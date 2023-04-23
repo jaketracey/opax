@@ -1,0 +1,3 @@
+#base=js
+ToolbarAction.AEMGPT.js
+ToolbarAction.OpaxImage.js
