@@ -4,7 +4,7 @@
     <jcr:content
         cq:conf="/conf/aemgpt"
         jcr:primaryType="nt:unstructured"
-        jcr:title="AEM-GPT">
+        jcr:title="Opax">
         <folderThumbnail/>
     </jcr:content>
     <asset.jpg/>

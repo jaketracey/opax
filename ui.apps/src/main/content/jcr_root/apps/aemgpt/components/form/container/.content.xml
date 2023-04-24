@@ -4,5 +4,5 @@
     jcr:title="Core Form Container"
     jcr:description="Container for components that allow users to submit information"
     sling:resourceSuperType="core/wcm/components/form/container/v2/container"
-    componentGroup="AEM-GPT - Form"
+    componentGroup="Opax - Form"
     cq:isContainer="{Boolean}true"/>

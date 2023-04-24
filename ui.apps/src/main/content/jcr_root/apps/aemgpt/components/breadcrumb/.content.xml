@@ -3,4 +3,4 @@
     jcr:primaryType="cq:Component"
     jcr:title="Breadcrumb"
     sling:resourceSuperType="core/wcm/components/breadcrumb/v3/breadcrumb"
-    componentGroup="AEM-GPT - Content"/>
+    componentGroup="Opax - Content"/>

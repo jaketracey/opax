@@ -2,6 +2,6 @@
     "scripts": [
         "create path (sling:OrderedFolder) /content/dam/aemgpt",
         "create path (nt:unstructured) /content/dam/aemgpt/jcr:content",
-        "set properties on /content/dam/aemgpt/jcr:content\n  set cq:conf{String} to /conf/aemgpt\n  set jcr:title{String} to \"AEM-GPT\"\nend"
+        "set properties on /content/dam/aemgpt/jcr:content\n  set cq:conf{String} to /conf/aemgpt\n  set jcr:title{String} to \"Opax\"\nend"
     ]
 }

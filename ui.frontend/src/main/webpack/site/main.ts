@@ -1,3 +1,0 @@
-
-// Stylesheets
-import "./main.scss";

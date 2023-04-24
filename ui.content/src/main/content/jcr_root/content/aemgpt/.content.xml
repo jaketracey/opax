@@ -7,7 +7,7 @@
         cq:redirectTarget="/content/aemgpt/us/en"
         cq:template="/conf/aemgpt/settings/wcm/templates/page-content"
         jcr:primaryType="cq:PageContent"
-        jcr:title="AEM-GPT"
+        jcr:title="Opax"
         sling:configRef="/conf/aemgpt"
         sling:redirect="{Boolean}true"
         sling:redirectStatus="{Long}302"

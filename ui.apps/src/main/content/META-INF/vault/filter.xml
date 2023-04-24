@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workspaceFilter version="1.0">
     <filter root="/apps/aemgpt/clientlibs"/>
-    <filter root="/apps/aemgpt/components"/>
-    <filter root="/apps/aemgpt/i18n"/>
 </workspaceFilter>

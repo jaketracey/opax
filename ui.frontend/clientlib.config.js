@@ -27,7 +27,11 @@ const CLIENTLIB_DIR = path.join(
   'jcr_root',
   'apps',
   'aemgpt',
-  'clientlibs'
+  'clientlibs',
+  'editor',
+  'sites',
+  'page',
+  'hook'
 );
 
 const libsBaseConfig = {
@@ -44,28 +48,8 @@ module.exports = {
   libs: [
     {
       ...libsBaseConfig,
-      name: 'clientlib-dependencies',
-      categories: ['aemgpt.dependencies'],
-      assets: {
-        // Copy entrypoint scripts and stylesheets into the respective ClientLib
-        // directories
-        js: {
-          cwd: 'clientlib-dependencies',
-          files: ['**/*.js'],
-          flatten: false
-        },
-        css: {
-          cwd: 'clientlib-dependencies',
-          files: ['**/*.css'],
-          flatten: false
-        }
-      }
-    },
-    {
-      ...libsBaseConfig,
-      name: 'clientlib-site',
-      categories: ['aemgpt.site'],
-      dependencies: ['aemgpt.dependencies'],
+      name: 'aemgpt',
+      categories: ['cq.authoring.editor.sites.page.hook'],
       assets: {
         // Copy entrypoint scripts and stylesheets into the respective ClientLib
         // directories

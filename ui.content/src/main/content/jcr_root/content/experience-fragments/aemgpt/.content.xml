@@ -4,7 +4,7 @@
     cq:allowedTemplates="[/conf/aemgpt/settings/wcm/templates/(?!page-).*]"
     cq:conf="/conf/aemgpt"
     jcr:primaryType="sling:OrderedFolder"
-    jcr:title="AEM-GPT Fragments"
+    jcr:title="Opax Fragments"
     sling:configRef="/conf/aemgpt">
     <us/>
 </jcr:root>

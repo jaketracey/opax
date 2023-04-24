@@ -4,4 +4,4 @@
     jcr:title="List"
     sling:resourceSuperType="core/wcm/components/list/v3/list"
     teaserDelegate="aemgpt/components/teaser"
-    componentGroup="AEM-GPT - Content"/>
+    componentGroup="Opax - Content"/>

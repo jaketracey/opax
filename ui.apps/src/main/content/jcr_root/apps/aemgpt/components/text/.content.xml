@@ -3,4 +3,4 @@
     jcr:primaryType="cq:Component"
     jcr:title="Text"
     sling:resourceSuperType="core/wcm/components/text/v2/text"
-    componentGroup="AEM-GPT - Content"/>
+    componentGroup="Opax - Content"/>

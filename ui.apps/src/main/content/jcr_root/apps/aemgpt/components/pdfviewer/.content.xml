@@ -3,4 +3,4 @@
     jcr:primaryType="cq:Component"
     jcr:title="PDF Viewer"
     sling:resourceSuperType="core/wcm/components/pdfviewer/v1/pdfviewer"
-    componentGroup="AEM-GPT - Content"/>
+    componentGroup="Opax - Content"/>
