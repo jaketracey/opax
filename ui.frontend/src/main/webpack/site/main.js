@@ -14,7 +14,10 @@
       showDialog(editable);
     },
     condition: function (editable) {
-      return editable;
+      console.log(editable);
+      if(editable.config.designDialog === "/libs/core/wcm/components/text/v2/text/cq:design_dialog") {
+        return editable;
+      }
     },
 
     isNonMulti: true,
@@ -97,14 +100,6 @@
             role="tab"
             >
             <coral-tab-label>Translate</coral-tab-label>
-          </coral-tab>
-          <coral-tab
-            id="tab3-${path}"
-            aria-controls="coral-id-tab3-${path}"
-            class="coral3-Tab"
-            role="tab"
-            >
-            <coral-tab-label>Image</coral-tab-label>
           </coral-tab>
         </coral-tablist>
         <coral-panelstack
@@ -1377,8 +1372,10 @@
         } else {
           const toast = new Coral.Toast().set({
             content: {
-              textContent: 'An error has occured'
-            }
+              textContent: 'An error has occured.'
+            },
+            duration: 3000,
+            type: 'error',
           });
           toast.style.width = '318px';
           toast.show();
@@ -1418,7 +1415,16 @@
       fetch(servletUrl)
       .then(response => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          const toast = new Coral.Toast().set({
+            content: {
+              textContent: 'An error has occured.'
+            },
+            duration: 3000,
+            type: 'error',
+          });
+          toast.style.width = '318px';
+          toast.show();
+          throw new Error('Network response was not ok for requestTemplatePrompt');
         }
         return response.json();
       }).then(response => {
@@ -1436,8 +1442,10 @@
       .catch(error => {
         const toast = new Coral.Toast().set({
           content: {
-            textContent: 'An error has occured'
-          }
+            textContent: 'An error has occured.'
+          },
+          duration: 3000,
+          type: 'error',
         });
         toast.style.width = '318px';
         toast.show();
@@ -1474,8 +1482,10 @@
             error: function (request, error) {
               const toast = new Coral.Toast().set({
                 content: {
-                  textContent: 'An error has occured'
-                }
+                  textContent: 'An error has occured.'
+                },
+                duration: 3000,
+                type: 'error',
               });
               toast.style.width = '318px';
               toast.show();
