@@ -1055,7 +1055,7 @@ import Quill from 'quill';
 }</style>
             <div
 
-            data-template-field="edit-current-content"
+            data-template-field="edit-content"
             style="width: auto; height: 400px; overflow-y: auto; background: #fff; margin-top: -4px; margin-bottom: 16px; display: flex; flex-direction: column; border: 1px solid #ccc; font-size: 16px;
             line-height: 1.5rem;
             padding: 10px 15px;
@@ -1064,11 +1064,11 @@ import Quill from 'quill';
             </div>
 
 
-      <button data-template-save-content-button is="coral-button" variant="primary"  style="float: right;">
+      <button data-edit-save-button is="coral-button" variant="primary"  style="float: right;">
       Save
     </button>
-      <button is="coral-button" variant="default" style="margin-left: 0;">
-        Cancel
+      <button data-edit-revert-button is="coral-button" variant="default" style="margin-left: 0;">
+        Revert
       </button>
 
 
@@ -1197,13 +1197,13 @@ import Quill from 'quill';
         type: 'GET',
 
         success: function (res) {
-          dialog.querySelector('[data-template-field="edit-current-content"]').innerHTML = res.text;
+          dialog.querySelector('[data-template-field="edit-content"]').innerHTML = res.text;
 
 
           var options = {
 
           };
-          var editor = new Quill('[data-template-field="edit-current-content"]', options);
+          var editor = new Quill('[data-template-field="edit-content"]', options);
 
 
         },
@@ -1235,6 +1235,33 @@ import Quill from 'quill';
         }
       });
     });
+
+
+    // attach click event to data-template-save-button
+    var editorSaveButton = dialog.content.querySelector("[data-edit-save-button]");
+    editorSaveButton.addEventListener('click', function(e) {
+      // get the content from the review-content div
+      var content = dialog.content.querySelector("[data-template-field='edit-content']").innerHTML;
+      // save the content
+      $.ajax({
+        url: `${editable.path}.html`,
+        type: 'POST',
+        data: {
+          './text': content,
+          './textIsRich': 'true'
+        },
+        success: function (res) {
+          editable.refresh();
+          clearTemplateFields();
+          dialog.hide();
+        },
+        error: function (request, error) {
+          console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
+        }
+      });
+    });
+
+
 
 
     // attach click event to data-template-generate-content-button
