@@ -1,9 +1,11 @@
+import Quill from 'quill';
+
 (function ($, ns, channel, window, undefined) {
   "use strict";
 
 
   var ACTION_ICON = "coral-Icon--automatedSegment";
-  var ACTION_TITLE = "AI Content Generation";
+  var ACTION_TITLE = "Opax Content Generation";
   var ACTION_NAME = "aiContentAction";
 
   var aiContentAction = new Granite.author.ui.ToolbarAction({
@@ -37,9 +39,29 @@
     // check if the dialog exists
     var dialog = document.querySelector(`#aiContentDialog-${path}`);
     if (dialog) {
+
       dialog.show();
+
+
       return;
     }
+
+    var currentContent;
+
+
+    // get the current content
+    $.ajax({
+      url: `${editable.path}.json`,
+      type: 'GET',
+
+      success: function (res) {
+        currentContent = res.text;
+      },
+      error: function (request, error) {
+        console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
+      }
+    });
+
 
     var dialog = new Coral.Dialog().set({
       id: `aiContentDialog-${path}`,
@@ -47,7 +69,7 @@
       movable: true,
       closable: 'on',
       header: {
-        innerHTML: `AI Content Generation`
+        innerHTML: `Opax AI Content Generation`
       },
       content: {
         innerHTML: `
@@ -117,23 +139,9 @@
             selected="">
             <coral-panel-content>
 
-<h3>Quick generate</h3>
-        <coral-actionbar>
-  <coral-actionbar-item>
-    <button id="generate-from-page-title" variant="primary" is="coral-button">Generate from page title</button>
-  </coral-actionbar-item>
-  <coral-actionbar-item>
-    <button id="generate-from-page-content" is="coral-button" variant="primary">From content</button>
-  </coral-actionbar-item>
-  <coral-actionbar-item>
-    <button id="create-outline-from-page-content" is="coral-button" variant="primary">Create outline</button>
-  </coral-actionbar-item>
-  </coral-actionbar-container>
-</coral-actionbar>
-
 
 <coral-wizardview>
-  <coral-steplist coral-wizardview-steplist="" style="display: none;">
+  <coral-steplist coral-wizardview-steplist="" style="margin-bottom: 20px;">
     <coral-step>Select template</coral-step>
     <coral-step>Configure</coral-step>
     <coral-step>Review</coral-step>
@@ -169,6 +177,7 @@
                 padding: 10px;
                 border-radius: 5px;
                 cursor: pointer;
+                background: #fff;
               }
 
               [data-template-selector] coral-masonry-item:hover {
@@ -966,7 +975,7 @@
 
               <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
 
-      <button data-template-generate-content-button is="coral-button" variant="primary" coral-wizardview-next="">
+      <button data-template-generate-content-button is="coral-button" variant="primary" coral-wizardview-next="" style="float: right;">
       Generate content
     </button>
       <button is="coral-button" variant="default" style="margin-left: 0;" coral-wizardview-previous="">
@@ -981,13 +990,11 @@
     <div class="coral-Form-fieldwrapper">
 
     <div
-
       data-template-field="review-content"
-      style="width: auto; height: 400px; overflow-y: auto; margin-top: 15px; border: 1px solid #ccc; font-size: 16px;
-      line-height: 1.5rem;
+      style="width: auto; height: 400px; overflow-y: auto; background: #fff;  margin-bottom: 16px; display: flex;
+      flex-direction: column; border: 1px solid #ccc; font-size: 16px;line-height: 1.5rem;
       padding: 10px 15px;
-      box-shadow: inset rgba(0,0,0,0.1) 0px 0px 10px"
-      ></div>
+      box-shadow: inset rgba(0,0,0,0.1) 0px 1px 4px;"></div>
 
 
   </div>
@@ -1016,33 +1023,56 @@
             role="tabpanel"
             aria-hidden="true">
             <coral-panel-content>
-            <h3>Quick editing tools</h3>
 
-            <button is="coral-button" variant="default" id="quick-summary" data-ai-polish>Quick summary</button>  <button is="coral-button" variant="default" id="quick-polish" data-ai-polish>Proof read</button>
-            <button is="coral-button" id="convert-to-list">Convert to list</button>
 
-            <form class="coral-Form coral-Form--vertical">
+            <coral-actionbar>
 
-                <h3 style="margin-top: 25px; margin-bottom: 10px;">Rewrite your content easily using a new persona</h3>
-                <div class="coral-Form-fieldwrapper">
-                  <label class="coral-Form-fieldlabel" id="label-vertical-textarea-0" for="rewriteType">Rewrite content as a</label>
-                  <coral-select id="rewriteType" name="Select" placeholder="Choose a persona">
-                    <coral-select-item>
-                      Marketer
-                    </coral-select-item>
-                    <coral-select-item>
-                      Developer
-                    </coral-select-item>
-                    <coral-select-item>
-                      Product manager
-                    </coral-select-item>
-                    <coral-select-item>
-                      5 year old
-                    </coral-select-item>
-                  </coral-select>
-                </div>
-              </form>
-              <button data-ai-primary is="coral-button" variant="primary" id="rewrite-generate" style="margin-top: 15px;">Generate</button>
+            <coral-actionbar-item>
+              <button id="generate-from-page-content" is="coral-button" variant="primary">Proof read</button>
+            </coral-actionbar-item>
+            <coral-actionbar-item>
+              <button id="create-outline-from-page-content" is="coral-button" variant="primary">Summarize</button>
+            </coral-actionbar-item>
+            <coral-actionbar-item>
+            <button id="create-outline-from-page-content" is="coral-button" variant="primary">Make longer</button>
+          </coral-actionbar-item>
+          <coral-actionbar-item>
+          <button id="create-outline-from-page-content" is="coral-button" variant="primary">Make shorter</button>
+          </coral-actionbar-item>
+          <coral-actionbar-item>
+          <button id="create-outline-from-page-content" is="coral-button" variant="primary">Simplify</button>
+          </coral-actionbar-item>
+          <coral-actionbar-item>
+              <button id="generate-from-page-title" variant="primary" is="coral-button">Improve SEO</button>
+            </coral-actionbar-item>
+
+            </coral-actionbar-container>
+          </coral-actionbar>
+
+<style type="text/css">
+.ql-editor:focus-visible {
+  outline: none;
+}</style>
+            <div
+
+            data-template-field="edit-current-content"
+            style="width: auto; height: 400px; overflow-y: auto; background: #fff; margin-top: -4px; margin-bottom: 16px; display: flex; flex-direction: column; border: 1px solid #ccc; font-size: 16px;
+            line-height: 1.5rem;
+            padding: 10px 15px;
+            box-shadow: inset rgba(0,0,0,0.1) 0px 1px 4px"
+            >
+            </div>
+
+
+      <button data-template-save-content-button is="coral-button" variant="primary"  style="float: right;">
+      Save
+    </button>
+      <button is="coral-button" variant="default" style="margin-left: 0;">
+        Cancel
+      </button>
+
+
+
               <style type="text/css">
                 [id^="aiContentDialog-"] .coral3-Dialog-wrapper {
                 width: 750px !important;
@@ -1139,7 +1169,6 @@
     var tabs = dialog.content.querySelector("[data-ai-tabs]");
     var loader = dialog.content.querySelector("#gpt-loader");
     var footer = dialog.footer;
-    var currentContent;
 
     // get template selector
     var templateSelector = dialog.content.querySelector("[data-template-selector]");
@@ -1161,18 +1190,27 @@
       panelToShow.removeAttribute('hidden');
     });
 
-    // get the current content
-    $.ajax({
-      url: `${editable.path}.json`,
-      type: 'GET',
 
-      success: function (res) {
-        currentContent = res.text;
-      },
-      error: function (request, error) {
-        console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
-      }
-    });
+       // get the current content
+       $.ajax({
+        url: `${editable.path}.json`,
+        type: 'GET',
+
+        success: function (res) {
+          dialog.querySelector('[data-template-field="edit-current-content"]').innerHTML = res.text;
+
+
+          var options = {
+
+          };
+          var editor = new Quill('[data-template-field="edit-current-content"]', options);
+
+
+        },
+        error: function (request, error) {
+          console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
+        }
+      });
 
     // attach click event to data-template-save-button
     var saveButton = dialog.content.querySelector("[data-template-save-button]");
@@ -1437,6 +1475,12 @@
 
         populateForReview(response.data);
 
+        var options = {
+
+        };
+        var editor = new Quill('[data-template-field="review-content"]', options);
+
+
       })
 
       .catch(error => {
@@ -1497,131 +1541,129 @@
       xhr.send();
     }
 
-    // Quick Summary
-    dialog.content.querySelector("#quick-summary").addEventListener("click", function () {
-      $.ajax({
-        url: `${editable.path}.json`,
-        type: 'GET',
+    // // Quick Summary
+    // dialog.content.querySelector("#quick-summary").addEventListener("click", function () {
+    //   $.ajax({
+    //     url: `${editable.path}.json`,
+    //     type: 'GET',
 
-        success: function (res) {
-          currentContent = res.text;
-          var prompt = `Please provide a brief summary of this content: ${encodeURIComponent(currentContent)}`
-      requestPrompt(prompt);
-        },
-        error: function (request, error) {
-          console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
-        }
-      });
+    //     success: function (res) {
+    //       currentContent = res.text;
+    //       var prompt = `Please provide a brief summary of this content: ${encodeURIComponent(currentContent)}`
+    //   requestPrompt(prompt);
+    //     },
+    //     error: function (request, error) {
+    //       console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
+    //     }
+    //   });
+    // });
 
+    // // Translate
+    // dialog.content.querySelector("#translate").addEventListener("click", function () {
+    //   // get the current content
+    //   $.ajax({
+    //     url: `${editable.path}.json`,
+    //     type: 'GET',
 
-    });
+    //     success: function (res) {
+    //       currentContent = res.text;
+    //       var targetLanguage = dialog.content.querySelector("#targetLanguage").value;
+    //       var prompt = `Translate the following text into ${targetLanguage}: ${encodeURIComponent(currentContent)}. Retain any existing HTML elements present in the content. Only modify the text.`;
+    //       requestPrompt(prompt);
+    //     },
+    //     error: function (request, error) {
+    //       console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
+    //     }
+    //   });
 
-    // Translate
-    dialog.content.querySelector("#translate").addEventListener("click", function () {
-      // get the current content
-      $.ajax({
-        url: `${editable.path}.json`,
-        type: 'GET',
+    // });
 
-        success: function (res) {
-          currentContent = res.text;
-          var targetLanguage = dialog.content.querySelector("#targetLanguage").value;
-          var prompt = `Translate the following text into ${targetLanguage}: ${encodeURIComponent(currentContent)}. Retain any existing HTML elements present in the content. Only modify the text.`;
-          requestPrompt(prompt);
-        },
-        error: function (request, error) {
-          console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
-        }
-      });
+    // // Rewrite
+    // dialog.content.querySelector("#rewrite-generate").addEventListener("click", function () {
+    //    // get the current content
+    //    $.ajax({
+    //     url: `${editable.path}.json`,
+    //     type: 'GET',
 
-    });
+    //     success: function (res) {
+    //       currentContent = res.text;
+    //       var rewriteType = dialog.content.querySelector("#rewriteType").value;
+    //       var prompt = `Respond in semantic HTML format without divs and h2 instead of h1 elements.  Use h2, h3, h4 as appropriate for headings. You are impersonating a ${encodeURIComponent(rewriteType)}. Rewrite this content as if you were them, keeping the same length: ${encodeURIComponent(currentContent)}`;
+    //       requestPrompt(prompt);
+    //     },
+    //     error: function (request, error) {
+    //       console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
+    //     }
+    //   });
 
-    // Rewrite
-    dialog.content.querySelector("#rewrite-generate").addEventListener("click", function () {
-       // get the current content
-       $.ajax({
-        url: `${editable.path}.json`,
-        type: 'GET',
-
-        success: function (res) {
-          currentContent = res.text;
-          var rewriteType = dialog.content.querySelector("#rewriteType").value;
-          var prompt = `Respond in semantic HTML format without divs and h2 instead of h1 elements.  Use h2, h3, h4 as appropriate for headings. You are impersonating a ${encodeURIComponent(rewriteType)}. Rewrite this content as if you were them, keeping the same length: ${encodeURIComponent(currentContent)}`;
-          requestPrompt(prompt);
-        },
-        error: function (request, error) {
-          console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
-        }
-      });
-
-    });
+    // });
 
 
-    // Convert to list
-    dialog.content.querySelector("#convert-to-list").addEventListener("click", function () {
-      // get the current content
-      $.ajax({
-        url: `${editable.path}.json`,
-        type: 'GET',
+    // // Convert to list
+    // dialog.content.querySelector("#convert-to-list").addEventListener("click", function () {
+    //   // get the current content
+    //   $.ajax({
+    //     url: `${editable.path}.json`,
+    //     type: 'GET',
 
-        success: function (res) {
-          currentContent = res.text;
-          var prompt = `Please convert this content into a HTML list: ${encodeURIComponent(currentContent)}.`;
-          requestPrompt(prompt);
-        },
-        error: function (request, error) {
-          console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
-        }
-      });
-    });
+    //     success: function (res) {
+    //       currentContent = res.text;
+    //       var prompt = `Please convert this content into a HTML list: ${encodeURIComponent(currentContent)}.`;
+    //       requestPrompt(prompt);
+    //     },
+    //     error: function (request, error) {
+    //       console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
+    //     }
+    //   });
+    // });
 
 
-    // Generate from page title
-    dialog.content.querySelector("#generate-from-page-title").addEventListener("click", function () {
-      var pageContents = document.querySelector("#ContentFrame").contentDocument.documentElement;
-      var title = pageContents.querySelector("title").innerHTML;
+    // // Generate from page title
+    // dialog.content.querySelector("#generate-from-page-title").addEventListener("click", function () {
+    //   var pageContents = document.querySelector("#ContentFrame").contentDocument.documentElement;
+    //   var title = pageContents.querySelector("title").innerHTML;
 
-      var prompt = `You are a copywriter, writing content for this website. Do not mention yourself. Create 4 paragraphs of content based on this page title: ${encodeURIComponent(title)} Always respond in semantic HTML format without divs and h2 instead of h1 elements.  Use h2, h3, h4 as appropriate for headings. Use <p> elements for paragraphs.`;
-      requestPrompt(prompt);
-    });
+    //   var prompt = `You are a copywriter, writing content for this website. Do not mention yourself. Create 4 paragraphs of content based on this page title: ${encodeURIComponent(title)} Always respond in semantic HTML format without divs and h2 instead of h1 elements.  Use h2, h3, h4 as appropriate for headings. Use <p> elements for paragraphs.`;
+    //   requestPrompt(prompt);
+    // });
 
-    // Convert to list
-    dialog.content.querySelector("#convert-to-list").addEventListener("click", function () {
-      // get the current content
-      $.ajax({
-        url: `${editable.path}.json`,
-        type: 'GET',
+    // // Convert to list
+    // dialog.content.querySelector("#convert-to-list").addEventListener("click", function () {
+    //   // get the current content
+    //   $.ajax({
+    //     url: `${editable.path}.json`,
+    //     type: 'GET',
 
-        success: function (res) {
-          currentContent = res.text;
-          var prompt = `Please convert this content into a HTML list: ${encodeURIComponent(currentContent)}.`;
-          requestPrompt(prompt);
-        },
-        error: function (request, error) {
-          console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
-        }
-      });
-    });
+    //     success: function (res) {
+    //       currentContent = res.text;
+    //       var prompt = `Please convert this content into a HTML list: ${encodeURIComponent(currentContent)}.`;
+    //       requestPrompt(prompt);
+    //     },
+    //     error: function (request, error) {
+    //       console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
+    //     }
+    //   });
+    // });
 
 
 
-    // Generate from page content
-    dialog.content.querySelector("#generate-from-page-content").addEventListener("click", function (e) {
-      var pageContents = document.querySelector("#ContentFrame").contentDocument.documentElement;
-      var mainElement = pageContents.querySelector("main");
-      var headings = mainElement.querySelectorAll("h1, h2, h3, h4, h5, h6");
-      var paragraphs = mainElement.querySelectorAll("p");
-      var title = pageContents.querySelector("title").innerHTML;
-      var pageText = title + " ";
-      for (var i = 0; i < headings.length; i++) {
-        pageText += headings[i].innerText + " ";
-      }
-      for (var i = 0; i < paragraphs.length; i++) {
-        pageText += paragraphs[i].innerText + " ";
-      }
-      var prompt = `You are a copywriter, writing content for this website. Do not mention yourself. Create 4 paragraphs of content based on this page text: ${encodeURIComponent(pageText)} Always respond in semantic HTML format without divs and h2 instead of h1 elements.  Use h2, h3, h4 as appropriate for headings. Use <p> elements for paragraphs.`;
-      requestPrompt(prompt);
-    });
+    // // Generate from page content
+    // dialog.content.querySelector("#generate-from-page-content").addEventListener("click", function (e) {
+    //   var pageContents = document.querySelector("#ContentFrame").contentDocument.documentElement;
+    //   var mainElement = pageContents.querySelector("main");
+    //   var headings = mainElement.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    //   var paragraphs = mainElement.querySelectorAll("p");
+    //   var title = pageContents.querySelector("title").innerHTML;
+    //   var pageText = title + " ";
+    //   for (var i = 0; i < headings.length; i++) {
+    //     pageText += headings[i].innerText + " ";
+    //   }
+    //   for (var i = 0; i < paragraphs.length; i++) {
+    //     pageText += paragraphs[i].innerText + " ";
+    //   }
+    //   var prompt = `You are a copywriter, writing content for this website. Do not mention yourself. Create 4 paragraphs of content based on this page text: ${encodeURIComponent(pageText)} Always respond in semantic HTML format without divs and h2 instead of h1 elements.  Use h2, h3, h4 as appropriate for headings. Use <p> elements for paragraphs.`;
+    //   requestPrompt(prompt);
+    // });
 
     function getElementContents() {
       $.ajax({
@@ -1654,28 +1696,28 @@
       return pageText;
     }
 
-    // Quick Polish
-    dialog.content.querySelector("#quick-polish").addEventListener("click", function () {
-      // get the current content
-      $.ajax({
-        url: `${editable.path}.json`,
-        type: 'GET',
+    // // Quick Polish
+    // dialog.content.querySelector("#quick-polish").addEventListener("click", function () {
+    //   // get the current content
+    //   $.ajax({
+    //     url: `${editable.path}.json`,
+    //     type: 'GET',
 
-        success: function (res) {
-          currentContent = res.text;
+    //     success: function (res) {
+    //       currentContent = res.text;
 
-          // escape res.text
-          var escapedContent = encodeURIComponent(currentContent);
+    //       // escape res.text
+    //       var escapedContent = encodeURIComponent(currentContent);
 
-          var prompt = `Correct any spelling or grammatical mistakes in the following content. Do not change any language unless absolutely needed to correct mistakes. Content: ${encodeURIComponent(escapedContent)} Always respond in semantic HTML format without divs and h2 instead of h1 elements. Use h2, h3, h4 as appropriate for headings. Use <p> elements for paragraphs.`;
-          requestPrompt(prompt);
-        },
-        error: function (request, error) {
-          console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
-        }
-      });
+    //       var prompt = `Correct any spelling or grammatical mistakes in the following content. Do not change any language unless absolutely needed to correct mistakes. Content: ${encodeURIComponent(escapedContent)} Always respond in semantic HTML format without divs and h2 instead of h1 elements. Use h2, h3, h4 as appropriate for headings. Use <p> elements for paragraphs.`;
+    //       requestPrompt(prompt);
+    //     },
+    //     error: function (request, error) {
+    //       console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
+    //     }
+    //   });
 
-    });
+    // });
 
 
 

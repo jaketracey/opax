@@ -3,6 +3,7 @@
 @import 'base';
 @import '../components/**/*.scss';
 @import './styles/*.scss';
+@import 'node_modules/quill/dist/quill.core.css';
 
 *, *::before, *::after {
     box-sizing: border-box;
