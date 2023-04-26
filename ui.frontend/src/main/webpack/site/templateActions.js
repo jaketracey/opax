@@ -119,7 +119,10 @@ function bindTemplateActions(dialog, editable) {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 var editor = new Quill('[data-template-field="review-content"]', {
                     modules: {
-                        toolbar: toolbarOptions
+                        toolbar: toolbarOptions,
+                        clipboard: {
+                            matchVisual: false
+                        }
                     },
                     theme: 'snow'
                 });

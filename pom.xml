@@ -23,7 +23,7 @@
 
   <packaging>pom</packaging>
 
-  <version>1.0.0-SNAPSHOT</version>
+  <version>0.9-BETA</version>
 
   <name>Opax</name>
 
@@ -39,11 +39,11 @@
 
     <module>ui.apps</module>
 
-    <!-- module>ui.apps.structure</!-->
+    <module>ui.apps.structure</module>
 
-    <!-- module>ui.config</!-->
+    <module>ui.config</module>
 
-    <!-- module>ui.content</!-->
+    <module>ui.content</module>
   </modules>
 
   <properties>

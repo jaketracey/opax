@@ -1,4 +1,4 @@
-package work.noice.core;
+package work.noice.core.services;
 
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.AttributeType;
@@ -21,7 +21,7 @@ public @interface OpaxConfiguration {
      * @return {@link Boolean}
      */
     @AttributeDefinition(name = "Enable toolbar", description = "This property indicates whether the toolbar will display or not", type = AttributeType.BOOLEAN)
-    public boolean enableConfig();
+    public boolean getToolbarEnabled();
 
     /**
      * Returns the component path where the AI toolbar will be injected

@@ -1,5 +1,5 @@
 function generateTemplatePrompt(templateId, dialog) {
-    const promptGuide = `Please respond in JSON format. Put the response into the data key of the response. Respond inside that value as HTML without divs and h2 instead of h1 elements.  Use h2, h3, h4 as appropriate for headings. Use <p> elements for paragraphs. Here is the prompt to use: `
+    const promptGuide = `Please respond in JSON format. Put the response into the data key of the response. Respond inside that value as HTML without divs and h2 instead of h1 elements.  Use h2, h3, h4 as appropriate for headings. Use <p> elements for paragraphs. Do not use <br> elements. Escape any control characters. Here is the prompt to use: `
     switch (templateId) {
         case 'free-prompt':
             // get the fields for content summarizer

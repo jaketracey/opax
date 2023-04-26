@@ -25,7 +25,10 @@ function updateEditor(newText, dialog) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     var editor = new Quill('[data-edit-editor]', {
         modules: {
-            toolbar: toolbarOptions
+            toolbar: toolbarOptions,
+            clipboard: {
+                matchVisual: false
+            }
         },
         theme: 'snow'
     });
@@ -57,7 +60,10 @@ function populateEditor(dialog, editable) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             var editor = new Quill('[data-edit-editor]', {
                 modules: {
-                    toolbar: toolbarOptions
+                    toolbar: toolbarOptions,
+                    clipboard: {
+                        matchVisual: false
+                    }
                 },
                 theme: 'snow'
             });

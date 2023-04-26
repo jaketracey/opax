@@ -824,9 +824,7 @@ function dialogTemplate(path) {
                         <button data-edit-save-button is="coral-button" variant="primary"  style="float: right;">
                         Save
                         </button>
-                        <button data-edit-revert-button is="coral-button" variant="default" style="margin-left: 0;">
-                        Revert
-                        </button>
+
                     </coral-panel-content>
                 </coral-panel>
                 <coral-panel
