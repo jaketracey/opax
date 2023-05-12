@@ -1,8 +1,5 @@
 import Quill from 'quill';
-import { getPageContents, getElementContents, clearTemplateFields } from "./utils";
-
-
-
+import { clearTemplateFields } from "./utils";
 
 function updateEditor(newText, dialog) {
     // first, populate the editor with the current content
@@ -150,7 +147,7 @@ function bindEditorActions(dialog, editable) {
         });
     });
 
-    const promptGuide = `Please wrap the response in JSON format. Put the response into the data key of the JSON object. Respond inside that data value as HTML without divs and h2 instead of h1 elements.  Use h2, h3, h4 as appropriate for headings. Use <p> elements for paragraphs. Here is the prompt to use: `
+    const promptGuide = `Please respond in JSON format. Put the response into the data key of the response. Respond inside that value as HTML without divs and h2 instead of h1 elements.  Use h2, h3, h4 as appropriate for headings. Use <p> elements for paragraphs. Do not use <br> elements. Escape any control characters. Here is the prompt to use: `;
 
 
     var proofReadButton = dialog.content.querySelector("[data-edit-action-proof-read]");

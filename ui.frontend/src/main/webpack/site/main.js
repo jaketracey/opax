@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import './styles/main.scss';
 import { dialogTemplate } from './dialogTemplate';
-import { bindEditorActions, populateEditor, updateEditor } from './editActions';
+import { bindEditorActions, populateEditor } from './editActions';
 import { bindTemplateActions } from './templateActions';
 
 (function ($, ns, channel, window, undefined) {

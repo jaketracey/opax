@@ -1,4 +1,4 @@
-const {merge} = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const common = require('./webpack.common.js');
@@ -40,10 +40,10 @@ module.exports = merge(common, {
         },
     },
     plugins: [
-        new WebpackObfuscator ({
-            rotateStringArray: true,
-        })
+        // new WebpackObfuscator ({
+        //     rotateStringArray: true,
+        // })
     ],
-    performance: {hints: false},
+    performance: { hints: false },
 
 });

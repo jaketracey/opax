@@ -92,9 +92,6 @@ function bindTemplateActions(dialog, editable) {
                 }
                 return response.json();
             }).then(response => {
-
-                console.log(response);
-
                 loader.hidden = true;
                 tabs.hidden = false;
                 footer.hidden = false;
