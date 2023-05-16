@@ -73,10 +73,16 @@ function bindTemplateActions(dialog, editable) {
         tabs.hidden = true;
         footer.hidden = true;
 
-        prompt = prompt.trim();
-        var servletUrl = `/bin/chat?prompt=${prompt}`;
+        var servletUrl = `/bin/chat`;
 
-        fetch(servletUrl)
+        fetch(servletUrl, {
+            method: 'POST',
+            body: JSON.stringify(prompt),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     const toast = new Coral.Toast().set({
