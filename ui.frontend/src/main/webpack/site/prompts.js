@@ -3,7 +3,7 @@ function generateTemplatePrompt(templateId, dialog) {
         case 'free-prompt':
             // get the fields for content summarizer
             var content = encodeURIComponent(dialog.content.querySelector("[data-template-field='free-prompt-content']").value);
-            prompt = `${content}`;
+            prompt = { "templateId": templateId, "dataAttributes": { "content": content } };
             break;
         case 'content-summarizer':
             // get the fields for content summarizer
