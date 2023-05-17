@@ -2,6 +2,8 @@ package work.noice.core.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -11,7 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.HttpConstants;
-import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -30,12 +32,12 @@ import java.io.IOException;
         service = Servlet.class,
         property = {
                 Constants.SERVICE_DESCRIPTION + "=ChatGPT Integration",
-                "sling.servlet.methods=" + HttpConstants.METHOD_GET,
+                "sling.servlet.methods=" + HttpConstants.METHOD_POST,
                 "sling.servlet.paths=" + "/bin/chat",
                 "sling.servlet.extensions={\"json\"}"
         }
 )
-public class OpaxServlet extends SlingSafeMethodsServlet {
+public class OpaxServlet extends SlingAllMethodsServlet {
 
     private static final Logger Logger = LoggerFactory.getLogger(OpaxServlet.class);
 
@@ -48,17 +50,24 @@ public class OpaxServlet extends SlingSafeMethodsServlet {
     private transient OpaxService config;
 
     @Override
-    protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
-        String prompt = generatePrompt(request.getParameter("prompt"));
-        String message = generateMessage(prompt);
+    protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+        Logger.error("@@@@@@@@@@@@@@@ inside Post");
+        String body = IOUtils.toString(request.getReader());
+        Logger.error("@@@@@@@@@@@@@@@ inside Post {}", body);
 
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(message);
+        if (StringUtils.isNotBlank(body)) {
+            String prompt = generatePrompt(body.replaceAll("%20", " "));
+            Logger.error("@@@@@@@@@@@@@@@ PROMPT {}", prompt);
+            String message = generateMessage(prompt);
+
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(message);
+        }
     }
 
     private String generateMessage(String prompt) throws IOException {
 
-        Logger.error(" @@@@@@ " + config.getOpaxApiKey() + " @@@@ " + config.getComponents() + " @@@@@ " + config.getOpenAIAPIKey() + " @@@@ " + config.getToolbarEnabled());
+        // Logger.error(" @@@@@@ " + config.getOpaxApiKey() + " @@@@ " + config.getComponents() + " @@@@@ " + config.getOpenAIAPIKey() + " @@@@ " + config.getToolbarEnabled());
         // Generate the chat message using ChatGPT API
         String requestBody = MAPPER.writeValueAsString(new ChatGptRequest(prompt, "gpt-3.5-turbo", "user"));
         HttpPost request = new HttpPost(CHATGPT_API_ENDPOINT);
