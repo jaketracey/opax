@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -59,7 +60,7 @@ public class OpaxServlet extends SlingAllMethodsServlet {
                 String result = generateMessage(prompt);
                 if (StringUtils.isNotBlank(result)) {
                     JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("data", result);
+                    jsonObject.addProperty("data", StringEscapeUtils.escapeHtml4(result));
                     response.setStatus(200);
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(jsonObject.toString());
