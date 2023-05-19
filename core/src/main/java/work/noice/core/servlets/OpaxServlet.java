@@ -29,16 +29,12 @@ import work.noice.core.services.OpaxService;
 import javax.servlet.Servlet;
 import java.io.IOException;
 
-@Component(
-        immediate = true,
-        service = Servlet.class,
-        property = {
-                Constants.SERVICE_DESCRIPTION + "=ChatGPT Integration",
-                "sling.servlet.methods=" + HttpConstants.METHOD_POST,
-                "sling.servlet.paths=" + "/bin/chat",
-                "sling.servlet.extensions={\"json\"}"
-        }
-)
+@Component(immediate = true, service = Servlet.class, property = {
+        Constants.SERVICE_DESCRIPTION + "=ChatGPT Integration",
+        "sling.servlet.methods=" + HttpConstants.METHOD_POST,
+        "sling.servlet.paths=" + "/bin/chat",
+        "sling.servlet.extensions={\"json\"}"
+})
 public class OpaxServlet extends SlingAllMethodsServlet {
 
     private static final Logger Logger = LoggerFactory.getLogger(OpaxServlet.class);
@@ -54,6 +50,15 @@ public class OpaxServlet extends SlingAllMethodsServlet {
     @Override
     protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
         String body = IOUtils.toString(request.getReader());
+        String key = config.getOpenAIAPIKey();
+
+        // return an error if key is not found
+        if (StringUtils.isBlank(key)) {
+            response.setStatus(400);
+            response.getWriter().write("Open AI API Key not found");
+            return;
+        }
+
         if (StringUtils.isNotBlank(body)) {
             String prompt = generatePrompt(body);
             if (StringUtils.isNotBlank(prompt)) {
@@ -64,18 +69,15 @@ public class OpaxServlet extends SlingAllMethodsServlet {
                     response.setStatus(200);
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(jsonObject.toString());
-                }
-                else {
+                } else {
                     response.setStatus(400);
                     response.getWriter().write("error");
                 }
-            }
-            else {
+            } else {
                 response.setStatus(400);
                 response.getWriter().write("error");
             }
-        }
-        else {
+        } else {
             response.setStatus(400);
             response.getWriter().write("error");
         }
@@ -85,18 +87,18 @@ public class OpaxServlet extends SlingAllMethodsServlet {
 
         String requestBody = MAPPER.writeValueAsString(new ChatGptRequest(prompt, "gpt-3.5-turbo", "user"));
         HttpPost request = new HttpPost(CHATGPT_API_ENDPOINT);
-        request.addHeader("Authorization", "Bearer" + " " + config.getOpaxApiKey());
+        request.addHeader("Authorization", "Bearer" + " " + config.getOpenAIAPIKey());
 
         request.addHeader("Content-Type", "application/json");
         request.setEntity(new StringEntity(requestBody, "UTF-8"));
         HttpResponse response = client.execute(request);
 
-        ChatGptResponse chatGptResponse = MAPPER.readValue(EntityUtils.toString(response.getEntity(), "UTF-8"), ChatGptResponse.class);
+        ChatGptResponse chatGptResponse = MAPPER.readValue(EntityUtils.toString(response.getEntity(), "UTF-8"),
+                ChatGptResponse.class);
         String message = chatGptResponse.getChoices().get(0).getMessage().getContent();
 
         return message;
     }
-
 
     private String generatePrompt(String data) {
 
@@ -123,8 +125,9 @@ public class OpaxServlet extends SlingAllMethodsServlet {
         String customerProblem = jsonData.getDataAttributes().get("customerProblem");
         String points = jsonData.getDataAttributes().get("points");
         String sentence = jsonData.getDataAttributes().get("sentence");
+        String language = jsonData.getDataAttributes().get("language");
 
-        String promptGuide = "Respond in HTML format without div elements and use the h2 element instead of the h1 element.  Use h2, h3, h4 as appropriate for headings. Use <p> elements for paragraphs. Do not use <br> elements. Escape any control characters. Here is the prompt to use: ";
+        String promptGuide = "You are a copywriter AI that takes can write and edit existing content. You always respond in HTML format for consumption by a rich text editor. Your goal is to produce the content that is requested as instructed without ever identifying yourself or the changes you have made. It should only ever contain content that was requested:  PROMPT: ";
 
         switch (jsonData.getTemplateId()) {
             case "free-prompt":
@@ -132,39 +135,79 @@ public class OpaxServlet extends SlingAllMethodsServlet {
             case "content-summarizer":
                 return promptGuide + "Summarize the following content in a " + tone + "tone: " + content;
             case "aida-framework":
-                return promptGuide + "Never mention the AIDA framework. Write content using the AIDA framework, without mentioning that you are using the AIDA framework - don't mention anything about attention, etc. with the following properties: Company Name: " + companyName + ", Product: " + product + ", Tone: " + tone + ".";
+                return promptGuide
+                        + "Never mention the AIDA framework. Write content using the AIDA framework, without mentioning that you are using the AIDA framework - don't mention anything about attention, etc. with the following properties: Company Name: "
+                        + companyName + ", Product: " + product + ", Tone: " + tone + ".";
             case "bab-framework":
-                return promptGuide + "Write content using the BAB (Before-After-Bridge) framework with the following properties: Company Name: " + companyName + ", Product: " + product + ", Tone: " + tone + ".";
+                return promptGuide
+                        + "Write content using the BAB (Before-After-Bridge) framework with the following properties: Company Name: "
+                        + companyName + ", Product: " + product + ", Tone: " + tone + ".";
             case "blog-post-conclusion-paragraph":
-                return promptGuide + "Write a conclusion paragraph for the following blog post using this post outline: " + outline + ". Include a call to action: " + cta + ". Use this tone of voice: " + tone + ".";
+                return promptGuide
+                        + "Write a conclusion paragraph for the following blog post using this post outline: " + outline
+                        + ". Include a call to action: " + cta + ". Use this tone of voice: " + tone + ".";
             case "blog-post-intro-paragraph":
-                return promptGuide + "Write an introduction paragraph for the following blog post title: " + title + ". The audience is " + audience + ". Use this tone of voice: " + tone + ".";
+                return promptGuide + "Write an introduction paragraph for the following blog post title: " + title
+                        + ". The audience is " + audience + ". Use this tone of voice: " + tone + ".";
             case "blog-post-outline":
-                return promptGuide + "Write an outline for the following blog post title: " + title + ". Use this tone of voice: " + tone + ".";
+                return promptGuide + "Write an outline for the following blog post title: " + title
+                        + ". Use this tone of voice: " + tone + ".";
             case "company-bio":
-                return promptGuide + "Write a company bio for the following company name: " + name + ". Company info: " + info + ". Use this tone of voice: " + tone + ".";
+                return promptGuide + "Write a company bio for the following company name: " + name + ". Company info: "
+                        + info + ". Use this tone of voice: " + tone + ".";
             case "content-improver":
-                return promptGuide + "Improve the following content: " + content + ". Use this tone of voice: " + tone + ".";
+                return promptGuide + "Improve the following content: " + content + ". Use this tone of voice: " + tone
+                        + ".";
             case "simplify":
-                return promptGuide + "Explain the following content to a child at grade level " + gradeLevel + ": " + content + ".";
+                return promptGuide + "Explain the following content to a child at grade level " + gradeLevel + ": "
+                        + content + ".";
             case "faq-generator":
-                return promptGuide + "Write " + numQuestions + " FAQs for the following topic: " + topic + ". Use this tone of voice: " + tone + ".";
+                return promptGuide + "Write " + numQuestions + " FAQs for the following topic: " + topic
+                        + ". Use this tone of voice: " + tone + ".";
             case "feature-to-benefit":
-                return promptGuide + "Write the benefits of the features of this product description: " + description + ". Use this tone of voice: " + tone + ".";
+                return promptGuide + "Write the benefits of the features of this product description: " + description
+                        + ". Use this tone of voice: " + tone + ".";
             case "listicle":
-                return promptGuide + "Write a listicle for the following topic: " + topic + ". The list should have " + listCount + " items. Use this tone of voice: " + tone + ".";
+                return promptGuide + "Write a listicle for the following topic: " + topic + ". The list should have "
+                        + listCount + " items. Use this tone of voice: " + tone + ".";
             case "one-shot-blog-post":
-                return promptGuide + "Write a one-shot blog post for the following topic: " + topic + ". Use this tone of voice: " + tone + ".";
+                return promptGuide + "Write a one-shot blog post for the following topic: " + topic
+                        + ". Use this tone of voice: " + tone + ".";
             case "perfect-headline":
-                return promptGuide + "Write a perfect headline for the following product description: " + productDescription + ". The company product name is " + companyProductName + ". The customer avatar is " + customerAvatar + ". The customer problem is " + customerProblem + ". Use this tone of voice: " + tone + ".";
+                return promptGuide + "Write a perfect headline for the following product description: "
+                        + productDescription + ". The company product name is " + companyProductName
+                        + ". The customer avatar is " + customerAvatar + ". The customer problem is " + customerProblem
+                        + ". Use this tone of voice: " + tone + ".";
             case "persuasive-bullet-points":
-                return promptGuide + "Write persuasive bullet points for the following content: Company/Product Name: " + companyProductName + ", Product Description: " + productDescription + ", Tone: " + tone + ".";
+                return promptGuide + "Write persuasive bullet points for the following content: Company/Product Name: "
+                        + companyProductName + ", Product Description: " + productDescription + ", Tone: " + tone + ".";
             case "press-release":
-                return promptGuide + "Write a press release for the following topic: " + topic + ". The press release should have " + points + " points.";
+                return promptGuide + "Write a press release for the following topic: " + topic
+                        + ". The press release should have " + points + " points.";
             case "sentence-expander":
-                return promptGuide + "Expand the following sentence: " + sentence + ". Use this tone of voice: " + tone + ".";
+                return promptGuide + "Expand the following sentence: " + sentence + ". Use this tone of voice: " + tone
+                        + ".";
+            case "proof-read":
+                return promptGuide + "Proofread the following content: " + content + ".";
+            case "summarize":
+                return promptGuide + "Summarize the following content: " + content + ".";
+            case "improve-seo":
+                return promptGuide + "Improve the SEO of the following content: " + content + ".";
+            case "improve-readability":
+                return promptGuide + "Improve the readability of the following content: " + content + ".";
+            case "improve-clarity":
+                return promptGuide + "Improve the clarity of the following content: " + content + ".";
+            case "improve-grammar":
+                return promptGuide + "Improve the grammar of the following content: " + content + ".";
+            case "improve-tone":
+                return promptGuide + "Improve the tone of the following content: " + content + ".";
+            case "improve-structure":
+                return promptGuide + "Improve the structure of the following content: " + content + ".";
+            case "improve-flow":
+                return promptGuide + "Improve the flow of the following content: " + content + ".";
+            case "translate":
+                return promptGuide + "Translate the following content into " + language + ": " + content + ".";
         }
         return "";
     }
 }
-

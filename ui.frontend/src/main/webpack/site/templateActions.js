@@ -102,7 +102,10 @@ function bindTemplateActions(dialog, editable) {
                 tabs.hidden = false;
                 footer.hidden = false;
 
-                populateForReview(response.data);
+                // convert back to html
+                var html = new DOMParser().parseFromString(response.data, "text/html").documentElement.textContent;
+
+                populateForReview(html);
 
                 var toolbarOptions = [
                     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons

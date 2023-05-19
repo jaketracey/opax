@@ -19,7 +19,7 @@ import { bindTemplateActions } from './templateActions';
       showDialog(editable);
     },
     condition: function (editable) {
-      if(editable.config.designDialog === "/libs/core/wcm/components/text/v2/text/cq:design_dialog") {
+      if (editable.config.designDialog === "/libs/core/wcm/components/text/v2/text/cq:design_dialog") {
         return editable;
       }
     },
@@ -63,8 +63,24 @@ import { bindTemplateActions } from './templateActions';
     bindTemplateActions(dialog, editable);
     populateEditor(dialog, editable);
 
+
     // Open the dialog
     document.body.appendChild(dialog);
+
+    $.ajax({
+      url: `${editable.path}.json`,
+      type: 'GET',
+
+      success: function (res) {
+        console.log(res);
+        if (res.text) {
+          dialog.content.querySelector("[data-edit-tab]").click();
+        }
+      },
+      error: function (request, error) {
+        console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
+      }
+    });
     dialog.show();
   }
 }(jQuery, Granite.author, jQuery(document), this, Coral));
