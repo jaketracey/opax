@@ -109,5 +109,4 @@ module.exports = {
         source: false,
         warnings: true
     },
-
 };

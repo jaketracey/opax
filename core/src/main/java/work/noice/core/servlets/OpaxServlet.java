@@ -127,7 +127,7 @@ public class OpaxServlet extends SlingAllMethodsServlet {
         String sentence = jsonData.getDataAttributes().get("sentence");
         String language = jsonData.getDataAttributes().get("language");
 
-        String promptGuide = "You are a copywriter AI that takes can write and edit existing content. You always respond in HTML format for consumption by a rich text editor. Your goal is to produce the content that is requested as instructed without ever identifying yourself or the changes you have made. It should only ever contain content that was requested:  PROMPT: ";
+        String promptGuide = "You are a copywriter AI that can write and edit existing content. You always respond in HTML format for consumption by a rich text editor. Your goal is to produce the content that is requested as instructed without ever identifying yourself or the changes you have made. It should only ever contain content that was requested:  PROMPT: ";
 
         switch (jsonData.getTemplateId()) {
             case "free-prompt":
