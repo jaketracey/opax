@@ -28,7 +28,9 @@ Before installation, ensure you meet all the pre-requisites.
 2. Navigate to the project directory
 3. Install the project
 
-`` mvn clean install -PautoInstallPackage
+```
+mvn clean install -PautoInstallPackage
+```
 
 ## Configuration
 
