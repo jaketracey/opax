@@ -13,7 +13,7 @@ function bindImageEvents(dialog) {
         const xhr = new XMLHttpRequest();
 
         xhr.open('POST', 'https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4');
-        xhr.setRequestHeader('Authorization', 'Bearer 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');
+        xhr.setRequestHeader('Authorization', 'Bearer xxxx');
         xhr.responseType = 'blob';
         xhr.onload = function () {
             if (xhr.status === 200) {

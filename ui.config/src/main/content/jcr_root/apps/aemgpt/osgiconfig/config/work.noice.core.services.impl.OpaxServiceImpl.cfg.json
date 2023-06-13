@@ -3,6 +3,5 @@
     "apps/test/component"
   ],
   "getToolbarEnabled": true,
-  "getOpaxApiKey":"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",
-  "getOpenAIAPIKey": "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"
+  "getOpenAIAPIKey": "xxx"
 }
