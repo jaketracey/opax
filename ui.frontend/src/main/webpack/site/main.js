@@ -72,7 +72,6 @@ import { bindTemplateActions } from './templateActions';
       type: 'GET',
 
       success: function (res) {
-        console.log(res);
         if (res.text) {
           dialog.content.querySelector("[data-edit-tab]").click();
         }

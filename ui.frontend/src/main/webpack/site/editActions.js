@@ -106,9 +106,6 @@ function bindEditorActions(dialog, editable) {
             }
             return response.json();
         }).then(response => {
-
-            console.log(response);
-
             loader.hidden = true;
             tabs.hidden = false;
             footer.hidden = false;
@@ -169,6 +166,48 @@ function bindEditorActions(dialog, editable) {
         requestEditPrompt(prompt);
     });
 
+    var improveReadabilityButton = dialog.content.querySelector("[data-edit-action-improve-readability]");
+    improveReadabilityButton.addEventListener('click', function () {
+        var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+        var prompt = { "templateId": 'improve-readability', "dataAttributes": { "content": content } };
+        requestEditPrompt(prompt);
+    });
+
+    var improveClarityButton = dialog.content.querySelector("[data-edit-action-improve-clarity]");
+    improveClarityButton.addEventListener('click', function () {
+        var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+        var prompt = { "templateId": 'improve-clarity', "dataAttributes": { "content": content } };
+        requestEditPrompt(prompt);
+    });
+
+    var improveGrammarButton = dialog.content.querySelector("[data-edit-action-improve-grammar]");
+    improveGrammarButton.addEventListener('click', function () {
+        var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+        var prompt = { "templateId": 'improve-grammar', "dataAttributes": { "content": content } };
+        requestEditPrompt(prompt);
+    });
+
+    var improveToneButton = dialog.content.querySelector("[data-edit-action-improve-tone]");
+    improveToneButton.addEventListener('click', function () {
+        var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+        var prompt = { "templateId": 'improve-tone', "dataAttributes": { "content": content } };
+        requestEditPrompt(prompt);
+    });
+
+    var improveStructureButton = dialog.content.querySelector("[data-edit-action-improve-structure]");
+    improveStructureButton.addEventListener('click', function () {
+        var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+        var prompt = { "templateId": 'improve-structure', "dataAttributes": { "content": content } };
+        requestEditPrompt(prompt);
+    });
+
+    var improveFlowButton = dialog.content.querySelector("[data-edit-action-improve-flow]");
+    improveFlowButton.addEventListener('click', function () {
+        var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+        var prompt = { "templateId": 'improve-flow', "dataAttributes": { "content": content } };
+        requestEditPrompt(prompt);
+    });
+
     var makeLongerButton = dialog.content.querySelector("[data-edit-action-make-longer]");
     makeLongerButton.addEventListener('click', function () {
         var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
@@ -196,7 +235,6 @@ function bindEditorActions(dialog, editable) {
         var prompt = { "templateId": 'improve-seo', "dataAttributes": { "content": content } };
         requestEditPrompt(prompt);
     });
-
 
     // Translate
     dialog.content.querySelector("[data-edit-action-translate]").addEventListener("click", function () {

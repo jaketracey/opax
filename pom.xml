@@ -39,11 +39,7 @@
 
     <module>ui.apps</module>
 
-    <!-- module>ui.apps.structure</!-->
-
     <module>ui.config</module>
-
-    <!-- module>ui.content</!-->
   </modules>
 
   <properties>

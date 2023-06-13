@@ -55,7 +55,13 @@ public class OpaxServlet extends SlingAllMethodsServlet {
         // return an error if key is not found
         if (StringUtils.isBlank(key)) {
             response.setStatus(400);
-            response.getWriter().write("Open AI API Key not found");
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            JsonObject errorObject = new JsonObject();
+            errorObject.addProperty("error", "Open AI API Key not found");
+
+            response.getWriter().write(errorObject.toString());
             return;
         }
 
@@ -67,19 +73,39 @@ public class OpaxServlet extends SlingAllMethodsServlet {
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("data", StringEscapeUtils.escapeHtml4(result));
                     response.setStatus(200);
+                    response.setContentType("application/json");
                     response.setCharacterEncoding("UTF-8");
+
                     response.getWriter().write(jsonObject.toString());
                 } else {
                     response.setStatus(400);
-                    response.getWriter().write("error");
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+
+                    JsonObject errorObject = new JsonObject();
+                    errorObject.addProperty("error", "Error occurred while generating message");
+
+                    response.getWriter().write(errorObject.toString());
                 }
             } else {
                 response.setStatus(400);
-                response.getWriter().write("error");
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+
+                JsonObject errorObject = new JsonObject();
+                errorObject.addProperty("error", "Invalid prompt");
+
+                response.getWriter().write(errorObject.toString());
             }
         } else {
             response.setStatus(400);
-            response.getWriter().write("error");
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            JsonObject errorObject = new JsonObject();
+            errorObject.addProperty("error", "Empty request body");
+
+            response.getWriter().write(errorObject.toString());
         }
     }
 
@@ -189,6 +215,14 @@ public class OpaxServlet extends SlingAllMethodsServlet {
                         + ".";
             case "proof-read":
                 return promptGuide + "Proofread the following content: " + content + ".";
+            case "make-longer":
+                return promptGuide
+                        + "Make the following content longer by around half, maintaining the essential meaning of the original content: "
+                        + content + ".";
+            case "make-shorter":
+                return promptGuide
+                        + "Make the following content longer by around half, maintaining the essential meaning of the original content: "
+                        + content + ".";
             case "summarize":
                 return promptGuide + "Summarize the following content: " + content + ".";
             case "improve-seo":
