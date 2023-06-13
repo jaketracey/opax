@@ -73,10 +73,16 @@ function bindTemplateActions(dialog, editable) {
         tabs.hidden = true;
         footer.hidden = true;
 
-        prompt = prompt.trim();
-        var servletUrl = `/bin/chat?prompt=${prompt}`;
+        var servletUrl = `/bin/chat`;
 
-        fetch(servletUrl)
+        fetch(servletUrl, {
+            method: 'POST',
+            body: JSON.stringify(prompt),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     const toast = new Coral.Toast().set({
@@ -96,7 +102,10 @@ function bindTemplateActions(dialog, editable) {
                 tabs.hidden = false;
                 footer.hidden = false;
 
-                populateForReview(response.data);
+                // convert back to html
+                var html = new DOMParser().parseFromString(response.data, "text/html").documentElement.textContent;
+
+                populateForReview(html);
 
                 var toolbarOptions = [
                     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons

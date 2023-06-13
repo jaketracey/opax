@@ -16,6 +16,7 @@ function dialogTemplate(path) {
                 id="coral-tablist-${path}"
                 aria-multiselectable="false">
                 <coral-tab
+                    data-write-tab
                     id="tab0-${path}"
                     aria-controls="coral-id-tab0-${path}"
                     class="coral3-Tab is-selected"
@@ -25,6 +26,7 @@ function dialogTemplate(path) {
                     <coral-tab-label>Write</coral-tab-label>
                 </coral-tab>
                 <coral-tab
+                    data-edit-tab
                     id="tab1-${path}"
                     aria-controls="coral-id-tab1-${path}"
                     class="coral3-Tab"
@@ -33,6 +35,7 @@ function dialogTemplate(path) {
                     <coral-tab-label>Edit</coral-tab-label>
                 </coral-tab>
                 <coral-tab
+                    data-translate-tab
                     id="tab2-${path}"
                     aria-controls="coral-id-tab2-${path}"
                     class="coral3-Tab"
@@ -804,17 +807,36 @@ function dialogTemplate(path) {
                                 <button data-edit-action-summarize is="coral-button" variant="primary">Summarize</button>
                             </coral-actionbar-item>
                             <coral-actionbar-item>
-                                <button data-edit-action-make-longer is="coral-button" variant="primary">Make longer</button>
+                                <button data-edit-action-improve-seo variant="primary" is="coral-button">Improve SEO</button>
+                            </coral-actionbar-item>
+                            <coral-actionbar-item>
+                                <button data-edit-action-improve-readability variant="primary" is="coral-button">Improve readability</button>
+                            </coral-actionbar-item>
+                            <coral-actionbar-item>
+                                <button data-edit-action-improve-clarity variant="primary" is="coral-button">Improve clarity</button>
+                            </coral-actionbar-item>
+                            <coral-actionbar-item>
+                                <button data-edit-action-improve-grammar variant="primary" is="coral-button">Improve grammar</button>
+                            </coral-actionbar-item>
+                            <coral-actionbar-item>
+                                <button data-edit-action-improve-tone variant="primary" is="coral-button">Improve tone</button>
+                            </coral-actionbar-item>
+                            <coral-actionbar-item>
+                                <button data-edit-action-improve-structure variant="primary" is="coral-button">Improve structure</button>
+                            </coral-actionbar-item>
+                            <coral-actionbar-item>
+                                <button data-edit-action-improve-flow variant="primary" is="coral-button">Improve flow</button>
                             </coral-actionbar-item>
                             <coral-actionbar-item>
                                 <button data-edit-action-make-shorter is="coral-button" variant="primary">Make shorter</button>
                             </coral-actionbar-item>
                             <coral-actionbar-item>
-                                <button data-edit-action-simplify is="coral-button" variant="primary">Simplify</button>
+                                <button data-edit-action-make-longer is="coral-button" variant="primary">Make longer</button>
                             </coral-actionbar-item>
                             <coral-actionbar-item>
-                                <button data-edit-action-improve-seo variant="primary" is="coral-button">Improve SEO</button>
+                                <button data-edit-action-simplify is="coral-button" variant="primary">Simplify</button>
                             </coral-actionbar-item>
+
                             </coral-actionbar-container>
                         </coral-actionbar>
                         <div

@@ -5,7 +5,7 @@ const common = require('./webpack.common.js');
 var WebpackObfuscator = require('webpack-obfuscator');
 
 module.exports = merge(common, {
-    mode: 'production',
+    mode: 'development',
     optimization: {
         minimize: true,
         minimizer: [

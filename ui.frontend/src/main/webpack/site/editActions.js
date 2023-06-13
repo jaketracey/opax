@@ -81,34 +81,39 @@ function bindEditorActions(dialog, editable) {
         tabs.hidden = true;
         footer.hidden = true;
 
-        prompt = prompt.trim();
-        var servletUrl = `/bin/chat?prompt=${prompt}`;
+        var servletUrl = `/bin/chat`;
 
-        fetch(servletUrl)
-            .then(response => {
-                if (!response.ok) {
-                    const toast = new Coral.Toast().set({
-                        content: {
-                            textContent: 'An error has occured.'
-                        },
-                        duration: 3000,
-                        type: 'error',
-                    });
-                    toast.style.width = '318px';
-                    toast.show();
-                    throw new Error('Network response was not ok for requestTemplatePrompt');
-                }
-                return response.json();
-            }).then(response => {
+        fetch(servletUrl, {
+            method: 'POST',
+            body: JSON.stringify(prompt),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }).then(response => {
+            if (!response.ok) {
+                const toast = new Coral.Toast().set({
+                    content: {
+                        textContent: 'An error has occured.'
+                    },
+                    duration: 3000,
+                    type: 'error',
 
-                console.log(response);
+                });
+                toast.style.width = '318px';
+                toast.show();
+                throw new Error('Network response was not ok for requestEditPrompt');
+            }
+            return response.json();
+        }).then(response => {
+            loader.hidden = true;
+            tabs.hidden = false;
+            footer.hidden = false;
 
-                loader.hidden = true;
-                tabs.hidden = false;
-                footer.hidden = false;
-
-                updateEditor(response.data, dialog);
-            })
+            // convert back to html
+            var html = new DOMParser().parseFromString(response.data, "text/html");
+            updateEditor(html.documentElement.textContent, dialog);
+        })
 
             .catch(error => {
                 const toast = new Coral.Toast().set({
@@ -147,51 +152,89 @@ function bindEditorActions(dialog, editable) {
         });
     });
 
-    const promptGuide = `Please respond in JSON format. Put the response into the data key of the response. Respond inside that value as HTML without divs and h2 instead of h1 elements.  Use h2, h3, h4 as appropriate for headings. Use <p> elements for paragraphs. Do not use <br> elements. Escape any control characters. Here is the prompt to use: `;
-
-
     var proofReadButton = dialog.content.querySelector("[data-edit-action-proof-read]");
     proofReadButton.addEventListener('click', function () {
         var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
-        var prompt = promptGuide + `Correct any spelling or grammatical mistakes in the following content. Do not change any language unless absolutely needed to correct mistakes. Content: ${encodeURIComponent(content)}`;
+        var prompt = { "templateId": 'proof-read', "dataAttributes": { "content": content } };
         requestEditPrompt(prompt);
     });
 
     var summarizeButton = dialog.content.querySelector("[data-edit-action-summarize]");
     summarizeButton.addEventListener('click', function () {
         var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
-        var prompt = promptGuide + `Please provide a brief summary of this content: ${encodeURIComponent(content)}`;
+        var prompt = { "templateId": 'summarize', "dataAttributes": { "content": content } };
+        requestEditPrompt(prompt);
+    });
+
+    var improveReadabilityButton = dialog.content.querySelector("[data-edit-action-improve-readability]");
+    improveReadabilityButton.addEventListener('click', function () {
+        var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+        var prompt = { "templateId": 'improve-readability', "dataAttributes": { "content": content } };
+        requestEditPrompt(prompt);
+    });
+
+    var improveClarityButton = dialog.content.querySelector("[data-edit-action-improve-clarity]");
+    improveClarityButton.addEventListener('click', function () {
+        var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+        var prompt = { "templateId": 'improve-clarity', "dataAttributes": { "content": content } };
+        requestEditPrompt(prompt);
+    });
+
+    var improveGrammarButton = dialog.content.querySelector("[data-edit-action-improve-grammar]");
+    improveGrammarButton.addEventListener('click', function () {
+        var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+        var prompt = { "templateId": 'improve-grammar', "dataAttributes": { "content": content } };
+        requestEditPrompt(prompt);
+    });
+
+    var improveToneButton = dialog.content.querySelector("[data-edit-action-improve-tone]");
+    improveToneButton.addEventListener('click', function () {
+        var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+        var prompt = { "templateId": 'improve-tone', "dataAttributes": { "content": content } };
+        requestEditPrompt(prompt);
+    });
+
+    var improveStructureButton = dialog.content.querySelector("[data-edit-action-improve-structure]");
+    improveStructureButton.addEventListener('click', function () {
+        var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+        var prompt = { "templateId": 'improve-structure', "dataAttributes": { "content": content } };
+        requestEditPrompt(prompt);
+    });
+
+    var improveFlowButton = dialog.content.querySelector("[data-edit-action-improve-flow]");
+    improveFlowButton.addEventListener('click', function () {
+        var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+        var prompt = { "templateId": 'improve-flow', "dataAttributes": { "content": content } };
         requestEditPrompt(prompt);
     });
 
     var makeLongerButton = dialog.content.querySelector("[data-edit-action-make-longer]");
     makeLongerButton.addEventListener('click', function () {
         var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
-        var prompt = promptGuide + `Please increase the overall length of the following content, while retaining the same information: ${encodeURIComponent(content)}`;
+        var prompt = { "templateId": 'make-longer', "dataAttributes": { "content": content } };
         requestEditPrompt(prompt);
     });
 
     var makeShorterButton = dialog.content.querySelector("[data-edit-action-make-shorter]");
     makeShorterButton.addEventListener('click', function () {
         var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
-        var prompt = promptGuide + `Please reduce the overall length of the following content, while retaining the same information: ${encodeURIComponent(content)}`;
+        var prompt = { "templateId": 'make-shorter', "dataAttributes": { "content": content } };
         requestEditPrompt(prompt);
     });
 
     var simplifyButton = dialog.content.querySelector("[data-edit-action-simplify]");
     simplifyButton.addEventListener('click', function () {
         var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
-        var prompt = promptGuide + `Simplify this content, while retaining the same information: ${encodeURIComponent(content)}`;
+        var prompt = { "templateId": 'simplify', "dataAttributes": { "content": content } };
         requestEditPrompt(prompt);
     });
 
     var improveSEOButton = dialog.content.querySelector("[data-edit-action-improve-seo]");
     improveSEOButton.addEventListener('click', function () {
         var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
-        var prompt = promptGuide + `Rewrite the following content to improve search engine optimization: ${encodeURIComponent(content)}`;
+        var prompt = { "templateId": 'improve-seo', "dataAttributes": { "content": content } };
         requestEditPrompt(prompt);
     });
-
 
     // Translate
     dialog.content.querySelector("[data-edit-action-translate]").addEventListener("click", function () {
@@ -202,9 +245,12 @@ function bindEditorActions(dialog, editable) {
 
             success: function (res) {
                 currentContent = res.text;
-                var targetLanguage = dialog.content.querySelector("[data-edit-translate-targetlang]").value;
-                var prompt = `Translate the following text into ${targetLanguage}: ${encodeURIComponent(currentContent)}. Retain any existing HTML elements present in the content. Only modify the text.`;
-                requestPrompt(prompt);
+                var language = dialog.content.querySelector("[data-edit-translate-targetlang]").value;
+                var content = dialog.content.querySelector("[data-edit-editor] > div").innerHTML.trim();
+                var prompt = { "templateId": 'translate', "dataAttributes": { "content": content, "language": language } };
+
+                requestEditPrompt(prompt);
+                dialog.content.querySelector("[data-edit-tab]").click();
             },
             error: function (request, error) {
                 console.log("Request: " + JSON.stringify(request) + "\n" + "Error: " + JSON.stringify(error));
