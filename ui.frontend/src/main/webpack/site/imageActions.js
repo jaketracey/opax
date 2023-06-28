@@ -36,7 +36,7 @@ function bindImageEvents(dialog) {
                         textContent: 'An error has occured.'
                     },
                     duration: 3000,
-                    type: 'error',
+                    variant: 'error',
                 });
                 toast.style.width = '318px';
                 toast.show();

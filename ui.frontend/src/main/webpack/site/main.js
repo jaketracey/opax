@@ -52,7 +52,7 @@ import { bindTemplateActions } from './templateActions';
       movable: true,
       closable: 'on',
       header: {
-        innerHTML: `Opax AI Content Generation`
+        innerHTML: `AI Content Generation`
       },
       content: {
         innerHTML: dialogTemplate(path)

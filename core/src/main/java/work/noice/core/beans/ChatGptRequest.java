@@ -11,7 +11,7 @@ public class ChatGptRequest {
     private List<Message> messages;
 
     public ChatGptRequest(String prompt, String model, String role) {
-        this.max_tokens = 3500;
+        this.max_tokens = 1500;
         this.model = model;
         this.messages = new ArrayList<>();
         Message message = new Message();

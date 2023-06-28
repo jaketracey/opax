@@ -10,8 +10,9 @@ import work.noice.core.services.OpaxService;
 
 /**
  * @author Anirudh Sharma
- * <p>
- * Implementation class of OpaxService interface and this class reads values from the OSGi configuration as well
+ *         <p>
+ *         Implementation class of OpaxService interface and this class reads
+ *         values from the OSGi configuration as well
  */
 @Component(service = OpaxService.class, immediate = true)
 @Designate(ocd = OpaxConfiguration.class)
@@ -33,7 +34,6 @@ public class OpaxServiceImpl implements OpaxService {
     @Activate
     protected void activate(OpaxConfiguration configuration) {
         toolbarEnabled = configuration.getToolbarEnabled();
-        opaxApiKey = configuration.getOpaxApiKey();
         components = configuration.getComponents();
         openAIAPIKey = configuration.getOpenAIAPIKey();
     }
@@ -52,10 +52,4 @@ public class OpaxServiceImpl implements OpaxService {
     public String[] getComponents() {
         return components;
     }
-
-    @Override
-    public String getOpaxApiKey() {
-        return opaxApiKey;
-    }
-
 }

@@ -5,7 +5,5 @@ public interface OpaxService {
 
     String[] getComponents();
 
-    String getOpaxApiKey();
-
     String getOpenAIAPIKey();
 }

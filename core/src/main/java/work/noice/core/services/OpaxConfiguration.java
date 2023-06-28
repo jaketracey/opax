@@ -6,10 +6,10 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 /**
  * @author Jake Tracey
- * <p>
- * This interface represents an OSGi configuration which can be found at
- * -
- * ./system/console/configMgr
+ *         <p>
+ *         This interface represents an OSGi configuration which can be found at
+ *         -
+ *         ./system/console/configMgr
  */
 @ObjectClassDefinition(name = "Opax - Configuration", description = "Configure the Opax AI integration with AEM")
 public @interface OpaxConfiguration {
@@ -30,14 +30,6 @@ public @interface OpaxConfiguration {
      */
     @AttributeDefinition(name = "Components to inject the AI toolbar", description = "Enter the specific component path where you wish the AI toolbar to be injected. For example, /apps/core/wcm/components/text/v2/text")
     String[] getComponents();
-
-    /**
-     * Returns the Opax API key
-     *
-     * @return {@link String}
-     */
-    @AttributeDefinition(name = "Opax API Key", description = "Enter your API key. You can generate a key from https://opax.ai/dashboard")
-    String getOpaxApiKey();
 
     /**
      * Returns the Open AI API key

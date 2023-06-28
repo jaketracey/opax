@@ -97,11 +97,13 @@ function bindEditorActions(dialog, editable) {
                         textContent: 'An error has occured.'
                     },
                     duration: 3000,
-                    type: 'error',
-
+                    variant: 'error',
                 });
                 toast.style.width = '318px';
                 toast.show();
+                loader.hidden = true;
+                tabs.hidden = false;
+                footer.hidden = false;
                 throw new Error('Network response was not ok for requestEditPrompt');
             }
             return response.json();
@@ -121,11 +123,14 @@ function bindEditorActions(dialog, editable) {
                         textContent: 'An error has occured.'
                     },
                     duration: 3000,
-                    type: 'error',
+                    variant: 'error',
                 });
                 toast.style.width = '318px';
                 toast.show();
                 console.error('There was a problem with the fetch operation:', error);
+                loader.hidden = true;
+                tabs.hidden = false;
+                footer.hidden = false;
             });
     }
 
