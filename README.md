@@ -2,6 +2,8 @@
 
 Opax AI is a powerful integration tool that brings the capabilities of OpenAI's ChatGPT into Adobe Experience Manager (AEM). It leverages AEM's robust content management features and combines them with the versatility and power of ChatGPT, allowing for a sophisticated, AI-driven user experience.
 
+https://github.com/jaketracey/opaxai/assets/146648/46e4debb-d5a6-4c13-8480-4616fed33e37
+
 The extension attaches to any instance of the v2 wcm text component, but you can modify it to your needs.
 
 ## Features
