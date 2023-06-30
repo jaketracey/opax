@@ -1,0 +1,84 @@
+[data-opax-dialog] {
+    min-width: calc(70vw);
+
+    coral-dialog-content {
+        padding: 1px;
+    }
+
+    #gpt-loader {
+        padding: 100px 0px;
+
+        p {
+            text-align: center;
+            margin-top: 80px;
+        }
+    }
+
+    [coral-wizardview-steplist] {
+        margin-bottom: 20px;
+    }
+
+    [data-ai-tabs] {
+        margin-top: 0px;
+    }
+
+    [data-template-selector] coral-masonry-item {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        background: #fff;
+    }
+
+    [data-template-selector] coral-masonry-item:hover {
+        box-shadow: 0 0 10px #ccc;
+    }
+
+    [data-template-selector] coral-masonry-item h3 {
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+
+    [data-template-panel] h2 {
+        margin-bottom: 10px;
+    }
+
+    [data-editor-container] {
+        width: auto;
+        height: 400px;
+        overflow-y: auto;
+        background: #fff;
+        margin-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        line-height: 1.5rem;
+        box-shadow: inset rgba(0, 0, 0, 0.1) 0px 1px 4px;
+    }
+
+    [id^="aiContentDialog-"] .coral3-Dialog-wrapper {
+        width: 750px !important;
+        margin-left: -350px !important;
+    }
+
+    [data-image-holder] {
+        margin-top: 26px;
+        display: inline-block;
+        width: 400px;
+        height: 400px;
+        position: relative;
+        text-align: center;
+        border: 1px dashed gray;
+    }
+
+    [data-image-container] {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: inherit;
+    }
+
+}

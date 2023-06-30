@@ -1,0 +1,7 @@
+{
+  "getComponents": [
+    "apps/test/component"
+  ],
+  "getToolbarEnabled": true,
+  "getOpenAIAPIKey": "xxx"
+}
