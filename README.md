@@ -57,6 +57,7 @@ This tool uses the OpenAI GPT model and therefore any responses it generates are
 - Adobe, for the AEM content management system.
 - OpenAI, for the GPT model.
 - Albin Issac, for his inspirational [post](https://techforum.medium.com/how-to-connect-adobe-experience-manager-aem-with-chatgpt-312651291713) and initial code upon which this extension was based. Connect with Albin on [LinkedIn](https://www.linkedin.com/in/albin-issac-56917523/).
+- Dipankar Gupta for his guidance in navigating OSGI configurations :)
 
 ---
 
