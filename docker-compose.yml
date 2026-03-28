@@ -1,0 +1,162 @@
+# =============================================================================
+# OPAX Docker Compose
+#
+# Usage:
+#   docker compose up -d              # start core services (api + web + nginx)
+#   docker compose up -d --build      # rebuild and start
+#   docker compose logs -f api        # tail API logs
+#   docker compose run --rm pipeline  # run daily pipeline
+#   docker compose down               # stop all services
+#
+# Profiles:
+#   (default)    api, web, nginx
+#   pipeline     one-shot pipeline worker
+#   production   adds certbot for SSL renewal
+#   full         adds redis cache layer
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # FastAPI Backend
+  # ---------------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: opax-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - opax-data:/data
+    env_file:
+      - .env
+    environment:
+      - OPAX_DB_PATH=/data/parli.db
+      - OPAX_EMBEDDINGS_DIR=/data/embeddings
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
+  # ---------------------------------------------------------------------------
+  # Next.js Frontend
+  # ---------------------------------------------------------------------------
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: opax-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # ---------------------------------------------------------------------------
+  # Nginx Reverse Proxy
+  # ---------------------------------------------------------------------------
+  nginx:
+    image: nginx:alpine
+    container_name: opax-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - api
+      - web
+    volumes:
+      - ./deploy/nginx-docker.conf:/etc/nginx/conf.d/default.conf:ro
+      - certbot-etc:/etc/letsencrypt:ro
+      - certbot-var:/var/lib/letsencrypt
+      - certbot-www:/var/www/certbot:ro
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # Certbot (SSL certificate renewal -- production profile)
+  # ---------------------------------------------------------------------------
+  certbot:
+    image: certbot/certbot
+    container_name: opax-certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - certbot-www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done'"
+    profiles:
+      - production
+
+  # ---------------------------------------------------------------------------
+  # Pipeline Worker (one-shot, run via: docker compose run --rm pipeline)
+  # ---------------------------------------------------------------------------
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipeline
+    container_name: opax-pipeline
+    volumes:
+      - opax-data:/data
+    env_file:
+      - .env
+    environment:
+      - OPAX_DB_PATH=/data/parli.db
+      - OPAX_EMBEDDINGS_DIR=/data/embeddings
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    profiles:
+      - pipeline
+
+  # ---------------------------------------------------------------------------
+  # Redis (cache layer -- full profile, for future rate limiting / caching)
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: opax-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --appendonly yes
+      --save 60 100
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - redis-data:/data
+    profiles:
+      - full
+
+volumes:
+  opax-data:
+    driver: local
+  redis-data:
+    driver: local
+  certbot-etc:
+    driver: local
+  certbot-var:
+    driver: local
+  certbot-www:
+    driver: local

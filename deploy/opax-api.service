@@ -1,0 +1,26 @@
+[Unit]
+Description=OPAX FastAPI Backend
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=opax
+Group=opax
+WorkingDirectory=/opt/opax
+Environment=PATH=/opt/opax/.venv/bin:/usr/local/bin:/usr/bin:/bin
+Environment=OPAX_DB_PATH=/opt/opax/data/hansard.db
+Environment=OPAX_EMBEDDINGS_PATH=/opt/opax/data/embeddings.npy
+ExecStart=/opt/opax/.venv/bin/uvicorn parli.api:app --host 127.0.0.1 --port 8000 --workers 2
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=opax-api
+
+# Resource limits
+MemoryMax=3G
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

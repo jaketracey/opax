@@ -1,0 +1,1695 @@
+=== Loading wragge/hansard-xml speeches ===
+  Found 13247 XML files
+  Loaded 424976 existing dedup keys
+  [58/13247] 500 inserted, 2240 deduped
+  [67/13247] 1000 inserted, 2240 deduped
+  [89/13247] 1500 inserted, 2240 deduped
+  [102/13247] 2000 inserted, 2240 deduped
+  [109/13247] 2500 inserted, 2240 deduped
+  [121/13247] 3000 inserted, 2279 deduped
+  [130/13247] 3500 inserted, 2279 deduped
+  [143/13247] 4000 inserted, 2279 deduped
+  [154/13247] 4500 inserted, 2279 deduped
+  [163/13247] 5000 inserted, 2279 deduped
+  [175/13247] 5500 inserted, 2279 deduped
+  [187/13247] 6000 inserted, 2279 deduped
+  [199/13247] 6500 inserted, 2279 deduped
+  [214/13247] 7000 inserted, 2279 deduped
+  [232/13247] 7500 inserted, 2279 deduped
+  [249/13247] 8000 inserted, 2279 deduped
+  [266/13247] 8500 inserted, 2279 deduped
+  [285/13247] 9000 inserted, 2279 deduped
+  [297/13247] 9500 inserted, 2279 deduped
+  [326/13247] 10000 inserted, 2279 deduped
+  [340/13247] 10500 inserted, 2279 deduped
+  [368/13247] 11000 inserted, 2279 deduped
+  [395/13247] 11500 inserted, 2279 deduped
+  [408/13247] 12000 inserted, 2279 deduped
+  [425/13247] 12500 inserted, 2279 deduped
+  [449/13247] 13000 inserted, 2279 deduped
+  [465/13247] 13500 inserted, 2279 deduped
+  [478/13247] 14000 inserted, 2279 deduped
+  [496/13247] 14500 inserted, 2279 deduped
+  [506/13247] 15000 inserted, 2279 deduped
+  [525/13247] 15500 inserted, 2279 deduped
+  [539/13247] 16000 inserted, 2279 deduped
+  [554/13247] 16500 inserted, 2279 deduped
+  [562/13247] 17000 inserted, 2279 deduped
+  [572/13247] 17500 inserted, 2280 deduped
+  [579/13247] 18000 inserted, 2280 deduped
+  [596/13247] 18500 inserted, 2280 deduped
+  [604/13247] 19000 inserted, 2280 deduped
+  [624/13247] 19500 inserted, 2280 deduped
+  [636/13247] 20000 inserted, 2280 deduped
+  [647/13247] 20500 inserted, 2280 deduped
+  [654/13247] 21000 inserted, 2280 deduped
+  [662/13247] 21500 inserted, 2280 deduped
+  [666/13247] 22000 inserted, 2280 deduped
+  [670/13247] 22500 inserted, 2280 deduped
+  [673/13247] 23000 inserted, 2280 deduped
+  [679/13247] 23500 inserted, 2280 deduped
+  [690/13247] 24000 inserted, 2280 deduped
+  [702/13247] 24500 inserted, 2280 deduped
+  [710/13247] 25000 inserted, 2280 deduped
+  [719/13247] 25500 inserted, 2280 deduped
+  [734/13247] 26000 inserted, 2280 deduped
+  [754/13247] 26500 inserted, 2280 deduped
+  [767/13247] 27000 inserted, 2280 deduped
+  [791/13247] 27500 inserted, 2280 deduped
+  [804/13247] 28000 inserted, 2280 deduped
+  [817/13247] 28500 inserted, 2280 deduped
+  [837/13247] 29000 inserted, 2280 deduped
+  [853/13247] 29500 inserted, 2280 deduped
+  [861/13247] 30000 inserted, 2280 deduped
+  [872/13247] 30500 inserted, 2280 deduped
+  [887/13247] 31000 inserted, 2280 deduped
+  [904/13247] 31500 inserted, 2280 deduped
+  [915/13247] 32000 inserted, 2280 deduped
+  [923/13247] 32500 inserted, 2280 deduped
+  [941/13247] 33000 inserted, 2280 deduped
+  [949/13247] 33500 inserted, 2280 deduped
+  [973/13247] 34000 inserted, 2280 deduped
+  [987/13247] 34500 inserted, 2280 deduped
+  [1000/13247] 34867 inserted, 2280 deduped
+  [1004/13247] 35000 inserted, 2280 deduped
+  [1007/13247] 35500 inserted, 2280 deduped
+  [1018/13247] 36000 inserted, 2280 deduped
+  [1039/13247] 36500 inserted, 2280 deduped
+  [1041/13247] 37000 inserted, 2280 deduped
+  [1067/13247] 37500 inserted, 2280 deduped
+  [1074/13247] 38000 inserted, 2280 deduped
+  [1084/13247] 38500 inserted, 2280 deduped
+  [1092/13247] 39000 inserted, 2280 deduped
+  [1112/13247] 39500 inserted, 2280 deduped
+  [1129/13247] 40000 inserted, 2280 deduped
+  [1153/13247] 40500 inserted, 2280 deduped
+  [1170/13247] 41000 inserted, 2280 deduped
+  [1187/13247] 41500 inserted, 2280 deduped
+  [1210/13247] 42000 inserted, 2280 deduped
+  [1231/13247] 42500 inserted, 2281 deduped
+  [1248/13247] 43000 inserted, 2281 deduped
+  [1260/13247] 43500 inserted, 2281 deduped
+  [1277/13247] 44000 inserted, 2281 deduped
+  [1296/13247] 44500 inserted, 2281 deduped
+  [1310/13247] 45000 inserted, 2281 deduped
+  [1322/13247] 45500 inserted, 2281 deduped
+  [1339/13247] 46000 inserted, 2281 deduped
+  [1356/13247] 46500 inserted, 2281 deduped
+  [1377/13247] 47000 inserted, 2281 deduped
+  [1393/13247] 47500 inserted, 2281 deduped
+  [1401/13247] 48000 inserted, 2281 deduped
+  [1412/13247] 48500 inserted, 2281 deduped
+  [1430/13247] 49000 inserted, 2281 deduped
+  [1445/13247] 49500 inserted, 2281 deduped
+  [1467/13247] 50000 inserted, 2281 deduped
+  [1482/13247] 50500 inserted, 2281 deduped
+  [1496/13247] 51000 inserted, 2281 deduped
+  [1514/13247] 51500 inserted, 2281 deduped
+  [1537/13247] 52000 inserted, 2281 deduped
+  [1554/13247] 52500 inserted, 2282 deduped
+  [1568/13247] 53000 inserted, 2282 deduped
+  [1583/13247] 53500 inserted, 2282 deduped
+  [1600/13247] 54000 inserted, 2282 deduped
+  [1613/13247] 54500 inserted, 2282 deduped
+  [1628/13247] 55000 inserted, 2282 deduped
+  [1644/13247] 55500 inserted, 2282 deduped
+  [1656/13247] 56000 inserted, 2282 deduped
+  [1677/13247] 56500 inserted, 2282 deduped
+  [1691/13247] 57000 inserted, 2282 deduped
+  [1703/13247] 57500 inserted, 2282 deduped
+  [1711/13247] 58000 inserted, 2282 deduped
+  [1731/13247] 58500 inserted, 2282 deduped
+  [1745/13247] 59000 inserted, 2282 deduped
+  [1754/13247] 59500 inserted, 2282 deduped
+  [1777/13247] 60000 inserted, 2283 deduped
+  [1793/13247] 60500 inserted, 2283 deduped
+  [1803/13247] 61000 inserted, 2285 deduped
+  [1814/13247] 61500 inserted, 2285 deduped
+  [1832/13247] 62000 inserted, 2286 deduped
+  [1851/13247] 62500 inserted, 2286 deduped
+  [1860/13247] 63000 inserted, 2286 deduped
+  [1875/13247] 63500 inserted, 2286 deduped
+  [1897/13247] 64000 inserted, 2286 deduped
+  [1920/13247] 64500 inserted, 2286 deduped
+  [1932/13247] 65000 inserted, 2286 deduped
+  [1942/13247] 65500 inserted, 2286 deduped
+  [1960/13247] 66000 inserted, 2286 deduped
+  [1974/13247] 66500 inserted, 2286 deduped
+  [1989/13247] 67000 inserted, 2286 deduped
+  [2000/13247] 67220 inserted, 2286 deduped
+  [2012/13247] 67500 inserted, 2286 deduped
+  [2020/13247] 68000 inserted, 2286 deduped
+  [2040/13247] 68500 inserted, 2286 deduped
+  [2058/13247] 69000 inserted, 2286 deduped
+  [2074/13247] 69500 inserted, 2286 deduped
+  [2086/13247] 70000 inserted, 2286 deduped
+  [2099/13247] 70500 inserted, 2286 deduped
+  [2111/13247] 71000 inserted, 2286 deduped
+  [2122/13247] 71500 inserted, 2286 deduped
+  [2145/13247] 72000 inserted, 2286 deduped
+  [2156/13247] 72500 inserted, 2286 deduped
+  [2167/13247] 73000 inserted, 2286 deduped
+  [2177/13247] 73500 inserted, 2286 deduped
+  [2189/13247] 74000 inserted, 2286 deduped
+  [2199/13247] 74500 inserted, 2286 deduped
+  [2205/13247] 75000 inserted, 2286 deduped
+  [2210/13247] 75500 inserted, 2287 deduped
+  [2229/13247] 76000 inserted, 2287 deduped
+  [2240/13247] 76500 inserted, 2287 deduped
+  [2248/13247] 77000 inserted, 2287 deduped
+  [2261/13247] 77500 inserted, 2288 deduped
+  [2271/13247] 78000 inserted, 2288 deduped
+  [2286/13247] 78500 inserted, 2288 deduped
+  [2298/13247] 79000 inserted, 2288 deduped
+  [2310/13247] 79500 inserted, 2288 deduped
+  [2326/13247] 80000 inserted, 2288 deduped
+  [2334/13247] 80500 inserted, 2288 deduped
+  [2348/13247] 81000 inserted, 2294 deduped
+  [2362/13247] 81500 inserted, 2294 deduped
+  [2373/13247] 82000 inserted, 2294 deduped
+  [2385/13247] 82500 inserted, 2294 deduped
+  [2398/13247] 83000 inserted, 2294 deduped
+  [2403/13247] 83500 inserted, 2294 deduped
+  [2411/13247] 84000 inserted, 2294 deduped
+  [2418/13247] 84500 inserted, 2294 deduped
+  [2431/13247] 85000 inserted, 2294 deduped
+  [2445/13247] 85500 inserted, 2294 deduped
+  [2459/13247] 86000 inserted, 2294 deduped
+  [2470/13247] 86500 inserted, 2294 deduped
+  [2486/13247] 87000 inserted, 2294 deduped
+  [2500/13247] 87500 inserted, 2294 deduped
+  [2510/13247] 88000 inserted, 2294 deduped
+  [2518/13247] 88500 inserted, 2294 deduped
+  [2527/13247] 89000 inserted, 2294 deduped
+  [2538/13247] 89500 inserted, 2294 deduped
+  [2547/13247] 90000 inserted, 2294 deduped
+  [2558/13247] 90500 inserted, 2294 deduped
+  [2568/13247] 91000 inserted, 2294 deduped
+  [2574/13247] 91500 inserted, 2294 deduped
+  [2584/13247] 92000 inserted, 2294 deduped
+  [2596/13247] 92500 inserted, 2294 deduped
+  [2609/13247] 93000 inserted, 2294 deduped
+  [2620/13247] 93500 inserted, 2294 deduped
+  [2629/13247] 94000 inserted, 2294 deduped
+  [2648/13247] 94500 inserted, 2294 deduped
+  [2658/13247] 95000 inserted, 2294 deduped
+  [2671/13247] 95500 inserted, 2294 deduped
+  [2683/13247] 96000 inserted, 2294 deduped
+  [2695/13247] 96500 inserted, 2295 deduped
+  [2716/13247] 97000 inserted, 2295 deduped
+  [2728/13247] 97500 inserted, 2295 deduped
+  [2749/13247] 98000 inserted, 2295 deduped
+  [2761/13247] 98500 inserted, 2295 deduped
+  [2780/13247] 99000 inserted, 2295 deduped
+  [2786/13247] 99500 inserted, 2295 deduped
+  [2801/13247] 100000 inserted, 2295 deduped
+  [2818/13247] 100500 inserted, 2295 deduped
+  [2830/13247] 101000 inserted, 2295 deduped
+  [2846/13247] 101500 inserted, 2295 deduped
+  [2858/13247] 102000 inserted, 2295 deduped
+  [2874/13247] 102500 inserted, 2295 deduped
+  [2887/13247] 103000 inserted, 2295 deduped
+  [2899/13247] 103500 inserted, 2295 deduped
+  [2919/13247] 104000 inserted, 2295 deduped
+  [2927/13247] 104500 inserted, 2295 deduped
+  [2940/13247] 105000 inserted, 2295 deduped
+  [2961/13247] 105500 inserted, 2295 deduped
+  [2971/13247] 106000 inserted, 2295 deduped
+  [2977/13247] 106500 inserted, 2295 deduped
+  [2991/13247] 107000 inserted, 2295 deduped
+  [3000/13247] 107431 inserted, 2295 deduped
+  [3003/13247] 107500 inserted, 2295 deduped
+  [3011/13247] 108000 inserted, 2295 deduped
+  [3030/13247] 108500 inserted, 2295 deduped
+  [3039/13247] 109000 inserted, 2295 deduped
+  [3051/13247] 109500 inserted, 2295 deduped
+  [3072/13247] 110000 inserted, 2295 deduped
+  [3084/13247] 110500 inserted, 2295 deduped
+  [3102/13247] 111000 inserted, 2295 deduped
+  [3114/13247] 111500 inserted, 2295 deduped
+  [3141/13247] 112000 inserted, 2295 deduped
+  [3153/13247] 112500 inserted, 2295 deduped
+  [3165/13247] 113000 inserted, 2295 deduped
+  [3175/13247] 113500 inserted, 2295 deduped
+  [3195/13247] 114000 inserted, 2295 deduped
+  [3207/13247] 114500 inserted, 2295 deduped
+  [3226/13247] 115000 inserted, 2295 deduped
+  [3241/13247] 115500 inserted, 2295 deduped
+  [3254/13247] 116000 inserted, 2295 deduped
+  [3272/13247] 116500 inserted, 2295 deduped
+  [3287/13247] 117000 inserted, 2295 deduped
+  [3299/13247] 117500 inserted, 2295 deduped
+  [3312/13247] 118000 inserted, 2295 deduped
+  [3322/13247] 118500 inserted, 2295 deduped
+  [3342/13247] 119000 inserted, 2295 deduped
+  [3361/13247] 119500 inserted, 2295 deduped
+  [3385/13247] 120000 inserted, 2295 deduped
+  [3404/13247] 120500 inserted, 2295 deduped
+  [3429/13247] 121000 inserted, 2295 deduped
+  [3448/13247] 121500 inserted, 2295 deduped
+  [3462/13247] 122000 inserted, 2295 deduped
+  [3489/13247] 122500 inserted, 2295 deduped
+  [3503/13247] 123000 inserted, 2295 deduped
+  [3528/13247] 123500 inserted, 2295 deduped
+  [3548/13247] 124000 inserted, 2295 deduped
+  [3565/13247] 124500 inserted, 2295 deduped
+  [3578/13247] 125000 inserted, 2295 deduped
+  [3596/13247] 125500 inserted, 2295 deduped
+  [3613/13247] 126000 inserted, 2295 deduped
+  [3619/13247] 126500 inserted, 2295 deduped
+  [3637/13247] 127000 inserted, 2295 deduped
+  [3655/13247] 127500 inserted, 2295 deduped
+  [3668/13247] 128000 inserted, 2295 deduped
+  [3684/13247] 128500 inserted, 2295 deduped
+  [3698/13247] 129000 inserted, 2295 deduped
+  [3716/13247] 129500 inserted, 2295 deduped
+  [3734/13247] 130000 inserted, 2295 deduped
+  [3749/13247] 130500 inserted, 2296 deduped
+  [3764/13247] 131000 inserted, 2296 deduped
+  [3785/13247] 131500 inserted, 2296 deduped
+  [3802/13247] 132000 inserted, 2296 deduped
+  [3814/13247] 132500 inserted, 2296 deduped
+  [3832/13247] 133000 inserted, 2296 deduped
+  [3846/13247] 133500 inserted, 2296 deduped
+  [3863/13247] 134000 inserted, 2296 deduped
+  [3877/13247] 134500 inserted, 2296 deduped
+  [3889/13247] 135000 inserted, 2296 deduped
+  [3908/13247] 135500 inserted, 2297 deduped
+  [3925/13247] 136000 inserted, 2297 deduped
+  [3941/13247] 136500 inserted, 2299 deduped
+  [3955/13247] 137000 inserted, 2299 deduped
+  [3970/13247] 137500 inserted, 2299 deduped
+  [3989/13247] 138000 inserted, 2299 deduped
+  [4000/13247] 138365 inserted, 2299 deduped
+  [4005/13247] 138500 inserted, 2299 deduped
+  [4017/13247] 139000 inserted, 2299 deduped
+  [4033/13247] 139500 inserted, 2299 deduped
+  [4047/13247] 140000 inserted, 2299 deduped
+  [4062/13247] 140500 inserted, 2300 deduped
+  [4078/13247] 141000 inserted, 2300 deduped
+  [4091/13247] 141500 inserted, 2300 deduped
+  [4104/13247] 142000 inserted, 2300 deduped
+  [4119/13247] 142500 inserted, 2300 deduped
+  [4132/13247] 143000 inserted, 2300 deduped
+  [4150/13247] 143500 inserted, 2300 deduped
+  [4163/13247] 144000 inserted, 2300 deduped
+  [4171/13247] 144500 inserted, 2300 deduped
+  [4189/13247] 145000 inserted, 2300 deduped
+  [4202/13247] 145500 inserted, 2300 deduped
+  [4216/13247] 146000 inserted, 2300 deduped
+  [4230/13247] 146500 inserted, 2300 deduped
+  [4242/13247] 147000 inserted, 2301 deduped
+  [4256/13247] 147500 inserted, 2301 deduped
+  [4268/13247] 148000 inserted, 2301 deduped
+  [4285/13247] 148500 inserted, 2301 deduped
+  [4296/13247] 149000 inserted, 2301 deduped
+  [4310/13247] 149500 inserted, 2301 deduped
+  [4325/13247] 150000 inserted, 2301 deduped
+  [4344/13247] 150500 inserted, 2301 deduped
+  [4356/13247] 151000 inserted, 2303 deduped
+  [4367/13247] 151500 inserted, 2303 deduped
+  [4384/13247] 152000 inserted, 2303 deduped
+  [4399/13247] 152500 inserted, 2303 deduped
+  [4415/13247] 153000 inserted, 2303 deduped
+  [4431/13247] 153500 inserted, 2303 deduped
+  [4445/13247] 154000 inserted, 2303 deduped
+  [4459/13247] 154500 inserted, 2303 deduped
+  [4465/13247] 155000 inserted, 2303 deduped
+  [4478/13247] 155500 inserted, 2303 deduped
+  [4493/13247] 156000 inserted, 2303 deduped
+  [4509/13247] 156500 inserted, 2303 deduped
+  [4523/13247] 157000 inserted, 2303 deduped
+  [4538/13247] 157500 inserted, 2303 deduped
+  [4554/13247] 158000 inserted, 2303 deduped
+  [4561/13247] 158500 inserted, 2304 deduped
+  [4576/13247] 159000 inserted, 2304 deduped
+  [4590/13247] 159500 inserted, 2304 deduped
+  [4606/13247] 160000 inserted, 2304 deduped
+  [4621/13247] 160500 inserted, 2304 deduped
+  [4633/13247] 161000 inserted, 2304 deduped
+  [4640/13247] 161500 inserted, 2304 deduped
+  [4646/13247] 162000 inserted, 2304 deduped
+  [4662/13247] 162500 inserted, 2307 deduped
+  [4675/13247] 163000 inserted, 2307 deduped
+  [4684/13247] 163500 inserted, 2309 deduped
+  [4697/13247] 164000 inserted, 2310 deduped
+  [4703/13247] 164500 inserted, 2311 deduped
+  [4717/13247] 165000 inserted, 2311 deduped
+  [4724/13247] 165500 inserted, 2311 deduped
+  [4736/13247] 166000 inserted, 2311 deduped
+  [4746/13247] 166500 inserted, 2311 deduped
+  [4757/13247] 167000 inserted, 2311 deduped
+  [4765/13247] 167500 inserted, 2311 deduped
+  [4775/13247] 168000 inserted, 2311 deduped
+  [4783/13247] 168500 inserted, 2312 deduped
+  [4789/13247] 169000 inserted, 2313 deduped
+  [4795/13247] 169500 inserted, 2313 deduped
+  [4807/13247] 170000 inserted, 2313 deduped
+  [4814/13247] 170500 inserted, 2313 deduped
+  [4821/13247] 171000 inserted, 2313 deduped
+  [4828/13247] 171500 inserted, 2313 deduped
+  [4834/13247] 172000 inserted, 2313 deduped
+  [4841/13247] 172500 inserted, 2313 deduped
+  [4848/13247] 173000 inserted, 2313 deduped
+  [4855/13247] 173500 inserted, 2314 deduped
+  [4861/13247] 174000 inserted, 2314 deduped
+  [4867/13247] 174500 inserted, 2315 deduped
+  [4875/13247] 175000 inserted, 2315 deduped
+  [4889/13247] 175500 inserted, 2315 deduped
+  [4898/13247] 176000 inserted, 2315 deduped
+  [4906/13247] 176500 inserted, 2315 deduped
+  [4916/13247] 177000 inserted, 2315 deduped
+  [4925/13247] 177500 inserted, 2315 deduped
+  [4931/13247] 178000 inserted, 2315 deduped
+  [4938/13247] 178500 inserted, 2318 deduped
+  [4945/13247] 179000 inserted, 2319 deduped
+  [4954/13247] 179500 inserted, 2319 deduped
+  [4961/13247] 180000 inserted, 2320 deduped
+  [4970/13247] 180500 inserted, 2320 deduped
+  [4979/13247] 181000 inserted, 2320 deduped
+  [4988/13247] 181500 inserted, 2320 deduped
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-02-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-03-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-03-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-03-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-03-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-03-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-03-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-03-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-03-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-03-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-03-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-04-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-04-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-04-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-04-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-04-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-04-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-04-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-05-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-05-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-05-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-05-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-05-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-05-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-05-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-05-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-05-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-06-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-06-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-06-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-06-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-06-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-06-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-08-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-08-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-08-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-08-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-08-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-08-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-09-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-09-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-09-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-09-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-09-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-09-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-09-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-09-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-10-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-10-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-10-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-10-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-10-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-10-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-10-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-10-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-10-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-11-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1981/reps_1981-11-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-02-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-02-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-02-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-02-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-02-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-02-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-03-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-03-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-03-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-03-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-03-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-03-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-03-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-04-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-04-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-04-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-04-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-04-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-04-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-05-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-05-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-05-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-08-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-08-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-08-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-08-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-09-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-09-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-09-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-09-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-09-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-09-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-09-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-09-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-09-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-10-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-10-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-10-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-10-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-10-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-10-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-10-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-11-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-12-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-12-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1982/reps_1982-12-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-04-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-05-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-05-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-05-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-05-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-05-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-05-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-05-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-05-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-05-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-05-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-05-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-05-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-08-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-08-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-08-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-09-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-09-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-09-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-09-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-09-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-09-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-09-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-09-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-09-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-10-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-10-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-10-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-10-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-10-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-10-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-10-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-10-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-10-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-11-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-11-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-11-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-11-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-11-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-11-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-11-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-11-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-11-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-11-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-11-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-12-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-12-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-12-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1983/reps_1983-12-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-02-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-02-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-03-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-03-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-03-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-03-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-03-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-03-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-03-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-03-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-03-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-03-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-04-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-04-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-04-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-05-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-05-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-05-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-05-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-05-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-05-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-05-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-05-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-05-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-05-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-05-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-06-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-06-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-06-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-06-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-06-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-08-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-08-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-08-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-08-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-09-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-09-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-09-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-09-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-09-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-09-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-09-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-09-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-10-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-10-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-10-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-10-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-10-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-10-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-10-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1984/reps_1984-10-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-02-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-02-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-02-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-02-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-02-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-02-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-03-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-03-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-03-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-03-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-03-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-03-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-03-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-04-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-04-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-04-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-04-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-04-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-04-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-05-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-05-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-05-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-05-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-05-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-05-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-05-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-05-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-05-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-05-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-05-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-05-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-08-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-08-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-08-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-09-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-09-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-09-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-09-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-09-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-09-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-09-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-09-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-10-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-10-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-10-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-10-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-10-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-10-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-10-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-10-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1985/reps_1985-11-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-02-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-02-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-02-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-02-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-02-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-02-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-02-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-02-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-03-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-03-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-03-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-03-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-03-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-03-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-03-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-04-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-04-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-04-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-04-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-04-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-04-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-04-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-04-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-04-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-04-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-05-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-06-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-06-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-06-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-06-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-08-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-08-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-08-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-08-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-09-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-09-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-09-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-09-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-09-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-09-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-09-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-09-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-10-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-10-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-10-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-10-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-10-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-10-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-10-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-10-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-10-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-10-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-10-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-10-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-11-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-11-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-11-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-11-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-11-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-11-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-11-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-11-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-11-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-11-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-11-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1986/reps_1986-11-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-02-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-02-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-02-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-02-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-02-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-02-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-02-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-02-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-03-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-03-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-03-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-03-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-03-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-03-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-03-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-03-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-03-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-03-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-04-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-04-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-04-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-04-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-04-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-05-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-06-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-06-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-06-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-06-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-09-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-09-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-09-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-09-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-09-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-09-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-09-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-09-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-09-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-10-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-10-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-10-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-10-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-10-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-10-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-10-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-10-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-10-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-10-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-11-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-11-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-11-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-11-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-11-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-11-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-11-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-11-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-11-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-11-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-11-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-12-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-12-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-12-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1987/reps_1987-12-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-02-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-02-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-02-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-02-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-02-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-02-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-02-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-03-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-03-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-03-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-03-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-03-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-04-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-04-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-04-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-04-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-04-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-04-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-04-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-04-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-05-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-05-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-05-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-05-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-05-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-05-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-05-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-05-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-06-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-08-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-08-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-08-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-08-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-08-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-09-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-09-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-09-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-10-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-10-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-10-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-10-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-10-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-10-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-11-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-12-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1988/reps_1988-12-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-02-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-03-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-03-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-03-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-03-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-03-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-04-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-04-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-04-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-04-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-04-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-04-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-04-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-05-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-05-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-05-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-05-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-05-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-05-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-05-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-05-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-05-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-05-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-05-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-06-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-06-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-08-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-08-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-08-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-08-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-09-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-09-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-10-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-10-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-10-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-10-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-10-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-10-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-10-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-10-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-11-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-11-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-11-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-11-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-11-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-11-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-11-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-11-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-12-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1989/reps_1989-12-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-05-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-05-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-05-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-05-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-05-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-05-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-05-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-05-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-06-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-08-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-08-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-09-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-09-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-09-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-09-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-10-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-10-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-10-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-10-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-10-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-10-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-11-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-11-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-11-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-11-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-11-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-11-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-11-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-12-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-12-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-12-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-12-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1990/reps_1990-12-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-01-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-02-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-02-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-02-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-02-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-02-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-02-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-02-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-03-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-03-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-03-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-03-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-03-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-03-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-04-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-04-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-04-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-04-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-04-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-04-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-04-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-05-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-05-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-05-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-05-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-05-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-05-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-05-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-05-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-05-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-06-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-06-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-06-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-06-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-06-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-06-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-08-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-08-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-09-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-09-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-09-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-09-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-09-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-09-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-10-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-10-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-10-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-10-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-10-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-10-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-10-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-11-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-11-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-11-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-11-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-11-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-11-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-11-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-11-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-11-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-11-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1991/reps_1991-12-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-01-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-02-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-02-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-02-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-03-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-03-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-03-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-03-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-03-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-03-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-03-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-03-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-03-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-04-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-04-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-04-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-04-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-04-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-05-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-05-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-05-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-05-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-05-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-05-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-05-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-06-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-06-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-06-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-06-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-06-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-06-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-08-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-08-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-08-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-09-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-09-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-09-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-09-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-09-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-09-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-10-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-10-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-10-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-10-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-10-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-10-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-10-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-11-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-11-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-11-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-11-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-11-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-11-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-11-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-11-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-11-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-11-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-12-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1992/reps_1992-12-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-05-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-05-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-05-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-05-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-05-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-05-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-05-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-05-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-05-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-08-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-08-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-08-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-08-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-08-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-09-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-09-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-09-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-09-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-09-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-09-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-09-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-09-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-10-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-10-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-10-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-10-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-10-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-10-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-10-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-10-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-10-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-10-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-11-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-11-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-11-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-11-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-11-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-11-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-11-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-12-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-12-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-12-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-12-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-12-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-12-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-12-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1993/reps_1993-12-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-02-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-02-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-02-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-02-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-02-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-02-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-02-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-02-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-02-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-02-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-02-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-02-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-03-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-03-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-03-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-03-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-03-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-03-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-05-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-05-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-05-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-05-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-05-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-05-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-05-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-05-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-05-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-06-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-06-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-06-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-06-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-06-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-06-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-06-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-06-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-06-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-06-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-08-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-08-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-08-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-08-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-08-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-08-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-09-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-09-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-09-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-09-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-09-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-10-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-10-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-10-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-10-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-10-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-10-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-10-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-10-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-11-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-11-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-11-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-11-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-11-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-11-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-11-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-11-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-12-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-12-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-12-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-12-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1994/reps_1994-12-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-01-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-02-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-02-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-02-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-02-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-02-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-02-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-02-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-02-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-03-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-03-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-03-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-03-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-03-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-03-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-03-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-03-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-03-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-03-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-05-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-05-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-05-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-05-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-05-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-05-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-06-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-08-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-08-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-08-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-08-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-08-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-08-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-08-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-09-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-09-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-09-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-09-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-09-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-09-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-09-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-09-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-10-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-10-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-10-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-10-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-10-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-10-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-10-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-10-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-11-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-11-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-11-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-11-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-11-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-11-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-11-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-11-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1995/reps_1995-12-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-04-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-05-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-06-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-06-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-06-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-06-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-06-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-06-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-06-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-06-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-06-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-08-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-08-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-08-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-09-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-09-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-09-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-09-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-09-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-09-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-09-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-09-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-10-08.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-10-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-10-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-10-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-10-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-10-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-10-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-10-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-10-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-10-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-10-31.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-11-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-11-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-11-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-11-07.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-11-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-11-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-11-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-12-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-12-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-12-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-12-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-12-09.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-12-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-12-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1996/reps_1996-12-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-02-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-02-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-02-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-02-10.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-02-11.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-02-12.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-02-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-02-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-02-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-02-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-02-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-03-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-03-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-03-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-03-06.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-03-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-03-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-03-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-03-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-03-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-03-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-05-13.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-05-14.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-05-15.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-05-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-05-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-05-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-05-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-16.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-06-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-08-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-08-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-08-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-08-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-09-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-09-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-09-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-09-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-09-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-09-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-09-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-09-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-09-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-09-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-10-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-10-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-10-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-10-21.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-10-22.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-10-23.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-10-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-10-28.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-10-29.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-10-30.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-11-17.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-11-18.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-11-19.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-11-20.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-11-24.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-11-25.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-11-26.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-11-27.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-12-01.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-12-02.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-12-03.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-12-04.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-12-05.xml: syntax error: line 1, column 64
+  ERROR parsing /home/jake/.cache/autoresearch/hansard/hansard-xml/hofreps/1997/reps_1997-12-06.xml: syntax error: line 1, column 64
+  [4995/13247] 182000 inserted, 2321 deduped
+  [5000/13247] 182376 inserted, 2323 deduped
+  [5002/13247] 182500 inserted, 2323 deduped
+  [5012/13247] 183000 inserted, 2323 deduped
+  [5023/13247] 183500 inserted, 2323 deduped
+  [5031/13247] 184000 inserted, 2324 deduped
+  [5039/13247] 184500 inserted, 2324 deduped
+  [5048/13247] 185000 inserted, 2324 deduped
+  [5055/13247] 185500 inserted, 2325 deduped
+  [5064/13247] 186000 inserted, 2325 deduped
+  [5070/13247] 186500 inserted, 2325 deduped
+  [5078/13247] 187000 inserted, 2326 deduped
+  [5087/13247] 187500 inserted, 2328 deduped
+  [5096/13247] 188000 inserted, 2328 deduped
+  [5105/13247] 188500 inserted, 2328 deduped
+  [5112/13247] 189000 inserted, 2328 deduped
+  [5121/13247] 189500 inserted, 2329 deduped
+  [5129/13247] 190000 inserted, 2329 deduped
+  [5137/13247] 190500 inserted, 2329 deduped
+  [5145/13247] 191000 inserted, 2329 deduped
+  [5153/13247] 191500 inserted, 2329 deduped
+  [5160/13247] 192000 inserted, 2329 deduped
+  [5167/13247] 192500 inserted, 2329 deduped
+  [5175/13247] 193000 inserted, 2329 deduped
+  [5181/13247] 193500 inserted, 2329 deduped
+  [5189/13247] 194000 inserted, 2330 deduped
+  [5198/13247] 194500 inserted, 2330 deduped
+  [5206/13247] 195000 inserted, 2331 deduped
+  [5215/13247] 195500 inserted, 2331 deduped
+  [5227/13247] 196000 inserted, 2331 deduped
+  [5238/13247] 196500 inserted, 2331 deduped
+  [5248/13247] 197000 inserted, 2331 deduped
+  [5257/13247] 197500 inserted, 2331 deduped
+  [5267/13247] 198000 inserted, 2331 deduped
+  [5276/13247] 198500 inserted, 2331 deduped
+  [5285/13247] 199000 inserted, 2331 deduped
+  [5293/13247] 199500 inserted, 2331 deduped
+  [5303/13247] 200000 inserted, 2331 deduped
+  [5312/13247] 200500 inserted, 2331 deduped
+  [5322/13247] 201000 inserted, 2331 deduped
+  [5330/13247] 201500 inserted, 2331 deduped
+  [5341/13247] 202000 inserted, 2331 deduped
+  [5351/13247] 202500 inserted, 2331 deduped
+  [5359/13247] 203000 inserted, 2331 deduped
+  [5367/13247] 203500 inserted, 2331 deduped
+  [5377/13247] 204000 inserted, 2331 deduped
+  [5386/13247] 204500 inserted, 2331 deduped
+  [5395/13247] 205000 inserted, 2331 deduped
+  [5404/13247] 205500 inserted, 2331 deduped
+  [5413/13247] 206000 inserted, 2331 deduped
+  [5421/13247] 206500 inserted, 2331 deduped
+  [5430/13247] 207000 inserted, 2332 deduped
+  [5438/13247] 207500 inserted, 2332 deduped
+  [5448/13247] 208000 inserted, 2332 deduped
+  [5457/13247] 208500 inserted, 2332 deduped
+  [5466/13247] 209000 inserted, 2332 deduped
+  [5473/13247] 209500 inserted, 2332 deduped
+  [5483/13247] 210000 inserted, 2332 deduped
+  [5492/13247] 210500 inserted, 2332 deduped
+  [5500/13247] 211000 inserted, 2332 deduped
+  [5506/13247] 211500 inserted, 2332 deduped
+  [5515/13247] 212000 inserted, 2332 deduped
+  [5524/13247] 212500 inserted, 2332 deduped
+  [5534/13247] 213000 inserted, 2333 deduped
+  [5542/13247] 213500 inserted, 2333 deduped
+  [5549/13247] 214000 inserted, 2333 deduped
+  [5555/13247] 214500 inserted, 2335 deduped
+  [5575/13247] 215000 inserted, 2336 deduped
+  [5649/13247] 215500 inserted, 2337 deduped
+  [5735/13247] 216000 inserted, 2339 deduped
+  [6000/13247] reps_1988-03-17.xml - no speeches
+  [6031/13247] 216500 inserted, 2340 deduped
+  [6090/13247] 217000 inserted, 2342 deduped
+  [6130/13247] 217500 inserted, 2344 deduped
+  [6500/13247] reps_1996-10-09.xml - no speeches
+  [6604/13247] 218000 inserted, 2348 deduped
+  [6612/13247] 218500 inserted, 2348 deduped
+  [6620/13247] 219000 inserted, 2348 deduped
+  [6629/13247] 219500 inserted, 2348 deduped
+  [6634/13247] 220000 inserted, 2348 deduped
+  [6642/13247] 220500 inserted, 2348 deduped
+  [6651/13247] 221000 inserted, 2348 deduped
+  [6659/13247] 221500 inserted, 2348 deduped
+  [6667/13247] 222000 inserted, 2348 deduped
+  [6674/13247] 222500 inserted, 2348 deduped
+  [6682/13247] 223000 inserted, 2348 deduped
+  [6690/13247] 223500 inserted, 2348 deduped
+  [6697/13247] 224000 inserted, 2348 deduped
+  [6705/13247] 224500 inserted, 2348 deduped
+  [6712/13247] 225000 inserted, 2348 deduped
+  [6719/13247] 225500 inserted, 2348 deduped
+  [6727/13247] 226000 inserted, 2349 deduped
+  [6734/13247] 226500 inserted, 2349 deduped
+  [6742/13247] 227000 inserted, 2349 deduped
+  [6750/13247] 227500 inserted, 2349 deduped
+  [6759/13247] 228000 inserted, 2350 deduped
+  [6766/13247] 228500 inserted, 2350 deduped
+  [6771/13247] 229000 inserted, 2351 deduped
+  [6779/13247] 229500 inserted, 2351 deduped
+  [6787/13247] 230000 inserted, 2351 deduped
+  [6795/13247] 230500 inserted, 2351 deduped
+  [6802/13247] 231000 inserted, 2351 deduped
+  [6809/13247] 231500 inserted, 2351 deduped
+  [6817/13247] 232000 inserted, 2351 deduped
+  [6827/13247] 232500 inserted, 2351 deduped
+  [6834/13247] 233000 inserted, 2351 deduped
+  [6840/13247] 233500 inserted, 2351 deduped
+  [6848/13247] 234000 inserted, 2351 deduped
+  [6856/13247] 234500 inserted, 2351 deduped
+  [6865/13247] 235000 inserted, 2351 deduped
+  [6872/13247] 235500 inserted, 2351 deduped
+  [6881/13247] 236000 inserted, 2351 deduped
+  [6889/13247] 236500 inserted, 2351 deduped
+  [6896/13247] 237000 inserted, 2352 deduped
+  [6903/13247] 237500 inserted, 2352 deduped
+  [6911/13247] 238000 inserted, 2352 deduped
+  [6919/13247] 238500 inserted, 2352 deduped
+  [6927/13247] 239000 inserted, 2352 deduped
+  [6933/13247] 239500 inserted, 2352 deduped
+  [6940/13247] 240000 inserted, 2352 deduped
+  [6947/13247] 240500 inserted, 2352 deduped
+  [6955/13247] 241000 inserted, 2352 deduped
+  [6962/13247] 241500 inserted, 2352 deduped
+  [6969/13247] 242000 inserted, 2354 deduped
+  [6978/13247] 242500 inserted, 2354 deduped
+  [6985/13247] 243000 inserted, 2354 deduped
+  [6996/13247] 243500 inserted, 2354 deduped
+  [7000/13247] 243839 inserted, 2354 deduped
+  [7003/13247] 244000 inserted, 2355 deduped
+  [7010/13247] 244500 inserted, 2355 deduped
+  [7018/13247] 245000 inserted, 2355 deduped
+  [7026/13247] 245500 inserted, 2355 deduped
+  [7034/13247] 246000 inserted, 2355 deduped
+  [7040/13247] 246500 inserted, 2355 deduped
+  [7045/13247] 247000 inserted, 2355 deduped
+  [7053/13247] 247500 inserted, 2361 deduped
+  [7060/13247] 248000 inserted, 2363 deduped
+  [7068/13247] 248500 inserted, 2369 deduped
+  [7076/13247] 249000 inserted, 2369 deduped
+  [7084/13247] 249500 inserted, 2370 deduped
+  [7090/13247] 250000 inserted, 2370 deduped
+  [7095/13247] 250500 inserted, 2370 deduped
+  [7101/13247] 251000 inserted, 2370 deduped
+  [7109/13247] 251500 inserted, 2370 deduped
+  [7116/13247] 252000 inserted, 2370 deduped
+  [7125/13247] 252500 inserted, 2370 deduped
+  [7135/13247] 253000 inserted, 2370 deduped
+  [7147/13247] 253500 inserted, 2370 deduped
+  [7156/13247] 254000 inserted, 2370 deduped
+  [7171/13247] 254500 inserted, 2370 deduped
+  [7180/13247] 255000 inserted, 2370 deduped
+  [7193/13247] 255500 inserted, 2370 deduped
+  [7212/13247] 256000 inserted, 2370 deduped
+  [7225/13247] 256500 inserted, 2370 deduped
+  [7237/13247] 257000 inserted, 2370 deduped
+  [7260/13247] 257500 inserted, 2370 deduped
+  [7276/13247] 258000 inserted, 2370 deduped
+  [7289/13247] 258500 inserted, 2370 deduped
+  [7306/13247] 259000 inserted, 2370 deduped
+  [7319/13247] 259500 inserted, 2370 deduped
+  [7337/13247] 260000 inserted, 2370 deduped
+  [7350/13247] 260500 inserted, 2370 deduped
+  [7365/13247] 261000 inserted, 2370 deduped
+  [7391/13247] 261500 inserted, 2370 deduped
+  [7416/13247] 262000 inserted, 2370 deduped
+  [7441/13247] 262500 inserted, 2370 deduped
+  [7459/13247] 263000 inserted, 2370 deduped
+  [7476/13247] 263500 inserted, 2370 deduped
+  [7492/13247] 264000 inserted, 2370 deduped
+  [7510/13247] 264500 inserted, 2370 deduped
+  [7526/13247] 265000 inserted, 2370 deduped
+  [7538/13247] 265500 inserted, 2370 deduped
+  [7551/13247] 266000 inserted, 2370 deduped
+  [7567/13247] 266500 inserted, 2370 deduped
+  [7586/13247] 267000 inserted, 2370 deduped
+  [7597/13247] 267500 inserted, 2371 deduped
+  [7614/13247] 268000 inserted, 2371 deduped
+  [7627/13247] 268500 inserted, 2371 deduped
+  [7635/13247] 269000 inserted, 2371 deduped
+  [7642/13247] 269500 inserted, 2371 deduped
+  [7648/13247] 270000 inserted, 2371 deduped
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/jake/autoresearch/parli/ingest/wragge_xml.py", line 430, in <module>
+    run(limit=args.limit)
+  File "/home/jake/autoresearch/parli/ingest/wragge_xml.py", line 371, in run
+    db.execute(
+sqlite3.OperationalError: database is locked
+  [7655/13247] 270500 inserted, 2371 deduped
+  [7661/13247] 271000 inserted, 2371 deduped
+  [7672/13247] 271500 inserted, 2371 deduped
+  [7689/13247] 272000 inserted, 2371 deduped
+  [7704/13247] 272500 inserted, 2371 deduped
+  [7728/13247] 273000 inserted, 2371 deduped
+  [7741/13247] 273500 inserted, 2371 deduped
+  [7761/13247] 274000 inserted, 2371 deduped
+  [7776/13247] 274500 inserted, 2371 deduped
+  [7795/13247] 275000 inserted, 2371 deduped
+  [7809/13247] 275500 inserted, 2371 deduped
+  [7823/13247] 276000 inserted, 2371 deduped
+  [7834/13247] 276500 inserted, 2371 deduped
+  [7849/13247] 277000 inserted, 2371 deduped
+  [7866/13247] 277500 inserted, 2371 deduped
+  [7878/13247] 278000 inserted, 2371 deduped
+  [7886/13247] 278500 inserted, 2371 deduped
+  [7907/13247] 279000 inserted, 2371 deduped
+  [7928/13247] 279500 inserted, 2371 deduped
+  [7944/13247] 280000 inserted, 2371 deduped
+  [7961/13247] 280500 inserted, 2371 deduped
+  [7979/13247] 281000 inserted, 2371 deduped
+  [8000/13247] 281463 inserted, 2374 deduped
+  [8002/13247] 281500 inserted, 2374 deduped
+  [8019/13247] 282000 inserted, 2374 deduped
+  [8034/13247] 282500 inserted, 2374 deduped
+  [8062/13247] 283000 inserted, 2374 deduped
+  [8077/13247] 283500 inserted, 2374 deduped
+  [8093/13247] 284000 inserted, 2374 deduped
+  [8120/13247] 284500 inserted, 2374 deduped
+  [8139/13247] 285000 inserted, 2374 deduped
+  [8156/13247] 285500 inserted, 2374 deduped
+  [8167/13247] 286000 inserted, 2374 deduped
+  [8193/13247] 286500 inserted, 2374 deduped
+  [8205/13247] 287000 inserted, 2374 deduped
+  [8228/13247] 287500 inserted, 2374 deduped
+  [8241/13247] 288000 inserted, 2374 deduped
+  [8260/13247] 288500 inserted, 2374 deduped
+  [8277/13247] 289000 inserted, 2374 deduped
+  [8296/13247] 289500 inserted, 2386 deduped
+  [8314/13247] 290000 inserted, 2386 deduped
+  [8336/13247] 290500 inserted, 2391 deduped
+  [8356/13247] 291000 inserted, 2391 deduped
+  [8375/13247] 291500 inserted, 2391 deduped
+  [8390/13247] 292000 inserted, 2391 deduped
+  [8400/13247] 292500 inserted, 2391 deduped
+  [8406/13247] 293000 inserted, 2391 deduped
+  [8411/13247] 293500 inserted, 2391 deduped
+  [8427/13247] 294000 inserted, 2391 deduped
+  [8435/13247] 294500 inserted, 2391 deduped
+  [8459/13247] 295000 inserted, 2391 deduped
+  [8475/13247] 295500 inserted, 2391 deduped
+  [8488/13247] 296000 inserted, 2391 deduped
+  [8505/13247] 296500 inserted, 2391 deduped
+  [8516/13247] 297000 inserted, 2391 deduped
+  [8537/13247] 297500 inserted, 2392 deduped
+  [8550/13247] 298000 inserted, 2392 deduped
+  [8570/13247] 298500 inserted, 2392 deduped
+  [8582/13247] 299000 inserted, 2392 deduped
+  [8605/13247] 299500 inserted, 2392 deduped
+  [8631/13247] 300000 inserted, 2392 deduped
+  [8651/13247] 300500 inserted, 2392 deduped
+  [8671/13247] 301000 inserted, 2392 deduped
+  [8690/13247] 301500 inserted, 2392 deduped
+  [8712/13247] 302000 inserted, 2392 deduped
+  [8737/13247] 302500 inserted, 2392 deduped
+  [8760/13247] 303000 inserted, 2392 deduped
+  [8793/13247] 303500 inserted, 2392 deduped
+  [8811/13247] 304000 inserted, 2392 deduped
+  [8831/13247] 304500 inserted, 2392 deduped
+  [8851/13247] 305000 inserted, 2392 deduped
+  [8864/13247] 305500 inserted, 2393 deduped
+  [8895/13247] 306000 inserted, 2393 deduped
+  [8916/13247] 306500 inserted, 2393 deduped
+  [8930/13247] 307000 inserted, 2393 deduped
+  [8949/13247] 307500 inserted, 2393 deduped
+  [8967/13247] 308000 inserted, 2393 deduped
+  [8984/13247] 308500 inserted, 2393 deduped
+  [8998/13247] 309000 inserted, 2393 deduped
+  [9000/13247] 309029 inserted, 2393 deduped
+  [9012/13247] 309500 inserted, 2393 deduped
+  [9022/13247] 310000 inserted, 2393 deduped
+  [9033/13247] 310500 inserted, 2393 deduped
+  [9045/13247] 311000 inserted, 2393 deduped
+  [9064/13247] 311500 inserted, 2393 deduped
+  [9084/13247] 312000 inserted, 2393 deduped
+  [9101/13247] 312500 inserted, 2393 deduped
+  [9120/13247] 313000 inserted, 2393 deduped
+  [9129/13247] 313500 inserted, 2393 deduped
+  [9146/13247] 314000 inserted, 2398 deduped
+  [9170/13247] 314500 inserted, 2398 deduped
+  [9190/13247] 315000 inserted, 2398 deduped
+  [9207/13247] 315500 inserted, 2398 deduped
+  [9220/13247] 316000 inserted, 2398 deduped
+  [9236/13247] 316500 inserted, 2398 deduped
+  [9248/13247] 317000 inserted, 2398 deduped
+  [9262/13247] 317500 inserted, 2398 deduped
+  [9280/13247] 318000 inserted, 2398 deduped
+  [9298/13247] 318500 inserted, 2398 deduped
+  [9326/13247] 319000 inserted, 2398 deduped
+  [9341/13247] 319500 inserted, 2398 deduped
+  [9358/13247] 320000 inserted, 2398 deduped
+  [9375/13247] 320500 inserted, 2398 deduped
+  [9395/13247] 321000 inserted, 2398 deduped
+  [9410/13247] 321500 inserted, 2398 deduped
+  [9426/13247] 322000 inserted, 2398 deduped
+  [9451/13247] 322500 inserted, 2398 deduped
+  [9466/13247] 323000 inserted, 2398 deduped
+  [9482/13247] 323500 inserted, 2398 deduped
+  [9501/13247] 324000 inserted, 2398 deduped
+  [9518/13247] 324500 inserted, 2400 deduped
+  [9537/13247] 325000 inserted, 2400 deduped
+  [9556/13247] 325500 inserted, 2400 deduped
+  [9571/13247] 326000 inserted, 2401 deduped
+  [9591/13247] 326500 inserted, 2401 deduped
+  [9606/13247] 327000 inserted, 2401 deduped
+  [9620/13247] 327500 inserted, 2403 deduped
+  [9643/13247] 328000 inserted, 2404 deduped
+  [9654/13247] 328500 inserted, 2404 deduped
+  [9677/13247] 329000 inserted, 2404 deduped
+  [9692/13247] 329500 inserted, 2404 deduped
+  [9711/13247] 330000 inserted, 2404 deduped
+  [9724/13247] 330500 inserted, 2405 deduped
+  [9745/13247] 331000 inserted, 2405 deduped
+  [9753/13247] 331500 inserted, 2405 deduped
+  [9766/13247] 332000 inserted, 2405 deduped
+  [9781/13247] 332500 inserted, 2405 deduped
+  [9791/13247] 333000 inserted, 2405 deduped

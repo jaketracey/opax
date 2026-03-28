@@ -1,0 +1,50 @@
+# =============================================================================
+# Dockerfile.pipeline -- OPAX Daily Pipeline Worker
+#
+# Runs as a one-shot job. Use with:
+#   docker compose run --rm pipeline
+#   docker compose run --rm pipeline --step fed_hansard
+#   docker compose run --rm pipeline --dry-run
+# =============================================================================
+FROM python:3.12-slim
+
+# System dependencies (tesseract for OCR of PDF sources, sqlite3 for debugging)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    sqlite3 \
+    tesseract-ocr \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+WORKDIR /app
+
+# Copy dependency file first for layer caching
+COPY pyproject.toml ./
+
+# Install Python dependencies
+RUN uv venv /app/.venv \
+    && uv pip install --python /app/.venv/bin/python \
+       -e . \
+       --extra-index-url https://download.pytorch.org/whl/cpu \
+    || uv pip install --python /app/.venv/bin/python -e .
+
+ENV PATH="/app/.venv/bin:$PATH"
+ENV VIRTUAL_ENV="/app/.venv"
+
+# Copy all application source (pipeline needs ingest scripts, analysis, etc.)
+COPY parli/ ./parli/
+COPY download_hansard.py download_hansard_fast.py prepare_hansard.py classify_state_speeches.py* ./
+
+# Data directory (mount same volume as api)
+RUN mkdir -p /data /root/.cache/autoresearch
+ENV OPAX_DB_PATH=/data/parli.db
+ENV OPAX_EMBEDDINGS_DIR=/data/embeddings
+
+# Symlink so ~/.cache/autoresearch points to /data
+RUN ln -sf /data /root/.cache/autoresearch
+
+ENTRYPOINT ["python", "-m", "parli.pipeline"]
+CMD []

@@ -1,0 +1,5 @@
+{
+  "enabledPlugins": {
+    "autofix-bot@claude-plugins-official": true
+  }
+}

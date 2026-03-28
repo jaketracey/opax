@@ -1,0 +1,61 @@
+# =============================================================================
+# .dockerignore -- OPAX
+# =============================================================================
+
+# Version control
+.git
+.gitignore
+
+# Environment and secrets
+.env
+.env.local
+.env.production
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+.venv
+*.egg-info
+dist/
+build/
+
+# Node.js
+opax/node_modules
+opax/.next
+
+# Data files (mounted as volumes, not baked into images)
+data/
+*.db
+*.npy
+*.mmap
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker files (avoid recursive context)
+Dockerfile*
+docker-compose*.yml
+
+# Logs
+*.log
+logs/
+
+# Cache directories
+.cache/
+~/.cache/
+
+# Documentation (not needed in images)
+*.md
+!opax/README.md
+
+# Deploy scripts (not needed in images)
+deploy/
+!deploy/nginx-docker.conf

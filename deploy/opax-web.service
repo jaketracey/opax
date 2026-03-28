@@ -1,0 +1,25 @@
+[Unit]
+Description=OPAX Next.js Frontend
+After=network.target
+Wants=opax-api.service
+
+[Service]
+Type=simple
+User=opax
+Group=opax
+WorkingDirectory=/opt/opax/opax
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=HOSTNAME=127.0.0.1
+ExecStart=/usr/bin/node node_modules/next/dist/bin/next start
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=opax-web
+
+# Resource limits
+MemoryMax=512M
+
+[Install]
+WantedBy=multi-user.target

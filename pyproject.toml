@@ -1,0 +1,41 @@
+[project]
+name = "autoresearch"
+version = "0.1.0"
+description = "Autonomous pretraining research swarm"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "kernels>=0.11.7",
+    "matplotlib>=3.10.8",
+    "numpy>=2.2.6",
+    "pandas>=2.3.3",
+    "pyarrow>=21.0.0",
+    "requests>=2.32.0",
+    "rustbpe>=0.1.0",
+    "tiktoken>=0.11.0",
+    "torch==2.9.1",
+    "gradio>=5.0.0",
+    "plotly>=6.0.0",
+    "requests>=2.32.0",
+    "beautifulsoup4>=4.12.0",
+    "sentence-transformers>=5.3.0",
+    "anthropic>=0.86.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+    "aiohttp>=3.13.3",
+    "datasets>=4.8.4",
+    "pdfminer.six>=20221105",
+    "openpyxl>=3.1.5",
+    "playwright>=1.58.0",
+    "redis>=5.0.0",
+]
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu128" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
