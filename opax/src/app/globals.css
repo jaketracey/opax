@@ -1,0 +1,194 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-gold: #FFD700;
+  --color-gold-dim: #b89b00;
+  --color-au-green: #00843D;
+  --color-crimson: #DC2626;
+  --color-muted-text: #8b949e;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+  --background: #0a0a0f;
+  --foreground: #e6edf3;
+  --card: #12121a;
+  --card-foreground: #e6edf3;
+  --popover: #12121a;
+  --popover-foreground: #e6edf3;
+  --primary: #FFD700;
+  --primary-foreground: #0a0a0f;
+  --secondary: #1a1a28;
+  --secondary-foreground: #e6edf3;
+  --muted: #1a1a28;
+  --muted-foreground: #8b949e;
+  --accent: #1a1a28;
+  --accent-foreground: #e6edf3;
+  --destructive: #DC2626;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #FFD700;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out both;
+}
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+.stagger-7 { animation-delay: 0.7s; }
+.stagger-8 { animation-delay: 0.8s; }
+.stagger-9 { animation-delay: 0.9s; }
+
+.editorial-underline {
+  position: relative;
+  display: inline-block;
+}
+.editorial-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: #FFD700;
+}
+
+.recharts-cartesian-axis-tick-value {
+  fill: #8b949e !important;
+  font-size: 12px;
+}
+
+/* Search page: pulsing loading dots */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.2; transform: rotate(var(--r, 0deg)) translateY(-14px) translateX(-50%) scale(0.7); }
+  50% { opacity: 1; transform: rotate(var(--r, 0deg)) translateY(-14px) translateX(-50%) scale(1); }
+}
+
+/* Search page: animated gradient border */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Network flow particles (CSS offset-path fallback) */
+@keyframes flow-particle {
+  0% { offset-distance: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* Hero gradient mesh animations */
+@keyframes gradient-shift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+@keyframes gradient-shift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-30px, 40px) scale(1.05); }
+  66% { transform: translate(30px, -20px) scale(1.1); }
+}
+@keyframes gradient-shift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, 30px) scale(1.08); }
+  66% { transform: translate(-40px, -10px) scale(0.97); }
+}
+
+.animate-gradient-shift-1 { animation: gradient-shift-1 8s ease-in-out infinite; }
+.animate-gradient-shift-2 { animation: gradient-shift-2 10s ease-in-out infinite; }
+.animate-gradient-shift-3 { animation: gradient-shift-3 12s ease-in-out infinite; }
+
+/* Animated gradient text for OPAX title */
+@keyframes gradient-text-flow {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+.animate-gradient-text {
+  animation: gradient-text-flow 4s linear infinite;
+}
+
+/* Typewriter cursor blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.animate-blink {
+  animation: blink 0.8s step-end infinite;
+}
+
+/* HIGH disconnect badge pulse */
+@keyframes pulse-disconnect {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.animate-pulse-disconnect {
+  animation: pulse-disconnect 2s ease-in-out infinite;
+}
+
+/* Featured investigation pulsing border */
+@keyframes investigation-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.1), 0 0 30px rgba(220, 38, 38, 0.05);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.2), 0 0 50px rgba(220, 38, 38, 0.1);
+  }
+}
+.animate-investigation-pulse {
+  animation: investigation-pulse 3s ease-in-out infinite;
+}
