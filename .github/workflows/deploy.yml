@@ -1,0 +1,93 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: opax/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: opax
+        run: npm ci
+
+      - name: Lint frontend
+        working-directory: opax
+        run: npx eslint . || true  # warn but don't block
+
+      - name: TypeScript check
+        working-directory: opax
+        run: npx tsc --noEmit || true  # warn but don't block
+
+  deploy:
+    needs: lint-and-typecheck
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/opax-key.pem
+          chmod 600 ~/.ssh/opax-key.pem
+          ssh-keyscan -H ${{ secrets.EC2_IP }} >> ~/.ssh/known_hosts
+
+      - name: Deploy code to EC2
+        run: |
+          # Sync frontend
+          rsync -avz --delete \
+            --exclude='node_modules' --exclude='.next' \
+            -e "ssh -i ~/.ssh/opax-key.pem" \
+            opax/ ubuntu@${{ secrets.EC2_IP }}:/opt/opax/opax/
+
+          # Sync backend
+          rsync -avz --delete \
+            --exclude='__pycache__' \
+            -e "ssh -i ~/.ssh/opax-key.pem" \
+            parli/ ubuntu@${{ secrets.EC2_IP }}:/opt/opax/parli/
+
+          # Sync scripts and config
+          rsync -avz \
+            -e "ssh -i ~/.ssh/opax-key.pem" \
+            scripts/ ubuntu@${{ secrets.EC2_IP }}:/opt/opax/scripts/
+          rsync -avz \
+            -e "ssh -i ~/.ssh/opax-key.pem" \
+            deploy/ ubuntu@${{ secrets.EC2_IP }}:/opt/opax/deploy/
+          rsync -avz \
+            -e "ssh -i ~/.ssh/opax-key.pem" \
+            docker-compose.yml Dockerfile.api Dockerfile.web Dockerfile.pipeline \
+            pyproject.toml uv.lock \
+            ubuntu@${{ secrets.EC2_IP }}:/opt/opax/
+
+      - name: Build and restart on EC2
+        run: |
+          ssh -i ~/.ssh/opax-key.pem ubuntu@${{ secrets.EC2_IP }} '
+            cd /opt/opax/opax &&
+            npm ci --production=false &&
+            npm run build &&
+            sudo systemctl restart opax-web opax-api
+          '
+
+      - name: Verify deployment
+        run: |
+          sleep 10
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://opax.com.au)
+          echo "Site status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "WARNING: Site returned $STATUS"
+          fi
