@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { getPhotoUrl } from "@/lib/utils";
 import {
   BarChart,
   Bar,
@@ -478,7 +479,7 @@ export default function JobsForTheBoysPage() {
                         {s.person_id && (
                           <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-white/10">
                             <img
-                              src={`https://www.openaustralia.org.au/images/mpsL/${s.person_id}.jpg`}
+                              src={getPhotoUrl(s.person_id)}
                               alt={s.name}
                               className="w-full h-full object-cover"
                               onError={(e) => {
@@ -530,7 +531,7 @@ export default function JobsForTheBoysPage() {
                   {rd.person_id && (
                     <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-white/10">
                       <img
-                        src={`https://www.openaustralia.org.au/images/mpsL/${rd.person_id}.jpg`}
+                        src={getPhotoUrl(rd.person_id)}
                         alt={rd.full_name}
                         className="w-full h-full object-cover"
                         onError={(e) => {
@@ -629,7 +630,7 @@ export default function JobsForTheBoysPage() {
                     {q.person_id && (
                       <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-white/10">
                         <img
-                          src={`https://www.openaustralia.org.au/images/mpsL/${q.person_id}.jpg`}
+                          src={getPhotoUrl(q.person_id)}
                           alt={q.speaker_name}
                           className="w-full h-full object-cover"
                           onError={(e) => {

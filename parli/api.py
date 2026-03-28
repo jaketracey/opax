@@ -12,9 +12,11 @@ import os
 from contextlib import asynccontextmanager
 from typing import Optional
 
+from pathlib import Path
+
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 
 from parli.schema import get_db
@@ -3736,3 +3738,41 @@ def entity_detail(entity_id: int):
     if not result:
         return {"error": "Entity not found", "entity_id": entity_id}
     return result
+
+
+# ---------------------------------------------------------------------------
+# GET /api/photos/{person_id} — Serve cached MP headshot or placeholder
+# ---------------------------------------------------------------------------
+
+PHOTOS_DIR = Path("~/.cache/autoresearch/photos").expanduser()
+
+@app.get("/api/photos/{person_id}")
+def get_photo(person_id: str):
+    """Serve a cached MP photo or placeholder image.
+
+    Returns the 200x200 JPEG headshot for the given person_id.
+    Falls back to a grey silhouette placeholder if no photo is available.
+    Browser-cacheable via Cache-Control headers.
+    """
+    # Sanitize: only allow alphanumeric person_ids
+    if not person_id.replace("-", "").replace("_", "").isalnum():
+        photo_path = PHOTOS_DIR / "placeholder.jpg"
+    else:
+        photo_path = PHOTOS_DIR / f"{person_id}.jpg"
+
+    if not photo_path.exists():
+        photo_path = PHOTOS_DIR / "placeholder.jpg"
+
+    if not photo_path.exists():
+        # Create placeholder on-the-fly if missing
+        PHOTOS_DIR.mkdir(parents=True, exist_ok=True)
+        from parli.ingest.photos import create_placeholder
+        create_placeholder(photo_path)
+
+    return FileResponse(
+        path=str(photo_path),
+        media_type="image/jpeg",
+        headers={
+            "Cache-Control": "public, max-age=604800, immutable",  # 7 days
+        },
+    )

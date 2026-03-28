@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { PartyBadge } from "@/components/party-badge";
+import { getPhotoUrl } from "@/lib/utils";
 import {
   Skeleton,
   SkeletonCard,
@@ -207,7 +208,7 @@ function HighlightedQuote({ quote }: { quote: TopQuote }) {
           {quote.photo_id && (
             <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border border-white/10">
               <img
-                src={`https://www.openaustralia.org.au/images/mpsL/${quote.photo_id}.jpg`}
+                src={getPhotoUrl(quote.photo_id)}
                 alt={quote.speaker_name}
                 className="w-full h-full object-cover"
               />
@@ -260,7 +261,7 @@ function DisconnectAlerts({ mps }: { mps: DisconnectMP[] }) {
                 {mp.photo_id ? (
                   <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-[#DC2626]/30">
                     <img
-                      src={`https://www.openaustralia.org.au/images/mpsL/${mp.photo_id}.jpg`}
+                      src={getPhotoUrl(mp.photo_id)}
                       alt={mp.name}
                       className="w-full h-full object-cover"
                     />

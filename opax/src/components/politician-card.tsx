@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { PartyBadge } from "@/components/party-badge";
+import { getPhotoUrl } from "@/lib/utils";
 
 const partyBorderColors: Record<string, string> = {
   Labor: "#E13A3A",
@@ -111,7 +112,7 @@ export function PoliticianCard({
           style={{ borderColor }}
         >
           <img
-            src={`https://www.openaustralia.org.au/images/mpsL/${photoId}.jpg`}
+            src={getPhotoUrl(photoId)}
             alt={name}
             className="w-full h-full object-cover"
             onError={(e) => {

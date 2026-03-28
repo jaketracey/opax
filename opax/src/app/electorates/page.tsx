@@ -6,7 +6,7 @@ import { Search, X } from "lucide-react";
 import { PartyBadge } from "@/components/party-badge";
 import { Skeleton, SkeletonAvatar } from "@/components/skeleton";
 
-import { API_BASE } from "@/lib/utils";
+import { API_BASE, getPhotoUrl } from "@/lib/utils";
 
 interface ElectorateData {
   electorate: string;
@@ -168,7 +168,7 @@ export default function ElectoratesPage() {
                       style={{ borderColor }}
                     >
                       <img
-                        src={`https://www.openaustralia.org.au/images/mpsL/${e.personId}.jpg`}
+                        src={getPhotoUrl(e.personId)}
                         alt={e.mp}
                         className="w-full h-full object-cover"
                       />

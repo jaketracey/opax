@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { getPhotoUrl } from "@/lib/utils";
 import {
   BarChart,
   Bar,
@@ -695,7 +696,7 @@ export default function MediaOwnershipPage() {
                   {q.photoId && (
                     <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-white/10">
                       <img
-                        src={`https://www.openaustralia.org.au/images/mpsL/${q.photoId}.jpg`}
+                        src={getPhotoUrl(q.photoId)}
                         alt={q.speaker}
                         className="w-full h-full object-cover"
                       />
@@ -743,7 +744,7 @@ export default function MediaOwnershipPage() {
                   <span className="text-xs text-[#8b949e] w-4 shrink-0 text-right">{i + 1}</span>
                   {mp.photoId ? (
                     <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 border border-white/10">
-                      <img src={`https://www.openaustralia.org.au/images/mpsL/${mp.photoId}.jpg`} alt={mp.name} className="w-full h-full object-cover" />
+                      <img src={getPhotoUrl(mp.photoId)} alt={mp.name} className="w-full h-full object-cover" />
                     </div>
                   ) : (
                     <div className="w-7 h-7 rounded-full bg-white/5 shrink-0" />

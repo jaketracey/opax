@@ -10,3 +10,8 @@ export const API_BASE =
   typeof window !== "undefined"
     ? `http://${window.location.hostname}:8000`
     : "http://localhost:8000";
+
+/** Get the URL for an MP's headshot photo (served from our API, not OpenAustralia). */
+export function getPhotoUrl(personId: string | number): string {
+  return `${API_BASE}/api/photos/${personId}`;
+}

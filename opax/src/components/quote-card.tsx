@@ -1,6 +1,7 @@
 "use client";
 
 import { PartyBadge } from "@/components/party-badge";
+import { getPhotoUrl } from "@/lib/utils";
 
 interface QuoteCardProps {
   speakerName: string;
@@ -37,7 +38,7 @@ export function QuoteCard({
       <div className="flex items-center gap-3 mb-4 pl-3">
         <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-white/10 transition-transform duration-300 group-hover:scale-105">
           <img
-            src={`https://www.openaustralia.org.au/images/mps/${photoId}.jpg`}
+            src={getPhotoUrl(photoId)}
             alt={speakerName}
             className="w-full h-full object-cover"
           />

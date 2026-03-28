@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { getPhotoUrl } from "@/lib/utils";
 import {
   BarChart,
   Bar,
@@ -654,7 +655,7 @@ export default function HousingPage() {
                       style={{ borderColor }}
                     >
                       <img
-                        src={`https://www.openaustralia.org.au/images/mps/${mp.photoId}.jpg`}
+                        src={getPhotoUrl(mp.photoId)}
                         alt={mp.name}
                         className="w-full h-full object-cover"
                       />

@@ -217,7 +217,7 @@ const partyColors: Record<string, string> = {
   "United Australia Party": "#FFD700", "Centre Alliance": "#FF6600",
 };
 
-import { API_BASE } from "@/lib/utils";
+import { API_BASE, getPhotoUrl } from "@/lib/utils";
 const API = API_BASE;
 
 /* ── Types for API data ── */
@@ -520,7 +520,7 @@ export default function GamblingPage() {
                         style={{ borderColor: `${barColor}60` }}
                       >
                         <img
-                          src={`https://www.openaustralia.org.au/images/mpsL/${mp.person_id}.jpg`}
+                          src={getPhotoUrl(mp.person_id)}
                           alt={mp.name}
                           className="w-full h-full object-cover"
                           onError={(e) => {
@@ -723,7 +723,7 @@ export default function GamblingPage() {
                     {q.photoId && (
                       <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-white/10">
                         <img
-                          src={`https://www.openaustralia.org.au/images/mpsL/${q.photoId}.jpg`}
+                          src={getPhotoUrl(q.photoId)}
                           alt={q.speaker}
                           className="w-full h-full object-cover"
                         />
@@ -908,7 +908,7 @@ export default function GamblingPage() {
                 {mp.photoId && (
                   <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-[#DC2626]/40">
                     <img
-                      src={`https://www.openaustralia.org.au/images/mpsL/${mp.photoId}.jpg`}
+                      src={getPhotoUrl(mp.photoId)}
                       alt={mp.name}
                       className="w-full h-full object-cover"
                     />
@@ -958,7 +958,7 @@ export default function GamblingPage() {
                     style={{ borderColor: partyColors[mp.party] || "#888" }}
                   >
                     <img
-                      src={`https://www.openaustralia.org.au/images/mpsL/${mp.photoId}.jpg`}
+                      src={getPhotoUrl(mp.photoId)}
                       alt={mp.name}
                       className="w-full h-full object-cover"
                     />

@@ -16,7 +16,7 @@ import {
   Legend,
 } from "recharts";
 
-import { API_BASE } from "@/lib/utils";
+import { API_BASE, getPhotoUrl } from "@/lib/utils";
 
 /* ── Types ── */
 
@@ -185,7 +185,7 @@ function MpSelector({
         {selected ? (
           <span className="flex items-center gap-2">
             <img
-              src={`https://www.openaustralia.org.au/images/mpsL/${selected.person_id}.jpg`}
+              src={getPhotoUrl(selected.person_id)}
               alt=""
               className="w-6 h-6 rounded-full object-cover"
             />
@@ -220,7 +220,7 @@ function MpSelector({
               className="w-full text-left px-4 py-2.5 text-sm hover:bg-white/5 transition-colors flex items-center gap-3"
             >
               <img
-                src={`https://www.openaustralia.org.au/images/mpsL/${mp.person_id}.jpg`}
+                src={getPhotoUrl(mp.person_id)}
                 alt=""
                 className="w-6 h-6 rounded-full object-cover"
               />

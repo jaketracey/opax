@@ -43,7 +43,7 @@ import {
   Flag,
 } from "lucide-react";
 
-import { API_BASE } from "@/lib/utils";
+import { API_BASE, getPhotoUrl } from "@/lib/utils";
 
 // --- Types ---
 
@@ -564,7 +564,7 @@ function YourMPPageInner() {
                   <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 shadow-lg">
                     {mpData.photo_id ? (
                       <img
-                        src={`https://www.openaustralia.org.au/images/mps/${mpData.photo_id}.jpg`}
+                        src={getPhotoUrl(mpData.photo_id)}
                         alt={mpData.name}
                         className="w-full h-full object-cover"
                       />

@@ -6,7 +6,7 @@ import Link from "next/link";
 import Markdown from "react-markdown";
 import { PartyBadge } from "@/components/party-badge";
 
-import { API_BASE } from "@/lib/utils";
+import { API_BASE, getPhotoUrl } from "@/lib/utils";
 
 type SearchMode = "hybrid" | "semantic" | "keyword";
 
@@ -812,7 +812,7 @@ function SearchPageInner() {
 
   const speakerPhotoUrl = (personId: number | null | undefined): string | null => {
     if (!personId) return null;
-    return `https://www.openaustralia.org.au/images/mpsL/${personId}.jpg`;
+    return getPhotoUrl(personId);
   };
 
   return (

@@ -116,5 +116,9 @@ export function formatDollars(n: number): string {
 }
 
 export function mpPhotoUrl(photoId: string): string {
-  return `https://www.openaustralia.org.au/images/mpsL/${photoId}.jpg`;
+  // Served from our own API — see parli/ingest/photos.py
+  const base = typeof window !== "undefined"
+    ? `http://${window.location.hostname}:8000`
+    : "http://localhost:8000";
+  return `${base}/api/photos/${photoId}`;
 }

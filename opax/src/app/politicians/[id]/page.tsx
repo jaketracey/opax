@@ -44,7 +44,7 @@ import {
   Cell,
 } from "recharts";
 
-import { API_BASE } from "@/lib/utils";
+import { API_BASE, getPhotoUrl } from "@/lib/utils";
 
 /* ── Types ── */
 
@@ -602,7 +602,7 @@ function MagazineQuoteCard({
         <div className="shrink-0 pt-1">
           <div className="w-10 h-10 rounded-full overflow-hidden border border-white/10">
             <img
-              src={`https://www.openaustralia.org.au/images/mps/${photoId}.jpg`}
+              src={getPhotoUrl(photoId)}
               alt={speakerName}
               className="w-full h-full object-cover"
             />
@@ -1371,7 +1371,7 @@ export default function PoliticianProfilePage({
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: `url(https://www.openaustralia.org.au/images/mpsL/${politician.photoId}.jpg)`,
+              backgroundImage: `url(${getPhotoUrl(politician.photoId)})`,
               transform: `translateY(${heroOffset}px) scale(1.1)`,
               filter: "brightness(0.4) saturate(0.7)",
             }}
@@ -1400,7 +1400,7 @@ export default function PoliticianProfilePage({
               }}
             >
               <img
-                src={`https://www.openaustralia.org.au/images/mpsL/${politician.photoId}.jpg`}
+                src={getPhotoUrl(politician.photoId)}
                 alt={politician.name}
                 className="w-full h-full object-cover"
               />
@@ -1850,7 +1850,7 @@ export default function PoliticianProfilePage({
                     style={{ borderColor: partyBorderColors[mp.party] || "#888" }}
                   >
                     <img
-                      src={`https://www.openaustralia.org.au/images/mps/${mp.photoId}.jpg`}
+                      src={getPhotoUrl(mp.photoId)}
                       alt={mp.name}
                       className="w-full h-full object-cover"
                     />

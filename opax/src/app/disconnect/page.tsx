@@ -137,7 +137,10 @@ function scoreBg(score: number): string {
 }
 
 function mpPhotoUrl(personId: string): string {
-  return `https://www.openaustralia.org.au/images/mps/${personId}.jpg`;
+  const base = typeof window !== "undefined"
+    ? `http://${window.location.hostname}:8000`
+    : "http://localhost:8000";
+  return `${base}/api/photos/${personId}`;
 }
 
 function partyAbbrev(party: string | null): string {
