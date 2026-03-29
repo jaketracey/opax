@@ -160,7 +160,7 @@ export default function PayToPlayPage() {
   // Fetch data
   const fetchData = useCallback(() => {
     setLoading(true);
-    const API = (typeof window !== "undefined" ? `http://${window.location.hostname}:8000` : "http://localhost:8000");
+    const API = (typeof window !== "undefined" && (window.location.hostname === "opax.com.au" || window.location.hostname === "www.opax.com.au") ? "" : typeof window !== "undefined" ? `http://${window.location.hostname}:8000` : "http://localhost:8000");
     const params = new URLSearchParams({
       sort: sortField === "company_name" ? "company_name" : sortField,
       limit: "200",

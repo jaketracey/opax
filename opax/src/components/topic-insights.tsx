@@ -106,7 +106,7 @@ export function TopicInsights({ topic, className = "" }: TopicInsightsProps) {
   const { ref, visible } = useScrollReveal();
 
   useEffect(() => {
-    const API = (typeof window !== "undefined" ? `http://${window.location.hostname}:8000` : "http://localhost:8000");
+    const API = (typeof window !== "undefined" && (window.location.hostname === "opax.com.au" || window.location.hostname === "www.opax.com.au") ? "" : typeof window !== "undefined" ? `http://${window.location.hostname}:8000` : "http://localhost:8000");
     fetch(`${API}/api/topic-insights/${encodeURIComponent(topic)}`)
       .then((r) => {
         if (!r.ok) throw new Error(`${r.status}`);

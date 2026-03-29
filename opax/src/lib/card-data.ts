@@ -117,7 +117,9 @@ export function formatDollars(n: number): string {
 
 export function mpPhotoUrl(photoId: string): string {
   // Served from our own API — see parli/ingest/photos.py
-  const base = typeof window !== "undefined"
+  const base = typeof window !== "undefined" && (window.location.hostname === "opax.com.au" || window.location.hostname === "www.opax.com.au")
+    ? ""
+    : typeof window !== "undefined"
     ? `http://${window.location.hostname}:8000`
     : "http://localhost:8000";
   return `${base}/api/photos/${photoId}`;

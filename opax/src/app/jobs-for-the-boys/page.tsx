@@ -167,7 +167,7 @@ export default function JobsForTheBoysPage() {
   const [activeTheme, setActiveTheme] = useState<string | null>(null);
 
   useEffect(() => {
-    const API = (typeof window !== "undefined" ? `http://${window.location.hostname}:8000` : "http://localhost:8000");
+    const API = (typeof window !== "undefined" && (window.location.hostname === "opax.com.au" || window.location.hostname === "www.opax.com.au") ? "" : typeof window !== "undefined" ? `http://${window.location.hostname}:8000` : "http://localhost:8000");
     fetch(`${API}/api/jobs-for-the-boys`)
       .then((r) => r.json())
       .then((resp) => {
