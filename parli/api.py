@@ -719,7 +719,6 @@ def gambling_stats():
            OR topic LIKE '%betting%'
            OR topic LIKE '%wagering%'
            OR topic LIKE '%casino%'
-           OR text LIKE '%gambling%'
         GROUP BY year, party_group
         ORDER BY year
         """
