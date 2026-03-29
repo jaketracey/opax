@@ -34,6 +34,7 @@ from collections import defaultdict
 from datetime import datetime
 from typing import Any
 
+from parli.db import is_postgres
 from parli.schema import get_db, init_db
 
 # Reuse the stance classification and topic profiles from consistency module
@@ -91,9 +92,19 @@ CREATE INDEX IF NOT EXISTS idx_disconnect_topic
 """
 
 
-def ensure_table(db: sqlite3.Connection) -> None:
+def ensure_table(db) -> None:
     """Create the mp_disconnect_scores table if it doesn't exist."""
-    db.executescript(CREATE_TABLE_SQL + CREATE_INDEX_SQL)
+    if is_postgres():
+        # On PG, tables are managed by migration scripts; just verify it exists
+        try:
+            db.execute("SELECT 1 FROM mp_disconnect_scores LIMIT 0")
+        except Exception:
+            # Create with PG-compatible syntax
+            pg_create = CREATE_TABLE_SQL.replace("datetime('now')", "NOW()")
+            db.executescript(pg_create)
+            db.executescript(CREATE_INDEX_SQL)
+    else:
+        db.executescript(CREATE_TABLE_SQL + CREATE_INDEX_SQL)
 
 
 # ---------------------------------------------------------------------------
@@ -335,15 +346,37 @@ def save_scores(db: sqlite3.Connection, results: list[dict]) -> int:
 
     ensure_table(db)
 
-    db.executemany(
+    if is_postgres():
+        upsert_sql = """
+        INSERT INTO mp_disconnect_scores
+            (person_id, topic_id, topic_name, speech_count,
+             pro_reform_speeches, anti_reform_speeches,
+             relevant_divisions, aligned_votes, misaligned_votes,
+             vote_alignment, disconnect_score, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT (person_id, topic_id) DO UPDATE SET
+            topic_name = EXCLUDED.topic_name,
+            speech_count = EXCLUDED.speech_count,
+            pro_reform_speeches = EXCLUDED.pro_reform_speeches,
+            anti_reform_speeches = EXCLUDED.anti_reform_speeches,
+            relevant_divisions = EXCLUDED.relevant_divisions,
+            aligned_votes = EXCLUDED.aligned_votes,
+            misaligned_votes = EXCLUDED.misaligned_votes,
+            vote_alignment = EXCLUDED.vote_alignment,
+            disconnect_score = EXCLUDED.disconnect_score,
+            updated_at = EXCLUDED.updated_at
         """
+    else:
+        upsert_sql = """
         INSERT OR REPLACE INTO mp_disconnect_scores
             (person_id, topic_id, topic_name, speech_count,
              pro_reform_speeches, anti_reform_speeches,
              relevant_divisions, aligned_votes, misaligned_votes,
              vote_alignment, disconnect_score, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """,
+        """
+    db.executemany(
+        upsert_sql,
         [
             (
                 r["person_id"], r["topic_id"], r["topic_name"],
@@ -468,7 +501,7 @@ def get_disconnect_summary(db: sqlite3.Connection) -> dict:
     # MPs with highest average disconnect across topics
     worst_avg = db.execute(
         """
-        SELECT ds.person_id, m.full_name, m.party,
+        SELECT ds.person_id, MAX(m.full_name) AS full_name, MAX(m.party) AS party,
                AVG(ds.disconnect_score) as avg_disconnect,
                COUNT(ds.topic_name) as topics_scored,
                SUM(ds.speech_count) as total_speeches
@@ -476,7 +509,7 @@ def get_disconnect_summary(db: sqlite3.Connection) -> dict:
         LEFT JOIN members m ON m.person_id = ds.person_id
         WHERE ds.speech_count >= ?
         GROUP BY ds.person_id
-        HAVING topics_scored >= 2
+        HAVING COUNT(ds.topic_name) >= 2
         ORDER BY avg_disconnect DESC
         LIMIT 20
         """,
@@ -554,7 +587,8 @@ def main() -> None:
     args = parser.parse_args()
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    if not is_postgres():
+        db.execute("PRAGMA busy_timeout = 300000")
     init_db(db)
 
     # Rebuild if requested

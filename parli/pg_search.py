@@ -89,20 +89,23 @@ def _pg_semantic_search(query: str, top_k: int = 20, text_limit: int = 500) -> l
     db = get_db()
     try:
         # Check if any embeddings exist in pgvector
-        has_embeddings = db.execute(
-            "SELECT EXISTS(SELECT 1 FROM speeches WHERE embedding IS NOT NULL LIMIT 1)"
-        ).fetchone()
-
-        # The result could be a dict or tuple
-        has_emb = False
-        if isinstance(has_embeddings, dict):
-            has_emb = list(has_embeddings.values())[0]
-        elif has_embeddings:
-            has_emb = has_embeddings[0]
+        try:
+            has_embeddings = db.execute(
+                "SELECT EXISTS(SELECT 1 FROM speeches WHERE embedding IS NOT NULL LIMIT 1)"
+            ).fetchone()
+            has_emb = False
+            if isinstance(has_embeddings, dict):
+                has_emb = list(has_embeddings.values())[0]
+            elif has_embeddings:
+                has_emb = has_embeddings[0]
+        except Exception:
+            has_emb = False
 
         if not has_emb:
             # Fall back to numpy-based semantic search
+            # Close db before calling fallback (which gets its own connection)
             db.close()
+            db = None  # Prevent double-close in finally
             return _numpy_semantic_search(query, top_k, text_limit)
 
         # Embed the query
@@ -131,7 +134,7 @@ def _pg_semantic_search(query: str, top_k: int = 20, text_limit: int = 500) -> l
             results.append(_speech_row_to_dict(row, score, text_limit=text_limit))
         return results
     finally:
-        if hasattr(db, 'close'):
+        if db is not None and hasattr(db, 'close'):
             db.close()
 
 

@@ -14,8 +14,10 @@ import json
 import sqlite3
 from datetime import datetime
 
+from parli.db import is_postgres
 
-def get_your_mp(db: sqlite3.Connection, postcode: str) -> dict:
+
+def get_your_mp(db, postcode: str) -> dict:
     """Return comprehensive MP/electorate data for a given postcode.
 
     Returns dict with keys:
@@ -23,7 +25,8 @@ def get_your_mp(db: sqlite3.Connection, postcode: str) -> dict:
         follow_the_money, electorate_vs_mp, conflicts_of_interest,
         grant_spending, career_stats, key_quote
     """
-    db.execute("PRAGMA busy_timeout = 600000")
+    if not is_postgres():
+        db.execute("PRAGMA busy_timeout = 600000")
 
     # ------------------------------------------------------------------
     # 0. Check cache first
@@ -36,25 +39,34 @@ def get_your_mp(db: sqlite3.Connection, postcode: str) -> dict:
     if cached:
         # Cache for 24 hours
         try:
-            updated = datetime.fromisoformat(cached["updated_at"])
+            updated_at = cached["updated_at"]
+            if hasattr(updated_at, 'isoformat'):
+                updated = updated_at  # Already a datetime on PG
+            else:
+                updated = datetime.fromisoformat(str(updated_at))
             if (datetime.now() - updated).total_seconds() < 86400:
-                return json.loads(cached["value"])
+                val = cached["value"]
+                return json.loads(val) if isinstance(val, str) else val
         except (ValueError, TypeError):
             pass
 
     # ------------------------------------------------------------------
     # 1. Resolve postcode -> electorate(s)
     # ------------------------------------------------------------------
-    electorates = db.execute(
-        """SELECT pe.electorate_name, pe.state, pe.ratio,
-                  e.margin_pct, e.winning_party, e.winning_candidate,
-                  e.swing, e.seat_type, e.year as election_year
-           FROM postcode_electorates pe
-           LEFT JOIN electorates e ON LOWER(e.electorate_name) = LOWER(pe.electorate_name)
-           WHERE pe.postcode = ?
+    try:
+        electorates = db.execute(
+            """SELECT pe.electorate_name, pe.state, pe.ratio,
+                      e.margin_pct, e.winning_party, e.winning_candidate,
+                      e.swing, e.seat_type, e.year as election_year
+               FROM postcode_electorates pe
+               LEFT JOIN electorates e ON LOWER(e.electorate_name) = LOWER(pe.electorate_name)
+               WHERE pe.postcode = ?
            ORDER BY pe.ratio DESC""",
-        (postcode,),
-    ).fetchall()
+            (postcode,),
+        ).fetchall()
+    except Exception:
+        # postcode_electorates table may not exist on this database
+        electorates = []
 
     if not electorates:
         return {"error": f"No electorate found for postcode {postcode}", "postcode": postcode}
@@ -364,17 +376,17 @@ def get_your_mp(db: sqlite3.Connection, postcode: str) -> dict:
     ).fetchone()
 
     # Years active
-    entered = mp_dict.get("entered_house", "")
-    first_speech = speech_stats["first_speech"] if speech_stats else None
+    entered = str(mp_dict.get("entered_house", "") or "")
+    first_speech = str(speech_stats["first_speech"] or "") if speech_stats else None
     start_year = None
     if entered:
         try:
-            start_year = int(entered[:4])
+            start_year = int(str(entered)[:4])
         except (ValueError, TypeError):
             pass
     if not start_year and first_speech:
         try:
-            start_year = int(first_speech[:4])
+            start_year = int(str(first_speech)[:4])
         except (ValueError, TypeError):
             pass
 
@@ -479,11 +491,19 @@ def get_your_mp(db: sqlite3.Connection, postcode: str) -> dict:
     # Cache the result
     # ------------------------------------------------------------------
     try:
-        db.execute(
-            """INSERT OR REPLACE INTO analysis_cache (key, value, updated_at)
-               VALUES (?, ?, datetime('now'))""",
-            (cache_key, json.dumps(result, default=str)),
-        )
+        if is_postgres():
+            db.execute(
+                """INSERT INTO analysis_cache (key, value, updated_at)
+                   VALUES (%s, %s, NOW())
+                   ON CONFLICT(key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()""",
+                (cache_key, json.dumps(result, default=str)),
+            )
+        else:
+            db.execute(
+                """INSERT OR REPLACE INTO analysis_cache (key, value, updated_at)
+                   VALUES (?, ?, datetime('now'))""",
+                (cache_key, json.dumps(result, default=str)),
+            )
         db.commit()
     except Exception:
         pass  # Don't fail the request if caching fails
@@ -491,12 +511,16 @@ def get_your_mp(db: sqlite3.Connection, postcode: str) -> dict:
     return result
 
 
-def get_all_postcodes(db: sqlite3.Connection) -> list[dict]:
+def get_all_postcodes(db) -> list[dict]:
     """Return all valid postcodes with their electorate names for autocomplete."""
-    db.execute("PRAGMA busy_timeout = 600000")
-    rows = db.execute(
-        """SELECT DISTINCT pe.postcode, pe.electorate_name, pe.state
-           FROM postcode_electorates pe
-           ORDER BY pe.postcode"""
-    ).fetchall()
-    return [dict(r) for r in rows]
+    if not is_postgres():
+        db.execute("PRAGMA busy_timeout = 600000")
+    try:
+        rows = db.execute(
+            """SELECT DISTINCT pe.postcode, pe.electorate_name, pe.state
+               FROM postcode_electorates pe
+               ORDER BY pe.postcode"""
+        ).fetchall()
+        return [dict(r) for r in rows]
+    except Exception:
+        return []

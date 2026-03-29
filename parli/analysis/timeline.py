@@ -24,7 +24,7 @@ import argparse
 import sqlite3
 from collections import defaultdict
 
-from parli.schema import get_db
+from parli.db import get_db, is_postgres
 
 
 # ---------------------------------------------------------------------------
@@ -42,7 +42,8 @@ def build_timeline(db: sqlite3.Connection, entity: str) -> dict:
       - events: list of event dicts sorted by date
       - summary: aggregate totals
     """
-    db.execute("PRAGMA busy_timeout = 600000")
+    if not is_postgres():
+        db.execute("PRAGMA busy_timeout = 600000")
     events = []
     like_pattern = f"%{entity}%"
 
@@ -110,19 +111,30 @@ def build_timeline(db: sqlite3.Connection, entity: str) -> dict:
             },
         })
 
-    # 3. Speeches via FTS5
+    # 3. Speeches via full-text search
     try:
-        rows = db.execute("""
-            SELECT s.speech_id, s.person_id, s.speaker_name, s.party,
-                   s.date, s.topic, substr(s.text, 1, 300) AS snippet,
-                   s.word_count
-            FROM speeches_fts fts
-            JOIN speeches s ON s.speech_id = fts.rowid
-            WHERE speeches_fts MATCH ?
-            ORDER BY s.date DESC
-            LIMIT 500
-        """, (_fts5_escape(entity),)).fetchall()
-    except sqlite3.OperationalError:
+        if is_postgres():
+            rows = db.execute("""
+                SELECT s.speech_id, s.person_id, s.speaker_name, s.party,
+                       s.date, s.topic, substr(s.text, 1, 300) AS snippet,
+                       s.word_count
+                FROM speeches s
+                WHERE s.search_vector @@ plainto_tsquery('english', %s)
+                ORDER BY s.date DESC
+                LIMIT 500
+            """, (entity,)).fetchall()
+        else:
+            rows = db.execute("""
+                SELECT s.speech_id, s.person_id, s.speaker_name, s.party,
+                       s.date, s.topic, substr(s.text, 1, 300) AS snippet,
+                       s.word_count
+                FROM speeches_fts fts
+                JOIN speeches s ON s.speech_id = fts.rowid
+                WHERE speeches_fts MATCH ?
+                ORDER BY s.date DESC
+                LIMIT 500
+            """, (_fts5_escape(entity),)).fetchall()
+    except Exception:
         rows = []
 
     for r in rows:
@@ -336,7 +348,8 @@ def get_top_entities(db: sqlite3.Connection, limit: int = 30) -> list[dict]:
     Scores entities by how many different data tables they appear in,
     weighted by the significance of each connection type.
     """
-    db.execute("PRAGMA busy_timeout = 600000")
+    if not is_postgres():
+        db.execute("PRAGMA busy_timeout = 600000")
     entities: dict[str, dict] = {}
 
     # Donors with total amounts
@@ -345,7 +358,7 @@ def get_top_entities(db: sqlite3.Connection, limit: int = 30) -> list[dict]:
         FROM donations
         WHERE donor_name IS NOT NULL AND donor_name != ''
         GROUP BY donor_name
-        HAVING cnt >= 2
+        HAVING COUNT(*) >= 2
         ORDER BY total DESC
         LIMIT 500
     """).fetchall()
@@ -363,7 +376,7 @@ def get_top_entities(db: sqlite3.Connection, limit: int = 30) -> list[dict]:
         FROM contracts
         WHERE supplier_name IS NOT NULL AND supplier_name != ''
         GROUP BY supplier_name
-        HAVING cnt >= 1
+        HAVING COUNT(*) >= 1
         ORDER BY total DESC
         LIMIT 500
     """).fetchall()
@@ -399,7 +412,7 @@ def get_top_entities(db: sqlite3.Connection, limit: int = 30) -> list[dict]:
         FROM ministerial_meetings
         WHERE organisation IS NOT NULL AND organisation != ''
         GROUP BY organisation
-        HAVING cnt >= 2
+        HAVING COUNT(*) >= 2
         ORDER BY cnt DESC
         LIMIT 200
     """).fetchall()

@@ -21,12 +21,28 @@ import sys
 from collections import Counter, defaultdict
 from datetime import datetime
 
-from parli.schema import get_db, init_db
+from parli.db import get_db, is_postgres
+from parli.schema import init_db
+
+
+def _gc_distinct(col: str, sep: str = ",") -> str:
+    """GROUP_CONCAT(DISTINCT col) -> STRING_AGG(DISTINCT col, sep) on PG."""
+    if is_postgres():
+        return f"STRING_AGG(DISTINCT {col}, '{sep}')"
+    return f"GROUP_CONCAT(DISTINCT {col})"
+
+
+def _gc(expr: str, sep: str = ",") -> str:
+    """GROUP_CONCAT(expr) -> STRING_AGG(expr, sep) on PG."""
+    if is_postgres():
+        return f"STRING_AGG({expr}, '{sep}')"
+    return f"GROUP_CONCAT({expr})"
 
 
 def _get_db():
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    if not is_postgres():
+        db.execute("PRAGMA busy_timeout = 300000")
     init_db(db)
     return db
 
@@ -36,10 +52,17 @@ def _cache(db, key: str, value):
     import time
     for attempt in range(5):
         try:
-            db.execute(
-                "INSERT OR REPLACE INTO analysis_cache(key, value, updated_at) VALUES (?, ?, ?)",
-                (key, json.dumps(value, default=str), datetime.now().isoformat()),
-            )
+            if is_postgres():
+                db.execute(
+                    """INSERT INTO analysis_cache(key, value, updated_at) VALUES (%s, %s, NOW())
+                       ON CONFLICT(key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()""",
+                    (key, json.dumps(value, default=str)),
+                )
+            else:
+                db.execute(
+                    "INSERT OR REPLACE INTO analysis_cache(key, value, updated_at) VALUES (?, ?, ?)",
+                    (key, json.dumps(value, default=str), datetime.now().isoformat()),
+                )
             db.commit()
             return
         except Exception as e:
@@ -76,8 +99,9 @@ def find_flip_floppers(db) -> list[dict]:
             JOIN members m ON m.person_id = s.person_id
             WHERE s.person_id IS NOT NULL
               AND m.full_name IS NOT NULL
-            GROUP BY m.person_id, t.name
-            HAVING (pre_count >= 20 OR post_count >= 20)
+            GROUP BY m.person_id, m.full_name, m.party, t.name
+            HAVING (SUM(CASE WHEN s.date < '2019-01-01' THEN 1 ELSE 0 END) >= 20
+                 OR SUM(CASE WHEN s.date >= '2019-01-01' THEN 1 ELSE 0 END) >= 20)
         ),
         mp_totals AS (
             SELECT
@@ -86,7 +110,7 @@ def find_flip_floppers(db) -> list[dict]:
                 SUM(post_count) AS total_post
             FROM period_counts
             GROUP BY person_id
-            HAVING total_pre >= 50 AND total_post >= 50
+            HAVING SUM(pre_count) >= 50 AND SUM(post_count) >= 50
         )
         SELECT
             pc.person_id,
@@ -169,7 +193,7 @@ def find_donation_spikes_before_votes(db) -> list[dict]:
             SUM(amount) AS total
         FROM donations
         WHERE industry IS NOT NULL
-          AND financial_year GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]'
+          AND LENGTH(financial_year) = 7 AND financial_year LIKE '____-__'
           AND amount > 0
         GROUP BY industry, recipient, financial_year
         ORDER BY industry, recipient, financial_year
@@ -198,7 +222,7 @@ def find_donation_spikes_before_votes(db) -> list[dict]:
             continue
 
         for div in divisions:
-            div_year = div["date"][:4]
+            div_year = str(div["date"])[:4]
             # The financial year before: if division is in 2020, the prior FY is 2019-20
             prior_fy = f"{int(div_year)-1}-{div_year[2:]}"
 
@@ -256,7 +280,8 @@ def find_revolving_door(db) -> list[dict]:
     """
     print("\n=== REVOLVING DOOR INDICATORS ===\n")
 
-    rows = db.execute("""
+    gc_suppliers = _gc_distinct("csl.supplier_name")
+    rows = db.execute(f"""
         SELECT
             csl.person_id,
             m.full_name,
@@ -265,15 +290,15 @@ def find_revolving_door(db) -> list[dict]:
             COUNT(*) AS link_count,
             SUM(csl.contract_amount) AS total_contract_value,
             SUM(csl.donation_amount) AS total_donations,
-            GROUP_CONCAT(DISTINCT csl.supplier_name) AS suppliers,
+            {gc_suppliers} AS suppliers,
             MIN(csl.speech_date) AS earliest_speech,
             MAX(csl.speech_date) AS latest_speech
         FROM contract_speech_links csl
         LEFT JOIN members m ON m.person_id = csl.person_id
         WHERE csl.match_type = 'party_match'
           AND csl.person_id IS NOT NULL
-        GROUP BY csl.person_id, csl.company_name
-        HAVING link_count >= 2
+        GROUP BY csl.person_id, m.full_name, csl.party, csl.company_name
+        HAVING COUNT(*) >= 2
         ORDER BY total_contract_value DESC
         LIMIT 50
     """).fetchall()
@@ -496,7 +521,7 @@ def find_cross_party_agreement(db) -> list[dict]:
     print("\n=== CROSS-PARTY AGREEMENT: United votes, divided rhetoric ===\n")
 
     # Find divisions where major parties voted the same way
-    rows = db.execute("""
+    rows = db.execute(f"""
         WITH party_division_votes AS (
             SELECT
                 v.division_id,
@@ -527,13 +552,13 @@ def find_cross_party_agreement(db) -> list[dict]:
         agreed_divisions AS (
             SELECT
                 division_id,
-                GROUP_CONCAT(party_group || ':' || majority_vote) AS votes_detail,
+                {_gc("party_group || ':' || majority_vote")} AS votes_detail,
                 COUNT(DISTINCT party_group) AS parties_voting,
                 COUNT(DISTINCT majority_vote) AS distinct_votes
             FROM party_majority
             WHERE rn = 1
             GROUP BY division_id
-            HAVING parties_voting >= 3 AND distinct_votes = 1
+            HAVING COUNT(DISTINCT party_group) >= 3 AND COUNT(DISTINCT majority_vote) = 1
         )
         SELECT
             ad.division_id,
@@ -647,7 +672,11 @@ def get_stories(story_type: str, db=None) -> list[dict]:
         "SELECT value FROM analysis_cache WHERE key = ?", (key,)
     ).fetchone()
     if row:
-        return json.loads(row["value"])
+        val = row["value"]
+        # PG may auto-deserialize JSONB columns; only parse if still a string
+        if isinstance(val, str):
+            return json.loads(val)
+        return val
     return []
 
 

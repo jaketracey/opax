@@ -157,10 +157,21 @@ class _CursorWrapper:
 def _translate_placeholders(sql: str) -> str:
     """Convert SQLite-style ? placeholders to PostgreSQL-style %s.
 
-    This is a simple conversion that handles the common case. It does NOT
-    handle ? inside string literals (unlikely in our codebase).
+    Also escapes literal % characters (e.g. in LIKE '%foo%') to %%
+    so psycopg doesn't interpret them as format codes.
+
+    Strategy: If the SQL contains ? placeholders (SQLite-style), we:
+      1. Escape all % to %% (so LIKE '%foo%' becomes '%%foo%%')
+      2. Convert ? to %s
+    If the SQL already uses %s placeholders (PG-style, e.g. from pg_search),
+    we leave it unchanged.
     """
-    return sql.replace("?", "%s")
+    if "?" in sql:
+        # SQLite-style SQL: escape % in literals, then convert ? to %s
+        sql = sql.replace("%", "%%")
+        sql = sql.replace("?", "%s")
+    # If no ? found, SQL already uses %s or has no params — leave as-is
+    return sql
 
 
 def get_db():

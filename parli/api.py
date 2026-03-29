@@ -19,7 +19,110 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 
-from parli.schema import get_db
+from parli.db import get_db, is_postgres
+
+
+# ---------------------------------------------------------------------------
+# PostgreSQL / SQLite compatibility helpers
+# ---------------------------------------------------------------------------
+
+def _pg_safe_pragma(db):
+    """Execute PRAGMA busy_timeout only on SQLite (no-op on PostgreSQL)."""
+    if not is_postgres():
+        _pg_safe_pragma(db)
+
+
+def _year_from_date(col: str) -> str:
+    """Return SQL to extract 4-digit year as TEXT from a date column."""
+    if is_postgres():
+        return f"EXTRACT(YEAR FROM {col})::TEXT"
+    else:
+        return f"substr({col}, 1, 4)"
+
+
+def _cast_date_year(col: str) -> str:
+    """Return SQL for CAST(date AS TEXT) -> extract year for grouping."""
+    if is_postgres():
+        return f"EXTRACT(YEAR FROM {col})::TEXT"
+    else:
+        return f"CAST({col} AS TEXT)"
+
+
+def _group_concat(expr: str, sep: str = ",") -> str:
+    """GROUP_CONCAT(expr) -> STRING_AGG(expr, sep) on PG."""
+    if is_postgres():
+        return f"STRING_AGG({expr}, '{sep}')"
+    else:
+        return f"GROUP_CONCAT({expr})"
+
+
+def _group_concat_distinct(col: str, sep: str = ",") -> str:
+    """GROUP_CONCAT(DISTINCT col) -> STRING_AGG(DISTINCT col, sep) on PG."""
+    if is_postgres():
+        return f"STRING_AGG(DISTINCT {col}, '{sep}')"
+    else:
+        return f"GROUP_CONCAT(DISTINCT {col})"
+
+
+def _upsert_cache(db, key: str, value: str):
+    """Insert or update analysis_cache, compatible with both backends."""
+    if is_postgres():
+        db.execute(
+            """INSERT INTO analysis_cache (key, value, updated_at)
+               VALUES (%s, %s, NOW())
+               ON CONFLICT(key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()""",
+            (key, value),
+        )
+    else:
+        db.execute(
+            "INSERT OR REPLACE INTO analysis_cache(key, value, updated_at) VALUES (?, ?, datetime('now'))",
+            (key, value),
+        )
+
+
+def _now_sql() -> str:
+    """Return the SQL expression for current timestamp."""
+    return "NOW()" if is_postgres() else "datetime('now')"
+
+
+def _ilike(col: str) -> str:
+    """Return col LIKE (SQLite is case-insensitive by default, PG needs ILIKE)."""
+    return f"{col} ILIKE" if is_postgres() else f"{col} LIKE"
+
+
+def _collate_nocase(col: str, param: str = "?") -> str:
+    """Return case-insensitive comparison: ILIKE on PG, COLLATE NOCASE on SQLite."""
+    if is_postgres():
+        return f"LOWER({col}) = LOWER({param})"
+    else:
+        return f"{col} = {param} COLLATE NOCASE"
+
+
+def _scalar(row):
+    """Extract the first value from a single-column query result row.
+    Works with both dict (PG) and tuple/Row (SQLite) rows."""
+    if row is None:
+        return None
+    if isinstance(row, dict):
+        return list(row.values())[0]
+    return row[0]
+
+
+def _parse_cached_json(val):
+    """Parse a value from analysis_cache. PG JSONB auto-deserializes; SQLite stores TEXT."""
+    if val is None:
+        return None
+    if isinstance(val, str):
+        return json.loads(val)
+    return val  # Already deserialized by PG JSONB driver
+
+
+def _table_exists_sql() -> str:
+    """Return SQL to list table names, compatible with both backends."""
+    if is_postgres():
+        return "SELECT table_name AS name FROM information_schema.tables WHERE table_schema = 'public'"
+    else:
+        return "SELECT name FROM sqlite_master WHERE type='table'"
 
 
 # ---------------------------------------------------------------------------
@@ -101,7 +204,10 @@ def search(
     mode: str = Query("hybrid", pattern="^(semantic|keyword|hybrid)$"),
     limit: int = Query(20, ge=1, le=100),
 ):
-    from parli.search import semantic_search, keyword_search, hybrid_search
+    if is_postgres():
+        from parli.pg_search import semantic_search, keyword_search, hybrid_search
+    else:
+        from parli.search import semantic_search, keyword_search, hybrid_search
 
     search_fn = {
         "semantic": semantic_search,
@@ -217,7 +323,7 @@ def get_mp(person_id: str):
     ).fetchone()
     if cache_row:
         try:
-            result["cached_analysis"] = json.loads(cache_row["value"])
+            result["cached_analysis"] = _parse_cached_json(cache_row["value"])
         except (json.JSONDecodeError, TypeError):
             pass
 
@@ -278,7 +384,7 @@ def get_mp_profile(person_id: str):
     ).fetchone()
     if cache_row:
         try:
-            tvfy_data = json.loads(cache_row["value"])
+            tvfy_data = _parse_cached_json(cache_row["value"])
             comparisons = tvfy_data.get("policy_comparisons", [])
             voted = [c for c in comparisons if c.get("voted")]
             result["policy_scores"] = [
@@ -417,7 +523,7 @@ def list_mps(
         FROM members m
         LEFT JOIN speeches s ON s.person_id = m.person_id
         WHERE {where}
-        GROUP BY m.person_id
+        GROUP BY m.person_id, m.full_name, m.party, m.electorate, m.chamber
         ORDER BY speech_count DESC
         LIMIT ?
         """,
@@ -457,7 +563,7 @@ def get_topic(topic_name: str):
     # Top speakers
     top_speakers = db.execute(
         """
-        SELECT speaker_name, party, COUNT(*) as count
+        SELECT speaker_name, MAX(party) as party, COUNT(*) as count
         FROM speeches
         WHERE topic LIKE ? AND speaker_name IS NOT NULL
         GROUP BY speaker_name
@@ -495,10 +601,11 @@ def get_topic(topic_name: str):
 @app.get("/api/topic/{topic_name}/timeline")
 def topic_timeline(topic_name: str):
     db = get_db()
+    year_expr = _cast_date_year("s.date")
     rows = db.execute(
-        """
+        f"""
         SELECT
-            CAST(s.date AS TEXT) AS year,
+            {year_expr} AS year,
             CASE
                 WHEN s.party LIKE '%Labor%' OR s.party LIKE '%ALP%' THEN 'ALP'
                 WHEN s.party LIKE '%Liberal%' THEN 'LIB'
@@ -547,7 +654,7 @@ def topic_mps(
         JOIN topics t ON t.topic_id = st.topic_id
         JOIN members m ON m.person_id = s.person_id
         WHERE t.name LIKE ?
-        GROUP BY m.person_id
+        GROUP BY m.person_id, m.full_name, m.party, m.electorate, m.chamber
         ORDER BY speech_count DESC
         LIMIT ?
         """,
@@ -592,10 +699,11 @@ def gambling_stats():
     db = get_db()
 
     # Speeches by year by party
+    year_expr = _cast_date_year("date")
     timeline = db.execute(
-        """
+        f"""
         SELECT
-            CAST(date AS TEXT) AS year,
+            {year_expr} AS year,
             CASE
                 WHEN party LIKE '%Labor%' OR party LIKE '%ALP%' THEN 'ALP'
                 WHEN party LIKE '%Liberal%' THEN 'LIB'
@@ -701,7 +809,7 @@ def gambling_stats():
     ).fetchone()
     if cache_row:
         try:
-            party_support = json.loads(cache_row["value"])
+            party_support = _parse_cached_json(cache_row["value"])
         except (json.JSONDecodeError, TypeError):
             pass
 
@@ -758,7 +866,10 @@ def stats():
 
     def safe_count(sql: str) -> int:
         try:
-            return db.execute(sql).fetchone()[0]
+            row = db.execute(sql).fetchone()
+            if isinstance(row, dict):
+                return list(row.values())[0] or 0
+            return row[0] if row else 0
         except Exception:
             return 0
 
@@ -790,9 +901,10 @@ def stats():
     # Donation industry coverage
     donation_industry_pct = 0.0
     try:
-        classified = db.execute(
+        row = db.execute(
             "SELECT COUNT(*) FROM donations WHERE industry IS NOT NULL AND industry != ''"
-        ).fetchone()[0]
+        ).fetchone()
+        classified = _scalar(row) or 0
         if donations > 0:
             donation_industry_pct = round(classified / donations * 100, 1)
     except Exception:
@@ -846,7 +958,7 @@ def donor_influence(
 ):
     """All party-industry donor-vote correlation scores."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     conditions = ["influence_score >= ?"]
     params: list = [min_score]
@@ -898,7 +1010,7 @@ def donor_influence(
 def donor_influence_mp(person_id: str):
     """Donor-vote correlation scores for a specific MP."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     rows = db.execute(
         """
@@ -936,7 +1048,7 @@ def donor_influence_party(
 ):
     """Donor-vote correlation scores for a specific party."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     rows = db.execute(
         """
@@ -1078,7 +1190,7 @@ def compare_mps(
         ).fetchone()
         if cache_row:
             try:
-                tvfy_data = json.loads(cache_row["value"])
+                tvfy_data = _parse_cached_json(cache_row["value"])
                 comparisons = tvfy_data.get("policy_comparisons", [])
                 voted = [c for c in comparisons if c.get("voted")]
                 result["policy_scores"] = [
@@ -1220,7 +1332,7 @@ def list_electorates():
         FROM members m
         LEFT JOIN speeches s ON s.person_id = m.person_id
         WHERE m.electorate IS NOT NULL AND m.chamber = 'representatives'
-        GROUP BY m.electorate
+        GROUP BY m.electorate, m.full_name, m.party, m.person_id
         ORDER BY m.electorate
         """
     ).fetchall()
@@ -1432,7 +1544,7 @@ def get_electorate_demographics(name: str):
     representation_gaps = []
     if stories:
         import json
-        data = json.loads(stories["value"])
+        data = _parse_cached_json(stories["value"])
         for story in data.get("stories", []):
             for mp in story.get("mps", []):
                 if mp.get("electorate", "").lower() == name.lower():
@@ -1478,27 +1590,33 @@ def network(
     where = " AND ".join(conditions)
 
     # Get donor -> party edges, normalising party names
+    party_case = """
+        CASE
+            WHEN recipient LIKE '%Labor%' OR recipient LIKE '%ALP%' THEN 'ALP'
+            WHEN recipient LIKE '%Liberal%' OR recipient LIKE '%LIB%' THEN 'Liberal'
+            WHEN recipient LIKE '%National%' OR recipient LIKE '%NAT%' THEN 'Nationals'
+            WHEN recipient LIKE '%Green%' OR recipient LIKE '%GRN%' THEN 'Greens'
+            WHEN recipient LIKE '%United Australia%' OR recipient LIKE '%Palmer%' THEN 'UAP'
+            WHEN recipient LIKE '%One Nation%' THEN 'One Nation'
+            ELSE 'Other'
+        END
+    """
     rows = db.execute(
         f"""
-        SELECT donor_name,
-               CASE
-                   WHEN recipient LIKE '%Labor%' OR recipient LIKE '%ALP%' THEN 'ALP'
-                   WHEN recipient LIKE '%Liberal%' OR recipient LIKE '%LIB%' THEN 'Liberal'
-                   WHEN recipient LIKE '%National%' OR recipient LIKE '%NAT%' THEN 'Nationals'
-                   WHEN recipient LIKE '%Green%' OR recipient LIKE '%GRN%' THEN 'Greens'
-                   WHEN recipient LIKE '%United Australia%' OR recipient LIKE '%Palmer%' THEN 'UAP'
-                   WHEN recipient LIKE '%One Nation%' THEN 'One Nation'
-                   ELSE 'Other'
-               END as party,
-               SUM(amount) as total,
-               industry,
-               COUNT(*) as donation_count,
-               MIN(financial_year) as first_year,
-               MAX(financial_year) as last_year
-        FROM donations
-        WHERE {where}
-        GROUP BY donor_name, party, industry
-        HAVING total >= ? AND party != 'Other'
+        SELECT donor_name, party, total, industry, donation_count, first_year, last_year
+        FROM (
+            SELECT donor_name,
+                   {party_case} as party,
+                   SUM(amount) as total,
+                   industry,
+                   COUNT(*) as donation_count,
+                   MIN(financial_year) as first_year,
+                   MAX(financial_year) as last_year
+            FROM donations
+            WHERE {where}
+            GROUP BY donor_name, {party_case}, industry
+        ) sub
+        WHERE total >= ? AND party != 'Other'
         ORDER BY total DESC
         LIMIT ?
         """,
@@ -1622,7 +1740,7 @@ def mp_insights(person_id: str):
     ).fetchone()
     if cached:
         try:
-            return json.loads(cached["value"])
+            return _parse_cached_json(cached["value"])
         except (json.JSONDecodeError, TypeError):
             pass
 
@@ -1660,9 +1778,10 @@ def mp_insights(person_id: str):
     ).fetchall()
 
     # Speech timeline — speeches per year
+    year_expr = _cast_date_year("date")
     timeline = db.execute(
-        """
-        SELECT CAST(date AS TEXT) AS year, COUNT(*) AS count
+        f"""
+        SELECT {year_expr} AS year, COUNT(*) AS count
         FROM speeches
         WHERE person_id = ? AND date IS NOT NULL
         GROUP BY year
@@ -1679,7 +1798,7 @@ def mp_insights(person_id: str):
     ).fetchone()
     if tvfy_row:
         try:
-            tvfy_data = json.loads(tvfy_row["value"])
+            tvfy_data = _parse_cached_json(tvfy_row["value"])
             comparisons = tvfy_data.get("policy_comparisons", [])
             policy_scores = [
                 {
@@ -1709,10 +1828,7 @@ def mp_insights(person_id: str):
     }
 
     # Cache it
-    db.execute(
-        "INSERT OR REPLACE INTO analysis_cache(key, value) VALUES (?, ?)",
-        (cache_key, json.dumps(result)),
-    )
+    _upsert_cache(db, cache_key, json.dumps(result))
     db.commit()
     return result
 
@@ -1810,7 +1926,7 @@ def mp_consistency(person_id: str):
     ).fetchone()
     if cached:
         try:
-            return json.loads(cached["value"])
+            return _parse_cached_json(cached["value"])
         except (json.JSONDecodeError, TypeError):
             pass
 
@@ -1829,7 +1945,7 @@ def mp_consistency(person_id: str):
     ).fetchone()
     if tvfy_row:
         try:
-            tvfy_data = json.loads(tvfy_row["value"])
+            tvfy_data = _parse_cached_json(tvfy_row["value"])
             for c in tvfy_data.get("policy_comparisons", []):
                 if c.get("voted"):
                     policy_scores[c["policy"]["name"].lower()] = c["agreement"]
@@ -1879,10 +1995,7 @@ def mp_consistency(person_id: str):
     }
 
     # Cache it
-    db.execute(
-        "INSERT OR REPLACE INTO analysis_cache(key, value) VALUES (?, ?)",
-        (cache_key, json.dumps(result)),
-    )
+    _upsert_cache(db, cache_key, json.dumps(result))
     db.commit()
     return result
 
@@ -2210,7 +2323,7 @@ def who_funds(query: str):
     ).fetchone()
     if cache_row:
         try:
-            tvfy_data = json.loads(cache_row["value"])
+            tvfy_data = _parse_cached_json(cache_row["value"])
             comparisons = tvfy_data.get("policy_comparisons", [])
             voted = [c for c in comparisons if c.get("voted")]
             policy_scores = [
@@ -2344,7 +2457,7 @@ def pay_to_play(
     received the donations ('party_match' = smoking gun).
     """
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     conditions = []
     params: list = []
@@ -2456,7 +2569,7 @@ def disconnect_scores(
     from parli.analysis.disconnect import get_mp_disconnect, ensure_table
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
     ensure_table(db)
     scores = get_mp_disconnect(person_id, db)
 
@@ -2490,7 +2603,7 @@ def disconnect_rankings(
     from parli.analysis.disconnect import get_disconnect_rankings, ensure_table
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
     ensure_table(db)
     rankings = get_disconnect_rankings(db, topic=topic, limit=limit, min_speeches=min_speeches)
 
@@ -2508,7 +2621,7 @@ def disconnect_summary():
     from parli.analysis.disconnect import get_disconnect_summary, ensure_table
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
     ensure_table(db)
     return get_disconnect_summary(db)
 
@@ -2523,7 +2636,7 @@ def topic_insights(topic_name: str, regenerate: bool = Query(False)):
     from parli.analysis.topic_insights import get_cached_insights, generate_topic_insights
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     if regenerate:
         topic_row = db.execute(
@@ -2532,14 +2645,7 @@ def topic_insights(topic_name: str, regenerate: bool = Query(False)):
         if not topic_row:
             return {"error": f"Topic '{topic_name}' not found"}, 404
         insights = generate_topic_insights(db, topic_row["topic_id"], topic_row["name"])
-        db.execute(
-            """
-            INSERT INTO analysis_cache (key, value, updated_at)
-            VALUES (?, ?, datetime('now'))
-            ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
-            """,
-            (f"topic_insights_{topic_name}", json.dumps(insights, default=str)),
-        )
+        _upsert_cache(db, f"topic_insights_{topic_name}", json.dumps(insights, default=str))
         db.commit()
         return insights
 
@@ -2554,7 +2660,7 @@ def topic_insights(topic_name: str, regenerate: bool = Query(False)):
 def all_topic_insights():
     """Return list of all topics with cached insights availability."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
     topics = db.execute("SELECT topic_id, name FROM topics ORDER BY topic_id").fetchall()
     result = []
     for t in topics:
@@ -2586,7 +2692,7 @@ def mp_profile_insights(
     from parli.analysis.mp_insights import get_mp_insight, generate_mp_insights, _parliament_topic_averages
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     if force:
         parliament_avg = _parliament_topic_averages(db)
@@ -2614,7 +2720,7 @@ def all_shareholdings(
     """List all MP shareholdings, optionally filtered by company name.
     Useful for cross-referencing with voting records."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     conditions = []
     params = []
@@ -2649,7 +2755,7 @@ def all_shareholdings(
 @app.get("/api/mp-interests/{person_id}")
 def mp_interests(person_id: str):
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     # General interests
     interests = db.execute(
@@ -2722,7 +2828,7 @@ def ministerial_meetings(
 ):
     """Search ministerial meeting diary entries with optional filters."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     conditions = []
     params = []
@@ -2788,7 +2894,7 @@ def ministerial_meetings(
 def ministerial_meetings_xref():
     """Return cached cross-references between ministerial meetings and donations/contracts."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     cached = db.execute(
         "SELECT value, updated_at FROM analysis_cache WHERE key = 'ministerial_meeting_xref'"
@@ -2796,7 +2902,7 @@ def ministerial_meetings_xref():
 
     if cached:
         return {
-            "data": json.loads(cached["value"]),
+            "data": _parse_cached_json(cached["value"]),
             "updated_at": cached["updated_at"],
         }
 
@@ -2817,7 +2923,7 @@ def mp_expenses_list(
 ):
     """List MP expense records with optional filters."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     conditions = []
     params = []
@@ -2835,12 +2941,11 @@ def mp_expenses_list(
 
     total = db.execute(
         f"SELECT COUNT(*) FROM mp_expenses {where}", params
-    ).fetchone()[0]
+    ).fetchone()
+    total = _scalar(total) or 0
 
     rows = db.execute(
-        f"""SELECT expense_id, name, member_type, electorate, state, party,
-                   category, subcategory, period, date_from, date_to,
-                   location, purpose, nights, rate, amount, date
+        f"""SELECT *
             FROM mp_expenses {where}
             ORDER BY amount DESC NULLS LAST
             LIMIT ? OFFSET ?""",
@@ -2854,7 +2959,7 @@ def mp_expenses_list(
 def mp_expenses_summary():
     """Aggregate expense stats by party and category."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     by_party = db.execute(
         """SELECT party, COUNT(*) as record_count,
@@ -2898,12 +3003,10 @@ def mp_expenses_by_mp(
 ):
     """Get all expense records for a specific MP (by exact name match)."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     rows = db.execute(
-        """SELECT expense_id, name, member_type, electorate, state, party,
-                  category, subcategory, period, date_from, date_to,
-                  location, purpose, nights, rate, amount, date
+        """SELECT *
            FROM mp_expenses
            WHERE name = ?
            ORDER BY amount DESC NULLS LAST
@@ -2937,7 +3040,7 @@ def qld_ministerial_gifts(
 ):
     """List QLD ministerial gift records."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     conditions = []
     params = []
@@ -2949,7 +3052,8 @@ def qld_ministerial_gifts(
 
     total = db.execute(
         f"SELECT COUNT(*) FROM qld_ministerial_gifts {where}", params
-    ).fetchone()[0]
+    ).fetchone()
+    total = _scalar(total) or 0
 
     rows = db.execute(
         f"""SELECT gift_id, registration_no, gift_description, donor_recipient,
@@ -2978,7 +3082,7 @@ def audits(
 ):
     """List ANAO audit reports with optional filters."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     conditions = []
     params = []
@@ -2997,7 +3101,8 @@ def audits(
 
     total = db.execute(
         f"SELECT COUNT(*) FROM audit_reports {where}", params
-    ).fetchone()[0]
+    ).fetchone()
+    total = _scalar(total) or 0
 
     rows = db.execute(
         f"""SELECT audit_id, title, report_number, audit_type, agency_audited,
@@ -3029,7 +3134,7 @@ def audits(
 def audit_detail(audit_id: int):
     """Get full detail for a single audit report."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     row = db.execute(
         """SELECT * FROM audit_reports WHERE audit_id = ?""",
@@ -3058,14 +3163,14 @@ def audit_detail(audit_id: int):
 def audit_xref():
     """Get cross-reference data: audited agencies vs contracts vs donations."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     cached = db.execute(
         "SELECT value FROM analysis_cache WHERE key = 'anao_agency_xref'"
     ).fetchone()
 
     if cached:
-        return json.loads(cached["value"])
+        return _parse_cached_json(cached["value"])
 
     return {"error": "Cross-reference data not yet generated. Run: python -m parli.ingest.anao"}
 
@@ -3093,11 +3198,11 @@ def federal_lobbyists(
         limit/offset - pagination
     """
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     # Check tables exist
-    tables = {r[0] for r in db.execute(
-        "SELECT name FROM sqlite_master WHERE type='table'"
+    tables = {r["name"] if isinstance(r, dict) else r[0] for r in db.execute(
+        _table_exists_sql()
     ).fetchall()}
     if "federal_lobbyists" not in tables:
         return {"total": 0, "lobbyists": [], "cross_references": {}}
@@ -3135,7 +3240,8 @@ def federal_lobbyists(
 
     total = db.execute(
         f"SELECT COUNT(*) FROM federal_lobbyists fl {where}", params
-    ).fetchone()[0]
+    ).fetchone()
+    total = _scalar(total) or 0
 
     rows = db.execute(
         f"""SELECT fl.lobbyist_id, fl.trading_name, fl.abn,
@@ -3171,7 +3277,7 @@ def federal_lobbyists(
                 "SELECT value FROM analysis_cache WHERE key = ?", (key,)
             ).fetchone()
             if cached:
-                cross_refs[key] = json.loads(cached["value"])
+                cross_refs[key] = _parse_cached_json(cached["value"])
         except Exception:
             pass
 
@@ -3213,7 +3319,7 @@ def grants(
     - q: free-text search across title, recipient, program
     """
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     conditions = []
     params = []
@@ -3250,7 +3356,8 @@ def grants(
 
     total = db.execute(
         f"SELECT COUNT(*) FROM government_grants {where}", params
-    ).fetchone()[0]
+    ).fetchone()
+    total = _scalar(total) or 0
 
     rows = db.execute(
         f"""SELECT grant_id, title, description, recipient, recipient_abn,
@@ -3270,7 +3377,7 @@ def grants(
 def grants_stats():
     """Summary statistics for government grants data."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     stats = db.execute("""
         SELECT
@@ -3313,7 +3420,7 @@ def grants_stats():
 def grants_pork_barreling():
     """Get cached pork-barreling analysis results."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     cached = db.execute(
         "SELECT value, updated_at FROM analysis_cache WHERE key = 'stories_pork_barreling'"
@@ -3321,7 +3428,7 @@ def grants_pork_barreling():
 
     if cached:
         return {
-            "data": json.loads(cached["value"]),
+            "data": _parse_cached_json(cached["value"]),
             "updated_at": cached["updated_at"],
         }
     return {"data": None, "message": "No pork-barreling analysis cached. Run: python -m parli.ingest.grants --analyze"}
@@ -3343,7 +3450,7 @@ def board_appointments(
 ):
     """Query government board appointments with optional filters."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     conditions = []
     params = []
@@ -3391,7 +3498,7 @@ def board_appointments(
 def board_patronage():
     """Get cached board patronage analysis (former MPs + donors on boards)."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     cached = db.execute(
         "SELECT value, updated_at FROM analysis_cache WHERE key = 'stories_board_patronage'"
@@ -3399,7 +3506,7 @@ def board_patronage():
 
     if cached:
         return {
-            "data": json.loads(cached["value"]),
+            "data": _parse_cached_json(cached["value"]),
             "updated_at": cached["updated_at"],
         }
     return {
@@ -3416,7 +3523,7 @@ def board_patronage():
 def jobs_for_the_boys(rebuild: bool = False):
     """Get 'Jobs for the Boys' investigation data (political patronage & revolving door)."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 600000")
+    _pg_safe_pragma(db)
 
     if not rebuild:
         cached = db.execute(
@@ -3424,7 +3531,7 @@ def jobs_for_the_boys(rebuild: bool = False):
         ).fetchone()
         if cached:
             return {
-                "data": json.loads(cached["value"]),
+                "data": _parse_cached_json(cached["value"]),
                 "updated_at": cached["updated_at"],
             }
 
@@ -3452,7 +3559,7 @@ def timeline_top(limit: int = Query(30, ge=1, le=100)):
     from parli.analysis.timeline import get_top_entities
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 600000")
+    _pg_safe_pragma(db)
     entities = get_top_entities(db, limit=limit)
     return {"entities": entities, "count": len(entities)}
 
@@ -3471,7 +3578,7 @@ def timeline_entity(entity_name: str):
     from parli.analysis.timeline import build_timeline
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 600000")
+    _pg_safe_pragma(db)
     result = build_timeline(db, entity_name)
     return result
 
@@ -3488,44 +3595,46 @@ def electorate_grants(
 ):
     """Return government grants for a specific electorate, plus electorate metadata."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 600000")
+    _pg_safe_pragma(db)
 
     # Get electorate info (most recent election)
-    electorate_info = db.execute("""
+    nocase_eq = "ILIKE" if is_postgres() else "="
+    nocase_suffix = "" if is_postgres() else " COLLATE NOCASE"
+    electorate_info = db.execute(f"""
         SELECT electorate_name, state, margin_pct, winning_party,
                winning_candidate, year, swing, seat_type
         FROM electorates
-        WHERE electorate_name = ? COLLATE NOCASE
+        WHERE LOWER(electorate_name) = LOWER(?)
         ORDER BY year DESC LIMIT 1
     """, (name,)).fetchone()
 
     # Get grants for this electorate
-    grants = db.execute("""
+    grants = db.execute(f"""
         SELECT grant_id, title, description, recipient, recipient_abn,
                amount, agency, program, start_date, end_date,
                grant_type, category, financial_year
         FROM government_grants
-        WHERE electorate = ? COLLATE NOCASE
+        WHERE LOWER(electorate) = LOWER(?)
           AND amount >= ?
         ORDER BY amount DESC
         LIMIT ?
     """, (name, min_amount, limit)).fetchall()
 
     # Summary stats
-    stats = db.execute("""
+    stats = db.execute(f"""
         SELECT SUM(amount) as total, COUNT(*) as cnt,
                AVG(amount) as avg_amount, MAX(amount) as max_grant,
                COUNT(DISTINCT program) as distinct_programs,
                COUNT(DISTINCT recipient) as distinct_recipients
         FROM government_grants
-        WHERE electorate = ? COLLATE NOCASE AND amount > 0
+        WHERE LOWER(electorate) = LOWER(?) AND amount > 0
     """, (name,)).fetchone()
 
     # Top programs
-    top_programs = db.execute("""
+    top_programs = db.execute(f"""
         SELECT program, SUM(amount) as total, COUNT(*) as cnt
         FROM government_grants
-        WHERE electorate = ? COLLATE NOCASE AND amount > 0
+        WHERE LOWER(electorate) = LOWER(?) AND amount > 0
         GROUP BY program
         ORDER BY total DESC LIMIT 10
     """, (name,)).fetchall()
@@ -3555,7 +3664,7 @@ def pork_barrel(
     Returns cached analysis results plus real-time filtering.
     """
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 600000")
+    _pg_safe_pragma(db)
 
     # Try cached results first
     cached = db.execute(
@@ -3563,7 +3672,7 @@ def pork_barrel(
     ).fetchone()
 
     if cached:
-        data = json.loads(cached["value"])
+        data = _parse_cached_json(cached["value"])
         electorates = data.get("all_electorates") or data.get("top_electorates", [])
 
         # Apply filters
@@ -3627,7 +3736,7 @@ def conflicts(
     from parli.analysis.conflicts import get_conflicts
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 600000")
+    _pg_safe_pragma(db)
     result = get_conflicts(db, person_id=person_id)
     return result
 
@@ -3680,7 +3789,7 @@ def entities_search(
     from parli.analysis.entity_resolution import search_entities
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
     results = search_entities(db, q, limit=limit)
     return {"query": q, "results": results, "count": len(results)}
 
@@ -3689,7 +3798,7 @@ def entities_search(
 def entities_stats():
     """Summary statistics for entity resolution."""
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     try:
         total = db.execute("SELECT COUNT(*) AS c FROM entities").fetchone()["c"]
@@ -3733,7 +3842,7 @@ def entity_detail(entity_id: int):
     from parli.analysis.entity_resolution import get_entity_detail
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
     result = get_entity_detail(db, entity_id)
     if not result:
         return {"error": "Entity not found", "entity_id": entity_id}

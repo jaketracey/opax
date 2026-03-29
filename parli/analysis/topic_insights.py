@@ -23,7 +23,37 @@ import sqlite3
 import time
 from datetime import datetime
 
-from parli.schema import get_db, DEFAULT_DB_PATH
+from parli.db import get_db, is_postgres
+from parli.schema import DEFAULT_DB_PATH
+
+
+def _year_from_date(col: str) -> str:
+    if is_postgres():
+        return f"EXTRACT(YEAR FROM {col})::TEXT"
+    return f"substr({col}, 1, 4)"
+
+
+def _year_from_date_int(col: str) -> str:
+    if is_postgres():
+        return f"EXTRACT(YEAR FROM {col})::INTEGER"
+    return f"CAST(substr({col}, 1, 4) AS INTEGER)"
+
+
+def _gc_distinct(col: str, sep: str = ",") -> str:
+    if is_postgres():
+        return f"STRING_AGG(DISTINCT {col}, '{sep}')"
+    return f"GROUP_CONCAT(DISTINCT {col})"
+
+
+def _gc(col: str, sep: str = ",") -> str:
+    if is_postgres():
+        return f"STRING_AGG({col}, '{sep}')"
+    return f"GROUP_CONCAT({col})"
+
+
+def _pg_safe_pragma(db):
+    if not is_postgres():
+        _pg_safe_pragma(db)
 
 # Map topics to donation industries for "follow the money"
 TOPIC_INDUSTRY_MAP = {
@@ -50,13 +80,13 @@ TOPIC_INDUSTRY_MAP = {
 }
 
 
-def _commit_retry(db: sqlite3.Connection, retries: int = 5, delay: float = 2.0):
+def _commit_retry(db, retries: int = 5, delay: float = 2.0):
     for attempt in range(retries):
         try:
             db.commit()
             return
-        except sqlite3.OperationalError as e:
-            if "locked" in str(e) and attempt < retries - 1:
+        except Exception as e:
+            if "locked" in str(e).lower() and attempt < retries - 1:
                 time.sleep(delay)
             else:
                 raise
@@ -95,9 +125,10 @@ def generate_topic_insights(db: sqlite3.Connection, topic_id: int, topic_name: s
     }
 
     # Peak year
+    year_expr = _year_from_date("s.date")
     peak_row = db.execute(
-        """
-        SELECT substr(s.date, 1, 4) AS year, COUNT(*) AS cnt
+        f"""
+        SELECT {year_expr} AS year, COUNT(*) AS cnt
         FROM speech_topics st
         JOIN speeches s ON s.speech_id = st.speech_id
         WHERE st.topic_id = ?
@@ -240,12 +271,13 @@ def generate_topic_insights(db: sqlite3.Connection, topic_id: int, topic_name: s
     if industries:
         placeholders = ",".join("?" for _ in industries)
         # Top 5 donors
+        gc_recipients = _gc_distinct("recipient")
         donor_rows = db.execute(
             f"""
             SELECT donor_name, SUM(amount) AS total_donated,
                    COUNT(*) AS donation_count,
-                   GROUP_CONCAT(DISTINCT recipient) AS recipients,
-                   industry
+                   {gc_recipients} AS recipients,
+                   MAX(industry) AS industry
             FROM donations
             WHERE industry IN ({placeholders})
               AND amount IS NOT NULL
@@ -359,14 +391,15 @@ def generate_topic_insights(db: sqlite3.Connection, topic_id: int, topic_name: s
             # Batch in chunks to avoid oversized IN clauses
             donor_list = list(donor_names)[:100]
             dn_placeholders = ",".join("?" for _ in donor_list)
+            gc_parties = _gc_distinct("party")
             ptf_rows = db.execute(
                 f"""
-                SELECT company_name, supplier_name, donor_name,
+                SELECT company_name, MAX(supplier_name) AS supplier_name, MAX(donor_name) AS donor_name,
                        SUM(contract_amount) AS total_contracts,
                        SUM(donation_amount) AS total_donations,
-                       GROUP_CONCAT(DISTINCT party) AS parties,
+                       {gc_parties} AS parties,
                        COUNT(*) AS link_count,
-                       match_type
+                       MAX(match_type) AS match_type
                 FROM contract_speech_links
                 WHERE LOWER(donor_name) IN ({dn_placeholders})
                    OR LOWER(company_name) IN ({dn_placeholders})
@@ -399,11 +432,12 @@ def generate_topic_insights(db: sqlite3.Connection, topic_id: int, topic_name: s
         if keywords_row and keywords_row["keywords"]:
             kw_list = [k.strip() for k in keywords_row["keywords"].split(",")][:3]
             for kw in kw_list:
+                gc_p = _gc_distinct("party")
                 rows = db.execute(
-                    """
+                    f"""
                     SELECT company_name, SUM(contract_amount) AS total_contracts,
                            SUM(donation_amount) AS total_donations,
-                           GROUP_CONCAT(DISTINCT party) AS parties,
+                           {gc_p} AS parties,
                            COUNT(*) AS link_count
                     FROM contract_speech_links
                     WHERE LOWER(company_name) LIKE ?
@@ -425,13 +459,14 @@ def generate_topic_insights(db: sqlite3.Connection, topic_id: int, topic_name: s
         insights["pay_to_play"] = ptf_results
 
     # ── 7. Trend Data (speeches per year, last 10 years) ──────────────────
+    year_int_expr = _year_from_date_int("s.date")
     trend_rows = db.execute(
-        """
-        SELECT substr(s.date, 1, 4) AS year, COUNT(*) AS speech_count
+        f"""
+        SELECT {year_expr} AS year, COUNT(*) AS speech_count
         FROM speech_topics st
         JOIN speeches s ON s.speech_id = st.speech_id
         WHERE st.topic_id = ?
-          AND CAST(substr(s.date, 1, 4) AS INTEGER) >= ?
+          AND {year_int_expr} >= ?
         GROUP BY year
         ORDER BY year
         """,
@@ -448,7 +483,7 @@ def generate_topic_insights(db: sqlite3.Connection, topic_id: int, topic_name: s
 
 def generate_all_insights(db: sqlite3.Connection, topic_filter: str | None = None) -> list[dict]:
     """Generate insights for all topics (or a single topic) and cache them."""
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     topics = db.execute("SELECT topic_id, name FROM topics ORDER BY topic_id").fetchall()
 
@@ -471,10 +506,11 @@ def generate_all_insights(db: sqlite3.Connection, topic_filter: str | None = Non
 
             # Cache in analysis_cache
             cache_key = f"topic_insights_{topic_name}"
+            now_sql = "NOW()" if is_postgres() else "datetime('now')"
             db.execute(
-                """
+                f"""
                 INSERT INTO analysis_cache (key, value, updated_at)
-                VALUES (?, ?, datetime('now'))
+                VALUES (?, ?, {now_sql})
                 ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
                 """,
                 (cache_key, json.dumps(insights, default=str)),
@@ -500,14 +536,15 @@ def generate_all_insights(db: sqlite3.Connection, topic_filter: str | None = Non
 
 def get_cached_insights(db: sqlite3.Connection, topic_name: str) -> dict | None:
     """Retrieve cached insights for a topic. Returns None if not cached."""
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
     row = db.execute(
         "SELECT value, updated_at FROM analysis_cache WHERE key = ?",
         (f"topic_insights_{topic_name}",),
     ).fetchone()
     if row:
-        data = json.loads(row["value"])
-        data["cached_at"] = row["updated_at"]
+        val = row["value"]
+        data = json.loads(val) if isinstance(val, str) else val
+        data["cached_at"] = str(row["updated_at"]) if row["updated_at"] else None
         return data
     return None
 
@@ -521,7 +558,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    _pg_safe_pragma(db)
 
     if args.list:
         topics = db.execute("SELECT topic_id, name FROM topics ORDER BY topic_id").fetchall()

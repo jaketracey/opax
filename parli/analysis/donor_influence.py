@@ -26,6 +26,7 @@ import re
 from collections import defaultdict
 from datetime import datetime
 
+from parli.db import is_postgres
 from parli.schema import get_db, init_db
 
 
@@ -487,9 +488,23 @@ def run_mp_analysis(db, party_filter: str | None = None) -> list[dict]:
 
 def create_tables(db) -> None:
     """Create the donor_influence_scores tables if they don't exist."""
-    db.executescript("""
+    if is_postgres():
+        # On PG, tables are managed by migrations; verify they exist
+        try:
+            db.execute("SELECT 1 FROM donor_influence_scores LIMIT 0")
+            db.execute("SELECT 1 FROM mp_donor_influence_scores LIMIT 0")
+            return
+        except Exception:
+            pass
+        now_default = "NOW()"
+        serial = "SERIAL"
+    else:
+        now_default = "(datetime('now'))"
+        serial = "INTEGER PRIMARY KEY AUTOINCREMENT"
+
+    db.executescript(f"""
         CREATE TABLE IF NOT EXISTS donor_influence_scores (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id {serial},
             party TEXT NOT NULL,
             industry TEXT NOT NULL,
             total_donated REAL,
@@ -500,12 +515,12 @@ def create_tables(db) -> None:
             no_count INTEGER,
             favorable_vote_pct REAL,
             influence_score REAL,
-            updated_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT {now_default},
             UNIQUE(party, industry)
         );
 
         CREATE TABLE IF NOT EXISTS mp_donor_influence_scores (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id {serial},
             person_id TEXT NOT NULL,
             full_name TEXT,
             party TEXT NOT NULL,
@@ -516,7 +531,7 @@ def create_tables(db) -> None:
             no_count INTEGER,
             favorable_vote_pct REAL,
             influence_score REAL,
-            updated_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT {now_default},
             UNIQUE(person_id, industry)
         );
     """)
@@ -525,14 +540,15 @@ def create_tables(db) -> None:
 def store_party_results(db, results: list[dict]) -> int:
     """Store party-level results, replacing any existing data."""
     db.execute("DELETE FROM donor_influence_scores")
+    now_sql = "NOW()" if is_postgres() else "datetime('now')"
     count = 0
     for r in results:
-        db.execute("""
+        db.execute(f"""
             INSERT INTO donor_influence_scores
             (party, industry, total_donated, relevant_divisions,
              divisions_with_votes, total_votes_cast, aye_count, no_count,
              favorable_vote_pct, influence_score, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, {now_sql})
         """, (
             r["party"], r["industry"], r["total_donated"],
             r["relevant_divisions"], r["divisions_with_votes"],
@@ -547,15 +563,16 @@ def store_party_results(db, results: list[dict]) -> int:
 def store_mp_results(db, results: list[dict]) -> int:
     """Store MP-level results, replacing any existing data."""
     db.execute("DELETE FROM mp_donor_influence_scores")
+    now_sql = "NOW()" if is_postgres() else "datetime('now')"
     count = 0
     for r in results:
-        db.execute("""
+        db.execute(f"""
             INSERT INTO mp_donor_influence_scores
             (person_id, full_name, party, industry,
              party_donations_from_industry, divisions_voted,
              aye_count, no_count, favorable_vote_pct, influence_score,
              updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, {now_sql})
         """, (
             r["person_id"], r["full_name"], r["party"], r["industry"],
             r["party_donations_from_industry"], r["divisions_voted"],
@@ -593,7 +610,8 @@ def main():
     args = parser.parse_args()
 
     db = get_db()
-    db.execute("PRAGMA busy_timeout = 300000")
+    if not is_postgres():
+        db.execute("PRAGMA busy_timeout = 300000")
     init_db(db)
     create_tables(db)
 
@@ -696,10 +714,17 @@ def main():
         "top_industry_correlations": industry_summary[:10],
         "updated_at": datetime.now().isoformat(),
     }
-    db.execute("""
-        INSERT OR REPLACE INTO analysis_cache (key, value, updated_at)
-        VALUES ('donor_influence_summary', ?, datetime('now'))
-    """, (json.dumps(summary, default=str),))
+    if is_postgres():
+        db.execute("""
+            INSERT INTO analysis_cache (key, value, updated_at)
+            VALUES ('donor_influence_summary', %s, NOW())
+            ON CONFLICT(key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()
+        """, (json.dumps(summary, default=str),))
+    else:
+        db.execute("""
+            INSERT OR REPLACE INTO analysis_cache (key, value, updated_at)
+            VALUES ('donor_influence_summary', ?, datetime('now'))
+        """, (json.dumps(summary, default=str),))
     db.commit()
 
     print(f"\n[donor_influence] Analysis complete. Summary cached in analysis_cache.")
