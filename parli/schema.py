@@ -598,18 +598,27 @@ def migrate_add_state_column(db: sqlite3.Connection) -> None:
         pass  # DB may be locked; column was added anyway
 
 
-def get_db(path: str | Path | None = None) -> sqlite3.Connection:
-    """Open (or create) the parli database and return a connection."""
+def get_db(path: str | Path | None = None):
+    """Open database connection. Uses PostgreSQL if DATABASE_URL is set, otherwise SQLite."""
+    import os
+    if os.environ.get("DATABASE_URL"):
+        from parli.db import get_db as pg_get_db
+        return pg_get_db()
+    return _get_sqlite_db(path)
+
+
+def _get_sqlite_db(path: str | Path | None = None) -> sqlite3.Connection:
+    """Open (or create) the SQLite parli database and return a connection."""
     path = Path(path) if path else DEFAULT_DB_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
     db = sqlite3.connect(str(path), timeout=300)
     db.row_factory = sqlite3.Row
     db.execute("PRAGMA journal_mode = WAL")
     db.execute("PRAGMA foreign_keys = ON")
-    db.execute("PRAGMA busy_timeout = 600000")   # 10 min wait for locks
-    db.execute("PRAGMA wal_autocheckpoint = 1000")  # checkpoint every 1000 pages
-    db.execute("PRAGMA synchronous = NORMAL")     # faster writes, still safe with WAL
-    db.execute("PRAGMA cache_size = -64000")       # 64MB page cache
+    db.execute("PRAGMA busy_timeout = 600000")
+    db.execute("PRAGMA wal_autocheckpoint = 1000")
+    db.execute("PRAGMA synchronous = NORMAL")
+    db.execute("PRAGMA cache_size = -64000")
     return db
 
 
