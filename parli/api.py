@@ -498,7 +498,7 @@ def topic_timeline(topic_name: str):
     rows = db.execute(
         """
         SELECT
-            substr(s.date, 1, 4) as year,
+            CAST(s.date AS TEXT) AS year,
             CASE
                 WHEN s.party LIKE '%Labor%' OR s.party LIKE '%ALP%' THEN 'ALP'
                 WHEN s.party LIKE '%Liberal%' THEN 'LIB'
@@ -595,7 +595,7 @@ def gambling_stats():
     timeline = db.execute(
         """
         SELECT
-            substr(date, 1, 4) as year,
+            CAST(date AS TEXT) AS year,
             CASE
                 WHEN party LIKE '%Labor%' OR party LIKE '%ALP%' THEN 'ALP'
                 WHEN party LIKE '%Liberal%' THEN 'LIB'
@@ -629,7 +629,7 @@ def gambling_stats():
     # Top gambling donors
     top_donors = db.execute(
         """
-        SELECT donor_name, recipient, SUM(amount) as total_amount,
+        SELECT donor_name, MAX(recipient) as recipient, SUM(amount) as total_amount,
                MIN(financial_year) as first_year, MAX(financial_year) as last_year,
                COUNT(*) as donation_count
         FROM donations
@@ -1662,7 +1662,7 @@ def mp_insights(person_id: str):
     # Speech timeline — speeches per year
     timeline = db.execute(
         """
-        SELECT substr(date, 1, 4) AS year, COUNT(*) AS count
+        SELECT CAST(date AS TEXT) AS year, COUNT(*) AS count
         FROM speeches
         WHERE person_id = ? AND date IS NOT NULL
         GROUP BY year
@@ -3756,12 +3756,17 @@ def get_photo(person_id: str):
     """
     # Sanitize: only allow alphanumeric person_ids
     if not person_id.replace("-", "").replace("_", "").isalnum():
-        photo_path = PHOTOS_DIR / "placeholder.jpg"
+        photo_path = PHOTOS_DIR / "placeholder.webp"
     else:
-        photo_path = PHOTOS_DIR / f"{person_id}.jpg"
+        # Try WebP first, fall back to JPG
+        photo_path = PHOTOS_DIR / f"{person_id}.webp"
+        if not photo_path.exists():
+            photo_path = PHOTOS_DIR / f"{person_id}.jpg"
 
     if not photo_path.exists():
-        photo_path = PHOTOS_DIR / "placeholder.jpg"
+        photo_path = PHOTOS_DIR / "placeholder.webp"
+        if not photo_path.exists():
+            photo_path = PHOTOS_DIR / "placeholder.jpg"
 
     if not photo_path.exists():
         # Create placeholder on-the-fly if missing
