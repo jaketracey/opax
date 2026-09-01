@@ -786,6 +786,7 @@ async function openDocPage(slug, manageFocus) {
   currentDoc = null;
   $("doc-title").textContent = "Loading…";
   $("doc-meta").textContent = "";
+  $("doc-speaker-links").hidden = true;
   $("doc-text").textContent = "";
   $("doc-caveat").hidden = true;
   $("doc-cite-panel").hidden = true;
@@ -804,6 +805,21 @@ async function openDocPage(slug, manageFocus) {
     const origin = safeUrl(doc.url);
     if (origin) metaBits.push(`<a href="${esc(origin)}" rel="noopener" target="_blank">View original ↗</a>`);
     $("doc-meta").innerHTML = metaBits.filter(Boolean).join(" · ");
+    // Ways into this speaker's wider record. External links are SEARCHES, so
+    // a shared name shows candidates rather than asserting the wrong person.
+    const speakerLinks = $("doc-speaker-links");
+    if (doc.speaker) {
+      const q = encodeURIComponent(doc.speaker);
+      const ext = (href, label) =>
+        `<a href="${href}" rel="noopener" target="_blank">${label} ↗</a>`;
+      speakerLinks.innerHTML = `About ${esc(doc.speaker)}: ` + [
+        `<a href="${esc(searchHash("", { speaker: doc.speaker }))}">all their speeches here</a>`,
+        ext(`https://theyvoteforyou.org.au/search?query=${q}`, "voting record"),
+        ext(`https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "parliamentary profile"),
+        ext(`https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(`${doc.speaker} Australian politician`)}`, "Wikipedia"),
+      ].join(" · ");
+      speakerLinks.hidden = false;
+    }
     $("doc-text").textContent = doc.text || "(no text)";
     $("doc-actions").hidden = false;
     $("doc-cite-panel").innerHTML = citePanelHTML(doc);

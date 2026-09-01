@@ -106,7 +106,10 @@ a, button.link {
   text-decoration-color: var(--bronze-ink); text-underline-offset: 3px;
   text-decoration-thickness: 1.5px;
 }
-a:hover, button.link:hover { color: var(--bronze-ink); }
+a:hover { color: var(--bronze-ink); }
+/* Link-styled buttons hold their ink on hover — the affordance is the
+   underline firming up, not a colour swap. */
+button.link:hover { text-decoration-thickness: 2.5px; }
 button.link {
   background: none; border: none; cursor: pointer; padding: 2px 0;
   font: inherit; text-align: left;
@@ -432,6 +435,8 @@ button.link.result-title { font: 600 1.0625rem/1.35 var(--serif); }
 #panel-about p, #panel-methods p, .about-list li { max-width: 68ch; }
 .about-list { padding-left: 1.2rem; }
 .about-list li { margin: 0.5rem 0; }
+.doc-speaker-links { margin: 0.3rem 0 0; }
+
 /* ---- stats page ---------------------------------------------------------- */
 
 .stat-grid {
