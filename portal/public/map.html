@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OPAX Money Map</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body {
+      display: flex; flex-direction: column; background: #faf9f6; color: #33322e;
+      font: 14px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif;
+    }
+    header {
+      display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+      padding: 12px 18px; border-bottom: 1px solid #e4e1d8;
+    }
+    header h1 { margin: 0; font-size: 17px; }
+    header p { margin: 0; font-size: 12.5px; color: #8a8578; }
+    #map { flex: 1; min-height: 0; }
+    #status {
+      display: flex; align-items: center; justify-content: center;
+      height: 100%; color: #8a8578;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OPAX Money Map</h1>
+    <p>
+      Who funds Australian politics: the top 250 donors and the parties they gave to,
+      from AEC returns 1998&ndash;2026. Colour and territory are the donor's industry;
+      size is lifetime dollars. Click the legend to isolate an industry.
+    </p>
+  </header>
+  <div id="map"><div id="status">Loading the map&hellip;</div></div>
+  <script type="module">
+    // The bundle is loaded lazily on purpose - this is the pattern the main
+    // portal page will use when the user opens the map.
+    const { mountMoneyMap } = await import('/money-map.js')
+    const container = document.getElementById('map')
+    try {
+      document.getElementById('status')?.remove()
+      await mountMoneyMap(container, '/graph/money.json')
+    } catch (error) {
+      container.textContent = 'The money map failed to load: ' + error.message
+    }
+  </script>
+</body>
+</html>

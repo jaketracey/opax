@@ -225,6 +225,7 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
         title: r.title ?? r.slug ?? rid,
         speaker: r.origin?.collaborators?.[0] ?? null,
         party: label(r, 'party'),
+        state: label(r, 'state'),
         date: (meta.date as string) ?? null,
         cited: citedIds.has(rid),
       }

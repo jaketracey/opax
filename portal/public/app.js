@@ -132,8 +132,13 @@ function siteUrl(hash) {
   return `${SITE_ORIGIN}/${hash}`;
 }
 
-function askHash(q) {
-  return `#/ask?q=${encodeURIComponent(q)}`;
+function askHash(q, kind) {
+  const scope = kind && kind !== "speech" ? `&kind=${encodeURIComponent(kind)}` : "";
+  return `#/ask?q=${encodeURIComponent(q)}${scope}`;
+}
+
+function askKind() {
+  return $("ask-wide")?.checked ? "all" : "speech";
 }
 
 function opaxUrl(slug) {
@@ -312,8 +317,14 @@ function route() {
     const q = params.get("q");
     if (view === "ask" && q && q !== lastAsk.question) {
       $("ask-input").value = q;
+      if ($("ask-wide")) $("ask-wide").checked = params.get("kind") === "all";
       runAsk(q);
     }
+  }
+  // A view change can hide the element that held focus (e.g. the doc page's
+  // Back button); catch the drop so keyboard users keep a place in the page.
+  if (manageFocus && document.activeElement === document.body) {
+    document.querySelector("main").focus();
   }
 }
 
@@ -329,37 +340,11 @@ window.addEventListener("hashchange", route);
 let askAbort = null;
 let askTimer = null;
 
-function renderAnswerText(container, text, citedCount) {
-  container.replaceChildren();
-  // Enhance [1]-style markers into jump buttons; plain text is the fallback.
-  const parts = String(text).split(/\[(\d{1,2})\]/);
-  for (let i = 0; i < parts.length; i++) {
-    if (i % 2 === 0) {
-      if (parts[i]) container.appendChild(document.createTextNode(parts[i]));
-    } else {
-      const n = Number(parts[i]);
-      if (n >= 1 && n <= citedCount) {
-        const sup = document.createElement("sup");
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "cite";
-        btn.textContent = n;
-        btn.setAttribute("aria-label", `Go to source ${n}`);
-        btn.addEventListener("click", () => {
-          const li = $("ask-cited-list").children[n - 1];
-          if (!li) return;
-          li.scrollIntoView({ block: "center", behavior: "smooth" });
-          li.classList.add("flash");
-          setTimeout(() => li.classList.remove("flash"), 900);
-        });
-        sup.appendChild(btn);
-        container.appendChild(sup);
-      } else {
-        container.appendChild(document.createTextNode(`[${parts[i]}]`));
-      }
-    }
-  }
-}
+// NOTE: answers may contain [n] markers, but the platform does not document
+// how they map onto retrieval results — wiring them to our renumbered cited
+// list risked visibly attributing a claim to the wrong speech. Until the
+// mapping is verified against the platform, markers render as plain text and
+// the sources list stands on its own.
 
 function sourceItem(s, num) {
   const li = document.createElement("li");
@@ -405,7 +390,7 @@ async function runAsk(question) {
     const data = await api("/api/ask", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ question }),
+      body: JSON.stringify({ question, kind: askKind() }),
       signal: myAbort.signal,
     });
     if (askAbort !== myAbort) return; // superseded by a newer question
@@ -425,7 +410,7 @@ async function runAsk(question) {
 
     setStatus($("ask-status"), `Answer ready — ${sources.length} sources.`);
     $("ask-result").hidden = false;
-    renderAnswerText($("ask-answer"), data.answer || "(no answer)", citedList.length);
+    $("ask-answer").textContent = data.answer || "(no answer)";
     $("ask-stamp").textContent =
       `Generated ${fmtDate(localISODate())} · corpus v${corpusVersion()}`;
     $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1)));
@@ -450,14 +435,14 @@ $("ask-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const q = $("ask-input").value.trim();
   if (!q) return;
-  history.replaceState(null, "", askHash(q));
+  history.replaceState(null, "", askHash(q, askKind()));
   runAsk(q);
 });
 
 $("ask-copylink").addEventListener("click", (e) => {
   const q = lastAsk.question || $("ask-input").value.trim();
   if (!q) return;
-  copyText(siteUrl(askHash(q)), e.target,
+  copyText(siteUrl(askHash(q, askKind())), e.target,
     "Copied — opening it re-asks the question; wording may vary");
 });
 
@@ -540,8 +525,8 @@ function applySearchParams(params) {
     $("f-state").value = params.get("state") || "";
     $("f-from").value = params.get("from") || "";
     $("f-to").value = params.get("to") || "";
-    if (params.get("kind")) $("search-kind").value = params.get("kind");
-    if (params.get("mode")) $("search-mode").value = params.get("mode");
+    $("search-kind").value = params.get("kind") || "speech";
+    $("search-mode").value = params.get("mode") || "hybrid";
     runSearch();
   }
 }
@@ -579,10 +564,13 @@ function renderResults(results) {
   );
 }
 
+let searchSeq = 0;
+
 async function runSearch() {
   const q = $("search-input").value.trim();
   const f = currentFilters();
   if (!q && !f.speaker) return;
+  const mySeq = ++searchSeq;
   const btn = $("search-form").querySelector('button[type="submit"]');
   btn.disabled = true;
   setStatus($("search-status"), "Searching the record…");
@@ -592,6 +580,7 @@ async function runSearch() {
     const params = new URLSearchParams({ q: q || f.speaker, kind: f.kind, mode: f.mode });
     for (const k of ["speaker", "party", "state", "from", "to"]) if (f[k]) params.set(k, f[k]);
     const data = await api(`/api/search?${params}`);
+    if (mySeq !== searchSeq) return; // a newer search owns the results now
     lastSearch = { query: q, filters: f, results: data.results || [] };
     if (!data.count) {
       const hints = [];
@@ -609,9 +598,10 @@ async function runSearch() {
       renderResults(lastSearch.results);
     }
   } catch (err) {
+    if (mySeq !== searchSeq) return;
     setStatus($("search-status"), String(err.message || err), true);
   } finally {
-    btn.disabled = false;
+    if (mySeq === searchSeq) btn.disabled = false;
   }
 }
 
@@ -1004,7 +994,11 @@ fetch("/corpus.json").then((r) => r.json()).then((m) => {
   if (defects && m.known_defects) {
     defects.innerHTML = m.known_defects.map((d) => `<li>${esc(d)}</li>`).join("");
   }
-}).catch(() => {});
+}).catch(() => {
+  // Manifest unavailable: keep the page honest with order-of-magnitude copy.
+  $("stat-colophon").innerHTML =
+    "<span><b>Half a million</b> speeches collected</span><span><b>5</b> parliaments</span>";
+});
 
 fetch("/suggestions.json").then((r) => r.json()).then((s) => {
   suggestions = s.questions || [];
@@ -1022,5 +1016,13 @@ api("/api/stats")
   .catch(() => {
     $("stats").textContent = "corpus loading…";
   });
+
+// Legacy entry contract: /?ask=<question> (used by standalone map pages).
+{
+  const legacyAsk = new URLSearchParams(location.search).get("ask");
+  if (legacyAsk) {
+    history.replaceState(null, "", `/${askHash(legacyAsk)}`);
+  }
+}
 
 route();

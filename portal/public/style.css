@@ -188,6 +188,12 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 .ask-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 .ask-row input { flex: 1 1 320px; min-height: 56px; font-size: 1.0625rem; }
 
+.ask-scope {
+  display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 0.6rem;
+  font-size: 0.8125rem; color: var(--ink-faint); cursor: pointer;
+}
+.ask-scope input { accent-color: var(--bronze-ink); width: 15px; height: 15px; }
+
 .chip-row {
   display: flex; align-items: center; gap: 0.5rem; margin-top: 0.8rem;
   overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity;
