@@ -319,9 +319,9 @@ Views/tools to build once the full passes run, in value order:
 5. **Then vs now** — DONE 2026-09-02 (deployed 8b98d2b3): sixth Explore
    view (thenvsnow.js), sequential era-filtered asks with honest
    loading-gap copy for thin eras and reader-owned consistency judgment.
-6. **Topic digests** — "the last fortnight in {topic}": newest on-topic
-   speeches' summaries stitched into a machine briefing (client-side), with
-   a disclosure line. Auto-freshens as the corpus updates.
+6. **Topic digests** — DONE 2026-09-02: "The latest, in brief" on every
+   topic page, stitched client-side from /api/resource summaries of the
+   newest labelled speeches; drops nulls, guards stale navigation.
 7. **Time machine + quiz upgrades** — topic dimension on the year dial;
    quiz questions computed live from facet counts.
 8. **Doc pages** — topic chips linking to topic pages; "more on this topic
