@@ -16,10 +16,24 @@
 </header>
 
 <main class="wrap">
+  <section class="hero">
+    <p><strong>OPAX cross-references what Australian politicians say in parliament with who funds
+    them.</strong> Ask a question of half a million parliamentary speeches — federal House and
+    Senate, committee hearings, and four state parliaments — and get an answer grounded in the
+    record, with every claim cited to the actual speech.</p>
+    <div class="stat-strip" aria-label="corpus at a glance">
+      <span><b>518,685</b> speeches</span>
+      <span><b>5</b> parliaments</span>
+      <span><b>199K</b> donations classified</span>
+      <span><b>1998–2026</b> coverage</span>
+    </div>
+  </section>
+
   <nav class="tabs" role="tablist">
     <button class="tab active" data-panel="ask" role="tab" aria-selected="true">Ask</button>
     <button class="tab" data-panel="search" role="tab" aria-selected="false">Search</button>
     <button class="tab" data-panel="reports" role="tab" aria-selected="false">Reports</button>
+    <button class="tab" data-panel="about" role="tab" aria-selected="false">About</button>
   </nav>
 
   <section id="panel-ask" class="panel" role="tabpanel">
@@ -63,8 +77,56 @@
       <h2 id="report-title"></h2>
       <p id="report-blurb" class="report-blurb"></p>
       <p id="report-meta" class="report-meta"></p>
+      <div id="report-stats"></div>
       <div id="report-sections"></div>
     </article>
+  </section>
+
+  <section id="panel-about" class="panel" hidden role="tabpanel">
+    <h2>What OPAX is</h2>
+    <p>OPAX — the Open Parliamentary Accountability eXchange — exposes governance blind spots by
+    cross-referencing what politicians say on the record with the money that flows around them.
+    A politician who gives two hundred speeches about a problem but votes against every reform,
+    or an industry that donates millions while its regulation stalls, leaves a paper trail.
+    OPAX makes that trail searchable and citable.</p>
+
+    <h2>What you can do here</h2>
+    <ul class="about-list">
+      <li><strong>Ask</strong> — put a question to the whole corpus and get a grounded answer.
+      Every claim is cited; every citation opens the actual speech at the passage it came from.</li>
+      <li><strong>Search</strong> — hybrid semantic + keyword search with reranking, across
+      speeches, with each result linked to the full document.</li>
+      <li><strong>Reports</strong> — standing investigations pairing the structured money data
+      (AEC donations classified by industry) with what was actually said in parliament.</li>
+    </ul>
+
+    <h2>The corpus</h2>
+    <div class="table-scroll"><table class="about-table">
+      <thead><tr><th>Source</th><th>Documents</th><th>Coverage</th></tr></thead>
+      <tbody>
+        <tr><td>Federal Hansard — House of Representatives</td><td>283,020</td><td>1998–2022</td></tr>
+        <tr><td>Federal Hansard — Senate + recent House</td><td>22,106</td><td>2006–2026</td></tr>
+        <tr><td>Senate committee hearings</td><td>45,608</td><td>2025–2026</td></tr>
+        <tr><td>NSW Parliament</td><td>76,734</td><td>2015–2026</td></tr>
+        <tr><td>Victorian Parliament</td><td>45,074</td><td>2015–2026</td></tr>
+        <tr><td>SA Parliament</td><td>37,971</td><td>2020–2026</td></tr>
+        <tr><td>QLD Parliament</td><td>8,172</td><td>2024–2026</td></tr>
+        <tr><td>News (Guardian, ABC)</td><td>3,592</td><td>2003–2026</td></tr>
+        <tr><td>AEC donations (27+ industries classified)</td><td>199,233</td><td>1998–2026</td></tr>
+      </tbody>
+    </table></div>
+    <p class="fineprint">The speech corpus is filtered to the era of currently serving
+    parliamentarians (March 1993 onward), deduplicated across overlapping sources, and stripped
+    of procedural noise — division roll-calls, chair interjections, day indexes — so retrieval
+    surfaces substance, not housekeeping. Voting records, government contracts and the
+    disconnect-scoring analytics from the previous version of this site are being rebuilt on
+    the new platform.</p>
+
+    <h2>How answers are produced</h2>
+    <p>Retrieval runs hybrid semantic and keyword search with a reranking pass over the corpus;
+    a language model then writes the answer <em>only</em> from the retrieved passages, with
+    numbered citations back to each source speech. If the record is thin on a question, the
+    answer says so. OPAX is <a href="https://github.com/jaketracey/opax">open source</a> (AGPL-3.0).</p>
   </section>
 </main>
 

@@ -10,7 +10,7 @@ function showPanel(name) {
     t.classList.toggle("active", active);
     t.setAttribute("aria-selected", String(active));
   }
-  for (const p of ["ask", "search", "reports"]) {
+  for (const p of ["ask", "search", "reports", "about"]) {
     $(`panel-${p}`).hidden = p !== name;
   }
 }
@@ -201,6 +201,90 @@ async function loadReportsList() {
   );
 }
 
+// --- report stats & charts --------------------------------------------------
+// Mark color #b5832c validated (dataviz six-checks) against the dark surface.
+
+const MARK = "#b5832c";
+
+const fmtIndustries = (list) => list.map((i) => i.replace(/_/g, " ")).join(", ");
+
+function fmtMoney(n) {
+  if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
+  if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
+  if (n >= 1e3) return `$${Math.round(n / 1e3)}K`;
+  return `$${n}`;
+}
+
+function tile(value, label) {
+  return `<div class="tile"><b>${esc(value)}</b><span>${esc(label)}</span></div>`;
+}
+
+// Column chart: thin top-rounded bars anchored to the baseline, 2px gaps,
+// per-mark hover tooltip, direct label on the peak only.
+function columnChart(pairs, { fmt = String, heading }) {
+  const W = 640, H = 150, pad = 4, base = H - 18;
+  const max = Math.max(...pairs.map(([, v]) => v), 1);
+  const bw = Math.max((W - pad * 2) / pairs.length - 2, 2);
+  const peakIdx = pairs.findIndex(([, v]) => v === max);
+  let bars = "";
+  pairs.forEach(([k, v], i) => {
+    const h = Math.max((v / max) * (base - 24), 1);
+    const x = pad + i * ((W - pad * 2) / pairs.length);
+    const y = base - h;
+    const r = Math.min(2, bw / 2, h);
+    bars += `<path d="M${x},${base} V${y + r} Q${x},${y} ${x + r},${y} H${x + bw - r} Q${x + bw},${y} ${x + bw},${y + r} V${base} Z"
+      fill="${MARK}" data-k="${esc(String(k))}" data-v="${esc(fmt(v))}"><title>${esc(String(k))}: ${esc(fmt(v))}</title></path>`;
+    if (i === peakIdx) {
+      bars += `<text x="${x + bw / 2}" y="${y - 5}" class="chart-peak" text-anchor="middle">${esc(fmt(v))}</text>`;
+    }
+  });
+  const first = pairs[0]?.[0] ?? "", last = pairs[pairs.length - 1]?.[0] ?? "";
+  return `<figure class="chart">
+    <figcaption>${esc(heading)}</figcaption>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(heading)}">
+      <line x1="${pad}" y1="${base}" x2="${W - pad}" y2="${base}" class="chart-axis"/>
+      ${bars}
+      <text x="${pad}" y="${H - 4}" class="chart-tick">${esc(String(first))}</text>
+      <text x="${W - pad}" y="${H - 4}" class="chart-tick" text-anchor="end">${esc(String(last))}</text>
+    </svg>
+  </figure>`;
+}
+
+// Horizontal labeled bar list (name + value in text tokens, bar carries magnitude).
+function barList(rows, { fmt = String, heading }) {
+  const max = Math.max(...rows.map(([, v]) => v), 1);
+  const items = rows.map(([name, v]) => `
+    <div class="barrow" title="${esc(name)}: ${esc(fmt(v))}">
+      <span class="barrow-name">${esc(name)}</span>
+      <span class="barrow-track"><i style="width:${Math.max((v / max) * 100, 1)}%"></i></span>
+      <span class="barrow-value">${esc(fmt(v))}</span>
+    </div>`).join("");
+  return `<figure class="chart"><figcaption>${esc(heading)}</figcaption>${items}</figure>`;
+}
+
+function renderStats(container, stats) {
+  if (!stats) { container.innerHTML = ""; return; }
+  const don = stats.donations;
+  let htmlOut = `<div class="tiles">
+    ${tile(stats.speech_count.toLocaleString(), "speeches on the record")}
+    ${tile(stats.unique_speakers.toLocaleString(), "parliamentarians spoke")}
+    ${don ? tile(fmtMoney(don.total), `donations — ${fmtIndustries(don.industries)}`) : ""}
+  </div>`;
+  if (stats.timeline?.length > 1) {
+    htmlOut += columnChart(stats.timeline, { heading: "Speeches per year", fmt: (v) => v.toLocaleString() });
+  }
+  if (don?.by_year?.length > 1) {
+    htmlOut += columnChart(don.by_year, { heading: `Donations per financial year (${fmtIndustries(don.industries)})`, fmt: fmtMoney });
+  }
+  if (don?.top_donors?.length) {
+    htmlOut += barList(don.top_donors, { heading: "Largest donors", fmt: fmtMoney });
+  }
+  if (stats.top_speakers?.length) {
+    htmlOut += barList(stats.top_speakers, { heading: "Most speeches on this topic", fmt: (v) => v.toLocaleString() });
+  }
+  container.innerHTML = htmlOut;
+}
+
 async function openReport(slug) {
   let report;
   try {
@@ -215,8 +299,14 @@ async function openReport(slug) {
   $("report-title").textContent = report.title;
   $("report-blurb").textContent = report.blurb;
   $("report-meta").textContent =
-    `Generated ${report.generated_at?.slice(0, 10)} from ` +
-    `${(report.corpus_resources ?? 0).toLocaleString()} documents. Every claim is cited.`;
+    `Generated ${report.generated_at?.slice(0, 10)}. Every claim in the analysis is cited.`;
+  renderStats($("report-stats"), report.stats);
+  if (!report.sections?.length) {
+    $("report-sections").innerHTML =
+      `<p class="status">The cited analysis for this investigation is generated from the full
+      speech corpus, which is currently indexing — it will appear here automatically.</p>`;
+    return;
+  }
   $("report-sections").replaceChildren(
     ...report.sections.map((s) => {
       const sec = document.createElement("section");
@@ -242,7 +332,7 @@ async function openReport(slug) {
 
 // Deep links: #/reports, #/reports/<slug>, #/search
 (function route() {
-  const m = location.hash.match(/^#\/(search|reports)(?:\/([a-z-]+))?/);
+  const m = location.hash.match(/^#\/(search|reports|about)(?:\/([a-z-]+))?/);
   if (!m) return;
   showPanel(m[1]);
   if (m[1] === "reports") {

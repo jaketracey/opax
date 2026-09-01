@@ -106,9 +106,13 @@ def build_section(kb: KbClient, question: str) -> dict:
 
 def main() -> None:
     load_dotenv()
+    stats_only = "--stats-only" in sys.argv
+    picked = [a for a in sys.argv[1:] if not a.startswith("--")] or list(REPORTS)
     kb = KbClient(AragConfig.from_env())
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    picked = sys.argv[1:] or list(REPORTS)
+
+    stats_path = Path(__file__).resolve().parent / "report_stats.json"
+    all_stats = json.loads(stats_path.read_text()) if stats_path.exists() else {}
 
     counters = kb.counters()
     index = []
@@ -118,27 +122,31 @@ def main() -> None:
 
     for slug in picked:
         cfg = REPORTS[slug]
-        print(f"[{slug}] {len(cfg['questions'])} questions...")
+        # Keep previously generated narrative when only refreshing stats.
+        prior_path = OUT_DIR / f"{slug}.json"
         sections = []
-        for q in cfg["questions"]:
-            t0 = time.time()
-            try:
-                sections.append(build_section(kb, q))
-                print(f"  ok ({time.time() - t0:.0f}s): {q[:60]}")
-            except AragError as e:
-                print(f"  FAILED ({e.status}): {q[:60]}", file=sys.stderr)
-        if not sections:
-            print(f"[{slug}] no sections generated — skipping write", file=sys.stderr)
-            continue
+        if prior_path.exists():
+            sections = json.loads(prior_path.read_text()).get("sections", [])
+        if not stats_only:
+            print(f"[{slug}] {len(cfg['questions'])} questions...")
+            sections = []
+            for q in cfg["questions"]:
+                t0 = time.time()
+                try:
+                    sections.append(build_section(kb, q))
+                    print(f"  ok ({time.time() - t0:.0f}s): {q[:60]}")
+                except AragError as e:
+                    print(f"  FAILED ({e.status}): {q[:60]}", file=sys.stderr)
         report = {
             "slug": slug,
             "title": cfg["title"],
             "blurb": cfg["blurb"],
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "corpus_resources": counters.get("resources"),
+            "stats": all_stats.get(slug),
             "sections": sections,
         }
-        (OUT_DIR / f"{slug}.json").write_text(json.dumps(report, indent=1))
+        prior_path.write_text(json.dumps(report, indent=1))
         index = [r for r in index if r["slug"] != slug] + [{
             "slug": slug, "title": cfg["title"], "blurb": cfg["blurb"],
             "updated": report["generated_at"],
