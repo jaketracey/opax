@@ -732,11 +732,116 @@ addEventListener("scroll", () => {
 addEventListener("resize", () => updateQuoteRail());
 addEventListener("hashchange", () => updateQuoteRail());
 
+
+// --- money answers ----------------------------------------------------------
+// "Who gives money to gambling?" deserves figures, not only quotes. The AEC
+// donations export already ships to every client (/graph/money.json), so a
+// money-intent question renders the structured answer INSTANTLY, while the
+// model composes the words alongside.
+
+let moneyData = null;
+let moneyDataPromise = null;
+function loadMoneyData() {
+  moneyDataPromise ??= fetch("/graph/money.json")
+    .then((r) => r.json()).then((d) => (moneyData = d)).catch(() => null);
+  return moneyDataPromise;
+}
+
+const MONEY_INTENT = /donat|donor|who (gives|takes|funds|pays)|money|funds?\b|funding|financ(es|ed|ing)|bankroll/i;
+const INDUSTRY_ALIASES = {
+  gambling: ["gambling", "pokies", "poker machine", "casino", "wagering", "betting", "bookmaker"],
+  finance: ["bank", "finance", "financial", "insurance", "superannuation"],
+  mining: ["mining", "miner", "resources sector"],
+  fossil_fuels: ["coal", " gas", "oil ", "fossil", "petroleum", "energy compan"],
+  property: ["property", "real estate", "developer", "construction"],
+  unions: ["union"],
+  media: ["media", "newspaper", "television", "broadcast"],
+  tech: ["tech ", "technology", "platforms"],
+  telecom: ["telco", "telecom"],
+  pharmacy: ["pharmac", "chemist"],
+  health: ["private health", "health insur", "hospital operator"],
+  alcohol: ["alcohol", "liquor", "brewer", "wine industry"],
+  hospitality: ["hotel", "clubs", "pub ", "hospitality"],
+  defence: ["defence industry", "weapons", "arms "],
+  agriculture: ["agricultur", "farm lobby"],
+  retail: ["retail", "supermarket"],
+  lobbying: ["lobby"],
+};
+
+function detectMoneyIndustry(q) {
+  const s = ` ${q.toLowerCase()} `;
+  if (!MONEY_INTENT.test(s)) return null;
+  for (const [ind, aliases] of Object.entries(INDUSTRY_ALIASES)) {
+    if (aliases.some((a) => s.includes(a))) return ind;
+  }
+  return null;
+}
+
+function industryLabel(ind) {
+  return ind.replace(/_/g, " ");
+}
+
+function renderMoneyPanel(ind) {
+  const box = $("ask-money");
+  if (!moneyData) { box.hidden = true; return; }
+  const donors = moneyData.nodes.filter(
+    (n) => n.kind === "donor" && (n.industry === ind || n.group === ind));
+  if (!donors.length) { box.hidden = true; return; }
+  const donorIds = new Set(donors.map((n) => n.id));
+  const total = donors.reduce((a, n) => a + (n.total || 0), 0);
+  const years = [
+    Math.min(...donors.map((n) => n.firstYear || 9999)),
+    Math.max(...donors.map((n) => n.lastYear || 0)),
+  ];
+  const byParty = new Map();
+  for (const e of moneyData.edges) {
+    if (!donorIds.has(e.source)) continue;
+    const party = String(e.target).replace(/^party:/, "");
+    byParty.set(party, (byParty.get(party) || 0) + (e.total || 0));
+  }
+  const partyRows = [...byParty.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6);
+  const donorRows = donors.sort((a, b) => (b.total || 0) - (a.total || 0)).slice(0, 8)
+    .map((n) => [n.label, n.total || 0]);
+  box.hidden = false;
+  box.innerHTML = `
+    <p class="kicker">The money — ${esc(industryLabel(ind))} (AEC disclosures)</p>
+    <div class="tiles">
+      ${tile(fmtMoney(total), `disclosed by ${industryLabel(ind)} donors`)}
+      ${tile(String(donors.length), "major donors disclosed")}
+      ${tile(`${years[0]}–${years[1]}`, "years covered")}
+    </div>
+    ${barList(donorRows, { fmt: fmtMoney, heading: "Largest donors" })}
+    ${barList(partyRows, { fmt: fmtMoney, heading: "Where it went" })}
+    <p class="fineprint">${esc(AEC_NOTE)}
+      <a href="#/money">Explore on the money map</a> ·
+      <a href="/graph/money.json">Download the data</a></p>`;
+}
+
+/** "What did John Howard say about pokies?" → filter retrieval to the speaker. */
+function parseSpeakerIntent(q) {
+  const m = /^what (?:did|has|have|does) ([A-Za-z'\u2019 .-]{4,40}?) (?:say|said|says)(?: about| on)? /i.exec(q.trim());
+  if (!m) return null;
+  const who = m[1].trim();
+  if (/\b(parliament|house|senate|mps?|senators?|government|labor|liberal|greens|nationals|coalition|minister|ministers|politicians?|members|people|courts?|they)\b/i.test(who)) return null;
+  const words = who.split(/\s+/);
+  if (words.length < 2 || words.length > 4) return null;
+  return who;
+}
+
 async function runAsk(question) {
   if (askAbort) askAbort.abort();
   const myAbort = new AbortController();
   askAbort = myAbort;
   const btn = $("ask-submit");
+  // Structured money answer, rendered immediately from local data.
+  const moneyInd = detectMoneyIndustry(question);
+  $("ask-money").hidden = true;
+  if (moneyInd) {
+    loadMoneyData().then(() => {
+      if (askAbort === myAbort) renderMoneyPanel(moneyInd);
+    });
+  }
+  const speakerFilter = parseSpeakerIntent(question);
   btn.disabled = true;
   $("ask-result").hidden = true;
   $("ask-chips").hidden = true;
@@ -753,7 +858,7 @@ async function runAsk(question) {
     const data = await api("/api/ask", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ question, kind: askKind() }),
+      body: JSON.stringify({ question, kind: askKind(), ...(speakerFilter ? { speaker: speakerFilter } : {}) }),
       signal: myAbort.signal,
     });
     if (askAbort !== myAbort) return; // superseded by a newer question
@@ -775,7 +880,8 @@ async function runAsk(question) {
     $("ask-result").hidden = false;
     renderAnswer($("ask-answer"), data.answer || "(no answer)");
     $("ask-stamp").textContent =
-      `Generated ${fmtDate(localISODate())} · corpus v${corpusVersion()}`;
+      `Generated ${fmtDate(localISODate())} · corpus v${corpusVersion()}` +
+      (speakerFilter ? ` · retrieval filtered to ${speakerFilter}'s speeches` : "");
     $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1)));
     $("ask-retrieved").hidden = !alsoList.length;
     $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null)));
@@ -826,6 +932,9 @@ $("ask-export").addEventListener("click", () => {
  * only return if that ask fails and the page is empty again.
  */
 function renderChips() {
+  // An ask already underway (status set synchronously at runAsk start) or
+  // answered: the cards stay out of the way.
+  if (lastAsk.question || !$("ask-result").hidden || $("ask-status").textContent) return;
   const block = $("ask-chips");
   const grid = $("suggest-grid");
   if (!suggestions.length) return;
