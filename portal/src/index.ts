@@ -97,7 +97,13 @@ function filterExpression(f: {
       ...(to ? { until: `${to}-12-31T23:59:59Z` } : {}),
     })
   }
-  if (!clauses.length) return null
+  // Title ("generic") fields hold only "Name — date". A paragraph match there
+  // is retrieval noise: under a tight speaker filter the whole context can end
+  // up as score-zero titles, which the model rightly answers with "not enough
+  // data" while the UI shows 20 hollow "sources". Restrict matching to real
+  // field text everywhere. (Verified live: the legacy `fields` param cannot
+  // mix with filter_expression; this not-clause is the supported form.)
+  clauses.push({ not: { prop: 'field', type: 'generic' } })
   return { field: clauses.length === 1 ? clauses[0] : { and: clauses } }
 }
 
