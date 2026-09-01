@@ -153,8 +153,8 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .mast-search input:focus { background: var(--paper-raised); color: var(--ink); }
 .mast-sugg {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 40;
-  width: min(380px, 90vw); background: var(--paper); border: 1px solid var(--line);
-  border-top: 3px solid var(--bronze); box-shadow: 0 18px 40px rgba(21, 27, 20, 0.22);
+  width: min(380px, 90vw); background: var(--paper); border: 1px solid var(--line); border-top: none;
+  box-shadow: 0 18px 40px rgba(21, 27, 20, 0.22);
   padding: 0.35rem;
 }
 .ms-row {
@@ -196,8 +196,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .megamenu {
   position: absolute; top: calc(100% + 3px); left: 0; z-index: 30;
   width: 340px; max-width: calc(100vw - 1.5rem);
-  background: var(--paper); border: 1px solid var(--line);
-  border-top: 3px solid var(--bronze);
+  background: var(--paper); border: 1px solid var(--line); border-top: none;
   box-shadow: 0 18px 40px rgba(21, 27, 20, 0.22);
   padding: 1.1rem 1.25rem 1.15rem;
 }

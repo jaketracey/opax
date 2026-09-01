@@ -253,12 +253,23 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
   // speaker-filtered ask ("What did X say about…") reads to the model as
   // unattributed text and it refuses. One provenance turn fixes that
   // (verified live: Wilkie/gambling went from refusal to a cited answer).
+  // Filtered retrieval returns a narrow, often mixed context (a speaker's
+  // gambling remarks beside their unrelated speeches); the model tends to
+  // refuse the whole set. Tell it to answer from the passages that do apply.
+  // A/B on Howard/gambling: citations 1 -> 3, refusals gone.
+  const filtered = [speaker, party, state, topic, from, to].some((v) => v?.trim())
+  const noteParts: string[] = []
   if (speaker?.trim()) {
-    turns.push({
-      author: 'USER',
-      text: `Note: every passage in the context is from a speech delivered by ${speaker.trim()} in an Australian parliament; first-person passages are their own words.`,
-    })
+    noteParts.push(
+      `Note: every passage in the context is from a speech delivered by ${speaker.trim()} in an Australian parliament; first-person passages are their own words.`,
+    )
   }
+  if (filtered) {
+    noteParts.push(
+      'Some passages may be off-topic. Answer from the passages that do address the question, even if only a few do or they address it only in part; quote or closely paraphrase them and cite them. Say the record is thin only if no passage touches the subject at all.',
+    )
+  }
+  if (noteParts.length) turns.push({ author: 'USER', text: noteParts.join(' ') })
   if (Array.isArray(context) && context.length > 0) {
     turns.push(
       ...context

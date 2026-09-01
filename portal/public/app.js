@@ -129,10 +129,14 @@ const CHAMBER_NAMES = {
   assembly: "Legislative Assembly", council: "Legislative Council",
 };
 
-function metaHTML(item) {
+function metaHTML(item, { linkSpeaker = false } = {}) {
   const bits = [];
   if (item.party) bits.push(partyChipHTML(item.party));
-  if (item.speaker) bits.push(esc(item.speaker));
+  if (item.speaker) {
+    bits.push(linkSpeaker
+      ? `<a href="${esc(subjectHash("person", item.speaker))}">${esc(item.speaker)}</a>`
+      : esc(item.speaker));
+  }
   if (item.state) bits.push(esc(STATE_NAMES[item.state] || item.state));
   if (item.date) bits.push(esc(fmtDate(item.date)));
   return bits.join(" · ");
@@ -1748,8 +1752,9 @@ async function openTopicPage(slug, manageFocus) {
       sections.insertAdjacentHTML("beforeend",
         `<p class="kicker">Newest in the index with this label</p>
          <ul class="subject-list" role="list">${data.recent.map((r) => `
-           <li><a href="#/doc/${esc(r.slug)}" class="source-title">${esc(r.title)}</a>
-             <span class="result-meta">${metaHTML(r)}</span></li>`).join("")}</ul>
+           <li><a href="#/doc/${esc(r.slug)}" class="source-title">${esc(
+               r.speaker && r.title.startsWith(`${r.speaker} — `) ? r.title.slice(r.speaker.length + 3) : r.title)}</a>
+             <span class="result-meta">${metaHTML(r, { linkSpeaker: true })}</span></li>`).join("")}</ul>
          <p class="fineprint">The newest labelled speeches to enter the index, not the newest
          speeches on the subject. <a href="${esc(searchTopic)}">Search all of them</a></p>`);
     } else if (count !== null) {
@@ -1804,7 +1809,6 @@ async function openTopicsIndex(manageFocus) {
   destroySubjectMap();
   const body = $("subject-body");
   body.innerHTML = `
-    <p class="kicker">Topics</p>
     <div class="subject-head">
       <h2 id="subject-title" tabindex="-1">Topics A-Z</h2>
       <p class="subject-tag"><span class="status" style="margin:0">Counting the labelled record…</span></p>
