@@ -55,11 +55,23 @@ function canonicalSpeaker(raw: string): string {
   )
 }
 
+// The 21-topic taxonomy applied by the enrichment pass (scripts/arag_enrich.py
+// TOPICS is canonical). Unknown values are ignored, not rejected.
+const TOPIC_SLUGS = new Set([
+  'gambling', 'financial-services', 'mining-energy', 'climate-environment',
+  'property-construction', 'housing', 'health', 'media-communications',
+  'hospitality-alcohol', 'defence-security', 'agriculture', 'unions-workplace',
+  'immigration', 'indigenous-affairs', 'tax-budget', 'education',
+  'welfare-social', 'integrity-democracy', 'infrastructure-transport',
+  'justice-law', 'foreign-affairs',
+])
+
 function filterExpression(f: {
   kind?: string | null
   speaker?: string | null
   party?: string | null
   state?: string | null
+  topic?: string | null
   from?: string | null
   to?: string | null
 }): Record<string, unknown> | null {
@@ -69,6 +81,9 @@ function filterExpression(f: {
   }
   if (f.party) clauses.push({ prop: 'label', labelset: 'party', label: f.party })
   if (f.state) clauses.push({ prop: 'label', labelset: 'state', label: f.state })
+  if (f.topic && TOPIC_SLUGS.has(f.topic)) {
+    clauses.push({ prop: 'label', labelset: 'topic', label: f.topic })
+  }
   if (f.speaker) {
     clauses.push({ prop: 'origin_collaborator', collaborator: canonicalSpeaker(f.speaker) })
   }
@@ -153,6 +168,7 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
     speaker: url.searchParams.get('speaker'),
     party: url.searchParams.get('party'),
     state: url.searchParams.get('state'),
+    topic: url.searchParams.get('topic'),
     from: url.searchParams.get('from'),
     to: url.searchParams.get('to'),
   })
@@ -201,7 +217,7 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
 }
 
 async function apiAsk(request: Request, env: Env): Promise<Response> {
-  const { question, kind, speaker, party, state, from, to, context } = ((await request
+  const { question, kind, speaker, party, state, topic, from, to, context } = ((await request
     .json()
     .catch(() => ({}))) ?? {}) as {
     question?: string
@@ -209,6 +225,7 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
     speaker?: string
     party?: string
     state?: string
+    topic?: string
     from?: string
     to?: string
     context?: { author?: string; text?: string }[]
@@ -248,7 +265,7 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
     )
   }
   if (turns.length > 0) body.context = turns
-  const filters = filterExpression({ kind: kind ?? 'speech', speaker, party, state, from, to })
+  const filters = filterExpression({ kind: kind ?? 'speech', speaker, party, state, topic, from, to })
   if (filters) body.filter_expression = filters
 
   const res = await kbFetch(env, '/ask', { body, headers: { 'x-synchronous': 'true' } })

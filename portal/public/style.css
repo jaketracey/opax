@@ -252,7 +252,11 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 /* ---- hero --------------------------------------------------------------- */
 
 main { flex: 1; padding: 2.75rem 0 3rem; }
-@media (max-width: 860px) { main { padding-top: 0; } }
+@media (max-width: 860px) {
+  main { padding-top: 0; }
+  /* The map opens the money page; give it air below the band. */
+  #panel-money { padding-top: 1rem; }
+}
 main:focus { outline: none; }
 
 .hero-intro h1 {
@@ -260,7 +264,6 @@ main:focus { outline: none; }
   font: 400 clamp(1.9rem, 4.5vw, 2.75rem)/1.25 var(--serif);
   letter-spacing: 0.005em;
 }
-.standfirst { margin: 0 0 1.4rem; color: var(--ink-soft); font-size: 1.0625rem; line-height: 1.55; max-width: 62ch; }
 main.compact .hero-intro { display: none; }
 
 /* ---- forms -------------------------------------------------------------- */

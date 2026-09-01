@@ -80,6 +80,42 @@ function partyChipHTML(party) {
 }
 
 const STATE_NAMES = { federal: "Federal", nsw: "NSW", vic: "VIC", sa: "SA", qld: "QLD" };
+// The 21-topic enrichment taxonomy (scripts/arag_enrich.py TOPICS is
+// canonical): slug → display name. Slugs are the ARAG label values.
+const TOPICS = {
+  "gambling": "Gambling",
+  "financial-services": "Financial services",
+  "mining-energy": "Mining & energy",
+  "climate-environment": "Climate & environment",
+  "property-construction": "Property & construction",
+  "housing": "Housing",
+  "health": "Health",
+  "media-communications": "Media & communications",
+  "hospitality-alcohol": "Hospitality & alcohol",
+  "defence-security": "Defence & security",
+  "agriculture": "Agriculture",
+  "unions-workplace": "Unions & workplace",
+  "immigration": "Immigration",
+  "indigenous-affairs": "Indigenous affairs",
+  "tax-budget": "Tax & budget",
+  "education": "Education",
+  "welfare-social": "Welfare & social services",
+  "integrity-democracy": "Integrity & democracy",
+  "infrastructure-transport": "Infrastructure & transport",
+  "justice-law": "Justice & law",
+  "foreign-affairs": "Foreign affairs",
+};
+// Both topic selects (ask and search popovers) are filled from the one list;
+// the markup carries only the "any" default.
+for (const sel of [$("a-topic"), $("f-topic")]) {
+  if (!sel) continue;
+  for (const [slug, name] of Object.entries(TOPICS)) {
+    const opt = document.createElement("option");
+    opt.value = slug;
+    opt.textContent = name;
+    sel.append(opt);
+  }
+}
 const CHAMBER_NAMES = {
   representatives: "House of Representatives", senate: "Senate",
   assembly: "Legislative Assembly", council: "Legislative Council",
@@ -165,6 +201,7 @@ function askFilters() {
   if (from === "1993" && to === "2026") { from = ""; to = ""; }
   return {
     speaker: val("a-speaker"), party: val("a-party"), state: val("a-state"),
+    topic: val("a-topic"),
     from, to,
   };
 }
@@ -204,6 +241,7 @@ function askFilterSummary(f) {
   if (f.speaker) bits.push(f.speaker);
   if (f.party) bits.push(f.party);
   if (f.state) bits.push(STATE_NAMES[f.state] || f.state);
+  if (f.topic) bits.push(TOPICS[f.topic] || f.topic);
   if (f.from || f.to) bits.push(`${f.from || "…"}–${f.to || "…"}`);
   return bits.join(" · ");
 }
@@ -1098,8 +1136,62 @@ function parseSpeakerIntent(q) {
   const who = m[1].trim();
   if (/\b(parliament|house|senate|mps?|senators?|government|labor|liberal|greens|nationals|coalition|minister|ministers|politicians?|members|people|courts?|they)\b/i.test(who)) return null;
   const words = who.split(/\s+/);
-  if (words.length < 2 || words.length > 4) return null;
+  // A lone word ("howard") passes so resolveSpeaker can try it as a surname
+  // at submit time; it is dropped there unless it resolves to a real speaker.
+  if (words.length > 4) return null;
   return who;
+}
+
+// --- speaker name resolution -------------------------------------------------
+// The ARAG speaker filter matches origin collaborators exactly ("John Howard"),
+// so casual inputs ("howard", "John howard", "McDONALD") resolve against
+// speakers.json — [name, speech_count] rows exported from the corpus with the
+// same normalization that produced the collaborator values (5+ speeches each).
+// Bare-surname entries ("Hume") are real collaborator values from surname-only
+// Hansard prints and compete as candidates like any full name.
+
+const SPEAKER_NICKNAMES = { albo: "Anthony Albanese", scomo: "Scott Morrison" };
+
+function speakerKey(s) {
+  return String(s || "").replace(/’/g, "'").replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+let speakersDirPromise = null;
+function loadSpeakersDir() {
+  speakersDirPromise ??= fetch("/speakers.json")
+    .then((r) => r.json())
+    .then((rows) => {
+      const exact = new Map(), bySurname = new Map();
+      for (const [name, count] of rows) {
+        const key = speakerKey(name);
+        exact.set(key, name);
+        const sur = key.split(" ").pop();
+        if (!bySurname.has(sur)) bySurname.set(sur, []);
+        bySurname.get(sur).push([name, count]);
+      }
+      for (const list of bySurname.values()) list.sort((a, b) => b[1] - a[1]);
+      return { exact, bySurname };
+    })
+    .catch(() => null);
+  return speakersDirPromise;
+}
+
+/** Casual name → canonical Hansard name, or null to leave the input as typed.
+ * Full names casefix by exact match only; a lone surname resolves when one
+ * person holds it, or when the biggest holder has 5x the speeches of the
+ * next — never a guess between comparable namesakes. */
+async function resolveSpeaker(input) {
+  const key = speakerKey(input);
+  if (!key) return null;
+  const dir = await loadSpeakersDir();
+  if (!dir) return null;
+  const nick = SPEAKER_NICKNAMES[key];
+  if (nick && dir.exact.has(speakerKey(nick))) return nick;
+  if (key.includes(" ")) return dir.exact.get(key) || null;
+  const holders = dir.bySurname.get(key) || [];
+  if (holders.length === 1) return holders[0][0];
+  if (holders.length > 1 && holders[0][1] >= 5 * holders[1][1]) return holders[0][0];
+  return null;
 }
 
 
@@ -1724,7 +1816,7 @@ async function runAsk(question) {
       if (askAbort === myAbort) renderMoneyPanel(moneyInd);
     });
   }
-  const speakerFilter = parseSpeakerIntent(question);
+  let speakerFilter = parseSpeakerIntent(question);
   btn.disabled = true;
   btn.classList.add("btn-loading");
   btn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span>Asking…';
@@ -1745,6 +1837,19 @@ async function runAsk(question) {
     }
   }, 5000);
   try {
+    // Canonicalize the speaker before the filter leaves the UI. The popover
+    // input gets the resolved name written back so the user sees what was
+    // actually filtered (askFilters() re-reads it below and in the stamp).
+    const aSpeaker = $("a-speaker");
+    if (aSpeaker?.value.trim()) {
+      const canon = await resolveSpeaker(aSpeaker.value);
+      if (canon) aSpeaker.value = canon;
+    } else if (speakerFilter) {
+      // A lone surname must resolve to be usable as a filter; an unresolved
+      // full name still passes through as typed.
+      speakerFilter = (await resolveSpeaker(speakerFilter)) ||
+        (speakerFilter.includes(" ") ? speakerFilter : null);
+    }
     const askBody = JSON.stringify((() => {
       const f = askFilters();
       if (!f.speaker && speakerFilter) f.speaker = speakerFilter;
@@ -2247,6 +2352,7 @@ function currentFilters() {
     speaker: $("f-speaker").value.trim(),
     party: $("f-party").value,
     state: $("f-state").value,
+    topic: $("f-topic").value,
     from,
     to,
     kind: $("search-kind").value,
@@ -2265,7 +2371,7 @@ function updateSearchYearsLabel() {
 function searchHash(q, f) {
   const p = new URLSearchParams();
   if (q) p.set("q", q);
-  for (const k of ["speaker", "party", "state", "from", "to"]) if (f[k]) p.set(k, f[k]);
+  for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
   if (f.kind && f.kind !== "speech") p.set("kind", f.kind);
   if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
   return `#/search?${p.toString()}`;
@@ -2308,6 +2414,7 @@ function applySearchParams(params) {
     $("f-speaker").value = params.get("speaker") || "";
     $("f-party").value = params.get("party") || "";
     $("f-state").value = params.get("state") || "";
+    $("f-topic").value = params.get("topic") || "";
     // Range inputs reset to their midpoint on "", so absent params pin the
     // slider ends (which currentFilters reads back as "no year filter").
     $("f-from").value = params.get("from") || "1993";
@@ -2324,6 +2431,7 @@ function activeFilterSummary(f) {
   if (f.speaker) bits.push(`speaker ${f.speaker}`);
   if (f.party) bits.push(f.party);
   if (f.state) bits.push(STATE_NAMES[f.state] || f.state);
+  if (f.topic) bits.push(TOPICS[f.topic] || f.topic);
   if (f.from || f.to) bits.push(`${f.from || "…"}–${f.to || "…"}`);
   return bits.join(", ");
 }
@@ -2396,6 +2504,14 @@ let searchSeq = 0;
 
 async function runSearch() {
   const q = $("search-input").value.trim();
+  // Canonicalize the speaker box before currentFilters() reads it, writing the
+  // resolved name back so the user sees what was actually filtered. Covers
+  // every entry path (submit, URL params, the guided card's requestSubmit).
+  const fSpeaker = $("f-speaker");
+  if (fSpeaker?.value.trim()) {
+    const canon = await resolveSpeaker(fSpeaker.value);
+    if (canon) fSpeaker.value = canon;
+  }
   const f = currentFilters();
   if (!q && !f.speaker) return;
   const mySeq = ++searchSeq;
@@ -2407,7 +2523,7 @@ async function runSearch() {
   $("search-results").replaceChildren();
   try {
     const params = new URLSearchParams({ q: q || f.speaker, kind: f.kind, mode: f.mode });
-    for (const k of ["speaker", "party", "state", "from", "to"]) if (f[k]) params.set(k, f[k]);
+    for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) params.set(k, f[k]);
     const data = await api(`/api/search?${params}`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
     lastSearch = { query: q, filters: f, results: data.results || [] };
