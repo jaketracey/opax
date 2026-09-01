@@ -702,7 +702,7 @@ function updateQuoteRail() {
     rect.bottom > innerHeight * 0.28 && rect.top < innerHeight * 0.85;
   rail.hidden = !visible;
   if (!visible) { quoteRail.idx = -1; return; }
-  rail.style.left = `${Math.round(rect.right + Math.min(72, space - 316))}px`;
+  rail.style.left = `${Math.round(rect.right + Math.min(48, space - 316))}px`;
   // The reading line: whichever slice of the answer crosses it decides the quote.
   const progress = Math.min(1, Math.max(0, (innerHeight * 0.38 - rect.top) / rect.height));
   const idx = Math.min(n - 1, Math.floor(progress * n));
