@@ -90,6 +90,30 @@ main { flex: 1; padding: 1.5rem 0 3rem; }
 .scorebar > i { display: block; height: 100%; background: var(--accent); }
 .snippet { margin: 0.5rem 0 0; color: var(--text); font-size: 0.95rem; }
 
+.report-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.9rem; margin-top: 1.4rem; }
+.report-card {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1rem 1.1rem; text-align: left; cursor: pointer; color: var(--text); font: inherit;
+}
+.report-card:hover { border-color: var(--accent); }
+.report-card h3 { margin: 0 0 0.35rem; color: var(--accent); font-size: 1.05rem; }
+.report-card p { margin: 0 0 0.5rem; color: var(--muted); font-size: 0.9rem; }
+.report-meta { color: var(--muted); font-size: 0.82rem; }
+.report-blurb { color: var(--muted); margin-top: -0.4rem; }
+#report-back { margin: 1rem 0 0; }
+#report-view h2 { color: var(--accent); margin-bottom: 0.2rem; }
+.report-section { margin-top: 1.6rem; }
+.report-section h3 { font-size: 1.05rem; margin-bottom: 0.5rem; }
+.report-section h4 {
+  font-size: 0.8rem; color: var(--muted); text-transform: uppercase;
+  letter-spacing: 0.1em; margin: 0.9rem 0 0.2rem;
+}
+.report-sources { margin: 0.2rem 0 0; padding-left: 1.4rem; }
+.report-sources li { margin: 0.3rem 0; }
+.report-sources button.link { background: none; border: none; color: var(--accent-2); cursor: pointer; font: inherit; padding: 0; text-align: left; }
+.report-sources button.link:hover { text-decoration: underline; }
+button.link { background: none; border: none; color: var(--accent-2); cursor: pointer; font: inherit; padding: 0; }
+
 dialog#doc-dialog {
   background: var(--panel); color: var(--text); border: 1px solid var(--border);
   border-radius: 12px; max-width: 760px; width: calc(100vw - 2rem);

@@ -4,14 +4,22 @@ const $ = (id) => document.getElementById(id);
 
 // --- tabs -------------------------------------------------------------------
 
+function showPanel(name) {
+  for (const t of document.querySelectorAll(".tab")) {
+    const active = t.dataset.panel === name;
+    t.classList.toggle("active", active);
+    t.setAttribute("aria-selected", String(active));
+  }
+  for (const p of ["ask", "search", "reports"]) {
+    $(`panel-${p}`).hidden = p !== name;
+  }
+}
+
 for (const tab of document.querySelectorAll(".tab")) {
   tab.addEventListener("click", () => {
-    for (const t of document.querySelectorAll(".tab")) {
-      t.classList.toggle("active", t === tab);
-      t.setAttribute("aria-selected", String(t === tab));
-    }
-    $("panel-ask").hidden = tab.dataset.panel !== "ask";
-    $("panel-search").hidden = tab.dataset.panel !== "search";
+    location.hash = tab.dataset.panel === "ask" ? "" : `#/${tab.dataset.panel}`;
+    showPanel(tab.dataset.panel);
+    if (tab.dataset.panel === "reports") loadReportsList();
   });
 }
 
@@ -158,6 +166,89 @@ $("search-form").addEventListener("submit", async (e) => {
     button.disabled = false;
   }
 });
+
+// --- reports ----------------------------------------------------------------
+
+let reportsIndex = null;
+
+$("report-back").addEventListener("click", () => {
+  location.hash = "#/reports";
+  loadReportsList();
+});
+
+async function loadReportsList() {
+  const list = $("reports-list");
+  $("report-view").hidden = true;
+  list.hidden = false;
+  if (!reportsIndex) {
+    try {
+      reportsIndex = (await api("/reports/index.json")).reports || [];
+    } catch {
+      list.innerHTML = `<p class="status">No reports published yet — they are generated
+        from the corpus and will appear here.</p>`;
+      return;
+    }
+  }
+  list.replaceChildren(
+    ...reportsIndex.map((r) => {
+      const card = document.createElement("button");
+      card.className = "report-card";
+      card.innerHTML = `<h3>${esc(r.title)}</h3><p>${esc(r.blurb)}</p>
+        <span class="report-meta">Updated ${esc((r.updated || "").slice(0, 10))}</span>`;
+      card.addEventListener("click", () => openReport(r.slug));
+      return card;
+    }),
+  );
+}
+
+async function openReport(slug) {
+  let report;
+  try {
+    report = await api(`/reports/${encodeURIComponent(slug)}.json`);
+  } catch {
+    return;
+  }
+  location.hash = `#/reports/${slug}`;
+  $("reports-list").hidden = true;
+  const view = $("report-view");
+  view.hidden = false;
+  $("report-title").textContent = report.title;
+  $("report-blurb").textContent = report.blurb;
+  $("report-meta").textContent =
+    `Generated ${report.generated_at?.slice(0, 10)} from ` +
+    `${(report.corpus_resources ?? 0).toLocaleString()} documents. Every claim is cited.`;
+  $("report-sections").replaceChildren(
+    ...report.sections.map((s) => {
+      const sec = document.createElement("section");
+      sec.className = "report-section";
+      const h = document.createElement("h3");
+      h.textContent = s.question;
+      const body = document.createElement("div");
+      body.className = "answer";
+      body.textContent = s.answer;
+      sec.append(h, body);
+      if (s.sources?.length) {
+        const label = document.createElement("h4");
+        label.textContent = "Sources";
+        const ol = document.createElement("ol");
+        ol.className = "report-sources";
+        ol.replaceChildren(...s.sources.map(sourceButton));
+        sec.append(label, ol);
+      }
+      return sec;
+    }),
+  );
+}
+
+// Deep links: #/reports, #/reports/<slug>, #/search
+(function route() {
+  const m = location.hash.match(/^#\/(search|reports)(?:\/([a-z-]+))?/);
+  if (!m) return;
+  showPanel(m[1]);
+  if (m[1] === "reports") {
+    loadReportsList().then(() => (m[2] ? openReport(m[2]) : null));
+  }
+})();
 
 // --- footer stats -----------------------------------------------------------
 
