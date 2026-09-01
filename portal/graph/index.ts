@@ -231,9 +231,9 @@ const CSS = `
 .mm-row-amt { font-weight: 600; white-space: nowrap; }
 .mm-row-years { font-size: 11px; color: #8a8578; white-space: nowrap; }
 .mm-ask { display: block; margin-top: 12px; padding: 8px 12px; border-radius: 9px;
-  background: #142a43; color: #ffffff; font-size: 13px; font-weight: 600;
+  background: #142a43; color: #ffffff !important; font-size: 13px; font-weight: 600;
   text-decoration: none; text-align: center; }
-.mm-ask:hover { background: #1d3a5c; }
+.mm-ask:hover { background: #1d3a5c; color: #ffffff; }
 .mm-ask-quiet { background: none; color: #33322e; border: 1px solid #d5d1c4;
   margin-top: 8px; }
 .mm-ask-quiet:hover { background: rgba(0, 0, 0, 0.05); color: #26251f; }
