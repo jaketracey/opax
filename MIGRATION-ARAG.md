@@ -259,6 +259,29 @@ facet use case. NEXT (gated on user + load completion):
 (~$70-100 at quant pricing), unlocking topic facets in the Workbench and
 donation-industry ↔ speech-topic joins.
 
+## Summaries sample (2026-09-01 evening — COMPLETE, live)
+
+The 500-speech summary sample (ask-task 84482f3f, BYOK) completed. The
+generated summary lands as the **text field `da-summary-t-body`** on each
+resource (NOT the basic `summary` attribute — that stays empty). The Worker's
+`/api/resource` surfaces it as `summary` (the `body`/`body-N` reassembly
+filter already excludes it) and doc pages render it as an "In brief" block
+with a machine-summary disclosure. Sampled rids re-extracted from the task
+record (`/task/{id}/inspect` → request.parameters.filter.rids) into
+`scripts/harness_runs/enrich_sample_rids.json`. NEXT (gated on user + load
+completion): `start-full-summaries` (~$45).
+
+## Speaker-filtered asks need the provenance turn (INVARIANT)
+
+Hansard passages are first-person with no in-text attribution, so a
+speaker-filtered ask ("What did X say about Y?") reads to the generative
+model as unattributed text and it refuses ("Not enough data") even with 20
+on-target sources. `apiAsk` therefore injects one USER `context` turn naming
+the speaker whenever `body.speaker` is set (A/B verified upstream and on
+prod: Wilkie/gambling refusal → 4-citation answer). The note shares the
+platform's 24-turn context budget with chat turns. Do not remove it as
+"redundant" — the filter alone does not tell the model who is speaking.
+
 ## Open items
 
 - Speaker filter is exact-match after case/whitespace normalisation only —
