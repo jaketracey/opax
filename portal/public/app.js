@@ -400,7 +400,30 @@ function route() {
   if (manageFocus && document.activeElement === document.body) {
     document.querySelector("main").focus();
   }
+  // Fresh view, fresh top of page (section deep-links re-scroll themselves).
+  if (manageFocus) window.scrollTo(0, 0);
 }
+
+function resetAsk() {
+  if (askAbort) { askAbort.abort(); askAbort = null; }
+  clearInterval(askTimer);
+  hideWombat();
+  $("ask-input").value = "";
+  setStatus($("ask-status"), "");
+  $("ask-result").hidden = true;
+  $("ask-money").hidden = true;
+  $("quote-rail").hidden = true;
+  lastAsk = { question: "", sources: [] };
+  renderChips();
+}
+
+document.querySelector(".logo")?.addEventListener("click", () => {
+  // Tapping the mark always means "take me home, fresh".
+  resetAsk();
+  if (location.hash && location.hash !== "#/") location.hash = "#/";
+  else { showPanel("ask"); renderFrontPage(); }
+  window.scrollTo(0, 0);
+});
 
 document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
   e.preventDefault();
