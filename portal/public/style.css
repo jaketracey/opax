@@ -122,7 +122,12 @@ header {
 .wordmark {
   margin: 0; font: 700 1.75rem/1.2 var(--serif); letter-spacing: 0.02em; color: var(--on-navy);
 }
-.wordmark .tick { color: var(--bronze-bright); }
+/* The Commonwealth Star — federation's seven points, in bronze, where the
+   full stop used to sit. */
+.wordmark .tick {
+  width: 0.58em; height: 0.58em; margin-left: 0.14em;
+  fill: var(--bronze-bright); vertical-align: 0.02em;
+}
 .masthead-sub { margin: 0.15rem 0 0; font-size: 0.8125rem; color: var(--on-navy-soft); }
 
 /* ---- hero --------------------------------------------------------------- */
