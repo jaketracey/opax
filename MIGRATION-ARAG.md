@@ -6,10 +6,17 @@ KB `opax` (`d33c0a87-98cb-4169-b0d2-ff9b75573fb7`, account `7b5c9761…`) is liv
 `ray-test` KB was deleted 2026-09-01. No enrichment (DA) task is registered anywhere —
 gated on the cost sign-offs in §Costs. Branch: `worktree-arag-migration`.
 
-**Models (updated 2026-09-01 evening — BYOK LIVE):** `generative_model` and
-`summary_model` are `openai-compatible` → OpenRouter →
-`deepseek/deepseek-v4-flash` ($0.081/$0.162 per 1M, 1M context), billed direct
-to the OpenRouter account; generation_config 1600 max out / 120k max in.
+**Models (updated 2026-09-01 evening — BYOK LIVE, provider-pinned):**
+`generative_model` and `summary_model` are `openai-compatible` → OpenRouter →
+model_id **`@preset/opax`** (an OpenRouter dashboard preset:
+`deepseek/deepseek-v4-flash-0731`, provider routing only=[DeepSeek]).
+Unpinned, OpenRouter served the model from 17 third-party hosts — mostly fp8
+quants, at least one fp4 — so the pin buys full-precision first-party serving
+at $0.44/$1.32 per 1M (~$0.008/ask, ~12K asks per $100). Routing policy lives
+in the OpenRouter preset (dashboard edit, no KB touch): switch the preset's
+`only` to `order` if fallback-on-outage is preferred over strict pinning
+(strict = asks fail during a DeepSeek outage). generation_config 1600 max out
+/ 120k max in.
 Applied via `scripts/arag_byok_openrouter.py`; **rollback is one command**
 (`--rollback` restores the previously pinned `gemini-2.5-flash-lite` and
 clears the key). Verified in production: ~13s cited /ask, 20 sources/11 cited.
