@@ -128,9 +128,18 @@
         <input id="ask-input" type="text" autocomplete="off">
         <button type="submit" class="primary" id="ask-submit">Ask the record</button>
       </form>
-      <details class="ask-options">
-        <summary>Options</summary>
-        <div class="filter-rail">
+      <div class="ask-options-wrap">
+      <button type="button" class="action-btn" id="ask-options-btn" aria-expanded="false" aria-controls="ask-options-pop">
+        <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
+        <span>Options</span>
+      </button>
+      <div class="ask-options-pop" id="ask-options-pop" hidden>
+        <div class="filter-rail ask-pop-rail">
+          <span class="filter-item filter-item-wide">
+            <label for="a-from">Years <b id="a-years-label">1993–2026</b></label>
+            <input id="a-from" type="range" min="1993" max="2026" value="1993" aria-label="From year">
+            <input id="a-to" type="range" min="1993" max="2026" value="2026" aria-label="To year">
+          </span>
           <span class="filter-item">
             <label for="a-speaker">Speaker</label>
             <input id="a-speaker" type="text" autocomplete="off" placeholder="any">
@@ -153,18 +162,11 @@
               <option value="qld">QLD</option>
             </select>
           </span>
-          <span class="filter-item">
-            <label for="a-from">From year</label>
-            <input id="a-from" type="number" min="1993" placeholder="1993">
-          </span>
-          <span class="filter-item">
-            <label for="a-to">To year</label>
-            <input id="a-to" type="number" min="1993" placeholder="2026">
-          </span>
           <label class="ask-scope"><input type="checkbox" id="ask-wide">
             Also search legal documents and news</label>
         </div>
-      </details>
+      </div>
+      </div>
       <div id="ask-chips" hidden>
         <div class="chip-row" id="chip-row">
           <span class="chip-label">Try:</span>
@@ -189,13 +191,7 @@
           <button type="button" class="action-btn" id="ask-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H4v12h12v-4"/><path d="M11 3.5h5.5V9"/><path d="M16.5 3.5L9.5 10.5"/></svg><span>Copy link to this question</span></button>
           <button type="button" class="action-btn" id="ask-export"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Download sources (BibTeX / RIS / CSV)</span></button>
         </div>
-<section class="front-mod" aria-labelledby="h-reports" id="mod-reports" hidden>
-          <h2 class="kicker" id="h-reports">Reports</h2>
-          <p class="fineprint" style="margin:-0.2rem 0 0.6rem">Long-running investigations pairing
-          the money with the words, every claim cited.</p>
-          <div class="report-cards" id="front-reports"></div>
-        </section>
-        <div id="ask-sources" hidden>
+<div id="ask-sources" hidden>
           <p class="kicker">Sources: from the record</p>
           <ol id="ask-cited-list" class="source-list"></ol>
           <details id="ask-retrieved" hidden>

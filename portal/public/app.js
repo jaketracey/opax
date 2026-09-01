@@ -159,10 +159,44 @@ function askKind() {
 
 function askFilters() {
   const val = (id) => $(id)?.value?.trim() || "";
+  let from = val("a-from"), to = val("a-to");
+  if (Number(from) > Number(to)) [from, to] = [to, from]; // sliders may cross
+  // The full range means "no year filter".
+  if (from === "1993" && to === "2026") { from = ""; to = ""; }
   return {
     speaker: val("a-speaker"), party: val("a-party"), state: val("a-state"),
-    from: val("a-from"), to: val("a-to"),
+    from, to,
   };
+}
+
+{
+  const btn = $("ask-options-btn");
+  const pop = $("ask-options-pop");
+  const yearsLabel = () => {
+    let a = Number($("a-from").value), b = Number($("a-to").value);
+    if (a > b) [a, b] = [b, a];
+    $("a-years-label").textContent = `${a}–${b}`;
+  };
+  btn?.addEventListener("click", () => {
+    pop.hidden = !pop.hidden;
+    btn.setAttribute("aria-expanded", String(!pop.hidden));
+  });
+  document.addEventListener("pointerdown", (e) => {
+    if (!pop || pop.hidden) return;
+    if (!pop.contains(e.target) && !btn.contains(e.target)) {
+      pop.hidden = true;
+      btn.setAttribute("aria-expanded", "false");
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && pop && !pop.hidden) {
+      pop.hidden = true;
+      btn.setAttribute("aria-expanded", "false");
+      btn.focus();
+    }
+  });
+  $("a-from")?.addEventListener("input", yearsLabel);
+  $("a-to")?.addEventListener("input", yearsLabel);
 }
 
 function askFilterSummary(f) {
@@ -1669,6 +1703,8 @@ async function runAsk(question) {
     if (askAbort === myAbort) {
       clearInterval(askTimer);
       btn.disabled = false;
+      btn.classList.remove("btn-loading");
+      btn.textContent = "Ask the record";
     }
   }
 }
@@ -1827,20 +1863,28 @@ function chatAnswerEl(msg) {
   const sources = msg.sources || [];
   if (sources.length) {
     const cited = sources.filter((s) => s.cited);
-    const ordered = cited.length ? [...cited, ...sources.filter((s) => !s.cited)] : sources;
-    const citedCount = cited.length || sources.length; // never fake the split
-    const det = document.createElement("details");
-    det.className = "chat-sources";
-    const sum = document.createElement("summary");
-    sum.textContent = cited.length
-      ? `${cited.length} sources cited · ${sources.length} retrieved`
-      : `${sources.length} sources retrieved`;
-    det.appendChild(sum);
+    const shown = (cited.length ? cited : sources).slice(0, 5);
+    const rest = sources.filter((s) => !shown.includes(s));
+    const label = document.createElement("p");
+    label.className = "kicker";
+    label.textContent = "Sources";
+    wrap.appendChild(label);
     const ol = document.createElement("ol");
-    ol.className = "source-list";
-    ordered.forEach((s, i) => ol.appendChild(sourceItem(s, i < citedCount ? i + 1 : null)));
-    det.appendChild(ol);
-    wrap.appendChild(det);
+    ol.className = "source-list chat-source-list";
+    shown.forEach((s, i) => ol.appendChild(sourceItem(s, i + 1)));
+    wrap.appendChild(ol);
+    if (rest.length) {
+      const det = document.createElement("details");
+      det.className = "chat-sources";
+      const sum = document.createElement("summary");
+      sum.textContent = `${rest.length} more retrieved`;
+      det.appendChild(sum);
+      const ol2 = document.createElement("ol");
+      ol2.className = "source-list";
+      rest.forEach((s) => ol2.appendChild(sourceItem(s, null)));
+      det.appendChild(ol2);
+      wrap.appendChild(det);
+    }
   }
   if (msg.carried) {
     const p = document.createElement("p");
