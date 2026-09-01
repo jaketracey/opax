@@ -325,6 +325,168 @@ async function apiStats(env: Env): Promise<Response> {
   return json(await res.json())
 }
 
+/**
+ * News rail: two Australian-politics RSS feeds fetched server-side (the KB
+ * pattern — the browser never talks to the outlets directly), parsed with a
+ * tolerant regex scan because Workers have no DOMParser, and cached in
+ * caches.default for 15 minutes so homepage traffic can't hammer the feeds.
+ * Every failure mode degrades to {items: []} with 200 — the rail fails silent.
+ * Each item carries a `topic`: a cleaned keyword seed for /ask and /search
+ * (kickers like "Live:", quoted exclamations, outlet suffixes and filler words
+ * stripped; the load-bearing nouns kept, in order).
+ */
+async function apiNews(): Promise<Response> {
+  const cache = caches.default
+  const cacheKey = new Request('https://opax.com.au/api/news')
+  const cached = await cache.match(cacheKey)
+  if (cached) return cached
+
+  // Order matters: CDATA first, numeric refs, then named — so a literal
+  // "&amp;#39;" decodes to "&#39;" and no further.
+  const decode = (s: string): string =>
+    s
+      .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+      .replace(/&#x([0-9a-f]+);/gi, (_, h: string) => String.fromCodePoint(parseInt(h, 16)))
+      .replace(/&#(\d+);/g, (_, d: string) => String.fromCodePoint(Number(d)))
+      .replace(
+        /&(amp|lt|gt|quot|apos|nbsp);/g,
+        (_, e: string) =>
+          (({ amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' }) as Record<string, string>)[e] ?? '',
+      )
+
+  const topicFrom = (title: string): string => {
+    // Everything after " | " is outlet furniture (ABC News, Analysis, author).
+    let t = title.split(/\s+\|\s+/)[0]
+    t = t.replace(/\s*[–—-]\s*(ABC News|The Guardian|Guardian Australia)\s*$/i, '')
+    const kicker =
+      /^\s*(live|live updates?|analysis|opinion|exclusive|explainer|explained|breaking|watch|video|updated|in full|as it happened|australian politics live|politics live)\s*[:|–—-]\s*/i
+    while (kicker.test(t)) t = t.replace(kicker, '')
+    // "'It's a disgrace': Minister rejects..." — the quote is rhetoric, the
+    // substance follows the colon.
+    t = t.replace(/^\s*[‘'"“][^’'"”]{2,80}[’'"”]\s*[:,;–—-]\s*/, '')
+    t = t.split(/\s+[–—-]\s+/)[0] // dashed subtitles ("– as it happened", "- podcast")
+    t = t.replace(/([A-Za-z])[’']s\b/g, '$1') // possessives
+    t = t.replace(/[‘’“”"']/g, '')
+    const stop = new Set(
+      (
+        'a an the to of in on for and or but with at by from as is are was were be been being ' +
+        'he she they them him his her hers their theirs we us our you your i me my ' +
+        'it its this that these those will would could should can may might must have has had do does did not ' +
+        'says say said tells told reveals revealed announces announced warns warned claims claimed denies denied ' +
+        'calls called urges urged vows vowed after amid over into against due what why how when who whats live update updates news'
+      ).split(' '),
+    )
+    const words = t
+      .split(/\s+/)
+      .map((w) => w.replace(/^[^\p{L}\p{N}$]+|[^\p{L}\p{N}$%]+$/gu, ''))
+      .filter(Boolean)
+    const kept = words.filter((w) => !stop.has(w.toLowerCase()))
+    // A stoplist that ate the whole headline means the headline WAS the topic.
+    return (kept.length >= 2 ? kept : words).slice(0, 8).join(' ')
+  }
+
+  const feeds = [
+    // 104217372 is ABC's Politics topic feed (51120 is "Just In" — all news).
+    { source: 'ABC News', url: 'https://www.abc.net.au/news/feed/104217372/rss.xml' },
+    { source: 'The Guardian', url: 'https://www.theguardian.com/australia-news/australian-politics/rss' },
+  ]
+  type NewsItem = { title: string; url: string; source: string; published: string | null; topic: string }
+  const perFeed = await Promise.all(
+    feeds.map(async (feed): Promise<NewsItem[]> => {
+      try {
+        const ac = new AbortController()
+        const timer = setTimeout(() => ac.abort(), 8000)
+        const res = await fetch(feed.url, {
+          signal: ac.signal,
+          headers: {
+            accept: 'application/rss+xml, application/xml, text/xml, */*',
+            'user-agent': 'OPAX-portal/1.0 (+https://opax.com.au)',
+          },
+        })
+        clearTimeout(timer)
+        if (!res.ok) return []
+        const xml = await res.text()
+        const out: NewsItem[] = []
+        for (const m of xml.matchAll(/<item(?:\s[^>]*)?>([\s\S]*?)<\/item>/gi)) {
+          const block = m[1]
+          const tag = (name: string): string => {
+            const hit = block.match(new RegExp(`<${name}[^>]*>([\\s\\S]*?)</${name}>`, 'i'))
+            return hit ? decode(hit[1]).trim() : ''
+          }
+          const title = tag('title')
+          const link = tag('link') || tag('guid')
+          if (!title || !/^https?:\/\//.test(link)) continue
+          const pub = Date.parse(tag('pubDate') || tag('dc:date'))
+          out.push({
+            title,
+            url: link,
+            source: feed.source,
+            published: Number.isNaN(pub) ? null : new Date(pub).toISOString(),
+            topic: topicFrom(title),
+          })
+        }
+        return out
+      } catch {
+        return [] // one dead feed must not take the rail down
+      }
+    }),
+  )
+
+  const seen = new Set<string>()
+  const items = perFeed
+    .flat()
+    .sort(
+      (a, b) =>
+        (b.published ? Date.parse(b.published) : 0) - (a.published ? Date.parse(a.published) : 0),
+    )
+    .filter((it) => {
+      // Near-identical titles (syndication, "updated" reposts) collapse on a
+      // normalised prefix.
+      const key = it.title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 72)
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+    .slice(0, 12)
+
+  const res = json({ fetched_at: new Date().toISOString(), items })
+  if (items.length) {
+    res.headers.set('cache-control', 'public, max-age=900')
+    await cache.put(cacheKey, res.clone())
+  }
+  return res
+}
+
+
+/**
+ * The newest documents to enter the index, straight from the KB catalog
+ * (sort by platform `created` — the moment the resource was indexed, which
+ * is exactly what "just added to the record" means while the bulk load runs
+ * and after it, when parliaments publish). Cached for 5 minutes.
+ */
+async function apiRecent(env: Env): Promise<Response> {
+  const cache = caches.default
+  const cacheKey = new Request('https://opax.com.au/api/recent')
+  const cached = await cache.match(cacheKey)
+  if (cached) return cached
+  const res = await kbFetch(
+    env,
+    '/catalog?page_number=0&page_size=14&sort_field=created&sort_order=desc',
+  )
+  if (!res.ok) return json({ items: [] })
+  const data = (await res.json()) as {
+    resources?: Record<string, { slug?: string; title?: string; created?: string }>
+  }
+  const items = Object.values(data.resources ?? {})
+    .filter((r) => SLUG_RE.test(r.slug ?? ''))
+    .map((r) => ({ slug: r.slug, title: r.title ?? r.slug, indexed: r.created ?? null }))
+    .slice(0, 12)
+  const out = json({ items })
+  out.headers.set('cache-control', 'public, max-age=300')
+  await cache.put(cacheKey, out.clone())
+  return out
+}
+
 // ---------------------------------------------------------------------------
 
 export default {
@@ -343,6 +505,12 @@ export default {
       }
       if (url.pathname === '/api/stats' && request.method === 'GET') {
         return await apiStats(env)
+      }
+      if (url.pathname === '/api/recent' && request.method === 'GET') {
+        return await apiRecent(env)
+      }
+      if (url.pathname === '/api/news' && request.method === 'GET') {
+        return await apiNews()
       }
       if (url.pathname.startsWith('/api/')) {
         return json({ error: 'not found' }, 404)

@@ -32,9 +32,8 @@
 
     <section class="hero-intro" id="hero-intro">
       <h1>Ask what your politicians actually said.</h1>
-      <p class="standfirst">Put a question to half a million speeches from federal parliament,
-      its committees and four state parliaments. Every answer is cited, line by line, to the
-      official record — and you can see who donates to the people doing the talking.</p>
+      <p class="standfirst">Half a million speeches from five parliaments, every answer cited
+      line-by-line to the record — with the donations data beside it.</p>
     </section>
 
     <nav class="tabs" aria-label="Sections">
@@ -57,8 +56,15 @@
       <label class="ask-scope"><input type="checkbox" id="ask-wide">
         Also search legal documents and news</label>
       <div id="ask-chips" hidden>
-        <p class="kicker">Or start with one of these</p>
-        <div class="suggest-grid" id="suggest-grid"><!-- cards injected --></div>
+        <div class="chip-row" id="chip-row">
+          <span class="chip-label">Try:</span>
+          <!-- chips injected -->
+        </div>
+      </div>
+      <div class="corpus-meter corpus-banner" id="home-corpus" hidden>
+        <p id="home-corpus-text"></p>
+        <div class="meter-track" role="meter" aria-valuemin="0" aria-valuemax="100"
+             aria-valuenow="0" aria-label="Share of collected documents indexed" id="home-corpus-bar"><i></i></div>
       </div>
       <div id="ask-status" class="status" role="status"></div>
       <div id="ask-money" hidden></div>
@@ -88,6 +94,64 @@
           Answers are generated fresh each time — cite the sources, not this text.
           <a href="#/methods">How answers work</a></p>
         </div>
+      </div>
+
+      <hr class="ledger-rule" id="front-rule">
+      <div class="front-grid" id="front-page">
+        <section class="front-mod span-8" aria-labelledby="h-news" id="mod-news">
+          <h2 class="kicker" id="h-news">In the news right now</h2>
+          <div id="front-news"><p class="status">Fetching today's headlines…</p></div>
+        </section>
+        <section class="front-mod span-4" aria-labelledby="h-numbers">
+          <h2 class="kicker" id="h-numbers">Today's numbers</h2>
+          <div class="tiles tiles-compact" id="front-numbers"></div>
+          <p class="fineprint" id="front-numbers-note">Live from the search index.
+          <a href="#/stats">Full corpus breakdown</a></p>
+        </section>
+        <section class="front-mod span-8" aria-labelledby="h-mw" id="mod-mw" hidden>
+          <h2 class="kicker" id="h-mw">Money &amp; words</h2>
+          <div id="front-mw"></div>
+        </section>
+        <section class="front-mod span-4" aria-labelledby="h-ency" id="mod-ency" hidden>
+          <h2 class="kicker" id="h-ency">From the encyclopedia</h2>
+          <div class="entry-stack" id="front-ency"></div>
+          <p class="fineprint">From AEC disclosures and the speech index — totals are a floor, not a ceiling.</p>
+        </section>
+        <section class="front-mod span-8" aria-labelledby="h-added" id="mod-added" hidden>
+          <h2 class="kicker" id="h-added">Just added to the record</h2>
+          <div class="split-list" id="front-added"></div>
+          <p class="fineprint">The newest documents to enter the index — the corpus updates as
+          parliaments publish. <a href="#/search">Search everything</a></p>
+        </section>
+        <section class="front-mod span-4" aria-labelledby="h-ways">
+          <h2 class="kicker" id="h-ways">More ways in</h2>
+          <div class="entry-stack">
+            <a class="report-card" href="#/money">
+              <span class="card-kicker">Interactive</span>
+              <span class="card-title">The money map</span>
+              <span class="card-blurb">250 donors, 11 parties, 28 years of AEC returns — as territory you can spin.</span>
+              <span class="card-meta">Open →</span>
+            </a>
+            <a class="report-card" href="#/explore">
+              <span class="card-kicker">Explore</span>
+              <span class="card-title">Time machine</span>
+              <span class="card-blurb">Dial up any year since 1998 and see what parliament was arguing about.</span>
+              <span class="card-meta">Open →</span>
+            </a>
+            <a class="report-card" href="#/explore">
+              <span class="card-kicker">Explore</span>
+              <span class="card-title">The record quiz</span>
+              <span class="card-blurb">Guess what the numbers say, then see the receipts.</span>
+              <span class="card-meta">Open →</span>
+            </a>
+          </div>
+        </section>
+        <section class="front-mod" aria-labelledby="h-reports" id="mod-reports" hidden>
+          <h2 class="kicker" id="h-reports">Reports</h2>
+          <p class="fineprint" style="margin:-0.2rem 0 0.6rem">Long-running investigations pairing
+          the money with the words — every claim cited.</p>
+          <div class="report-cards" id="front-reports"></div>
+        </section>
       </div>
     </section>
 

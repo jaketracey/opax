@@ -350,6 +350,8 @@ function route() {
       $("ask-input").value = q;
       if ($("ask-wide")) $("ask-wide").checked = params.get("kind") === "all";
       runAsk(q);
+    } else if (!q && $("ask-result").hidden) {
+      renderFrontPage();
     }
   }
   // A view change can hide the element that held focus (e.g. the doc page's
@@ -1117,6 +1119,158 @@ async function mountExplore(which) {
 $("explore-tm-btn").addEventListener("click", () => mountExplore("tm"));
 $("explore-quiz-btn").addEventListener("click", () => mountExplore("quiz"));
 
+
+// --- the front page ----------------------------------------------------------
+// A broadsheet front page over the live dataset: news that pivots into the
+// record, today's numbers, a daily Money & Words topic, encyclopedia features,
+// and the newest documents to enter the index. Everything renders
+// progressively below the ask box; nothing blocks it.
+
+let frontRendered = false;
+
+function onIdle(fn) {
+  (window.requestIdleCallback || ((f) => setTimeout(f, 1)))(fn);
+}
+
+function relTime(iso) {
+  if (!iso) return "";
+  // KB catalog timestamps carry no timezone suffix but are UTC.
+  const d = new Date(/[zZ]|[+-]\d\d:?\d\d$/.test(iso) ? iso : iso + "Z");
+  const mins = Math.round((Date.now() - d.getTime()) / 60000);
+  if (mins < 2) return "moments ago";
+  if (mins < 60) return mins === 1 ? "1 minute ago" : `${mins} minutes ago`;
+  if (mins < 60 * 36) {
+    const h = Math.round(mins / 60);
+    return h === 1 ? "1 hour ago" : `${h} hours ago`;
+  }
+  return fmtDate(iso.slice(0, 10));
+}
+
+async function renderFrontNews() {
+  const holder = $("front-news");
+  try {
+    const data = await api("/api/news");
+    const items = (data.items || []).filter((i) => safeUrl(i.url)).slice(0, 6);
+    if (!items.length) { $("mod-news").hidden = true; return; }
+    const srcName = { ABC: "ABC News", Guardian: "The Guardian" };
+    holder.innerHTML = `<ol class="news-list" role="list">${items.map((i) => {
+      const topic = String(i.topic || "").trim();
+      const pivots = topic ? `<span class="news-pivots">
+          <a href="${esc(askHash(`What has parliament said about ${topic}?`))}">What does the record say?</a>
+          <a href="${esc(searchHash(topic, {}))}">Search the speeches</a>
+        </span>` : "";
+      const when = relTime(i.published);
+      return `<li>
+        <a class="news-headline" href="${esc(safeUrl(i.url))}" rel="noopener" target="_blank">${esc(i.title)} ↗</a>
+        <span class="news-meta"><span class="news-source">${esc(srcName[i.source] || i.source || "")}</span>${when ? ` · ${esc(when)}` : ""}</span>
+        ${pivots}</li>`;
+    }).join("")}</ol>
+    <p class="fineprint">Headlines link to ABC News and The Guardian — their words, not ours.
+    “What does the record say?” asks OPAX’s corpus of parliamentary speeches; the two are
+    independent sources shown side by side.</p>`;
+  } catch {
+    $("mod-news").hidden = true;
+  }
+}
+
+function renderFrontNumbers() {
+  const holder = $("front-numbers");
+  const aec = (corpusManifest?.sources || []).find((x) => x.name.startsWith("AEC donations"));
+  const tiles = [
+    [liveStats ? (liveStats.resources ?? 0).toLocaleString() : "—", "documents in the live index"],
+    [liveStats ? (liveStats.paragraphs ?? 0).toLocaleString() : "—", "passages searchable"],
+    [corpusManifest ? (corpusManifest.collected_speeches ?? 0).toLocaleString() : "—", "speeches collected"],
+    [aec ? aec.docs.toLocaleString() : "—", "donations classified"],
+    ["5", "parliaments"],
+  ];
+  holder.innerHTML = tiles.map(([v, l]) => tile(v, l)).join("");
+  if (corpusManifest) {
+    $("front-numbers-note").innerHTML =
+      `Live from the search index and corpus manifest v${esc(corpusVersion())}. <a href="#/stats">Full corpus breakdown</a>`;
+  }
+}
+
+async function renderFrontTopic() {
+  try {
+    if (!reportsIndex) reportsIndex = (await api("/reports/index.json")).reports || [];
+    if (!reportsIndex.length) return;
+    const today = reportsIndex[Math.floor(Date.now() / 864e5) % reportsIndex.length];
+    const report = await api(`/reports/${encodeURIComponent(today.slug)}.json`);
+    const stats = report.stats;
+    if (!stats) return;
+    const don = stats.donations;
+    $("h-mw").textContent = `Money & words — ${report.title}`;
+    $("front-mw").innerHTML = `
+      <p class="fineprint" style="margin:-0.3rem 0 0.4rem">Today's topic — changes daily.
+      ${esc((stats.speech_count ?? 0).toLocaleString())} speeches${don ? ` · ${esc(fmtMoney(don.total ?? 0))} disclosed by ${esc(fmtIndustries(don.industries || []))} donors` : ""}.</p>
+      ${moneyWordsCharts(stats)}
+      ${don?.top_donors?.length ? barList(don.top_donors.slice(0, 5), {
+        heading: "Largest donors", fmt: fmtMoney, linkTo: (nm) => subjectHash("donor", nm) }) : ""}
+      <p class="fineprint"><a href="#/reports/${esc(today.slug)}">Read the ${esc(report.title)} report</a> ·
+      <a href="#/reports">All reports</a></p>`;
+    $("mod-mw").hidden = false;
+
+    // Encyclopedia rail: today's topic's #1 donor and #1 speaker.
+    const cards = [];
+    await loadMoneyData();
+    const topDonor = don?.top_donors?.[0];
+    if (topDonor) {
+      const node = findMoneyNode("donor", topDonor[0]);
+      const fact = node ? weeklyFunFact(node).replace(/<[^>]+>/g, "") : "";
+      cards.push(`<a class="report-card" href="${esc(subjectHash("donor", topDonor[0]))}">
+        <span class="card-kicker">Donor${node?.industry ? ` · ${esc(industryLabel(node.industry))}` : ""}</span>
+        <span class="card-title">${esc(topDonor[0])}</span>
+        <span class="card-blurb">${esc(fmtMoney(topDonor[1]))} disclosed${node ? `, ${node.firstYear}–${node.lastYear}` : " to parties"}.
+          ${esc(fact)}</span>
+        <span class="card-meta">Open the entry →</span></a>`);
+    }
+    const topSpeaker = stats.top_speakers?.[0];
+    if (topSpeaker) {
+      cards.push(`<a class="report-card" href="${esc(subjectHash("person", topSpeaker[0]))}">
+        <span class="card-kicker">Parliamentarian</span>
+        <span class="card-title">${esc(topSpeaker[0])}</span>
+        <span class="card-blurb">${esc(Number(topSpeaker[1]).toLocaleString())} speeches on ${esc(report.title.toLowerCase())} in the indexed record.</span>
+        <span class="card-meta">Open the entry →</span></a>`);
+    }
+    if (cards.length) {
+      $("front-ency").innerHTML = cards.join("");
+      $("mod-ency").hidden = false;
+    }
+
+    // Reports row (index already in hand).
+    $("front-reports").innerHTML = reportsIndex.map((r) => `
+      <a class="report-card" href="#/reports/${esc(r.slug)}">
+        <span class="card-title">${esc(r.title)}</span>
+        <span class="card-blurb">${esc(r.blurb)}</span>
+        <span class="card-meta">Updated ${esc(fmtDate(r.updated || ""))}</span></a>`).join("");
+    $("mod-reports").hidden = false;
+  } catch { /* modules stay hidden */ }
+}
+
+async function renderFrontAdded() {
+  try {
+    const data = await api("/api/recent");
+    const items = (data.items || []).slice(0, 6);
+    if (!items.length) return;
+    const half = Math.ceil(items.length / 2);
+    const li = (i) => `<li><a href="#/doc/${esc(i.slug)}" class="source-title">${esc(i.title)}</a>
+      <span class="result-meta">indexed ${esc(relTime(i.indexed))}</span></li>`;
+    $("front-added").innerHTML =
+      `<ul class="subject-list" role="list">${items.slice(0, half).map(li).join("")}</ul>` +
+      `<ul class="subject-list" role="list">${items.slice(half).map(li).join("")}</ul>`;
+    $("mod-added").hidden = false;
+  } catch { /* stays hidden */ }
+}
+
+function renderFrontPage() {
+  setFrontPageHidden(false);
+  renderFrontNumbers();
+  if (frontRendered) return;
+  frontRendered = true;
+  renderFrontNews();
+  onIdle(() => { renderFrontTopic(); renderFrontAdded(); });
+}
+
 async function runAsk(question) {
   if (askAbort) askAbort.abort();
   const myAbort = new AbortController();
@@ -1134,6 +1288,7 @@ async function runAsk(question) {
   btn.disabled = true;
   $("ask-result").hidden = true;
   $("ask-chips").hidden = true;
+  setFrontPageHidden(true);
   setQuoteRail([]);
   const started = Date.now();
   setStatus($("ask-status"), "Checking the record — this can take up to a minute.");
@@ -1185,6 +1340,7 @@ async function runAsk(question) {
         `${err.message || err} — the record is still there; try again.`, true);
       // A failed ask leaves the page empty; the suggested starts return.
       if (suggestions.length) $("ask-chips").hidden = false;
+      setFrontPageHidden(false);
     }
   } finally {
     if (askAbort === myAbort) {
@@ -1222,51 +1378,59 @@ $("ask-export").addEventListener("click", () => {
  */
 function renderChips() {
   // An ask already underway (status set synchronously at runAsk start) or
-  // answered: the cards stay out of the way.
+  // answered: the chips and the front page stay out of the way.
   if (lastAsk.question || !$("ask-result").hidden || $("ask-status").textContent) return;
-  const block = $("ask-chips");
-  const grid = $("suggest-grid");
   if (!suggestions.length) return;
-  const picks = [...suggestions].sort(() => Math.random() - 0.5).slice(0, 3);
-  grid.replaceChildren();
+  const row = $("chip-row");
+  for (const el of row.querySelectorAll(".chip")) el.remove();
+  const picks = [...suggestions].sort(() => Math.random() - 0.5).slice(0, 4);
   for (const q of picks) {
     const b = document.createElement("button");
     b.type = "button";
-    b.className = "suggest-card";
-    const kicker = document.createElement("span");
-    kicker.className = "card-kicker";
-    kicker.textContent = "Ask the record";
-    const title = document.createElement("span");
-    title.className = "card-title suggest-title";
-    title.textContent = q;
-    b.append(kicker, title);
+    b.className = "chip";
+    b.textContent = q.length > 60 ? q.slice(0, 57) + "…" : q;
     b.addEventListener("click", () => {
       $("ask-input").value = q;
       history.replaceState(null, "", askHash(q));
       runAsk(q);
     });
-    grid.appendChild(b);
+    row.appendChild(b);
   }
-  block.hidden = false;
+  $("ask-chips").hidden = false;
+}
+
+function setFrontPageHidden(hidden) {
+  for (const id of ["front-page", "front-rule", "home-corpus"]) {
+    const el = $(id);
+    if (!el) continue;
+    if (id === "home-corpus") { if (hidden) el.hidden = true; else renderCorpusMeter(); }
+    else el.hidden = hidden;
+  }
 }
 
 // --- corpus meter -----------------------------------------------------------
 
 function renderCorpusMeter() {
   if (!liveStats || !corpusManifest) return;
+  fillMeter("corpus-meter", "corpus-meter-text", "corpus-meter-bar");
+  fillMeter("home-corpus", "home-corpus-text", "home-corpus-bar");
+}
+
+function fillMeter(boxId, textId, barId) {
+  if (!$(boxId)) return;
   const indexed = liveStats.resources ?? 0;
   // NOTE: /api/stats counts every KB resource. corpus.json's expected_resources
   // covers speeches+news only — it MUST be raised when the legal push is
   // approved, or this meter will hide while speeches are still incomplete.
   const expected = corpusManifest.expected_resources || 0;
   if (!expected) return;
-  const meter = $("corpus-meter");
+  const meter = $(boxId);
   if (indexed >= expected * 0.98) { meter.hidden = true; return; }
   meter.hidden = false;
-  $("corpus-meter-text").textContent =
+  $(textId).textContent =
     `${indexed.toLocaleString()} of ${expected.toLocaleString()} collected documents indexed — more added daily. Answers may be incomplete while indexing runs.`;
   const pct = Math.min(Math.max(Math.round((indexed / expected) * 100), 1), 100);
-  const bar = $("corpus-meter-bar");
+  const bar = $(barId);
   bar.setAttribute("aria-valuenow", String(pct));
   bar.querySelector("i").style.width = `${pct}%`;
 }
@@ -1649,19 +1813,13 @@ function toYearSeries(series) {
   return m;
 }
 
-function renderStats(container, stats) {
-  if (!stats) { container.innerHTML = ""; return; }
+/** The paired speech/donation charts on one shared year axis (report page + homepage). */
+function moneyWordsCharts(stats) {
   const don = stats.donations;
   const industries = fmtIndustries(don?.industries || []);
-  let htmlOut = `<div class="tiles">
-    ${tile((stats.speech_count ?? 0).toLocaleString(), "speeches on the record")}
-    ${tile((stats.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
-    ${don ? tile(fmtMoney(don.total ?? 0), `donations — ${industries}`) : ""}
-  </div>`;
   const speechYears = toYearSeries(stats.timeline ?? []);
   const donYears = toYearSeries(don?.by_year ?? []);
   const paired = speechYears.size > 1 && donYears.size > 1;
-  // Money & Words: when both series exist, plot them on one shared year axis.
   const domain = paired
     ? (() => {
         const all = [...new Set([...speechYears.keys(), ...donYears.keys()])].sort();
@@ -1671,12 +1829,13 @@ function renderStats(container, stats) {
       })()
     : null;
   const seriesFor = (m) => (domain ?? [...m.keys()].sort()).map((y) => [y, m.get(y) ?? 0]);
+  let out = "";
   if (speechYears.size > 1) {
-    htmlOut += columnChart(seriesFor(speechYears),
+    out += columnChart(seriesFor(speechYears),
       { heading: "Speeches per year", fmt: (v) => v.toLocaleString() });
   }
   if (donYears.size > 1) {
-    htmlOut += columnChart(seriesFor(donYears), {
+    out += columnChart(seriesFor(donYears), {
       heading: `Donations per financial year, plotted at end year (${industries})`,
       fmt: fmtMoney,
       note: (paired
@@ -1684,6 +1843,19 @@ function renderStats(container, stats) {
         : "") + AEC_NOTE,
     });
   }
+  return out;
+}
+
+function renderStats(container, stats) {
+  if (!stats) { container.innerHTML = ""; return; }
+  const don = stats.donations;
+  const industries = fmtIndustries(don?.industries || []);
+  let htmlOut = `<div class="tiles">
+    ${tile((stats.speech_count ?? 0).toLocaleString(), "speeches on the record")}
+    ${tile((stats.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
+    ${don ? tile(fmtMoney(don.total ?? 0), `donations — ${industries}`) : ""}
+  </div>`;
+  htmlOut += moneyWordsCharts(stats);
   if (don?.top_donors?.length) htmlOut += barList(don.top_donors, {
     heading: "Largest donors", fmt: fmtMoney,
     linkTo: (nm) => subjectHash("donor", nm) });
@@ -1881,6 +2053,7 @@ $("report-back").addEventListener("click", () => { location.hash = "#/reports"; 
 fetch("/corpus.json").then((r) => r.json()).then((m) => {
   corpusManifest = m;
   renderCorpusMeter();
+  if (frontRendered) renderFrontNumbers();
   // The stats page's hero figures come from the manifest, so a re-sync
   // updates them in one place.
   const donations = (m.sources || []).find((s) => s.name.startsWith("AEC donations"));
@@ -1928,6 +2101,7 @@ api("/api/stats")
     $("stats").textContent = line;
     $("stats-live").textContent = `Live index: ${line}.`;
     renderCorpusMeter();
+    if (frontRendered) renderFrontNumbers();
   })
   .catch(() => {
     $("stats").textContent = "corpus loading…";
