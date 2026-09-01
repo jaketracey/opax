@@ -555,6 +555,9 @@ async function apiResource(slug: string, env: Env): Promise<Response> {
     .join('')
   const labels: Record<string, string> = {}
   for (const c of r.usermetadata?.classifications ?? []) labels[c.labelset] = c.label
+  // Machine summary written by the enrichment pass (ask-task, destination
+  // "summary"): lands as the text field "da-summary-t-body". Optional.
+  const brief = texts['da-summary-t-body']?.value?.body?.trim() || null
   return json({
     slug,
     title: r.title ?? slug,
@@ -562,6 +565,7 @@ async function apiResource(slug: string, env: Env): Promise<Response> {
     url: r.origin?.url ?? null,
     labels, // kind / source / party / state / chamber — for chips + provenance caveats
     metadata: r.extra?.metadata ?? {},
+    summary: brief,
     text: bodyText,
   })
 }

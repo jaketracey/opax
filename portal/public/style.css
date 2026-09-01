@@ -770,6 +770,11 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 }
 .doc-toolbar-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .doc-rule { margin: 1.2rem 0 1.4rem; }
+.doc-brief { margin: 1.3rem 0 0.5rem; max-width: 68ch; }
+.doc-brief .kicker { margin: 0 0 0.45rem; }
+.doc-brief #doc-brief-text {
+  font: 400 1.0625rem/1.65 var(--serif); color: var(--ink); margin: 0 0 0.4rem;
+}
 .doc-text {
   font-family: var(--serif);
   font-size: 1.03125rem;

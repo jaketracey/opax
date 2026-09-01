@@ -2425,6 +2425,7 @@ async function openDocPage(slug, manageFocus) {
   $("doc-topic").hidden = true;
   $("doc-speaker-links").hidden = true;
   $("doc-text").textContent = "";
+  $("doc-brief").hidden = true;
   $("doc-caveat").hidden = true;
   $("doc-cite-panel").hidden = true;
   $("doc-cite").setAttribute("aria-expanded", "false");
@@ -2481,6 +2482,10 @@ async function openDocPage(slug, manageFocus) {
         ext(`https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(`${doc.speaker} Australian politician`)}`, "Wikipedia"),
       ].join(" · ");
       speakerLinks.hidden = false;
+    }
+    if (doc.summary) {
+      $("doc-brief-text").textContent = doc.summary;
+      $("doc-brief").hidden = false;
     }
     $("doc-text").textContent = doc.text || "(no text)";
     $("doc-actions").hidden = false;
