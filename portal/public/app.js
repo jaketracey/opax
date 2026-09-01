@@ -1108,6 +1108,37 @@ function actionBtn(icon, href, label, { external = false, primary = false } = {}
     `${iconSvg(icon)}<span>${esc(label)}${external ? " ↗" : ""}</span></a>`;
 }
 
+
+// --- portraits & monograms ---------------------------------------------------
+// 200 self-hosted MP portraits (WebP, sourced from official APH/OpenAustralia
+// photos by the ingest pipeline) keyed by normalised full name. Donors get
+// industry-coloured monogram tiles — most are private companies with no clean,
+// legally safe logo source.
+
+let photoMap = null;
+let photoMapPromise = null;
+function loadPhotoMap() {
+  photoMapPromise ??= fetch("/photos/people.json")
+    .then((r) => r.json()).then((d) => (photoMap = d)).catch(() => null);
+  return photoMapPromise;
+}
+
+function photoUrlFor(name) {
+  const pid = photoMap?.[String(name || "").trim().toLowerCase()];
+  return pid ? `/photos/${pid}.webp` : null;
+}
+
+/** Portrait <img> or a monogram tile; always returns markup. */
+function avatarHTML(name, { photo = null, colour = null, size = 44 } = {}) {
+  if (photo) {
+    return `<img class="avatar" src="${esc(photo)}" alt="" width="${size}" height="${size}" loading="lazy">`;
+  }
+  const initials = String(name || "?").split(/\s+/).filter(Boolean)
+    .slice(0, 2).map((w) => w[0].toUpperCase()).join("");
+  const bg = colour || "#8D897B";
+  return `<span class="avatar avatar-mono" style="background:${esc(bg)}1f;color:${esc(bg)};width:${size}px;height:${size}px;font-size:${Math.round(size * 0.38)}px" aria-hidden="true">${esc(initials)}</span>`;
+}
+
 function subjectHash(kind, label) {
   return `#/subject/${kind}/${encodeURIComponent(label)}`;
 }
@@ -1267,6 +1298,8 @@ async function openSubject(kind, name, manageFocus) {
       counter.set(label, (counter.get(label) || 0) + (e.total || 0));
     }
     const flowRows = [...counter.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
+    $("subject-title")?.insertAdjacentHTML("beforebegin",
+      `<span class="subject-portrait subject-portrait-mono">${avatarHTML(node.label, { colour: node.colour || "#8D897B", size: 72 })}</span>`);
     body.querySelector(".subject-tag").innerHTML = [
       isParty ? partyChipHTML(node.label) : `<span class="party party-oth"><i aria-hidden="true"></i>${esc(industryLabel(node.industry || ""))}</span>`,
       `<span class="subject-active"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l2.8 1.8"/></svg>Active ${node.firstYear}–${node.lastYear}</span>`,
@@ -1304,6 +1337,12 @@ async function openSubject(kind, name, manageFocus) {
   // person
   const sections = $("subject-sections");
   const box = $("subject-infobox");
+  loadPhotoMap().then(() => {
+    if (currentSubjectKey !== key) return;
+    const url = photoUrlFor(name);
+    if (url) $("subject-title")?.insertAdjacentHTML("beforebegin",
+      `<img class="subject-portrait" src="${esc(url)}" alt="Official portrait of ${esc(name)}" width="112" height="112">`);
+  });
   let speeches = [];
   try {
     const data = await api(`/api/search?${new URLSearchParams({ q: name, speaker: name, top_k: "20" })}`);
