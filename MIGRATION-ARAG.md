@@ -306,9 +306,12 @@ Views/tools to build once the full passes run, in value order:
    honest still-labelling copy, party split, money pairing, Topics A-Z index
    in Explore/drawer. Multi-label caveat: never sum facet counts; the bare
    labelset filter total is the labelled denominator.
-3. **Party × topic matrix** ("who owns which debate") — heatmap of speech
-   share from faceted+filters counts, every cell a filtered search link.
-   New Explore entry; the numbers are live, not static exports.
+3. **Party × topic matrix** — DONE 2026-09-01 (deployed d3a10117): Explore
+   card + game dialog (matrix.js), /api/matrix with catalog calls batched in
+   fives — Workers cap simultaneous connections at 6 and count unread
+   bodies, so wide Promise.all fans die in production only ("Response
+   closed due to connection limit"). Remember this for any future fan-out
+   endpoint.
 4. **Words per dollar** — per industry: disclosed donations (money.json) vs
    on-topic speech share per party. The site's thesis in one view. Needs
    the industry→topic map (exists in detectMoneyIndustry) + facet slices.
