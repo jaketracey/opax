@@ -961,6 +961,14 @@ a.report-card .card-meta { color: var(--ink-soft); }
 .subject-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
 .subject-list li { border-top: 1px solid var(--line); padding: 0.7rem 0; }
 .subject-list li:first-child { border-top: none; }
+.topic-digest { max-width: 68ch; }
+.topic-digest-item { border-top: 1px solid var(--line); padding: 0.85rem 0 0.9rem; }
+.topic-digest-item:first-of-type { border-top: none; padding-top: 0.1rem; }
+.topic-digest-source { font: 600 0.9375rem/1.35 var(--serif); text-decoration: none; }
+.topic-digest-source:hover { color: var(--bronze-ink); }
+.topic-digest-text {
+  font: 400 1rem/1.6 var(--serif); color: var(--ink); margin: 0.3rem 0 0;
+}
 @media (max-width: 900px) {
   .subject-grid { grid-template-columns: 1fr; }
   .infobox { position: static; }

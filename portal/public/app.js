@@ -1646,6 +1646,35 @@ async function openTopicPage(slug, manageFocus) {
     const html = topicMoneyHTML(moneyInd);
     if (html) sections.insertAdjacentHTML("beforeend", html);
   }
+
+  // "The latest, in brief": the machine summaries of the newest labelled
+  // speeches, stitched into a briefing under the sections above. The topic
+  // endpoint serves no summaries, so each comes from its own /api/resource
+  // fetch; speeches the summariser has not reached are skipped, and under
+  // two summaries the section stays out entirely rather than stand as a stub.
+  if ((data?.recent?.length ?? 0) >= 2) {
+    const docs = await Promise.all(data.recent.slice(0, 5).map(async (r) => {
+      try {
+        const doc = await api(`/api/resource/${encodeURIComponent(r.slug)}`);
+        return doc?.summary ? { ...r, summary: doc.summary } : null;
+      } catch { return null; }
+    }));
+    if (currentSubjectKey !== key) return;
+    const briefed = docs.filter(Boolean);
+    if (briefed.length >= 2) {
+      sections.insertAdjacentHTML("beforeend", `
+        <div class="topic-digest">
+          <p class="kicker">The latest, in brief</p>
+          ${briefed.map((d) => `
+            <div class="topic-digest-item">
+              <a class="topic-digest-source" href="#/doc/${esc(d.slug)}">${partyDotHTML(d.party)}${esc(d.speaker || d.title)}${d.date ? `, ${esc(fmtDate(d.date))}` : ""}</a>
+              <p class="topic-digest-text">${esc(d.summary)}</p>
+            </div>`).join("")}
+          <p class="fineprint">Machine summaries of the newest speeches to enter the index
+            with this label; each links to the full record.</p>
+        </div>`);
+    }
+  }
 }
 
 async function openTopicsIndex(manageFocus) {
