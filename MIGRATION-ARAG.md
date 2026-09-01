@@ -357,6 +357,15 @@ that function shells out to ssh, and ssh eats the stdin that the confirm
 prompt needs). Track with `python3 scripts/arag_enrich.py status`; build
 the roadmap views as label coverage grows (facet counts show progress).
 
+## Ingest vs enrichment backpressure (2026-09-02, diagnosed)
+
+With both DA passes running, the platform 429s bulk ingest with long
+try_after waits (client honours up to 900s per retry, silently, workers
+all sleeping — looks like a stall but is pacing). Do NOT restart the sync
+for silence alone; check /proc state + established connections first.
+The passes and the load share platform processing; ingest slows while
+enrichment runs hot and recovers on its own.
+
 ## Open items
 
 - ~~Speaker filter exact-match only~~ RESOLVED 2026-09-01: speakers.json
