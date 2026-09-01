@@ -1358,6 +1358,9 @@ const ICONS = {
   map: '<circle cx="6" cy="7" r="2.2"/><circle cx="14" cy="5.5" r="1.7"/><circle cx="12" cy="13.5" r="2.6"/><path d="M7.9 8.1l2.4 3.3M13.3 7.1l-.7 4"/>',
   cite: '<path d="M7.6 6.3c-1.7.6-2.8 2-2.8 3.9 0 1.2.8 2 1.9 2s1.9-.8 1.9-1.9c0-1-.7-1.8-1.7-1.9"/><path d="M15 6.3c-1.7.6-2.8 2-2.8 3.9 0 1.2.8 2 1.9 2s1.9-.8 1.9-1.9c0-1-.7-1.8-1.7-1.9"/>',
   link: '<path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/>',
+  entry: '<path d="M5 3.5h10v13H5z"/><path d="M8 7.5h4M8 10.5h4"/>',
+  prev: '<path d="M12 4.5L6.5 10l5.5 5.5"/>',
+  next: '<path d="M8 4.5L13.5 10 8 15.5"/>',
 };
 
 function iconSvg(name) {
@@ -1390,6 +1393,22 @@ function loadPhotoMap() {
 function photoUrlFor(name) {
   const pid = photoMap?.[String(name || "").trim().toLowerCase()];
   return pid ? `/photos/${pid}.webp` : null;
+}
+
+// Voting records for the same 200 people, exported from the division tables
+// by scripts/export_votes.py and served static; keyed by the portrait id.
+// Fetched only by the front-page encyclopedia slider.
+let votesData = null;
+let votesPromise = null;
+function loadVotes() {
+  votesPromise ??= fetch("/votes.json")
+    .then((r) => (r.ok ? r.json() : null)).then((d) => (votesData = d)).catch(() => null);
+  return votesPromise;
+}
+
+function votesFor(name) {
+  const pid = photoMap?.[String(name || "").trim().toLowerCase()];
+  return (pid && votesData?.[pid]) || null;
 }
 
 function subjectHash(kind, label) {
@@ -1979,7 +1998,8 @@ async function renderFrontTopic() {
   try {
     if (!reportsIndex) await loadReportsIndex();
     if (!reportsIndex?.length) return;
-    const today = reportsIndex[Math.floor(Date.now() / 864e5) % reportsIndex.length];
+    const dayIdx = Math.floor(Date.now() / 864e5) % reportsIndex.length;
+    const today = reportsIndex[dayIdx];
     const report = await api(`/reports/${encodeURIComponent(today.slug)}.json`);
     const stats = report.stats;
     if (!stats) return;
@@ -2043,32 +2063,9 @@ async function renderFrontTopic() {
       <a href="#/reports">All reports</a></p>`;
     $("mod-mw").hidden = false;
 
-    // Encyclopedia rail: today's topic's #1 donor and #1 speaker.
-    const cards = [];
-    await loadMoneyData();
-    const topDonor = don?.top_donors?.[0];
-    if (topDonor) {
-      const node = findMoneyNode("donor", topDonor[0]);
-      const fact = node ? weeklyFunFact(node).replace(/<[^>]+>/g, "") : "";
-      cards.push(`<a class="report-card" href="${esc(subjectHash("donor", topDonor[0]))}">
-        <span class="card-kicker">Donor${node?.industry ? ` · ${esc(industryLabel(node.industry))}` : ""}</span>
-        <span class="card-title">${esc(topDonor[0])}</span>
-        <span class="card-blurb">${esc(fmtMoney(topDonor[1]))} disclosed${node ? `, ${node.firstYear}–${node.lastYear}` : " to parties"}.
-          ${esc(fact)}</span>
-        <span class="card-meta">Open the entry →</span></a>`);
-    }
-    const topSpeaker = stats.top_speakers?.[0];
-    if (topSpeaker) {
-      cards.push(`<a class="report-card" href="${esc(subjectHash("person", topSpeaker[0]))}">
-        <span class="card-kicker">Parliamentarian</span>
-        <span class="card-title">${esc(topSpeaker[0])}</span>
-        <span class="card-blurb">${esc(Number(topSpeaker[1]).toLocaleString())} speeches on ${esc(report.title.toLowerCase())} in the indexed record.</span>
-        <span class="card-meta">Open the entry →</span></a>`);
-    }
-    if (cards.length) {
-      $("front-ency").innerHTML = cards.join("");
-      $("mod-ency").hidden = false;
-    }
+    // Encyclopedia rail: the loudest voices across every report, today's
+    // topic leading. Needs the other reports too, so it fills in on its own.
+    renderFrontEncy(dayIdx, report, don).catch(() => { /* module stays hidden */ });
 
     // Reports row (index already in hand).
     $("front-reports").innerHTML = reportsIndex.map((r) => `
@@ -2078,6 +2075,115 @@ async function renderFrontTopic() {
         <span class="card-meta">Updated ${esc(fmtDate(r.updated || ""))}</span></a>`).join("");
     $("mod-reports").hidden = false;
   } catch { /* modules stay hidden */ }
+}
+
+// The encyclopedia slider: one card per report's top speaker (today's topic
+// first, then the daily rotation order), deduped, filled from the second and
+// later ranks up to eight. Speakers without a portrait are skipped. Votes come
+// from the static export; a person missing from it simply has no vote block.
+// Today's top donor closes the row so the AEC half of the fineprint holds.
+async function renderFrontEncy(dayIdx, todayReport, don) {
+  const n = reportsIndex.length;
+  const order = reportsIndex.map((_, i) => reportsIndex[(dayIdx + i) % n]);
+  const [reports] = await Promise.all([
+    Promise.all(order.map((r) => r.slug === order[0].slug
+      ? todayReport
+      : api(`/reports/${encodeURIComponent(r.slug)}.json`).catch(() => null))),
+    loadPhotoMap(), loadVotes(), loadMoneyData(),
+  ]);
+  const ranked = reports.map((rep) => ({
+    topic: rep?.title || "",
+    speakers: (rep?.stats?.top_speakers || []).filter(([nm]) => photoUrlFor(nm)),
+  }));
+  const seen = new Set();
+  const picks = [];
+  for (let rank = 0; picks.length < 8 && ranked.some((r) => r.speakers[rank]); rank++) {
+    for (const r of ranked) {
+      const row = r.speakers[rank];
+      if (!row || seen.has(row[0]) || picks.length >= 8) continue;
+      seen.add(row[0]);
+      picks.push({ name: row[0], count: row[1], topic: r.topic });
+    }
+  }
+
+  const voteList = (label, rows) => rows?.length ? `
+    <div class="ency-votes-col">
+      <span class="ency-votes-label">${label}</span>
+      <ul class="ency-votes-list" role="list">${rows.slice(0, 2).map((d) => `
+        <li><span class="ency-bill">${esc(d.name)}</span><span class="ency-year">${esc(String(d.date || "").slice(0, 4))}</span></li>`).join("")}
+      </ul>
+    </div>` : "";
+  const cards = picks.map((p) => {
+    const v = votesFor(p.name);
+    const hasVotes = Boolean(v?.for?.length || v?.against?.length);
+    return `<article class="report-card ency-card">
+      <div class="ency-head">
+        <img class="ency-portrait" src="${esc(photoUrlFor(p.name))}" alt="" width="64" height="64">
+        <div class="ency-id">
+          <span class="card-kicker">Parliamentarian</span>
+          <a class="card-title ency-name" href="${esc(subjectHash("person", p.name))}">${esc(p.name)}</a>
+          ${v?.party ? partyChipHTML(v.party) : ""}
+        </div>
+      </div>
+      <p class="card-blurb">${esc(Number(p.count).toLocaleString())} speeches on ${esc(p.topic.toLowerCase())} in the indexed record.</p>
+      ${hasVotes ? `<div class="ency-votes">${voteList("Voted for", v.for)}${voteList("Voted against", v.against)}</div>
+      <span class="card-meta">${esc(Number(v.divisions_total || 0).toLocaleString())} recorded votes${v.years ? `, ${esc(String(v.years[0]))} to ${esc(String(v.years[1]))}` : ""}</span>` : ""}
+      ${actionBtn("entry", subjectHash("person", p.name), "Open the entry")}
+    </article>`;
+  });
+
+  const topDonor = don?.top_donors?.[0];
+  if (topDonor) {
+    const node = findMoneyNode("donor", topDonor[0]);
+    const fact = node ? weeklyFunFact(node).replace(/<[^>]+>/g, "") : "";
+    cards.push(`<article class="report-card ency-card">
+      <div class="ency-id">
+        <span class="card-kicker">Donor${node?.industry ? ` · ${esc(industryLabel(node.industry))}` : ""}</span>
+        <a class="card-title ency-name" href="${esc(subjectHash("donor", topDonor[0]))}">${esc(topDonor[0])}</a>
+      </div>
+      <p class="card-blurb">${esc(fmtMoney(topDonor[1]))} disclosed${node ? `, ${node.firstYear} to ${node.lastYear}` : " to parties"}.
+        ${esc(fact)}</p>
+      ${actionBtn("entry", subjectHash("donor", topDonor[0]), "Open the entry")}
+    </article>`);
+  }
+  if (!cards.length) return;
+
+  const holder = $("front-ency");
+  holder.innerHTML = `
+    <div class="ency-slider">
+      <div class="ency-track">${cards.join("")}</div>
+      ${cards.length > 1 ? `<div class="ency-nav">
+        <button type="button" class="action-btn ency-prev" aria-label="Previous entry">${iconSvg("prev")}</button>
+        <span class="ency-count" aria-live="polite"></span>
+        <button type="button" class="action-btn ency-next" aria-label="Next entry">${iconSvg("next")}</button>
+      </div>` : ""}
+    </div>`;
+  // Unhide before measuring: a display:none track reports zero widths.
+  $("mod-ency").hidden = false;
+  if (cards.length > 1) mountEncySlider(holder.querySelector(".ency-slider"));
+}
+
+// Prev/next step one card; the count and the disabled ends follow the track's
+// own scroll position, so swipes and arrow clicks stay in agreement.
+function mountEncySlider(root) {
+  const track = root.querySelector(".ency-track");
+  const prev = root.querySelector(".ency-prev");
+  const next = root.querySelector(".ency-next");
+  const count = root.querySelector(".ency-count");
+  const cards = [...track.children];
+  const step = () => (cards[1].offsetLeft - cards[0].offsetLeft) || track.clientWidth;
+  const sync = () => {
+    const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+    const i = atEnd ? cards.length - 1 : Math.min(cards.length - 1, Math.round(track.scrollLeft / step()));
+    count.textContent = `${i + 1} of ${cards.length}`;
+    prev.disabled = track.scrollLeft <= 2;
+    next.disabled = atEnd;
+  };
+  prev.addEventListener("click", () => track.scrollBy({ left: -step() }));
+  next.addEventListener("click", () => track.scrollBy({ left: step() }));
+  track.addEventListener("scroll", sync, { passive: true });
+  window.addEventListener("resize", sync);
+  sync();
 }
 
 async function renderFrontAdded() {
