@@ -316,10 +316,9 @@ Views/tools to build once the full passes run, in value order:
    Explore view (wordsdollars.js), donations beside debate share per party
    for the 8 industry→topic mappings, built entirely from /api/matrix +
    money.json. Shares use the topic-total denominator (matrix convention).
-5. **Then vs now / position tracker** — speaker + topic → two era-filtered
-   asks side by side ("what did X say about climate, 1998-2007 vs
-   2019-2026") with dated quotes; summaries make the era lists scannable.
-   Uses the speaker-provenance turn + created ranges + topic label.
+5. **Then vs now** — DONE 2026-09-02 (deployed 8b98d2b3): sixth Explore
+   view (thenvsnow.js), sequential era-filtered asks with honest
+   loading-gap copy for thin eras and reader-owned consistency judgment.
 6. **Topic digests** — "the last fortnight in {topic}": newest on-topic
    speeches' summaries stitched into a machine briefing (client-side), with
    a disclosure line. Auto-freshens as the corpus updates.
