@@ -113,7 +113,7 @@ patch_config({
         # long passages; deepseek-v4-flash takes 1M in.
         "generation_config": {
             "temperature": 0.0,
-            "default_max_completion_tokens": 1600,
+            "default_max_completion_tokens": 4096,
             "max_input_tokens": 120000,
         },
         # DeepSeek v4-flash defaults to thinking mode, which rejects the

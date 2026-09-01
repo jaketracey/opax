@@ -586,6 +586,16 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .search-answer .source-list li { padding: 0.45rem 0; }
 .search-answer .source-title { font-size: 0.9375rem; }
 
+.chat-next-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chat-next-btns .chip {
+  white-space: normal; text-align: left; line-height: 1.4;
+  max-width: 100%; height: auto; padding: 0.6rem 1rem;
+}
+@media (max-width: 700px) {
+  .chat-next-btns { flex-direction: column; align-items: stretch; }
+  .chat-next-btns .chip { width: 100%; border-radius: 10px; }
+}
+
 /* ---- reports ------------------------------------------------------------ */
 
 .report-cards {
