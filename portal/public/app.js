@@ -54,12 +54,23 @@ function fmtMoney(n) {
 // Party identity: dot + short text label, always redundant with text (never color alone).
 const PARTY_MAP = {
   "labor": ["alp", "ALP"], "liberal": ["lib", "LIB"], "nationals": ["nat", "NAT"],
-  "lnp": ["nat", "LNP"], "country liberal party": ["nat", "CLP"],
+  "lnp": ["lnp", "LNP"], "country liberal party": ["nat", "CLP"],
   "greens": ["grn", "GRN"], "one nation": ["onp", "ONP"], "independent": ["ind", "IND"],
   "centre alliance": ["oth", "CA"], "katter's australian party": ["oth", "KAP"],
   "united australia party": ["oth", "UAP"], "australian democrats": ["oth", "AD"],
   "family first": ["oth", "FF"], "dlp": ["oth", "DLP"], "jln": ["oth", "JLN"],
 };
+function partyClass(party) {
+  const hit = PARTY_MAP[String(party || "").toLowerCase()];
+  return hit ? hit[0] : null;
+}
+
+function partyDotHTML(party) {
+  const cls = partyClass(party);
+  if (!cls) return "";
+  return `<span class="party party-${cls} party-dot-only"><i aria-hidden="true"></i></span>`;
+}
+
 function partyChipHTML(party) {
   if (!party) return "";
   const hit = PARTY_MAP[String(party).toLowerCase()];
@@ -824,7 +835,7 @@ function renderMoneyPanel(ind) {
       ${tile(`${years[0]}–${years[1]}`, "years covered")}
     </div>
     ${barList(donorRows, { fmt: fmtMoney, heading: "Largest donors", linkTo: (nm) => subjectHash("donor", nm) })}
-    ${barList(partyRows, { fmt: fmtMoney, heading: "Where it went", linkTo: (nm) => subjectHash("party", nm) })}
+    ${barList(partyRows, { fmt: fmtMoney, heading: "Where it went", linkTo: (nm) => subjectHash("party", nm), partyDots: true })}
     <p class="fineprint">${esc(AEC_NOTE)}
       <a href="#/money">Explore on the money map</a> ·
       <a href="/graph/money.json">Download the data</a></p>`;
@@ -855,6 +866,29 @@ function destroySubjectMap() {
     try { subjectMapHandle.destroy(); } catch { /* already gone */ }
     subjectMapHandle = null;
   }
+}
+
+
+// House icon idiom: stroked, never filled, rounded caps, 20-unit grid.
+const ICONS = {
+  ask: '<path d="M3 4.5h14v9H9.5L6 16.5v-3H3z"/><path d="M8.2 8.6c0-1 .8-1.7 1.8-1.7s1.8.7 1.8 1.6c0 1.2-1.8 1.3-1.8 2.4"/><path d="M10 12.9h.01"/>',
+  search: '<circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/>',
+  download: '<path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/>',
+  speeches: '<path d="M4 3.5h12v13H4z"/><path d="M7 7h6M7 10h6M7 13h4"/>',
+  external: '<path d="M8 4H4v12h12v-4"/><path d="M11 3.5h5.5V9"/><path d="M16.5 3.5L9.5 10.5"/>',
+  map: '<circle cx="6" cy="7" r="2.2"/><circle cx="14" cy="5.5" r="1.7"/><circle cx="12" cy="13.5" r="2.6"/><path d="M7.9 8.1l2.4 3.3M13.3 7.1l-.7 4"/>',
+};
+
+function iconSvg(name) {
+  return `<svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor"
+    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ""}</svg>`;
+}
+
+/** An infobox/action button: icon + label; primary = navy fill. */
+function actionBtn(icon, href, label, { external = false, primary = false } = {}) {
+  const ext = external ? ` rel="noopener" target="_blank"` : "";
+  return `<a class="action-btn${primary ? " action-primary" : ""}" href="${esc(href)}"${ext}>` +
+    `${iconSvg(icon)}<span>${esc(label)}${external ? " ↗" : ""}</span></a>`;
 }
 
 function subjectHash(kind, label) {
@@ -973,8 +1007,8 @@ async function openSubject(kind, name, manageFocus) {
         `<span>Not among the top 250 disclosed donors in the money data — the record may still mention them.</span>`;
       box.innerHTML = infoboxHTML(
         [["Type", kind === "party" ? "Political party" : "Organisation"]], "",
-        [`<a href="${esc(searchHash(`"${name}"`, {}))}">Search the record for them</a>`,
-         `<a href="#/money">Open the money map</a>`]);
+        [actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for them", { primary: true }),
+         actionBtn("map", "#/money", "Open the money map")]);
       subjectMentions(name, sections, "In parliament");
       return;
     }
@@ -1001,14 +1035,16 @@ async function openSubject(kind, name, manageFocus) {
       ["Active years", `${node.firstYear}–${node.lastYear}`],
       ["Rank", `#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed donors"}`],
     ], weeklyFunFact(node), [
-      `<a href="${esc(askHash(`What has parliament said about ${industryLabel(node.industry || name)}?`))}">Ask what parliament said about ${esc(isParty ? "them" : "this industry")}</a>`,
-      `<a href="${esc(searchHash(`"${node.label}"`, {}))}">Search mentions in the record</a>`,
-      `<a href="/graph/money.json">Download the data</a>`,
+      actionBtn("ask", askHash(`What has parliament said about ${industryLabel(node.industry || name)}?`),
+        `Ask what parliament said about ${isParty ? "them" : "this industry"}`, { primary: true }),
+      actionBtn("search", searchHash(`"${node.label}"`, {}), "Search mentions in the record"),
+      actionBtn("download", "/graph/money.json", "Download the data"),
     ]);
     sections.insertAdjacentHTML("beforeend", barList(flowRows, {
       fmt: fmtMoney,
       heading: isParty ? "Where it came from" : "Where the money went",
       linkTo: (nm) => subjectHash(isParty ? "donor" : "party", nm),
+      partyDots: !isParty, // donor page rows are parties; party page rows are donors
     }));
     sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
@@ -1042,10 +1078,10 @@ async function openSubject(kind, name, manageFocus) {
     chambers.length && ["Parliament", esc(chambers.join(", "))],
     dates.length && ["Indexed speeches span", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
   ], "", [
-    `<a href="${esc(searchHash("", { speaker: name }))}">All their speeches on OPAX</a>`,
-    `<a href="https://theyvoteforyou.org.au/search?query=${q}" rel="noopener" target="_blank">Voting record ↗</a>`,
-    `<a href="https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}" rel="noopener" target="_blank">Parliamentary profile ↗</a>`,
-    `<a href="https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician" rel="noopener" target="_blank">Wikipedia ↗</a>`,
+    actionBtn("speeches", searchHash("", { speaker: name }), "All their speeches on OPAX", { primary: true }),
+    actionBtn("external", `https://theyvoteforyou.org.au/search?query=${q}`, "Voting record", { external: true }),
+    actionBtn("external", `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliamentary profile", { external: true }),
+    actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
   ]);
   sections.insertAdjacentHTML("beforeend", `
     <form class="query-line" id="subject-ask-form" style="margin:0 0 0.4rem">
@@ -1400,11 +1436,9 @@ function renderChips() {
 }
 
 function setFrontPageHidden(hidden) {
-  for (const id of ["front-page", "front-rule", "home-corpus"]) {
+  for (const id of ["front-page", "front-rule"]) {
     const el = $(id);
-    if (!el) continue;
-    if (id === "home-corpus") { if (hidden) el.hidden = true; else renderCorpusMeter(); }
-    else el.hidden = hidden;
+    if (el) el.hidden = hidden;
   }
 }
 
@@ -1413,7 +1447,6 @@ function setFrontPageHidden(hidden) {
 function renderCorpusMeter() {
   if (!liveStats || !corpusManifest) return;
   fillMeter("corpus-meter", "corpus-meter-text", "corpus-meter-bar");
-  fillMeter("home-corpus", "home-corpus-text", "home-corpus-bar");
 }
 
 function fillMeter(boxId, textId, barId) {
@@ -1765,13 +1798,13 @@ function columnChart(pairs, { fmt = String, heading, note }) {
   </figure>`;
 }
 
-function barList(rows, { fmt = String, heading, linkTo }) {
+function barList(rows, { fmt = String, heading, linkTo, partyDots = false }) {
   const max = Math.max(...rows.map(([, v]) => v), 1);
   const items = rows.map(([name, v]) => `
     <div class="barrow">
       ${linkTo
-        ? `<a class="barrow-name" title="${esc(name)}" href="${esc(linkTo(name))}">${esc(name)}</a>`
-        : `<span class="barrow-name" title="${esc(name)}">${esc(name)}</span>`}
+        ? `<a class="barrow-name" title="${esc(name)}" href="${esc(linkTo(name))}">${partyDots ? partyDotHTML(name) : ""}${esc(name)}</a>`
+        : `<span class="barrow-name" title="${esc(name)}">${partyDots ? partyDotHTML(name) : ""}${esc(name)}</span>`}
       <span class="barrow-track" aria-hidden="true"><i style="width:${Math.max((v / max) * 100, 1)}%"></i></span>
       <span class="barrow-value">${esc(fmt(v))}</span>
     </div>`).join("");

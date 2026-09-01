@@ -40,6 +40,7 @@
   --party-alp: #B02E33;
   --party-lib: #1D4F91;
   --party-nat: #8F6E00;
+  --party-lnp: #4A90D9;  /* matches the money map's LNP blue */
   --party-grn: #2E7D32;
   --party-onp: #BF5B15;
   --party-ind: #3E5B77;
@@ -323,6 +324,7 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
 .party-alp { --pc: var(--party-alp); }
 .party-lib { --pc: var(--party-lib); }
 .party-nat { --pc: var(--party-nat); }
+.party-lnp { --pc: var(--party-lnp); }
 .party-grn { --pc: var(--party-grn); }
 .party-onp { --pc: var(--party-onp); }
 .party-ind { --pc: var(--party-ind); }
@@ -480,6 +482,21 @@ button.link.result-title { font: 600 1.0625rem/1.35 var(--serif); }
   background: var(--navy); color: var(--on-navy); border-color: var(--navy);
 }
 .explore-slot { min-height: 300px; }
+
+.action-btn {
+  display: flex; align-items: center; gap: 0.55rem;
+  border: 1px solid var(--line-strong); border-radius: 4px;
+  padding: 0.55rem 0.8rem; text-decoration: none;
+  font: 600 0.875rem/1.3 var(--sans); color: var(--ink);
+}
+.action-btn:hover { border-color: var(--ink); color: var(--ink); }
+.action-btn .btn-icon { width: 17px; height: 17px; flex: 0 0 auto; color: var(--bronze-ink); }
+.action-btn.action-primary {
+  background: var(--navy); border-color: var(--navy); color: var(--on-navy);
+}
+.action-btn.action-primary:hover { background: var(--navy-raised); }
+.action-btn.action-primary .btn-icon { color: var(--bronze-bright); }
+.party-dot-only { margin-right: 0.45rem; }
 
 /* ---- front page grid ---------------------------------------------------- */
 
