@@ -1965,9 +1965,9 @@ function renderReportBrief(report) {
   brief.replaceChildren();
   if (report.brief?.answer) {
     const body = document.createElement("div");
-    body.className = "answer record-rule";
+    body.className = "answer";
     renderAnswer(body, report.brief.answer);
-    brief.append(kicker("The brief"), body);
+    brief.append(body);
   }
 
   const figures = $("report-figures");
@@ -2059,7 +2059,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   renderStats($("report-stats"), report.stats);
   renderReportBrief(report);
   $("report-download").innerHTML =
-    `Download the data behind this report: <a href="/reports/${esc(slug)}.json">${esc(slug)}.json</a>`;
+    `<a class="action-btn report-download-btn" href="/reports/${esc(slug)}.json">${iconSvg("download")}<span>Download the data behind this report</span></a>`;
 
   const sectionsEl = $("report-sections");
   if (!report.sections?.length) {
@@ -2091,14 +2091,14 @@ async function openReport(slug, sectionNum, manageFocus) {
         tools.className = "section-tools action-row";
         const linkBtn = document.createElement("button");
         linkBtn.type = "button";
-        linkBtn.className = "link";
-        linkBtn.textContent = "Copy link to this section";
+        linkBtn.className = "action-btn";
+        linkBtn.innerHTML = `${iconSvg("external")}<span>Copy link to this section</span>`;
         linkBtn.addEventListener("click", (e) =>
-          copyText(siteUrl(`#/reports/${slug}/s/${i + 1}`), e.target));
+          copyText(siteUrl(`#/reports/${slug}/s/${i + 1}`), e.currentTarget.querySelector("span")));
         const askBtn = document.createElement("button");
         askBtn.type = "button";
-        askBtn.className = "link";
-        askBtn.textContent = "Ask the record about this";
+        askBtn.className = "action-btn";
+        askBtn.innerHTML = `${iconSvg("ask")}<span>Ask the record about this</span>`;
         askBtn.addEventListener("click", () => {
           location.hash = askHash(s.question);
         });

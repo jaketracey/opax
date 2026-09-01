@@ -439,7 +439,10 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .barrow-value { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 
 /* Evidence-brief layers */
-#report-brief .answer { margin-top: 0.4rem; }
+#report-brief .answer { margin-top: 0.6rem; }
+.section-tools { gap: 0.5rem 0.7rem; }
+button.action-btn { background: none; cursor: pointer; font: 600 0.875rem/1.3 var(--sans); }
+.report-download-btn { display: inline-flex; margin-top: 1.6rem; }
 .tile .tile-source { display: block; margin-top: 0.35rem; font-size: 0.75rem; color: var(--ink-faint); }
 .tile .tile-source a { color: var(--ink-faint); }
 .position-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
