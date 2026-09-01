@@ -15,16 +15,23 @@ Output is keyed by person_id:
                           "date": "2012-08-15", "summary": "Read a second time", "rebels": 3}, ...],
              "against": [...]}}
 
-`for` and `against` hold up to four divisions each, substantive bill votes
-(second and third readings) first, then other bill stages, then motions, most
-recent first within each tier. Division names arrive TheyVoteForYou-style
-("Title - Stage - What the vote meant"); the stage is split out rather than
-deleted and the trailing description stands in as the summary when the
-division carries no motion text of its own. Only 535 of ~4,000 divisions
-carry a summary, and most of those are Hansard boilerplate ("Division:
-Question put ..."), so summaries are optional and never a selection filter.
-`rebels` is the division's own rebellion count when above zero; whether this
-person was among the rebels is not derivable from the vote columns.
+`for` and `against` hold up to four bills each, most recent first, one entry
+per bill. Only divisions whose question was the bill itself qualify: "pass
+the bill", "read a second time", "agree with the bill's main idea" and kin
+(an aye is for the bill), plus the inverted forms "decline a second
+reading" / "disagree with bill" (an aye is against it). Procedural divisions
+that share the bill's name ("put the question", "speed things along", "stop
+the member from speaking") are skipped: an aye there says nothing about the
+bill, so listing it under "Voted for" would misreport the vote.
+
+Division names arrive TheyVoteForYou-style ("Title - Stage - What the vote
+meant"); the stage is split out rather than deleted and the trailing
+description stands in as the summary when the division carries no motion text
+of its own. Only 535 of ~4,000 divisions carry a summary, most of it Hansard
+boilerplate or the mover's speech, so real motion text is used only when it
+reads as one ("That this House ...", "The majority voted ..."). `rebels` is
+the division's own rebellion count when above zero; whether this person was
+among the rebels is not derivable from the vote columns.
 """
 
 import json
@@ -58,9 +65,18 @@ STAGE_CASE = {
     "consideration of senate message": "Consideration of Senate message",
     "consideration of house of representatives message": "Consideration of House message",
 }
-BOILERPLATE = ("division: question put", "no motion text", "resolved in the")
+# The vote description tells which way the question ran. An aye on a POSITIVE
+# question backs the bill; an aye on a NEGATIVE one opposes it.
+POSITIVE = re.compile(
+    r"^(pass the bills?|read a (second|third) time|"
+    r"agree (with|to) (the )?(bills?'?s?( main idea| as amended)?|main idea( of the bill)?|amended bill))$")
+NEGATIVE = re.compile(
+    r"^(decline (to read a second time|(a )?second reading)|"
+    r"don'?t agree with (the )?bills?'?s? main idea|disagree with (the )?bills?|reject the bills?)$")
+MOTION_TEXT = ("that ", "the majority voted")
 TRAILING_JOINERS = re.compile(r"\s+and\s+(related bills?|another|others?|\d+ others?)\s*$", re.I)
 TAGS = re.compile(r"<[^>]+>")
+MD_LINK = re.compile(r"\[([^\]]+)\]\([^)]*\)")
 WS = re.compile(r"\s+")
 
 
@@ -108,20 +124,31 @@ def clean_summary(text, fallback):
         # Hansard extracts open with the mover's name on its own line.
         if len(lines) > 1 and lines[1].strip() == "" and len(lines[0]) < 40 and "." not in lines[0]:
             lines = lines[2:]
-        s = WS.sub(" ", TAGS.sub(" ", "\n".join(lines))).strip()
-        if not s or s.lower().startswith(BOILERPLATE) or "AYES," in s:
+        s = WS.sub(" ", MD_LINK.sub(r"\1", TAGS.sub(" ", "\n".join(lines))).replace("#", " ")).strip()
+        if not s.lower().startswith(MOTION_TEXT):
             s = ""
+        elif s.lower().startswith("the majority voted"):
+            # TheyVoteForYou explainers run on for paragraphs; the first
+            # sentence is the finding, the rest is a primer on bill stages.
+            s = re.split(r"\.(?=[\s(])", s, 1)[0].rstrip(".") + "."
     s = s or WS.sub(" ", fallback or "").strip()
     if len(s) > SUMMARY_CHARS:
         s = s[:SUMMARY_CHARS].rsplit(" ", 1)[0].rstrip(" ,;:") + "…"
     return s
 
 
-def tier(parsed):
-    _, stage, _, is_bill = parsed
-    if is_bill and stage in ("Second reading", "Third reading"):
+def polarity(parsed):
+    """+1 when an aye backs the bill, -1 when an aye opposes it, 0 when the
+    division was procedural or not about a bill at all."""
+    _, _, detail, is_bill = parsed
+    if not is_bill:
         return 0
-    return 1 if is_bill else 2
+    d = detail.lower().strip(" .")
+    if POSITIVE.match(d):
+        return 1
+    if NEGATIVE.match(d):
+        return -1
+    return 0
 
 
 def main():
@@ -141,11 +168,11 @@ def main():
         parsed = parse_name(name)
         if not parsed or not date:
             continue
-        title, stage, detail, is_bill = parsed
+        title, stage, detail, _ = parsed
         divisions[did] = {
             "name": title, "stage": stage, "date": date[:10],
             "summary": clean_summary(summary, detail),
-            "rebels": int(rebellions or 0), "tier": tier(parsed),
+            "rebels": int(rebellions or 0), "polarity": polarity(parsed),
         }
 
     marks = ",".join("?" * len(ids))
@@ -175,16 +202,26 @@ def main():
             f"({','.join('?' * len(rows))})", [d for d, _ in rows]) if db_date]
         if dated:
             entry["years"] = [int(min(dated)[:4]), int(max(dated)[:4])]
-        for side, want in (("for", "aye"), ("against", "no")):
-            picks = [divisions[d] for d, v in rows if v == want and d in divisions]
-            # Substantive tier first, newest first inside each tier.
+        # An aye on a positive question or a no on a negative one backs the bill.
+        sides = {"for": [], "against": []}
+        for did, vote in rows:
+            d = divisions.get(did)
+            if not d or not d["polarity"]:
+                continue
+            backs = (vote == "aye") == (d["polarity"] > 0)
+            sides["for" if backs else "against"].append(d)
+        for side, picks in sides.items():
             picks.sort(key=lambda d: d["date"], reverse=True)
-            picks.sort(key=lambda d: d["tier"])
-            entry[side] = [
-                {k: v for k, v in d.items() if k != "tier" and not (k == "rebels" and v == 0)
-                 and not (k == "summary" and not v)}
-                for d in picks[:PER_SIDE]
-            ]
+            seen, chosen = set(), []
+            for d in picks:  # one entry per bill: second and third readings repeat the name
+                if d["name"] in seen:
+                    continue
+                seen.add(d["name"])
+                chosen.append({k: v for k, v in d.items() if k != "polarity"
+                               and not (k == "rebels" and v == 0) and not (k == "summary" and not v)})
+                if len(chosen) == PER_SIDE:
+                    break
+            entry[side] = chosen
         out[pid] = entry
 
     json.dump(out, sys.stdout, ensure_ascii=False, separators=(",", ":"))

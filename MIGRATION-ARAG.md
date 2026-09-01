@@ -281,6 +281,11 @@ the speaker whenever `body.speaker` is set (A/B verified upstream and on
 prod: Wilkie/gambling refusal → 4-citation answer). The note shares the
 platform's 24-turn context budget with chat turns. Do not remove it as
 "redundant" — the filter alone does not tell the model who is speaking.
+Every FILTERED ask also carries a partial-context guidance sentence: the
+model refused mixed contexts (8/20 on-topic passages) 2 runs in 3 until
+told explicitly that a passage mentioning the subject counts as data
+(then 3/3 answers, 5-6 citations). Keep the explicit prohibition; the
+softer wording was measured insufficient (2026-09-02).
 
 ## Post-enrichment roadmap (planned 2026-09-01, gated on full labeller + summaries passes)
 

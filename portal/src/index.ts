@@ -256,7 +256,8 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
   // Filtered retrieval returns a narrow, often mixed context (a speaker's
   // gambling remarks beside their unrelated speeches); the model tends to
   // refuse the whole set. Tell it to answer from the passages that do apply.
-  // A/B on Howard/gambling: citations 1 -> 3, refusals gone.
+  // Measured on Howard/gambling (8/20 passages on-topic): the softer wording
+  // still refused 2 of 3 runs; this wording answered 3/3 with 5-6 citations.
   const filtered = [speaker, party, state, topic, from, to].some((v) => v?.trim())
   const noteParts: string[] = []
   if (speaker?.trim()) {
@@ -266,7 +267,7 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
   }
   if (filtered) {
     noteParts.push(
-      'Some passages may be off-topic. Answer from the passages that do address the question, even if only a few do or they address it only in part; quote or closely paraphrase them and cite them. Say the record is thin only if no passage touches the subject at all.',
+      'Some passages may be off-topic. Answer from the passages that do address the question, even if only a few do or they address it only in part; quote or closely paraphrase them and cite them. Say the record is thin only if no passage touches the subject at all. Passages that mention the subject DO count as data: if even one passage mentions it, you must not reply that there is not enough data; summarise what that passage says instead.',
     )
   }
   if (noteParts.length) turns.push({ author: 'USER', text: noteParts.join(' ') })
