@@ -540,7 +540,7 @@ function buildCallouts(reports, year) {
     const top = counts[0]
     callouts.push({
       num: fmtInt(top.count),
-      text: `speeches touched on ${top.report.title} in ${year} — the busiest of the ${reports.length} topics OPAX tracks.`,
+      text: `speeches touched on ${top.report.title} in ${year}, the busiest of the ${reports.length} topics OPAX tracks.`,
       sparkline: top.report,
     })
 
@@ -552,7 +552,7 @@ function buildCallouts(reports, year) {
     if (record && record.count >= 20) {
       callouts.push({
         num: `⬆ ${year}`,
-        text: `was ${record.report.title}’s biggest year yet at that point — ${fmtInt(record.count)} speeches, more than any year before it.`,
+        text: `was ${record.report.title}’s biggest year yet at that point: ${fmtInt(record.count)} speeches, more than any year before it.`,
       })
     }
   }
@@ -780,7 +780,7 @@ export function mountTimeMachine(container) {
     b.textContent = 'The archive is still being digitised, oldest first.'
     p.appendChild(b)
     const rest = staticData.progress
-      ? ` About ${staticData.progress.pct}% of ${fmtInt(staticData.progress.expected)} records are searchable so far, and more arrive every day. The numbers panel uses the complete historical index, so it works for every year — the quote machine catches up year by year.`
+      ? ` About ${staticData.progress.pct}% of ${fmtInt(staticData.progress.expected)} records are searchable so far, and more arrive every day. The numbers panel uses the complete historical index, so it works for every year. The quote machine catches up year by year.`
       : ' Live quotes appear as each year is shelved; the numbers panel already covers the whole record.'
     p.appendChild(document.createTextNode(rest))
     footerEl.append(icon, p)
@@ -819,8 +819,8 @@ export function mountTimeMachine(container) {
     body.style.margin = '0.4rem 0 0'
     const pctNote = staticData.progress ? ` It’s about ${staticData.progress.pct}% of the way through.` : ''
     body.textContent = tracked > 0
-      ? `Parliament definitely wasn’t quiet — it gave ${fmtInt(tracked)} speeches in ${year} on our six tracked topics alone (see the numbers). Our librarians are shelving the record oldest-first, and the live quotes for this year are still on the trolley.${pctNote}`
-      : `Our librarians are shelving the record oldest-first, and the live quotes for this year are still on the trolley.${pctNote} Parliament wasn’t silent — we just haven’t caught up.`
+      ? `Parliament definitely wasn’t quiet: it gave ${fmtInt(tracked)} speeches in ${year} on our six tracked topics alone (see the numbers). Our librarians are shelving the record oldest-first, and the live quotes for this year are still on the trolley.${pctNote}`
+      : `Our librarians are shelving the record oldest-first, and the live quotes for this year are still on the trolley.${pctNote} Parliament wasn’t silent. We just haven’t caught up.`
     box.appendChild(body)
 
     const actions = el('div', 'tm-empty-actions')
@@ -843,7 +843,7 @@ export function mountTimeMachine(container) {
     box.appendChild(head)
     const body = el('p')
     body.style.margin = '0.4rem 0 0'
-    body.textContent = 'We couldn’t reach the archive just now — nudge the dial to try again.'
+    body.textContent = 'We couldn’t reach the archive just now. Nudge the dial to try again.'
     box.appendChild(body)
     cardsEl.appendChild(box)
   }
@@ -906,7 +906,7 @@ export function mountTimeMachine(container) {
     // went quiet — say so.
     if (picks.length < 3) {
       const note = el('div', 'tm-empty', { role: 'note' })
-      note.textContent = `That’s everything the machine has shelved for ${year} so far — the archive loads oldest-first, and more of ${year} arrives every day.`
+      note.textContent = `That’s everything the machine has shelved for ${year} so far. The archive loads oldest-first, and more of ${year} arrives every day.`
       cardsEl.appendChild(note)
     }
   }

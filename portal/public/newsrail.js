@@ -158,7 +158,7 @@ function renderItems(root, items) {
     el(
       'p',
       'nr-fineprint',
-      'Headlines from ABC News and The Guardian. The answers come from the parliamentary record — OPAX does not write news.',
+      'Headlines from ABC News and The Guardian. The answers come from the parliamentary record; OPAX does not write news.',
     ),
   )
 }

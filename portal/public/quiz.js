@@ -174,7 +174,7 @@ const TEMPLATES = [
         options: shuffled(options, rng),
         explanation:
           "About " + fmtMoney(s.total) + " across " + fmtCount(s.count) +
-          " disclosed donations from the industry's biggest donors. And that's a floor, not a ceiling — " +
+          " disclosed donations from the industry's biggest donors. And that's a floor, not a ceiling: " +
           "donations under the disclosure threshold never have to be reported.",
         source: "AEC disclosures via OPAX's money data",
         link: MONEY_LINK,
@@ -200,7 +200,7 @@ const TEMPLATES = [
         ], rng);
         return {
           template: this.id, kind: "mc",
-          prompt: "Who has given more speeches about " + r.title.toLowerCase() + " — " +
+          prompt: "Who has given more speeches about " + r.title.toLowerCase() + ", " +
             options[0].label + " or " + options[1].label + "?",
           options,
           explanation:
@@ -241,7 +241,7 @@ const TEMPLATES = [
           options,
           explanation:
             sorted[0][0] + " received " + fmtMoney(sorted[0][1]) + " in disclosed donations from " +
-            DONOR_PHRASES[ind] + " — the next party, " + sorted[1][0] + ", received " +
+            DONOR_PHRASES[ind] + "; the next party, " + sorted[1][0] + ", received " +
             fmtMoney(sorted[1][1]) + ".",
           source: "AEC disclosures via OPAX's money data",
           link: MONEY_LINK,
@@ -266,7 +266,7 @@ const TEMPLATES = [
         answer: false,
         explanation:
           "Only donations above the AEC's disclosure threshold ever have to be reported, so smaller " +
-          "donations are invisible. Every total you see here is a floor, not a ceiling — the real " +
+          "donations are invisible. Every total you see here is a floor, not a ceiling: the real " +
           "amounts can only be higher.",
         source: "AEC disclosure rules; OPAX's money data",
         link: MONEY_LINK,
@@ -306,8 +306,8 @@ const TEMPLATES = [
           statement: "The OPAX money map shows every donor who has ever disclosed a donation.",
           answer: false,
           explanation:
-            "It shows the " + fmtCount(meta.donor_nodes) + " biggest donors by lifetime total — " +
-            "thousands of smaller disclosed donors sit below that cut.",
+            "It shows the " + fmtCount(meta.donor_nodes) + " biggest donors by lifetime total. " +
+            "Thousands of smaller disclosed donors sit below that cut.",
           source: "OPAX money data methodology",
           link: MONEY_LINK,
         });
@@ -358,7 +358,7 @@ const TEMPLATES = [
           options,
           explanation:
             peak[0] + " was the bigger year, with " + fmtCount(peak[1]) + " speeches touching on " +
-            r.title.toLowerCase() + " — compared with " + fmtCount(d1[1]) + " in " + d1[0] +
+            r.title.toLowerCase() + ", compared with " + fmtCount(d1[1]) + " in " + d1[0] +
             " and " + fmtCount(d2[1]) + " in " + d2[0] + ".",
           source: "Parliamentary record via OPAX's " + r.title + " report",
           link: reportLink(r),
@@ -410,7 +410,7 @@ const TEMPLATES = [
         options: shuffled(options, rng),
         explanation:
           fmtCount(n) + " documents collected from " + ((ctx.corpus.sources || []).length || "many") +
-          " sources — federal Hansard back to the 1990s, state parliaments, committee hearings, " +
+          " sources: federal Hansard back to the 1990s, state parliaments, committee hearings, " +
           "news and AEC donation records.",
         source: "OPAX corpus",
         link: null,
@@ -802,7 +802,7 @@ export function mountQuiz(container) {
     stage.appendChild(h(doc, "p", {
       class: "qz-lead",
       text:
-        "Eight quick questions computed straight from the public record — " +
+        "Eight quick questions computed straight from the public record: " +
         speeches + " parliamentary speeches and documents, plus 28 years of AEC " +
         "donation disclosures. No opinions and no trick questions: every answer " +
         "comes with its source.",
@@ -815,8 +815,8 @@ export function mountQuiz(container) {
     stage.appendChild(h(doc, "p", {
       class: "qz-fineprint",
       text:
-        "Fair play: this quiz identifies what is on the public record — who said what, " +
-        "who disclosed what. It never tells you what to think about it.",
+        "Fair play: this quiz identifies what is on the public record (who said what, " +
+        "who disclosed what). It never tells you what to think about it.",
     }));
   }
 
@@ -847,7 +847,7 @@ export function mountQuiz(container) {
 
     const hint = h(doc, "p", {
       class: "qz-hint",
-      text: "Pick an answer — or press " + (q.options.length === 2 ? "1 or 2" : "1, 2 or 3") + " on your keyboard.",
+      text: "Pick an answer, or press " + (q.options.length === 2 ? "1 or 2" : "1, 2 or 3") + " on your keyboard.",
     });
     const feedback = h(doc, "div", { class: "qz-feedback" });
 
@@ -891,7 +891,7 @@ export function mountQuiz(container) {
     const correctLabel = q.options.find((o) => o.correct).label;
     const verdict = h(doc, "p", { class: "qz-verdict" },
       correct ? h(doc, "span", { class: "qz-star", "aria-hidden": "true", text: "★" }) : null,
-      correct ? "Correct!" : "Not quite — the answer is " + correctLabel + ".",
+      correct ? "Correct!" : "Not quite. The answer is " + correctLabel + ".",
     );
 
     const provenance = h(doc, "p", { class: "qz-provenance" }, "Source: " + q.source + ". ");
@@ -926,7 +926,7 @@ export function mountQuiz(container) {
     const total = state.round.length;
     const rank = rankFor(state.score, total);
 
-    stage.appendChild(h(doc, "p", { class: "qz-kicker", text: "The Record Quiz — result" }));
+    stage.appendChild(h(doc, "p", { class: "qz-kicker", text: "The Record Quiz: result" }));
     stage.appendChild(h(doc, "p", {
       class: "qz-result-score",
       text: state.score + " / " + total,

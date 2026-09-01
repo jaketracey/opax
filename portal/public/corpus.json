@@ -3,8 +3,8 @@
   "expected_resources": 522277,
   "collected_speeches": 518685,
   "sources": [
-    { "name": "Federal Hansard — House of Representatives (zenodo)", "docs": 283020, "coverage": "1998–2022" },
-    { "name": "Federal Hansard — Senate + recent House (openaustralia)", "docs": 22106, "coverage": "2006–2026" },
+    { "name": "Federal Hansard: House of Representatives (zenodo)", "docs": 283020, "coverage": "1998–2022" },
+    { "name": "Federal Hansard: Senate + recent House (openaustralia)", "docs": 22106, "coverage": "2006–2026" },
     { "name": "Senate committee hearings", "docs": 45608, "coverage": "2025–2026" },
     { "name": "NSW Parliament", "docs": 76734, "coverage": "2015–2026" },
     { "name": "Victorian Parliament", "docs": 45074, "coverage": "2015–2026" },
