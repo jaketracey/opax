@@ -2812,8 +2812,14 @@ async function runSearchAnswer(q, f, mySeq) {
   $("search-answer-more").textContent = "";
   setStatus($("search-answer-status"), "Reading the record…");
   try {
-    const body = { question: q, kind: f.kind || "speech" };
-    for (const k of ["speaker", "party", "state", "from", "to"]) if (f[k]) body[k] = f[k];
+    // A search query is rarely a question ("gambling"); the model refuses bare
+    // keywords. Phrase it, folding in the speaker when one is filtered.
+    const looksLikeQuestion = /\?\s*$|^(what|how|why|who|when|where|did|does|do|has|have|is|are|was|were)\b/i.test(q);
+    const question = looksLikeQuestion ? q
+      : f.speaker ? `What did ${f.speaker} say about ${q}?`
+      : `What has parliament said about ${q}?`;
+    const body = { question, kind: f.kind || "speech" };
+    for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) body[k] = f[k];
     const data = await api("/api/ask", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -2830,7 +2836,7 @@ async function runSearchAnswer(q, f, mySeq) {
     $("search-answer-sum").textContent = `Sources (${cited.length})`;
     $("search-answer-fold").hidden = !cited.length;
     $("search-answer-more").innerHTML =
-      `Generated from the retrieved passages. <a href="${esc(askHash(q, f.kind))}">Open in Ask</a> for the full sources.`;
+      `Generated from the retrieved passages. <a href="${esc(askHash(question, f.kind))}">Open in Ask</a> for the full sources.`;
   } catch (err) {
     if (err.name === "AbortError" || mySeq !== searchSeq) return;
     box.hidden = true;
