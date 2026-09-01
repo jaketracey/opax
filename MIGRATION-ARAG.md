@@ -298,10 +298,9 @@ Verified primitives (probed live against the 2K-label sample):
 
 Views/tools to build once the full passes run, in value order:
 
-1. **Topic filter in the ask + search popovers** — a Topic select (21-entry
-   taxonomy) added to both filter popovers, passed as a label filter in
-   filter_expression. Pure plumbing on verified primitives; sharpens
-   retrieval for every broad question. Build first.
+1. **Topic filter in the ask + search popovers** — DONE 2026-09-01 (deployed
+   e92a49e0): Topic selects in both popovers, allowlisted topic label clause
+   in filterExpression, deep links round-trip. Coverage grows with the pass.
 2. **Topic pages** (`#/subject/topic/{slug}`) — the encyclopedia grows an
    ideas wing: live facet counts by year/party, the money pairing via the
    industry map, latest on-topic speeches with their machine summaries, a
@@ -342,10 +341,14 @@ the roadmap views as label coverage grows (facet counts show progress).
 
 ## Open items
 
-- Speaker filter is exact-match after case/whitespace normalisation only —
-  typos, surname-only ("howard") and lowercase Mc/Mac names still miss. Real
-  resolution needs a speakers directory (exported names list from the members
-  table, or KB facets) resolved client-side before filtering.
+- ~~Speaker filter exact-match only~~ RESOLVED 2026-09-01: speakers.json
+  (2,063 names+counts, exported with the sync's own normalize_speaker so
+  every name is a valid collaborator value) + client resolveSpeaker():
+  casefix, albo/scomo nicknames, unique-surname wins, dominant surname only
+  at 5x the runner-up, ambiguous left as typed. Residual: ~957 bare-surname
+  collaborator values from surname-only Hansard prints split some people
+  across two names ("Hume" vs "Jane Hume") — a dedupe would need the
+  members table, which is dirty; left alone deliberately.
 - If/when the legal push is approved: raise `portal/public/corpus.json`
   `expected_resources` to include the legal docs — the front-page corpus meter
   compares it against the KB's total resource count and will otherwise hide
