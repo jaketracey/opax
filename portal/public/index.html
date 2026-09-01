@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OPAX — ask what Australian politicians actually said</title>
+<title>OPAX: ask what Australian politicians actually said</title>
 <meta name="description" content="Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.">
 <meta name="theme-color" content="#142A43">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -18,7 +18,7 @@
 <header>
   <div class="wrap masthead">
     <div class="masthead-id">
-      <a class="logo" href="#/" aria-label="OPAX — home">
+      <a class="logo" href="#/" aria-label="OPAX home">
         <svg class="logo-mark" viewBox="0 0 176 132" role="img" aria-hidden="true"><path class="logo-land" d="M110.0 26.5L118.5 41.9L126.3 52.1L135.8 62.6L137.0 69.9L131.2 83.1L128.2 91.4L119.5 95.5L113.6 94.0L105.1 93.1L98.5 86.7L93.6 85.5L81.9 77.2L64.8 80.9L50.2 85.8L42.9 84.0L42.6 73.6L39.0 64.3L40.7 53.6L50.2 49.9L60.4 44.3L67.8 35.8L78.2 36.7L81.4 30.6L85.8 29.9L92.9 36.5L96.3 30.4L101.4 40.6L105.8 43.3L107.8 37.0L107.3 31.1Z"/><path class="logo-land" d="M115.3 99.7L124.1 100.1L120.9 106.5L116.5 103.3Z"/><path class="logo-star" d="M88.0 2.0L90.6 7.4L96.0 10.0L90.6 12.6L88.0 18.0L85.4 12.6L80.0 10.0L85.4 7.4Z"/><path class="logo-star" d="M149.0 25.6L150.8 29.3L154.5 31.1L150.8 32.9L149.0 36.6L147.2 32.9L143.5 31.1L147.2 29.3Z"/><path class="logo-star" d="M164.0 71.5L166.2 76.3L171.0 78.5L166.2 80.7L164.0 85.5L161.8 80.7L157.0 78.5L161.8 76.3Z"/><path class="logo-star" d="M121.8 111.5L123.4 114.9L126.8 116.5L123.4 118.1L121.8 121.5L120.2 118.1L116.8 116.5L120.2 114.9Z"/><path class="logo-star" d="M54.2 108.5L56.8 113.9L62.2 116.5L56.8 119.1L54.2 124.5L51.6 119.1L46.2 116.5L51.6 113.9Z"/><path class="logo-star" d="M12.0 73.0L13.8 76.7L17.5 78.5L13.8 80.3L12.0 84.0L10.2 80.3L6.5 78.5L10.2 76.7Z"/><path class="logo-star" d="M27.0 24.6L29.1 29.0L33.5 31.1L29.1 33.2L27.0 37.6L24.9 33.2L20.5 31.1L24.9 29.0Z"/></svg>
       </a>
       <p class="masthead-sub">Open Parliamentary Accountability eXchange · independent &amp; open source</p>
@@ -72,17 +72,17 @@
         <article id="ask-answer" class="answer" tabindex="-1"></article>
         <p class="answer-stamp" id="ask-stamp"></p>
         <div class="action-row">
-          <button type="button" class="link" id="ask-copylink">Copy link to this question</button>
-          <button type="button" class="link" id="ask-export">Download sources (BibTeX / RIS / CSV)</button>
+          <button type="button" class="action-btn" id="ask-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H4v12h12v-4"/><path d="M11 3.5h5.5V9"/><path d="M16.5 3.5L9.5 10.5"/></svg><span>Copy link to this question</span></button>
+          <button type="button" class="action-btn" id="ask-export"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Download sources (BibTeX / RIS / CSV)</span></button>
         </div>
 <section class="front-mod" aria-labelledby="h-reports" id="mod-reports" hidden>
           <h2 class="kicker" id="h-reports">Reports</h2>
           <p class="fineprint" style="margin:-0.2rem 0 0.6rem">Long-running investigations pairing
-          the money with the words — every claim cited.</p>
+          the money with the words, every claim cited.</p>
           <div class="report-cards" id="front-reports"></div>
         </section>
         <div id="ask-sources" hidden>
-          <p class="kicker">Sources — from the record</p>
+          <p class="kicker">Sources: from the record</p>
           <ol id="ask-cited-list" class="source-list"></ol>
           <details id="ask-retrieved" hidden>
             <summary>Also retrieved, not cited in the answer</summary>
@@ -90,7 +90,7 @@
           </details>
           <p class="fineprint">Answers are written only from the passages retrieved above,
           and currently draw on the speech corpus. If the record is thin, the answer says so.
-          Answers are generated fresh each time — cite the sources, not this text.
+          Answers are generated fresh each time, so cite the sources, not this text.
           <a href="#/methods">How answers work</a></p>
         </div>
       </div>
@@ -109,7 +109,7 @@
 <section class="front-mod" aria-labelledby="h-added" id="mod-added" hidden>
           <h2 class="kicker" id="h-added">Just added to the record</h2>
           <div class="split-list" id="front-added"></div>
-          <p class="fineprint">The newest documents to enter the index — the corpus updates as
+          <p class="fineprint">The newest documents to enter the index. The corpus updates as
           parliaments publish.</p>
           <p style="margin:0.6rem 0 0"><a class="action-btn search-everything" href="#/search"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg><span>Search everything</span></a></p>
         </section>
@@ -124,7 +124,7 @@
 <section class="front-mod" aria-labelledby="h-ency" id="mod-ency" hidden>
           <h2 class="kicker" id="h-ency">From the encyclopedia</h2>
           <div class="entry-stack" id="front-ency"></div>
-          <p class="fineprint">From AEC disclosures and the speech index — totals are a floor, not a ceiling.</p>
+          <p class="fineprint">From AEC disclosures and the speech index. Totals are a floor, not a ceiling.</p>
         </section>
 <section class="front-mod" aria-labelledby="h-ways">
           <h2 class="kicker" id="h-ways">More ways in</h2>
@@ -132,7 +132,7 @@
             <a class="report-card" href="#/money">
               <span class="card-kicker">Interactive</span>
               <span class="card-title">The money map</span>
-              <span class="card-blurb">250 donors, 11 parties, 28 years of AEC returns — as territory you can spin.</span>
+              <span class="card-blurb">250 donors, 11 parties, 28 years of AEC returns, as territory you can spin.</span>
               <span class="card-meta">Open →</span>
             </a>
             <a class="report-card" href="#/explore">
@@ -164,7 +164,7 @@
             id="guided-topic" type="text" autocomplete="off" placeholder="a topic">?
           <button type="button" class="secondary" id="guided-go">Go</button>
         </p>
-        <p class="fineprint">Names as they appear in Hansard — “Anthony Albanese”, not “the PM”.</p>
+        <p class="fineprint">Names as they appear in Hansard: “Anthony Albanese”, not “the PM”.</p>
       </div>
 
       <form id="search-form" class="search-grid">
@@ -231,6 +231,8 @@
       </form>
 
       <div id="search-status" class="status" role="status"></div>
+      <div class="search-results-grid">
+      <div class="search-results-main">
       <div class="results-bar" id="results-bar" hidden>
         <span id="results-count"></span>
         <span class="results-actions">
@@ -244,17 +246,26 @@
         </span>
       </div>
       <ul id="search-results" class="results" role="list"></ul>
+      </div>
+      <aside class="search-answer" id="search-answer" hidden aria-label="Answer from the record">
+        <h2 class="kicker" id="search-answer-head">The record's answer</h2>
+        <div id="search-answer-status" class="status" role="status"></div>
+        <div class="answer answer-compact" id="search-answer-body"></div>
+        <ol class="source-list" id="search-answer-sources"></ol>
+        <p class="fineprint" id="search-answer-more"></p>
+      </aside>
+      </div>
     </section>
 
     <!-- ============================ MONEY MAP ========================== -->
     <section id="panel-money" class="panel" hidden aria-label="Money map">
       <p class="standfirst">Who funds Australian politics: the top 250 donors and the parties
       they gave to, from AEC returns 1998–2026. Colour and territory are the donor's industry;
-      size is lifetime dollars. Click a donor to see where the money went — then ask the record
+      size is lifetime dollars. Click a donor to see where the money went, then ask the record
       what parliament said about it.</p>
       <div id="money-map-root" class="money-map-root"></div>
       <p class="fineprint">AEC disclosure data: donations under the disclosure threshold are not
-      reported and cannot appear here — totals are a floor, not a ceiling. Public electoral
+      reported and cannot appear here, so totals are a floor, not a ceiling. Public electoral
       funding and internal party transfers are excluded.
       <a href="/graph/money.json">Download the data</a> · <a href="/map">Full-screen map</a></p>
     </section>
@@ -282,16 +293,21 @@
 
     <!-- ============================== DOC ============================== -->
     <section id="panel-doc" class="panel" hidden aria-label="Document from the record">
-      <p><button id="doc-back" class="link"><span aria-hidden="true">← </span>Back</button></p>
-      <p class="kicker">From the record</p>
-      <h2 id="doc-title" tabindex="-1"></h2>
-      <p id="doc-meta" class="doc-meta"></p>
-      <p id="doc-speaker-links" class="fineprint doc-speaker-links" hidden></p>
-      <div class="action-row" id="doc-actions" hidden>
-        <button type="button" class="link" id="doc-cite">Cite</button>
-        <button type="button" class="link" id="doc-copylink">Copy link</button>
-        <button type="button" class="link" id="doc-similar">Find similar</button>
-        <button type="button" class="link" id="doc-more">More from this speaker</button>
+      <p class="doc-backline"><button id="doc-back" class="link"><span aria-hidden="true">← </span>Back</button></p>
+      <div class="doc-head">
+        <p class="kicker">From the record</p>
+        <h2 id="doc-title" tabindex="-1"></h2>
+        <p id="doc-topic" class="doc-topic" hidden></p>
+        <p id="doc-meta" class="doc-meta"></p>
+        <div class="doc-toolbar" id="doc-actions" hidden>
+          <div class="doc-toolbar-btns" role="group" aria-label="Document actions">
+            <button type="button" class="action-btn" id="doc-cite" aria-expanded="false" aria-controls="doc-cite-panel">Cite</button>
+            <button type="button" class="action-btn" id="doc-more">Their speeches</button>
+            <button type="button" class="action-btn" id="doc-similar">Find similar</button>
+            <button type="button" class="action-btn" id="doc-copylink">Copy link</button>
+          </div>
+          <p id="doc-speaker-links" class="fineprint doc-speaker-links" hidden></p>
+        </div>
       </div>
       <div id="doc-cite-panel" class="cite-panel" hidden>
         <!-- injected -->
@@ -317,7 +333,7 @@
           </span>
           <span class="game-title">Time machine</span>
           <span class="game-blurb">Spin the dial through 29 years and see what parliament
-          was arguing about — with the real speeches to prove it.</span>
+          was arguing about, with the real speeches to prove it.</span>
           <span class="game-cta">Play</span>
         </button>
         <button type="button" class="game-card" id="explore-quiz-btn">
@@ -381,7 +397,7 @@
 
     <section id="panel-about" class="panel" hidden aria-label="About OPAX">
       <h2>What OPAX is</h2>
-      <p>OPAX — the Open Parliamentary Accountability eXchange — exposes governance blind spots by
+      <p>OPAX, the Open Parliamentary Accountability eXchange, exposes governance blind spots by
       cross-referencing what politicians say on the record with the money that flows around them.
       A politician who gives two hundred speeches about a problem but votes against every reform,
       or an industry that donates millions while its regulation stalls, leaves a paper trail.
@@ -389,12 +405,12 @@
 
       <h2>What you can do here</h2>
       <ul class="about-list">
-        <li><strong>Ask</strong> — put a question to the speech corpus (widen it to legal
+        <li><strong>Ask</strong>: put a question to the speech corpus (widen it to legal
         documents and news with one checkbox) and get a grounded answer. Every claim is cited;
         every citation opens the actual speech at a stable, linkable page.</li>
-        <li><strong>Search</strong> — hybrid semantic + keyword search with reranking, filterable
+        <li><strong>Search</strong>: hybrid semantic + keyword search with reranking, filterable
         by speaker, party, parliament and year, with citation-ready exports.</li>
-        <li><strong>Reports</strong> — standing investigations pairing the structured money data
+        <li><strong>Reports</strong>: standing investigations pairing the structured money data
         (AEC donations classified by industry) with what was actually said in parliament.</li>
       </ul>
 
@@ -405,7 +421,7 @@
       </table></div>
       <p class="fineprint">The speech corpus is filtered to the era of currently serving
       parliamentarians (March 1993 onward), deduplicated across overlapping sources, and stripped
-      of procedural noise — division roll-calls, chair interjections, day indexes — so retrieval
+      of procedural noise (division roll-calls, chair interjections, day indexes) so retrieval
       surfaces substance, not housekeeping. Voting records, government contracts and the
       disconnect-scoring analytics from the previous version of this site are being rebuilt on
       the new platform. Full detail: <a href="#/methods">methods &amp; how to cite OPAX</a>.</p>
@@ -422,17 +438,17 @@
       <p class="kicker">Methods</p>
       <h2>How OPAX works, and how to cite it</h2>
 
-      <h3>What OPAX is — and is not</h3>
+      <h3>What OPAX is, and is not</h3>
       <p>OPAX is a retrieval and analysis layer over public records. It is not the official
       record. Before publishing a quote, verify the wording at the source link on the document
-      page — every document links to its official origin where one exists.</p>
+      page. Every document links to its official origin where one exists.</p>
 
       <h3>Corpus construction</h3>
-      <p>Speeches are included from <strong>13 March 1993</strong> — the election that seated the
+      <p>Speeches are included from <strong>13 March 1993</strong>, the election that seated the
       longest-serving current federal parliamentarian, so nothing in the corpus predates a
       currently serving member. Speeches under 200 characters are excluded (procedural fragments),
-      duplicates across overlapping sources are removed, and procedural noise — division
-      roll-calls, chair interjections, day indexes — is stripped. The machine-readable corpus
+      duplicates across overlapping sources are removed, and procedural noise (division
+      roll-calls, chair interjections, day indexes) is stripped. The machine-readable corpus
       manifest, including per-source counts and the current corpus version, is at
       <a href="/corpus.json">corpus.json</a>.</p>
 
@@ -444,7 +460,7 @@
       is recorded in the manifest.</p>
 
       <h3>Reproducibility</h3>
-      <p>Searches are reproducible given a query, filters and corpus version — every export file
+      <p>Searches are reproducible given a query, filters and corpus version: every export file
       embeds all three. Generated answers are <strong>not</strong> reproducible and must not be
       quoted as data. The supported method for a paper: state the question, cite the returned
       documents by their permanent OPAX links, and archive the export file.</p>
@@ -460,7 +476,7 @@
       <h3>Licence, code and corrections</h3>
       <p>AGPL-3.0. Source and issue tracker:
       <a href="https://github.com/jaketracey/opax" rel="noopener">github.com/jaketracey/opax</a>.
-      Data errors are corrections we want — please report them.</p>
+      Data errors are corrections we want, so please report them.</p>
     </section>
 
   </div>

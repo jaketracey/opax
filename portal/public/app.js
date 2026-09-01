@@ -80,6 +80,10 @@ function partyChipHTML(party) {
 }
 
 const STATE_NAMES = { federal: "Federal", nsw: "NSW", vic: "VIC", sa: "SA", qld: "QLD" };
+const CHAMBER_NAMES = {
+  representatives: "House of Representatives", senate: "Senate",
+  assembly: "Legislative Assembly", council: "Legislative Council",
+};
 
 function metaHTML(item) {
   const bits = [];
@@ -100,6 +104,7 @@ async function api(path, options) {
 function setStatus(el, message, isError = false) {
   el.textContent = message || "";
   el.classList.toggle("error", isError);
+  el.classList.remove("visually-hidden");
 }
 
 function download(filename, mime, text) {
@@ -875,6 +880,8 @@ const ICONS = {
   speeches: '<path d="M4 3.5h12v13H4z"/><path d="M7 7h6M7 10h6M7 13h4"/>',
   external: '<path d="M8 4H4v12h12v-4"/><path d="M11 3.5h5.5V9"/><path d="M16.5 3.5L9.5 10.5"/>',
   map: '<circle cx="6" cy="7" r="2.2"/><circle cx="14" cy="5.5" r="1.7"/><circle cx="12" cy="13.5" r="2.6"/><path d="M7.9 8.1l2.4 3.3M13.3 7.1l-.7 4"/>',
+  cite: '<path d="M7.6 6.3c-1.7.6-2.8 2-2.8 3.9 0 1.2.8 2 1.9 2s1.9-.8 1.9-1.9c0-1-.7-1.8-1.7-1.9"/><path d="M15 6.3c-1.7.6-2.8 2-2.8 3.9 0 1.2.8 2 1.9 2s1.9-.8 1.9-1.9c0-1-.7-1.8-1.7-1.9"/>',
+  link: '<path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/>',
 };
 
 function iconSvg(name) {
@@ -1050,7 +1057,7 @@ async function openSubject(kind, name, manageFocus) {
     const flowRows = [...counter.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
     body.querySelector(".subject-tag").innerHTML = [
       isParty ? partyChipHTML(node.label) : `<span class="party party-oth"><i aria-hidden="true"></i>${esc(industryLabel(node.industry || ""))}</span>`,
-      `<span>active ${node.firstYear}–${node.lastYear}</span>`,
+      `<span class="subject-active"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l2.8 1.8"/></svg>Active ${node.firstYear}–${node.lastYear}</span>`,
     ].join(" · ");
     box.innerHTML = infoboxHTML([
       ["Type", isParty ? "Political party" : "Organisation / donor"],
@@ -1397,6 +1404,7 @@ async function runAsk(question) {
     lastAsk = { question, sources };
 
     setStatus($("ask-status"), `Answer ready — ${sources.length} sources.`);
+    $("ask-status").classList.add("visually-hidden"); // announced, not displayed
     $("ask-result").hidden = false;
     renderAnswer($("ask-answer"), data.answer || "(no answer)");
     $("ask-stamp").textContent =
@@ -1437,7 +1445,7 @@ $("ask-form").addEventListener("submit", (e) => {
 $("ask-copylink").addEventListener("click", (e) => {
   const q = lastAsk.question || $("ask-input").value.trim();
   if (!q) return;
-  copyText(siteUrl(askHash(q, askKind())), e.target,
+  copyText(siteUrl(askHash(q, askKind())), e.currentTarget.querySelector("span") || e.target,
     "Copied — opening it re-asks the question; wording may vary");
 });
 
@@ -1583,6 +1591,46 @@ function renderResults(results) {
   );
 }
 
+
+// --- search answer (the record's answer beside the results) -----------------
+
+let searchAnswerAbort = null;
+
+async function runSearchAnswer(q, f, mySeq) {
+  const box = $("search-answer");
+  if (!q) { box.hidden = true; return; }
+  if (searchAnswerAbort) searchAnswerAbort.abort();
+  const abort = new AbortController();
+  searchAnswerAbort = abort;
+  box.hidden = false;
+  $("search-answer-body").replaceChildren();
+  $("search-answer-sources").replaceChildren();
+  $("search-answer-more").textContent = "";
+  setStatus($("search-answer-status"), "Reading the record…");
+  try {
+    const body = { question: q, kind: f.kind || "speech" };
+    for (const k of ["speaker", "party", "state", "from", "to"]) if (f[k]) body[k] = f[k];
+    const data = await api("/api/ask", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+      signal: abort.signal,
+    });
+    if (mySeq !== searchSeq || searchAnswerAbort !== abort) return;
+    const answer = (data.answer || "").trim();
+    if (!answer) { box.hidden = true; return; }
+    setStatus($("search-answer-status"), "");
+    renderAnswer($("search-answer-body"), answer);
+    const cited = (data.sources || []).filter((x) => x.cited).slice(0, 3);
+    $("search-answer-sources").replaceChildren(...cited.map((x, i) => sourceItem(x, i + 1)));
+    $("search-answer-more").innerHTML =
+      `Generated from the retrieved passages — <a href="${esc(askHash(q, f.kind))}">open in Ask</a> for the full sources.`;
+  } catch (err) {
+    if (err.name === "AbortError" || mySeq !== searchSeq) return;
+    box.hidden = true;
+  }
+}
+
 let searchSeq = 0;
 
 async function runSearch() {
@@ -1590,6 +1638,7 @@ async function runSearch() {
   const f = currentFilters();
   if (!q && !f.speaker) return;
   const mySeq = ++searchSeq;
+  runSearchAnswer(q, f, mySeq);
   const btn = $("search-form").querySelector('button[type="submit"]');
   btn.disabled = true;
   setStatus($("search-status"), "Searching the record…");
@@ -1694,10 +1743,12 @@ async function openDocPage(slug, manageFocus) {
   currentDoc = null;
   $("doc-title").textContent = "Loading…";
   $("doc-meta").textContent = "";
+  $("doc-topic").hidden = true;
   $("doc-speaker-links").hidden = true;
   $("doc-text").textContent = "";
   $("doc-caveat").hidden = true;
   $("doc-cite-panel").hidden = true;
+  $("doc-cite").setAttribute("aria-expanded", "false");
   $("doc-actions").hidden = true;
   setStatus($("doc-status"), "Fetching the document…");
   try {
@@ -1705,14 +1756,27 @@ async function openDocPage(slug, manageFocus) {
     if (currentDocSlug !== slug) return; // user navigated away while fetching
     currentDoc = doc;
     setStatus($("doc-status"), "");
-    $("doc-title").textContent = doc.title;
-    const metaBits = [metaHTML({
-      party: doc.labels?.party, speaker: doc.speaker,
-      state: doc.labels?.state, date: doc.metadata?.date,
-    })];
+    // The headline is the speaker; raw titles ("Name — 2000-03-07") repeat
+    // what the byline says, so they only stand in when no speaker is attached.
+    $("doc-title").textContent = doc.speaker || doc.title;
+    const topic = doc.metadata?.topic || doc.metadata?.debate;
+    $("doc-topic").textContent = topic ? String(topic) : "";
+    $("doc-topic").hidden = !topic;
+    // One byline, each fact once: party · seat · chamber · date · source.
+    const chamber = CHAMBER_NAMES[String(doc.labels?.chamber || "").toLowerCase()];
+    const state = doc.labels?.state;
+    const stateName = state ? (STATE_NAMES[state] || state) : null;
+    const house = chamber
+      ? (state && state !== "federal" ? `${chamber}, ${stateName}` : chamber)
+      : (state ? (state === "federal" ? "Federal Parliament" : `Parliament of ${stateName}`) : null);
     const origin = safeUrl(doc.url);
-    if (origin) metaBits.push(`<a href="${esc(origin)}" rel="noopener" target="_blank">View original ↗</a>`);
-    $("doc-meta").innerHTML = metaBits.filter(Boolean).join(" · ");
+    $("doc-meta").innerHTML = [
+      doc.labels?.party ? partyChipHTML(doc.labels.party) : "",
+      doc.metadata?.electorate ? `Member for ${esc(doc.metadata.electorate)}` : "",
+      house ? esc(house) : "",
+      doc.metadata?.date ? esc(fmtDate(doc.metadata.date)) : "",
+      origin ? `<a href="${esc(origin)}" rel="noopener" target="_blank">View original ↗</a>` : "",
+    ].filter(Boolean).join(" · ");
     // Ways into this speaker's wider record. External links are SEARCHES, so
     // a shared name shows candidates rather than asserting the wrong person.
     const speakerLinks = $("doc-speaker-links");
@@ -1720,8 +1784,7 @@ async function openDocPage(slug, manageFocus) {
       const q = encodeURIComponent(doc.speaker);
       const ext = (href, label) =>
         `<a href="${href}" rel="noopener" target="_blank">${label} ↗</a>`;
-      speakerLinks.innerHTML = `About ${esc(doc.speaker)}: ` + [
-        `<a href="${esc(searchHash("", { speaker: doc.speaker }))}">all their speeches here</a>`,
+      speakerLinks.innerHTML = `Research ${esc(doc.speaker)}: ` + [
         ext(`https://theyvoteforyou.org.au/search?query=${q}`, "voting record"),
         ext(`https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "parliamentary profile"),
         ext(`https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(`${doc.speaker} Australian politician`)}`, "Wikipedia"),
@@ -1754,12 +1817,22 @@ $("doc-back").addEventListener("click", () => {
   if (routeCount > 1) history.back();
   else location.hash = "#/";
 });
+// Toolbar buttons: labels live in the markup; wrap them with the house icons.
+for (const [id, icon] of [
+  ["doc-cite", "cite"], ["doc-more", "speeches"],
+  ["doc-similar", "search"], ["doc-copylink", "link"],
+]) {
+  const btn = $(id);
+  btn.innerHTML = `${iconSvg(icon)}<span>${esc(btn.textContent)}</span>`;
+}
 $("doc-cite").addEventListener("click", () => {
   const panel = $("doc-cite-panel");
   panel.hidden = !panel.hidden;
+  $("doc-cite").setAttribute("aria-expanded", String(!panel.hidden));
 });
-$("doc-copylink").addEventListener("click", (e) => {
-  if (currentDocSlug) copyText(opaxUrl(currentDocSlug), e.target);
+$("doc-copylink").addEventListener("click", () => {
+  // Swap only the label span so the "Copied" feedback keeps the icon.
+  if (currentDocSlug) copyText(opaxUrl(currentDocSlug), $("doc-copylink").querySelector("span"));
 });
 $("doc-similar").addEventListener("click", () => {
   if (!currentDoc) return;

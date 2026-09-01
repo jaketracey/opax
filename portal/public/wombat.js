@@ -74,7 +74,7 @@ function css() {
 
 .wb-fur     { fill: var(--bronze, #A0761B); }
 .wb-fur-far { fill: var(--bronze-ink, #8A5A12); }
-.wb-belly   { fill: var(--bronze-bright, #D9A84A); opacity: 0.65; }
+.wb-belly   { fill: var(--bronze-bright, #D9A84A); opacity: 0.6; }
 .wb-earin   { fill: var(--bronze-ink, #8A5A12); }
 .wb-dark    { fill: var(--ink, #23271F); }
 .wb-eye     { fill: var(--ink, #23271F); }
@@ -92,7 +92,7 @@ function css() {
 .wb-label {
   margin: 4px 0 0;
   max-width: 320px;
-  font: 400 0.9375rem/1.35 var(--sans, "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
+  font: 400 0.9375rem/1.3 var(--sans, "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
   color: var(--ink-soft, #575C52);
   text-align: center;
   text-wrap: balance;
@@ -108,10 +108,10 @@ function css() {
    pivots over the front feet, nose down), pops back up, walks on. */
 @keyframes wb-sniff {
   0%, 44% { transform: rotate(0deg); }
-  46.5%   { transform: rotate(9deg); }
-  48.5%   { transform: rotate(3deg); }
-  51%     { transform: rotate(9.5deg); }
-  53.5%   { transform: rotate(-2deg); }
+  46.5%   { transform: rotate(11deg); }
+  48.5%   { transform: rotate(3.5deg); }
+  51%     { transform: rotate(12deg); }
+  53.5%   { transform: rotate(-2.5deg); }
   55.5%, 100% { transform: rotate(0deg); }
 }
 @keyframes wb-rock {
@@ -179,17 +179,17 @@ function markup(id) {
             ${leg(67, 10, "b", true)}
             ${leg(37, 10, "a", true)}
 
-            <circle cx="85" cy="13.5" r="4.6" class="wb-fur-far"/>
+            <circle cx="86" cy="15" r="4.6" class="wb-fur-far"/>
 
             <use href="#${id}-body" class="wb-fur"/>
             <g clip-path="url(#${id}-clip)">
-              <ellipse cx="60" cy="61" rx="34" ry="10" class="wb-belly"/>
+              <ellipse cx="58" cy="64" rx="30" ry="8.5" class="wb-belly"/>
             </g>
 
-            <circle cx="96" cy="16.5" r="5.2" class="wb-fur"/>
-            <circle cx="96.5" cy="16.8" r="2.2" class="wb-earin"/>
+            <circle cx="97" cy="18" r="5.2" class="wb-fur"/>
+            <circle cx="97.3" cy="18.3" r="2.2" class="wb-earin"/>
 
-            <circle class="wb-eye" cx="95.5" cy="33" r="3"/>
+            <circle class="wb-eye" cx="96.5" cy="34.5" r="2.9"/>
             <ellipse class="wb-dark" cx="105" cy="46.5" rx="6.6" ry="5.8"/>
             <path class="wb-mouth" d="M 100 55.5 q 3.5 2 7 0.5"/>
 
