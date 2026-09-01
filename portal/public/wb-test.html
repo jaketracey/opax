@@ -15,7 +15,10 @@
     .walkframe .wb-leg-i { animation-delay: -4s !important; }
     .sniffframe .wb-trundle, .sniffframe .wb-sniff, .sniffframe .wb-rock,
     .sniffframe .wb-leg-i { animation-delay: -7.84s !important; }
+    .edgeframe .wb-trundle, .edgeframe .wb-sniff, .edgeframe .wb-rock,
+    .edgeframe .wb-leg-i { animation-delay: -1.6s !important; }
     .zoom { transform: scale(2.8); transform-origin: top left; margin-bottom: 180px; }
+    .zoom .wb-wrap { margin: 0; }
   </style>
 </head>
 <body>
@@ -30,6 +33,9 @@
   <h2>frozen sniff frame, 2.8x</h2>
   <div class="zoom freeze sniffframe"><div id="f2"></div></div>
 
+  <h2>frozen edge-entry frame, 2.8x</h2>
+  <div class="zoom freeze edgeframe"><div id="f3"></div></div>
+
   <script type="module">
     import { mountWombat } from '/wombat.js'
     const w = mountWombat(document.getElementById('live'))
@@ -40,6 +46,7 @@
     }, 1000)
     mountWombat(document.getElementById('f1'), { label: 'walk frame' })
     mountWombat(document.getElementById('f2'), { label: 'sniff frame' })
+    mountWombat(document.getElementById('f3'), { label: 'edge frame' })
     window.wombat = w
   </script>
 </body>

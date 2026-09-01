@@ -53,13 +53,16 @@ function css() {
   );
 
   return `
-.wb-wrap { display: inline-block; vertical-align: top; }
+.wb-wrap { display: block; width: fit-content; margin: 1.5rem auto; }
 .wb-stage {
   position: relative;
-  width: 320px;      /* explicit so the inline-block wrap doesn't shrink-wrap a short label */
+  width: 320px;      /* explicit so the fit-content wrap doesn't shrink-wrap a short label */
   max-width: 100%;
   height: 48px;
   overflow: hidden;
+  /* the wombat fades in entering and out leaving, rather than hard-clipping */
+  mask-image: linear-gradient(to right,
+    transparent, #000 30px, #000 calc(100% - 30px), transparent);
 }
 .wb-stage::after {
   content: "";
