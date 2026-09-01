@@ -1,5 +1,5 @@
 {
- "_doc": "Question bench for the OPAX ask harness (scripts/ask_harness.py). Each entry: id; q (the question); topic; era [from,to] the evidence mostly lives in \u2014 questions whose era is not yet indexed score PENDING rather than FAIL while the bulk load runs; expect.any_terms \u2014 case-insensitive terms, at least `hits` of which should appear in a good answer; expect.min_cited \u2014 minimum cited sources. Grow this file freely; the harness just iterates it.",
+ "_doc": "Question bench for the OPAX ask harness (scripts/ask_harness.py). Each entry: id; q (the question); topic; era [from,to] the evidence mostly lives in — questions whose era is not yet indexed score PENDING rather than FAIL while the bulk load runs; expect.any_terms — case-insensitive terms, at least `hits` of which should appear in a good answer; expect.min_cited — minimum cited sources. Grow this file freely; the harness just iterates it.",
  "questions": [
   {
    "id": "gambling-basics",
@@ -108,7 +108,12 @@
      "East Timor",
      "INTERFET",
      "peacekeeping",
-     "Indonesia"
+     "Indonesia",
+     "militia",
+     "humanitarian",
+     "independence",
+     "United Nations",
+     "Timorese"
     ],
     "hits": 2,
     "min_cited": 3
