@@ -138,6 +138,36 @@ existing site serves ARAG answers without the new FE.
   portal Worker locally (`wrangler dev`), including origin/extra serialization and
   the split-body document viewer.
 
+## Public portal v2 (2026-09-01 — design fan-out, deployed)
+
+Four parallel expert passes (civic design lead, research-tools UX, WCAG 2.1 AA
+audit, 3D-graph port) merged into the shipped portal, reviewed (5-finder code
+review; all clear-cut findings fixed) and deployed to opax.com.au:
+
+- **Identity "The record, in daylight":** paper-white surface (dark via
+  prefers-color-scheme), Literata for record content / Public Sans for UI,
+  single Hansard-bronze accent with a usage rule, ledger-rule motif, party
+  dots always paired with text labels. WCAG AA verified computationally.
+- **Ask, Cited:** cited vs also-retrieved split (Worker-computed `cited` flag),
+  suggestion chips, share links (labelled re-runs), BibTeX/RIS/CSV export,
+  live corpus meter, legal/news scope checkbox.
+- **Hansard Workbench:** server-side speaker/party/state/year filters
+  (`origin_collaborator` / `label` / `created` filter_expression props,
+  verified against the live KB), guided card, permalinks, exports with
+  reproducibility headers.
+- **Document pages:** `#/doc/{slug}` canonical citable permalinks; cite panel
+  (AGLC-guidance/APA/BibTeX/RIS); openaustralia concatenation caveat per-doc.
+- **Money Map:** corpuskit 3D engine ported to `portal/graph/` (vanilla
+  adapter, analytic picking, label occlusion fix); 250 top donors + 11
+  parties from parli.db (`scripts/export_money_graph.py`, exclusions
+  documented in `public/graph/money.json` meta).
+- **Methods + corpus.json manifest:** the citable dataset version, stamped on
+  answers and exports. Colophon/About/Methods all render from the manifest —
+  update `corpus.json` when the bulk load or a re-sync completes.
+- Citation `[n]` markers deliberately render as plain text: the platform's
+  answer-marker → retrieval-result mapping is undocumented; do not wire jump
+  buttons until verified (misattribution risk).
+
 ## Corpus QA pass (2026-09-01, three parallel agents — measured, validated live)
 
 **Final migrating corpus: 518,685 speeches (1.67 GB) + 3,592 news articles.**
