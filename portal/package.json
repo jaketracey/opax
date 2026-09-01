@@ -9,6 +9,9 @@
     "check": "wrangler types && tsc --noEmit"
   },
   "devDependencies": {
+    "@types/three": "^0.185.4",
+    "esbuild": "^0.28.2",
+    "three": "^0.185.1",
     "typescript": "^5.9.0",
     "wrangler": "^4.0.0"
   }
