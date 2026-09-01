@@ -91,10 +91,16 @@ def build_section(kb: KbClient, question: str) -> dict:
             continue
         meta = ((resource.get("extra") or {}).get("metadata")) or {}
         collabs = (resource.get("origin") or {}).get("collaborators") or []
+        labels = {
+            c.get("labelset"): c.get("label")
+            for c in ((resource.get("usermetadata") or {}).get("classifications") or [])
+        }
         sources.append({
             "slug": slug,
             "title": resource.get("title"),
             "speaker": collabs[0] if collabs else None,
+            "party": labels.get("party"),
+            "state": labels.get("state"),
             "date": meta.get("date"),
         })
     return {

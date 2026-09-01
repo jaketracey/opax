@@ -157,7 +157,7 @@ function bibtexFor(s) {
     `  howpublished = {Parliamentary record, via OPAX corpus v${corpusVersion()}}`,
     `  url = {${opaxUrl(s.slug)}}`,
     `  urldate = {${localISODate()}}`,
-    s.sourceUrl ? `  note = {Official record: ${s.sourceUrl}}` : null,
+    (s.sourceUrl ?? s.url) ? `  note = {Official record: ${s.sourceUrl ?? s.url}}` : null,
   ].filter(Boolean);
   return `@misc{opax-${s.slug},\n${fields.join(",\n")}\n}`;
 }
@@ -169,7 +169,8 @@ function risFor(s) {
   lines.push(`TI  - ${s.title || s.slug}`);
   if (s.date) lines.push(`PY  - ${s.date.slice(0, 4)}`, `DA  - ${s.date.slice(0, 10).replace(/-/g, "/")}`);
   lines.push(`UR  - ${opaxUrl(s.slug)}`);
-  lines.push(`N1  - Via OPAX corpus v${corpusVersion()}${s.sourceUrl ? `; official record: ${s.sourceUrl}` : ""}`);
+  const official = s.sourceUrl ?? s.url;
+  lines.push(`N1  - Via OPAX corpus v${corpusVersion()}${official ? `; official record: ${official}` : ""}`);
   lines.push("ER  - ");
   return lines.join("\n");
 }
@@ -193,10 +194,10 @@ function exportHeader(context) {
 }
 
 function sourcesCSV(rows, context) {
-  const head = "slug,kind,title,speaker,party,state,date,score,snippet,opax_url";
+  const head = "slug,kind,title,speaker,party,state,date,score,snippet,opax_url,source_url";
   const body = rows.map((r) =>
     [r.slug, r.kind || (r.slug || "").split("-")[0], r.title, r.speaker, r.party, r.state, r.date,
-      r.score ?? "", (r.snippet || "").slice(0, 300), opaxUrl(r.slug)].map(csvCell).join(",")
+      r.score ?? "", (r.snippet || "").slice(0, 300), opaxUrl(r.slug), r.url || ""].map(csvCell).join(",")
   );
   return `${exportHeader(context)}\n${head}\n${body.join("\n")}\n`;
 }

@@ -143,7 +143,9 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
   if (!res.ok) return json({ error: `find failed (${res.status})` }, 502)
   const found = (await res.json()) as { resources?: Record<string, FindResource> }
 
-  const results = Object.entries(found.resources ?? {}).map(([rid, resource]) => {
+  const results = Object.entries(found.resources ?? {})
+    .filter(([, r]) => !(r.slug ?? '').startsWith('da-')) // enrichment output never surfaces as a result
+    .map(([rid, resource]) => {
     const slug = resource.slug ?? ''
     const m = SLUG_RE.exec(slug)
     const meta = resource.extra?.metadata ?? {}
@@ -169,6 +171,7 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
       party: label(resource, 'party'),
       state: label(resource, 'state'),
       date: (meta.date as string) ?? null,
+      url: resource.origin?.url || null, // official record, for exports/citations
       snippet: bestText.slice(0, 600),
       score: Math.round(calibrate(bestScore, bestType) * 1000) / 1000,
     }
@@ -227,6 +230,7 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
         party: label(r, 'party'),
         state: label(r, 'state'),
         date: (meta.date as string) ?? null,
+        url: r.origin?.url || null, // official record, for exports/citations
         cited: citedIds.has(rid),
       }
     })
