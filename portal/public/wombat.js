@@ -298,6 +298,7 @@ function css() {
   position: absolute; left: 4px; right: 4px; bottom: 4px;
   height: 1px;
   background: var(--line-strong, #CFCABB);
+  opacity: 0.4;
 }
 .wb-trundle {
   position: absolute; bottom: 0; left: 0;
