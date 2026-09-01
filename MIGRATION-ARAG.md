@@ -101,6 +101,15 @@ covers generative calls only, not ingest/processing, so the §1 bulk-load
 question stands; (3) any stored key must be API-restricted with a spend cap
 (it lives in the KB config). Set via `scripts/arag_set_models.py`'s endpoint.
 
+**Prepared switch (2026-09-01, NOT applied — awaiting the OpenRouter key in
+`.env`):** `scripts/arag_byok_openrouter.py` moves generative+summary to
+`openai-compatible` via OpenRouter with `deepseek/deepseek-v4-flash`
+($0.081/$0.162 per 1M, 1M context — flash-lite territory, billed direct),
+generation_config sized for cited answers (1600 out / 120k in), with a live
+/ask smoke test and automatic rollback to gemini-2.5-flash-lite on failure
+(also `--rollback`). Run at a quiet moment — the KB serves production /ask.
+If this lands, the §Models upgrade ladder above is partly superseded.
+
 ### 1. ARAG platform ingest (blocks step 5)
 
 Processing 13.6 GB / ~3.35B tokens through extraction + embedding consumes platform
