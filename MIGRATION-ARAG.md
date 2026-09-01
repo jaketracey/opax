@@ -138,6 +138,28 @@ existing site serves ARAG answers without the new FE.
   portal Worker locally (`wrangler dev`), including origin/extra serialization and
   the split-body document viewer.
 
+## Corpus QA pass (2026-09-01, three parallel agents — measured, validated live)
+
+**Final migrating corpus: 518,685 speeches (1.67 GB) + 3,592 news articles.**
+From the 627K post-date-filter set: dedupe −86.5K (drop `wragge_xml` wholesale —
+genuine 1998-2005 federal House Hansard but 94% redundant inside zenodo; drop
+openaustralia House rows on zenodo sitting dates — zenodo is House-ONLY, so oa's
+20.6K Senate rows are the corpus's only Senate chamber coverage and are kept;
+window-dedupe exact (date, speaker, text) — 17.1K rows, almost all committee
+transcripts double-ingested on 8 dates), junk −~32K via predicates P1-P7 in
+`arag_sync.py` (chair/procedural rows, division roll-calls, day indexes, TOC
+documents, gallery welcomes, clerk records). Text cleanup at load: HTML-entity
+unescape, leading ':'/'—' artifacts, NSW ALL-CAPS header dupes, committee turns
+get their `[topic]` prepended as searchable body. Speaker names normalized
+per-source via `parli/ingest/speaker_names.py` (57/57 sampled formats pass);
+party labels via a 15-value canonical whitelist (office strings → no label).
+Lesson that cost an hour: `topic IN (...)` with NULL topic poisons `NOT(...)`
+chains in SQLite — every nullable column in an exclusion predicate needs
+COALESCE (zenodo's 305K rows silently vanished until fixed).
+Not fixed (documented): openaustralia's ~23% missing-space concatenation
+("toSenator Abetz") — needs upstream re-clean; corrupt members linkage (151
+member rows, 35K speeches) — don't trust members-derived facts for those.
+
 ## Open items
 
 - Step-4 sample (~2K docs) → measure Agentic RAG token burn/resource, eval

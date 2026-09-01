@@ -24,6 +24,7 @@ re-attempts recorded failures.
 """
 
 import argparse
+import html
 import json
 import sqlite3
 import sys
@@ -33,6 +34,7 @@ from pathlib import Path
 from typing import Any, Iterator, Optional
 
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
+from parli.ingest.speaker_names import normalize_speaker
 
 STATE_PATH = Path("~/.cache/autoresearch/arag_sync_state.json").expanduser()
 DB_PATH = Path("~/.cache/autoresearch/parli.db").expanduser()
@@ -46,13 +48,118 @@ DB_PATH = Path("~/.cache/autoresearch/parli.db").expanduser()
 DEFAULT_SINCE = "1993-03-13"
 MIN_SPEECH_CHARS = 200
 
+# Junk exclusions from the 2026-09-01 corpus QA pass (measured on the
+# post-filter 627K set; ~34K rows, 5.4%). P-numbers match MIGRATION-ARAG.md.
+# NULL-SAFETY: topic is 100% NULL for zenodo and speaker_name is NULL on 9K
+# rows; a bare `topic IN (...)` yields NULL, which poisons the whole
+# `NOT (a OR b OR ...)` chain and silently drops the row. Every nullable
+# column below therefore goes through COALESCE.
+JUNK_PREDICATES = " AND NOT (" + " OR ".join([
+    # P1 zenodo division roll-calls / incorporated tables (4,074)
+    "(source='zenodo' AND COALESCE(speaker_name,'')='stage direction')",
+    # P2 presiding-officer procedural rows, all sources (27,233)
+    "(UPPER(COALESCE(speaker_name,'')) LIKE '%SPEAKER%'"
+    " OR UPPER(COALESCE(speaker_name,'')) LIKE '%PRESIDENT%'"
+    " OR UPPER(COALESCE(speaker_name,'')) LIKE '%CHAIR%')",
+    # P3 qld whole-day TOC documents (50)
+    "(source='qld_hansard' AND text LIKE '%ISSN 1322-0330%')",
+    # P4 nsw alphabetical day indexes (119)
+    "(source='nsw_hansard' AND COALESCE(topic,'')='Start of Day')",
+    # P5 gallery welcomes / notice boilerplate (2,362)
+    "(COALESCE(topic,'') IN ('Visitors','Distinguished Visitors','Postponement of Business')"
+    " OR (source='openaustralia' AND COALESCE(topic,'')='Notices'))",
+    # P6 nsw clerk ceremonial records (186)
+    "(source='nsw_hansard' AND substr(text,1,300) LIKE '%The Clerk announced%')",
+    # P7 qld standalone division roll-calls (56)
+    "(source='qld_hansard' AND text LIKE '%Division: Question put%'"
+    " AND text LIKE '%AYES%' AND LENGTH(text)<2000)",
+]) + ")"
+
+# Dedupe rules from the 2026-09-01 QA pass (validated live; final ~550K):
+#  a) wragge_xml is 1998-2005 federal House Hansard sitting entirely inside
+#     zenodo's coverage (94% prefix-confirmed redundant) — dropped wholesale.
+#  b) zenodo is House-ONLY; openaustralia House rows on zenodo sitting dates
+#     are redundant, its Senate rows and post-2022 House rows are unique.
+#  c) exact (date, speaker_name, text) duplicates — 17.8K rows, almost all
+#     committee_senate transcripts double-ingested on 8 dates.
+# The temp tables are built once per run by prepare_dedupe() (TEMP tables are
+# writable even on a read-only connection).
+DEDUPE_PREDICATES = (
+    " AND source != 'wragge_xml'"
+    " AND NOT (source='openaustralia' AND COALESCE(chamber,'')='representatives'"
+    " AND date IN (SELECT date FROM temp.zenodo_dates))"
+    " AND speech_id NOT IN (SELECT speech_id FROM temp.dedupe_excluded)"
+)
+
+
+def prepare_dedupe(db: sqlite3.Connection, since: str) -> None:
+    """Materialize the zenodo sitting dates and the exact-duplicate exclusion
+    set (window function over rows that would otherwise migrate, keeping the
+    highest-priority source / lowest speech_id per (date, speaker, text))."""
+    t0 = time.time()
+    db.execute("CREATE TEMP TABLE IF NOT EXISTS zenodo_dates AS "
+               "SELECT DISTINCT date FROM speeches WHERE source='zenodo'")
+    db.execute(f"""
+        CREATE TEMP TABLE IF NOT EXISTS dedupe_excluded AS
+        SELECT speech_id FROM (
+            SELECT speech_id,
+                   ROW_NUMBER() OVER (
+                       PARTITION BY date, speaker_name, text
+                       ORDER BY CASE source
+                           WHEN 'zenodo' THEN 0 WHEN 'openaustralia' THEN 1
+                           WHEN 'committee_senate' THEN 2 WHEN 'nsw_hansard' THEN 3
+                           WHEN 'vic_hansard' THEN 4 WHEN 'sa_hansard' THEN 5
+                           WHEN 'qld_hansard' THEN 6 ELSE 7 END,
+                         speech_id) AS rn
+            FROM speeches
+            WHERE date >= {since!r} AND LENGTH(text) >= {MIN_SPEECH_CHARS}
+              AND source != 'wragge_xml'
+              AND NOT (source='openaustralia' AND COALESCE(chamber,'')='representatives'
+                       AND date IN (SELECT date FROM temp.zenodo_dates))
+              {JUNK_PREDICATES}
+        ) WHERE rn > 1
+    """)
+    n = db.execute("SELECT COUNT(*) FROM temp.dedupe_excluded").fetchone()[0]
+    print(f"[dedupe] {n:,} duplicate speech_ids excluded "
+          f"({time.time() - t0:.0f}s to materialize)")
+
 # A single text field caps out well below this; split anything bigger into
 # continuation fields on the same resource (legal docs reach 100s of KB).
 MAX_FIELD_CHARS = 900_000
 
 SAFETY_LIMIT = 100  # per-table cap unless --full
 
-WORKERS = 6  # modest parallelism; global backpressure pause still applies
+WORKERS = 10  # backpressure (429 try_after) throttles this automatically
+
+# Party label hygiene (2026-09-01 QA): whitelist + alias map to the canonical
+# 15-value vocabulary; office strings ("Shadow Minister for ...") and unknown
+# values get NO party label rather than a junk one.
+PARTY_ALIASES: dict[str, str] = {}
+for canonical, aliases in {
+    "Labor": ["ALP", "Australian Labor Party", "Labor"],
+    "Liberal": ["LP", "LIB", "Liberal Party", "Liberal"],
+    "Nationals": ["NP", "Nats", "NATS", "NPA", "National Party", "NatsWA", "CP", "Nationals"],
+    "LNP": ["LNP", "Liberal National Party"],
+    "Independent": ["IND", "Ind", "Ind.", "Independent"],
+    "Greens": ["AG", "Australian Greens", "Greens"],
+    "Country Liberal Party": ["CLP", "Country Liberal Party"],
+    "Katter's Australian Party": ["KAP", "Katter's Australian Party"],
+    "Centre Alliance": ["NXT", "CA", "Centre Alliance"],
+    "United Australia Party": ["PUP", "UAP", "United Australia Party"],
+    "One Nation": ["One Nation", "PHON", "Pauline Hanson's One Nation"],
+    "Australian Democrats": ["Australian Democrats", "AD"],
+    "DLP": ["DLP"],
+    "Family First": ["Family First", "FF"],
+    "JLN": ["JLN", "Jacqui Lambie Network"],
+}.items():
+    for alias in aliases:
+        PARTY_ALIASES[alias.casefold()] = canonical
+
+
+def clean_party(raw: object) -> Optional[str]:
+    if not raw or not isinstance(raw, str):
+        return None
+    return PARTY_ALIASES.get(raw.strip().casefold())
 
 
 # ---------------------------------------------------------------------------
@@ -79,17 +186,35 @@ def _texts(body: str) -> dict[str, dict]:
     return fields
 
 
+def clean_speech_text(text: str, source: str, topic: Optional[str]) -> str:
+    """Source-specific cleanup from the corpus QA pass: HTML numeric entities
+    (committee/sa), leading ': ' speaker-split and '—' continuation artifacts
+    (committee/sa/wragge), NSW's ALL-CAPS duplicated topic header. Committee
+    hearing turns are short and context-free, so the topic is prepended as
+    searchable body text (titles are not searchable on the platform)."""
+    if "&#" in text:
+        text = html.unescape(text)
+    text = text.lstrip(": ").lstrip("—- ").lstrip()
+    if source == "nsw_hansard" and topic and text.startswith(topic.upper()):
+        text = text[len(topic):].lstrip()
+    if source == "committee_senate" and topic:
+        text = f"[{topic}] {text}"
+    return text
+
+
 def map_speech(row: sqlite3.Row) -> dict:
     date = row["date"] or ""
     decade = f"{date[:3]}0s" if len(date) >= 4 and date[:4].isdigit() else None
-    title_bits = [b for b in (row["speaker_name"], row["topic"], date) if b]
+    speaker = normalize_speaker(row["speaker_name"])
+    party = clean_party(row["party"])
+    title_bits = [b for b in (speaker, row["topic"], date) if b]
     return {
         "slug": f"speech-{row['speech_id']}",
         "title": " — ".join(title_bits) or f"Speech {row['speech_id']}",
-        "texts": _texts(row["text"]),
+        "texts": _texts(clean_speech_text(row["text"], row["source"] or "", row["topic"])),
         "origin": {
             "source_id": "opax-parli",
-            "collaborators": [row["speaker_name"]] if row["speaker_name"] else [],
+            "collaborators": [speaker] if speaker else [],
             **({"created": f"{date}T00:00:00Z"} if len(date) == 10 else {}),
         },
         "usermetadata": {
@@ -97,7 +222,7 @@ def map_speech(row: sqlite3.Row) -> dict:
                 ("kind", "speech"),
                 ("source", row["source"]),
                 ("state", row["state"] or "federal"),
-                ("party", row["party"]),
+                ("party", party),
                 ("chamber", row["chamber"]),
                 ("decade", decade),
             ])
@@ -106,6 +231,7 @@ def map_speech(row: sqlite3.Row) -> dict:
             "metadata": {
                 "speech_id": row["speech_id"],
                 "person_id": row["person_id"],
+                "speaker_raw": row["speaker_name"],
                 "electorate": row["electorate"],
                 "word_count": row["word_count"],
                 "date": date,
@@ -143,21 +269,24 @@ def map_legal(row: sqlite3.Row) -> dict:
 
 
 def map_news(row: sqlite3.Row) -> dict:
-    cols = row.keys()
-    text_col = next((c for c in ("content", "body", "text", "summary") if c in cols), None)
-    date_col = next((c for c in ("date", "published", "published_at") if c in cols), None)
-    date = (row[date_col] or "") if date_col else ""
+    # Schema (QA 2026-09-01): article_id TEXT PK, title, date ISO, section,
+    # url, body_text, source ('guardian'|'abc'). section is topic tags for
+    # abc only (guardian's is uniformly 'Australia news' — useless).
+    date = row["date"] or ""
+    labels: list[tuple[str, Optional[str]]] = [("kind", "news"), ("source", row["source"])]
+    if row["source"] == "abc" and row["section"]:
+        labels += [("topic", t.strip()) for t in row["section"].split(",")[:5] if t.strip()]
     return {
-        "slug": f"news-{row[0]}",
-        "title": (row["title"] if "title" in cols else None) or f"Article {row[0]}",
-        "texts": _texts((row[text_col] or "") if text_col else ""),
+        "slug": f"news-{row['rowid']}",
+        "title": row["title"] or f"Article {row['rowid']}",
+        "texts": _texts(row["body_text"] or ""),
         "origin": {
             "source_id": "news",
-            **({"url": row["url"]} if "url" in cols and row["url"] else {}),
+            **({"url": row["url"]} if row["url"] else {}),
             **({"created": f"{date[:10]}T00:00:00Z"} if len(date) >= 10 else {}),
         },
-        "usermetadata": {"classifications": _classifications([("kind", "news")])},
-        "extra": {"metadata": {"article_id": row[0], "date": date}},
+        "usermetadata": {"classifications": _classifications(labels)},
+        "extra": {"metadata": {"article_id": row["article_id"], "date": date}},
     }
 
 
@@ -166,6 +295,7 @@ TABLES: dict[str, dict[str, Any]] = {
         "pk": "speech_id",
         "select": "SELECT * FROM speeches WHERE speech_id > ? AND text IS NOT NULL "
                   f"AND LENGTH(text) >= {MIN_SPEECH_CHARS} AND date >= {{since!r}} "
+                  f"{JUNK_PREDICATES} {DEDUPE_PREDICATES} "
                   "ORDER BY speech_id LIMIT ?",
         "map": map_speech,
     },
@@ -177,7 +307,8 @@ TABLES: dict[str, dict[str, Any]] = {
     },
     "news_articles": {
         "pk": "rowid",
-        "select": "SELECT rowid, * FROM news_articles WHERE rowid > ? ORDER BY rowid LIMIT ?",
+        "select": "SELECT rowid, * FROM news_articles WHERE rowid > ? "
+                  "AND LENGTH(body_text) >= 200 ORDER BY rowid LIMIT ?",
         "map": map_news,
     },
 }
@@ -326,6 +457,8 @@ def main() -> None:
 
     db = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
+    if "speeches" in args.tables:
+        prepare_dedupe(db, args.since)
     kb = None if args.dry_run else KbClient(cfg)
     state = load_state()
 
