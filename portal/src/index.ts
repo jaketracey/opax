@@ -209,6 +209,12 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
     retrieval_results?: { resources?: Record<string, FindResource> }
   }
 
+  // Citation keys are ARAG paragraph ids ("<rid>/f/<field>/..."); the leading
+  // segment is the resource id. Platform-format knowledge stays HERE — the
+  // frontend just reads the `cited` flag.
+  const citedIds = new Set(
+    Object.keys(answer.citations ?? {}).map((k) => k.split('/')[0]),
+  )
   const sources = Object.entries(answer.retrieval_results?.resources ?? {})
     .filter(([, r]) => !(r.slug ?? '').startsWith('da-'))
     .map(([rid, r]) => {
@@ -220,6 +226,7 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
         speaker: r.origin?.collaborators?.[0] ?? null,
         party: label(r, 'party'),
         date: (meta.date as string) ?? null,
+        cited: citedIds.has(rid),
       }
     })
 

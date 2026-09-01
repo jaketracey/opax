@@ -107,24 +107,23 @@ a.visually-hidden:focus-visible {
 
 /* ---- type roles --------------------------------------------------------- */
 
-.kicker {
+.kicker, .card-kicker, .chart figcaption, .cite-panel h3 {
   font: 700 0.6875rem/1.3 var(--sans); color: var(--bronze-ink);
-  text-transform: uppercase; letter-spacing: 0.08em; margin: 1.6rem 0 0.5rem;
+  text-transform: uppercase; letter-spacing: 0.08em;
 }
+.kicker { margin: 1.6rem 0 0.5rem; }
 .fineprint { color: var(--ink-faint); font-size: 0.8125rem; line-height: 1.5; max-width: 68ch; }
 
-a { color: var(--ink); text-decoration: underline;
-    text-decoration-color: var(--bronze-ink); text-underline-offset: 3px;
-    text-decoration-thickness: 1.5px; }
-a:hover { color: var(--bronze-ink); }
-
+a, button.link {
+  color: var(--ink); text-decoration: underline;
+  text-decoration-color: var(--bronze-ink); text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+}
+a:hover, button.link:hover { color: var(--bronze-ink); }
 button.link {
   background: none; border: none; cursor: pointer; padding: 2px 0;
-  font: inherit; color: var(--ink); text-align: left;
-  text-decoration: underline; text-decoration-color: var(--bronze-ink);
-  text-underline-offset: 3px; text-decoration-thickness: 1.5px;
+  font: inherit; text-align: left;
 }
-button.link:hover { color: var(--bronze-ink); }
 
 /* ---- masthead ----------------------------------------------------------- */
 
@@ -236,7 +235,6 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 
 .source-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
 .source-list li { margin: 0; padding: 0.75rem 0 0.75rem 14px; }
-.source-list li.record-rule { }
 .source-num { font: 700 0.8125rem/1 var(--sans); color: var(--bronze-ink); font-variant-numeric: tabular-nums; margin-right: 0.4rem; }
 .source-title { font: 600 1rem/1.35 var(--serif); }
 .source-meta, .result-meta { display: block; color: var(--ink-faint); font-size: 0.8125rem; margin-top: 0.25rem; }
@@ -330,8 +328,8 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
   padding: 1.1rem 1.25rem; text-align: left; cursor: pointer; color: var(--ink); font: inherit;
 }
 .report-card:hover, .report-card:focus-visible { border-color: var(--line-strong); }
-.report-card:hover .card-title { text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px; }
-.card-kicker { display: block; font: 700 0.6875rem/1.3 var(--sans); color: var(--bronze-ink); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+.report-card:hover .card-title { text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px; }  /* mirrors the link treatment */
+.card-kicker { display: block; margin-bottom: 0.4rem; }
 .card-title { display: block; font: 600 1.25rem/1.3 var(--serif); margin-bottom: 0.35rem; }
 .card-blurb { display: block; color: var(--ink-soft); font-size: 0.875rem; margin-bottom: 0.5rem; }
 .card-meta { display: block; color: var(--ink-faint); font-size: 0.75rem; }
@@ -352,10 +350,7 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
   margin: 1.1rem 0 0; background: var(--paper-raised); border: 1px solid var(--line);
   border-radius: 10px; padding: 0.9rem 1.1rem;
 }
-.chart figcaption {
-  color: var(--ink-soft); font: 700 0.6875rem/1.3 var(--sans);
-  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.6rem;
-}
+.chart figcaption { color: var(--ink-soft); margin-bottom: 0.6rem; }
 .chart svg { width: 100%; height: auto; display: block; }
 .chart-axis { stroke: var(--line); stroke-width: 1; }
 .chart-bar { fill: var(--chart-mark); }
@@ -392,7 +387,7 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: 10px;
   padding: 1rem 1.25rem; margin: 0.8rem 0 0; font-size: 0.875rem;
 }
-.cite-panel h3 { font: 700 0.6875rem/1.3 var(--sans); color: var(--bronze-ink); text-transform: uppercase; letter-spacing: 0.08em; margin: 0.8rem 0 0.3rem; }
+.cite-panel h3 { margin: 0.8rem 0 0.3rem; }
 .cite-panel h3:first-child { margin-top: 0; }
 .cite-panel pre {
   white-space: pre-wrap; word-break: break-word; background: var(--paper-sunken);

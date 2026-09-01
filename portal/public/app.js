@@ -12,7 +12,7 @@ let liveStats = null; // /api/stats
 let suggestions = []; // /suggestions.json
 let reportsIndex = null;
 let lastSearch = { query: "", filters: {}, results: [] };
-let lastAsk = { question: "", sources: [], citedIds: new Set() };
+let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
@@ -124,8 +124,20 @@ function splitName(full) {
   return { family: parts[parts.length - 1], given: parts.slice(0, -1).join(" ") };
 }
 
+// Canonical origin for citation permalinks and copied links. Deliberate for
+// BibTeX/RIS (footnotes must survive a staging deploy), single-sourced here.
+const SITE_ORIGIN = "https://opax.com.au";
+
+function siteUrl(hash) {
+  return `${SITE_ORIGIN}/${hash}`;
+}
+
+function askHash(q) {
+  return `#/ask?q=${encodeURIComponent(q)}`;
+}
+
 function opaxUrl(slug) {
-  return `https://opax.com.au/#/doc/${slug}`;
+  return siteUrl(`#/doc/${slug}`);
 }
 
 function bibtexFor(s) {
@@ -238,7 +250,7 @@ async function mountMoney() {
     root.textContent = "";
     moneyMapHandle = await mountMoneyMap(root, "/graph/money.json", {
       askUrl: (industry) =>
-        `#/ask?q=${encodeURIComponent(`What has parliament said about ${industry.replace(/_/g, " ")}?`)}`,
+        askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
     });
   } catch (err) {
     root.textContent = "";
@@ -398,15 +410,18 @@ async function runAsk(question) {
     });
     if (askAbort !== myAbort) return; // superseded by a newer question
     const sources = data.sources || [];
-    const citedIds = new Set(
+    // The Worker flags cited sources (it owns the platform's citation-key
+    // format); fall back to the raw citations map for older responses.
+    const fallbackIds = new Set(
       Object.keys(data.citations || {}).map((k) => k.split("/")[0]),
     );
-    const cited = sources.filter((s) => citedIds.has(s.resource));
-    const retrieved = sources.filter((s) => !citedIds.has(s.resource));
+    const isCited = (s) => s.cited ?? fallbackIds.has(s.resource);
+    const cited = sources.filter(isCited);
+    const retrieved = sources.filter((s) => !isCited(s));
     // Never fake the split: with no citation data, everything is "retrieved for this answer".
     const citedList = cited.length ? cited : sources;
     const alsoList = cited.length ? retrieved : [];
-    lastAsk = { question, sources, citedIds };
+    lastAsk = { question, sources };
 
     setStatus($("ask-status"), `Answer ready — ${sources.length} sources.`);
     $("ask-result").hidden = false;
@@ -435,14 +450,14 @@ $("ask-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const q = $("ask-input").value.trim();
   if (!q) return;
-  history.replaceState(null, "", `#/ask?q=${encodeURIComponent(q)}`);
+  history.replaceState(null, "", askHash(q));
   runAsk(q);
 });
 
 $("ask-copylink").addEventListener("click", (e) => {
   const q = lastAsk.question || $("ask-input").value.trim();
   if (!q) return;
-  copyText(`https://opax.com.au/#/ask?q=${encodeURIComponent(q)}`, e.target,
+  copyText(siteUrl(askHash(q)), e.target,
     "Copied — opening it re-asks the question; wording may vary");
 });
 
@@ -464,7 +479,7 @@ function renderChips() {
     b.textContent = q;
     b.addEventListener("click", () => {
       $("ask-input").value = q;
-      history.replaceState(null, "", `#/ask?q=${encodeURIComponent(q)}`);
+      history.replaceState(null, "", askHash(q));
       runAsk(q);
     });
     row.appendChild(b);
@@ -622,7 +637,7 @@ $("guided-go").addEventListener("click", () => {
 });
 
 $("search-copylink").addEventListener("click", (e) => {
-  copyText(`https://opax.com.au/${searchHash(lastSearch.query, lastSearch.filters)}`, e.target);
+  copyText(siteUrl(searchHash(lastSearch.query, lastSearch.filters)), e.target);
 });
 
 $("search-export").addEventListener("click", () => {
@@ -723,6 +738,7 @@ $("doc-more").addEventListener("click", () => {
 
 async function loadReportsList(manageFocus) {
   const list = $("reports-list");
+  currentReportSlug = null;
   $("report-view").hidden = true;
   list.hidden = false;
   if (!reportsIndex) {
@@ -799,10 +815,37 @@ function barList(rows, { fmt = String, heading }) {
 
 const fmtIndustries = (list) => list.map((i) => i.replace(/_/g, " ")).join(", ");
 
-/** Pad a [year,value] series onto a shared year domain so paired charts align. */
-function padSeries(series, years) {
-  const m = new Map(series.map(([k, v]) => [String(k), v]));
-  return years.map((y) => [y, m.get(String(y)) ?? 0]);
+const AEC_NOTE =
+  "AEC disclosure data: donations under the disclosure threshold are not reported " +
+  "and cannot appear here — totals are a floor, not a ceiling.";
+
+function tile(value, label) {
+  return `<div class="tile"><b>${esc(value)}</b><span>${esc(label)}</span></div>`;
+}
+
+/**
+ * Normalise a series key to a calendar year. The two report series speak
+ * different vocabularies: timeline uses "1998", donations use AEC financial
+ * years ("1998-99", plotted at their END year) plus event labels
+ * ("2004 Federal Election" → 2004). Returns null for keys with no year.
+ */
+function yearOf(key) {
+  const s = String(key);
+  const m = /^(\d{4})/.exec(s);
+  if (!m) return null;
+  const y = Number(m[1]);
+  return /^\d{4}-\d{2}\b/.test(s) ? y + 1 : y;
+}
+
+/** Re-key a [label,value] series onto calendar years, summing collisions. */
+function toYearSeries(series) {
+  const m = new Map();
+  for (const [k, v] of series) {
+    const y = yearOf(k);
+    if (y === null) continue;
+    m.set(y, (m.get(y) ?? 0) + v);
+  }
+  return m;
 }
 
 function renderStats(container, stats) {
@@ -810,28 +853,34 @@ function renderStats(container, stats) {
   const don = stats.donations;
   const industries = fmtIndustries(don?.industries || []);
   let htmlOut = `<div class="tiles">
-    <div class="tile"><b>${esc((stats.speech_count ?? 0).toLocaleString())}</b><span>speeches on the record</span></div>
-    <div class="tile"><b>${esc((stats.unique_speakers ?? 0).toLocaleString())}</b><span>parliamentarians spoke</span></div>
-    ${don ? `<div class="tile"><b>${esc(fmtMoney(don.total ?? 0))}</b><span>donations — ${esc(industries)}</span></div>` : ""}
+    ${tile((stats.speech_count ?? 0).toLocaleString(), "speeches on the record")}
+    ${tile((stats.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
+    ${don ? tile(fmtMoney(don.total ?? 0), `donations — ${industries}`) : ""}
   </div>`;
-  const hasTimeline = stats.timeline?.length > 1;
-  const hasDonYears = don?.by_year?.length > 1;
-  if (hasTimeline && hasDonYears) {
-    // Money & Words: stacked small multiples on one shared year axis.
-    const years = [...new Set([...stats.timeline.map(([y]) => String(y)), ...don.by_year.map(([y]) => String(y))])].sort();
-    htmlOut += columnChart(padSeries(stats.timeline, years),
+  const speechYears = toYearSeries(stats.timeline ?? []);
+  const donYears = toYearSeries(don?.by_year ?? []);
+  const paired = speechYears.size > 1 && donYears.size > 1;
+  // Money & Words: when both series exist, plot them on one shared year axis.
+  const domain = paired
+    ? (() => {
+        const all = [...new Set([...speechYears.keys(), ...donYears.keys()])].sort();
+        const out = [];
+        for (let y = all[0]; y <= all[all.length - 1]; y++) out.push(y);
+        return out;
+      })()
+    : null;
+  const seriesFor = (m) => (domain ?? [...m.keys()].sort()).map((y) => [y, m.get(y) ?? 0]);
+  if (speechYears.size > 1) {
+    htmlOut += columnChart(seriesFor(speechYears),
       { heading: "Speeches per year", fmt: (v) => v.toLocaleString() });
-    htmlOut += columnChart(padSeries(don.by_year, years), {
-      heading: `Donations per financial year (${industries})`,
+  }
+  if (donYears.size > 1) {
+    htmlOut += columnChart(seriesFor(donYears), {
+      heading: `Donations per financial year, plotted at end year (${industries})`,
       fmt: fmtMoney,
-      note: "Shown together for comparison. OPAX does not claim one series causes the other. " +
-        "AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here — totals are a floor, not a ceiling.",
-    });
-  } else {
-    if (hasTimeline) htmlOut += columnChart(stats.timeline, { heading: "Speeches per year", fmt: (v) => v.toLocaleString() });
-    if (hasDonYears) htmlOut += columnChart(don.by_year, {
-      heading: `Donations per financial year (${industries})`, fmt: fmtMoney,
-      note: "AEC disclosure data: donations under the disclosure threshold are not reported — totals are a floor, not a ceiling.",
+      note: (paired
+        ? "Shown together for comparison. OPAX does not claim one series causes the other. "
+        : "") + AEC_NOTE,
     });
   }
   if (don?.top_donors?.length) htmlOut += barList(don.top_donors, { heading: "Largest donors", fmt: fmtMoney });
@@ -839,7 +888,18 @@ function renderStats(container, stats) {
   container.innerHTML = htmlOut;
 }
 
+let currentReportSlug = null;
+
 async function openReport(slug, sectionNum, manageFocus) {
+  // Already rendered (e.g. Back from a cited document): just reveal it —
+  // the DOM is intact under `hidden`, so scroll position and charts survive.
+  if (currentReportSlug === slug) {
+    $("reports-list").hidden = true;
+    $("report-view").hidden = false;
+    if (sectionNum) $(`report-s-${sectionNum}`)?.scrollIntoView();
+    else if (manageFocus) $("report-title").focus();
+    return;
+  }
   let report;
   try {
     report = await api(`/reports/${encodeURIComponent(slug)}.json`);
@@ -850,6 +910,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   }
   // Stale-resolution guard: only render if the hash still points at this report.
   if (!location.hash.startsWith(`#/reports/${slug}`)) return;
+  currentReportSlug = slug;
   setStatus($("reports-status"), "");
   $("reports-list").hidden = true;
   const view = $("report-view");
@@ -895,13 +956,13 @@ async function openReport(slug, sectionNum, manageFocus) {
         linkBtn.className = "link";
         linkBtn.textContent = "Copy link to this section";
         linkBtn.addEventListener("click", (e) =>
-          copyText(`https://opax.com.au/#/reports/${slug}/s/${i + 1}`, e.target));
+          copyText(siteUrl(`#/reports/${slug}/s/${i + 1}`), e.target));
         const askBtn = document.createElement("button");
         askBtn.type = "button";
         askBtn.className = "link";
         askBtn.textContent = "Ask the record about this";
         askBtn.addEventListener("click", () => {
-          location.hash = `#/ask?q=${encodeURIComponent(s.question)}`;
+          location.hash = askHash(s.question);
         });
         tools.append(linkBtn, askBtn);
         sec.append(tools);
@@ -924,6 +985,15 @@ $("report-back").addEventListener("click", () => { location.hash = "#/reports"; 
 fetch("/corpus.json").then((r) => r.json()).then((m) => {
   corpusManifest = m;
   renderCorpusMeter();
+  // Hero colophon: the site's most prominent figures come from the manifest,
+  // so a re-sync updates them in one place.
+  const donations = (m.sources || []).find((s) => s.name.startsWith("AEC donations"));
+  $("stat-colophon").innerHTML = [
+    `<span><b>${(m.collected_speeches ?? 0).toLocaleString()}</b> speeches collected</span>`,
+    `<span><b>5</b> parliaments</span>`,
+    donations ? `<span><b>${donations.docs.toLocaleString()}</b> donations classified</span>` : "",
+    donations ? `<span><b>${esc(donations.coverage)}</b> coverage</span>` : "",
+  ].join("");
   // About: corpus table + Methods: known defects, from the manifest.
   const tbody = $("about-sources");
   if (tbody && m.sources) {
