@@ -126,7 +126,9 @@ header {
 .logo { display: inline-block; line-height: 0; text-decoration: none; }
 /* The mark: the continent in bronze, ringed by seven stars — federation's
    number — in the masthead's soft white. */
-.logo-mark { height: 52px; width: auto; }
+/* Explicit box at the mark's own 176:132 ratio — `width: auto` lets some
+   engines fall back to a default that squashes the continent. */
+.logo-mark { height: 78px; width: 104px; }
 .logo-mark .logo-land { fill: var(--bronze-bright); }
 .logo-mark .logo-star { fill: var(--on-navy-soft); }
 .logo:hover .logo-star { fill: var(--on-navy); }
@@ -140,7 +142,7 @@ header {
 
 /* ---- hero --------------------------------------------------------------- */
 
-main { flex: 1; padding: 1.5rem 0 3rem; }
+main { flex: 1; padding: 2.75rem 0 3rem; }
 main:focus { outline: none; }
 
 .hero-intro h1 {
