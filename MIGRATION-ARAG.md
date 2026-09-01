@@ -160,6 +160,13 @@ Not fixed (documented): openaustralia's ~23% missing-space concatenation
 ("toSenator Abetz") — needs upstream re-clean; corrupt members linkage (151
 member rows, 35K speeches) — don't trust members-derived facts for those.
 
+## Invariants
+
+- **Slugs are citation URLs.** `speech-{id}` / `legal-{id}` / `news-{id}` slugs are
+  the public permalinks academics cite (`/#/doc/speech-123`, `/api/resource/...`).
+  Any re-sync, re-import or schema change MUST preserve parli.db primary keys —
+  a renumbered corpus breaks every footnote that ever cited us.
+
 ## Open items
 
 - Step-4 sample (~2K docs) → measure Agentic RAG token burn/resource, eval

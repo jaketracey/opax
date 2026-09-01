@@ -30,6 +30,43 @@ interface FindResource {
 
 const SLUG_RE = /^(speech|legal|news)-(\d+)$/
 
+/**
+ * Build a /find//ask filter_expression from the portal's filter vocabulary.
+ * Grammar verified against the live KB (2026-09-01):
+ *   speaker → {prop:'origin_collaborator', collaborator} (names normalised at sync)
+ *   party/state/kind → {prop:'label', labelset, label}
+ *   from/to (years) → {prop:'created', since/until} — origin.created is the speech date
+ * Multiple clauses AND together under `field`.
+ */
+function filterExpression(f: {
+  kind?: string | null
+  speaker?: string | null
+  party?: string | null
+  state?: string | null
+  from?: string | null
+  to?: string | null
+}): Record<string, unknown> | null {
+  const clauses: Record<string, unknown>[] = []
+  if (f.kind && f.kind !== 'all') {
+    clauses.push({ prop: 'label', labelset: 'kind', label: f.kind })
+  }
+  if (f.party) clauses.push({ prop: 'label', labelset: 'party', label: f.party })
+  if (f.state) clauses.push({ prop: 'label', labelset: 'state', label: f.state })
+  if (f.speaker) clauses.push({ prop: 'origin_collaborator', collaborator: f.speaker })
+  const yr = (s: string | null | undefined) => (s && /^\d{4}$/.test(s) ? s : null)
+  const from = yr(f.from)
+  const to = yr(f.to)
+  if (from || to) {
+    clauses.push({
+      prop: 'created',
+      ...(from ? { since: `${from}-01-01T00:00:00Z` } : {}),
+      ...(to ? { until: `${to}-12-31T23:59:59Z` } : {}),
+    })
+  }
+  if (!clauses.length) return null
+  return { field: clauses.length === 1 ? clauses[0] : { and: clauses } }
+}
+
 const ragBase = (env: Env) =>
   `https://${env.ARAG_ZONE}.rag.progress.cloud/api/v1/kb/${env.ARAG_KB_ID}`
 
@@ -92,9 +129,15 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
     features:
       mode === 'semantic' ? ['semantic'] : mode === 'keyword' ? ['keyword'] : ['keyword', 'semantic'],
   }
-  if (kind !== 'all') {
-    body.filter_expression = { field: { prop: 'label', labelset: 'kind', label: kind } }
-  }
+  const filters = filterExpression({
+    kind,
+    speaker: url.searchParams.get('speaker'),
+    party: url.searchParams.get('party'),
+    state: url.searchParams.get('state'),
+    from: url.searchParams.get('from'),
+    to: url.searchParams.get('to'),
+  })
+  if (filters) body.filter_expression = filters
 
   const res = await kbFetch(env, '/find', { body })
   if (!res.ok) return json({ error: `find failed (${res.status})` }, 502)
@@ -135,9 +178,16 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
 }
 
 async function apiAsk(request: Request, env: Env): Promise<Response> {
-  const { question, kind } = (await request.json().catch(() => ({}))) as {
+  const { question, kind, speaker, party, state, from, to } = (await request
+    .json()
+    .catch(() => ({}))) as {
     question?: string
     kind?: string
+    speaker?: string
+    party?: string
+    state?: string
+    from?: string
+    to?: string
   }
   if (!question?.trim()) return json({ error: 'question is required' }, 400)
 
@@ -148,9 +198,8 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
     reranker: 'predict',
     show: ['basic', 'origin', 'extra'],
   }
-  if (kind && kind !== 'all') {
-    body.filter_expression = { field: { prop: 'label', labelset: 'kind', label: kind } }
-  }
+  const filters = filterExpression({ kind: kind ?? 'speech', speaker, party, state, from, to })
+  if (filters) body.filter_expression = filters
 
   const res = await kbFetch(env, '/ask', { body, headers: { 'x-synchronous': 'true' } })
   if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
@@ -192,6 +241,7 @@ async function apiResource(slug: string, env: Env): Promise<Response> {
   const r = (await res.json()) as {
     title?: string
     origin?: { collaborators?: string[]; url?: string }
+    usermetadata?: { classifications?: { labelset: string; label: string }[] }
     extra?: { metadata?: Record<string, unknown> }
     data?: { texts?: Record<string, { value?: { body?: string } }> }
   }
@@ -202,11 +252,14 @@ async function apiResource(slug: string, env: Env): Promise<Response> {
     .sort((a, b) => (a === 'body' ? -1 : b === 'body' ? 1 : a.localeCompare(b, undefined, { numeric: true })))
     .map((k) => texts[k]?.value?.body ?? '')
     .join('')
+  const labels: Record<string, string> = {}
+  for (const c of r.usermetadata?.classifications ?? []) labels[c.labelset] = c.label
   return json({
     slug,
     title: r.title ?? slug,
     speaker: r.origin?.collaborators?.[0] ?? null,
     url: r.origin?.url ?? null,
+    labels, // kind / source / party / state / chamber — for chips + provenance caveats
     metadata: r.extra?.metadata ?? {},
     text: bodyText,
   })

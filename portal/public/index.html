@@ -3,149 +3,321 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OPAX — Open Parliamentary Accountability eXchange</title>
-<meta name="description" content="Ask questions of 1.4 million Australian parliamentary speeches and legal documents. Every answer cited.">
+<title>OPAX — ask what Australian politicians actually said</title>
+<meta name="description" content="Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.">
+<meta name="theme-color" content="#FAF9F6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400..600;1,7..72,400&family=Public+Sans:wght@400..700&display=swap">
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<a class="visually-hidden" href="#main">Skip to content</a>
+
 <header>
   <div class="wrap">
-    <h1>OPAX</h1>
-    <p class="tagline">What politicians say, on the record, searchable and citable.</p>
+    <p class="wordmark">OPAX<span class="tick">.</span></p>
+    <p class="masthead-sub">Open Parliamentary Accountability eXchange · independent &amp; open source</p>
   </div>
+  <div class="wrap"><hr class="ledger-rule"></div>
 </header>
 
-<main class="wrap">
-  <section class="hero">
-    <p><strong>OPAX cross-references what Australian politicians say in parliament with who funds
-    them.</strong> Ask a question of half a million parliamentary speeches — federal House and
-    Senate, committee hearings, and four state parliaments — and get an answer grounded in the
-    record, with every claim cited to the actual speech.</p>
-    <div class="stat-strip" aria-label="corpus at a glance">
-      <span><b>518,685</b> speeches</span>
-      <span><b>5</b> parliaments</span>
-      <span><b>199K</b> donations classified</span>
-      <span><b>1998–2026</b> coverage</span>
-    </div>
-  </section>
+<main id="main" tabindex="-1">
+  <div class="wrap">
 
-  <nav class="tabs" role="tablist">
-    <button class="tab active" data-panel="ask" role="tab" aria-selected="true">Ask</button>
-    <button class="tab" data-panel="search" role="tab" aria-selected="false">Search</button>
-    <button class="tab" data-panel="reports" role="tab" aria-selected="false">Reports</button>
-    <button class="tab" data-panel="about" role="tab" aria-selected="false">About</button>
-  </nav>
+    <section class="hero-intro" id="hero-intro">
+      <h1>Ask what your politicians actually said.</h1>
+      <p class="standfirst">Put a question to half a million speeches from federal parliament,
+      its committees and four state parliaments. Every answer is cited, line by line, to the
+      official record — and you can see who donates to the people doing the talking.</p>
+    </section>
 
-  <section id="panel-ask" class="panel" role="tabpanel">
-    <form id="ask-form" class="query-row">
-      <input id="ask-input" type="text" autocomplete="off"
-             placeholder="e.g. What has parliament said about gambling reform since 2020?">
-      <button type="submit">Ask</button>
-    </form>
-    <div id="ask-status" class="status" hidden></div>
-    <article id="ask-answer" class="answer" hidden></article>
-    <div id="ask-sources" class="sources" hidden>
-      <h2>Sources</h2>
-      <ol id="ask-sources-list"></ol>
-    </div>
-  </section>
+    <nav class="tabs" aria-label="Sections">
+      <button class="tab" data-panel="ask">Ask</button>
+      <button class="tab" data-panel="search">Search</button>
+      <button class="tab" data-panel="reports">Reports</button>
+      <button class="tab" data-panel="about">About</button>
+    </nav>
 
-  <section id="panel-search" class="panel" hidden role="tabpanel">
-    <form id="search-form" class="query-row">
-      <input id="search-input" type="text" autocomplete="off" placeholder="Search the corpus…">
-      <select id="search-kind" title="Corpus">
-        <option value="speech">Speeches</option>
-        <option value="legal">Legal documents</option>
-        <option value="news">News</option>
-        <option value="all">Everything</option>
-      </select>
-      <select id="search-mode" title="Mode">
-        <option value="hybrid">Hybrid</option>
-        <option value="semantic">Semantic</option>
-        <option value="keyword">Keyword</option>
-      </select>
-      <button type="submit">Search</button>
-    </form>
-    <div id="search-status" class="status" hidden></div>
-    <ul id="search-results" class="results"></ul>
-  </section>
+    <!-- ============================== ASK ============================== -->
+    <section id="panel-ask" class="panel" aria-label="Ask the record">
+      <form id="ask-form" class="ask-row">
+        <label for="ask-input" class="visually-hidden">Ask a question of the parliamentary record</label>
+        <input id="ask-input" type="text" autocomplete="off"
+               placeholder="Ask anything about what was said in parliament…">
+        <button type="submit" class="primary" id="ask-submit">Ask the record</button>
+      </form>
+      <div class="chip-row" id="ask-chips" hidden>
+        <span class="chip-label" id="chips-label">Try:</span>
+        <!-- chips injected -->
+      </div>
+      <div class="corpus-meter" id="corpus-meter" hidden>
+        <p id="corpus-meter-text"></p>
+        <div class="meter-track" role="meter" aria-valuemin="0" aria-valuemax="100"
+             aria-valuenow="0" aria-label="Share of collected speeches indexed" id="corpus-meter-bar">
+          <i></i>
+        </div>
+      </div>
+      <p class="colophon" id="stat-colophon">
+        <span><b>518,685</b> speeches collected</span>
+        <span><b>5</b> parliaments</span>
+        <span><b>199,233</b> donations classified</span>
+        <span><b>1998–2026</b> coverage</span>
+      </p>
 
-  <section id="panel-reports" class="panel" hidden role="tabpanel">
-    <div id="reports-list" class="report-cards"></div>
-    <article id="report-view" hidden>
-      <button id="report-back" class="link">← All reports</button>
-      <h2 id="report-title"></h2>
-      <p id="report-blurb" class="report-blurb"></p>
-      <p id="report-meta" class="report-meta"></p>
-      <div id="report-stats"></div>
-      <div id="report-sections"></div>
-    </article>
-  </section>
+      <div id="ask-status" class="status" role="status"></div>
+      <div id="ask-result" hidden>
+        <p class="kicker">Answer</p>
+        <article id="ask-answer" class="answer" tabindex="-1"></article>
+        <p class="answer-stamp" id="ask-stamp"></p>
+        <div class="action-row">
+          <button type="button" class="link" id="ask-copylink">Copy link to this question</button>
+          <button type="button" class="link" id="ask-export">Download sources (BibTeX / RIS / CSV)</button>
+        </div>
+        <div id="ask-sources" hidden>
+          <p class="kicker">Sources — from the record</p>
+          <ol id="ask-cited-list" class="source-list"></ol>
+          <details id="ask-retrieved" hidden>
+            <summary>Also retrieved, not cited in the answer</summary>
+            <ol id="ask-retrieved-list" class="source-list"></ol>
+          </details>
+          <p class="fineprint">Answers are written only from the passages retrieved above.
+          If the record is thin, the answer says so. Answers are generated fresh each time —
+          cite the sources, not this text. <a href="#/methods">How answers work</a></p>
+        </div>
+      </div>
+    </section>
 
-  <section id="panel-about" class="panel" hidden role="tabpanel">
-    <h2>What OPAX is</h2>
-    <p>OPAX — the Open Parliamentary Accountability eXchange — exposes governance blind spots by
-    cross-referencing what politicians say on the record with the money that flows around them.
-    A politician who gives two hundred speeches about a problem but votes against every reform,
-    or an industry that donates millions while its regulation stalls, leaves a paper trail.
-    OPAX makes that trail searchable and citable.</p>
+    <!-- ============================= SEARCH ============================ -->
+    <section id="panel-search" class="panel" hidden aria-label="Search the record">
+      <div class="guided" id="search-guided">
+        <p class="guided-lead">What did
+          <label class="visually-hidden" for="guided-speaker">speaker name</label><input
+            id="guided-speaker" type="text" autocomplete="off" placeholder="a politician">
+          say about
+          <label class="visually-hidden" for="guided-topic">topic</label><input
+            id="guided-topic" type="text" autocomplete="off" placeholder="a topic">?
+          <button type="button" class="secondary" id="guided-go">Go</button>
+        </p>
+        <p class="fineprint">Names as they appear in Hansard — “Anthony Albanese”, not “the PM”.</p>
+      </div>
 
-    <h2>What you can do here</h2>
-    <ul class="about-list">
-      <li><strong>Ask</strong> — put a question to the whole corpus and get a grounded answer.
-      Every claim is cited; every citation opens the actual speech at the passage it came from.</li>
-      <li><strong>Search</strong> — hybrid semantic + keyword search with reranking, across
-      speeches, with each result linked to the full document.</li>
-      <li><strong>Reports</strong> — standing investigations pairing the structured money data
-      (AEC donations classified by industry) with what was actually said in parliament.</li>
-    </ul>
+      <form id="search-form" class="search-grid">
+        <div class="query-line">
+          <label for="search-input" class="visually-hidden">Search the corpus</label>
+          <input id="search-input" type="text" autocomplete="off" placeholder="Search half a million speeches…">
+          <button type="submit" class="secondary">Search</button>
+        </div>
+        <div class="filter-rail">
+          <span class="filter-item">
+            <label for="f-speaker">Speaker</label>
+            <input id="f-speaker" type="text" autocomplete="off" placeholder="any">
+          </span>
+          <span class="filter-item">
+            <label for="f-party">Party</label>
+            <select id="f-party">
+              <option value="">any</option>
+              <option>Labor</option><option>Liberal</option><option>Nationals</option>
+              <option>LNP</option><option>Greens</option><option>Independent</option>
+              <option>One Nation</option><option>Centre Alliance</option>
+              <option>Katter's Australian Party</option><option>United Australia Party</option>
+              <option>Australian Democrats</option><option>Country Liberal Party</option>
+              <option>Family First</option><option>DLP</option><option>JLN</option>
+            </select>
+          </span>
+          <span class="filter-item">
+            <label for="f-state">Parliament</label>
+            <select id="f-state">
+              <option value="">any</option>
+              <option value="federal">Federal</option><option value="nsw">NSW</option>
+              <option value="vic">VIC</option><option value="sa">SA</option>
+              <option value="qld">QLD</option>
+            </select>
+          </span>
+          <span class="filter-item">
+            <label for="f-from">From year</label>
+            <input id="f-from" type="number" min="1993" max="2026" placeholder="1993">
+          </span>
+          <span class="filter-item">
+            <label for="f-to">To year</label>
+            <input id="f-to" type="number" min="1993" max="2026" placeholder="2026">
+          </span>
+          <details class="advanced">
+            <summary>Advanced</summary>
+            <span class="filter-item">
+              <label for="search-kind">Corpus</label>
+              <select id="search-kind">
+                <option value="speech">Speeches</option>
+                <option value="legal">Legal documents</option>
+                <option value="news">News</option>
+                <option value="all">Everything</option>
+              </select>
+            </span>
+            <span class="filter-item">
+              <label for="search-mode">Mode</label>
+              <select id="search-mode">
+                <option value="hybrid">Hybrid</option>
+                <option value="semantic">Semantic</option>
+                <option value="keyword">Keyword</option>
+              </select>
+            </span>
+          </details>
+        </div>
+      </form>
 
-    <h2>The corpus</h2>
-    <div class="table-scroll"><table class="about-table">
-      <thead><tr><th>Source</th><th>Documents</th><th>Coverage</th></tr></thead>
-      <tbody>
-        <tr><td>Federal Hansard — House of Representatives</td><td>283,020</td><td>1998–2022</td></tr>
-        <tr><td>Federal Hansard — Senate + recent House</td><td>22,106</td><td>2006–2026</td></tr>
-        <tr><td>Senate committee hearings</td><td>45,608</td><td>2025–2026</td></tr>
-        <tr><td>NSW Parliament</td><td>76,734</td><td>2015–2026</td></tr>
-        <tr><td>Victorian Parliament</td><td>45,074</td><td>2015–2026</td></tr>
-        <tr><td>SA Parliament</td><td>37,971</td><td>2020–2026</td></tr>
-        <tr><td>QLD Parliament</td><td>8,172</td><td>2024–2026</td></tr>
-        <tr><td>News (Guardian, ABC)</td><td>3,592</td><td>2003–2026</td></tr>
-        <tr><td>AEC donations (27+ industries classified)</td><td>199,233</td><td>1998–2026</td></tr>
-      </tbody>
-    </table></div>
-    <p class="fineprint">The speech corpus is filtered to the era of currently serving
-    parliamentarians (March 1993 onward), deduplicated across overlapping sources, and stripped
-    of procedural noise — division roll-calls, chair interjections, day indexes — so retrieval
-    surfaces substance, not housekeeping. Voting records, government contracts and the
-    disconnect-scoring analytics from the previous version of this site are being rebuilt on
-    the new platform.</p>
+      <div id="search-status" class="status" role="status"></div>
+      <div class="results-bar" id="results-bar" hidden>
+        <span id="results-count"></span>
+        <span class="results-actions">
+          <label for="search-sort" class="visually-hidden">Sort results</label>
+          <select id="search-sort">
+            <option value="relevance">Relevance</option>
+            <option value="newest">Newest first</option>
+          </select>
+          <button type="button" class="link" id="search-copylink">Copy link</button>
+          <button type="button" class="link" id="search-export">Export (CSV / BibTeX / RIS)</button>
+        </span>
+      </div>
+      <ul id="search-results" class="results" role="list"></ul>
+    </section>
 
-    <h2>How answers are produced</h2>
-    <p>Retrieval runs hybrid semantic and keyword search with a reranking pass over the corpus;
-    a language model then writes the answer <em>only</em> from the retrieved passages, with
-    numbered citations back to each source speech. If the record is thin on a question, the
-    answer says so. OPAX is <a href="https://github.com/jaketracey/opax">open source</a> (AGPL-3.0).</p>
-  </section>
+    <!-- ============================= REPORTS =========================== -->
+    <section id="panel-reports" class="panel" hidden aria-label="Standing reports">
+      <div id="reports-list" class="report-cards"></div>
+      <div id="reports-status" class="status" role="status"></div>
+      <article id="report-view" hidden>
+        <p><button id="report-back" class="link"><span aria-hidden="true">← </span>All reports</button></p>
+        <p class="kicker">Standing report</p>
+        <h2 id="report-title" tabindex="-1"></h2>
+        <p id="report-blurb" class="report-blurb"></p>
+        <p id="report-meta" class="report-meta"></p>
+        <div id="report-stats"></div>
+        <div id="report-sections"></div>
+        <p class="fineprint" id="report-download"></p>
+      </article>
+    </section>
+
+    <!-- ============================== DOC ============================== -->
+    <section id="panel-doc" class="panel" hidden aria-label="Document from the record">
+      <p><button id="doc-back" class="link"><span aria-hidden="true">← </span>Back</button></p>
+      <p class="kicker">From the record</p>
+      <h2 id="doc-title" tabindex="-1"></h2>
+      <p id="doc-meta" class="doc-meta"></p>
+      <div class="action-row" id="doc-actions" hidden>
+        <button type="button" class="link" id="doc-cite">Cite</button>
+        <button type="button" class="link" id="doc-copylink">Copy link</button>
+        <button type="button" class="link" id="doc-similar">Find similar</button>
+        <button type="button" class="link" id="doc-more">More from this speaker</button>
+      </div>
+      <div id="doc-cite-panel" class="cite-panel" hidden>
+        <!-- injected -->
+      </div>
+      <hr class="ledger-rule doc-rule">
+      <div id="doc-status" class="status" role="status"></div>
+      <pre id="doc-text" class="doc-text"></pre>
+      <p class="fineprint" id="doc-caveat" hidden></p>
+    </section>
+
+    <!-- ============================= ABOUT ============================= -->
+    <section id="panel-about" class="panel" hidden aria-label="About OPAX">
+      <h2>What OPAX is</h2>
+      <p>OPAX — the Open Parliamentary Accountability eXchange — exposes governance blind spots by
+      cross-referencing what politicians say on the record with the money that flows around them.
+      A politician who gives two hundred speeches about a problem but votes against every reform,
+      or an industry that donates millions while its regulation stalls, leaves a paper trail.
+      OPAX makes that trail searchable and citable.</p>
+
+      <h2>What you can do here</h2>
+      <ul class="about-list">
+        <li><strong>Ask</strong> — put a question to the whole corpus and get a grounded answer.
+        Every claim is cited; every citation opens the actual speech at a stable, linkable page.</li>
+        <li><strong>Search</strong> — hybrid semantic + keyword search with reranking, filterable
+        by speaker, party, parliament and year, with citation-ready exports.</li>
+        <li><strong>Reports</strong> — standing investigations pairing the structured money data
+        (AEC donations classified by industry) with what was actually said in parliament.</li>
+      </ul>
+
+      <h2>The corpus</h2>
+      <div class="table-scroll"><table class="about-table">
+        <thead><tr><th>Source</th><th>Documents</th><th>Coverage</th></tr></thead>
+        <tbody id="about-sources"><!-- filled from corpus.json --></tbody>
+      </table></div>
+      <p class="fineprint">The speech corpus is filtered to the era of currently serving
+      parliamentarians (March 1993 onward), deduplicated across overlapping sources, and stripped
+      of procedural noise — division roll-calls, chair interjections, day indexes — so retrieval
+      surfaces substance, not housekeeping. Voting records, government contracts and the
+      disconnect-scoring analytics from the previous version of this site are being rebuilt on
+      the new platform. Full detail: <a href="#/methods">methods &amp; how to cite OPAX</a>.</p>
+
+      <h2>How answers are produced</h2>
+      <p>Retrieval runs hybrid semantic and keyword search with a reranking pass over the corpus;
+      a language model then writes the answer <em>only</em> from the retrieved passages, with
+      citations back to each source speech. If the record is thin on a question, the answer says
+      so. OPAX is <a href="https://github.com/jaketracey/opax" rel="noopener">open source</a> (AGPL-3.0).</p>
+    </section>
+
+    <!-- ============================ METHODS ============================ -->
+    <section id="panel-methods" class="panel" hidden aria-label="Methods">
+      <p class="kicker">Methods</p>
+      <h2>How OPAX works, and how to cite it</h2>
+
+      <h3>What OPAX is — and is not</h3>
+      <p>OPAX is a retrieval and analysis layer over public records. It is not the official
+      record. Before publishing a quote, verify the wording at the source link on the document
+      page — every document links to its official origin where one exists.</p>
+
+      <h3>Corpus construction</h3>
+      <p>Speeches are included from <strong>13 March 1993</strong> — the election that seated the
+      longest-serving current federal parliamentarian, so nothing in the corpus predates a
+      currently serving member. Speeches under 200 characters are excluded (procedural fragments),
+      duplicates across overlapping sources are removed, and procedural noise — division
+      roll-calls, chair interjections, day indexes — is stripped. The machine-readable corpus
+      manifest, including per-source counts and the current corpus version, is at
+      <a href="/corpus.json">corpus.json</a>.</p>
+
+      <h3>Retrieval and generation</h3>
+      <p>Search runs hybrid semantic + keyword retrieval with a reranking pass. Answers are
+      generated only from retrieved passages, with citations. Embeddings:
+      <code>multilingual-2024-05-06</code>. Generation model (pinned):
+      <code>gemini-2.5-flash-lite</code>. Model identity may change between corpus versions and
+      is recorded in the manifest.</p>
+
+      <h3>Reproducibility</h3>
+      <p>Searches are reproducible given a query, filters and corpus version — every export file
+      embeds all three. Generated answers are <strong>not</strong> reproducible and must not be
+      quoted as data. The supported method for a paper: state the question, cite the returned
+      documents by their permanent OPAX links, and archive the export file.</p>
+
+      <h3>Known limitations</h3>
+      <ul class="about-list" id="methods-defects"><!-- filled from corpus.json --></ul>
+      <ul class="about-list">
+        <li>Hansard is a revised record ("substantially verbatim"), not a raw transcript.</li>
+        <li>Party labels use a 15-value canonical vocabulary; some speeches carry no party label.</li>
+        <li>State coverage windows differ by parliament (QLD only from 2024, NSW/VIC from 2015).</li>
+      </ul>
+
+      <h3>Licence, code and corrections</h3>
+      <p>AGPL-3.0. Source and issue tracker:
+      <a href="https://github.com/jaketracey/opax" rel="noopener">github.com/jaketracey/opax</a>.
+      Data errors are corrections we want — please report them.</p>
+    </section>
+
+  </div>
 </main>
 
-<dialog id="doc-dialog">
-  <div class="doc-head">
-    <h2 id="doc-title"></h2>
-    <button id="doc-close" aria-label="Close">✕</button>
-  </div>
-  <p id="doc-meta" class="doc-meta"></p>
-  <pre id="doc-text"></pre>
-</dialog>
-
 <footer>
-  <div class="wrap">
-    <span id="stats">…</span>
-    <span>Powered by Progress Agentic RAG · <a href="https://github.com/jaketracey/opax">open source</a></span>
+  <div class="wrap"><hr class="ledger-rule"></div>
+  <div class="wrap footer-lines">
+    <p>OPAX is independent and open source (AGPL-3.0). It is not affiliated with any parliament,
+    government agency or political party.</p>
+    <p id="stats">…</p>
+    <p><a href="https://github.com/jaketracey/opax" rel="noopener">Source code on GitHub</a> ·
+       <a href="#/methods">Methods &amp; how to cite</a> ·
+       Powered by Progress Agentic RAG</p>
   </div>
 </footer>
 
+<noscript><p class="status" style="padding:1rem 1.25rem">OPAX needs JavaScript to search the record.</p></noscript>
 <script src="/app.js"></script>
 </body>
 </html>

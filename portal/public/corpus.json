@@ -1,0 +1,26 @@
+{
+  "version": "2026-09-01",
+  "expected_resources": 522277,
+  "collected_speeches": 518685,
+  "sources": [
+    { "name": "Federal Hansard — House of Representatives (zenodo)", "docs": 283020, "coverage": "1998–2022" },
+    { "name": "Federal Hansard — Senate + recent House (openaustralia)", "docs": 22106, "coverage": "2006–2026" },
+    { "name": "Senate committee hearings", "docs": 45608, "coverage": "2025–2026" },
+    { "name": "NSW Parliament", "docs": 76734, "coverage": "2015–2026" },
+    { "name": "Victorian Parliament", "docs": 45074, "coverage": "2015–2026" },
+    { "name": "SA Parliament", "docs": 37971, "coverage": "2020–2026" },
+    { "name": "QLD Parliament", "docs": 8172, "coverage": "2024–2026" },
+    { "name": "News (Guardian, ABC)", "docs": 3592, "coverage": "2003–2026" },
+    { "name": "AEC donations (27+ industries classified)", "docs": 199233, "coverage": "1998–2026" }
+  ],
+  "inclusion": "Speeches from 1993-03-13 (the election that seated the longest-serving current federal MP), at least 200 characters, deduplicated across overlapping sources, procedural rows removed (division roll-calls, chair interjections, day indexes).",
+  "models": {
+    "embeddings": "multilingual-2024-05-06",
+    "generation": "gemini-2.5-flash-lite"
+  },
+  "known_defects": [
+    "openaustralia-derived texts: roughly a quarter contain missing-space concatenation artefacts ('toSenator'); verify wording against the official record before quoting.",
+    "Member biographical linkage is unreliable for 151 members (~35K speeches); OPAX makes no members-derived biographical claims.",
+    "AEC donation disclosure: amounts under the indexed threshold are not reported; donation totals are a floor, not a ceiling."
+  ]
+}
