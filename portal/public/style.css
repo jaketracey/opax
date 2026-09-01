@@ -225,10 +225,7 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
   color: var(--ink); font: inherit;
 }
 .suggest-card:hover, .suggest-card:focus-visible { border-color: var(--line-strong); }
-.suggest-card:hover .card-title {
-  text-decoration: underline; text-decoration-color: var(--bronze-ink);
-  text-underline-offset: 3px;
-}
+.suggest-card:hover .suggest-title, .suggest-card:focus-visible .suggest-title { color: var(--bronze-ink); }
 .suggest-title { font: 600 1.375rem/1.35 var(--serif); margin-bottom: 0; }
 
 .corpus-meter { margin-top: 1rem; }
@@ -435,6 +432,16 @@ button.link.result-title { font: 600 1.0625rem/1.35 var(--serif); }
 .barrow-track i { display: block; height: 100%; background: var(--chart-mark); border-radius: 4px; }
 .barrow-value { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 
+/* Evidence-brief layers */
+#report-brief .answer { margin-top: 0.4rem; }
+.tile .tile-source { display: block; margin-top: 0.35rem; font-size: 0.75rem; color: var(--ink-faint); }
+.tile .tile-source a { color: var(--ink-faint); }
+.position-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+.position-list li { margin: 0; padding: 0.7rem 0 0.7rem 14px; max-width: 78ch; }
+.position-party { margin-right: 0.35rem; }
+.position-text { font-size: 0.9375rem; }
+.position-list .source-meta { margin-top: 0.3rem; }
+
 .report-section { margin-top: 2rem; }
 .report-section h3 { font: 600 1.25rem/1.3 var(--serif); margin: 0 0 0.5rem; }
 .report-section .answer { padding-left: 14px; }
@@ -463,6 +470,40 @@ button.link.result-title { font: 600 1.0625rem/1.35 var(--serif); }
 .cite-panel pre {
   white-space: pre-wrap; word-break: break-word; background: var(--paper-sunken);
   border-radius: 6px; padding: 0.6rem 0.8rem; margin: 0.2rem 0; font-size: 0.8125rem;
+}
+
+#report-back, #doc-back, #subject-back { text-decoration: none; color: var(--ink-soft); }
+#report-back:hover, #doc-back:hover, #subject-back:hover { color: var(--ink); text-decoration: none; }
+
+/* ---- subject entries (the encyclopedia) --------------------------------- */
+
+.subject-head h2 { font: 700 clamp(1.75rem, 3.5vw, 2.6rem)/1.15 var(--serif); margin: 0.2rem 0 0.3rem; }
+.subject-tag { color: var(--ink-soft); font-size: 0.9375rem; margin: 0 0 1rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+.subject-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 1.5rem; align-items: start; }
+.subject-main { min-width: 0; }
+.subject-map {
+  position: relative; height: 420px; border: 1px solid var(--line);
+  border-radius: 4px; overflow: hidden; background: var(--paper-raised);
+}
+.infobox {
+  background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
+  border-top: 3px solid var(--bronze); padding: 1rem 1.2rem; position: sticky; top: 1rem;
+}
+.infobox dl { margin: 0.4rem 0 0; display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1rem; }
+.infobox dt { color: var(--ink-faint); font-size: 0.8125rem; }
+.infobox dd { margin: 0; font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
+.infobox .actions { margin-top: 0.9rem; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.875rem; }
+.funfact {
+  background: var(--bronze-wash); border-radius: 4px; padding: 0.8rem 1rem;
+  margin-top: 0.9rem; font-size: 0.9375rem; line-height: 1.5;
+}
+.funfact b { font-variant-numeric: tabular-nums; }
+.subject-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+.subject-list li { border-top: 1px solid var(--line); padding: 0.7rem 0; }
+.subject-list li:first-child { border-top: none; }
+@media (max-width: 900px) {
+  .subject-grid { grid-template-columns: 1fr; }
+  .infobox { position: static; }
 }
 
 /* ---- about / methods ---------------------------------------------------- */

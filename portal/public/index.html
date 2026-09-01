@@ -206,8 +206,12 @@
         <h2 id="report-title" tabindex="-1"></h2>
         <p id="report-blurb" class="report-blurb"></p>
         <p id="report-meta" class="report-meta"></p>
+        <div id="report-brief"></div>
+        <div id="report-figures"></div>
         <div id="report-stats"></div>
+        <div id="report-positions"></div>
         <div id="report-sections"></div>
+        <div id="report-moments"></div>
         <p class="fineprint" id="report-download"></p>
       </article>
     </section>
@@ -232,6 +236,12 @@
       <div id="doc-status" class="status" role="status"></div>
       <pre id="doc-text" class="doc-text"></pre>
       <p class="fineprint" id="doc-caveat" hidden></p>
+    </section>
+
+    <!-- ============================ SUBJECT ============================ -->
+    <section id="panel-subject" class="panel" hidden aria-label="Subject entry">
+      <p><button id="subject-back" class="link"><span aria-hidden="true">← </span>Back</button></p>
+      <div id="subject-body"><!-- entry injected --></div>
     </section>
 
     <!-- ============================= ABOUT ============================= -->

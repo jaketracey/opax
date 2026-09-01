@@ -16,7 +16,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["ask", "search", "money", "reports", "doc", "about", "methods", "stats"];
+const PANELS = ["ask", "search", "money", "reports", "doc", "subject", "about", "methods", "stats"];
 
 // --- helpers ----------------------------------------------------------------
 
@@ -242,6 +242,7 @@ const TITLES = {
   money: "Money map — OPAX",
   reports: "Standing reports — OPAX",
   doc: "From the record — OPAX",
+  subject: "OPAX encyclopedia",
   about: "About — OPAX",
   methods: "Methods — OPAX",
   stats: "Corpus stats — OPAX",
@@ -305,7 +306,12 @@ function route() {
   firstRoute = false;
   routeCount++;
 
-  if (view === "doc" && segs[1]) {
+  if (view !== "subject") { destroySubjectMap(); currentSubjectKey = null; }
+  if (view === "subject" && segs[1] && segs[2]) {
+    showPanel("subject");
+    document.title = TITLES.subject;
+    openSubject(segs[1], decodeURIComponent(segs[2]), manageFocus);
+  } else if (view === "doc" && segs[1]) {
     showPanel("doc");
     document.title = TITLES.doc;
     openDocPage(segs[1], manageFocus);
@@ -810,8 +816,8 @@ function renderMoneyPanel(ind) {
       ${tile(String(donors.length), "major donors disclosed")}
       ${tile(`${years[0]}–${years[1]}`, "years covered")}
     </div>
-    ${barList(donorRows, { fmt: fmtMoney, heading: "Largest donors" })}
-    ${barList(partyRows, { fmt: fmtMoney, heading: "Where it went" })}
+    ${barList(donorRows, { fmt: fmtMoney, heading: "Largest donors", linkTo: (nm) => subjectHash("donor", nm) })}
+    ${barList(partyRows, { fmt: fmtMoney, heading: "Where it went", linkTo: (nm) => subjectHash("party", nm) })}
     <p class="fineprint">${esc(AEC_NOTE)}
       <a href="#/money">Explore on the money map</a> ·
       <a href="/graph/money.json">Download the data</a></p>`;
@@ -827,6 +833,254 @@ function parseSpeakerIntent(q) {
   if (words.length < 2 || words.length > 4) return null;
   return who;
 }
+
+
+// --- subject entries (the encyclopedia) -------------------------------------
+// Every donor, party and parliamentarian gets an entry page: an infobox of
+// quick facts, honest fun-facts computed from the disclosed data, and a mini
+// 3D money map seeded at the subject — click any bubble to jump to ITS page.
+
+let subjectMapHandle = null;
+let currentSubjectKey = null;
+
+function destroySubjectMap() {
+  if (subjectMapHandle) {
+    try { subjectMapHandle.destroy(); } catch { /* already gone */ }
+    subjectMapHandle = null;
+  }
+}
+
+function subjectHash(kind, label) {
+  return `#/subject/${kind}/${encodeURIComponent(label)}`;
+}
+
+function normName(x) {
+  return String(x || "").toLowerCase().replace(/[^a-z0-9]+/g, " ")
+    .replace(/\b(pty|ltd|limited|the|inc|co|holdings)\b/g, "").replace(/\s+/g, " ").trim();
+}
+
+function findMoneyNode(kind, name) {
+  if (!moneyData) return null;
+  const nn = normName(name);
+  let best = null;
+  for (const n of moneyData.nodes) {
+    if (kind && n.kind !== kind) continue;
+    const c = normName(n.label);
+    if (c === nn) return n;
+    if (!best && nn && (c.startsWith(nn) || nn.startsWith(c))) best = n;
+  }
+  return best;
+}
+
+function subjectSkeleton(kindLabel, name, tagHTML) {
+  return `
+    <p class="kicker">OPAX encyclopedia · ${esc(kindLabel)}</p>
+    <div class="subject-head">
+      <h2 id="subject-title" tabindex="-1">${esc(name)}</h2>
+      <p class="subject-tag">${tagHTML}</p>
+    </div>
+    <div class="subject-grid">
+      <div class="subject-main" id="subject-main">
+        <div class="subject-map" id="subject-map" hidden></div>
+        <p class="fineprint" id="subject-map-hint" hidden>Drag to spin · click any bubble to jump to it ·
+          <a href="#/money">open the full map</a></p>
+        <div id="subject-sections"></div>
+      </div>
+      <aside class="infobox" id="subject-infobox"></aside>
+    </div>`;
+}
+
+function infoboxHTML(rows, funfact, actions) {
+  return `<p class="kicker" style="margin-top:0">Quick facts</p>
+    <dl>${rows.filter(Boolean).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join("")}</dl>
+    ${funfact ? `<div class="funfact">${funfact}</div>` : ""}
+    <div class="actions">${actions.join("")}</div>`;
+}
+
+async function mountSubjectMap(nodeId) {
+  const key = currentSubjectKey;
+  const el = $("subject-map");
+  if (!el) return;
+  el.hidden = false;
+  $("subject-map-hint").hidden = false;
+  try {
+    const { mountMoneyMap } = await import("/money-map.js");
+    if (currentSubjectKey !== key) return; // navigated away while loading
+    destroySubjectMap();
+    subjectMapHandle = await mountMoneyMap(el, "/graph/money.json", {
+      focus: nodeId,
+      chrome: "mini",
+      askUrl: (industry) => askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
+      onSelect: (node) => {
+        if (!node || node.id === nodeId) return;
+        location.hash = subjectHash(node.kind === "party" ? "party" : "donor", node.label);
+      },
+    });
+    subjectMapHandle.select?.(nodeId);
+  } catch {
+    el.innerHTML = `<p class="status" style="padding:1rem">The map could not load here — <a href="/map">open the full map</a>.</p>`;
+  }
+}
+
+async function subjectMentions(name, container, heading) {
+  try {
+    const data = await api(`/api/search?${new URLSearchParams({ q: `"${name}"`, top_k: "6" })}`);
+    if (!data.results?.length) return;
+    const items = data.results.slice(0, 5).map((r) => `
+      <li><a href="#/doc/${esc(r.slug)}" class="source-title">${esc(r.title)}</a>
+        <span class="result-meta">${metaHTML(r)}</span>
+        <p class="snippet">${esc((r.snippet || "").slice(0, 220))}</p></li>`).join("");
+    container.insertAdjacentHTML("beforeend",
+      `<p class="kicker">${esc(heading)}</p><ul class="subject-list" role="list">${items}</ul>
+       <p class="fineprint"><a href="${esc(searchHash(`"${name}"`, {}))}">All mentions in the record</a></p>`);
+  } catch { /* mentions are a bonus, not a dependency */ }
+}
+
+function weeklyFunFact(node) {
+  const years = Math.max((node.lastYear || 0) - (node.firstYear || 0) + 1, 1);
+  const perWeek = node.total / (years * 52);
+  if (!isFinite(perWeek) || perWeek < 1) return "";
+  return `That works out to about <b>${fmtMoney(Math.round(perWeek))}</b> every single week for
+    ${years} year${years > 1 ? "s" : ""} — all from published AEC disclosures.`;
+}
+
+async function openSubject(kind, name, manageFocus) {
+  const key = `${kind}:${name}`;
+  if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
+  currentSubjectKey = key;
+  destroySubjectMap();
+  const body = $("subject-body");
+  body.innerHTML = subjectSkeleton(
+    kind === "person" ? "Parliamentarian" : kind === "party" ? "Political party" : "Donor",
+    name, `<span class="status" style="margin:0">Opening the entry…</span>`);
+  if (manageFocus) $("subject-title")?.focus();
+
+  if (kind === "donor" || kind === "party") {
+    await loadMoneyData();
+    if (currentSubjectKey !== key) return;
+    const node = findMoneyNode(kind, name);
+    const sections = $("subject-sections");
+    const box = $("subject-infobox");
+    if (!node) {
+      body.querySelector(".subject-tag").innerHTML =
+        `<span>Not among the top 250 disclosed donors in the money data — the record may still mention them.</span>`;
+      box.innerHTML = infoboxHTML(
+        [["Type", kind === "party" ? "Political party" : "Organisation"]], "",
+        [`<a href="${esc(searchHash(`"${name}"`, {}))}">Search the record for them</a>`,
+         `<a href="#/money">Open the money map</a>`]);
+      subjectMentions(name, sections, "In parliament");
+      return;
+    }
+    const donors = moneyData.nodes.filter((n) => n.kind === node.kind);
+    const rank = donors.sort((a, b) => (b.total || 0) - (a.total || 0)).findIndex((n) => n.id === node.id) + 1;
+    const isParty = node.kind === "party";
+    const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id);
+    const counter = new Map();
+    for (const e of flows) {
+      const other = String(isParty ? e.source : e.target).replace(/^(donor|party):/, "");
+      const label = (moneyData.nodes.find((n) => n.id === (isParty ? e.source : e.target)) || {}).label || other;
+      counter.set(label, (counter.get(label) || 0) + (e.total || 0));
+    }
+    const flowRows = [...counter.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
+    body.querySelector(".subject-tag").innerHTML = [
+      isParty ? partyChipHTML(node.label) : `<span class="party party-oth"><i aria-hidden="true"></i>${esc(industryLabel(node.industry || ""))}</span>`,
+      `<span>active ${node.firstYear}–${node.lastYear}</span>`,
+    ].join(" · ");
+    box.innerHTML = infoboxHTML([
+      ["Type", isParty ? "Political party" : "Organisation / donor"],
+      !isParty && ["Industry", esc(industryLabel(node.industry || ""))],
+      [isParty ? "Received (disclosed)" : "Given (disclosed)", `<b>${fmtMoney(node.total || 0)}</b>`],
+      ["Donations counted", (node.count || 0).toLocaleString()],
+      ["Active years", `${node.firstYear}–${node.lastYear}`],
+      ["Rank", `#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed donors"}`],
+    ], weeklyFunFact(node), [
+      `<a href="${esc(askHash(`What has parliament said about ${industryLabel(node.industry || name)}?`))}">Ask what parliament said about ${esc(isParty ? "them" : "this industry")}</a>`,
+      `<a href="${esc(searchHash(`"${node.label}"`, {}))}">Search mentions in the record</a>`,
+      `<a href="/graph/money.json">Download the data</a>`,
+    ]);
+    sections.insertAdjacentHTML("beforeend", barList(flowRows, {
+      fmt: fmtMoney,
+      heading: isParty ? "Where it came from" : "Where the money went",
+      linkTo: (nm) => subjectHash(isParty ? "donor" : "party", nm),
+    }));
+    sections.insertAdjacentHTML("beforeend",
+      `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
+    subjectMentions(node.label, sections, "In parliament");
+    mountSubjectMap(node.id);
+    return;
+  }
+
+  // person
+  const sections = $("subject-sections");
+  const box = $("subject-infobox");
+  let speeches = [];
+  try {
+    const data = await api(`/api/search?${new URLSearchParams({ q: name, speaker: name, top_k: "20" })}`);
+    speeches = data.results || [];
+  } catch { /* fall through to the empty state */ }
+  if (currentSubjectKey !== key) return;
+  const partyCount = new Map();
+  for (const r of speeches) if (r.party) partyCount.set(r.party, (partyCount.get(r.party) || 0) + 1);
+  const party = [...partyCount.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+  const dates = speeches.map((r) => r.date).filter(Boolean).sort();
+  const chambers = [...new Set(speeches.map((r) => STATE_NAMES[r.state] || r.state).filter(Boolean))];
+  body.querySelector(".subject-tag").innerHTML = [
+    party ? partyChipHTML(party) : "",
+    chambers.length ? `<span>${esc(chambers.join(" · "))} parliament</span>` : "",
+  ].filter(Boolean).join(" · ") || "<span>From the parliamentary record</span>";
+  const q = encodeURIComponent(name);
+  box.innerHTML = infoboxHTML([
+    ["Type", "Parliamentarian"],
+    party && ["Party", partyChipHTML(party)],
+    chambers.length && ["Parliament", esc(chambers.join(", "))],
+    dates.length && ["Indexed speeches span", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
+  ], "", [
+    `<a href="${esc(searchHash("", { speaker: name }))}">All their speeches on OPAX</a>`,
+    `<a href="https://theyvoteforyou.org.au/search?query=${q}" rel="noopener" target="_blank">Voting record ↗</a>`,
+    `<a href="https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}" rel="noopener" target="_blank">Parliamentary profile ↗</a>`,
+    `<a href="https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician" rel="noopener" target="_blank">Wikipedia ↗</a>`,
+  ]);
+  sections.insertAdjacentHTML("beforeend", `
+    <form class="query-line" id="subject-ask-form" style="margin:0 0 0.4rem">
+      <label class="visually-hidden" for="subject-ask-topic">Topic</label>
+      <input id="subject-ask-topic" type="text" autocomplete="off"
+             placeholder="Ask what ${esc(name)} said about…">
+      <button type="submit" class="secondary">Ask</button>
+    </form>`);
+  $("subject-ask-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const topic = $("subject-ask-topic").value.trim();
+    if (topic) location.hash = askHash(`What did ${name} say about ${topic}?`);
+  });
+  if (speeches.length) {
+    const newest = [...speeches].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 8);
+    sections.insertAdjacentHTML("beforeend",
+      `<p class="kicker">Latest indexed speeches</p><ul class="subject-list" role="list">${newest.map((r) => `
+        <li><a href="#/doc/${esc(r.slug)}" class="source-title">${esc(r.title)}</a>
+          <span class="result-meta">${metaHTML(r)}</span></li>`).join("")}</ul>
+      <p class="fineprint">The corpus is still indexing — this is what has been loaded so far, not their full record.</p>`);
+  } else {
+    sections.insertAdjacentHTML("beforeend",
+      `<p class="status">No speeches by “${esc(name)}” in the indexed corpus yet — names appear as in
+       Hansard, and the record is still loading. <a href="${esc(searchHash(name, {}))}">Search the record instead</a>.</p>`);
+  }
+  if (party) {
+    await loadMoneyData();
+    if (currentSubjectKey !== key) return;
+    const pnode = findMoneyNode("party", party);
+    if (pnode) {
+      sections.insertAdjacentHTML("beforeend",
+        `<p class="fineprint" style="margin-top:1rem">The money map starts from ${esc(party)} — the party this
+         speaker's indexed speeches carry. In AEC disclosure data, money flows to parties, not individuals.</p>`);
+      mountSubjectMap(pnode.id);
+    }
+  }
+}
+
+$("subject-back").addEventListener("click", () => {
+  if (routeCount > 1) history.back();
+  else location.hash = "#/";
+});
 
 async function runAsk(question) {
   if (askAbort) askAbort.abort();
@@ -1313,11 +1567,13 @@ function columnChart(pairs, { fmt = String, heading, note }) {
   </figure>`;
 }
 
-function barList(rows, { fmt = String, heading }) {
+function barList(rows, { fmt = String, heading, linkTo }) {
   const max = Math.max(...rows.map(([, v]) => v), 1);
   const items = rows.map(([name, v]) => `
     <div class="barrow">
-      <span class="barrow-name" title="${esc(name)}">${esc(name)}</span>
+      ${linkTo
+        ? `<a class="barrow-name" title="${esc(name)}" href="${esc(linkTo(name))}">${esc(name)}</a>`
+        : `<span class="barrow-name" title="${esc(name)}">${esc(name)}</span>`}
       <span class="barrow-track" aria-hidden="true"><i style="width:${Math.max((v / max) * 100, 1)}%"></i></span>
       <span class="barrow-value">${esc(fmt(v))}</span>
     </div>`).join("");
@@ -1394,12 +1650,102 @@ function renderStats(container, stats) {
         : "") + AEC_NOTE,
     });
   }
-  if (don?.top_donors?.length) htmlOut += barList(don.top_donors, { heading: "Largest donors", fmt: fmtMoney });
-  if (stats.top_speakers?.length) htmlOut += barList(stats.top_speakers, { heading: "Most speeches on this topic", fmt: (v) => v.toLocaleString() });
+  if (don?.top_donors?.length) htmlOut += barList(don.top_donors, {
+    heading: "Largest donors", fmt: fmtMoney,
+    linkTo: (nm) => subjectHash("donor", nm) });
+  if (stats.top_speakers?.length) htmlOut += barList(stats.top_speakers, {
+    heading: "Most speeches on this topic", fmt: (v) => v.toLocaleString(),
+    linkTo: (nm) => subjectHash("person", nm) });
   container.innerHTML = htmlOut;
 }
 
 let currentReportSlug = null;
+
+/**
+ * The evidence-brief layers of a report: prose lead, key figures traced to
+ * the record, where the parties stand, and the reading list. Every value is
+ * model- or corpus-derived text, so everything reaches the DOM via
+ * textContent — never innerHTML.
+ */
+function renderReportBrief(report) {
+  const kicker = (text) => {
+    const p = document.createElement("p");
+    p.className = "kicker";
+    p.textContent = text;
+    return p;
+  };
+  const docLink = (slug, title) => {
+    const a = document.createElement("a");
+    a.href = `#/doc/${slug}`;
+    a.textContent = title || slug;
+    return a;
+  };
+
+  const brief = $("report-brief");
+  brief.replaceChildren();
+  if (report.brief?.answer) {
+    const body = document.createElement("div");
+    body.className = "answer record-rule";
+    renderAnswer(body, report.brief.answer);
+    brief.append(kicker("The brief"), body);
+  }
+
+  const figures = $("report-figures");
+  figures.replaceChildren();
+  if (report.key_stats?.length) {
+    const grid = document.createElement("div");
+    grid.className = "tiles";
+    for (const s of report.key_stats) {
+      const t = document.createElement("div");
+      t.className = "tile";
+      const b = document.createElement("b");
+      b.textContent = s.value;
+      const label = document.createElement("span");
+      label.textContent = s.label;
+      const src = document.createElement("span");
+      src.className = "tile-source";
+      src.append("— ", docLink(s.slug, s.source_title));
+      if (s.detail) t.title = s.detail;
+      t.append(b, label, src);
+      grid.appendChild(t);
+    }
+    figures.append(kicker("Key figures — spoken on the record"), grid);
+  }
+
+  const positions = $("report-positions");
+  positions.replaceChildren();
+  if (report.positions?.length) {
+    const list = document.createElement("ul");
+    list.className = "position-list";
+    for (const p of report.positions) {
+      const li = document.createElement("li");
+      li.className = "record-rule";
+      const head = document.createElement("span");
+      head.className = "position-party";
+      head.innerHTML = partyChipHTML(p.party); // fixed map lookup, not model text
+      if (!head.firstChild) head.textContent = p.party;
+      const text = document.createElement("span");
+      text.className = "position-text";
+      text.textContent = ` ${p.position} `;
+      const cite = document.createElement("span");
+      cite.className = "source-meta";
+      const who = [p.speaker, fmtDate(p.date || "")].filter(Boolean).join(", ");
+      cite.append(who ? `${who} — ` : "", docLink(p.slug, "read the speech"));
+      li.append(head, text, cite);
+      list.appendChild(li);
+    }
+    positions.append(kicker("Where the parties stand"), list);
+  }
+
+  const moments = $("report-moments");
+  moments.replaceChildren();
+  if (report.key_moments?.length) {
+    const ol = document.createElement("ol");
+    ol.className = "source-list";
+    ol.replaceChildren(...report.key_moments.map((m, i) => sourceItem(m, i + 1)));
+    moments.append(kicker("Start reading — key speeches"), ol);
+  }
+}
 
 async function openReport(slug, sectionNum, manageFocus) {
   // Already rendered (e.g. Back from a cited document): just reveal it —
@@ -1431,6 +1777,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   $("report-meta").textContent =
     `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record · corpus v${corpusVersion()}`;
   renderStats($("report-stats"), report.stats);
+  renderReportBrief(report);
   $("report-download").innerHTML =
     `Download the data behind this report: <a href="/reports/${esc(slug)}.json">${esc(slug)}.json</a>`;
 

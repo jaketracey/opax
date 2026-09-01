@@ -2,8 +2,8 @@
  "slug": "immigration",
  "title": "Immigration",
  "blurb": "Border policy, offshore detention and migration levels across the decades.",
- "generated_at": "2026-09-01T04:42:25+00:00",
- "corpus_resources": 17557,
+ "generated_at": "2026-09-01T07:38:17+00:00",
+ "corpus_resources": 70556,
  "stats": {
   "speech_count": 49867,
   "unique_speakers": 2351,
@@ -148,5 +148,411 @@
    ]
   ]
  },
- "sections": []
+ "brief": {
+  "question": "What does the parliamentary record show about immigration?",
+  "answer": ""
+ },
+ "key_stats": [],
+ "positions": [
+  {
+   "party": "Liberal",
+   "position": "The Liberal Party supports strong border protection, a tough approach to illegal migration and people-smuggling, and defending the government's detention policy and border protection measures.",
+   "slug": "speech-108140",
+   "source_title": "Alexander Downer \u2014 2003-11-26",
+   "speaker": "Alexander Downer",
+   "date": "2003-11-26"
+  },
+  {
+   "party": "Labor",
+   "position": "Labor members questioned the government's immigration policies, calling for more effective and sensible policies to deal with illegal immigration and raising concerns about the government's approach.",
+   "slug": "speech-67504",
+   "source_title": "Janice Crosio \u2014 2001-08-23",
+   "speaker": "Janice Crosio",
+   "date": "2001-08-23"
+  }
+ ],
+ "key_moments": [
+  {
+   "slug": "speech-65810",
+   "title": "John Murphy \u2014 2001-08-06",
+   "speaker": "John Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2001-08-06"
+  },
+  {
+   "slug": "speech-104874",
+   "title": "Laurie Ferguson \u2014 2003-10-07",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2003-10-07"
+  },
+  {
+   "slug": "speech-74253",
+   "title": "Tony Abbott \u2014 2002-03-21",
+   "speaker": "Tony Abbott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2002-03-21"
+  },
+  {
+   "slug": "speech-37442",
+   "title": "Philip Ruddock \u2014 2000-03-06",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2000-03-06"
+  },
+  {
+   "slug": "speech-54408",
+   "title": "John Anderson \u2014 2000-11-30",
+   "speaker": "John Anderson",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2000-11-30"
+  },
+  {
+   "slug": "speech-29765",
+   "title": "Larry Anthony \u2014 1999-08-30",
+   "speaker": "Larry Anthony",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "1999-08-30"
+  }
+ ],
+ "sections": [
+  {
+   "question": "What positions have MPs taken on asylum seekers and offshore detention?",
+   "answer": "Based on the provided context, MPs took a range of positions:\n\n- **Government/Ministerial position (e.g., Minister for Immigration Ruddock):** Strongly supported mandatory detention and offshore processing of asylum seekers. He argued detention was needed to maintain border integrity, process claims, address health/character/security risks, and ensure failed asylum seekers could be removed. He defended the policy as working, citing no unauthorised boat arrivals and contrasting it with European countries\u2019 difficulties.\n- **Some Government MPs:** Defended strong border protection and criticised the Labor Party for allegedly creating conditions that encouraged people-smuggling.\n- **Opposition/Labor MPs (e.g., Kate Lundy, Dr Theophanous, Mr Murphy, Ms Gillard, Ms Plibersek, Dr Lawrence):** Raised concerns about mandatory detention and offshore processing. Kate Lundy stated that mandatory detention in its current form was not acceptable and that immigration policy should not be about protecting borders. Others asked about alternatives such as the \u201cSwedish Model,\u201d community-based alternatives, conditions in detention, and possible human rights abuses.\n- **Other MPs (e.g., member for Warringah):** Presented a petition requesting an end to detention of asylum seekers and to temporary protection visas.\n\nThus, MPs were split: some strongly supported offshore detention and mandatory detention, while others questioned, criticised, or opposed it.",
+   "sources": [
+    {
+     "slug": "speech-79169",
+     "title": "Murphy \u2014 2002-06-25",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-80499",
+     "title": "Peter Andren \u2014 2002-08-19",
+     "speaker": null,
+     "party": "Independent",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-86558",
+     "title": "Julia Gillard \u2014 2002-11-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-68801",
+     "title": "Chris Pyne \u2014 2001-08-30",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-80640",
+     "title": "John Murphy \u2014 2002-08-19",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-87245",
+     "title": "Peter McGauran \u2014 2002-11-14",
+     "speaker": null,
+     "party": "Nationals",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-87820",
+     "title": "Philip Ruddock \u2014 2002-12-03",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-61244",
+     "title": "Andrew Theophanous \u2014 2001-05-22",
+     "speaker": null,
+     "party": "Independent",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-84125",
+     "title": "Julia Gillard \u2014 2002-09-24",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-76644",
+     "title": "Alexander Downer \u2014 2002-06-04",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-65908",
+     "title": "Andrew Theophanous \u2014 2001-08-06",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-84624",
+     "title": "Philip Ruddock \u2014 2002-09-26",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-47287",
+     "title": "Philip Ruddock \u2014 2000-08-28",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-76505",
+     "title": "Philip Ruddock \u2014 2002-06-03",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-83868",
+     "title": "Julia Gillard \u2014 2002-09-23",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-66325",
+     "title": "Roger Price \u2014 2001-08-08",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-76656",
+     "title": "Philip Ruddock \u2014 2002-06-04",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-100388",
+     "title": "Tanya Plibersek \u2014 2003-08-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-100722",
+     "title": "Carmen Lawrence \u2014 2003-08-12",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-41532",
+     "title": "Philip Ruddock \u2014 2000-05-10",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    }
+   ]
+  },
+  {
+   "question": "What has been said about immigration levels and skilled migration?",
+   "answer": "The context says the government emphasised maintaining proper skill levels in the migration program and balancing skilled migration with family reunion. Skilled migration was described as having a positive economic impact: it boosts living standards, workforce productivity, labour force participation, and contributes significantly to the Commonwealth budget. For example, skilled migration was estimated to contribute about $1.4 billion to the budget over five years. It was also stated that a substantially larger intake focused on skilled migration would involve diluting selection standards\u2014particularly age and skill\u2014and would dilute the economic benefits.\n\nThe context also mentions that the government increased the migration program by 6,000 places, with 5,000 in the skilled stream, making skilled migration about 52 per cent of the program. There are also comments from other speakers who criticised placing only economic value on migrants, stressed the importance of family reunion, and argued that skilled migration should not come at the expense of jobs, apprenticeships, and traineeships for Australians. Some also said more migrants were needed, especially in regional areas, and linked skilled migration with regional development.",
+   "sources": [
+    {
+     "slug": "speech-5652",
+     "title": "Philip Ruddock \u2014 1998-04-07",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-21175",
+     "title": "Philip Ruddock \u2014 1999-03-22",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-57299",
+     "title": "Andrew Theophanous \u2014 2001-02-27",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-37777",
+     "title": "Philip Ruddock \u2014 2000-03-08",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-38082",
+     "title": "Philip Ruddock \u2014 2000-03-09",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-58657",
+     "title": "John Murphy \u2014 2001-03-08",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-5755",
+     "title": "Martin Ferguson \u2014 1998-04-07",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-37458",
+     "title": "Christine Gallus \u2014 2000-03-06",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-4575",
+     "title": "Joe Hockey \u2014 1998-04-01",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-40079",
+     "title": "Philip Ruddock \u2014 2000-04-06",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-57738",
+     "title": "Philip Ruddock \u2014 2001-03-01",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-57980",
+     "title": "Janice Crosio \u2014 2001-03-05",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-98835",
+     "title": "Philip Ruddock \u2014 2003-06-23",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-102882",
+     "title": "Philip Ruddock \u2014 2003-09-09",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-36263",
+     "title": "Chris Pyne \u2014 1999-12-09",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-50918",
+     "title": "Philip Ruddock \u2014 2000-10-11",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-4576",
+     "title": "Philip Ruddock \u2014 1998-04-01",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-21174",
+     "title": "Andrew Theophanous \u2014 1999-03-22",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-37469",
+     "title": "Dick Adams \u2014 2000-03-06",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-92086",
+     "title": "Philip Ruddock \u2014 2003-03-04",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    }
+   ]
+  }
+ ]
 }

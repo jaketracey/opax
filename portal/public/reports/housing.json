@@ -2,8 +2,8 @@
  "slug": "housing",
  "title": "Housing",
  "blurb": "Decades of affordability promises, negative gearing fights and supply debates.",
- "generated_at": "2026-09-01T04:42:25+00:00",
- "corpus_resources": 17557,
+ "generated_at": "2026-09-01T07:36:14+00:00",
+ "corpus_resources": 70556,
  "stats": {
   "speech_count": 210854,
   "unique_speakers": 3502,
@@ -323,5 +323,552 @@
    ]
   }
  },
- "sections": []
+ "brief": {
+  "question": "What does the parliamentary record show about housing?",
+  "answer": ""
+ },
+ "key_stats": [],
+ "positions": [],
+ "key_moments": [
+  {
+   "slug": "speech-106341",
+   "title": "Michael Johnson \u2014 2003-10-16",
+   "speaker": "Michael Johnson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2003-10-16"
+  },
+  {
+   "slug": "speech-107269",
+   "title": "Kevin Andrews \u2014 2003-11-06",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2003-11-06"
+  },
+  {
+   "slug": "speech-29532",
+   "title": "Peter Slipper \u2014 1999-08-26",
+   "speaker": "Peter Slipper",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "1999-08-26"
+  },
+  {
+   "slug": "speech-66146",
+   "title": "Michael Lee \u2014 2001-08-08",
+   "speaker": "Michael Lee",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2001-08-08"
+  },
+  {
+   "slug": "speech-68984",
+   "title": "John Howard \u2014 2001-09-17",
+   "speaker": "John Howard",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2001-09-17"
+  },
+  {
+   "slug": "speech-85336",
+   "title": "Mark Latham \u2014 2002-10-17",
+   "speaker": "Mark Latham",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2002-10-17"
+  }
+ ],
+ "sections": [
+  {
+   "question": "What have MPs said about housing affordability and home ownership?",
+   "answer": "MPs made conflicting statements about housing affordability and home ownership.\n\n- **Opposition/Labor MPs argued that there is a housing affordability crisis.** They said low- and middle-income families, as well as young people, are finding it increasingly difficult to buy homes. They cited rising house prices, such as a typical Melbourne house jumping from four years to seven years of average earnings, and noted that housing affordability had fallen to its lowest level in years. They also criticised the government for not attending the debate and for failing to help those who have \u201cmissed the boat,\u201d including public housing tenants and people on low incomes.\n\n- **Government/Coalition MPs rejected the idea of a crisis.** They said home ownership had \u201cnever been as achievable\u201d and that housing affordability was stronger under the coalition than under Labor. They pointed to lower interest rates\u20146.55 per cent compared with 17 per cent under Labor\u2014and the First Home Owners Grant, which they said helped hundreds of thousands of Australians enter the housing market. They also argued that rising house prices increased the wealth of most homeowners and announced measures such as the Productivity Commission inquiry and the Prime Minister\u2019s task force on home ownership.\n\n- **MPs also debated specific policies.** Some MPs criticised the GST for increasing housing costs and hitting public housing tenants, while others defended the government\u2019s economic management. On mortgage brokers, some MPs called for national regulation to protect home buyers, while government MPs said the government was assisting states to develop a uniform approach.",
+   "sources": [
+    {
+     "slug": "speech-17875",
+     "title": "John Howard \u2014 1999-02-09",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-100084",
+     "title": "Jill Hall \u2014 2003-08-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-77103",
+     "title": "Peter Slipper \u2014 2002-06-05",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-83764",
+     "title": "Mark Latham \u2014 2002-09-23",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-86185",
+     "title": "Andrew Southcott \u2014 2002-10-23",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-86197",
+     "title": "Christopher Pearce \u2014 2002-10-23",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-106049",
+     "title": "Larry Anthony \u2014 2003-10-15",
+     "speaker": null,
+     "party": "Nationals",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-104170",
+     "title": "John Howard \u2014 2003-09-17",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-11802",
+     "title": "Frank Mossfield \u2014 1998-06-24",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-104169",
+     "title": "John Howard \u2014 2003-09-17",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-17071",
+     "title": "Anthony Albanese \u2014 1998-12-09",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-103509",
+     "title": "Joe Hockey \u2014 2003-09-11",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-86187",
+     "title": "Brendan O'Connor \u2014 2002-10-23",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-100085",
+     "title": "Christopher Pearce \u2014 2003-08-11",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-83980",
+     "title": "John Anderson \u2014 2002-09-24",
+     "speaker": null,
+     "party": "Nationals",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-86188",
+     "title": "Brendan O'Connor \u2014 2002-10-23",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-83765",
+     "title": "John Anderson \u2014 2002-09-23",
+     "speaker": null,
+     "party": "Nationals",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-83973",
+     "title": "Mark Latham \u2014 2002-09-24",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-100086",
+     "title": "Alan Griffin \u2014 2003-08-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    }
+   ]
+  },
+  {
+   "question": "What positions have been taken on negative gearing and property tax concessions?",
+   "answer": "Based on the provided context, the positions taken are:\n\n**On negative gearing:**\n- The government/coalition said: \u201cWe on this side of the House will not be abolishing negative gearing, because we believe that if you make a loss on an investment you should be able to set that loss against income, as you can under the normal principles of taxation law.\u201d So the government supports keeping negative gearing.\n- The opposition/Labor Party was inconsistent. At one point the Deputy Leader of the Opposition said abolishing negative gearing was \u201ccertainly one option that could be contemplated,\u201d but later issued a statement saying: \u201cWe are not, however, proposing to embrace ACOSS's proposal to end negative gearing.\u201d\n- Later, the member for Werriwa said negative gearing was \u201cpart of Labor's policy review\u201d and that \u201cany smart policy maker would be looking at it,\u201d but the next day the member for Hotham said: \u201cWe are not reviewing negative gearing.\u201d\n\n**On property tax concessions:**\n- The government said it introduced the First Home Owners Scheme, that there is no GST on an established home, and that it would keep up pressure on the states over stamp duties.\n- The government said state Labor governments impose stamp duty, and that since 1996 stamp duty on an average home had risen to $16,000 from $6,000 in both Melbourne and Sydney, while the opposition was silent on stamp duty.\n- The member for Werriwa was described as supporting higher taxation, including extending capital gains tax to the family home and introducing a local betterment tax.",
+   "sources": [
+    {
+     "slug": "speech-100516",
+     "title": "Peter Costello \u2014 2003-08-12",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-22590",
+     "title": "John Howard \u2014 1999-03-31",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-2717",
+     "title": "Peter Costello \u2014 1998-03-23",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-104207",
+     "title": "Joe Hockey \u2014 2003-09-17",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-16585",
+     "title": "Warren Truss \u2014 1998-12-08",
+     "speaker": null,
+     "party": "Nationals",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-28515",
+     "title": "Peter Costello \u2014 1999-08-11",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-108228",
+     "title": "Robert McClelland \u2014 2003-11-26",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-110164",
+     "title": "Peter Costello \u2014 2004-02-12",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-104774",
+     "title": "Peter Costello \u2014 2003-10-07",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-22594",
+     "title": "Peter Costello \u2014 1999-03-31",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-516",
+     "title": "Bob Charles \u2014 1998-03-03",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-102648",
+     "title": "Peter Costello \u2014 2003-09-08",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-71822",
+     "title": "Duncan Kerr \u2014 2002-02-18",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-108842",
+     "title": "Joe Hockey \u2014 2003-12-02",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-104173",
+     "title": "John Howard \u2014 2003-09-17",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-34694",
+     "title": "John Moore \u2014 1999-11-24",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-3358",
+     "title": "Larry Anthony \u2014 1998-03-25",
+     "speaker": null,
+     "party": "Nationals",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-108806",
+     "title": "Peter Costello \u2014 2003-12-02",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-52397",
+     "title": "Peter Costello \u2014 2000-11-06",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-67700",
+     "title": "Daryl Williams \u2014 2001-08-23",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    }
+   ]
+  },
+  {
+   "question": "What has parliament said about social and public housing supply?",
+   "answer": "Based on the context, parliament discussed several aspects of public and social housing supply:\n\n- Public housing is described as a **state responsibility**, with the Commonwealth providing funding through the Commonwealth-State Housing Agreement (CSHA) and rent assistance, but not administering waiting lists or maintenance.\n- Some speakers **criticised cuts** to public housing funding, including a $200 million cut in the 1997\u201398 budget, further CSHA reductions of $50 million per year, and warnings that GST-related impacts could cut more than $100 million from public housing budgets and result in fewer houses being built.\n- **Waiting lists were said to be growing**: in Victoria, from 30,076 to 53,379 people between 1987 and 1997; nationally, about 12% of applicants waited more than five years; an older person in Victoria could wait up to ten years; one constituent was told she could wait another three years after already waiting 16 months.\n- The government responded that Commonwealth outlays for public housing plus rent assistance had increased by **$232 million in real terms** since 1997\u201398, with an extra **$75 million over four years** for Indigenous housing, and that states also received GST revenue.\n- Parliament also considered and approved **specific housing supply projects**, mostly for Defence Housing Authority developments: 72 family houses at Adamstown, Newcastle, at $21.6 million; 50 mixed residential dwellings at Stirling, ACT, at $11.5 million; off-base housing at Queanbeyan; housing redevelopment at Enoggera; and a housing development at Parap Grove, Darwin.",
+   "sources": [
+    {
+     "slug": "speech-15770",
+     "title": "Kim Beazley \u2014 1998-12-02",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-20996",
+     "title": "Warren Truss \u2014 1999-03-22",
+     "speaker": null,
+     "party": "Nationals",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-14299",
+     "title": "John Murphy \u2014 1998-11-12",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-12160",
+     "title": "Bronwyn Bishop \u2014 1998-06-29",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-59773",
+     "title": "Annette Ellis \u2014 2001-03-29",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-94903",
+     "title": "Judi Moylan \u2014 2003-05-14",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-42720",
+     "title": "Judi Moylan \u2014 2000-06-01",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-55286",
+     "title": "Peter Slipper \u2014 2000-12-06",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-20565",
+     "title": "Anna Burke \u2014 1999-03-10",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-108939",
+     "title": "Peter Slipper \u2014 2003-12-02",
+     "speaker": null,
+     "party": "Independent",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-86163",
+     "title": "Peter Costello \u2014 2002-10-23",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-11484",
+     "title": "Kelvin Thomson \u2014 1998-06-23",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-23502",
+     "title": "Warren Truss \u2014 1999-05-12",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-45813",
+     "title": "Peter Slipper \u2014 2000-06-29",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-23500",
+     "title": "Warren Truss \u2014 1999-05-12",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-21949",
+     "title": "Anthony Albanese \u2014 1999-03-25",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-25898",
+     "title": "Simon Crean \u2014 1999-06-22",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-95419",
+     "title": "Sharon Grierson \u2014 2003-05-15",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-70642",
+     "title": "Judi Moylan \u2014 2001-09-26",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-105968",
+     "title": "John Howard \u2014 2003-10-15",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    }
+   ]
+  }
+ ]
 }

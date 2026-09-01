@@ -2,8 +2,8 @@
  "slug": "climate",
  "title": "Climate & Energy",
  "blurb": "The climate debate on the record: targets, coal, renewables and carbon pricing.",
- "generated_at": "2026-09-01T04:42:25+00:00",
- "corpus_resources": 17557,
+ "generated_at": "2026-09-01T07:35:01+00:00",
+ "corpus_resources": 70556,
  "stats": {
   "speech_count": 93216,
   "unique_speakers": 2469,
@@ -312,5 +312,585 @@
    ]
   }
  },
- "sections": []
+ "brief": {
+  "question": "What does the parliamentary record show about climate & energy?",
+  "answer": "The strongest finding in the record is a stark partisan divide over whether the Howard government\u2019s climate and energy record was one of achievement or broken promise. Government speakers claimed a \u201cAAA record\u201d built on a $1 billion greenhouse response, the world\u2019s only dedicated Australian Greenhouse Office, a $400 million Greenhouse Gas Abatement Program, and a Mandatory Renewable Energy Target (MRET) requiring an extra 9,500 gigawatt hours of renewable electricity by 2010\u2014described as equivalent to two Snowy Mountains schemes. They also claimed current measures would cut emissions by about 60 million tonnes a year in the 2008-12 Kyoto period, equal to removing all passenger cars from Australian roads. The government refused to ratify the Kyoto protocol, arguing that even full compliance would cut global greenhouse concentrations by less than one per cent, that major emitters including developing countries were excluded, and that long-term costs outweighed short-term benefits\u2014citing premiers of Queensland and Western Australia who said their resource states would be disadvantaged.\n\nOpposition speakers consistently challenged those claims, arguing the government was doing the minimum and breaking its own commitments. Labor called for ratification and a five per cent MRET rather than the two per cent target, citing Origin Energy research that a five per cent target would cut emissions by one per cent with negligible electricity cost increases. They pointed to actual electricity demand growth of 3.8 per cent a year from 1996 to 2000, far above the 2.1 per cent assumption used to set the MRET, meaning renewables would struggle to maintain their existing market share. Labor also reported that the Australian Greenhouse Office had been cut by $30 million, or 45 per cent, between 2001-03, and that the $400 million Greenhouse Gas Abatement Program had delivered less than $129 million, with the Bureau of Transport and Regional Economics projecting transport emissions would reach 47 per cent above 1990 levels by 2010 and 68 per cent above by 2020.\n\nThe debate shifted noticeably between 2000 and 2003. In 2000, Labor reserved its final position on the Renewable Energy (Electricity) Bill, complained it was rushed, questioned whether a technology-neutral subsidy would simply favour biomass, and noted the government\u2019s own cost estimate of around"
+ },
+ "key_stats": [
+  {
+   "value": "108%",
+   "label": "Greenhouse gas emissions target",
+   "detail": "The Government is committed to limiting Australia's greenhouse gas emissions to 108% of 1990 emission levels.",
+   "slug": "speech-80428",
+   "source_title": "David Kemp \u2014 2002-08-19"
+  }
+ ],
+ "positions": [
+  {
+   "party": "Liberal",
+   "position": "The Liberal Party supports government measures to tackle the greenhouse effect, including the Renewable Energy (Electricity) Bill 2000 and the Mandatory Renewable Energy Target scheme, and is committed to working towards limiting Australia's greenhouse gas emissions to 108% of 1990 levels while stressing the need for a global response to climate change that includes participation by all nations.",
+   "slug": "speech-45854",
+   "source_title": "Mal Washer \u2014 2000-06-29",
+   "speaker": "Mal Washer",
+   "date": "2000-06-29"
+  },
+  {
+   "party": "Labor",
+   "position": "The Labor Party takes the greenhouse response seriously, supports Australia signing up to and ratifying the Kyoto protocol, and criticises the government's greenhouse policy as being in disarray and its approach to renewable energy as inadequate.",
+   "slug": "speech-45852",
+   "source_title": "Martyn Evans \u2014 2000-06-29",
+   "speaker": "Martyn Evans",
+   "date": "2000-06-29"
+  }
+ ],
+ "key_moments": [
+  {
+   "slug": "speech-106341",
+   "title": "Michael Johnson \u2014 2003-10-16",
+   "speaker": "Michael Johnson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2003-10-16"
+  },
+  {
+   "slug": "speech-107269",
+   "title": "Kevin Andrews \u2014 2003-11-06",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2003-11-06"
+  },
+  {
+   "slug": "speech-75790",
+   "title": "Peter Slipper \u2014 2002-05-29",
+   "speaker": "Peter Slipper",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2002-05-29"
+  },
+  {
+   "slug": "speech-68984",
+   "title": "John Howard \u2014 2001-09-17",
+   "speaker": "John Howard",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2001-09-17"
+  },
+  {
+   "slug": "speech-66146",
+   "title": "Michael Lee \u2014 2001-08-08",
+   "speaker": "Michael Lee",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2001-08-08"
+  },
+  {
+   "slug": "speech-60741",
+   "title": "Joe Hockey \u2014 2001-04-05",
+   "speaker": "Joe Hockey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2001-04-05"
+  }
+ ],
+ "sections": [
+  {
+   "question": "What positions have MPs taken on climate change action and emissions targets?",
+   "answer": "",
+   "sources": [
+    {
+     "slug": "speech-96505",
+     "title": "David Kemp \u2014 2003-05-29",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-107457",
+     "title": "David Kemp \u2014 2003-11-06",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-52667",
+     "title": "Alexander Downer \u2014 2000-11-08",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-107774",
+     "title": "David Kemp \u2014 2003-11-24",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-70114",
+     "title": "Warren Truss \u2014 2001-09-24",
+     "speaker": null,
+     "party": "Nationals",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-80428",
+     "title": "David Kemp \u2014 2002-08-19",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-45852",
+     "title": "Martyn Evans \u2014 2000-06-29",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-88646",
+     "title": "Kelvin Thomson \u2014 2002-12-09",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-72584",
+     "title": "Kelvin Thomson \u2014 2002-03-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-88058",
+     "title": "David Kemp \u2014 2002-12-04",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-90214",
+     "title": "John Murphy \u2014 2003-02-04",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-80756",
+     "title": "Kirsten Livermore \u2014 2002-08-20",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-107773",
+     "title": "Kelvin Thomson \u2014 2003-11-24",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-45864",
+     "title": "Harry Jenkins \u2014 2000-06-29",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-60311",
+     "title": "Bruce Billson \u2014 2001-04-03",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-104922",
+     "title": "David Kemp \u2014 2003-10-07",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-84132",
+     "title": "David Kemp \u2014 2002-09-24",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-53328",
+     "title": "Alexander Downer \u2014 2000-11-27",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-104921",
+     "title": "Martyn Evans \u2014 2003-10-07",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-380",
+     "title": "John Howard \u2014 1998-03-02",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    }
+   ]
+  },
+  {
+   "question": "What has been said in parliament about coal mining and the transition to renewable energy?",
+   "answer": "Based on the parliamentary debate in the context, several views were expressed about coal mining and the transition to renewable energy:\n\n- Many speakers acknowledged the coal industry\u2019s importance to Australia, particularly for exports, jobs, and electricity generation. For example, it was described as Australia\u2019s largest commodity export, a key source of low-cost electricity, and vital to regions like the Hunter and electorates such as Charlton, Paterson, and McMillan.\n- Some speakers defended coal and opposed rapid moves away from it, arguing that the Kyoto protocol would harm the coal industry and that \u201cclean coal\u201d technology and coal seam methane should be considered, though others called clean coal a \u201ctransparent fraud\u201d that would not reduce carbon dioxide emissions.\n- Several speakers supported the transition to renewable energy and criticized the government\u2019s renewable energy target as too low. They argued for increasing the mandatory renewable energy target from two per cent to five per cent, and some mentioned Greenpeace\u2019s call for 10 per cent.\n- The debate also included discussion of the Renewable Energy (Electricity) Amendment Bill 2002, which aimed to improve the administration of the existing renewable energy legislation. Some speakers said the bill did not go far enough and that Australia should ratify the Kyoto protocol and invest more in renewable energy, while others supported the government\u2019s approach, including not ratifying Kyoto and instead focusing on greenhouse gas abatement programs.\n- There was also reference to the history of the Joint Coal Board, coalmining safety, miners\u2019 deaths, and the need to protect workers\u2019 entitlements and communities, as well as the transfer of coal industry responsibilities from the Commonwealth to New South Wales.\n\nOverall, the context shows a divided parliament: one side emphasized the economic importance of coal and cautious, technology-based approaches to emissions; the other side argued for stronger and faster action on renewable energy and greenhouse gas reductions.",
+   "sources": [
+    {
+     "slug": "speech-92547",
+     "title": "David Kemp \u2014 2003-03-06",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-88660",
+     "title": "Martyn Evans \u2014 2002-12-09",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-80759",
+     "title": "Antony Windsor \u2014 2002-08-20",
+     "speaker": null,
+     "party": "Independent",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-88659",
+     "title": "Julie Bishop \u2014 2002-12-09",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-89258",
+     "title": "John Murphy \u2014 2002-12-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-60693",
+     "title": "Kelly Hoare \u2014 2001-04-04",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-89259",
+     "title": "Kirsten Livermore \u2014 2002-12-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-78033",
+     "title": "Joel Fitzgibbon \u2014 2002-06-19",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-25888",
+     "title": "Kim Beazley \u2014 1999-06-22",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-60699",
+     "title": "Bernie Ripoll \u2014 2001-04-04",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-88651",
+     "title": "Joel Fitzgibbon \u2014 2002-12-09",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-2715",
+     "title": "John Howard \u2014 1998-03-23",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-60688",
+     "title": "Andrew Thomson \u2014 2001-04-04",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-60690",
+     "title": "Colin Hollis \u2014 2001-04-04",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-73049",
+     "title": "Robert Baldwin \u2014 2002-03-13",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-89253",
+     "title": "Jill Hall \u2014 2002-12-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-108205",
+     "title": "Antony Windsor \u2014 2003-11-26",
+     "speaker": null,
+     "party": "Independent",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-29968",
+     "title": "Peter Reith \u2014 1999-08-31",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-2699",
+     "title": "John Howard \u2014 1998-03-23",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-60704",
+     "title": "Warren Entsch \u2014 2001-04-04",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    }
+   ]
+  },
+  {
+   "question": "How have MPs discussed carbon pricing and its repeal?",
+   "answer": "Not enough data to answer this.",
+   "sources": [
+    {
+     "slug": "speech-22798",
+     "title": "Bruce Baird \u2014 1999-03-31",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-26223",
+     "title": "Ian Causley \u2014 1999-06-23",
+     "speaker": null,
+     "party": "Nationals",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-47922",
+     "title": "Kim Beazley \u2014 2000-08-31",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-20726",
+     "title": "Peter Reith \u2014 1999-03-11",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-19292",
+     "title": "Peter Reith \u2014 1999-02-17",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-44811",
+     "title": "Bob Charles \u2014 2000-06-22",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-60688",
+     "title": "Andrew Thomson \u2014 2001-04-04",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-45864",
+     "title": "Harry Jenkins \u2014 2000-06-29",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-92377",
+     "title": "Ian Macfarlane \u2014 2003-03-05",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-74054",
+     "title": "Ian Macfarlane \u2014 2002-03-20",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-46148",
+     "title": "Peter Andren \u2014 2000-08-14",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-41142",
+     "title": "Joe Hockey \u2014 2000-05-09",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-20687",
+     "title": "Lou Lieberman \u2014 1999-03-11",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-40303",
+     "title": "John Howard \u2014 2000-04-10",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-57334",
+     "title": "Gary Hardgrave \u2014 2001-02-28",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-54399",
+     "title": "Bob Horne \u2014 2000-11-30",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-51935",
+     "title": "Peter Costello \u2014 2000-11-02",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-25737",
+     "title": "David Kemp \u2014 1999-06-21",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-26219",
+     "title": "Ian Macfarlane \u2014 1999-06-23",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-35435",
+     "title": "John Moore \u2014 1999-12-06",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    }
+   ]
+  }
+ ]
 }
