@@ -1,0 +1,27 @@
+{
+  // OPAX portal — one Worker: /api/* proxies the Agentic RAG knowledge box
+  // (KB token stays server-side), everything else is static assets.
+  "name": "opax-portal",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // API routes must reach the Worker even though assets exist.
+    "run_worker_first": ["/api/*"]
+  },
+
+  "observability": {
+    "enabled": true,
+    "logs": { "head_sampling_rate": 1 }
+  },
+
+  // Non-secret binding vars. The KB token is a secret:
+  //   npx wrangler secret put ARAG_KB_TOKEN
+  "vars": {
+    "ARAG_ZONE": "aws-ap-southeast-2-1",
+    "ARAG_KB_ID": ""
+  }
+}

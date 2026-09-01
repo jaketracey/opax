@@ -204,6 +204,15 @@ def search(
     mode: str = Query("hybrid", pattern="^(semantic|keyword|hybrid)$"),
     limit: int = Query(20, ge=1, le=100),
 ):
+    from parli.arag_search import arag_enabled
+    if arag_enabled():
+        # Agentic RAG cutover path (ARAG_SEARCH=1): same response shape,
+        # retrieval served by the knowledge box instead of SQLite/Postgres.
+        from parli.arag_search import search as arag_find
+        results = arag_find(q, top_k=limit, mode=mode)
+        return {"results": results, "query": q, "mode": mode,
+                "count": len(results), "engine": "arag"}
+
     if is_postgres():
         from parli.pg_search import semantic_search, keyword_search, hybrid_search
     else:
@@ -1250,6 +1259,26 @@ def compare_mps(
 
 @app.post("/api/ask")
 def ask(req: AskRequest):
+    from parli.arag_search import arag_enabled
+    if arag_enabled():
+        # Agentic RAG cutover path (ARAG_SEARCH=1): grounded, cited /ask on
+        # the knowledge box. Streaming requests get the answer as SSE chunks.
+        from parli.arag_search import ask as arag_ask
+        result = arag_ask(req.question, top_k=req.top_k)
+        if req.stream:
+            def _arag_sse():
+                answer = result["answer"] or ""
+                for i in range(0, len(answer), 120):
+                    yield f"data: {json.dumps(answer[i:i + 120])}\n\n"
+                meta = {k: v for k, v in result.items() if k != "answer"}
+                yield f"event: metadata\ndata: {json.dumps(meta, default=str)}\n\n"
+                yield "event: done\ndata: {}\n\n"
+            return StreamingResponse(
+                _arag_sse(), media_type="text/event-stream",
+                headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+            )
+        return result
+
     from parli.rag import get_context
 
     context, metadata = get_context(req.question, top_k=req.top_k)

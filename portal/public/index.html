@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPAX — Open Parliamentary Accountability eXchange</title>
+<meta name="description" content="Ask questions of 1.4 million Australian parliamentary speeches and legal documents. Every answer cited.">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>OPAX</h1>
+    <p class="tagline">What politicians say, on the record, searchable and citable.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-panel="ask" role="tab" aria-selected="true">Ask</button>
+    <button class="tab" data-panel="search" role="tab" aria-selected="false">Search</button>
+  </nav>
+
+  <section id="panel-ask" class="panel" role="tabpanel">
+    <form id="ask-form" class="query-row">
+      <input id="ask-input" type="text" autocomplete="off"
+             placeholder="e.g. What has parliament said about gambling reform since 2020?">
+      <button type="submit">Ask</button>
+    </form>
+    <div id="ask-status" class="status" hidden></div>
+    <article id="ask-answer" class="answer" hidden></article>
+    <div id="ask-sources" class="sources" hidden>
+      <h2>Sources</h2>
+      <ol id="ask-sources-list"></ol>
+    </div>
+  </section>
+
+  <section id="panel-search" class="panel" hidden role="tabpanel">
+    <form id="search-form" class="query-row">
+      <input id="search-input" type="text" autocomplete="off" placeholder="Search the corpus…">
+      <select id="search-kind" title="Corpus">
+        <option value="speech">Speeches</option>
+        <option value="legal">Legal documents</option>
+        <option value="news">News</option>
+        <option value="all">Everything</option>
+      </select>
+      <select id="search-mode" title="Mode">
+        <option value="hybrid">Hybrid</option>
+        <option value="semantic">Semantic</option>
+        <option value="keyword">Keyword</option>
+      </select>
+      <button type="submit">Search</button>
+    </form>
+    <div id="search-status" class="status" hidden></div>
+    <ul id="search-results" class="results"></ul>
+  </section>
+</main>
+
+<dialog id="doc-dialog">
+  <div class="doc-head">
+    <h2 id="doc-title"></h2>
+    <button id="doc-close" aria-label="Close">✕</button>
+  </div>
+  <p id="doc-meta" class="doc-meta"></p>
+  <pre id="doc-text"></pre>
+</dialog>
+
+<footer>
+  <div class="wrap">
+    <span id="stats">…</span>
+    <span>Powered by Progress Agentic RAG · <a href="https://github.com/jaketracey/opax">open source</a></span>
+  </div>
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>

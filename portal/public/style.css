@@ -1,0 +1,113 @@
+:root {
+  --bg: #0e1116;
+  --panel: #161b23;
+  --panel-2: #1c2330;
+  --text: #e6e9ef;
+  --muted: #8b94a7;
+  --accent: #e8b64c;      /* hansard gold */
+  --accent-2: #4c9be8;
+  --border: #2a3242;
+  --danger: #e05252;
+}
+
+* { box-sizing: border-box; }
+html { color-scheme: dark; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 0 1.25rem; width: 100%; }
+
+header { border-bottom: 1px solid var(--border); padding: 2.2rem 0 1.4rem; }
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 0.35em;
+  color: var(--accent);
+}
+.tagline { margin: 0.3rem 0 0; color: var(--muted); }
+
+main { flex: 1; padding: 1.5rem 0 3rem; }
+
+.tabs { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; }
+.tab {
+  background: none; border: 1px solid var(--border); color: var(--muted);
+  padding: 0.45rem 1.1rem; border-radius: 999px; cursor: pointer; font-size: 0.95rem;
+}
+.tab.active { color: var(--bg); background: var(--accent); border-color: var(--accent); font-weight: 600; }
+
+.query-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.query-row input[type="text"] {
+  flex: 1 1 320px; background: var(--panel); border: 1px solid var(--border);
+  color: var(--text); padding: 0.7rem 0.9rem; border-radius: 8px; font-size: 1rem;
+}
+.query-row input:focus { outline: 2px solid var(--accent-2); border-color: transparent; }
+.query-row select {
+  background: var(--panel); color: var(--text); border: 1px solid var(--border);
+  border-radius: 8px; padding: 0 0.6rem;
+}
+.query-row button {
+  background: var(--accent); color: var(--bg); border: none; font-weight: 700;
+  padding: 0.7rem 1.4rem; border-radius: 8px; cursor: pointer; font-size: 1rem;
+}
+.query-row button:disabled { opacity: 0.5; cursor: wait; }
+
+.status { margin-top: 1rem; color: var(--muted); }
+.status.error { color: var(--danger); }
+
+.answer {
+  margin-top: 1.4rem; background: var(--panel); border: 1px solid var(--border);
+  border-radius: 10px; padding: 1.1rem 1.3rem; white-space: pre-wrap;
+}
+.answer sup { color: var(--accent); font-weight: 700; }
+
+.sources { margin-top: 1.4rem; }
+.sources h2 { font-size: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.sources ol { margin: 0.4rem 0 0; padding-left: 1.4rem; }
+.sources li { margin: 0.45rem 0; }
+.sources button.link, .results button.link {
+  background: none; border: none; color: var(--accent-2); cursor: pointer;
+  font: inherit; padding: 0; text-align: left;
+}
+.sources button.link:hover, .results button.link:hover { text-decoration: underline; }
+.source-meta, .result-meta { color: var(--muted); font-size: 0.85rem; }
+
+.results { list-style: none; margin: 1.4rem 0 0; padding: 0; display: grid; gap: 0.8rem; }
+.results li {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+}
+.result-top { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+.scorebar {
+  flex: 0 0 72px; height: 6px; border-radius: 3px; background: var(--panel-2);
+  overflow: hidden; align-self: center;
+}
+.scorebar > i { display: block; height: 100%; background: var(--accent); }
+.snippet { margin: 0.5rem 0 0; color: var(--text); font-size: 0.95rem; }
+
+dialog#doc-dialog {
+  background: var(--panel); color: var(--text); border: 1px solid var(--border);
+  border-radius: 12px; max-width: 760px; width: calc(100vw - 2rem);
+  max-height: 85vh; padding: 1.2rem 1.4rem;
+}
+dialog#doc-dialog::backdrop { background: rgba(0, 0, 0, 0.65); }
+.doc-head { display: flex; justify-content: space-between; align-items: start; gap: 1rem; }
+.doc-head h2 { margin: 0; font-size: 1.15rem; }
+.doc-head button { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; }
+.doc-meta { color: var(--muted); font-size: 0.9rem; }
+#doc-text {
+  white-space: pre-wrap; font: 0.92rem/1.6 inherit; overflow-y: auto;
+  max-height: 60vh; margin: 0.8rem 0 0; padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+
+footer {
+  border-top: 1px solid var(--border); padding: 1rem 0; color: var(--muted); font-size: 0.85rem;
+}
+footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+footer a { color: var(--muted); }
