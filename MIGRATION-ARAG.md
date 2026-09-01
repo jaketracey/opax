@@ -6,15 +6,20 @@ KB `opax` (`d33c0a87-98cb-4169-b0d2-ff9b75573fb7`, account `7b5c9761…`) is liv
 `ray-test` KB was deleted 2026-09-01. No enrichment (DA) task is registered anywhere —
 gated on the cost sign-offs in §Costs. Branch: `worktree-arag-migration`.
 
-**Models (pinned 2026-09-01, cheapest tier):** `generative_model` and `summary_model`
-are `gemini-2.5-flash-lite` — the cheapest of the KB's 71 generative options
-($0.10/$0.40 per 1M provider tokens); grounded cited answering keeps lite-tier models
-honest, verified on the sample. Upgrade ladder if sample-eval quality demands:
-`chatgpt-5-nano` → `gemini-3.1-flash-lite` → `gemini-3.6-flash`
-(`scripts/arag_set_models.py <model-id>`). Embeddings: platform default
-`multilingual-2024-05-06` (no per-query LLM cost). NOTE: Progress bills in
-**Agentic RAG tokens** (~$0.008/token past the monthly allowance) with undisclosed
-per-model multipliers — the step-4 sample measures the real burn.
+**Models (updated 2026-09-01 evening — BYOK LIVE):** `generative_model` and
+`summary_model` are `openai-compatible` → OpenRouter →
+`deepseek/deepseek-v4-flash` ($0.081/$0.162 per 1M, 1M context), billed direct
+to the OpenRouter account; generation_config 1600 max out / 120k max in.
+Applied via `scripts/arag_byok_openrouter.py`; **rollback is one command**
+(`--rollback` restores the previously pinned `gemini-2.5-flash-lite` and
+clears the key). Verified in production: ~13s cited /ask, 20 sources/11 cited.
+The OpenRouter key lives in `.env` (gitignored) and platform-side in the KB
+config — it transited a chat transcript on setup, so rotate or spend-cap it.
+OPEN QUESTION with a live experiment attached: watch whether ARAG platform
+token burn for /ask drops to ~zero on the account dashboard — that answers
+whether BYOK generation is exempt from platform billing. Embeddings remain
+platform `multilingual-2024-05-06`. (The old gemini upgrade ladder is
+superseded while BYOK holds — any OpenRouter model id is now a config edit.)
 
 **Corpus filter (2026-09-01):** speeches only migrate from **1993-03-13** (the
 election that seated the longest-serving current federal MP — nothing predates any
