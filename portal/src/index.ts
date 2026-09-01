@@ -403,13 +403,23 @@ function isEchoOfQuestion(candidate: string, asked: string): boolean {
 const ABOUT_THE_OBJECT =
   /^(who (wrote|authored|published|funded|commissioned|produced|prepared)|when (was|is) (it|this)|what (year|type|kind) of|who (is|was) (it|this) (for|written for)|what is this (document|report|resource))/i
 
+/**
+ * A kept follow-up carries its proof: the evidence sentence and the title of
+ * the passage that grounds it. The chip's question was proven against the
+ * PREVIOUS answer's retrieval — re-asking it fresh can miss that passage
+ * (retrieval-vocabulary mismatch) and force an honest "not enough data"
+ * refusal of a question we guaranteed was answerable. The client sends the
+ * evidence back as a context turn when the chip is clicked, so the grounding
+ * survives the seam between generation and send.
+ */
 function selectFollowUps(
   candidates: { question?: string; evidence?: string }[],
   asked: string,
+  passages: { title: string; text: string }[],
   context: string,
-): string[] {
+): { question: string; evidence: string; source: string }[] {
   if (!context.trim()) return [] // nothing to prove a follow-up against
-  const kept: string[] = []
+  const kept: { question: string; evidence: string; source: string }[] = []
   for (const candidate of candidates) {
     if (kept.length >= FOLLOWUP_WANT) break
     const question = (candidate.question ?? '').trim()
@@ -421,10 +431,11 @@ function selectFollowUps(
     if (ABOUT_THE_OBJECT.test(question)) continue
     if (isEchoOfQuestion(question, asked)) continue
     if (!evidenceIsGrounded(evidence, context)) continue
-    if (kept.some((k) => k.toLowerCase() === question.toLowerCase())) continue
+    if (kept.some((k) => k.question.toLowerCase() === question.toLowerCase())) continue
     // Three follow-ups that are each other's rewording waste all three slots.
-    if (kept.some((k) => isEchoOfQuestion(question, k))) continue
-    kept.push(question)
+    if (kept.some((k) => isEchoOfQuestion(question, k.question))) continue
+    const source = passages.find((p) => evidenceIsGrounded(evidence, p.text))?.title ?? ''
+    kept.push({ question, evidence, source })
   }
   return kept
 }
@@ -514,7 +525,7 @@ async function apiFollowups(request: Request, env: Env): Promise<Response> {
     if (!res.ok) return json({ questions: [] })
     const data = (await res.json()) as { answer?: string }
     const candidates = parseFollowUpLines(data.answer ?? '')
-    return json({ questions: selectFollowUps(candidates, question, context) })
+    return json({ questions: selectFollowUps(candidates, question, clean, context) })
   } catch {
     return json({ questions: [] })
   }

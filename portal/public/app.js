@@ -1570,18 +1570,28 @@ async function runAsk(question) {
     }
   }, 5000);
   try {
-    const data = await api("/api/ask", {
+    const askBody = JSON.stringify((() => {
+      const f = askFilters();
+      if (!f.speaker && speakerFilter) f.speaker = speakerFilter;
+      const body = { question, kind: askKind() };
+      for (const [k, v] of Object.entries(f)) if (v) body[k] = v;
+      return body;
+    })());
+    let data = await api("/api/ask", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify((() => {
-        const f = askFilters();
-        if (!f.speaker && speakerFilter) f.speaker = speakerFilter;
-        const body = { question, kind: askKind() };
-        for (const [k, v] of Object.entries(f)) if (v) body[k] = v;
-        return body;
-      })()),
+      body: askBody,
       signal: myAbort.signal,
     });
+    if (!(data.answer || "").trim()) {
+      // Reasoning burn: one silent retry before conceding an empty answer.
+      data = await api("/api/ask", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: askBody,
+        signal: myAbort.signal,
+      });
+    }
     if (askAbort !== myAbort) return; // superseded by a newer question
     const sources = data.sources || [];
     // The Worker flags cited sources (it owns the platform's citation-key
@@ -1809,6 +1819,14 @@ function chatAnswerEl(msg) {
     det.appendChild(ol);
     wrap.appendChild(det);
   }
+  if (msg.carried) {
+    const p = document.createElement("p");
+    p.className = "fineprint";
+    p.textContent = msg.carried.source
+      ? `This suggested follow-up drew on a passage from “${msg.carried.source}”, retrieved for the previous answer.`
+      : "This suggested follow-up drew on a passage retrieved for the previous answer.";
+    wrap.appendChild(p);
+  }
   return wrap;
 }
 
@@ -1833,7 +1851,9 @@ async function requestChatFollowups() {
       signal: myAbort.signal,
     });
     if (chatFollowAbort !== myAbort || chatThread[chatThread.length - 1] !== last) return;
-    const questions = (data.questions || []).filter((q) => typeof q === "string" && q.trim());
+    const questions = (data.questions || [])
+      .map((item) => (typeof item === "string" ? { question: item } : item))
+      .filter((item) => item && typeof item.question === "string" && item.question.trim());
     if (!questions.length) return;
     last.next = questions;
     saveChatSession();
@@ -1854,24 +1874,27 @@ function renderChatNext(questions) {
   row.className = "chat-next-btns";
   row.setAttribute("role", "group");
   row.setAttribute("aria-label", "Suggested follow-up questions");
-  for (const q of questions) {
+  for (const raw of questions) {
+    // Sessions saved before follow-ups carried evidence stored plain strings.
+    const item = typeof raw === "string" ? { question: raw } : raw;
+    if (!item?.question) continue;
     const b = document.createElement("button");
     b.type = "button";
     b.className = "chat-next-btn";
     const text = document.createElement("span");
-    text.textContent = q;
+    text.textContent = item.question;
     const arrow = document.createElement("span");
     arrow.className = "next-arrow";
     arrow.setAttribute("aria-hidden", "true");
     arrow.textContent = "→";
     b.append(text, arrow);
-    b.addEventListener("click", () => sendChat(q));
+    b.addEventListener("click", () => sendChat(item.question, item));
     row.appendChild(b);
   }
   next.appendChild(row);
 }
 
-async function sendChat(question) {
+async function sendChat(question, carry) {
   const q = String(question || "").trim();
   if (!q) return;
   if (chatAbort) chatAbort.abort();
@@ -1882,6 +1905,17 @@ async function sendChat(question) {
   const context = chatThread
     .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.text }))
     .slice(-12);
+  // A chip's question was proven against a passage retrieved for the PREVIOUS
+  // answer; fresh retrieval on the chip's wording alone can miss that passage,
+  // so the proof travels with the click as one extra context turn (appended
+  // after the slice — it must never be trimmed away). Typed follow-ups carry
+  // nothing: they are pure re-retrieval.
+  if (carry?.evidence) {
+    context.push({
+      author: "answer",
+      text: `From the record${carry.source ? ` (${carry.source})` : ""}: "${carry.evidence}"`,
+    });
+  }
   chatThread.push({ role: "user", text: q });
   saveChatSession();
   renderChatThread();
@@ -1908,14 +1942,32 @@ async function sendChat(question) {
     if (s >= 10 && trundler) trundler.setLabel(`Still digging (${s}s). Long questions can take a minute.`);
   }, 5000);
   try {
-    const data = await api("/api/ask", {
+    const chatBody = JSON.stringify({ question: q, kind: chatKind, context });
+    let data = await api("/api/ask", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ question: q, kind: chatKind, context }),
+      body: chatBody,
       signal: myAbort.signal,
     });
+    // Reasoning models occasionally burn the whole budget thinking and
+    // return nothing; one silent retry recovers almost all of these.
+    if (!(data.answer || "").trim()) {
+      data = await api("/api/ask", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: chatBody,
+        signal: myAbort.signal,
+      });
+    }
     if (chatAbort !== myAbort) return;
-    chatThread.push({ role: "answer", text: data.answer || "(no answer)", sources: data.sources || [] });
+    chatThread.push({
+      role: "answer",
+      text: data.answer || "(no answer)",
+      sources: data.sources || [],
+      // Disclosed under the answer: the carried passage is real corpus text,
+      // but this turn's retrieval did not necessarily surface it itself.
+      ...(carry?.evidence ? { carried: { source: carry.source || "" } } : {}),
+    });
     saveChatSession();
     renderChatThread();
     setStatus($("chat-status"), "Answer ready.");
