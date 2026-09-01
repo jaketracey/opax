@@ -1097,7 +1097,7 @@ function findMoneyNode(kind, name) {
 
 function subjectSkeleton(kindLabel, name, tagHTML) {
   return `
-    <p class="kicker">OPAX encyclopedia · ${esc(kindLabel)}</p>
+    <p class="kicker">${esc(kindLabel)}</p>
     <div class="subject-head">
       <h2 id="subject-title" tabindex="-1">${esc(name)}</h2>
       <p class="subject-tag">${tagHTML}</p>

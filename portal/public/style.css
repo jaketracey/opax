@@ -248,6 +248,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 /* ---- hero --------------------------------------------------------------- */
 
 main { flex: 1; padding: 2.75rem 0 3rem; }
+@media (max-width: 860px) { main { padding-top: 1rem; } }
 main:focus { outline: none; }
 
 .hero-intro h1 {
