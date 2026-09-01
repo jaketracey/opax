@@ -57,7 +57,14 @@ def ask(base: str, question: str, speaker: str | None, timeout: int) -> tuple[di
     )
     t0 = time.time()
     with urllib.request.urlopen(req, timeout=timeout) as res:
-        return json.load(res), time.time() - t0
+        data = json.load(res)
+    # One silent retry on an empty answer, mirroring the portal UI: the
+    # generative model occasionally burns its budget and returns nothing
+    # under load, which is a transient, not a corpus verdict.
+    if not (data.get("answer") or "").strip():
+        with urllib.request.urlopen(req, timeout=timeout) as res:
+            data = json.load(res)
+    return data, time.time() - t0
 
 
 def corpus_latest_year(base: str) -> int:
