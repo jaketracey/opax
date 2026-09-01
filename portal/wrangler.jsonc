@@ -18,6 +18,12 @@
     "logs": { "head_sampling_rate": 1 }
   },
 
+  // Live domain. Replaces the DNS records that pointed at the old EC2 origin.
+  "routes": [
+    { "pattern": "opax.com.au", "custom_domain": true },
+    { "pattern": "www.opax.com.au", "custom_domain": true }
+  ],
+
   // Non-secret binding vars. The KB token is a secret:
   //   npx wrangler secret put ARAG_KB_TOKEN
   "vars": {

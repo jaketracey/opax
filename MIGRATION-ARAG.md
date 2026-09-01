@@ -150,4 +150,8 @@ existing site serves ARAG answers without the new FE.
   any speaker-linked analytics on the current site too.
 - Decide the fate of the 30 Next.js investigation pages (park, or regenerate the
   top handful as static pages over exported JSON).
-- Portal deploy + opax.com.au DNS cutover once the full corpus is in.
+- ~~Portal deploy + opax.com.au DNS cutover~~ **DONE 2026-09-01**: Worker
+  `opax-portal` deployed (account 4597145…, workers.dev + custom domains
+  opax.com.au / www). The old EC2 A record and a stale Vercel CNAME were deleted
+  from the zone (google-site-verification TXT kept). Rollback = re-point DNS.
+  The site is live on the 25-speech sample until the bulk load runs.
