@@ -186,7 +186,7 @@ function markup() {
   <p class="wb-label"></p>`;
 }
 
-export function mountWombat(container, { label = "Checking the record — this can take up to a minute." } = {}) {
+export function mountWombat(container, { label = "Checking the record. This can take up to a minute." } = {}) {
   if (!container) throw new TypeError("mountWombat: container is required");
   ensureStyles();
   const wrap = document.createElement("div");
