@@ -1,0 +1,46 @@
+<!doctype html>
+<!-- Throwaway harness for the loading wombat. Not linked from anywhere; delete freely. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>wombat test</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    body { max-width: 860px; margin: 2rem auto; padding: 0 1rem; }
+    h2 { margin-top: 2.5rem; }
+    .freeze .wb-trundle, .freeze .wb-sniff, .freeze .wb-rock,
+    .freeze .wb-leg-i, .freeze .wb-eye { animation-play-state: paused !important; }
+    .walkframe .wb-trundle, .walkframe .wb-sniff, .walkframe .wb-rock,
+    .walkframe .wb-leg-i { animation-delay: -3.6s !important; }
+    .sniffframe .wb-trundle, .sniffframe .wb-sniff, .sniffframe .wb-rock,
+    .sniffframe .wb-leg-i { animation-delay: -6.05s !important; }
+    .zoom { transform: scale(2.8); transform-origin: top left; margin-bottom: 180px; }
+  </style>
+</head>
+<body>
+  <h1>wombat test</h1>
+
+  <h2>live (as on the Ask page)</h2>
+  <div id="live" role="status"></div>
+
+  <h2>frozen walk frame, 2.8x</h2>
+  <div class="zoom freeze walkframe"><div id="f1"></div></div>
+
+  <h2>frozen sniff frame, 2.8x</h2>
+  <div class="zoom freeze sniffframe"><div id="f2"></div></div>
+
+  <script type="module">
+    import { mountWombat } from '/wombat.js'
+    const w = mountWombat(document.getElementById('live'))
+    let s = 0
+    setInterval(() => {
+      s++
+      if (s >= 10) w.setLabel(`Checking the record — ${s}s. This can take up to a minute.`)
+    }, 1000)
+    mountWombat(document.getElementById('f1'), { label: 'walk frame' })
+    mountWombat(document.getElementById('f2'), { label: 'sniff frame' })
+    window.wombat = w
+  </script>
+</body>
+</html>

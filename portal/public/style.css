@@ -440,6 +440,13 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 
 /* Evidence-brief layers */
 #report-brief .answer { margin-top: 0.6rem; }
+.report-lead { display: grid; grid-template-columns: 1fr; gap: 1.5rem 2.5rem; align-items: start; }
+@media (min-width: 1100px) {
+  .report-lead { grid-template-columns: minmax(0, 1fr) 340px; }
+  #report-figures { position: sticky; top: 1rem; }
+  #report-figures .tiles { flex-direction: column; }
+  #report-figures .tile { max-width: none; }
+}
 .section-tools { gap: 0.5rem 0.7rem; }
 button.action-btn { background: none; cursor: pointer; font: 600 0.875rem/1.3 var(--sans); }
 .report-download-btn { display: inline-flex; margin-top: 1.6rem; }

@@ -152,6 +152,11 @@ export function buildGraph(raw: MoneyGraph): {
 const STYLE_ID = 'money-map-styles'
 
 const CSS = `
+.mm-root ::-webkit-scrollbar { width: 8px; height: 8px; }
+.mm-root ::-webkit-scrollbar-track { background: transparent; }
+.mm-root ::-webkit-scrollbar-thumb { background: #cfc9ba; border-radius: 4px; }
+.mm-root ::-webkit-scrollbar-thumb:hover { background: #a0761b; }
+.mm-root * { scrollbar-width: thin; scrollbar-color: #cfc9ba transparent; }
 .mm-root { position: relative; overflow: hidden; background: ${SURFACE};
   font: 14px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif; color: #33322e; }
 .mm-canvas { display: block; width: 100%; height: 100%; cursor: grab;
