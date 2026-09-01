@@ -90,7 +90,7 @@ def _request(
 
     Backpressure 429s never count against max_retries — the platform is pacing
     a saturated ingest queue, which is expected during bulk load. We wait as
-    told (capped 15 min/cycle, 2 h total per request) instead of failing."""
+    told (capped 15 min/cycle, 24 h total per request) instead of failing."""
     attempt = 0
     bp_waited = 0.0
     while True:
@@ -116,7 +116,7 @@ def _request(
                 return res.text
 
         err = AragError(res.status_code, url, res.text)
-        if err.backpressure and bp_waited < 7200:
+        if err.backpressure and bp_waited < 86400:
             wait = max(5.0, min(err.backpressure["try_after"] - time.time(), 900))
             time.sleep(wait)
             bp_waited += wait
