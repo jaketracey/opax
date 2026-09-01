@@ -374,8 +374,9 @@ the roadmap views as label coverage grows (facet counts show progress).
 
 - Step-4 sample (~2K docs) → measure Agentic RAG token burn/resource, eval
   flash-lite answer quality → the two §Costs sign-offs.
-- news_articles text column name (scan errored on content/body/text — check schema
-  before syncing that table).
+- ~~news_articles text column name~~ RESOLVED (stale): the column is
+  `body_text`, arag_sync.py already selects it, and 3,592 news docs are in
+  the KB (probed 2026-09-02).
 - The members table is dirty (current members linked to 1901 records, e.g. Susan
   McDonald `entered_house=1901-05-09`; Bob Katter carries his father's 1967 entry).
   Doesn't block the KB migration (cutoff is pinned, not derived) but it corrupts
