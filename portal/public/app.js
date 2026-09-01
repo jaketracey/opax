@@ -201,7 +201,7 @@ function csvCell(v) {
 function exportHeader(context) {
   const now = new Date().toISOString();
   return [
-    `# OPAX export — ${now}`,
+    `# OPAX export: ${now}`,
     `# corpus version: ${corpusVersion()}`,
     ...context,
     `# Searches are reproducible given query, filters and corpus version.`,
@@ -221,7 +221,7 @@ function sourcesCSV(rows, context) {
 function offerExport(rows, context, baseName) {
   if (!rows.length) return;
   const choice = (window.prompt(
-    "Export format — type csv, bibtex or ris:", "csv") || "").trim().toLowerCase();
+    "Export format (type csv, bibtex or ris):", "csv") || "").trim().toLowerCase();
   if (choice === "csv") {
     download(`${baseName}.csv`, "text/csv;charset=utf-8", sourcesCSV(rows, context));
   } else if (choice === "bibtex" || choice === "bib") {
@@ -253,16 +253,16 @@ function showPanel(name) {
 }
 
 const TITLES = {
-  ask: "OPAX — ask what Australian politicians actually said",
-  search: "Search the record — OPAX",
-  money: "Money map — OPAX",
-  reports: "Reports — OPAX",
-  doc: "From the record — OPAX",
+  ask: "OPAX: ask what Australian politicians actually said",
+  search: "Search the record · OPAX",
+  money: "Money map · OPAX",
+  reports: "Reports · OPAX",
+  doc: "From the record · OPAX",
   subject: "OPAX encyclopedia",
-  explore: "Explore — OPAX",
-  about: "About — OPAX",
-  methods: "Methods — OPAX",
-  stats: "Corpus stats — OPAX",
+  explore: "Explore · OPAX",
+  about: "About · OPAX",
+  methods: "Methods · OPAX",
+  stats: "Corpus stats · OPAX",
 };
 
 // --- money map (lazy-loaded 3D bundle) --------------------------------------
@@ -831,7 +831,7 @@ function renderMoneyPanel(ind) {
     .map((n) => [n.label, n.total || 0]);
   box.hidden = false;
   box.innerHTML = `
-    <p class="kicker">The money — ${esc(industryLabel(ind))} (AEC disclosures)</p>
+    <p class="kicker">The money: ${esc(industryLabel(ind))} (AEC disclosures)</p>
     <div class="tiles">
       ${tile(fmtMoney(total), `disclosed by ${industryLabel(ind)} donors`)}
       ${tile(String(donors.length), "major donors disclosed")}
@@ -964,7 +964,7 @@ async function mountSubjectMap(nodeId) {
     });
     subjectMapHandle.select?.(nodeId);
   } catch {
-    el.innerHTML = `<p class="status" style="padding:1rem">The map could not load here — <a href="/map">open the full map</a>.</p>`;
+    el.innerHTML = `<p class="status" style="padding:1rem">The map could not load here. <a href="/map">Open the full map</a>.</p>`;
   }
 }
 
@@ -1014,7 +1014,7 @@ function weeklyFunFact(node) {
   const perWeek = node.total / (years * 52);
   if (!isFinite(perWeek) || perWeek < 1) return "";
   return `That works out to about <b>${fmtMoney(Math.round(perWeek))}</b> every single week for
-    ${years} year${years > 1 ? "s" : ""} — all from published AEC disclosures.`;
+    ${years} year${years > 1 ? "s" : ""}, all from published AEC disclosures.`;
 }
 
 async function openSubject(kind, name, manageFocus) {
@@ -1036,7 +1036,7 @@ async function openSubject(kind, name, manageFocus) {
     const box = $("subject-infobox");
     if (!node) {
       body.querySelector(".subject-tag").innerHTML =
-        `<span>Not among the top 250 disclosed donors in the money data — the record may still mention them.</span>`;
+        `<span>Not among the top 250 disclosed donors in the money data. The record may still mention them.</span>`;
       box.innerHTML = infoboxHTML(
         [["Type", kind === "party" ? "Political party" : "Organisation"]], "",
         [actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for them", { primary: true }),
@@ -1137,10 +1137,10 @@ async function openSubject(kind, name, manageFocus) {
       `<p class="kicker">Latest indexed speeches</p><ul class="subject-list" role="list">${newest.map((r) => `
         <li><a href="#/doc/${esc(r.slug)}" class="source-title">${esc(r.title)}</a>
           <span class="result-meta">${metaHTML(r)}</span></li>`).join("")}</ul>
-      <p class="fineprint">The corpus is still indexing — this is what has been loaded so far, not their full record.</p>`);
+      <p class="fineprint">The corpus is still indexing: this is what has been loaded so far, not their full record.</p>`);
   } else {
     sections.insertAdjacentHTML("beforeend",
-      `<p class="status">No speeches by “${esc(name)}” in the indexed corpus yet — names appear as in
+      `<p class="status">No speeches by “${esc(name)}” in the indexed corpus yet. Names appear as in
        Hansard, and the record is still loading. <a href="${esc(searchHash(name, {}))}">Search the record instead</a>.</p>`);
   }
   await subjectNews(name, sections);
@@ -1150,7 +1150,7 @@ async function openSubject(kind, name, manageFocus) {
     const pnode = findMoneyNode("party", party);
     if (pnode) {
       sections.insertAdjacentHTML("beforeend",
-        `<p class="fineprint" style="margin-top:1rem">The money map starts from ${esc(party)} — the party this
+        `<p class="fineprint" style="margin-top:1rem">The money map starts from ${esc(party)}, the party this
          speaker's indexed speeches carry. In AEC disclosure data, money flows to parties, not individuals.</p>`);
       mountSubjectMap(pnode.id);
     }
@@ -1183,7 +1183,7 @@ async function openGame(which) {
     }
   } catch (err) {
     $(which === "tm" ? "explore-tm" : "explore-quiz").innerHTML =
-      `<p class="status">This could not load (${esc(String(err.message || err))}) — try again shortly.</p>`;
+      `<p class="status">This could not load (${esc(String(err.message || err))}). Try again shortly.</p>`;
   }
 }
 
@@ -1248,7 +1248,7 @@ async function renderFrontNews() {
         <span class="news-meta"><span class="news-source">${esc(srcName[i.source] || i.source || "")}</span>${when ? ` · ${esc(when)}` : ""}</span>
         ${pivots}</li>`;
     }).join("")}</ol>
-    <p class="fineprint">Headlines link to ABC News and The Guardian — their words, not ours.
+    <p class="fineprint">Headlines link to ABC News and The Guardian: their words, not ours.
     “What does the record say?” asks OPAX’s corpus of parliamentary speeches; the two are
     independent sources shown side by side.</p>`;
   } catch {
@@ -1282,9 +1282,9 @@ async function renderFrontTopic() {
     const stats = report.stats;
     if (!stats) return;
     const don = stats.donations;
-    $("h-mw").textContent = `Money & words — ${report.title}`;
+    $("h-mw").textContent = `Money & words: ${report.title}`;
     $("front-mw").innerHTML = `
-      <p class="fineprint" style="margin:-0.3rem 0 0.4rem">Today's topic — changes daily.
+      <p class="fineprint" style="margin:-0.3rem 0 0.4rem">Today's topic. Changes daily.
       ${esc((stats.speech_count ?? 0).toLocaleString())} speeches${don ? ` · ${esc(fmtMoney(don.total ?? 0))} disclosed by ${esc(fmtIndustries(don.industries || []))} donors` : ""}.</p>
       ${moneyWordsCharts(stats)}
       ${don?.top_donors?.length ? barList(don.top_donors.slice(0, 5), {
@@ -1354,6 +1354,36 @@ function renderFrontPage() {
   onIdle(() => { renderFrontTopic(); renderFrontAdded(); });
 }
 
+
+// --- the wombat (loading companion) -----------------------------------------
+
+let wombat = null;
+let wombatLoading = false;
+
+async function showWombat(label) {
+  const slot = $("ask-wombat");
+  slot.hidden = false;
+  if (!wombat && !wombatLoading) {
+    wombatLoading = true;
+    try {
+      const mod = await import("/wombat.js");
+      if (!$("ask-wombat").hidden) {
+        wombat = mod.mountWombat(slot, { label });
+      } else {
+        wombat = mod.mountWombat(slot, { label });
+        slot.hidden = true;
+      }
+    } catch { /* the text status still carries the state */ }
+    wombatLoading = false;
+  } else if (wombat) {
+    wombat.setLabel(label);
+  }
+}
+
+function hideWombat() {
+  $("ask-wombat").hidden = true;
+}
+
 async function runAsk(question) {
   if (askAbort) askAbort.abort();
   const myAbort = new AbortController();
@@ -1374,12 +1404,16 @@ async function runAsk(question) {
   setFrontPageHidden(true);
   setQuoteRail([]);
   const started = Date.now();
-  setStatus($("ask-status"), "Checking the record — this can take up to a minute.");
+  setStatus($("ask-status"), "Checking the record. This can take up to a minute.");
+  $("ask-status").classList.add("visually-hidden");
+  showWombat("Checking the record. This can take up to a minute.");
   clearInterval(askTimer);
   askTimer = setInterval(() => {
     const s = Math.round((Date.now() - started) / 1000);
-    if (s >= 10) $("ask-status").textContent =
-      `Checking the record — ${s}s. This can take up to a minute.`;
+    if (s >= 10) {
+      $("ask-status").textContent = `Checking the record (${s}s). This can take up to a minute.`;
+      if (wombat && !$("ask-wombat").hidden) wombat.setLabel(`Still digging (${s}s). Long questions can take a minute.`);
+    }
   }, 5000);
   try {
     const data = await api("/api/ask", {
@@ -1403,7 +1437,8 @@ async function runAsk(question) {
     const alsoList = cited.length ? retrieved : [];
     lastAsk = { question, sources };
 
-    setStatus($("ask-status"), `Answer ready — ${sources.length} sources.`);
+    hideWombat();
+    setStatus($("ask-status"), `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
     $("ask-result").hidden = false;
     renderAnswer($("ask-answer"), data.answer || "(no answer)");
@@ -1418,10 +1453,11 @@ async function runAsk(question) {
     $("ask-answer").focus();
   } catch (err) {
     if (askAbort !== myAbort) return; // a newer request owns the UI now
+    hideWombat();
     if (err.name === "AbortError") setStatus($("ask-status"), "Cancelled.");
     else {
       setStatus($("ask-status"),
-        `${err.message || err} — the record is still there; try again.`, true);
+        `${err.message || err}. The record is still there; try again.`, true);
       // A failed ask leaves the page empty; the suggested starts return.
       if (suggestions.length) $("ask-chips").hidden = false;
       setFrontPageHidden(false);
@@ -1446,7 +1482,7 @@ $("ask-copylink").addEventListener("click", (e) => {
   const q = lastAsk.question || $("ask-input").value.trim();
   if (!q) return;
   copyText(siteUrl(askHash(q, askKind())), e.currentTarget.querySelector("span") || e.target,
-    "Copied — opening it re-asks the question; wording may vary");
+    "Copied. Opening it re-asks the question; wording may vary");
 });
 
 $("ask-export").addEventListener("click", () => {
@@ -1509,7 +1545,7 @@ function fillMeter(boxId, textId, barId) {
   if (indexed >= expected * 0.98) { meter.hidden = true; return; }
   meter.hidden = false;
   $(textId).textContent =
-    `${indexed.toLocaleString()} of ${expected.toLocaleString()} collected documents indexed — more added daily. Answers may be incomplete while indexing runs.`;
+    `${indexed.toLocaleString()} of ${expected.toLocaleString()} collected documents indexed, with more added daily. Answers may be incomplete while indexing runs.`;
   const pct = Math.min(Math.max(Math.round((indexed / expected) * 100), 1), 100);
   const bar = $(barId);
   bar.setAttribute("aria-valuenow", String(pct));
@@ -1624,7 +1660,7 @@ async function runSearchAnswer(q, f, mySeq) {
     const cited = (data.sources || []).filter((x) => x.cited).slice(0, 3);
     $("search-answer-sources").replaceChildren(...cited.map((x, i) => sourceItem(x, i + 1)));
     $("search-answer-more").innerHTML =
-      `Generated from the retrieved passages — <a href="${esc(askHash(q, f.kind))}">open in Ask</a> for the full sources.`;
+      `Generated from the retrieved passages. <a href="${esc(askHash(q, f.kind))}">Open in Ask</a> for the full sources.`;
   } catch (err) {
     if (err.name === "AbortError" || mySeq !== searchSeq) return;
     box.hidden = true;
@@ -1652,8 +1688,8 @@ async function runSearch() {
     lastSearch = { query: q, filters: f, results: data.results || [] };
     if (!data.count) {
       const hints = [];
-      if (f.speaker) hints.push(`No speeches found for “${f.speaker}”. Names appear as in Hansard — “Anthony Albanese”, not “the PM”.`);
-      if (f.mode === "keyword") hints.push("Try hybrid mode — it also matches by meaning.");
+      if (f.speaker) hints.push(`No speeches found for “${f.speaker}”. Names appear as in Hansard: “Anthony Albanese”, not “the PM”.`);
+      if (f.mode === "keyword") hints.push("Try hybrid mode. It also matches by meaning.");
       const active = activeFilterSummary(f);
       if (active) hints.push(`Filters active: ${active}. Try removing one.`);
       setStatus($("search-status"), hints.join(" ") || "No results from the record.");
@@ -1661,7 +1697,7 @@ async function runSearch() {
       setStatus($("search-status"), "");
       const active = activeFilterSummary(f);
       $("results-count").textContent =
-        `${data.count} results from the record${active ? ` — ${active}` : ""} (top ${data.count} matches)`;
+        `${data.count} results from the record${active ? ` · ${active}` : ""} (top ${data.count} matches)`;
       $("results-bar").hidden = false;
       renderResults(lastSearch.results);
     }
@@ -1731,7 +1767,7 @@ function citePanelHTML(doc) {
   const src = { slug: doc.slug, title: doc.title, speaker: doc.speaker, date: d, sourceUrl: doc.url };
   return `
     <h3>AGLC-style</h3><pre>${esc(aglc)}</pre>
-    <p class="fineprint">For AGLC-compliant page references, use the official record via the source link — OPAX never invents Hansard page numbers.</p>
+    <p class="fineprint">For AGLC-compliant page references, use the official record via the source link. OPAX never invents Hansard page numbers.</p>
     <h3>APA 7</h3><pre>${esc(apa)}</pre>
     <h3>BibTeX</h3><pre>${esc(bibtexFor(src))}</pre>
     <h3>RIS</h3><pre>${esc(risFor(src))}</pre>`;
@@ -1804,7 +1840,7 @@ async function openDocPage(slug, manageFocus) {
     if (currentDocSlug !== slug) return;
     setStatus($("doc-status"),
       err.message === "not found"
-        ? "No document with this identifier — it may not be indexed yet."
+        ? "No document with this identifier. It may not be indexed yet."
         : String(err.message || err), true);
     $("doc-title").textContent = "Document unavailable";
   }
@@ -1856,7 +1892,7 @@ async function loadReportsList(manageFocus) {
       reportsIndex = (await api("/reports/index.json")).reports || [];
     } catch {
       setStatus($("reports-status"),
-        "No reports published yet — they are generated from the corpus and will appear here.");
+        "No reports published yet. They are generated from the corpus and will appear here.");
       return;
     }
   }
@@ -1928,7 +1964,7 @@ const fmtIndustries = (list) => list.map((i) => i.replace(/_/g, " ")).join(", ")
 
 const AEC_NOTE =
   "AEC disclosure data: donations under the disclosure threshold are not reported " +
-  "and cannot appear here — totals are a floor, not a ceiling.";
+  "and cannot appear here, so totals are a floor, not a ceiling.";
 
 function tile(value, label) {
   return `<div class="tile"><b>${esc(value)}</b><span>${esc(label)}</span></div>`;
@@ -2057,7 +2093,7 @@ function renderReportBrief(report) {
       t.append(b, label, src);
       grid.appendChild(t);
     }
-    figures.append(kicker("Key figures — spoken on the record"), grid);
+    figures.append(kicker("Key figures: spoken on the record"), grid);
   }
 
   const positions = $("report-positions");
@@ -2077,7 +2113,7 @@ function renderReportBrief(report) {
       const cite = document.createElement("span");
       cite.className = "source-meta";
       const who = [p.speaker, fmtDate(p.date || "")].filter(Boolean).join(", ");
-      cite.append(who ? `${who} — ` : "", docLink(p.slug, "read the speech"));
+      cite.append(who ? `${who} · ` : "", docLink(p.slug, "read the speech"));
       li.append(head, text, cite);
       list.appendChild(li);
     }
@@ -2090,7 +2126,7 @@ function renderReportBrief(report) {
     const ol = document.createElement("ol");
     ol.className = "source-list";
     ol.replaceChildren(...report.key_moments.map((m, i) => sourceItem(m, i + 1)));
-    moments.append(kicker("Start reading — key speeches"), ol);
+    moments.append(kicker("Start reading: key speeches"), ol);
   }
 }
 
@@ -2108,7 +2144,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   try {
     report = await api(`/reports/${encodeURIComponent(slug)}.json`);
   } catch {
-    setStatus($("reports-status"), "That report could not be loaded — it may not exist yet.", true);
+    setStatus($("reports-status"), "That report could not be loaded. It may not exist yet.", true);
     loadReportsList(false);
     return;
   }
@@ -2131,7 +2167,7 @@ async function openReport(slug, sectionNum, manageFocus) {
       $("report-figures").insertAdjacentHTML("beforeend", `<div class="tiles">
         ${tile((st.speech_count ?? 0).toLocaleString(), "speeches on the record")}
         ${tile((st.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
-        ${don ? tile(fmtMoney(don.total ?? 0), `donations — ${fmtIndustries(don.industries || [])}`) : ""}
+        ${don ? tile(fmtMoney(don.total ?? 0), `donations: ${fmtIndustries(don.industries || [])}`) : ""}
       </div>`);
     }
   }
@@ -2143,7 +2179,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   if (!report.sections?.length) {
     sectionsEl.innerHTML =
       `<p class="status">The cited analysis for this investigation is generated from the full
-      speech corpus, which is currently indexing — it will appear here automatically.</p>`;
+      speech corpus, which is currently indexing. It will appear here automatically.</p>`;
   } else {
     sectionsEl.replaceChildren(
       ...report.sections.map((s, i) => {

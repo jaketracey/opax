@@ -1,5 +1,7 @@
 /* wombat.js — the OPAX loading wombat.
-   A waddling wombat for the Ask page's "checking the record" wait.
+   A quietly waddling, line-drawn wombat for the Ask page's "checking the
+   record" wait. Hairline bronze stroke work on paper, in the site's
+   broadsheet register — closer to an engraving than a mascot.
    Plain browser ES module, no dependencies; inline SVG + CSS keyframes only.
 
      import { mountWombat } from "/wombat.js";
@@ -12,12 +14,12 @@
 
 const STYLE_ID = "wombat-styles";
 
-/* One gait cycle is 12s: trundle on (0–42%), stop and sniff the ground
-   (42–58%), trundle off (58–100%). The rock and leg keyframes are generated
-   over the same 12s so the shuffle freezes exactly while the walk pauses;
-   the seam at 100%→0% is offscreen, so phase there doesn't matter. */
-const SPANS = [[0, 42], [58, 100]];
-const STEP = 2; // % of cycle per half-stride (0.24s)
+/* One gait cycle is 16s: trundle on (0–44%), pause for a single slow sniff
+   of the ground (44–56%), trundle off (56–100%). The rock and leg keyframes
+   are generated over the same 16s so the shuffle stills exactly while the
+   walk pauses; the seam at 100%→0% is offscreen, so phase there is moot. */
+const SPANS = [[0, 44], [56, 100]];
+const STEP = 2; // % of cycle per half-stride (0.32s)
 
 function gait(extreme, mid, rest) {
   const rows = [];
@@ -29,23 +31,23 @@ function gait(extreme, mid, rest) {
       if (mid && i < n) rows.push(`${p + STEP / 2}% { ${mid} }`);
     }
   }
-  rows.push(`44% { ${rest} }`, `56% { ${rest} }`);
+  rows.push(`45.5% { ${rest} }`, `54.5% { ${rest} }`);
   return rows.join("\n    ");
 }
 
 function css() {
   const rock = gait(
-    (even) => `transform: rotate(${even ? -2.6 : 2.6}deg) translateY(0)`,
-    `transform: rotate(0deg) translateY(-1.2px)`, // mid-swing lift
+    (even) => `transform: rotate(${even ? -1.6 : 1.6}deg) translateY(0)`,
+    `transform: rotate(0deg) translateY(-0.8px)`, // mid-swing lift
     `transform: rotate(0deg) translateY(0)`
   );
   const legA = gait(
-    (even) => `transform: rotate(${even ? -14 : 14}deg)`,
+    (even) => `transform: rotate(${even ? -9 : 9}deg)`,
     null,
     `transform: rotate(0deg)`
   );
   const legB = gait(
-    (even) => `transform: rotate(${even ? 14 : -14}deg)`,
+    (even) => `transform: rotate(${even ? 9 : -9}deg)`,
     null,
     `transform: rotate(0deg)`
   );
@@ -56,41 +58,38 @@ function css() {
   position: relative;
   width: 320px;      /* explicit so the inline-block wrap doesn't shrink-wrap a short label */
   max-width: 100%;
-  height: 46px;
+  height: 48px;
   overflow: hidden;
 }
 .wb-stage::after {
   content: "";
-  position: absolute; left: 4px; right: 4px; bottom: 3px;
+  position: absolute; left: 4px; right: 4px; bottom: 4px;
   height: 1px;
   background: var(--line-strong, #CFCABB);
 }
 .wb-trundle {
   position: absolute; bottom: 0; left: 0;
-  width: 68px; height: 44px;
-  animation: wb-trundle 12s linear infinite;
+  width: 65px; height: 42px;
+  animation: wb-trundle 16s linear infinite;
 }
 .wb-svg { display: block; width: 100%; height: 100%; overflow: visible; }
 
-.wb-fur     { fill: var(--bronze, #A0761B); }
-.wb-fur-far { fill: var(--bronze-ink, #8A5A12); }
-.wb-belly   { fill: var(--bronze-bright, #D9A84A); opacity: 0.6; }
-.wb-earin   { fill: var(--bronze-ink, #8A5A12); }
-.wb-dark    { fill: var(--ink, #23271F); }
-.wb-eye     { fill: var(--ink, #23271F); }
-.wb-mouth   { fill: none; stroke: var(--ink, #23271F); stroke-width: 1.2; stroke-linecap: round; opacity: 0.65; }
-.wb-shadow  { fill: var(--ink, #23271F); opacity: 0.08; }
+.wb-line  { fill: none; stroke: var(--bronze-ink, #8A5A12); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.wb-shape { fill: var(--bronze-wash, rgba(160, 118, 27, 0.16)); stroke: var(--bronze-ink, #8A5A12); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.wb-solid { fill: var(--bronze-ink, #8A5A12); }
+.wb-soft  { stroke-width: 1.7; opacity: 0.55; }
+.wb-far   { opacity: 0.5; }
 
 .wb-sniff, .wb-rock, .wb-leg-i, .wb-eye { transform-box: fill-box; }
-.wb-sniff { transform-origin: 70% 100%; animation: wb-sniff 12s ease-in-out infinite; }
-.wb-rock  { transform-origin: 50% 100%; animation: wb-rock 12s ease-in-out infinite; }
-.wb-leg-i { transform-origin: 50% 8%; }
-.wb-ph-a  { animation: wb-lega 12s ease-in-out infinite; }
-.wb-ph-b  { animation: wb-legb 12s ease-in-out infinite; }
-.wb-eye   { transform-origin: center; animation: wb-blink 4.6s linear infinite; }
+.wb-sniff { transform-origin: 70% 100%; animation: wb-sniff 16s ease-in-out infinite; }
+.wb-rock  { transform-origin: 50% 100%; animation: wb-rock 16s ease-in-out infinite; }
+.wb-leg-i { transform-origin: 50% 0; }
+.wb-ph-a  { animation: wb-lega 16s ease-in-out infinite; }
+.wb-ph-b  { animation: wb-legb 16s ease-in-out infinite; }
+.wb-eye   { animation: wb-blink 5.2s linear infinite; }
 
 .wb-label {
-  margin: 4px 0 0;
+  margin: 2px 0 0;
   max-width: 320px;
   font: 400 0.9375rem/1.3 var(--sans, "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
   color: var(--ink-soft, #575C52);
@@ -100,18 +99,18 @@ function css() {
 
 @keyframes wb-trundle {
   0%   { transform: translateX(-80px); }
-  42%  { transform: translateX(126px); }
-  58%  { transform: translateX(126px); }
+  44%  { transform: translateX(126px); }
+  56%  { transform: translateX(126px); }
   100% { transform: translateX(340px); }
 }
-/* The funny beat: mid-walk it stops, sniffs the ground twice (whole body
-   pivots over the front feet, nose down), pops back up, walks on. */
+/* The one beat: mid-walk it pauses and takes a single unhurried sniff of
+   the ground — the body pivots gently over the front feet, holds a moment,
+   lifts just past level, and walks on. */
 @keyframes wb-sniff {
-  0%, 44% { transform: rotate(0deg); }
-  46.5%   { transform: rotate(11deg); }
-  48.5%   { transform: rotate(3.5deg); }
-  51%     { transform: rotate(12deg); }
-  53.5%   { transform: rotate(-2.5deg); }
+  0%, 45% { transform: rotate(0deg); }
+  48%     { transform: rotate(7deg); }
+  50.5%   { transform: rotate(6.6deg); }
+  53.5%   { transform: rotate(-0.8deg); }
   55.5%, 100% { transform: rotate(0deg); }
 }
 @keyframes wb-rock {
@@ -124,12 +123,12 @@ function css() {
     ${legB}
 }
 @keyframes wb-blink {
-  0%, 91%, 100% { opacity: 1; }
-  93%, 95%      { opacity: 0; }
+  0%, 92%, 100% { opacity: 1; }
+  94%, 95.5%    { opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wb-trundle { animation: none; left: calc(50% - 34px); }
+  .wb-trundle { animation: none; left: calc(50% - 33px); }
   .wb-sniff, .wb-rock, .wb-leg-i { animation: none; }
   /* the eye keeps its opacity-only blink, so it still reads as alive */
 }
@@ -144,57 +143,41 @@ function ensureStyles() {
   document.head.appendChild(style);
 }
 
-let uid = 0;
-
-/* Side view, facing right. Wombats are basically bricks with legs: one long
-   low blob where the head is just the front of the body, small round ears,
-   a big blunt nose low on the face, stubby legs barely clearing the belly. */
-function markup(id) {
-  const leg = (x, w, phase, far) => `
-      <g class="wb-leg-i wb-ph-${phase}">
-        <rect x="${x}" y="50" width="${w}" height="${far ? 17 : 18}" rx="${far ? 4.5 : 5}" class="${far ? "wb-fur-far" : "wb-fur"}"/>
-        <ellipse cx="${x + w / 2}" cy="${far ? 66.5 : 67.5}" rx="${far ? 5 : 5.4}" ry="${far ? 2.6 : 2.8}" class="wb-dark"/>
-      </g>`;
+/* Side view, facing right; one low chunky contour where the head is simply
+   the front of the body, small round ears on the outline, a solid blunt
+   nose, a single interior haunch line. Legs are short open arches tucked
+   under the bottom edge so the contour stays unbroken. */
+function markup() {
+  const leg = (x) => `M ${x} 62.5 L ${x} 65.3 Q ${x} 68.6 ${x + 3} 68.6 L ${x + 5} 68.6 Q ${x + 8} 68.6 ${x + 8} 65.3 L ${x + 8} 62.5`;
 
   return `
   <div class="wb-stage">
     <div class="wb-trundle">
       <svg class="wb-svg" viewBox="0 0 120 78" aria-hidden="true" focusable="false">
-        <defs>
-          <path id="${id}-body" d="M 26 63
-            C 12 62 7 52 8 42
-            C 9 28 20 18 40 16
-            C 55 14.5 70 14 82 17
-            C 94 20 103 26 107 35
-            C 109.5 41 109.5 49 106 54
-            C 102 60 94 62.5 86 63
-            Z"/>
-          <clipPath id="${id}-clip"><use href="#${id}-body"/></clipPath>
-        </defs>
-
-        <ellipse class="wb-shadow" cx="58" cy="71.5" rx="46" ry="3.5"/>
-
         <g class="wb-sniff">
           <g class="wb-rock">
-            ${leg(67, 10, "b", true)}
-            ${leg(37, 10, "a", true)}
+            <g class="wb-leg-i wb-ph-b wb-far"><path class="wb-shape" d="${leg(67.5)}"/></g>
+            <g class="wb-leg-i wb-ph-a wb-far"><path class="wb-shape" d="${leg(38)}"/></g>
 
-            <circle cx="86" cy="15" r="4.6" class="wb-fur-far"/>
+            <path class="wb-shape" d="M 26 63
+              C 12 62 7 52 8 42
+              C 9 28 20 18 40 16
+              C 55 14.5 70 14 82 17
+              C 94 20 103 26 107 35
+              C 109.5 41 109.5 49 106 54
+              C 102 60 94 62.5 86 63
+              Z"/>
 
-            <use href="#${id}-body" class="wb-fur"/>
-            <g clip-path="url(#${id}-clip)">
-              <ellipse cx="58" cy="64" rx="30" ry="8.5" class="wb-belly"/>
-            </g>
+            <path class="wb-line wb-soft" d="M 20.5 33 C 15 41 15.5 52 23 58.5"/>
 
-            <circle cx="97" cy="18" r="5.2" class="wb-fur"/>
-            <circle cx="97.3" cy="18.3" r="2.2" class="wb-earin"/>
+            <path class="wb-shape" d="M 80.5 16.8 C 80.8 10.4 88.8 10.6 88.3 18.7"/>
+            <path class="wb-shape" d="M 90 19.6 C 90.2 12.8 99 13.2 98.6 22.2"/>
 
-            <circle class="wb-eye" cx="96.5" cy="34.5" r="2.9"/>
-            <ellipse class="wb-dark" cx="105" cy="46.5" rx="6.6" ry="5.8"/>
-            <path class="wb-mouth" d="M 100 55.5 q 3.5 2 7 0.5"/>
+            <circle class="wb-eye wb-solid" cx="96" cy="33" r="1.8"/>
+            <ellipse class="wb-solid" cx="105.6" cy="46.8" rx="5.6" ry="5"/>
 
-            ${leg(80, 11, "a", false)}
-            ${leg(25, 11, "b", false)}
+            <g class="wb-leg-i wb-ph-a"><path class="wb-shape" d="${leg(81)}"/></g>
+            <g class="wb-leg-i wb-ph-b"><path class="wb-shape" d="${leg(26)}"/></g>
           </g>
         </g>
       </svg>
@@ -208,7 +191,7 @@ export function mountWombat(container, { label = "Checking the record — this c
   ensureStyles();
   const wrap = document.createElement("div");
   wrap.className = "wb-wrap";
-  wrap.innerHTML = markup(`wb${++uid}`);
+  wrap.innerHTML = markup();
   const labelEl = wrap.querySelector(".wb-label");
   labelEl.textContent = label;
   container.appendChild(wrap);
