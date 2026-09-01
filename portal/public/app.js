@@ -356,6 +356,33 @@ window.addEventListener("hashchange", route);
 let askAbort = null;
 let askTimer = null;
 
+/**
+ * Minimal, injection-safe rendering for model-written answers: only text
+ * nodes and <strong> are ever created. Handles the two things the model
+ * actually emits — **bold** and `* ` list markers — nothing else.
+ */
+function renderAnswer(container, text) {
+  container.replaceChildren();
+  const lines = String(text).split("\n");
+  lines.forEach((line, i) => {
+    const m = /^(\s*)\*\s+(.*)$/.exec(line);
+    let content = line;
+    if (m) content = `${m[1]}\u2022 ${m[2]}`;
+    const parts = content.split(/\*\*(.+?)\*\*/);
+    parts.forEach((part, j) => {
+      if (!part) return;
+      if (j % 2 === 1) {
+        const b = document.createElement("strong");
+        b.textContent = part;
+        container.appendChild(b);
+      } else {
+        container.appendChild(document.createTextNode(part));
+      }
+    });
+    if (i < lines.length - 1) container.appendChild(document.createTextNode("\n"));
+  });
+}
+
 // NOTE: answers may contain [n] markers, but the platform does not document
 // how they map onto retrieval results — wiring them to our renumbered cited
 // list risked visibly attributing a claim to the wrong speech. Until the
@@ -387,6 +414,69 @@ function sourceItem(s, num) {
   return li;
 }
 
+// --- scroll quote rail ------------------------------------------------------
+// As the reader scrolls the answer, the passage behind it fades up on the
+// right: reading progress maps onto the CITED sources in list order. The [n]
+// markers stay unwired (see the note above) — progress mapping paces the
+// record alongside the answer without ever attributing a claim to a marker.
+
+const quoteRail = { sources: [], idx: -1, raf: 0 };
+
+function quoteCardHTML(s, i, n) {
+  const full = (s.snippet || "").trim().replace(/\s+/g, " ");
+  const meta = [
+    s.speaker ? `<span class="quote-speaker">${esc(s.speaker)}</span>` : "",
+    s.party ? partyChipHTML(s.party) : "",
+    s.date ? esc(fmtDate(s.date)) : "",
+  ].filter(Boolean).join(" · ");
+  // Quote marks only around a real passage; with no snippet the title stands in.
+  const body = full
+    ? `“${esc(full.slice(0, 260))}${full.length > 260 ? "…" : ""}”`
+    : esc(s.title || s.slug);
+  return `<span class="kicker">From the record · ${i + 1} of ${n}</span>` +
+    `<blockquote>${body}</blockquote>` +
+    (meta ? `<span class="quote-meta">${meta}</span>` : "");
+}
+
+function setQuoteRail(sources) {
+  quoteRail.sources = sources || [];
+  quoteRail.idx = -1;
+  updateQuoteRail();
+}
+
+function updateQuoteRail() {
+  const rail = $("quote-rail");
+  const n = quoteRail.sources.length;
+  const rect = $("ask-answer").getBoundingClientRect();
+  // Room to the answer's right for the card (measured, so browser zoom and
+  // odd widths are handled truthfully rather than by a breakpoint guess).
+  const space = innerWidth - rect.right;
+  const visible = space >= 348 && n > 0 && !$("ask-result").hidden && rect.height > 1 &&
+    rect.bottom > innerHeight * 0.28 && rect.top < innerHeight * 0.85;
+  rail.hidden = !visible;
+  if (!visible) { quoteRail.idx = -1; return; }
+  rail.style.left = `${Math.round(rect.right + Math.min(72, space - 316))}px`;
+  // The reading line: whichever slice of the answer crosses it decides the quote.
+  const progress = Math.min(1, Math.max(0, (innerHeight * 0.38 - rect.top) / rect.height));
+  const idx = Math.min(n - 1, Math.floor(progress * n));
+  if (idx === quoteRail.idx) return;
+  quoteRail.idx = idx;
+  const s = quoteRail.sources[idx];
+  const card = $("quote-card");
+  card.classList.remove("shown");
+  card.innerHTML = quoteCardHTML(s, idx, n);
+  card.onclick = (e) => { e.preventDefault(); location.hash = `#/doc/${s.slug}`; };
+  void card.offsetWidth; // restart the fade-up from the bottom
+  card.classList.add("shown");
+}
+
+addEventListener("scroll", () => {
+  if (quoteRail.raf) return;
+  quoteRail.raf = requestAnimationFrame(() => { quoteRail.raf = 0; updateQuoteRail(); });
+}, { passive: true });
+addEventListener("resize", () => updateQuoteRail());
+addEventListener("hashchange", () => updateQuoteRail());
+
 async function runAsk(question) {
   if (askAbort) askAbort.abort();
   const myAbort = new AbortController();
@@ -394,6 +484,7 @@ async function runAsk(question) {
   const btn = $("ask-submit");
   btn.disabled = true;
   $("ask-result").hidden = true;
+  setQuoteRail([]);
   const started = Date.now();
   setStatus($("ask-status"), "Checking the record — this can take up to a minute.");
   clearInterval(askTimer);
@@ -426,13 +517,14 @@ async function runAsk(question) {
 
     setStatus($("ask-status"), `Answer ready — ${sources.length} sources.`);
     $("ask-result").hidden = false;
-    $("ask-answer").textContent = data.answer || "(no answer)";
+    renderAnswer($("ask-answer"), data.answer || "(no answer)");
     $("ask-stamp").textContent =
       `Generated ${fmtDate(localISODate())} · corpus v${corpusVersion()}`;
     $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1)));
     $("ask-retrieved").hidden = !alsoList.length;
     $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null)));
     $("ask-sources").hidden = !sources.length;
+    setQuoteRail(citedList);
     $("ask-answer").focus();
   } catch (err) {
     if (askAbort !== myAbort) return; // a newer request owns the UI now
@@ -950,7 +1042,7 @@ async function openReport(slug, sectionNum, manageFocus) {
         h.textContent = s.question;
         const body = document.createElement("div");
         body.className = "answer record-rule";
-        body.textContent = s.answer;
+        renderAnswer(body, s.answer || "");
         sec.append(h, body);
         if (s.sources?.length) {
           const label = document.createElement("p");

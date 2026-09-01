@@ -219,10 +219,31 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
   const citedIds = new Set(
     Object.keys(answer.citations ?? {}).map((k) => k.split('/')[0]),
   )
+  const citedParas = new Set(Object.keys(answer.citations ?? {}))
   const sources = Object.entries(answer.retrieval_results?.resources ?? {})
     .filter(([, r]) => !(r.slug ?? '').startsWith('da-'))
     .map(([rid, r]) => {
       const meta = r.extra?.metadata ?? {}
+      // The passage to quote beside the answer: prefer the paragraph the
+      // platform actually CITED for this resource; otherwise the best
+      // retrieved one (compared on the calibrated scale, as in apiSearch).
+      let bestText = ''
+      let bestScore = -1
+      let citedText = ''
+      let citedScore = -1
+      for (const field of Object.values(r.fields ?? {})) {
+        for (const [pid, para] of Object.entries(field.paragraphs ?? {})) {
+          const cal = calibrate(para.score, para.score_type)
+          if (cal > bestScore) {
+            bestScore = cal
+            bestText = para.text
+          }
+          if (citedParas.has(pid) && cal > citedScore) {
+            citedScore = cal
+            citedText = para.text
+          }
+        }
+      }
       return {
         resource: rid,
         slug: r.slug ?? '',
@@ -232,6 +253,7 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
         state: label(r, 'state'),
         date: (meta.date as string) ?? null,
         url: r.origin?.url || null, // official record, for exports/citations
+        snippet: (citedText || bestText).slice(0, 600),
         cited: citedIds.has(rid),
       }
     })

@@ -246,6 +246,28 @@ button.link.source-title { font: 600 1rem/1.35 var(--serif); }
 }
 details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem; padding: 0.4rem 0; }
 
+/* ---- scroll quote rail --------------------------------------------------- */
+/* The passage behind the answer, riding the right margin on wide screens.
+   Bronze record-rule bar: these are quotes from the record itself. */
+
+/* Anchored beside the answer column - the script measures the column's true
+   right edge and sets `left`, so the quote sits in the reading eye-line at
+   any zoom or width instead of stranded at the viewport edge. */
+.quote-rail { position: fixed; top: 30vh; left: 0; width: 300px; z-index: 4; }
+.quote-card {
+  display: block; padding: 0.15rem 0 0.15rem 14px;
+  text-decoration: none; opacity: 0; transform: translateY(14px);
+}
+.quote-card.shown { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .quote-card { transition: opacity 380ms ease, transform 380ms ease; }
+}
+.quote-card .kicker { display: block; margin: 0 0 0.4rem; }
+.quote-card blockquote { margin: 0; font: italic 400 0.9375rem/1.55 var(--serif); color: var(--ink-soft); }
+.quote-card:hover blockquote { color: var(--ink); }
+.quote-card .quote-meta { display: block; margin-top: 0.45rem; font-size: 0.8125rem; color: var(--ink-faint); }
+.quote-card .quote-speaker { font-weight: 600; color: var(--ink); }
+
 /* ---- party chip --------------------------------------------------------- */
 
 .party {

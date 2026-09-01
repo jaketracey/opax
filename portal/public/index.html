@@ -16,9 +16,14 @@
 <a class="visually-hidden" href="#main">Skip to content</a>
 
 <header>
-  <div class="wrap">
-    <p class="wordmark">OPAX<svg class="tick" viewBox="0 0 132 92" aria-hidden="true"><path d="M72.0 2.5L80.5 17.9L88.3 28.1L97.8 38.6L99.0 45.9L93.2 59.1L90.2 67.4L81.5 71.5L75.6 70.0L67.1 69.1L60.5 62.7L55.6 61.5L43.9 53.2L26.8 56.9L12.2 61.8L4.9 60.0L4.6 49.6L1.0 40.3L2.7 29.6L12.2 25.9L22.4 20.3L29.8 11.8L40.2 12.7L43.4 6.6L47.8 5.9L54.9 12.5L58.3 6.4L63.4 16.6L67.8 19.3L69.8 13.0L69.3 7.1Z"/><path d="M77.3 75.7L86.1 76.1L82.9 82.5L78.5 79.3Z"/><path d="M112 5.5L114.7 11.3L120.5 14L114.7 16.7L112 22.5L109.3 16.7L103.5 14L109.3 11.3Z"/><path d="M103 36.5L105.7 42.3L111.5 45L105.7 47.7L103 53.5L100.3 47.7L94.5 45L100.3 42.3Z"/><path d="M112 68.5L114.7 74.3L120.5 77L114.7 79.7L112 85.5L109.3 79.7L103.5 77L109.3 74.3Z"/><path d="M123.5 31L126.1 36.4L131.5 39L126.1 41.6L123.5 47L120.9 41.6L115.5 39L120.9 36.4Z"/><path d="M116.5 50L118.1 53.4L121.5 55L118.1 56.6L116.5 60L114.9 56.6L111.5 55L114.9 53.4Z"/></svg></p>
-    <p class="masthead-sub">Open Parliamentary Accountability eXchange · independent &amp; open source</p>
+  <div class="wrap masthead">
+    <div class="masthead-id">
+      <a class="logo" href="#/" aria-label="OPAX — home">
+        <svg class="logo-mark" viewBox="0 0 176 132" role="img" aria-hidden="true"><path class="logo-land" d="M110.0 26.5L118.5 41.9L126.3 52.1L135.8 62.6L137.0 69.9L131.2 83.1L128.2 91.4L119.5 95.5L113.6 94.0L105.1 93.1L98.5 86.7L93.6 85.5L81.9 77.2L64.8 80.9L50.2 85.8L42.9 84.0L42.6 73.6L39.0 64.3L40.7 53.6L50.2 49.9L60.4 44.3L67.8 35.8L78.2 36.7L81.4 30.6L85.8 29.9L92.9 36.5L96.3 30.4L101.4 40.6L105.8 43.3L107.8 37.0L107.3 31.1Z"/><path class="logo-land" d="M115.3 99.7L124.1 100.1L120.9 106.5L116.5 103.3Z"/><path class="logo-star" d="M88.0 2.0L90.6 7.4L96.0 10.0L90.6 12.6L88.0 18.0L85.4 12.6L80.0 10.0L85.4 7.4Z"/><path class="logo-star" d="M149.0 25.6L150.8 29.3L154.5 31.1L150.8 32.9L149.0 36.6L147.2 32.9L143.5 31.1L147.2 29.3Z"/><path class="logo-star" d="M164.0 71.5L166.2 76.3L171.0 78.5L166.2 80.7L164.0 85.5L161.8 80.7L157.0 78.5L161.8 76.3Z"/><path class="logo-star" d="M121.8 111.5L123.4 114.9L126.8 116.5L123.4 118.1L121.8 121.5L120.2 118.1L116.8 116.5L120.2 114.9Z"/><path class="logo-star" d="M54.2 108.5L56.8 113.9L62.2 116.5L56.8 119.1L54.2 124.5L51.6 119.1L46.2 116.5L51.6 113.9Z"/><path class="logo-star" d="M12.0 73.0L13.8 76.7L17.5 78.5L13.8 80.3L12.0 84.0L10.2 80.3L6.5 78.5L10.2 76.7Z"/><path class="logo-star" d="M27.0 24.6L29.1 29.0L33.5 31.1L29.1 33.2L27.0 37.6L24.9 33.2L20.5 31.1L24.9 29.0Z"/></svg>
+      </a>
+      <p class="masthead-sub">Open Parliamentary Accountability eXchange · independent &amp; open source</p>
+    </div>
+    <a class="masthead-link" href="#/stats">Corpus stats</a>
   </div>
 </header>
 
@@ -54,16 +59,13 @@
         <span class="chip-label">Try:</span>
         <!-- chips injected -->
       </div>
-      <div class="corpus-meter" id="corpus-meter" hidden>
-        <p id="corpus-meter-text"></p>
-        <div class="meter-track" role="meter" aria-valuemin="0" aria-valuemax="100"
-             aria-valuenow="0" aria-label="Share of collected speeches indexed" id="corpus-meter-bar">
-          <i></i>
-        </div>
-      </div>
-      <p class="colophon" id="stat-colophon"><!-- filled from corpus.json --></p>
-
       <div id="ask-status" class="status" role="status"></div>
+      <!-- The passage behind the part of the answer being read, fading up on
+           the right as the reader scrolls. Content duplicates the sources
+           list below; the card is mouse-only (keyboard readers use the list). -->
+      <aside id="quote-rail" class="quote-rail" aria-label="Passage from the record behind this part of the answer" hidden>
+        <a id="quote-card" class="quote-card record-rule" href="#" tabindex="-1"></a>
+      </aside>
       <div id="ask-result" hidden>
         <p class="kicker">Answer</p>
         <article id="ask-answer" class="answer" tabindex="-1"></article>
