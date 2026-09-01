@@ -367,14 +367,20 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
   max-width: 72ch; margin: 0;
 }
 .answer:focus { outline: none; }
-.answer > * { margin: 0 0 1.15rem; }
+.answer > * { margin: 0 0 1.3rem; }
 .answer > *:last-child { margin-bottom: 0; }
 .answer h3 { font: 600 1.1875rem/1.35 var(--serif); margin-top: 1.8rem; }
 .answer h4 { font: 600 1rem/1.35 var(--serif); margin-top: 1.1rem; }
-.answer ul, .answer ol { padding-left: 1.35rem; }
-.answer li { margin: 0 0 0.85rem; padding-left: 0.35rem; }
+/* Bulleted answers read as record prose: a dash sits inline and wrapped lines
+   return flush to the text column — no indented block hanging off a marker. */
+.answer ul { padding-left: 0; list-style: none; }
+.answer ol { padding-left: 1.35rem; }
+.answer li { margin: 0 0 1rem; padding-left: 0; }
+.answer ol > li { padding-left: 0.35rem; }
 .answer li:last-child { margin-bottom: 0; }
-.answer li > ul { margin: 0.3rem 0 0; list-style: circle; }
+.answer ul > li::before { content: "\2014\2002"; color: var(--ink-faint); }
+.answer li > ul { margin: 0.4rem 0 0; padding-left: 1.2rem; }
+.answer li > ul > li::before { content: "\2013\2002"; }
 .answer li::marker { color: var(--ink-faint); }
 .answer blockquote {
   margin-left: 0; padding-left: 14px; font-style: italic; color: var(--ink-soft);
@@ -424,9 +430,20 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
 .chat-sources { margin: 0.2rem 0 0; }
 .chat-sources summary { font-size: 0.875rem; }
 .chat-sources .source-list li { padding: 0.55rem 0; }
-.chat-next { margin: 1.1rem 0 0.4rem; }
-.chat-next .kicker { margin: 0 0 0.55rem; }
-.chat-next-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chat-next { margin: 1.4rem 0 0.4rem; }
+.chat-next .kicker { margin: 0 0 0.6rem; }
+/* Follow-ups stack as full-width cards (the suggest-card idiom): long
+   questions wrap instead of overflowing, and each reads as a way on. */
+.chat-next-btns { display: flex; flex-direction: column; gap: 0.5rem; max-width: 34rem; }
+.chat-next-btn {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 0.8rem;
+  background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
+  padding: 0.75rem 1rem; cursor: pointer; text-align: left;
+  font: 600 0.9375rem/1.4 var(--sans); color: var(--ink-soft);
+}
+.chat-next-btn:hover, .chat-next-btn:focus-visible { border-color: var(--line-strong); color: var(--ink); }
+.chat-next-btn .next-arrow { flex: 0 0 auto; color: var(--ink-faint); }
+.chat-next-btn:hover .next-arrow { color: var(--bronze-ink); }
 .chat-error { color: var(--ink-soft); font-size: 0.9375rem; margin: 0.6rem 0; }
 .chat-hint { color: var(--ink-faint); font-size: 0.9375rem; margin: 2rem 0 0.5rem; }
 .chat-composer {
@@ -435,7 +452,7 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
   background: var(--paper); border-top: 1px solid var(--line);
   padding: 0.8rem 0 1rem; margin-top: 0.8rem;
 }
-.chat-composer input { flex: 1 1 auto; min-height: 48px; }
+.chat-composer input { flex: 1 1 auto; min-width: 0; min-height: 48px; }
 .chat-composer button { min-height: 48px; }
 
 /* ---- scroll quote rail --------------------------------------------------- */

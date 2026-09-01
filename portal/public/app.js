@@ -1824,8 +1824,14 @@ function renderChatNext(questions) {
   for (const q of questions) {
     const b = document.createElement("button");
     b.type = "button";
-    b.className = "chip";
-    b.textContent = q;
+    b.className = "chat-next-btn";
+    const text = document.createElement("span");
+    text.textContent = q;
+    const arrow = document.createElement("span");
+    arrow.className = "next-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "→";
+    b.append(text, arrow);
     b.addEventListener("click", () => sendChat(q));
     row.appendChild(b);
   }
@@ -2217,6 +2223,8 @@ async function openDocPage(slug, manageFocus) {
     }
     $("doc-text").textContent = doc.text || "(no text)";
     $("doc-actions").hidden = false;
+    $("doc-profile").hidden = !doc.speaker;
+    $("doc-more").hidden = !doc.speaker;
     $("doc-cite-panel").innerHTML = citePanelHTML(doc);
     if (doc.labels?.source === "openaustralia") {
       $("doc-caveat").hidden = false;
@@ -2243,7 +2251,7 @@ $("doc-back").addEventListener("click", () => {
 });
 // Toolbar buttons: labels live in the markup; wrap them with the house icons.
 for (const [id, icon] of [
-  ["doc-cite", "cite"], ["doc-more", "speeches"],
+  ["doc-profile", "map"], ["doc-cite", "cite"], ["doc-more", "speeches"],
   ["doc-similar", "search"], ["doc-copylink", "link"],
 ]) {
   const btn = $(id);
@@ -2266,6 +2274,10 @@ $("doc-similar").addEventListener("click", () => {
 $("doc-more").addEventListener("click", () => {
   if (!currentDoc?.speaker) return;
   location.hash = searchHash("", { speaker: currentDoc.speaker });
+});
+$("doc-profile").addEventListener("click", () => {
+  if (!currentDoc?.speaker) return;
+  location.hash = subjectHash("person", currentDoc.speaker);
 });
 
 // --- reports ----------------------------------------------------------------
