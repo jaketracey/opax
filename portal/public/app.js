@@ -1697,7 +1697,7 @@ $("subject-back").addEventListener("click", () => {
 // Both are standalone lazy modules with a mount/destroy contract; the page
 // only owns the toggle. Modules are mounted once and kept alive per session.
 
-const explore = { tm: null, quiz: null, ledger: null, matrix: null, wd: null };
+const explore = { tm: null, quiz: null, ledger: null, matrix: null, wd: null, tvn: null };
 
 const GAMES = {
   tm: { dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
@@ -1705,6 +1705,7 @@ const GAMES = {
   ledger: { dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js", mount: "mountLedger" },
   matrix: { dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
   wd: { dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
+  tvn: { dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js", mount: "mountThenVsNow" },
 };
 
 async function openGame(which) {
@@ -1727,6 +1728,7 @@ $("explore-quiz-btn").addEventListener("click", () => openGame("quiz"));
 $("explore-ledger-btn").addEventListener("click", () => openGame("ledger"));
 $("explore-matrix-btn").addEventListener("click", () => openGame("matrix"));
 $("explore-wd-btn").addEventListener("click", () => openGame("wd"));
+$("explore-tvn-btn").addEventListener("click", () => openGame("tvn"));
 for (const btn of document.querySelectorAll(".game-close")) {
   btn.addEventListener("click", () => $(btn.dataset.close).close());
 }
