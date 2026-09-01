@@ -10,6 +10,8 @@ classification tolerates quantised hosts, which are ~5-6x cheaper than the
 first-party pin the user-facing /ask path uses.
 
   python3 scripts/arag_enrich.py plan            # show taxonomy + config (key redacted)
+  python3 scripts/arag_enrich.py sample-summaries [N]   # summarise N sampled speeches
+  python3 scripts/arag_enrich.py start-full-summaries   # WHOLE CORPUS - typed confirm
   python3 scripts/arag_enrich.py sample [N]      # label N sampled speeches (default 2000)
   python3 scripts/arag_enrich.py status          # configs/running/done
   python3 scripts/arag_enrich.py eval [M]        # inspect labels on M sampled docs
@@ -105,6 +107,36 @@ TOPICS: list[tuple[str, str, list[str]]] = [
 
 TASK_SAMPLE = "opax-topics-sample"
 TASK_FULL = "opax-topics"
+SUMMARY_SAMPLE = "opax-summaries-sample"
+SUMMARY_FULL = "opax-summaries"
+
+SUMMARY_PROMPT = (
+    "You are summarising one Australian parliamentary speech for a public "
+    "accountability site. In one or two plain sentences, state what the speaker "
+    "argued or announced and any concrete positions, figures or names — neutral "
+    "register, no opinions, no 'the speaker says' framing, no preamble. "
+    "Text of the speech:\n{context}"
+)
+
+
+def build_summary_parameters(name: str, rids: list[str] | None) -> dict:
+    """An `ask` DA task generating a per-speech summary field, billed to OUR
+    OpenRouter key exactly like the labeler."""
+    params: dict = {
+        "name": name,
+        "on": 1,
+        "operations": [{
+            "ask": {
+                "question": "",
+                "destination": "summary",
+                "user_prompt": SUMMARY_PROMPT,
+            },
+        }],
+        "llm": build_parameters(name, None)["llm"],
+    }
+    if rids:
+        params["filter"] = {"rids": rids}
+    return params
 
 
 def openrouter_key() -> str:
@@ -226,6 +258,24 @@ def main() -> None:
         params = build_parameters(TASK_SAMPLE, rids)
         out = kb.start_task("labeler", params, apply="EXISTING")
         print("started:", json.dumps(out)[:400])
+
+    elif cmd == "sample-summaries":
+        n = int(sys.argv[2]) if len(sys.argv) > 2 else 500
+        saved = ROOT / "scripts" / "harness_runs" / "enrich_sample_rids.json"
+        rids = (json.loads(saved.read_text())[:n] if saved.exists() else sample_rids(cfg, n))
+        print(f"summarising {len(rids)} sampled speeches")
+        out = kb.start_task("ask", build_summary_parameters(SUMMARY_SAMPLE, rids), apply="EXISTING")
+        print("started:", json.dumps(out)[:300])
+
+    elif cmd == "start-full-summaries":
+        if load_still_running():
+            sys.exit("Bulk load is still RUNNING - full summaries wait for load completion.")
+        print("This summarises the WHOLE speech corpus (~519K docs) on the OpenRouter key (~$45).")
+        typed = input("Type 'summarise the corpus' to confirm: ").strip()
+        if typed != "summarise the corpus":
+            sys.exit("Aborted.")
+        out = kb.start_task("ask", build_summary_parameters(SUMMARY_FULL, None), apply="ALL")
+        print("started:", json.dumps(out)[:300])
 
     elif cmd == "status":
         t = kb.list_tasks()
