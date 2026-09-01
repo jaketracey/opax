@@ -660,7 +660,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   background: var(--paper-raised);
 }
 
-.search-results-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem 2.5rem; align-items: start; }
+.search-results-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem 2.5rem; align-items: start; margin-top: 1.25rem; }
 @media (min-width: 1100px) {
   .search-results-grid { grid-template-columns: minmax(0, 1fr) 380px; }
   .search-answer { position: sticky; top: 1rem; }
