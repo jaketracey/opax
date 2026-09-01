@@ -16,7 +16,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["ask", "search", "money", "reports", "doc", "about", "methods"];
+const PANELS = ["ask", "search", "money", "reports", "doc", "about", "methods", "stats"];
 
 // --- helpers ----------------------------------------------------------------
 
@@ -229,6 +229,11 @@ function showPanel(name) {
   }
   for (const p of PANELS) $(`panel-${p}`).hidden = p !== name;
   document.querySelector("main").classList.toggle("compact", name !== "ask");
+  const statsLink = document.querySelector(".masthead-link");
+  if (statsLink) {
+    if (name === "stats") statsLink.setAttribute("aria-current", "true");
+    else statsLink.removeAttribute("aria-current");
+  }
 }
 
 const TITLES = {
@@ -239,6 +244,7 @@ const TITLES = {
   doc: "From the record — OPAX",
   about: "About — OPAX",
   methods: "Methods — OPAX",
+  stats: "Corpus stats — OPAX",
 };
 
 // --- money map (lazy-loaded 3D bundle) --------------------------------------
@@ -322,6 +328,9 @@ function route() {
   } else if (view === "methods") {
     showPanel("methods");
     document.title = TITLES.methods;
+  } else if (view === "stats") {
+    showPanel("stats");
+    document.title = TITLES.stats;
   } else {
     showPanel("ask");
     document.title = TITLES.ask;
@@ -1093,15 +1102,23 @@ $("report-back").addEventListener("click", () => { location.hash = "#/reports"; 
 fetch("/corpus.json").then((r) => r.json()).then((m) => {
   corpusManifest = m;
   renderCorpusMeter();
-  // Hero colophon: the site's most prominent figures come from the manifest,
-  // so a re-sync updates them in one place.
+  // The stats page's hero figures come from the manifest, so a re-sync
+  // updates them in one place.
   const donations = (m.sources || []).find((s) => s.name.startsWith("AEC donations"));
-  $("stat-colophon").innerHTML = [
-    `<span><b>${(m.collected_speeches ?? 0).toLocaleString()}</b> speeches collected</span>`,
-    `<span><b>5</b> parliaments</span>`,
-    donations ? `<span><b>${donations.docs.toLocaleString()}</b> donations classified</span>` : "",
-    donations ? `<span><b>${esc(donations.coverage)}</b> coverage</span>` : "",
+  const stat = (figure, label) =>
+    `<span><span class="stat-figure">${figure}</span><span class="stat-label">${label}</span></span>`;
+  $("stats-hero").innerHTML = [
+    stat((m.collected_speeches ?? 0).toLocaleString(), "speeches collected"),
+    stat("5", "parliaments"),
+    donations ? stat(donations.docs.toLocaleString(), "donations classified") : "",
+    donations ? stat(esc(donations.coverage), "coverage") : "",
   ].join("");
+  const statsBody = $("stats-sources");
+  if (statsBody && m.sources) {
+    statsBody.innerHTML = m.sources.map((s) =>
+      `<tr><td>${esc(s.name)}</td><td>${s.docs.toLocaleString()}</td><td>${esc(s.coverage)}</td></tr>`).join("");
+  }
+  if (m.version) $("stats-version").textContent = `Corpus version ${m.version}.`;
   // About: corpus table + Methods: known defects, from the manifest.
   const tbody = $("about-sources");
   if (tbody && m.sources) {
@@ -1114,8 +1131,9 @@ fetch("/corpus.json").then((r) => r.json()).then((m) => {
   }
 }).catch(() => {
   // Manifest unavailable: keep the page honest with order-of-magnitude copy.
-  $("stat-colophon").innerHTML =
-    "<span><b>Half a million</b> speeches collected</span><span><b>5</b> parliaments</span>";
+  $("stats-hero").innerHTML =
+    '<span><span class="stat-figure">Half a million</span><span class="stat-label">speeches collected</span></span>' +
+    '<span><span class="stat-figure">5</span><span class="stat-label">parliaments</span></span>';
 });
 
 fetch("/suggestions.json").then((r) => r.json()).then((s) => {
@@ -1126,13 +1144,15 @@ fetch("/suggestions.json").then((r) => r.json()).then((s) => {
 api("/api/stats")
   .then((s) => {
     liveStats = s;
-    $("stats").textContent =
-      `${(s.resources ?? 0).toLocaleString()} documents · ` +
+    const line = `${(s.resources ?? 0).toLocaleString()} documents · ` +
       `${(s.paragraphs ?? 0).toLocaleString()} passages indexed · growing daily`;
+    $("stats").textContent = line;
+    $("stats-live").textContent = `Live index: ${line}.`;
     renderCorpusMeter();
   })
   .catch(() => {
     $("stats").textContent = "corpus loading…";
+    $("stats-live").textContent = "Live index figures are unavailable right now.";
   });
 
 // Legacy entry contract: /?ask=<question> (used by standalone map pages).

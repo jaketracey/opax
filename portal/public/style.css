@@ -117,18 +117,23 @@ button.link {
 header {
   background: var(--navy);
   border-bottom: 3px solid var(--bronze);
-  padding: 1.4rem 0 1.1rem;
+  padding: 1.1rem 0 0.9rem;
 }
-.wordmark {
-  margin: 0; font: 700 1.75rem/1.2 var(--serif); letter-spacing: 0.02em; color: var(--on-navy);
+.masthead { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+.logo { display: inline-block; line-height: 0; text-decoration: none; }
+/* The mark: the continent in bronze, ringed by seven stars — federation's
+   number — in the masthead's soft white. */
+.logo-mark { height: 52px; width: auto; }
+.logo-mark .logo-land { fill: var(--bronze-bright); }
+.logo-mark .logo-star { fill: var(--on-navy-soft); }
+.logo:hover .logo-star { fill: var(--on-navy); }
+.masthead-sub { margin: 0.4rem 0 0; font-size: 0.8125rem; color: var(--on-navy-soft); }
+.masthead-link {
+  flex: 0 0 auto; font: 600 0.875rem/1 var(--sans); color: var(--on-navy-soft);
+  text-decoration: underline; text-decoration-color: var(--bronze-bright);
+  text-underline-offset: 4px; text-decoration-thickness: 1.5px; padding: 0.5rem 0;
 }
-/* The continent under the Southern Cross, in bronze, where the full stop
-   used to sit. */
-.wordmark .tick {
-  width: 0.98em; height: 0.68em; margin-left: 0.18em;
-  fill: var(--bronze-bright); vertical-align: 0.01em;
-}
-.masthead-sub { margin: 0.15rem 0 0; font-size: 0.8125rem; color: var(--on-navy-soft); }
+.masthead-link:hover, .masthead-link[aria-current] { color: var(--on-navy); }
 
 /* ---- hero --------------------------------------------------------------- */
 
@@ -427,6 +432,20 @@ button.link.result-title { font: 600 1.0625rem/1.35 var(--serif); }
 #panel-about p, #panel-methods p, .about-list li { max-width: 68ch; }
 .about-list { padding-left: 1.2rem; }
 .about-list li { margin: 0.5rem 0; }
+/* ---- stats page ---------------------------------------------------------- */
+
+.stat-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, max-content));
+  gap: 1.2rem 3rem; margin: 0 0 1.6rem;
+}
+.stat-grid .stat-figure {
+  display: block; font: 700 2rem/1.15 var(--serif); color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.stat-grid .stat-label {
+  display: block; margin-top: 0.2rem; font-size: 0.8125rem; color: var(--ink-faint);
+}
+
 .table-scroll { overflow-x: auto; }
 .about-table { border-collapse: collapse; width: 100%; font-size: 0.875rem; }
 .about-table th, .about-table td { text-align: left; padding: 0.45rem 0.9rem 0.45rem 0; border-bottom: 1px solid var(--line); }

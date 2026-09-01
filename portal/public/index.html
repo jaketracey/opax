@@ -233,6 +233,29 @@
     </section>
 
     <!-- ============================= ABOUT ============================= -->
+    <!-- ============================== STATS ============================ -->
+    <section id="panel-stats" class="panel" hidden aria-label="Corpus statistics">
+      <p class="kicker">The corpus in numbers</p>
+      <div class="stat-grid" id="stats-hero"><!-- filled from corpus.json --></div>
+      <div class="corpus-meter" id="corpus-meter" hidden>
+        <p id="corpus-meter-text"></p>
+        <div class="meter-track" role="meter" aria-valuemin="0" aria-valuemax="100"
+             aria-valuenow="0" aria-label="Share of collected speeches indexed" id="corpus-meter-bar">
+          <i></i>
+        </div>
+      </div>
+      <p class="fineprint" id="stats-live">corpus loading…</p>
+
+      <p class="kicker">By collection</p>
+      <div class="table-scroll"><table class="about-table">
+        <thead><tr><th>Source</th><th>Documents</th><th>Coverage</th></tr></thead>
+        <tbody id="stats-sources"><!-- filled from corpus.json --></tbody>
+      </table></div>
+      <p class="fineprint" id="stats-version"></p>
+      <p class="fineprint">How the corpus is collected and what is known to be missing:
+        <a href="#/methods">Methods</a> · <a href="#/about">About OPAX</a></p>
+    </section>
+
     <section id="panel-about" class="panel" hidden aria-label="About OPAX">
       <h2>What OPAX is</h2>
       <p>OPAX — the Open Parliamentary Accountability eXchange — exposes governance blind spots by
