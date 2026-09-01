@@ -962,6 +962,33 @@ async function mountSubjectMap(nodeId) {
   }
 }
 
+
+/** "In the news" on subject pages: live headlines mentioning the subject,
+ *  matched on significant name tokens, plus outlet searches for the rest. */
+async function subjectNews(name, container) {
+  const key = currentSubjectKey;
+  const tokens = String(name).split(/\s+/)
+    .filter((w) => w.length >= 4 && !/^(party|australia|australian|limited|pty|ltd|holdings|the)$/i.test(w));
+  let items = [];
+  try {
+    const data = await api("/api/news");
+    items = (data.items || []).filter((i) =>
+      tokens.some((t) => new RegExp(`\\b${t.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}`, "i").test(i.title)));
+  } catch { /* outlet links still render */ }
+  if (currentSubjectKey !== key) return;
+  const q = encodeURIComponent(name);
+  const srcName = { ABC: "ABC News", Guardian: "The Guardian" };
+  const list = items.slice(0, 4).map((i) => `
+    <li><a class="news-headline" href="${esc(safeUrl(i.url) || "#")}" rel="noopener" target="_blank">${esc(i.title)} ↗</a>
+      <span class="news-meta"><span class="news-source">${esc(srcName[i.source] || i.source || "")}</span>${i.published ? ` · ${esc(relTime(i.published))}` : ""}</span></li>`).join("");
+  container.insertAdjacentHTML("beforeend", `
+    <p class="kicker">In the news</p>
+    ${list ? `<ol class="news-list" role="list">${list}</ol>` : `<p class="fineprint" style="margin-top:0.2rem">Nothing in today's politics headlines mentions them.</p>`}
+    <p class="fineprint">Search the outlets:
+      <a href="https://www.abc.net.au/news/search?query=${q}" rel="noopener" target="_blank">ABC News ↗</a> ·
+      <a href="https://www.theguardian.com/australia-news?query=${q}#search" rel="noopener" target="_blank">The Guardian ↗</a></p>`);
+}
+
 async function subjectMentions(name, container, heading) {
   try {
     const data = await api(`/api/search?${new URLSearchParams({ q: `"${name}"`, top_k: "6" })}`);
@@ -1034,7 +1061,10 @@ async function openSubject(kind, name, manageFocus) {
       ["Active years", `${node.firstYear}–${node.lastYear}`],
       ["Rank", `#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed donors"}`],
     ], weeklyFunFact(node), [
-      actionBtn("ask", askHash(`What has parliament said about ${industryLabel(node.industry || name)}?`),
+      actionBtn("ask",
+        askHash(isParty
+          ? `What has parliament said about the ${node.label}?`
+          : `What has parliament said about ${industryLabel(node.industry || name)}?`),
         `Ask what parliament said about ${isParty ? "them" : "this industry"}`, { primary: true }),
       actionBtn("search", searchHash(`"${node.label}"`, {}), "Search mentions in the record"),
       actionBtn("download", "/graph/money.json", "Download the data"),
@@ -1047,7 +1077,8 @@ async function openSubject(kind, name, manageFocus) {
     }));
     sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
-    subjectMentions(node.label, sections, "In parliament");
+    await subjectMentions(node.label, sections, "In parliament");
+    subjectNews(node.label, sections);
     mountSubjectMap(node.id);
     return;
   }
@@ -1106,6 +1137,7 @@ async function openSubject(kind, name, manageFocus) {
       `<p class="status">No speeches by “${esc(name)}” in the indexed corpus yet — names appear as in
        Hansard, and the record is still loading. <a href="${esc(searchHash(name, {}))}">Search the record instead</a>.</p>`);
   }
+  await subjectNews(name, sections);
   if (party) {
     await loadMoneyData();
     if (currentSubjectKey !== key) return;
