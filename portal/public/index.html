@@ -537,6 +537,23 @@
           live from the labelled record. Each cell opens the speeches behind it.</span>
           <span class="game-cta">Open</span>
         </button>
+        <button type="button" class="game-card" id="explore-wd-btn">
+          <span class="game-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 9h27M14 15h15"/>
+              <path d="M14 24h21M14 30h27"/>
+              <path d="M14 39h10M14 45h18"/>
+              <circle cx="7" cy="9" r="2.1" fill="currentColor" stroke="none"/>
+              <circle cx="7" cy="24" r="2.1" fill="currentColor" stroke="none"/>
+              <circle cx="7" cy="39" r="2.1" fill="currentColor" stroke="none"/>
+            </svg>
+          </span>
+          <span class="game-title">Words per dollar</span>
+          <span class="game-blurb">Each industry's disclosed donations beside each party's
+          share of the matching debate. Comparison, not causation.</span>
+          <span class="game-cta">Open</span>
+        </button>
       </div>
 
       <dialog class="game-dialog" id="dialog-tm" aria-label="Time machine">
@@ -562,6 +579,12 @@
           <button type="button" class="game-close" data-close="dialog-matrix" aria-label="Close">✕</button>
         </div>
         <div id="explore-matrix" class="game-dialog-body"></div>
+      </dialog>
+      <dialog class="game-dialog" id="dialog-wd" aria-label="Words per dollar">
+        <div class="game-dialog-head">
+          <button type="button" class="game-close" data-close="dialog-wd" aria-label="Close">✕</button>
+        </div>
+        <div id="explore-wd" class="game-dialog-body"></div>
       </dialog>
     </section>
 
