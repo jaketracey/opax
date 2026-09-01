@@ -312,9 +312,10 @@ Views/tools to build once the full passes run, in value order:
    bodies, so wide Promise.all fans die in production only ("Response
    closed due to connection limit"). Remember this for any future fan-out
    endpoint.
-4. **Words per dollar** — per industry: disclosed donations (money.json) vs
-   on-topic speech share per party. The site's thesis in one view. Needs
-   the industry→topic map (exists in detectMoneyIndustry) + facet slices.
+4. **Words per dollar** — DONE 2026-09-01 (deployed 9b9fb01c): fifth
+   Explore view (wordsdollars.js), donations beside debate share per party
+   for the 8 industry→topic mappings, built entirely from /api/matrix +
+   money.json. Shares use the topic-total denominator (matrix convention).
 5. **Then vs now / position tracker** — speaker + topic → two era-filtered
    asks side by side ("what did X say about climate, 1998-2007 vs
    2019-2026") with dated quotes; summaries make the era lists scannable.
