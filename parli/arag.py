@@ -292,7 +292,8 @@ class KbClient:
     # -- retrieval ---------------------------------------------------------
 
     def find(self, query: str, *, top_k: int = 20, filter_expression: Optional[dict] = None,
-             features: Optional[list[str]] = None) -> dict:
+             features: Optional[list[str]] = None,
+             show: Optional[list[str]] = None) -> dict:
         body: dict[str, Any] = {
             "query": query,
             "top_k": top_k,
@@ -300,6 +301,9 @@ class KbClient:
             # change cannot silently un-rerank this path.
             "reranker": "predict",
         }
+        if show:
+            # origin (speaker) and extra (date) aren't serialized by default.
+            body["show"] = show
         if features:
             body["features"] = features
         if filter_expression:

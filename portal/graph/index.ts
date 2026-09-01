@@ -63,8 +63,15 @@ export type MoneyGraph = {
 export type MoneyMapOptions = {
   /** Builds the parliament ask-link for a donor's industry. */
   askUrl?: (industry: string) => string
-  /** Observe selections (for the host page). */
+  /**
+   * Observe USER-initiated selections only - programmatic ones (the `focus`
+   * seed, `handle.select`, a selection dropped by a filter) stay silent.
+   */
   onSelect?: (node: MoneyNode | null) => void
+  /** Node id to mount already-selected with the camera on it. */
+  focus?: string
+  /** 'full' (default): legend, find, time scrub, zoom, hint. 'mini': bare scene + cards. */
+  chrome?: 'full' | 'mini'
 }
 
 export type MoneyMapHandle = {
@@ -227,6 +234,9 @@ const CSS = `
   background: #142a43; color: #ffffff; font-size: 13px; font-weight: 600;
   text-decoration: none; text-align: center; }
 .mm-ask:hover { background: #1d3a5c; }
+.mm-ask-quiet { background: none; color: #33322e; border: 1px solid #d5d1c4;
+  margin-top: 8px; }
+.mm-ask-quiet:hover { background: rgba(0, 0, 0, 0.05); color: #26251f; }
 .mm-zoom { position: absolute; right: 12px; bottom: 12px; display: flex;
   flex-direction: column; gap: 4px; }
 .mm-zoom button { width: 34px; height: 34px; border: 1px solid #e4e1d8;
@@ -236,6 +246,27 @@ const CSS = `
 .mm-hint { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
   margin: 0; font-size: 11.5px; color: #8a8578; pointer-events: none;
   white-space: nowrap; }
+.mm-find { position: absolute; top: 12px; right: 12px; width: 240px; }
+.mm-find input { width: 100%; border: 1px solid #e4e1d8; border-radius: 9px;
+  background: rgba(250, 249, 246, 0.92); backdrop-filter: blur(6px);
+  font: inherit; font-size: 13px; color: #33322e; padding: 7px 10px; }
+.mm-find input:focus-visible { outline: 2px solid ${ACCENT}; }
+.mm-find-list { list-style: none; margin: 4px 0 0; padding: 4px;
+  background: rgba(250, 249, 246, 0.96); border: 1px solid #e4e1d8;
+  border-radius: 9px; max-height: 260px; overflow: auto; }
+.mm-find-list:empty { display: none; }
+.mm-find-list button { display: flex; align-items: center; gap: 7px; width: 100%;
+  border: 0; background: none; font: inherit; font-size: 12.5px; color: #33322e;
+  padding: 5px 8px; border-radius: 6px; cursor: pointer; text-align: left; }
+.mm-find-list button:hover, .mm-find-list button:focus-visible { background: rgba(0,0,0,0.06); }
+.mm-root[data-mm-chrome='full'] .mm-card { top: 58px; max-height: calc(100% - 70px); }
+.mm-scrub { position: absolute; left: 12px; bottom: 12px; width: 250px;
+  background: rgba(250, 249, 246, 0.88); backdrop-filter: blur(6px);
+  border: 1px solid #e4e1d8; border-radius: 10px; padding: 8px 12px 10px; }
+.mm-scrub-label { display: flex; justify-content: space-between; font-size: 11px;
+  font-weight: 700; letter-spacing: 0.06em; color: #8a8578; margin-bottom: 2px; }
+.mm-scrub-years { font-variant-numeric: tabular-nums; color: #33322e; }
+.mm-scrub input[type='range'] { width: 100%; margin: 2px 0; accent-color: ${ACCENT}; }
 .mm-fallback { display: flex; align-items: center; justify-content: center;
   height: 100%; padding: 24px; text-align: center; color: #57544a; }
 @media (prefers-reduced-motion: reduce) {
@@ -248,7 +279,8 @@ const CSS = `
   .mm-chip { white-space: nowrap; flex: none; }
   .mm-card { top: auto; right: 8px; left: 8px; bottom: 8px; width: auto;
     max-height: 55%; }
-  .mm-hint { display: none; }
+  .mm-root[data-mm-chrome='full'] .mm-card { top: auto; max-height: 55%; }
+  .mm-hint, .mm-find, .mm-scrub { display: none; }
 }
 `
 
@@ -296,9 +328,25 @@ export async function mountMoneyMap(
 
   const graph = buildGraph(raw)
   const byId = new Map(raw.nodes.map((n) => [n.id, n]))
+  const chrome = opts.chrome ?? 'full'
+  container.dataset.mmChrome = chrome
+  // Route links: inside the SPA (served at /) a bare "#/..." href routes in
+  // place with no reload; on a standalone page (/map.html) the same route
+  // needs the leading slash to land on the app first.
+  const routeBase = location.pathname === '/' ? '' : '/'
   const askUrl = opts.askUrl ??
     ((industry: string) =>
-      `/?ask=${encodeURIComponent(`What has parliament said about ${industry}?`)}`)
+      `${routeBase}#/ask?q=${encodeURIComponent(`What has parliament said about ${industry}?`)}`)
+
+  // Observed year extent of the flows, for the time scrub.
+  let yearMin = 2026
+  let yearMax = 1998
+  for (const e of raw.edges) {
+    if (e.firstYear) yearMin = Math.min(yearMin, e.firstYear)
+    if (e.lastYear) yearMax = Math.max(yearMax, e.lastYear)
+  }
+  let yearLo = yearMin
+  let yearHi = yearMax
 
   // --- DOM scaffolding -------------------------------------------------
   const canvas = el('canvas', 'mm-canvas', container)
@@ -313,9 +361,12 @@ export async function mountMoneyMap(
   const labels = el('div', 'mm-labels', container)
   labels.setAttribute('aria-hidden', 'true')
 
-  const legend = el('div', 'mm-legend', container)
-  const legendTitle = el('div', 'mm-legend-title', legend)
-  legendTitle.textContent = 'Industries · click to isolate'
+  const full = chrome === 'full'
+  const legend = full ? el('div', 'mm-legend', container) : null
+  if (legend) {
+    const legendTitle = el('div', 'mm-legend-title', legend)
+    legendTitle.textContent = 'Industries · click to isolate'
+  }
 
   const card = el('div', 'mm-card', container)
   card.tabIndex = -1
@@ -323,33 +374,37 @@ export async function mountMoneyMap(
   card.setAttribute('aria-label', 'Details for the selected node')
   card.hidden = true
 
-  const zoom = el('div', 'mm-zoom', container)
-  const zoomButton = (label: string, title: string, onClick: () => void) => {
-    const button = el('button', '', zoom)
-    button.type = 'button'
-    button.textContent = label
-    button.setAttribute('aria-label', title)
-    button.title = title
-    button.addEventListener('click', onClick)
-    return button
+  const zoom = full ? el('div', 'mm-zoom', container) : null
+  if (zoom) {
+    const zoomButton = (label: string, title: string, onClick: () => void) => {
+      const button = el('button', '', zoom)
+      button.type = 'button'
+      button.textContent = label
+      button.setAttribute('aria-label', title)
+      button.title = title
+      button.addEventListener('click', onClick)
+    }
+    zoomButton('+', 'Zoom in', () => engine.zoomBy(1.3))
+    zoomButton('−', 'Zoom out', () => engine.zoomBy(1 / 1.3))
+    zoomButton('⤢', 'Fit the whole map to view', () => engine.fit(true))
   }
-  zoomButton('+', 'Zoom in', () => engine.zoomBy(1.3))
-  zoomButton('−', 'Zoom out', () => engine.zoomBy(1 / 1.3))
-  zoomButton('⤢', 'Fit the whole map to view', () => engine.fit(true))
 
-  const hint = el('p', 'mm-hint', container)
-  hint.textContent = `Drag to orbit · scroll to zoom · click a node — AEC returns ${
-    raw.meta?.coverage ?? '1998–2026'
-  }`
+  const hint = full ? el('p', 'mm-hint', container) : null
+  if (hint) {
+    hint.textContent = `Drag to orbit · scroll to zoom · click a node or a flow — AEC returns ${
+      raw.meta?.coverage ?? '1998–2026'
+    }`
+  }
 
   // --- Engine ----------------------------------------------------------
   let selectedId: string | null = null
+  let selectedEdge: MapEdge | null = null
   let activeGroup: string | null = null
 
   const engine = new KnowledgeMapEngine(
     canvas,
     labels,
-    (id) => setSelection(id),
+    (id) => setSelection(id, { user: true }),
     () => {
       // A lost WebGL context leaves a frozen canvas with no way back.
       canvas.replaceWith(Object.assign(document.createElement('div'), {
@@ -358,6 +413,7 @@ export async function mountMoneyMap(
       }))
     },
   )
+  engine.onEdgePick = (edge) => setEdgeSelection(edge)
 
   const aspectBucket = () => {
     const rect = container.getBoundingClientRect()
@@ -368,24 +424,38 @@ export async function mountMoneyMap(
 
   let fitSig = ''
   const pushData = () => {
-    const visibleNodes = activeGroup === null
-      ? graph.nodes
-      : graph.nodes.filter((n) => n.group === activeGroup || n.group === 'parties')
+    // Time scrub: an edge is in the window when its span overlaps [lo, hi];
+    // a donor stays visible only while at least one of its flows does.
+    // Parties always anchor the centre. Undated flows never disappear.
+    const scrubbed = yearLo > yearMin || yearHi < yearMax
+    const inWindow = (e: MapEdge) =>
+      !scrubbed ||
+      ((e.firstYear ?? yearMin) <= yearHi && (e.lastYear ?? yearMax) >= yearLo)
+    const windowEdges = graph.edges.filter(inWindow)
+    const activeDonors = new Set(windowEdges.map((e) => e.source))
+    const visibleNodes = graph.nodes.filter((n) => {
+      if (n.group === 'parties') return true
+      if (activeGroup !== null && n.group !== activeGroup) return false
+      return !scrubbed || activeDonors.has(n.id)
+    })
     const visibleIds = new Set(visibleNodes.map((n) => n.id))
-    const visibleEdges = graph.edges.filter(
+    const visibleEdges = windowEdges.filter(
       (e) => visibleIds.has(e.source) && visibleIds.has(e.target),
     )
     const data: EngineData = {
       nodes: visibleNodes,
       edges: visibleEdges,
       groupStyles: graph.groupStyles,
-      degrees: graph.degrees,
+      degrees: buildDegrees(visibleEdges),
       measure: 'resources',
       layout: 'grouped',
       aspect: aspectBucket(),
       centralGroup: 'parties',
     }
     engine.setData(data)
+    // The fit signature deliberately excludes the year window: refitting the
+    // camera on every scrub step would turn the timeline into a fairground
+    // ride. Filters and resizes refit; the scrub holds the view still.
     const sig = `${data.aspect}|${activeGroup ?? '*'}`
     if (sig !== fitSig) {
       const firstFit = fitSig === ''
@@ -393,6 +463,7 @@ export async function mountMoneyMap(
       engine.fit(!firstFit)
     }
     if (selectedId && !visibleIds.has(selectedId)) setSelection(null)
+    if (selectedEdge && !visibleEdges.includes(selectedEdge)) setEdgeSelection(null)
   }
 
   let lastBucket = aspectBucket()
@@ -407,27 +478,117 @@ export async function mountMoneyMap(
 
   // --- Legend / filter -------------------------------------------------
   const chips = new Map<string, HTMLButtonElement>()
-  const legendGroups = [...CLUSTER_COLOURS.keys()].filter(
-    (group) => group !== 'parties' && graph.groupStyles.has(group),
-  )
-  for (const group of legendGroups) {
-    const chip = el('button', 'mm-chip', legend)
-    chip.type = 'button'
-    chip.setAttribute('aria-pressed', 'false')
-    const dot = el('span', 'mm-dot', chip)
-    dot.style.background = clusterColour(group).colour
-    const name = el('span', '', chip)
-    name.textContent = `${group} · ${graph.groupStyles.get(group)?.count ?? 0}`
-    chip.addEventListener('click', () => {
-      activeGroup = activeGroup === group ? null : group
-      for (const [g, c] of chips) {
-        c.setAttribute('aria-pressed', String(g === activeGroup))
-        if (activeGroup !== null && g !== activeGroup) c.setAttribute('data-dimmed', '')
-        else c.removeAttribute('data-dimmed')
+  if (legend) {
+    const legendGroups = [...CLUSTER_COLOURS.keys()].filter(
+      (group) => group !== 'parties' && graph.groupStyles.has(group),
+    )
+    for (const group of legendGroups) {
+      const chip = el('button', 'mm-chip', legend)
+      chip.type = 'button'
+      chip.setAttribute('aria-pressed', 'false')
+      const dot = el('span', 'mm-dot', chip)
+      dot.style.background = clusterColour(group).colour
+      const name = el('span', '', chip)
+      name.textContent = `${group} · ${graph.groupStyles.get(group)?.count ?? 0}`
+      chip.addEventListener('click', () => {
+        activeGroup = activeGroup === group ? null : group
+        for (const [g, c] of chips) {
+          c.setAttribute('aria-pressed', String(g === activeGroup))
+          if (activeGroup !== null && g !== activeGroup) c.setAttribute('data-dimmed', '')
+          else c.removeAttribute('data-dimmed')
+        }
+        pushData()
+      })
+      chips.set(group, chip)
+    }
+  }
+
+  // --- Find-in-map ------------------------------------------------------
+  const find = full ? el('div', 'mm-find', container) : null
+  if (find) {
+    const input = el('input', '', find)
+    input.type = 'search'
+    input.placeholder = 'Find a donor or party…'
+    input.setAttribute('aria-label', 'Find a donor or party by name')
+    const list = el('ul', 'mm-find-list', find)
+    const runFind = () => {
+      const q = input.value.trim().toLowerCase()
+      list.replaceChildren()
+      if (q.length < 2) return
+      const scored = graph.nodes
+        .map((n) => {
+          const label = n.label.toLowerCase()
+          const at = label.indexOf(q)
+          // Prefix beats word-start beats anywhere; misses drop out.
+          const score = at === 0 ? 0 : label.includes(` ${q}`) ? 1 : at > 0 ? 2 : -1
+          return { n, score, at }
+        })
+        .filter((s) => s.score >= 0)
+        .sort((a, b) => a.score - b.score || a.n.label.length - b.n.label.length)
+        .slice(0, 8)
+      for (const { n } of scored) {
+        const li = el('li', '', list)
+        const b = el('button', '', li)
+        b.type = 'button'
+        const dot = el('span', 'mm-dot', b)
+        dot.style.background = n.colour ?? clusterColour(n.group).colour
+        const name = el('span', 'mm-row-name', b)
+        name.textContent = n.label
+        b.addEventListener('click', () => {
+          input.value = ''
+          list.replaceChildren()
+          setSelection(n.id, { user: true })
+        })
       }
-      pushData()
+    }
+    input.addEventListener('input', runFind)
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') list.querySelector('button')?.click()
+      if (e.key === 'Escape') {
+        input.value = ''
+        list.replaceChildren()
+        e.stopPropagation()
+      }
     })
-    chips.set(group, chip)
+  }
+
+  // --- Time scrub -------------------------------------------------------
+  const scrub = full && yearMax > yearMin ? el('div', 'mm-scrub', container) : null
+  if (scrub) {
+    const label = el('div', 'mm-scrub-label', scrub)
+    const caption = el('span', '', label)
+    caption.textContent = 'YEARS'
+    const years = el('span', 'mm-scrub-years', label)
+    const lo = el('input', '', scrub)
+    const hi = el('input', '', scrub)
+    for (const [input, name] of [[lo, 'from'], [hi, 'to']] as const) {
+      input.type = 'range'
+      input.min = String(yearMin)
+      input.max = String(yearMax)
+      input.setAttribute('aria-label', `Show flows ${name} year`)
+    }
+    lo.value = String(yearMin)
+    hi.value = String(yearMax)
+    const showYears = () => {
+      years.textContent = yearLo === yearHi ? `${yearLo}` : `${yearLo} – ${yearHi}`
+    }
+    showYears()
+    let pending = 0
+    const applyScrub = () => {
+      // The two thumbs may cross; the window is always the ordered pair.
+      const a = Number(lo.value)
+      const b = Number(hi.value)
+      yearLo = Math.min(a, b)
+      yearHi = Math.max(a, b)
+      showYears()
+      if (pending) return
+      pending = requestAnimationFrame(() => {
+        pending = 0
+        pushData()
+      })
+    }
+    lo.addEventListener('input', applyScrub)
+    hi.addEventListener('input', applyScrub)
   }
 
   // --- Info card -------------------------------------------------------
@@ -458,13 +619,44 @@ export async function mountMoneyMap(
     }
   }
 
+  /** A question-trigger or profile link on a card. */
+  const trigger = (parent: HTMLElement, href: string, label: string, quiet = false) => {
+    const a = el('a', quiet ? 'mm-ask mm-ask-quiet' : 'mm-ask', parent)
+    a.href = href
+    a.textContent = label
+  }
+
+  const subjectUrl = (kind: 'donor' | 'party', label: string) =>
+    `${routeBase}#/subject/${kind}/${encodeURIComponent(label)}`
+
+  /** The industry that gave a party the most, for its ask-trigger. */
+  const topIndustryOf = (partyId: string): string | null => {
+    const sums = new Map<string, number>()
+    for (const e of raw.edges) {
+      if (e.target !== partyId) continue
+      const donor = byId.get(e.source)
+      if (!donor || donor.industry === 'other') continue
+      const industry = donor.industry.replace(/_/g, ' ')
+      sums.set(industry, (sums.get(industry) ?? 0) + e.total)
+    }
+    let best: string | null = null
+    let bestTotal = 0
+    for (const [industry, total] of sums) {
+      if (total > bestTotal) {
+        bestTotal = total
+        best = industry
+      }
+    }
+    return best
+  }
+
   const renderCard = (node: MoneyNode) => {
     card.innerHTML = ''
     const close = el('button', 'mm-card-close', card)
     close.type = 'button'
     close.textContent = '✕'
     close.setAttribute('aria-label', 'Close details')
-    close.addEventListener('click', () => setSelection(null))
+    close.addEventListener('click', () => setSelection(null, { user: true }))
 
     const title = el('h2', '', card)
     title.textContent = node.label
@@ -499,12 +691,17 @@ export async function mountMoneyMap(
           party.label,
           edge.total,
           yearSpan(edge.firstYear, edge.lastYear),
-          () => setSelection(party.id),
+          () => setSelection(party.id, { user: true }),
         )
       }
-      const ask = el('a', 'mm-ask', card)
-      ask.href = askUrl(node.industry.replace(/_/g, ' '))
-      ask.textContent = 'What did parliament say about this industry?'
+      trigger(card, askUrl(node.industry.replace(/_/g, ' ')),
+        'What did parliament say about this industry?')
+      // Quote the suffix-stripped name: MPs say "Philip Morris", never
+      // "Philip Morris Limited" - the full label finds nothing.
+      trigger(card,
+        `${routeBase}#/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`,
+        `What was said about ${shortName(node.label)}?`, true)
+      trigger(card, subjectUrl('donor', node.label), 'Full profile', true)
     } else {
       listTitle.textContent = 'Top donors shown on the map'
       const incoming = raw.edges
@@ -520,9 +717,61 @@ export async function mountMoneyMap(
           donor.label,
           edge.total,
           yearSpan(edge.firstYear, edge.lastYear),
-          () => setSelection(donor.id),
+          () => setSelection(donor.id, { user: true }),
         )
       }
+      const industry = topIndustryOf(node.id)
+      if (industry) {
+        trigger(card,
+          `${routeBase}#/ask?q=${
+            encodeURIComponent(`What has ${node.label} said about ${industry}?`)
+          }`,
+          `Ask what ${node.label} said about ${industry}`)
+      }
+      trigger(card, subjectUrl('party', node.label), 'Full profile', true)
+    }
+  }
+
+  /** Company-suffix-free name for question copy ("Pratt Holdings", not "…Pty Ltd"). */
+  const shortName = (label: string) =>
+    label.replace(/\s+(Pty\.?\s*)?(Ltd|Limited|Incorporated|Inc)\.?$/i, '')
+
+  const renderEdgeCard = (edge: MapEdge) => {
+    const donor = byId.get(edge.source)
+    const party = byId.get(edge.target)
+    if (!donor || !party) return
+    card.innerHTML = ''
+    const close = el('button', 'mm-card-close', card)
+    close.type = 'button'
+    close.textContent = '✕'
+    close.setAttribute('aria-label', 'Close details')
+    close.addEventListener('click', () => setEdgeSelection(null))
+
+    const title = el('h2', '', card)
+    title.textContent = `${donor.label} → ${party.label}`
+    const tag = el('span', 'mm-card-tag', card)
+    tag.style.color = clusterColour(donor.group).ink
+    tag.textContent = `${donor.industry.replace(/_/g, ' ')} money`
+
+    const total = el('div', 'mm-card-total', card)
+    total.textContent = formatMoney(edge.total ?? 0)
+    const sub = el('div', 'mm-card-sub', card)
+    const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
+    sub.textContent =
+      `across ${(edge.count ?? 0).toLocaleString()} donations${span ? ` · ${span}` : ''}`
+
+    const list = el('ul', 'mm-rows', card)
+    row(list, donor.colour ?? clusterColour(donor.group).colour, donor.label,
+      donor.total, '', () => setSelection(donor.id, { user: true }))
+    row(list, party.colour ?? '#9AA0A8', party.label,
+      party.total, '', () => setSelection(party.id, { user: true }))
+
+    if (edge.firstYear && edge.lastYear) {
+      const industry = donor.industry.replace(/_/g, ' ')
+      trigger(card,
+        `${routeBase}#/search?q=${encodeURIComponent(industry)}` +
+          `&from=${edge.firstYear}&to=${edge.lastYear}`,
+        `What was said about ${industry} in ${span}?`)
     }
   }
 
@@ -536,8 +785,14 @@ export async function mountMoneyMap(
       : { left: 0, right: rect.width + 24, bottom: 0 }
   }
 
-  function setSelection(id: string | null) {
+  /**
+   * Select a node. `user: true` marks a reader-initiated selection (a click,
+   * Enter, the find box, a card row) - only those reach opts.onSelect; the
+   * focus seed, handle.select and filter-driven clears stay silent.
+   */
+  function setSelection(id: string | null, { user = false } = {}) {
     selectedId = id
+    selectedEdge = null
     const node = id ? byId.get(id) ?? null : null
     engine.setEmphasis({ selectedId: id, pathEdges: null, pathFrom: null })
     if (node) {
@@ -556,12 +811,36 @@ export async function mountMoneyMap(
       card.innerHTML = ''
       engine.setInsets({ left: 0, right: 0, bottom: 0 })
     }
-    opts.onSelect?.(node)
+    if (user) opts.onSelect?.(node)
+  }
+
+  /** Select a flow (edge). Reuses the engine's path emphasis to light it up. */
+  function setEdgeSelection(edge: MapEdge | null) {
+    selectedEdge = edge
+    selectedId = null
+    engine.setEmphasis({
+      selectedId: null,
+      pathEdges: edge ? [edge] : null,
+      pathFrom: null,
+    })
+    if (edge) {
+      renderEdgeCard(edge)
+      card.hidden = false
+      requestAnimationFrame(() => {
+        if (!card.hidden) engine.setInsets(measureInsets())
+      })
+      card.focus({ preventScroll: true })
+    } else {
+      card.hidden = true
+      card.innerHTML = ''
+      engine.setInsets({ left: 0, right: 0, bottom: 0 })
+    }
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape' && selectedId) {
-      setSelection(null)
+    if (event.key === 'Escape' && (selectedId || selectedEdge)) {
+      if (selectedEdge) setEdgeSelection(null)
+      else setSelection(null, { user: true })
       canvas.focus({ preventScroll: true })
       event.stopPropagation()
     }
@@ -570,14 +849,21 @@ export async function mountMoneyMap(
 
   pushData()
 
+  // The embed seed: mount already-selected with the camera on the node.
+  // Deliberately silent - the host asked for it, so it is not an event.
+  if (opts.focus && byId.has(opts.focus)) setSelection(opts.focus)
+
   return {
     select: (id) => setSelection(id),
     destroy: () => {
       container.removeEventListener('keydown', onKeyDown)
       resizeObserver.disconnect()
       engine.dispose()
-      for (const child of [canvas, labels, legend, card, zoom, hint]) child.remove()
+      for (const child of [canvas, labels, legend, card, zoom, hint, find, scrub]) {
+        child?.remove()
+      }
       container.classList.remove('mm-root')
+      delete container.dataset.mmChrome
     },
   }
 }

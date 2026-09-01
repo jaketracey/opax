@@ -49,11 +49,11 @@ HEADERS = {"content-type": "application/json",
            "x-nuclia-serviceaccount": f"Bearer {TOK}"}
 
 
-def call(path, method="GET", body=None, timeout=90):
+def call(path, method="GET", body=None, timeout=90, headers=None):
     req = urllib.request.Request(
         f"{BASE}{path}",
         data=json.dumps(body).encode() if body is not None else None,
-        method=method, headers=HEADERS)
+        method=method, headers={**HEADERS, **(headers or {})})
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
             raw = r.read()
@@ -77,10 +77,11 @@ def models_now():
 
 def smoke_ask():
     """One tiny live /ask; returns (ok, note). Sync mode, small question."""
+    # x-synchronous gives one JSON object; without it /ask streams NDJSON.
     status, body = call("/ask", "POST", {
         "query": "In one sentence, what is this knowledge base about?",
         "top_k": 3, "citations": False,
-    }, timeout=120)
+    }, timeout=120, headers={"x-synchronous": "true"})
     if status != 200:
         return False, f"/ask returned {status}: {str(body)[:200]}"
     answer = (body.get("answer") or "") if isinstance(body, dict) else ""
@@ -114,6 +115,21 @@ patch_config({
             "temperature": 0.0,
             "default_max_completion_tokens": 1600,
             "max_input_tokens": 120000,
+        },
+        # DeepSeek v4-flash defaults to thinking mode, which rejects the
+        # forced tool_choice ARAG uses for answer_json_schema (verified:
+        # "Thinking mode does not support this tool_choice"). Declaring
+        # effort NONE (5) with effort dispatch (2) makes ARAG send
+        # reasoning_effort=none on every request - structured asks work and
+        # prose asks get faster and cheaper. vision off: 0731 is text-only.
+        "model_features": {
+            "tool_use": True,
+            "vision": False,
+            "reasoning_features": {
+                "dispatch": 2,
+                "available_efforts": [5],
+                "default_effort": 5,
+            },
         },
     }},
     "generative_model": "openai-compatible",

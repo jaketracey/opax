@@ -250,6 +250,8 @@ export class KnowledgeMapEngine {
   private canvas: HTMLCanvasElement
   private labelLayer: HTMLDivElement
   private onSelect: (id: string | null) => void
+  /** Optional: a click that hits no node but lands on an edge reports it here. */
+  onEdgePick: ((edge: MapEdge | null) => void) | null = null
 
   private renderer: THREE.WebGLRenderer
   private scene = new THREE.Scene()
@@ -1285,6 +1287,46 @@ export class KnowledgeMapEngine {
     return best
   }
 
+  private pickVecA = new THREE.Vector3()
+  private pickVecB = new THREE.Vector3()
+
+  /**
+   * The edge nearest a click, tested in SCREEN space (point-to-segment
+   * distance against the projected endpoints) so a thin tube is as easy to
+   * hit as it is to see. Same sim-position discipline as raycastNode - no
+   * dependence on rendered mesh state. Invisible edges never pick.
+   */
+  private pickEdge(x: number, y: number, threshold = 9): EdgeVisual | null {
+    this.updateCamera()
+    let best: EdgeVisual | null = null
+    let bestD = threshold
+    const a = this.pickVecA
+    const b = this.pickVecB
+    for (const visual of this.edgeVisuals) {
+      // Gate on the INTENDED opacity: `current` only animates while frames
+      // run, so a throttled tab would report every edge invisible (the same
+      // trap raycastNode avoids by using sim positions).
+      if (Math.max(visual.opacity.current, visual.opacity.target) < 0.05) continue
+      a.set(visual.from.sim.x, visual.from.sim.y, visual.from.sim.z).project(this.camera)
+      b.set(visual.to.sim.x, visual.to.sim.y, visual.to.sim.z).project(this.camera)
+      if ((a.z > 1 && b.z > 1) || (a.z < -1 && b.z < -1)) continue
+      const ax = (a.x * 0.5 + 0.5) * this.width
+      const ay = (-a.y * 0.5 + 0.5) * this.height
+      const bx = (b.x * 0.5 + 0.5) * this.width
+      const by = (-b.y * 0.5 + 0.5) * this.height
+      const dx = bx - ax
+      const dy = by - ay
+      const lenSq = dx * dx + dy * dy
+      const t = lenSq > 0 ? Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / lenSq)) : 0
+      const d = Math.hypot(x - (ax + t * dx), y - (ay + t * dy))
+      if (d < bestD) {
+        bestD = d
+        best = visual
+      }
+    }
+    return best
+  }
+
   private onPointerDown = (event: PointerEvent) => {
     const point = this.localPoint(event)
     this.pointers.set(event.pointerId, point)
@@ -1469,7 +1511,15 @@ export class KnowledgeMapEngine {
         return
       }
       const hit = this.raycastNode(point.x, point.y)
-      this.onSelect(hit ? hit.node.id : null)
+      if (hit) {
+        this.onSelect(hit.node.id)
+      } else {
+        // A miss can still land on an edge - the flow between two nodes is a
+        // selectable fact of its own.
+        const edge = this.onEdgePick ? this.pickEdge(point.x, point.y) : null
+        if (edge) this.onEdgePick?.(edge.edge)
+        else this.onSelect(null)
+      }
     }
     this.gestured = false
   }

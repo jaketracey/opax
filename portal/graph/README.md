@@ -35,14 +35,31 @@ const handle = await mountMoneyMap(
   document.getElementById('map'),   // any block container; becomes position:relative
   '/graph/money.json',
   {
-    // optional:
-    askUrl: (industry) => `/?ask=${encodeURIComponent(`What has parliament said about ${industry}?`)}`,
-    onSelect: (node) => { /* node: MoneyNode | null */ },
+    // all optional:
+    askUrl: (industry) => `#/ask?q=${encodeURIComponent(`What has parliament said about ${industry}?`)}`,
+    onSelect: (node) => { /* node: MoneyNode | null — USER selections only */ },
+    focus: 'party:Labor',     // mount already-selected, camera on the node (silent)
+    chrome: 'mini',           // 'full' (default) | 'mini' = bare scene + cards
   },
 )
-// handle.select('party:Labor') — drive the selection from outside
+// handle.select('party:Labor') — programmatic selection (does NOT fire onSelect)
 // handle.destroy() — full teardown (WebGL context, listeners, DOM)
 ```
+
+Embed notes for subject pages:
+- `onSelect` fires only for user-initiated selections (click, Enter, find box,
+  card rows); the `focus` seed, `handle.select` and filter-driven clears are
+  silent by contract.
+- `chrome: 'mini'` drops the legend, find box, time scrub, zoom buttons and
+  hint; the info/flow cards, gestures and keyboard access remain.
+- Card triggers route via `#/ask?q=`, `#/search?q=[&from=&to=]` and
+  `#/subject/{donor|party}/{label}`; on a non-SPA page (map.html) the same
+  routes are emitted with a leading `/`.
+- Interactions in full chrome: click a node (info card), click a flow line
+  (edge card with a year-scoped search trigger), find-in-map (prefix-fuzzy),
+  and a year-range scrub that filters flows by [firstYear, lastYear] overlap
+  without moving the camera.
+- Test bed: `/map.html?focus=party:Labor&chrome=mini`.
 
 ## Checks
 
