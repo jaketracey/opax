@@ -220,7 +220,9 @@ def main() -> None:
                for c in (existing.get("configs") or []) + (existing.get("running") or [])):
             sys.exit("A topics task config already exists — labelers run one at a time. See `status`.")
         rids = sample_rids(cfg, n)
-        print(f"sampled {len(rids)} speech rids")
+        (ROOT / "scripts" / "harness_runs").mkdir(exist_ok=True)
+        (ROOT / "scripts" / "harness_runs" / "enrich_sample_rids.json").write_text(json.dumps(rids))
+        print(f"sampled {len(rids)} speech rids (persisted for eval)")
         params = build_parameters(TASK_SAMPLE, rids)
         out = kb.start_task("labeler", params, apply="EXISTING")
         print("started:", json.dumps(out)[:400])
@@ -237,8 +239,35 @@ def main() -> None:
                 print(f"  - id={pid} name={nm} {json.dumps(comp)[:200]}")
 
     elif cmd == "eval":
+        # Per-label facet probes: /find with the generated labelset filter —
+        # this is also the proof the labels work as search facets.
+        import urllib.parse
+        probe_labels = ["gambling", "tax-budget", "health", "indigenous-affairs",
+                        "immigration", "financial-services", "integrity-democracy"]
+        print("label facet probes (top matches per label):")
+        for lab in probe_labels:
+            body = json.dumps({
+                "query": "the", "top_k": 3, "features": ["keyword"],
+                "show": ["basic"],
+                "filter_expression": {"field": {"prop": "label", "labelset": "topic", "label": lab}},
+            }).encode()
+            req = urllib.request.Request(
+                f"https://{cfg.zone}.rag.progress.cloud/api/v1/kb/{cfg.kb_id}/find",
+                data=body, method="POST",
+                headers={"x-nuclia-serviceaccount": f"Bearer {cfg.kb_token}",
+                         "content-type": "application/json", "user-agent": "opax-enrich/1.0"})
+            try:
+                with urllib.request.urlopen(req, timeout=60) as res:
+                    found = json.load(res)
+                titles = [r.get("title", "?") for r in (found.get("resources") or {}).values()]
+                print(f"  {lab:22} {len(titles)} shown: {'; '.join(t[:45] for t in titles)}")
+            except Exception as e:
+                print(f"  {lab:22} probe error: {e}")
+        print()
         m = int(sys.argv[2]) if len(sys.argv) > 2 else 12
-        rids = sample_rids(cfg, 400)
+        saved = ROOT / "scripts" / "harness_runs" / "enrich_sample_rids.json"
+        rids = json.loads(saved.read_text()) if saved.exists() else sample_rids(cfg, 400)
+        random.shuffle(rids)
         shown = 0
         for rid in rids:
             if shown >= m:
