@@ -775,6 +775,113 @@ async function apiRecent(env: Env): Promise<Response> {
   return out
 }
 
+// --- topic pages ------------------------------------------------------------
+// Live label counts from the enrichment pass. The labeller is MULTI-label and
+// still running, so per-topic facet counts must never be summed into "speeches
+// labelled" (a speech carrying three labels would count three times) and no
+// number here is a corpus total — the client phrases everything as "so far".
+// Verified live 2026-09-01: a faceted catalog call combined with `filters`
+// returns the facet AND the filtered total in one request, and the BARE
+// labelset path filters on "carries any label in this set".
+
+const TOPIC_FILTER_PREFIX = '/classification.labels/topic'
+const PARTY_FACET = '/classification.labels/party'
+
+interface CatalogRow extends FindResource {
+  created?: string
+}
+
+interface CatalogPage {
+  resources?: Record<string, CatalogRow>
+  fulltext?: { total?: number; facets?: Record<string, Record<string, number>> }
+}
+
+async function cachedJson(
+  cachePath: string,
+  build: () => Promise<Response>,
+): Promise<Response> {
+  const cache = caches.default
+  const cacheKey = new Request(`https://opax.com.au${cachePath}`)
+  const cached = await cache.match(cacheKey)
+  if (cached) return cached
+  const out = await build()
+  if (out.ok) {
+    out.headers.set('cache-control', 'public, max-age=600')
+    await cache.put(cacheKey, out.clone())
+  }
+  return out
+}
+
+/** All 21 topics with live counts, plus how many speeches carry any topic label. */
+async function apiTopics(env: Env): Promise<Response> {
+  return cachedJson('/api/topics', async () => {
+    const [facetedRes, anyRes] = await Promise.all([
+      kbFetch(env, `/catalog?faceted=${TOPIC_FILTER_PREFIX}&page_size=0`),
+      kbFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+    ])
+    if (!facetedRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
+    const faceted = (await facetedRes.json()) as CatalogPage
+    const any = (await anyRes.json()) as CatalogPage
+    const facet = faceted.fulltext?.facets?.[TOPIC_FILTER_PREFIX] ?? {}
+    const counts = new Map<string, number>()
+    for (const [path, n] of Object.entries(facet)) {
+      counts.set(path.slice(`${TOPIC_FILTER_PREFIX}/`.length), n)
+    }
+    // Every topic renders even before the pass reaches it — zero is honest.
+    const topics = [...TOPIC_SLUGS].map((slug) => ({ slug, count: counts.get(slug) ?? 0 }))
+    return json({ labelled: any.fulltext?.total ?? 0, topics })
+  })
+}
+
+/**
+ * One topic: total labelled so far (the filtered call's own total), per-party
+ * split (facet within the topic filter — one request covers both, cheaper than
+ * a faceted call per party), and the newest labelled speeches to enter the
+ * index (apiRecent's pattern; catalog rows carry no machine summary, so none
+ * is served — the client must not fetch per-doc to fill the gap).
+ */
+async function apiTopic(slug: string, env: Env): Promise<Response> {
+  if (!TOPIC_SLUGS.has(slug)) return json({ error: 'unknown topic' }, 404)
+  return cachedJson(`/api/topic/${slug}`, async () => {
+    const filter = `filters=${TOPIC_FILTER_PREFIX}/${slug}`
+    const [partyRes, newestRes, anyRes] = await Promise.all([
+      kbFetch(env, `/catalog?faceted=${PARTY_FACET}&${filter}&page_size=0`),
+      kbFetch(
+        env,
+        `/catalog?${filter}&sort_field=created&sort_order=desc&page_size=12&show=basic&show=origin&show=extra`,
+      ),
+      kbFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+    ])
+    if (!partyRes.ok || !newestRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
+    const byParty = (await partyRes.json()) as CatalogPage
+    const newest = (await newestRes.json()) as CatalogPage
+    const any = (await anyRes.json()) as CatalogPage
+    const partyFacet = byParty.fulltext?.facets?.[PARTY_FACET] ?? {}
+    const parties = Object.entries(partyFacet)
+      .map(([path, n]): [string, number] => [path.slice(`${PARTY_FACET}/`.length), n])
+      .sort((a, b) => b[1] - a[1])
+    const recent = Object.values(newest.resources ?? {})
+      .filter((r) => SLUG_RE.test(r.slug ?? ''))
+      .map((r) => ({
+        slug: r.slug,
+        title: r.title ?? r.slug,
+        speaker: r.origin?.collaborators?.[0] ?? null,
+        party: label(r, 'party'),
+        state: label(r, 'state'),
+        date: (r.extra?.metadata?.date as string) ?? null,
+        indexed: r.created ?? null,
+      }))
+      .slice(0, 8)
+    return json({
+      slug,
+      count: byParty.fulltext?.total ?? 0,
+      labelled: any.fulltext?.total ?? 0,
+      parties,
+      recent,
+    })
+  })
+}
+
 // ---------------------------------------------------------------------------
 
 export default {
@@ -799,6 +906,13 @@ export default {
       }
       if (url.pathname === '/api/recent' && request.method === 'GET') {
         return await apiRecent(env)
+      }
+      if (url.pathname === '/api/topics' && request.method === 'GET') {
+        return await apiTopics(env)
+      }
+      const topicMatch = url.pathname.match(/^\/api\/topic\/([a-z][a-z-]*)$/)
+      if (topicMatch && request.method === 'GET') {
+        return await apiTopic(topicMatch[1], env)
       }
       if (url.pathname === '/api/news' && request.method === 'GET') {
         return await apiNews()

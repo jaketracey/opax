@@ -116,6 +116,14 @@ for (const sel of [$("a-topic"), $("f-topic")]) {
     sel.append(opt);
   }
 }
+// Reports and topic labels describe the same debates in two vocabularies;
+// where they align, the pages cross-link (report slug ↔ enrichment topic slug).
+const REPORT_TOPIC = {
+  climate: "climate-environment", gambling: "gambling", housing: "housing",
+  immigration: "immigration", indigenous: "indigenous-affairs", media: "media-communications",
+};
+const TOPIC_REPORT = Object.fromEntries(
+  Object.entries(REPORT_TOPIC).map(([report, topic]) => [topic, report]));
 const CHAMBER_NAMES = {
   representatives: "House of Representatives", senate: "Senate",
   assembly: "Legislative Assembly", council: "Legislative Council",
@@ -419,7 +427,12 @@ function route() {
   routeCount++;
 
   if (view !== "subject") { destroySubjectMap(); currentSubjectKey = null; }
-  if (view === "subject" && segs[1] && segs[2]) {
+  if (view === "subject" && segs[1] === "topic") {
+    showPanel("subject");
+    document.title = TITLES.subject;
+    if (segs[2]) openTopicPage(decodeURIComponent(segs[2]), manageFocus);
+    else openTopicsIndex(manageFocus);
+  } else if (view === "subject" && segs[1] && segs[2]) {
     showPanel("subject");
     document.title = TITLES.subject;
     openSubject(segs[1], decodeURIComponent(segs[2]), manageFocus);
@@ -1522,6 +1535,158 @@ async function openSubject(kind, name, manageFocus) {
   }
 }
 
+// --- topic entries (the encyclopedia's ideas wing) ---------------------------
+// Every enrichment topic gets an entry: live label counts, the party split,
+// the newest labelled speeches, the money pairing where an AEC donor industry
+// maps onto the debate, and the standing report where one exists. The machine
+// labelling pass is still running, so every count reads "so far", never as a
+// corpus total.
+
+/** How a topic reads mid-sentence ("What has parliament said about …?"). */
+function topicPhrase(slug) {
+  if (slug === "indigenous-affairs") return "Indigenous affairs";
+  return (TOPICS[slug] || slug).toLowerCase().replace(/ & /g, " and ");
+}
+
+/** The donors pairing for a topic that maps onto an AEC donor industry. */
+function topicMoneyHTML(ind) {
+  const donors = (moneyData?.nodes || []).filter(
+    (n) => n.kind === "donor" && (n.industry === ind || n.group === ind));
+  if (!donors.length) return "";
+  const total = donors.reduce((a, n) => a + (n.total || 0), 0);
+  const donorRows = donors.sort((a, b) => (b.total || 0) - (a.total || 0)).slice(0, 6)
+    .map((n) => [n.label, n.total || 0]);
+  return `
+    <p class="kicker">The money beside the words</p>
+    <p style="margin:0.2rem 0 0.6rem">While parliament debated this, ${esc(industryLabel(ind))}
+      interests disclosed <b>${esc(fmtMoney(total))}</b> in donations to political parties.</p>
+    ${barList(donorRows, { fmt: fmtMoney, heading: `Largest ${industryLabel(ind)} donors`,
+      linkTo: (nm) => subjectHash("donor", nm) })}
+    <p class="fineprint">${esc(AEC_NOTE)} <a href="#/money">Explore on the money map</a></p>`;
+}
+
+async function openTopicPage(slug, manageFocus) {
+  const key = `topic:${slug}`;
+  if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
+  currentSubjectKey = key;
+  destroySubjectMap();
+  const body = $("subject-body");
+  const name = TOPICS[slug];
+  if (!name) {
+    body.innerHTML = `<p class="kicker">Topic</p>
+      <p class="status">No topic called “${esc(slug)}” in the taxonomy.
+      <a href="#/subject/topic">All topics</a></p>`;
+    return;
+  }
+  body.innerHTML = subjectSkeleton("Topic", name,
+    `<span class="status" style="margin:0">Counting the labelled record…</span>`);
+  if (manageFocus) $("subject-title")?.focus();
+  const sections = $("subject-sections");
+  const box = $("subject-infobox");
+  const phrase = topicPhrase(slug);
+  const searchTopic = searchHash(phrase, { topic: slug });
+
+  let data = null;
+  try {
+    [data] = await Promise.all([api(`/api/topic/${encodeURIComponent(slug)}`), loadReportsIndex()]);
+  } catch { /* the ask and search actions below work without counts */ }
+  if (currentSubjectKey !== key) return;
+  const report = reportsIndex?.find((r) => r.slug === TOPIC_REPORT[slug]) || null;
+
+  const count = data?.count ?? null;
+  const labelled = data?.labelled ?? 0;
+  body.querySelector(".subject-tag").innerHTML = count === null
+    ? `<span>The live counts could not be loaded. The searches below still work.</span>`
+    : `<span>${esc(count.toLocaleString())} speeches carry this label so far, of
+       ${esc(labelled.toLocaleString())} labelled to date. The labelling pass is still running.</span>`;
+
+  const share = count && labelled ? `${((count / labelled) * 100).toFixed(1)}%` : null;
+  box.innerHTML = infoboxHTML([
+    ["Type", "Topic"],
+    count !== null && ["Labelled so far", `<b>${esc(count.toLocaleString())}</b> speeches`],
+    share && ["Of labelled speeches", esc(share)],
+    report && ["Standing report", `<a href="#/reports/${esc(report.slug)}">${esc(report.title)}</a>`],
+  ], "", [
+    actionBtn("ask", askHash(`What has parliament said about ${phrase}?`), "Ask what parliament said", { primary: true }),
+    actionBtn("search", searchTopic, "Search this topic"),
+    ...(report ? [actionBtn("speeches", `#/reports/${report.slug}`, `Read the ${report.title} report`)] : []),
+  ]);
+
+  if (data) {
+    if (data.parties?.length) {
+      sections.insertAdjacentHTML("beforeend", barList(data.parties.slice(0, 8), {
+        heading: "Who speaks on it, by party (labelled so far)",
+        fmt: (v) => Number(v).toLocaleString(),
+        linkTo: (nm) => searchHash(phrase, { topic: slug, party: nm }),
+        partyDots: true,
+      }));
+      sections.insertAdjacentHTML("beforeend",
+        `<p class="fineprint">Party names open that party's labelled speeches on this topic.
+         Some speeches carry no party label, so the bars can sum below the total.</p>`);
+    }
+    if (data.recent?.length) {
+      sections.insertAdjacentHTML("beforeend",
+        `<p class="kicker">Newest in the index with this label</p>
+         <ul class="subject-list" role="list">${data.recent.map((r) => `
+           <li><a href="#/doc/${esc(r.slug)}" class="source-title">${esc(r.title)}</a>
+             <span class="result-meta">${metaHTML(r)}</span></li>`).join("")}</ul>
+         <p class="fineprint">The newest labelled speeches to enter the index, not the newest
+         speeches on the subject. <a href="${esc(searchTopic)}">Search all of them</a></p>`);
+    } else if (count !== null) {
+      sections.insertAdjacentHTML("beforeend",
+        `<p class="status">The labelling pass has not reached this debate yet.
+         <a href="${esc(searchHash(phrase, {}))}">Search the record for ${esc(phrase)} instead</a>.</p>`);
+    }
+  }
+
+  const moneyInd = detectMoneyIndustry(`who donates money to ${phrase}`);
+  if (moneyInd) {
+    await loadMoneyData();
+    if (currentSubjectKey !== key) return;
+    const html = topicMoneyHTML(moneyInd);
+    if (html) sections.insertAdjacentHTML("beforeend", html);
+  }
+}
+
+async function openTopicsIndex(manageFocus) {
+  const key = "topic:index";
+  if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
+  currentSubjectKey = key;
+  destroySubjectMap();
+  const body = $("subject-body");
+  body.innerHTML = `
+    <p class="kicker">Topics</p>
+    <div class="subject-head">
+      <h2 id="subject-title" tabindex="-1">Topics A-Z</h2>
+      <p class="subject-tag"><span class="status" style="margin:0">Counting the labelled record…</span></p>
+    </div>
+    <div id="subject-sections"></div>`;
+  if (manageFocus) $("subject-title")?.focus();
+  let data = null;
+  try { data = await api("/api/topics"); } catch { /* honest failure below */ }
+  if (currentSubjectKey !== key) return;
+  const tag = body.querySelector(".subject-tag");
+  if (!data?.topics?.length) {
+    tag.innerHTML = `<span>The live counts could not be loaded. Try again shortly.</span>`;
+    return;
+  }
+  tag.innerHTML = `<span>${esc((data.labelled ?? 0).toLocaleString())} speeches carry topic labels
+    so far. The labelling pass is still running, so every count below is a floor.</span>`;
+  const known = data.topics.filter((t) => TOPICS[t.slug])
+    .sort((a, b) => TOPICS[a.slug].localeCompare(TOPICS[b.slug]));
+  const li = (t) => `<li><a href="${esc(subjectHash("topic", t.slug))}" class="source-title">${esc(TOPICS[t.slug])}</a>
+    <span class="result-meta">${esc(t.count.toLocaleString())} labelled so far</span></li>`;
+  const half = Math.ceil(known.length / 2);
+  $("subject-sections").innerHTML = `
+    <div class="split-list">
+      <ul class="subject-list" role="list">${known.slice(0, half).map(li).join("")}</ul>
+      <ul class="subject-list" role="list">${known.slice(half).map(li).join("")}</ul>
+    </div>
+    <p class="fineprint">A machine pass is labelling every speech in the corpus by subject;
+    these counts are live and grow as it runs. A topic with few speeches yet is not a quiet
+    debate, just one the pass has not reached.</p>`;
+}
+
 $("subject-back").addEventListener("click", () => {
   if (routeCount > 1) history.back();
   else location.hash = "#/";
@@ -1668,7 +1833,12 @@ async function renderFrontTopic() {
     const speechYears = toYearSeries(stats.timeline ?? []);
     const firstYear = speechYears.size ? Math.min(...speechYears.keys()) : null;
     const [peakYear] = peakOf(speechYears.entries()) ?? [];
-    $("h-mw").textContent = `Money & words: ${report.title}`;
+    // Where the report maps onto an enrichment topic, the module's name opens
+    // the topic's live encyclopedia entry.
+    const mwTopic = REPORT_TOPIC[today.slug];
+    $("h-mw").innerHTML = mwTopic
+      ? `Money &amp; words: <a href="${esc(subjectHash("topic", mwTopic))}">${esc(report.title)}</a>`
+      : `Money &amp; words: ${esc(report.title)}`;
 
     // The module's name, enacted: the words and the money in one sentence.
     const lede = `<b>${esc((stats.speech_count ?? 0).toLocaleString())}</b> speeches` +
@@ -1709,6 +1879,7 @@ async function renderFrontTopic() {
       </nav>` : ""}
       <p class="fineprint" style="margin-top:0.9rem">The topic rotates daily.
       <a href="#/reports/${esc(today.slug)}">Read the full ${esc(report.title)} report</a> ·
+      ${mwTopic ? `<a href="${esc(subjectHash("topic", mwTopic))}">Follow the topic live</a> · ` : ""}
       <a href="#/reports">All reports</a></p>`;
     $("mod-mw").hidden = false;
 
