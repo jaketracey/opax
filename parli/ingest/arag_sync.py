@@ -210,7 +210,7 @@ def map_speech(row: sqlite3.Row) -> dict:
     title_bits = [b for b in (speaker, row["topic"], date) if b]
     return {
         "slug": f"speech-{row['speech_id']}",
-        "title": " — ".join(title_bits) or f"Speech {row['speech_id']}",
+        "title": (" — ".join(title_bits) or f"Speech {row['speech_id']}")[:2000],
         "texts": _texts(clean_speech_text(row["text"], row["source"] or "", row["topic"])),
         "origin": {
             "source_id": "opax-parli",
@@ -244,7 +244,7 @@ def map_legal(row: sqlite3.Row) -> dict:
     date = row["date"] or ""
     return {
         "slug": f"legal-{row['doc_id']}",
-        "title": row["title"] or row["citation"] or f"Legal document {row['doc_id']}",
+        "title": (row["title"] or row["citation"] or f"Legal document {row['doc_id']}")[:2000],
         "texts": _texts(row["text"] or ""),
         "origin": {
             "source_id": "open-australian-legal-corpus",
@@ -278,7 +278,7 @@ def map_news(row: sqlite3.Row) -> dict:
         labels += [("topic", t.strip()) for t in row["section"].split(",")[:5] if t.strip()]
     return {
         "slug": f"news-{row['rowid']}",
-        "title": row["title"] or f"Article {row['rowid']}",
+        "title": (row["title"] or f"Article {row['rowid']}")[:2000],
         "texts": _texts(row["body_text"] or ""),
         "origin": {
             "source_id": "news",
