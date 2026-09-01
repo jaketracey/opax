@@ -745,6 +745,15 @@ $("guided-go").addEventListener("click", () => {
   $("search-input").value = topic;
   $("search-form").requestSubmit();
 });
+// The guided line is prose, not a <form>, so Enter must be wired by hand.
+for (const id of ["guided-speaker", "guided-topic"]) {
+  $(id).addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      $("guided-go").click();
+    }
+  });
+}
 
 $("search-copylink").addEventListener("click", (e) => {
   copyText(siteUrl(searchHash(lastSearch.query, lastSearch.filters)), e.target);

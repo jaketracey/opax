@@ -199,6 +199,10 @@ member rows, 35K speeches) — don't trust members-derived facts for those.
 
 ## Open items
 
+- Speaker filter is exact-match after case/whitespace normalisation only —
+  typos, surname-only ("howard") and lowercase Mc/Mac names still miss. Real
+  resolution needs a speakers directory (exported names list from the members
+  table, or KB facets) resolved client-side before filtering.
 - If/when the legal push is approved: raise `portal/public/corpus.json`
   `expected_resources` to include the legal docs — the front-page corpus meter
   compares it against the KB's total resource count and will otherwise hide

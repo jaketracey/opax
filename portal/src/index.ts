@@ -38,6 +38,23 @@ const SLUG_RE = /^(speech|legal|news)-(\d+)$/
  *   from/to (years) → {prop:'created', since/until} — origin.created is the speech date
  * Multiple clauses AND together under `field`.
  */
+/**
+ * The collaborator filter is an EXACT match against names normalised at sync
+ * ("John Howard"), so a lazily-typed "john howard" finds nothing. Meet the
+ * typing halfway: collapse whitespace, and when the input carries no case
+ * signal at all (all lower / all upper) title-case each name part across
+ * space, hyphen and apostrophe boundaries. Mixed-case input ("McEwen",
+ * "D'Ambrosio") is trusted verbatim - re-casing it would break the match.
+ */
+function canonicalSpeaker(raw: string): string {
+  const name = raw.trim().replace(/\s+/g, ' ')
+  if (name !== name.toLowerCase() && name !== name.toUpperCase()) return name
+  return name.toLowerCase().replace(
+    /(^|[\s\-'])(\p{L})/gu,
+    (_, boundary: string, letter: string) => boundary + letter.toUpperCase(),
+  )
+}
+
 function filterExpression(f: {
   kind?: string | null
   speaker?: string | null
@@ -52,7 +69,9 @@ function filterExpression(f: {
   }
   if (f.party) clauses.push({ prop: 'label', labelset: 'party', label: f.party })
   if (f.state) clauses.push({ prop: 'label', labelset: 'state', label: f.state })
-  if (f.speaker) clauses.push({ prop: 'origin_collaborator', collaborator: f.speaker })
+  if (f.speaker) {
+    clauses.push({ prop: 'origin_collaborator', collaborator: canonicalSpeaker(f.speaker) })
+  }
   const yr = (s: string | null | undefined) => (s && /^\d{4}$/.test(s) ? s : null)
   const from = yr(f.from)
   const to = yr(f.to)
