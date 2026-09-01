@@ -37,6 +37,15 @@ from parli.arag import AragConfig, AragError, KbClient, load_dotenv
 STATE_PATH = Path("~/.cache/autoresearch/arag_sync_state.json").expanduser()
 DB_PATH = Path("~/.cache/autoresearch/parli.db").expanduser()
 
+# Corpus cutoff: nothing predating any currently serving parliamentarian.
+# The members table is too dirty to derive this (1901 senators linked to
+# current members), so it's pinned to the March 1993 federal election — the
+# entry of the longest-serving current federal MP (Bob Katter). Speeches
+# under 200 chars are procedural fragments ("business start") — excluded.
+# Together these halve the speech corpus: 627K rows / 2.22 GB kept.
+DEFAULT_SINCE = "1993-03-13"
+MIN_SPEECH_CHARS = 200
+
 # A single text field caps out well below this; split anything bigger into
 # continuation fields on the same resource (legal docs reach 100s of KB).
 MAX_FIELD_CHARS = 900_000
@@ -156,6 +165,7 @@ TABLES: dict[str, dict[str, Any]] = {
     "speeches": {
         "pk": "speech_id",
         "select": "SELECT * FROM speeches WHERE speech_id > ? AND text IS NOT NULL "
+                  f"AND LENGTH(text) >= {MIN_SPEECH_CHARS} AND date >= {{since!r}} "
                   "ORDER BY speech_id LIMIT ?",
         "map": map_speech,
     },
@@ -208,11 +218,10 @@ def _push_one(kb: KbClient, body: dict) -> tuple[str, Optional[str]]:
 
 
 def _batches(db: sqlite3.Connection, spec: dict, after: int, remaining: int,
-             batch_size: int = 200) -> Iterator[list[sqlite3.Row]]:
+             since: str, batch_size: int = 200) -> Iterator[list[sqlite3.Row]]:
+    select = spec["select"].format(since=since)
     while remaining > 0:
-        rows = db.execute(
-            spec["select"], (after, min(batch_size, remaining))
-        ).fetchall()
+        rows = db.execute(select, (after, min(batch_size, remaining))).fetchall()
         if not rows:
             return
         yield rows
@@ -221,20 +230,20 @@ def _batches(db: sqlite3.Connection, spec: dict, after: int, remaining: int,
 
 
 def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
-               state: dict, limit: int, dry_run: bool) -> None:
+               state: dict, limit: int, dry_run: bool, since: str) -> None:
     tstate = state["tables"].setdefault(table, {"after": 0, "pushed": 0, "failed": {}})
     after = tstate["after"]
     print(f"[{table}] resuming after {spec['pk']}={after}, "
           f"{tstate['pushed']:,} already pushed, {len(tstate['failed'])} failed")
 
-    for rows in _batches(db, spec, after, limit):
+    for rows in _batches(db, spec, after, limit, since):
         bodies = [spec["map"](r) for r in rows]
         if dry_run:
+            # Never advance or persist the checkpoint on a dry run.
             for b in bodies:
                 size = sum(len(f["body"]) for f in b["texts"].values())
                 print(f"  DRY {b['slug']:20s} {size:>9,} chars  {b['title'][:70]!r}")
-            tstate["after"] = rows[-1][0] if spec["pk"] == "rowid" else rows[-1][spec["pk"]]
-            continue
+            return
 
         with ThreadPoolExecutor(max_workers=WORKERS) as pool:
             futures = {pool.submit(_push_one, kb, b): b for b in bodies}
@@ -299,6 +308,9 @@ def main() -> None:
                         help="map and print, push nothing")
     parser.add_argument("--retry-failed", action="store_true",
                         help="re-attempt previously failed resources, then exit")
+    parser.add_argument("--since", default=DEFAULT_SINCE,
+                        help=f"speech date cutoff (default {DEFAULT_SINCE}: the 1993 "
+                             "election — no data predating any current federal MP)")
     parser.add_argument("--db", default=str(DB_PATH))
     args = parser.parse_args()
 
@@ -326,7 +338,7 @@ def main() -> None:
         table = table.strip()
         if table not in TABLES:
             sys.exit(f"Unknown table {table!r} (choose from {', '.join(TABLES)})")
-        sync_table(kb, db, table, TABLES[table], state, limit, args.dry_run)
+        sync_table(kb, db, table, TABLES[table], state, limit, args.dry_run, args.since)
     print(f"Elapsed {time.time() - t0:.0f}s. State: {STATE_PATH}")
 
 

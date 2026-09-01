@@ -1,8 +1,27 @@
 # OPAX → Progress Agentic RAG migration
 
-Status: **built, not yet executed at scale.** No knowledge box has been bulk-loaded and
-no enrichment (DA) task is registered anywhere — both are gated on the cost sign-offs
-in §Costs. Branch: `worktree-arag-migration`.
+Status: **provisioned and smoke-tested end-to-end; bulk load pending cost sign-off.**
+KB `opax` (`d33c0a87-98cb-4169-b0d2-ff9b75573fb7`, account `7b5c9761…`) is live with a
+25-speech sample; the portal Worker serves grounded, cited answers off it. The
+`ray-test` KB was deleted 2026-09-01. No enrichment (DA) task is registered anywhere —
+gated on the cost sign-offs in §Costs. Branch: `worktree-arag-migration`.
+
+**Models (pinned 2026-09-01, cheapest tier):** `generative_model` and `summary_model`
+are `gemini-2.5-flash-lite` — the cheapest of the KB's 71 generative options
+($0.10/$0.40 per 1M provider tokens); grounded cited answering keeps lite-tier models
+honest, verified on the sample. Upgrade ladder if sample-eval quality demands:
+`chatgpt-5-nano` → `gemini-3.1-flash-lite` → `gemini-3.6-flash`
+(`scripts/arag_set_models.py <model-id>`). Embeddings: platform default
+`multilingual-2024-05-06` (no per-query LLM cost). NOTE: Progress bills in
+**Agentic RAG tokens** (~$0.008/token past the monthly allowance) with undisclosed
+per-model multipliers — the step-4 sample measures the real burn.
+
+**Corpus filter (2026-09-01):** speeches only migrate from **1993-03-13** (the
+election that seated the longest-serving current federal MP — nothing predates any
+currently serving parliamentarian; the members table is too dirty to derive this
+per-member) and only if **≥200 chars** (drops "business start"-style procedural
+fragments). Kept: **627,061 speeches / 2.22 GB** — halves the speech corpus.
+Override: `--since`. Legal documents are not date-filtered (in-force law is old).
 
 ## Target architecture
 
@@ -37,10 +56,12 @@ gets `ARAG_KB_ID` as a var and `ARAG_KB_TOKEN` via `wrangler secret put`.
 
 | Table | Rows | Text | Avg/doc | Est. tokens |
 |---|---:|---:|---:|---:|
-| speeches | 1,187,050 | 4.40 GB (752.7M words) | 3.7 KB | ~1.05 B |
+| speeches (full) | 1,187,050 | 4.40 GB (752.7M words) | 3.7 KB | ~1.05 B |
+| **speeches (≥1993, ≥200 chars — what migrates)** | **627,061** | **2.22 GB** | 3.5 KB | **~0.56 B** |
 | legal_documents | 232,560 | 9.21 GB | 39.6 KB | ~2.30 B |
 | news_articles | 4,028 | small | — | negligible |
-| **Total migrating** | **1.42 M docs** | **13.6 GB** | | **~3.35 B** |
+| **Total migrating (with legal)** | **864 K docs** | **11.4 GB** | | **~2.9 B** |
+| **Total migrating (speeches-only phase 1)** | **631 K docs** | **2.2 GB** | | **~0.56 B** |
 
 Staying relational: votes 304K · donations 199K · grants 230K · contracts 15.8K ·
 bills 5.3K · members 2,415 · speech_topics 2.98M · lobbyists/meetings/interests.
@@ -81,11 +102,11 @@ Gemini 2.5 Flash, one pass over every doc (≈150-token prompt overhead; ≈150 
 tokens/speech, ≈300/legal doc). Current list prices per 1M tokens: Flash $0.30 in /
 $2.50 out, Flash-Lite $0.10 / $0.40; Batch API is 50% off both.
 
-| Scope | Input | Output | Flash std | Flash batch | Lite batch |
+| Scope (post-filter corpus) | Input | Output | Flash std | Flash batch | Lite batch |
 |---|---:|---:|---:|---:|---:|
-| Speeches only | 1.23 B | 178 M | $814 | **$407** | $97 |
+| Speeches (627K, ≥1993) | 0.65 B | 94 M | $430 | **$215** | $51 |
 | Legal only | 2.34 B | 70 M | $875 | **$438** | $131 |
-| Whole corpus | 3.57 B | 248 M | $1,691 | **$846** | $228 |
+| Whole filtered corpus | 3.0 B | 164 M | $1,310 | **$654** | $182 |
 
 Recommendation: Batch API always (no urgency in a corpus pass); trial Flash-Lite on
 a 1K-doc sample first — if quality holds for classification-shaped work, the whole
@@ -108,15 +129,25 @@ parli.db → KB). Cutover is a DNS change to the Worker; rollback is pointing DN
 back. The `ARAG_SEARCH=1` env flag on FastAPI allows an A/B period where the
 existing site serves ARAG answers without the new FE.
 
+## Done 2026-09-01
+
+- `ray-test` KB deleted (account `7b5c9761…`, which also holds `noicework`).
+- `opax` KB created, SOWNER token minted (`.env`), zero DA tasks.
+- Models pinned to `gemini-2.5-flash-lite`.
+- 25-speech smoke push (4s, 0 failed) → `/find` + cited `/ask` verified through the
+  portal Worker locally (`wrangler dev`), including origin/extra serialization and
+  the split-body document viewer.
+
 ## Open items
 
-- **ARAG_ACCOUNT UUID for the new NUA key** — the key provided 2026-09-01 is not
-  scoped to the noice account (f2ac01e1…) nor progress-jay; need its account UUID
-  (visible in the dashboard URL) before `create` / `delete-kb` work.
-- **Delete the "ray test" KB** — not on the noice account (only `vccmhw` +
-  `ncsr-demo` there); presumably on the new key's account:
-  `uv run python scripts/arag_provision.py delete-kb <slug>` once ARAG_ACCOUNT is set.
+- Step-4 sample (~2K docs) → measure Agentic RAG token burn/resource, eval
+  flash-lite answer quality → the two §Costs sign-offs.
 - news_articles text column name (scan errored on content/body/text — check schema
   before syncing that table).
+- The members table is dirty (current members linked to 1901 records, e.g. Susan
+  McDonald `entered_house=1901-05-09`; Bob Katter carries his father's 1967 entry).
+  Doesn't block the KB migration (cutoff is pinned, not derived) but it corrupts
+  any speaker-linked analytics on the current site too.
 - Decide the fate of the 30 Next.js investigation pages (park, or regenerate the
   top handful as static pages over exported JSON).
+- Portal deploy + opax.com.au DNS cutover once the full corpus is in.

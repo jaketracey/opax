@@ -86,6 +86,9 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
     query: q,
     top_k: topK,
     reranker: 'predict',
+    // origin + extra aren't serialized by default; the UI needs them for
+    // speaker and date.
+    show: ['basic', 'origin', 'extra'],
     features:
       mode === 'semantic' ? ['semantic'] : mode === 'keyword' ? ['keyword'] : ['keyword', 'semantic'],
   }
@@ -143,6 +146,7 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
     citations: true, // NEVER combine with answer_json_schema — platform bug
     top_k: 20,
     reranker: 'predict',
+    show: ['basic', 'origin', 'extra'],
   }
   if (kind && kind !== 'all') {
     body.filter_expression = { field: { prop: 'label', labelset: 'kind', label: kind } }
@@ -181,7 +185,7 @@ async function apiResource(slug: string, env: Env): Promise<Response> {
   if (!SLUG_RE.test(slug)) return json({ error: 'bad slug' }, 400)
   const res = await kbFetch(
     env,
-    `/slug/${slug}?show=basic&show=values&show=extracted&extracted=text`,
+    `/slug/${slug}?show=basic&show=origin&show=extra&show=values&show=extracted&extracted=text`,
   )
   if (res.status === 404) return json({ error: 'not found' }, 404)
   if (!res.ok) return json({ error: `resource fetch failed (${res.status})` }, 502)

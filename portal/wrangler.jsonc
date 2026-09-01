@@ -22,6 +22,6 @@
   //   npx wrangler secret put ARAG_KB_TOKEN
   "vars": {
     "ARAG_ZONE": "aws-ap-southeast-2-1",
-    "ARAG_KB_ID": ""
+    "ARAG_KB_ID": "d33c0a87-98cb-4169-b0d2-ff9b75573fb7"
   }
 }
