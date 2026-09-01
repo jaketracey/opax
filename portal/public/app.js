@@ -365,31 +365,269 @@ window.addEventListener("hashchange", route);
 let askAbort = null;
 let askTimer = null;
 
+/* --- answer markdown, ported from corpuskit ---------------------------------
+   parseDocBlocks + normaliseAnswerBullets come from corpuskit's tested
+   lib/resource-view.ts and lib/answer-text.ts (the parser its document reader
+   and AI answers share); renderAnswer below replaces the React shell
+   (AnswerMarkdown.tsx) with plain DOM building. Injection-safe: model text
+   only ever reaches textContent — no innerHTML on this path. */
+
 /**
- * Minimal, injection-safe rendering for model-written answers: only text
- * nodes and <strong> are ever created. Handles the two things the model
- * actually emits — **bold** and `* ` list markers — nothing else.
+ * The model is asked for markdown but sometimes runs a whole bulleted section
+ * onto one line — `**Tiers** * The SESSF uses ... * Tier 3 ...`. A lone ` * `
+ * after a sentence-ish boundary is never legitimate prose here, so it moves
+ * onto its own line and parses as the bullet it was meant to be. Emphasis
+ * (`*word*`) and arithmetic (`0.2 * 3`) never match.
  */
+function normaliseAnswerBullets(text) {
+  return text.replace(/([.:;!?\]"”)*]) \* (?=\S)/g, "$1\n* ");
+}
+
+function tableCells(line) {
+  return line.replace(/^\s*\|/, "").replace(/\|\s*$/, "").split("|").map((c) => c.trim());
+}
+
+function isTableSeparator(line) {
+  return /^\s*\|?[\s:|-]*-[\s:|-]*\|?\s*$/.test(line) && line.includes("-");
+}
+
+/** Collapse the soft line wraps inside a single paragraph into spaces. */
+function unwrapText(text) {
+  return text.replace(/\s*\n\s*/g, " ").trim();
+}
+
+/** Width of a line's leading whitespace, counting a tab as two spaces. */
+function indentWidth(line) {
+  const leading = /^[ \t]*/.exec(line)?.[0] ?? "";
+  return leading.replace(/\t/g, "  ").length;
+}
+
+/**
+ * Parse a body (markdown, or flattened extracted text) into renderable
+ * blocks: headings, block quotes, fenced code, ordered/unordered lists with
+ * one level of nesting and soft-wrap continuations, pipe tables; everything
+ * else is a paragraph. Blank-line separation is used when present; otherwise
+ * each source line becomes its own block.
+ */
+function parseDocBlocks(body) {
+  const source = String(body ?? "").replace(/\r\n?/g, "\n");
+  if (source.trim().length === 0) return [];
+  const hasBlankLines = /\n[ \t]*\n/.test(source);
+  const lines = source.split("\n");
+  const blocks = [];
+
+  let i = 0;
+  let paragraph = [];
+  const flushParagraph = () => {
+    if (paragraph.length === 0) return;
+    blocks.push({ kind: "paragraph", text: unwrapText(paragraph.join("\n")) });
+    paragraph = [];
+  };
+
+  while (i < lines.length) {
+    const line = lines[i] ?? "";
+    const trimmed = line.trim();
+
+    if (trimmed.length === 0) {
+      flushParagraph();
+      i += 1;
+      continue;
+    }
+
+    if (/^```/.test(trimmed)) {
+      flushParagraph();
+      const buf = [];
+      i += 1;
+      while (i < lines.length && !/^```/.test((lines[i] ?? "").trim())) {
+        buf.push(lines[i] ?? "");
+        i += 1;
+      }
+      i += 1; // closing fence
+      blocks.push({ kind: "code", text: buf.join("\n") });
+      continue;
+    }
+
+    const heading = /^(#{1,6})\s+(.*)$/.exec(trimmed);
+    if (heading) {
+      flushParagraph();
+      blocks.push({ kind: "heading", level: heading[1].length, text: heading[2].trim() });
+      i += 1;
+      continue;
+    }
+
+    // Table: a pipe row followed by a separator row.
+    if (trimmed.includes("|") && i + 1 < lines.length && isTableSeparator(lines[i + 1] ?? "")) {
+      flushParagraph();
+      const headers = tableCells(trimmed);
+      const rows = [];
+      i += 2;
+      while (i < lines.length && (lines[i] ?? "").includes("|") && (lines[i] ?? "").trim()) {
+        rows.push(tableCells(lines[i] ?? ""));
+        i += 1;
+      }
+      blocks.push({ kind: "table", headers, rows });
+      continue;
+    }
+
+    if (/^>\s?/.test(trimmed)) {
+      flushParagraph();
+      const buf = [];
+      while (i < lines.length && /^>\s?/.test((lines[i] ?? "").trim())) {
+        buf.push((lines[i] ?? "").trim().replace(/^>\s?/, ""));
+        i += 1;
+      }
+      blocks.push({ kind: "quote", text: unwrapText(buf.join("\n")) });
+      continue;
+    }
+
+    // List: bullet/number lines with soft-wrap continuations, blank-line
+    // "loose" gaps, and one level of nesting (a bullet indented two-plus
+    // spaces past the first item nests under the item above it).
+    const bullet = /^([-*+]|\d+[.)])\s+/.exec(trimmed);
+    if (bullet) {
+      flushParagraph();
+      const ordered = /^\d/.test(bullet[1]);
+      const baseIndent = indentWidth(line);
+      const items = [];
+      let lastWasChild = false;
+      while (i < lines.length) {
+        const raw = lines[i] ?? "";
+        const t = raw.trim();
+        const m = /^([-*+]|\d+[.)])\s+(.*)$/.exec(t);
+        if (m) {
+          const parent = items[items.length - 1];
+          if (parent && indentWidth(raw) >= baseIndent + 2) {
+            parent.children.push(m[2].trim());
+            lastWasChild = true;
+          } else {
+            items.push({ text: m[2].trim(), children: [] });
+            lastWasChild = false;
+          }
+          i += 1;
+          continue;
+        }
+        if (t.length === 0) {
+          // Continue across a blank line only when the list resumes after it.
+          let j = i + 1;
+          while (j < lines.length && (lines[j] ?? "").trim().length === 0) j += 1;
+          if (j < lines.length && /^([-*+]|\d+[.)])\s+/.test((lines[j] ?? "").trim())) {
+            i = j;
+            continue;
+          }
+          break;
+        }
+        // An indented, non-bullet line continues the most recent entry's text.
+        const target = items[items.length - 1];
+        if (/^\s/.test(raw) && target) {
+          if (lastWasChild && target.children.length > 0) {
+            target.children[target.children.length - 1] += ` ${t}`;
+          } else {
+            target.text += ` ${t}`;
+          }
+          i += 1;
+          continue;
+        }
+        break;
+      }
+      blocks.push({ kind: "list", ordered, items });
+      continue;
+    }
+
+    if (hasBlankLines) {
+      paragraph.push(line);
+      i += 1;
+    } else {
+      blocks.push({ kind: "paragraph", text: trimmed });
+      i += 1;
+    }
+  }
+  flushParagraph();
+  return blocks;
+}
+
+/** Inline treatment: **bold** only — text nodes and <strong>, nothing else. */
+function appendInline(el, text) {
+  const parts = String(text).split(/\*\*(.+?)\*\*/);
+  parts.forEach((part, j) => {
+    if (!part) return;
+    if (j % 2 === 1) {
+      const b = document.createElement("strong");
+      b.textContent = part;
+      el.appendChild(b);
+    } else {
+      el.appendChild(document.createTextNode(part));
+    }
+  });
+}
+
 function renderAnswer(container, text) {
   container.replaceChildren();
-  const lines = String(text).split("\n");
-  lines.forEach((line, i) => {
-    const m = /^(\s*)\*\s+(.*)$/.exec(line);
-    let content = line;
-    if (m) content = `${m[1]}\u2022 ${m[2]}`;
-    const parts = content.split(/\*\*(.+?)\*\*/);
-    parts.forEach((part, j) => {
-      if (!part) return;
-      if (j % 2 === 1) {
-        const b = document.createElement("strong");
-        b.textContent = part;
-        container.appendChild(b);
-      } else {
-        container.appendChild(document.createTextNode(part));
+  for (const block of parseDocBlocks(normaliseAnswerBullets(String(text)))) {
+    if (block.kind === "heading") {
+      // An answer sits below the page's own headings: model headings render
+      // at one visual level (h3, h4 beneath) to keep the outline sensible.
+      const h = document.createElement(block.level <= 3 ? "h3" : "h4");
+      appendInline(h, block.text);
+      container.appendChild(h);
+    } else if (block.kind === "list") {
+      const list = document.createElement(block.ordered ? "ol" : "ul");
+      for (const item of block.items) {
+        const li = document.createElement("li");
+        appendInline(li, item.text);
+        if (item.children.length) {
+          const sub = document.createElement("ul");
+          for (const child of item.children) {
+            const cli = document.createElement("li");
+            appendInline(cli, child);
+            sub.appendChild(cli);
+          }
+          li.appendChild(sub);
+        }
+        list.appendChild(li);
       }
-    });
-    if (i < lines.length - 1) container.appendChild(document.createTextNode("\n"));
-  });
+      container.appendChild(list);
+    } else if (block.kind === "quote") {
+      const q = document.createElement("blockquote");
+      appendInline(q, block.text);
+      container.appendChild(q);
+    } else if (block.kind === "code") {
+      const pre = document.createElement("pre");
+      const code = document.createElement("code");
+      code.textContent = block.text;
+      pre.appendChild(code);
+      container.appendChild(pre);
+    } else if (block.kind === "table") {
+      const scroll = document.createElement("div");
+      scroll.className = "table-scroll";
+      const table = document.createElement("table");
+      table.className = "about-table";
+      const thead = document.createElement("thead");
+      const headRow = document.createElement("tr");
+      for (const header of block.headers) {
+        const th = document.createElement("th");
+        appendInline(th, header);
+        headRow.appendChild(th);
+      }
+      thead.appendChild(headRow);
+      const tbody = document.createElement("tbody");
+      for (const row of block.rows) {
+        const tr = document.createElement("tr");
+        for (const cell of row) {
+          const td = document.createElement("td");
+          appendInline(td, cell);
+          tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+      }
+      table.append(thead, tbody);
+      scroll.appendChild(table);
+      container.appendChild(scroll);
+    } else {
+      const p = document.createElement("p");
+      appendInline(p, block.text);
+      container.appendChild(p);
+    }
+  }
 }
 
 // NOTE: answers may contain [n] markers, but the platform does not document

@@ -230,11 +230,30 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 
 /* ---- answer + sources --------------------------------------------------- */
 
+/* Answers render as parsed blocks (see renderAnswer), not pre-wrapped text. */
 .answer {
   font: 400 1.0625rem/1.7 var(--serif); color: var(--ink);
-  max-width: 68ch; white-space: pre-wrap; margin: 0;
+  max-width: 68ch; margin: 0;
 }
 .answer:focus { outline: none; }
+.answer > * { margin: 0 0 0.9rem; }
+.answer > *:last-child { margin-bottom: 0; }
+.answer h3 { font: 600 1.125rem/1.35 var(--serif); margin-top: 1.3rem; }
+.answer h4 { font: 600 1rem/1.35 var(--serif); margin-top: 1.1rem; }
+.answer ul, .answer ol { padding-left: 1.5rem; }
+.answer li { margin: 0.3rem 0; }
+.answer li > ul { margin: 0.3rem 0 0; list-style: circle; }
+.answer li::marker { color: var(--ink-faint); }
+.answer blockquote {
+  margin-left: 0; padding-left: 14px; font-style: italic; color: var(--ink-soft);
+  background: linear-gradient(to right, var(--bronze) 0 2px, transparent 2px)
+    no-repeat left / 2px 100%;
+}
+.answer pre {
+  overflow-x: auto; background: var(--paper-sunken); border-radius: 4px;
+  padding: 0.7rem 0.9rem; font-size: 0.8125rem; line-height: 1.5;
+}
+.answer .about-table { font-size: 0.9375rem; }
 .answer sup { line-height: 0; }
 .answer .cite {
   background: none; border: none; cursor: pointer; padding: 2px 3px;
