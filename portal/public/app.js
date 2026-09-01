@@ -731,6 +731,7 @@ async function runAsk(question) {
   const btn = $("ask-submit");
   btn.disabled = true;
   $("ask-result").hidden = true;
+  $("ask-chips").hidden = true;
   setQuoteRail([]);
   const started = Date.now();
   setStatus($("ask-status"), "Checking the record — this can take up to a minute.");
@@ -776,8 +777,12 @@ async function runAsk(question) {
   } catch (err) {
     if (askAbort !== myAbort) return; // a newer request owns the UI now
     if (err.name === "AbortError") setStatus($("ask-status"), "Cancelled.");
-    else setStatus($("ask-status"),
-      `${err.message || err} — the record is still there; try again.`, true);
+    else {
+      setStatus($("ask-status"),
+        `${err.message || err} — the record is still there; try again.`, true);
+      // A failed ask leaves the page empty; the suggested starts return.
+      if (suggestions.length) $("ask-chips").hidden = false;
+    }
   } finally {
     if (askAbort === myAbort) {
       clearInterval(askTimer);
@@ -807,23 +812,36 @@ $("ask-export").addEventListener("click", () => {
     "opax-ask-sources");
 });
 
+/**
+ * Suggested questions as home-page cards. They exist to start a first journey,
+ * so they leave the moment a question is asked (runAsk hides the block) and
+ * only return if that ask fails and the page is empty again.
+ */
 function renderChips() {
-  const row = $("ask-chips");
+  const block = $("ask-chips");
+  const grid = $("suggest-grid");
   if (!suggestions.length) return;
   const picks = [...suggestions].sort(() => Math.random() - 0.5).slice(0, 3);
-  row.hidden = false;
+  grid.replaceChildren();
   for (const q of picks) {
     const b = document.createElement("button");
     b.type = "button";
-    b.className = "chip";
-    b.textContent = q;
+    b.className = "suggest-card";
+    const kicker = document.createElement("span");
+    kicker.className = "card-kicker";
+    kicker.textContent = "Ask the record";
+    const title = document.createElement("span");
+    title.className = "card-title suggest-title";
+    title.textContent = q;
+    b.append(kicker, title);
     b.addEventListener("click", () => {
       $("ask-input").value = q;
       history.replaceState(null, "", askHash(q));
       runAsk(q);
     });
-    row.appendChild(b);
+    grid.appendChild(b);
   }
+  block.hidden = false;
 }
 
 // --- corpus meter -----------------------------------------------------------

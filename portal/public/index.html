@@ -55,9 +55,9 @@
       </form>
       <label class="ask-scope"><input type="checkbox" id="ask-wide">
         Also search legal documents and news</label>
-      <div class="chip-row" id="ask-chips" hidden>
-        <span class="chip-label">Try:</span>
-        <!-- chips injected -->
+      <div id="ask-chips" hidden>
+        <p class="kicker">Or start with one of these</p>
+        <div class="suggest-grid" id="suggest-grid"><!-- cards injected --></div>
       </div>
       <div id="ask-status" class="status" role="status"></div>
       <!-- The passage behind the part of the answer being read, fading up on

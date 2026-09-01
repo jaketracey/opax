@@ -211,6 +211,24 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 }
 .chip:hover { background: var(--bronze-wash); color: var(--ink); }
 
+/* Suggested questions as cards — the report-card idiom, home-page sized. */
+#ask-chips { margin-top: 1.6rem; }
+.suggest-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.2rem; margin-top: 0.2rem; max-width: 80rem;
+}
+.suggest-card {
+  background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
+  padding: 1.6rem 1.7rem 1.7rem; text-align: left; cursor: pointer;
+  color: var(--ink); font: inherit;
+}
+.suggest-card:hover, .suggest-card:focus-visible { border-color: var(--line-strong); }
+.suggest-card:hover .card-title {
+  text-decoration: underline; text-decoration-color: var(--bronze-ink);
+  text-underline-offset: 3px;
+}
+.suggest-title { font: 600 1.375rem/1.35 var(--serif); margin-bottom: 0; }
+
 .corpus-meter { margin-top: 1rem; }
 .corpus-meter p { margin: 0 0 0.3rem; font-size: 0.8125rem; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
 .meter-track { max-width: 320px; height: 4px; border-radius: 2px; background: var(--paper-sunken); overflow: hidden; }
