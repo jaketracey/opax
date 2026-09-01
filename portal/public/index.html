@@ -129,12 +129,10 @@
         <label for="ask-input" class="visually-hidden">Ask a question of the parliamentary record</label>
         <input id="ask-input" type="text" autocomplete="off">
         <button type="submit" class="primary" id="ask-submit">Ask the record</button>
-      </form>
-      <div class="ask-options-wrap">
-      <button type="button" class="action-btn" id="ask-options-btn" aria-expanded="false" aria-controls="ask-options-pop">
-        <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
-        <span>Options</span>
-      </button>
+        <div class="ask-options-wrap">
+        <button type="button" class="action-btn" id="ask-options-btn" aria-expanded="false" aria-controls="ask-options-pop" aria-label="Ask options" title="Options">
+          <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
+        </button>
       <div class="ask-options-pop" id="ask-options-pop" hidden>
         <div class="filter-rail ask-pop-rail">
           <span class="filter-item filter-item-wide">
@@ -169,6 +167,7 @@
         </div>
       </div>
       </div>
+      </form>
       <div id="ask-chips" hidden>
         <div class="chip-row" id="chip-row">
           <span class="chip-label">Try:</span>

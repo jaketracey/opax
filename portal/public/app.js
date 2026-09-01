@@ -1641,6 +1641,8 @@ async function runAsk(question) {
   }
   const speakerFilter = parseSpeakerIntent(question);
   btn.disabled = true;
+  btn.classList.add("btn-loading");
+  btn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span>Asking…';
   $("ask-result").hidden = true;
   $("ask-chips").hidden = true;
   setFrontPageHidden(true);
