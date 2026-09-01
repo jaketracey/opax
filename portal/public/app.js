@@ -16,14 +16,25 @@ let lastAsk = { question: "", sources: [], citedIds: new Set() };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["ask", "search", "reports", "doc", "about", "methods"];
+const PANELS = ["ask", "search", "money", "reports", "doc", "about", "methods"];
 
 // --- helpers ----------------------------------------------------------------
 
 function esc(s) {
-  const d = document.createElement("span");
-  d.textContent = s ?? "";
-  return d.innerHTML;
+  // Attribute-safe escaping: & < > " ' — this output lands in attribute values too.
+  return String(s ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+}
+
+/** Only http(s) URLs from the corpus may render as links. */
+function safeUrl(u) {
+  return typeof u === "string" && /^https?:\/\//i.test(u) ? u : null;
+}
+
+/** Local calendar date as YYYY-MM-DD (never UTC — citations carry access dates). */
+function localISODate() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -128,7 +139,7 @@ function bibtexFor(s) {
     month ? `  month = {${month}}` : null,
     `  howpublished = {Parliamentary record, via OPAX corpus v${corpusVersion()}}`,
     `  url = {${opaxUrl(s.slug)}}`,
-    `  urldate = {${new Date().toISOString().slice(0, 10)}}`,
+    `  urldate = {${localISODate()}}`,
     s.sourceUrl ? `  note = {Official record: ${s.sourceUrl}}` : null,
   ].filter(Boolean);
   return `@misc{opax-${s.slug},\n${fields.join(",\n")}\n}`;
@@ -147,8 +158,10 @@ function risFor(s) {
 }
 
 function csvCell(v) {
-  const s = String(v ?? "");
-  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  let s = String(v ?? "");
+  // Neutralise spreadsheet formula injection from corpus-derived text.
+  if (/^[=+\-@]/.test(s)) s = `'${s}`;
+  return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
 function exportHeader(context) {
@@ -203,11 +216,44 @@ function showPanel(name) {
 const TITLES = {
   ask: "OPAX — ask what Australian politicians actually said",
   search: "Search the record — OPAX",
+  money: "Money map — OPAX",
   reports: "Standing reports — OPAX",
   doc: "From the record — OPAX",
   about: "About — OPAX",
   methods: "Methods — OPAX",
 };
+
+// --- money map (lazy-loaded 3D bundle) --------------------------------------
+
+let moneyMapHandle = null;
+let moneyMapLoading = false;
+
+async function mountMoney() {
+  if (moneyMapHandle || moneyMapLoading) return;
+  moneyMapLoading = true;
+  const root = $("money-map-root");
+  root.textContent = "Loading the map…";
+  try {
+    const { mountMoneyMap } = await import("/money-map.js");
+    root.textContent = "";
+    moneyMapHandle = await mountMoneyMap(root, "/graph/money.json", {
+      askUrl: (industry) =>
+        `#/ask?q=${encodeURIComponent(`What has parliament said about ${industry.replace(/_/g, " ")}?`)}`,
+    });
+  } catch (err) {
+    root.textContent = "";
+    const p = document.createElement("p");
+    p.className = "status error";
+    p.textContent = `The map could not load (${err.message || err}). `;
+    const a = document.createElement("a");
+    a.href = "/map";
+    a.textContent = "Try the full-screen map";
+    p.appendChild(a);
+    root.appendChild(p);
+  } finally {
+    moneyMapLoading = false;
+  }
+}
 
 let firstRoute = true;
 
@@ -238,6 +284,10 @@ function route() {
     document.title = TITLES.reports;
     if (segs[1]) openReport(segs[1], segs[3] ? Number(segs[3]) : null, manageFocus);
     else loadReportsList(manageFocus);
+  } else if (view === "money") {
+    showPanel("money");
+    document.title = TITLES.money;
+    mountMoney();
   } else if (view === "about") {
     showPanel("about");
     document.title = TITLES.about;
@@ -326,7 +376,8 @@ function sourceItem(s, num) {
 
 async function runAsk(question) {
   if (askAbort) askAbort.abort();
-  askAbort = new AbortController();
+  const myAbort = new AbortController();
+  askAbort = myAbort;
   const btn = $("ask-submit");
   btn.disabled = true;
   $("ask-result").hidden = true;
@@ -343,8 +394,9 @@ async function runAsk(question) {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ question }),
-      signal: askAbort.signal,
+      signal: myAbort.signal,
     });
+    if (askAbort !== myAbort) return; // superseded by a newer question
     const sources = data.sources || [];
     const citedIds = new Set(
       Object.keys(data.citations || {}).map((k) => k.split("/")[0]),
@@ -360,19 +412,22 @@ async function runAsk(question) {
     $("ask-result").hidden = false;
     renderAnswerText($("ask-answer"), data.answer || "(no answer)", citedList.length);
     $("ask-stamp").textContent =
-      `Generated ${fmtDate(new Date().toISOString())} · corpus v${corpusVersion()}`;
+      `Generated ${fmtDate(localISODate())} · corpus v${corpusVersion()}`;
     $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1)));
     $("ask-retrieved").hidden = !alsoList.length;
     $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null)));
     $("ask-sources").hidden = !sources.length;
     $("ask-answer").focus();
   } catch (err) {
+    if (askAbort !== myAbort) return; // a newer request owns the UI now
     if (err.name === "AbortError") setStatus($("ask-status"), "Cancelled.");
     else setStatus($("ask-status"),
       `${err.message || err} — the record is still there; try again.`, true);
   } finally {
-    clearInterval(askTimer);
-    btn.disabled = false;
+    if (askAbort === myAbort) {
+      clearInterval(askTimer);
+      btn.disabled = false;
+    }
   }
 }
 
@@ -613,6 +668,7 @@ async function openDocPage(slug, manageFocus) {
   setStatus($("doc-status"), "Fetching the document…");
   try {
     const doc = await api(`/api/resource/${encodeURIComponent(slug)}`);
+    if (currentDocSlug !== slug) return; // user navigated away while fetching
     currentDoc = doc;
     setStatus($("doc-status"), "");
     $("doc-title").textContent = doc.title;
@@ -620,7 +676,8 @@ async function openDocPage(slug, manageFocus) {
       party: doc.labels?.party, speaker: doc.speaker,
       state: doc.labels?.state, date: doc.metadata?.date,
     })];
-    if (doc.url) metaBits.push(`<a href="${esc(doc.url)}" rel="noopener" target="_blank">View original ↗</a>`);
+    const origin = safeUrl(doc.url);
+    if (origin) metaBits.push(`<a href="${esc(origin)}" rel="noopener" target="_blank">View original ↗</a>`);
     $("doc-meta").innerHTML = metaBits.filter(Boolean).join(" · ");
     $("doc-text").textContent = doc.text || "(no text)";
     $("doc-actions").hidden = false;
@@ -632,6 +689,7 @@ async function openDocPage(slug, manageFocus) {
     }
     if (manageFocus) $("doc-title").focus();
   } catch (err) {
+    if (currentDocSlug !== slug) return;
     setStatus($("doc-status"),
       err.message === "not found"
         ? "No document with this identifier — it may not be indexed yet."
@@ -750,10 +808,11 @@ function padSeries(series, years) {
 function renderStats(container, stats) {
   if (!stats) { container.innerHTML = ""; return; }
   const don = stats.donations;
+  const industries = fmtIndustries(don?.industries || []);
   let htmlOut = `<div class="tiles">
-    <div class="tile"><b>${esc(stats.speech_count.toLocaleString())}</b><span>speeches on the record</span></div>
-    <div class="tile"><b>${esc(stats.unique_speakers.toLocaleString())}</b><span>parliamentarians spoke</span></div>
-    ${don ? `<div class="tile"><b>${esc(fmtMoney(don.total))}</b><span>donations — ${esc(fmtIndustries(don.industries))}</span></div>` : ""}
+    <div class="tile"><b>${esc((stats.speech_count ?? 0).toLocaleString())}</b><span>speeches on the record</span></div>
+    <div class="tile"><b>${esc((stats.unique_speakers ?? 0).toLocaleString())}</b><span>parliamentarians spoke</span></div>
+    ${don ? `<div class="tile"><b>${esc(fmtMoney(don.total ?? 0))}</b><span>donations — ${esc(industries)}</span></div>` : ""}
   </div>`;
   const hasTimeline = stats.timeline?.length > 1;
   const hasDonYears = don?.by_year?.length > 1;
@@ -763,7 +822,7 @@ function renderStats(container, stats) {
     htmlOut += columnChart(padSeries(stats.timeline, years),
       { heading: "Speeches per year", fmt: (v) => v.toLocaleString() });
     htmlOut += columnChart(padSeries(don.by_year, years), {
-      heading: `Donations per financial year (${fmtIndustries(don.industries)})`,
+      heading: `Donations per financial year (${industries})`,
       fmt: fmtMoney,
       note: "Shown together for comparison. OPAX does not claim one series causes the other. " +
         "AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here — totals are a floor, not a ceiling.",
@@ -771,7 +830,7 @@ function renderStats(container, stats) {
   } else {
     if (hasTimeline) htmlOut += columnChart(stats.timeline, { heading: "Speeches per year", fmt: (v) => v.toLocaleString() });
     if (hasDonYears) htmlOut += columnChart(don.by_year, {
-      heading: `Donations per financial year (${fmtIndustries(don.industries)})`, fmt: fmtMoney,
+      heading: `Donations per financial year (${industries})`, fmt: fmtMoney,
       note: "AEC disclosure data: donations under the disclosure threshold are not reported — totals are a floor, not a ceiling.",
     });
   }
@@ -789,6 +848,8 @@ async function openReport(slug, sectionNum, manageFocus) {
     loadReportsList(false);
     return;
   }
+  // Stale-resolution guard: only render if the hash still points at this report.
+  if (!location.hash.startsWith(`#/reports/${slug}`)) return;
   setStatus($("reports-status"), "");
   $("reports-list").hidden = true;
   const view = $("report-view");

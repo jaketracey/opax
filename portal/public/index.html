@@ -35,6 +35,7 @@
     <nav class="tabs" aria-label="Sections">
       <button class="tab" data-panel="ask">Ask</button>
       <button class="tab" data-panel="search">Search</button>
+      <button class="tab" data-panel="money">Money map</button>
       <button class="tab" data-panel="reports">Reports</button>
       <button class="tab" data-panel="about">About</button>
     </nav>
@@ -179,6 +180,19 @@
         </span>
       </div>
       <ul id="search-results" class="results" role="list"></ul>
+    </section>
+
+    <!-- ============================ MONEY MAP ========================== -->
+    <section id="panel-money" class="panel" hidden aria-label="Money map">
+      <p class="standfirst">Who funds Australian politics: the top 250 donors and the parties
+      they gave to, from AEC returns 1998–2026. Colour and territory are the donor's industry;
+      size is lifetime dollars. Click a donor to see where the money went — then ask the record
+      what parliament said about it.</p>
+      <div id="money-map-root" class="money-map-root"></div>
+      <p class="fineprint">AEC disclosure data: donations under the disclosure threshold are not
+      reported and cannot appear here — totals are a floor, not a ceiling. Public electoral
+      funding and internal party transfers are excluded.
+      <a href="/graph/money.json">Download the data</a> · <a href="/map">Full-screen map</a></p>
     </section>
 
     <!-- ============================= REPORTS =========================== -->

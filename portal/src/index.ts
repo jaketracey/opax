@@ -178,9 +178,9 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
 }
 
 async function apiAsk(request: Request, env: Env): Promise<Response> {
-  const { question, kind, speaker, party, state, from, to } = (await request
+  const { question, kind, speaker, party, state, from, to } = ((await request
     .json()
-    .catch(() => ({}))) as {
+    .catch(() => ({}))) ?? {}) as {
     question?: string
     kind?: string
     speaker?: string

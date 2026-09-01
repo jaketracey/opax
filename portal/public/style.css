@@ -307,6 +307,18 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
 }
 .scorebar > i { display: block; height: 100%; background: var(--bronze); }
 
+/* ---- money map ---------------------------------------------------------- */
+
+.money-map-root {
+  position: relative;
+  height: min(72vh, 720px);
+  min-height: 440px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--paper-raised);
+}
+
 /* ---- reports ------------------------------------------------------------ */
 
 .report-cards {
