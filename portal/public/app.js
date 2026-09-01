@@ -1112,6 +1112,37 @@ function quoteCardHTML(s, i, n) {
     (meta ? `<span class="quote-meta">${meta}</span>` : "");
 }
 
+// People in this answer: the filtered speaker, the speakers behind the
+// cited passages, then directory names the answer text itself mentions
+// (full names only, so "Carr" alone never links the wrong person).
+async function renderPeopleRail({ answer, sources, speaker }) {
+  const rail = $("people-rail");
+  if (!rail) return;
+  const seq = (rail.dataset.seq = String(Number(rail.dataset.seq || 0) + 1));
+  const seen = new Map();
+  if (speaker) seen.set(speaker, null);
+  for (const s of sources) if (s.speaker && (!seen.has(s.speaker) || !seen.get(s.speaker))) seen.set(s.speaker, s.party || null);
+  const [dir] = await Promise.all([loadSpeakersDir(), loadPhotoMap()]);
+  if (rail.dataset.seq !== seq) return;
+  if (dir?.names) {
+    const text = ` ${answer} `;
+    for (const n of dir.names) {
+      if (seen.size >= 8) break;
+      if (n.includes(" ") && !seen.has(n) && text.includes(n)) seen.set(n, null);
+    }
+  }
+  const rows = [...seen.entries()].slice(0, 6).map(([name, party]) => {
+    const url = photoUrlFor(name);
+    return `<li>${url ? `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">` : `<span class="pr-gap"></span>`}
+      <span><a href="${esc(subjectHash("person", name))}">${esc(name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}</span></li>`;
+  });
+  rail.innerHTML = rows.length
+    ? `<p class="kicker">People in this answer</p><ul class="people-list" role="list">${rows.join("")}</ul>`
+    : "";
+  rail.dataset.rows = String(rows.length);
+  updateQuoteRail();
+}
+
 function setQuoteRail(sources) {
   quoteRail.sources = sources || [];
   quoteRail.idx = -1;
@@ -1136,8 +1167,15 @@ function updateQuoteRail() {
   const visible = space >= 348 && n > 0 && !$("ask-result").hidden && rect.height > 1 &&
     rect.top < innerHeight * 0.3 + 8 && rect.bottom > innerHeight * 0.28 && clearOfSources;
   rail.hidden = !visible;
-  if (!visible) { quoteRail.idx = -1; return; }
+  if (!visible) { quoteRail.idx = -1; const pr = $("people-rail"); if (pr) pr.hidden = true; return; }
   rail.style.left = `${Math.round(rect.right + Math.min(48, space - 316))}px`;
+  const people = $("people-rail");
+  if (people) {
+    const showPeople = Number(people.dataset.rows || 0) > 0;
+    people.hidden = !showPeople;
+    people.style.left = rail.style.left;
+    rail.style.top = showPeople ? `calc(30vh + ${people.offsetHeight + 12}px)` : "";
+  }
   // The reading line: whichever slice of the answer crosses it decides the quote.
   const progress = Math.min(1, Math.max(0, (innerHeight * 0.38 - rect.top) / rect.height));
   const idx = Math.min(n - 1, Math.floor(progress * n));
@@ -2365,6 +2403,8 @@ async function runAsk(question) {
     $("ask-sources").open = false; // each new answer starts folded
     $("ask-sources").hidden = !sources.length;
     setQuoteRail(citedList);
+    renderPeopleRail({ answer: answerText, sources: [...citedList, ...alsoList],
+      speaker: askFilters().speaker || speakerFilter || null });
     $("ask-answer").focus({ preventScroll: true });
   } catch (err) {
     if (askAbort !== myAbort) return; // a newer request owns the UI now

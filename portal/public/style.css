@@ -557,6 +557,17 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
    right edge and sets `left`, so the quote sits in the reading eye-line at
    any zoom or width instead of stranded at the viewport edge. */
 .quote-rail { position: fixed; top: 30vh; left: 0; width: 300px; z-index: 4; }
+/* People rail: fixed card above the quote card in the same column. */
+.people-rail { position: fixed; top: 30vh; left: 0; width: 300px; z-index: 4; padding-left: 14px; }
+.people-rail .kicker { margin: 0 0 0.5rem; }
+.people-list { list-style: none; margin: 0; padding: 0; }
+.people-list li { display: flex; align-items: center; gap: 0.6rem; padding: 0.3rem 0; }
+.people-list li > span { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.9375rem; }
+.people-list img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: 0 0 auto;
+  border: 2px solid var(--paper-raised); box-shadow: 0 0 0 1px var(--line); }
+.people-list .pr-gap { width: 40px; height: 40px; flex: 0 0 auto; }
+.people-list a { text-decoration: none; font-weight: 600; color: var(--ink); }
+.people-list a:hover { color: var(--bronze-ink); }
 .quote-card {
   display: block; padding: 0.15rem 0 0.15rem 14px;
   text-decoration: none; opacity: 0; transform: translateY(14px);
