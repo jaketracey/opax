@@ -201,7 +201,7 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
 }
 
 async function apiAsk(request: Request, env: Env): Promise<Response> {
-  const { question, kind, speaker, party, state, from, to } = ((await request
+  const { question, kind, speaker, party, state, from, to, context } = ((await request
     .json()
     .catch(() => ({}))) ?? {}) as {
     question?: string
@@ -211,6 +211,7 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
     state?: string
     from?: string
     to?: string
+    context?: { author?: string; text?: string }[]
   }
   if (!question?.trim()) return json({ error: 'question is required' }, 400)
 
@@ -220,6 +221,18 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
     top_k: 20,
     reranker: 'predict',
     show: ['basic', 'origin', 'extra'],
+  }
+  // Prior conversation turns from the chat view. The platform's /ask context
+  // author enum is NUCLIA | USER (422 otherwise) — prior answers go in as
+  // NUCLIA. The platform validates at 24 turns; clip text defensively too.
+  if (Array.isArray(context) && context.length > 0) {
+    body.context = context
+      .filter((t) => typeof t?.text === 'string' && t.text.trim().length > 0)
+      .slice(-24)
+      .map((t) => ({
+        author: t.author === 'answer' ? 'NUCLIA' : 'USER',
+        text: String(t.text).slice(0, 6000),
+      }))
   }
   const filters = filterExpression({ kind: kind ?? 'speech', speaker, party, state, from, to })
   if (filters) body.filter_expression = filters
@@ -282,6 +295,229 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
     citations: answer.citations ?? {},
     sources,
   })
+}
+
+// --- follow-up questions (the chat's "Ask next" chips) ----------------------
+// Ported from corpuskit's follow-up generator. The grounding idea: a follow-up
+// is by definition not answered by the answer above it, so the answer cannot
+// be its evidence — but the passages retrieved FOR that answer can be. A
+// candidate is shipped only when the model copies out the sentence from those
+// passages that answers it, which makes the question demonstrably answerable
+// from the corpus and phrased around specifics the next retrieval will find.
+// Candidates that echo the question already asked, ask about documents as
+// objects, or can't be grounded are dropped; offering nothing beats offering
+// a question the record would refuse.
+
+const FOLLOWUP_WANT = 3 // shown; we ask for twice this because some fail the tests
+const FOLLOWUP_PASSAGE_BUDGET = 6000
+const FOLLOWUP_ANSWER_BUDGET = 2500
+const FOLLOWUP_MIN_CONTEXT = 200
+
+/** Collapse whitespace and cut on a word boundary, never mid-word. */
+function clipText(raw: string, limit: number): string {
+  const text = raw.replace(/\s+/g, ' ').trim()
+  if (text.length <= limit) return text
+  const stop = text.lastIndexOf(' ', limit)
+  return text.slice(0, stop > limit / 2 ? stop : limit).trim()
+}
+
+/**
+ * The retrieved passages as one block of corpus text. Every passage gets an
+ * equal share of the budget rather than the first taking it all: the top hit
+ * is usually what the answer already used, so the unspent material — where a
+ * good follow-up comes from — sits further down the list.
+ */
+function passageContext(passages: { title: string; text: string }[]): string {
+  const usable = passages.filter((p) => p.text.trim().length > 0)
+  if (usable.length === 0) return ''
+  const share = Math.max(300, Math.floor(FOLLOWUP_PASSAGE_BUDGET / usable.length))
+  return usable.map((p) => `${clipText(p.title, 160)}: ${clipText(p.text, share)}`).join('\n\n')
+}
+
+/** Normalise quotes/dashes/whitespace so grounding survives model tidying. */
+function flattenText(value: string): string {
+  return value
+    .replace(/[‘’‛′]/g, "'")
+    .replace(/[“”‟″]/g, '"')
+    .replace(/[‐-―−]/g, '-')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase()
+}
+
+/**
+ * Six words in a row is not something a model invents about a passage it is
+ * looking at — demanding character-perfect reproduction would test copyist
+ * skill, not groundedness.
+ */
+function evidenceIsGrounded(evidence: string, excerpt: string): boolean {
+  const haystack = flattenText(excerpt)
+  const needle = flattenText(evidence)
+  if (!haystack) return true
+  if (haystack.includes(needle)) return true
+  const words = needle.split(' ').filter(Boolean)
+  if (words.length < 6) return false
+  for (let i = 0; i + 6 <= words.length; i++) {
+    if (haystack.includes(words.slice(i, i + 6).join(' '))) return true
+  }
+  return false
+}
+
+const SCAFFOLDING = new Set(
+  ('what which when where whose whom does done this that these those they them their there here ' +
+    'been being have from with about into than then were was are the and for any how why who ' +
+    'much many more most said says tell show give given make made take taken')
+    .split(' '),
+)
+
+function stemWord(word: string): string {
+  let out = word
+  if (out.endsWith('ies') && out.length > 4) out = `${out.slice(0, -3)}y`
+  else if (out.endsWith('s') && !out.endsWith('ss') && out.length > 3) out = out.slice(0, -1)
+  if (out.endsWith('ing') && out.length > 5) out = out.slice(0, -3)
+  else if (out.endsWith('ed') && out.length > 4) out = out.slice(0, -2)
+  return out
+}
+
+function topicWords(value: string): Set<string> {
+  return new Set(
+    value.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/)
+      .filter((word) => word.length > 3 && !SCAFFOLDING.has(word))
+      .map(stemWord),
+  )
+}
+
+/**
+ * Measured against the candidate's own topic words, not the union: a follow-up
+ * that adds a new subject scores low even when it repeats the original one.
+ */
+function isEchoOfQuestion(candidate: string, asked: string): boolean {
+  const mine = topicWords(candidate)
+  if (mine.size === 0) return true
+  const theirs = topicWords(asked)
+  let shared = 0
+  for (const word of mine) if (theirs.has(word)) shared++
+  return shared / mine.size >= 0.7
+}
+
+const ABOUT_THE_OBJECT =
+  /^(who (wrote|authored|published|funded|commissioned|produced|prepared)|when (was|is) (it|this)|what (year|type|kind) of|who (is|was) (it|this) (for|written for)|what is this (document|report|resource))/i
+
+function selectFollowUps(
+  candidates: { question?: string; evidence?: string }[],
+  asked: string,
+  context: string,
+): string[] {
+  if (!context.trim()) return [] // nothing to prove a follow-up against
+  const kept: string[] = []
+  for (const candidate of candidates) {
+    if (kept.length >= FOLLOWUP_WANT) break
+    const question = (candidate.question ?? '').trim()
+    const evidence = (candidate.evidence ?? '').trim()
+    if (!question.endsWith('?')) continue
+    const words = question.split(/\s+/).length
+    if (words < 4 || words > 16) continue
+    if (flattenText(evidence).length < 25) continue
+    if (ABOUT_THE_OBJECT.test(question)) continue
+    if (isEchoOfQuestion(question, asked)) continue
+    if (!evidenceIsGrounded(evidence, context)) continue
+    if (kept.some((k) => k.toLowerCase() === question.toLowerCase())) continue
+    // Three follow-ups that are each other's rewording waste all three slots.
+    if (kept.some((k) => isEchoOfQuestion(question, k))) continue
+    kept.push(question)
+  }
+  return kept
+}
+
+/**
+ * Candidates come back as plain text lines ("Q: … || EV: …") rather than
+ * answer_json_schema: the KB's generation is BYOK OpenRouter → DeepSeek, and
+ * the provider 412s the platform's structured-output request ("Unknown LLM
+ * exception … 400 Provider returned error"). A line format survives any
+ * provider, and the accept filter downstream doesn't care how candidates
+ * arrived — ungrounded ones are dropped the same way.
+ */
+function parseFollowUpLines(answerText: string): { question: string; evidence: string }[] {
+  const out: { question: string; evidence: string }[] = []
+  for (const line of answerText.split('\n')) {
+    const m = line.match(/^\s*(?:[-*\d.)\s]{0,4})Q:\s*(.+?)\s*\|\|\s*EV:\s*(.+?)\s*$/i)
+    if (m) out.push({ question: m[1], evidence: m[2] })
+  }
+  return out
+}
+
+async function apiFollowups(request: Request, env: Env): Promise<Response> {
+  const { question, answer, passages } = ((await request.json().catch(() => ({}))) ?? {}) as {
+    question?: string
+    answer?: string
+    passages?: { title?: string; text?: string }[]
+  }
+  // Always 200 with a possibly-empty list: follow-ups are an extra, never an error.
+  if (!question?.trim() || !answer?.trim()) return json({ questions: [] })
+  const clean = (Array.isArray(passages) ? passages : [])
+    .map((p) => ({
+      title: String(p?.title ?? '').slice(0, 300),
+      text: String(p?.text ?? '').slice(0, 4000),
+    }))
+    .filter((p) => p.text.trim().length > 0)
+    .slice(0, 12)
+  const context = passageContext(clean)
+  if (context.length < FOLLOWUP_MIN_CONTEXT) return json({ questions: [] })
+
+  const asked = FOLLOWUP_WANT * 2
+  const prompt = [
+    `Write ${asked} follow-up questions for a reader who has just been given the answer below.`,
+    'Use only the retrieved passages; do not draw on outside knowledge.',
+    '',
+    `QUESTION ALREADY ASKED: ${clipText(question, 500)}`,
+    '',
+    'ANSWER ALREADY GIVEN (do not ask for anything it already states):',
+    clipText(answer, FOLLOWUP_ANSWER_BUDGET),
+    '',
+    '--- RETRIEVED PASSAGES (the only source a follow-up may draw on) ---',
+    context,
+    '--- END RETRIEVED PASSAGES ---',
+    '',
+    'Rules for each question: under 12 words, phrased the way a person would type it, ' +
+      'ending in a question mark. It must NOT be the question already asked or a ' +
+      'rewording of it, and must not ask for something the answer above already ' +
+      'states - go to what the answer left open: a detail it skated over, a figure or ' +
+      'term it used without explaining, a related finding in the passages it never ' +
+      'reached. Name the specific members, bills, programs, figures or inquiries the ' +
+      'passages discuss. Never ask about the documents as objects (who wrote or ' +
+      'published them, when, what kind of document they are). Australian English.',
+    '',
+    'With each question, copy out the sentence from the RETRIEVED PASSAGES that ' +
+      'answers it, EXACTLY, character for character. If you cannot copy out a sentence ' +
+      'that answers a question, do not write that question: if the passages mention a ' +
+      'topic but never state the answer, the question cannot be asked.',
+    '',
+    `Reply with exactly ${asked} lines and nothing else, each formatted as:`,
+    'Q: <the question> || EV: <the copied sentence>',
+  ].join('\n')
+
+  try {
+    // Synchronous /ask, like the production answers, but on the box's fast
+    // non-reasoning model rather than its default. The BYOK default
+    // (deepseek-v4-flash) is a reasoning model: on this task it spends the
+    // box's whole 1600-token output budget thinking and returns an empty
+    // answer (verified live — `reasoning` full, `answer` empty, per-request
+    // max_tokens does not lift the box cap). flash-lite is the box's proven
+    // rollback model; NOTE it generates platform-side, not via the OpenRouter
+    // key, so these calls can show up in ARAG platform token burn.
+    // The platform still retrieves against the prompt; that context is
+    // incidental and the grounding filter below only trusts OUR passages.
+    const res = await kbFetch(env, '/ask', {
+      body: { query: prompt, top_k: 5, max_tokens: 4096, generative_model: 'gemini-2.5-flash-lite' },
+      headers: { 'x-synchronous': 'true' },
+    })
+    if (!res.ok) return json({ questions: [] })
+    const data = (await res.json()) as { answer?: string }
+    const candidates = parseFollowUpLines(data.answer ?? '')
+    return json({ questions: selectFollowUps(candidates, question, context) })
+  } catch {
+    return json({ questions: [] })
+  }
 }
 
 async function apiResource(slug: string, env: Env): Promise<Response> {
@@ -498,6 +734,9 @@ export default {
       }
       if (url.pathname === '/api/ask' && request.method === 'POST') {
         return await apiAsk(request, env)
+      }
+      if (url.pathname === '/api/followups' && request.method === 'POST') {
+        return await apiFollowups(request, env)
       }
       const resourceMatch = url.pathname.match(/^\/api\/resource\/([a-z]+-\d+)$/)
       if (resourceMatch && request.method === 'GET') {
