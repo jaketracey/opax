@@ -282,7 +282,7 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 .action-row { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; margin: 0.6rem 0 0; font-size: 0.875rem; }
 
 .source-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
-.source-list li { margin: 0; padding: 0.75rem 0 0.75rem 14px; }
+.source-list li { margin: 0; padding: 0.75rem 0; }
 .source-num { font: 700 0.8125rem/1 var(--sans); color: var(--bronze-ink); font-variant-numeric: tabular-nums; margin-right: 0.4rem; }
 button.link.source-title { font: 600 1rem/1.35 var(--serif); }
 .source-title, button.link.source-title, a.source-title { text-decoration: none; }
@@ -450,11 +450,11 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 }
 .section-tools { gap: 0.5rem 0.7rem; }
 button.action-btn { background: none; cursor: pointer; font: 600 0.875rem/1.3 var(--sans); }
-.report-download-btn { display: inline-flex; margin-top: 1.6rem; }
+a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top: 1.6rem; }
 .tile .tile-source { display: block; margin-top: 0.35rem; font-size: 0.75rem; color: var(--ink-faint); }
 .tile .tile-source a { color: var(--ink-faint); }
 .position-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
-.position-list li { margin: 0; padding: 0.7rem 0 0.7rem 14px; max-width: 78ch; }
+.position-list li { margin: 0; padding: 0.7rem 0; max-width: 78ch; }
 .position-party { margin-right: 0.35rem; }
 .position-text { font-size: 0.9375rem; }
 .position-list .source-meta { margin-top: 0.3rem; }

@@ -661,7 +661,6 @@ function renderAnswer(container, text) {
 
 function sourceItem(s, num) {
   const li = document.createElement("li");
-  li.className = "record-rule";
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = "link source-title";
@@ -1995,7 +1994,6 @@ function renderReportBrief(report) {
     list.className = "position-list";
     for (const p of report.positions) {
       const li = document.createElement("li");
-      li.className = "record-rule";
       const head = document.createElement("span");
       head.className = "position-party";
       head.innerHTML = partyChipHTML(p.party); // fixed map lookup, not model text
@@ -2082,7 +2080,7 @@ async function openReport(slug, sectionNum, manageFocus) {
         const h = document.createElement("h3");
         h.textContent = s.question;
         const body = document.createElement("div");
-        body.className = "answer record-rule";
+        body.className = "answer";
         renderAnswer(body, s.answer || "");
         sec.append(h, body);
         if (s.sources?.length) {

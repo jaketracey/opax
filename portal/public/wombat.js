@@ -54,26 +54,27 @@ function css() {
 .wb-wrap { display: inline-block; vertical-align: top; }
 .wb-stage {
   position: relative;
-  width: min(280px, 100%);
-  height: 58px;
+  width: 320px;      /* explicit so the inline-block wrap doesn't shrink-wrap a short label */
+  max-width: 100%;
+  height: 46px;
   overflow: hidden;
 }
 .wb-stage::after {
   content: "";
-  position: absolute; left: 4px; right: 4px; bottom: 4px;
+  position: absolute; left: 4px; right: 4px; bottom: 3px;
   height: 1px;
   background: var(--line-strong, #CFCABB);
 }
 .wb-trundle {
-  position: absolute; bottom: 1px; left: 0;
-  width: 86px; height: 56px;
+  position: absolute; bottom: 0; left: 0;
+  width: 68px; height: 44px;
   animation: wb-trundle 12s linear infinite;
 }
 .wb-svg { display: block; width: 100%; height: 100%; overflow: visible; }
 
 .wb-fur     { fill: var(--bronze, #A0761B); }
 .wb-fur-far { fill: var(--bronze-ink, #8A5A12); }
-.wb-belly   { fill: var(--bronze-bright, #D9A84A); opacity: 0.55; }
+.wb-belly   { fill: var(--bronze-bright, #D9A84A); opacity: 0.65; }
 .wb-earin   { fill: var(--bronze-ink, #8A5A12); }
 .wb-dark    { fill: var(--ink, #23271F); }
 .wb-eye     { fill: var(--ink, #23271F); }
@@ -89,18 +90,19 @@ function css() {
 .wb-eye   { transform-origin: center; animation: wb-blink 4.6s linear infinite; }
 
 .wb-label {
-  margin: 6px 0 0;
-  max-width: 280px;
-  font: 400 0.9375rem/1.4 var(--sans, "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
+  margin: 4px 0 0;
+  max-width: 320px;
+  font: 400 0.9375rem/1.35 var(--sans, "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
   color: var(--ink-soft, #575C52);
   text-align: center;
+  text-wrap: balance;
 }
 
 @keyframes wb-trundle {
-  0%   { transform: translateX(-100px); }
-  42%  { transform: translateX(105px); }
-  58%  { transform: translateX(105px); }
-  100% { transform: translateX(300px); }
+  0%   { transform: translateX(-80px); }
+  42%  { transform: translateX(126px); }
+  58%  { transform: translateX(126px); }
+  100% { transform: translateX(340px); }
 }
 /* The funny beat: mid-walk it stops, sniffs the ground twice (whole body
    pivots over the front feet, nose down), pops back up, walks on. */
@@ -127,7 +129,7 @@ function css() {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wb-trundle { animation: none; left: calc(50% - 43px); }
+  .wb-trundle { animation: none; left: calc(50% - 34px); }
   .wb-sniff, .wb-rock, .wb-leg-i { animation: none; }
   /* the eye keeps its opacity-only blink, so it still reads as alive */
 }
@@ -177,18 +179,18 @@ function markup(id) {
             ${leg(67, 10, "b", true)}
             ${leg(37, 10, "a", true)}
 
-            <circle cx="84" cy="13" r="5" class="wb-fur-far"/>
+            <circle cx="85" cy="13.5" r="4.6" class="wb-fur-far"/>
 
             <use href="#${id}-body" class="wb-fur"/>
             <g clip-path="url(#${id}-clip)">
               <ellipse cx="60" cy="61" rx="34" ry="10" class="wb-belly"/>
             </g>
 
-            <circle cx="95" cy="16" r="5.5" class="wb-fur"/>
-            <circle cx="95.6" cy="16.4" r="2.4" class="wb-earin"/>
+            <circle cx="96" cy="16.5" r="5.2" class="wb-fur"/>
+            <circle cx="96.5" cy="16.8" r="2.2" class="wb-earin"/>
 
-            <circle class="wb-eye" cx="93" cy="31" r="2.7"/>
-            <ellipse class="wb-dark" cx="105" cy="46.5" rx="6.2" ry="5.4"/>
+            <circle class="wb-eye" cx="95.5" cy="33" r="3"/>
+            <ellipse class="wb-dark" cx="105" cy="46.5" rx="6.6" ry="5.8"/>
             <path class="wb-mouth" d="M 100 55.5 q 3.5 2 7 0.5"/>
 
             ${leg(80, 11, "a", false)}
