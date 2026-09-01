@@ -343,7 +343,6 @@ function route() {
   } else if (view === "explore") {
     showPanel("explore");
     document.title = TITLES.explore;
-    mountExplore($("explore-tm").hidden ? "quiz" : "tm");
   } else if (view === "about") {
     showPanel("about");
     document.title = TITLES.about;
@@ -1132,11 +1131,9 @@ $("subject-back").addEventListener("click", () => {
 
 const explore = { tm: null, quiz: null };
 
-async function mountExplore(which) {
-  $("explore-tm").hidden = which !== "tm";
-  $("explore-quiz").hidden = which !== "quiz";
-  $("explore-tm-btn").setAttribute("aria-pressed", String(which === "tm"));
-  $("explore-quiz-btn").setAttribute("aria-pressed", String(which === "quiz"));
+async function openGame(which) {
+  const dialog = $(which === "tm" ? "dialog-tm" : "dialog-quiz");
+  dialog.showModal();
   try {
     if (which === "tm" && !explore.tm) {
       const mod = await import("/timemachine.js");
@@ -1148,12 +1145,24 @@ async function mountExplore(which) {
     }
   } catch (err) {
     $(which === "tm" ? "explore-tm" : "explore-quiz").innerHTML =
-      `<p class="status">This explorer could not load (${esc(String(err.message || err))}). It may still be being built — try again shortly.</p>`;
+      `<p class="status">This could not load (${esc(String(err.message || err))}) — try again shortly.</p>`;
   }
 }
 
-$("explore-tm-btn").addEventListener("click", () => mountExplore("tm"));
-$("explore-quiz-btn").addEventListener("click", () => mountExplore("quiz"));
+$("explore-tm-btn").addEventListener("click", () => openGame("tm"));
+$("explore-quiz-btn").addEventListener("click", () => openGame("quiz"));
+for (const btn of document.querySelectorAll(".game-close")) {
+  btn.addEventListener("click", () => $(btn.dataset.close).close());
+}
+// A click on the backdrop (outside the dialog's box) closes the game.
+for (const dialog of document.querySelectorAll(".game-dialog")) {
+  dialog.addEventListener("click", (e) => {
+    const r = dialog.getBoundingClientRect();
+    const inside = e.clientX >= r.left && e.clientX <= r.right &&
+                   e.clientY >= r.top && e.clientY <= r.bottom;
+    if (!inside) dialog.close();
+  });
+}
 
 
 // --- the front page ----------------------------------------------------------
