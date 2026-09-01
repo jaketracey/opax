@@ -301,11 +301,11 @@ Views/tools to build once the full passes run, in value order:
 1. **Topic filter in the ask + search popovers** — DONE 2026-09-01 (deployed
    e92a49e0): Topic selects in both popovers, allowlisted topic label clause
    in filterExpression, deep links round-trip. Coverage grows with the pass.
-2. **Topic pages** (`#/subject/topic/{slug}`) — the encyclopedia grows an
-   ideas wing: live facet counts by year/party, the money pairing via the
-   industry map, latest on-topic speeches with their machine summaries, a
-   pre-filtered ask box, link into the report. The Money & Words module
-   becomes its front-page teaser.
+2. **Topic pages** — DONE 2026-09-01 (deployed 48e8f601): /api/topic/{slug}
+   + /api/topics (faceted catalog, 10-min cache), #/subject/topic pages with
+   honest still-labelling copy, party split, money pairing, Topics A-Z index
+   in Explore/drawer. Multi-label caveat: never sum facet counts; the bare
+   labelset filter total is the labelled denominator.
 3. **Party × topic matrix** ("who owns which debate") — heatmap of speech
    share from faceted+filters counts, every cell a filtered search link.
    New Explore entry; the numbers are live, not static exports.
