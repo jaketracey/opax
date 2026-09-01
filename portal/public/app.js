@@ -465,6 +465,41 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
   document.querySelector("main").focus();
 });
 
+// --- the masthead constellation ---------------------------------------------
+// Every now and then two (sometimes three) of the seven federation stars
+// acknowledge each other: a hairline thread breathes in and fades away.
+// Decorative only; still under reduced motion.
+(() => {
+  const svg = document.querySelector(".logo-mark");
+  if (!svg || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let stars = null; // measured lazily: getBBox needs a rendered SVG
+  const NS = "http://www.w3.org/2000/svg";
+  const thread = (a, b, delay) => {
+    const line = document.createElementNS(NS, "line");
+    line.setAttribute("x1", a.x); line.setAttribute("y1", a.y);
+    line.setAttribute("x2", b.x); line.setAttribute("y2", b.y);
+    line.setAttribute("class", "logo-thread");
+    svg.insertBefore(line, svg.firstChild); // beneath the land and stars
+    line.animate(
+      [{ opacity: 0 }, { opacity: 0.4, offset: 0.4 }, { opacity: 0 }],
+      { duration: 3600, delay, easing: "ease-in-out" },
+    ).onfinish = () => line.remove();
+  };
+  const glint = () => {
+    stars ??= [...svg.querySelectorAll(".logo-star")].map((p) => {
+      const b = p.getBBox();
+      return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
+    });
+    // Two or, one time in three, three distinct stars in a short chain.
+    const picks = [...stars].sort(() => Math.random() - 0.5)
+      .slice(0, Math.random() < 1 / 3 ? 3 : 2);
+    for (let i = 0; i + 1 < picks.length; i++) thread(picks[i], picks[i + 1], i * 450);
+    schedule();
+  };
+  const schedule = () => setTimeout(glint, 8000 + Math.random() * 14000);
+  schedule();
+})();
+
 window.addEventListener("hashchange", route);
 
 // --- masthead nav: megamenus + mobile drawer --------------------------------
@@ -1872,7 +1907,15 @@ function initChat(manageFocus) {
   } catch { /* a bad seed leaves the existing thread standing */ }
   renderChatThread();
   requestChatFollowups();
-  if (manageFocus) $("chat-input").focus();
+  // Land at the composer: the thread above is history, the input is the
+  // point of this view. Double-rAF so route()'s scroll-to-top settles first.
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    $("chat-form")?.scrollIntoView({
+      behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
+      block: "end",
+    });
+    if (manageFocus) $("chat-input").focus({ preventScroll: true });
+  }));
 }
 
 function renderChatThread() {
@@ -1911,29 +1954,31 @@ function chatAnswerEl(msg) {
   wrap.appendChild(body);
   const sources = msg.sources || [];
   if (sources.length) {
+    // Collapsed by default: in a running conversation the sources are a
+    // reference, not the reading path between an answer and the composer.
     const cited = sources.filter((s) => s.cited);
     const shown = (cited.length ? cited : sources).slice(0, 5);
     const rest = sources.filter((s) => !shown.includes(s));
-    const label = document.createElement("p");
-    label.className = "kicker";
-    label.textContent = "Sources";
-    wrap.appendChild(label);
+    const det = document.createElement("details");
+    det.className = "chat-sources";
+    const sum = document.createElement("summary");
+    sum.textContent = `Sources (${sources.length})`;
+    det.appendChild(sum);
     const ol = document.createElement("ol");
     ol.className = "source-list chat-source-list";
     shown.forEach((s, i) => ol.appendChild(sourceItem(s, i + 1)));
-    wrap.appendChild(ol);
+    det.appendChild(ol);
     if (rest.length) {
-      const det = document.createElement("details");
-      det.className = "chat-sources";
-      const sum = document.createElement("summary");
-      sum.textContent = `${rest.length} more retrieved`;
-      det.appendChild(sum);
+      const more = document.createElement("p");
+      more.className = "fineprint";
+      more.textContent = "Also retrieved for this answer:";
+      det.appendChild(more);
       const ol2 = document.createElement("ol");
       ol2.className = "source-list";
       rest.forEach((s) => ol2.appendChild(sourceItem(s, null)));
       det.appendChild(ol2);
-      wrap.appendChild(det);
     }
+    wrap.appendChild(det);
   }
   if (msg.carried) {
     const p = document.createElement("p");

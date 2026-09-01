@@ -130,11 +130,6 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .masthead { display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2.75rem); }
 .masthead-id { flex: 0 1 auto; max-width: 300px; }
 .logo { display: inline-flex; align-items: center; gap: 0.6rem; line-height: 0; text-decoration: none; }
-.logo-name {
-  font: 700 0.8125rem/1 var(--sans); letter-spacing: 0.22em;
-  color: var(--on-navy-soft); text-transform: uppercase;
-}
-.logo:hover .logo-name { color: var(--on-navy); }
 /* The mark: the continent in bronze, ringed by seven stars — federation's
    number — in the masthead's soft white. */
 /* Explicit box at the mark's own 176:132 ratio — `width: auto` lets some
@@ -142,6 +137,10 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .logo-mark { height: 78px; width: 104px; }
 .logo-mark .logo-land { fill: var(--bronze-bright); }
 .logo-mark .logo-star { fill: var(--on-navy-soft); }
+.logo-mark .logo-thread {
+  stroke: var(--on-navy-soft); stroke-width: 0.9; stroke-linecap: round;
+  fill: none; opacity: 0; pointer-events: none;
+}
 .logo:hover .logo-star { fill: var(--on-navy); }
 .masthead-sub { margin: 0.4rem 0 0; font-size: 0.75rem; line-height: 1.45; color: var(--on-navy-soft); }
 .masthead-link {
@@ -484,7 +483,22 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
 .chat-turn-answer { margin: 0 0 0.6rem; }
 .chat-turn-answer .answer { font-size: 1.0625rem; }
 .chat-sources { margin: 0.2rem 0 0; }
-.chat-sources summary { font-size: 0.875rem; }
+.chat-sources summary {
+  cursor: pointer; list-style: none; display: inline-flex; align-items: center;
+  gap: 0.5rem; min-height: 44px;
+  font: 700 0.6875rem/1.3 var(--sans); color: var(--bronze-ink);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.chat-sources summary::-webkit-details-marker { display: none; }
+.chat-sources summary::before {
+  content: ""; width: 7px; height: 7px; flex: 0 0 auto;
+  border-right: 1.8px solid currentColor; border-bottom: 1.8px solid currentColor;
+  transform: rotate(-45deg); margin-top: -2px;
+}
+.chat-sources[open] summary::before { transform: rotate(45deg); margin-top: -4px; }
+@media (prefers-reduced-motion: no-preference) {
+  .chat-sources summary::before { transition: transform 150ms ease; }
+}
 .chat-sources .source-list li { padding: 0.55rem 0; }
 .chat-next { margin: 1.4rem 0 0.4rem; }
 .chat-next .kicker { margin: 0 0 0.6rem; }
@@ -738,7 +752,7 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 .position-list .source-meta { margin-top: 0.3rem; }
 
 .report-section { margin-top: 2rem; }
-.report-section h3 { font: 600 1.25rem/1.3 var(--serif); margin: 0 0 0.5rem; }
+.report-section h3 { font: 600 1.25rem/1.3 var(--serif); margin: 0 0 1.1rem; }
 .section-tools { margin: 0.5rem 0 0; }
 
 /* ---- document page ------------------------------------------------------ */
