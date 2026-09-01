@@ -897,15 +897,30 @@ const MATRIX_PARTY_CAP = 7
 async function apiMatrix(env: Env): Promise<Response> {
   return cachedJson('/api/matrix', async () => {
     const slugs = [...TOPIC_SLUGS]
-    const [anyRes, ...topicRes] = await Promise.all([
-      kbFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
-      ...slugs.map((slug) =>
-        kbFetch(env, `/catalog?faceted=${PARTY_FACET}&filters=${TOPIC_FILTER_PREFIX}/${slug}&page_size=0`),
+    // Workers cap simultaneous open connections at 6, and a response body
+    // left unread counts as open — 22 parallel fetches died in production
+    // with "Response closed due to connection limit" (local dev does not
+    // enforce it). Fetch AND parse in batches of five.
+    const parseCatalog = async (path: string): Promise<CatalogPage> => {
+      const r = await kbFetch(env, path)
+      if (!r.ok) throw new Error(`catalog ${r.status}`)
+      return (await r.json()) as CatalogPage
+    }
+    const paths = [
+      `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`,
+      ...slugs.map(
+        (slug) => `/catalog?faceted=${PARTY_FACET}&filters=${TOPIC_FILTER_PREFIX}/${slug}&page_size=0`,
       ),
-    ])
-    if (!anyRes.ok || topicRes.some((r) => !r.ok)) return json({ error: 'catalog failed' }, 502)
-    const any = (await anyRes.json()) as CatalogPage
-    const pages = (await Promise.all(topicRes.map((r) => r.json()))) as CatalogPage[]
+    ]
+    const pagesAll: CatalogPage[] = []
+    try {
+      for (let i = 0; i < paths.length; i += 5) {
+        pagesAll.push(...(await Promise.all(paths.slice(i, i + 5).map(parseCatalog))))
+      }
+    } catch {
+      return json({ error: 'catalog failed' }, 502)
+    }
+    const [any, ...pages] = pagesAll
 
     const totals: Record<string, number> = {}
     const raw = new Map<string, Map<string, number>>()
