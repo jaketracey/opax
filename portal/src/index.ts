@@ -225,15 +225,29 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
   // Prior conversation turns from the chat view. The platform's /ask context
   // author enum is NUCLIA | USER (422 otherwise) — prior answers go in as
   // NUCLIA. The platform validates at 24 turns; clip text defensively too.
-  if (Array.isArray(context) && context.length > 0) {
-    body.context = context
-      .filter((t) => typeof t?.text === 'string' && t.text.trim().length > 0)
-      .slice(-24)
-      .map((t) => ({
-        author: t.author === 'answer' ? 'NUCLIA' : 'USER',
-        text: String(t.text).slice(0, 6000),
-      }))
+  const turns: { author: string; text: string }[] = []
+  // Hansard passages are first-person with no in-text attribution, so a
+  // speaker-filtered ask ("What did X say about…") reads to the model as
+  // unattributed text and it refuses. One provenance turn fixes that
+  // (verified live: Wilkie/gambling went from refusal to a cited answer).
+  if (speaker?.trim()) {
+    turns.push({
+      author: 'USER',
+      text: `Note: every passage in the context is from a speech delivered by ${speaker.trim()} in an Australian parliament; first-person passages are their own words.`,
+    })
   }
+  if (Array.isArray(context) && context.length > 0) {
+    turns.push(
+      ...context
+        .filter((t) => typeof t?.text === 'string' && t.text.trim().length > 0)
+        .slice(-(24 - turns.length))
+        .map((t) => ({
+          author: t.author === 'answer' ? 'NUCLIA' : 'USER',
+          text: String(t.text).slice(0, 6000),
+        })),
+    )
+  }
+  if (turns.length > 0) body.context = turns
   const filters = filterExpression({ kind: kind ?? 'speech', speaker, party, state, from, to })
   if (filters) body.filter_expression = filters
 
