@@ -240,6 +240,20 @@ member rows, 35K speeches) — don't trust members-derived facts for those.
   Any re-sync, re-import or schema change MUST preserve parli.db primary keys —
   a renumbered corpus breaks every footnote that ever cited us.
 
+## Enrichment sample (2026-09-01 evening — COMPLETE, verified)
+
+The 2,000-speech topic-labeler sample (task 38714b7c, `scripts/arag_enrich.py`,
+BYOK on the OpenRouter key) ran to completion. Facet probes confirm the labels
+work as `/find` filter facets: `{prop:'label', labelset:'topic', label:...}`
+returns topically-correct hits for all probed labels (gambling → Dutton 2004,
+immigration → Ruddock, financial-services → Costello, etc.). Per-doc
+classification metadata doesn't surface under usermetadata on the sampled
+resources (labels live at the field level the filter sees) — fine for the
+facet use case. NEXT (gated on user + load completion):
+`python3 scripts/arag_enrich.py start-full` labels the whole speech corpus
+(~$70-100 at quant pricing), unlocking topic facets in the Workbench and
+donation-industry ↔ speech-topic joins.
+
 ## Open items
 
 - Speaker filter is exact-match after case/whitespace normalisation only —
