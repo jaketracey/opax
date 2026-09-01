@@ -1128,17 +1128,6 @@ function photoUrlFor(name) {
   return pid ? `/photos/${pid}.webp` : null;
 }
 
-/** Portrait <img> or a monogram tile; always returns markup. */
-function avatarHTML(name, { photo = null, colour = null, size = 44 } = {}) {
-  if (photo) {
-    return `<img class="avatar" src="${esc(photo)}" alt="" width="${size}" height="${size}" loading="lazy">`;
-  }
-  const initials = String(name || "?").split(/\s+/).filter(Boolean)
-    .slice(0, 2).map((w) => w[0].toUpperCase()).join("");
-  const bg = colour || "#8D897B";
-  return `<span class="avatar avatar-mono" style="background:${esc(bg)}1f;color:${esc(bg)};width:${size}px;height:${size}px;font-size:${Math.round(size * 0.38)}px" aria-hidden="true">${esc(initials)}</span>`;
-}
-
 function subjectHash(kind, label) {
   return `#/subject/${kind}/${encodeURIComponent(label)}`;
 }
@@ -1298,8 +1287,6 @@ async function openSubject(kind, name, manageFocus) {
       counter.set(label, (counter.get(label) || 0) + (e.total || 0));
     }
     const flowRows = [...counter.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
-    $("subject-title")?.insertAdjacentHTML("beforebegin",
-      `<span class="subject-portrait subject-portrait-mono">${avatarHTML(node.label, { colour: node.colour || "#8D897B", size: 72 })}</span>`);
     body.querySelector(".subject-tag").innerHTML = [
       isParty ? partyChipHTML(node.label) : `<span class="party party-oth"><i aria-hidden="true"></i>${esc(industryLabel(node.industry || ""))}</span>`,
       `<span class="subject-active"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l2.8 1.8"/></svg>Active ${node.firstYear}–${node.lastYear}</span>`,
@@ -1418,28 +1405,32 @@ $("subject-back").addEventListener("click", () => {
 // Both are standalone lazy modules with a mount/destroy contract; the page
 // only owns the toggle. Modules are mounted once and kept alive per session.
 
-const explore = { tm: null, quiz: null };
+const explore = { tm: null, quiz: null, ledger: null };
+
+const GAMES = {
+  tm: { dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
+  quiz: { dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
+  ledger: { dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js", mount: "mountLedger" },
+};
 
 async function openGame(which) {
-  const dialog = $(which === "tm" ? "dialog-tm" : "dialog-quiz");
-  dialog.showModal();
+  const game = GAMES[which];
+  if (!game) return;
+  $(game.dialog).showModal();
   try {
-    if (which === "tm" && !explore.tm) {
-      const mod = await import("/timemachine.js");
-      explore.tm = mod.mountTimeMachine($("explore-tm"));
-    }
-    if (which === "quiz" && !explore.quiz) {
-      const mod = await import("/quiz.js");
-      explore.quiz = mod.mountQuiz($("explore-quiz"));
+    if (!explore[which]) {
+      const mod = await import(game.module);
+      explore[which] = mod[game.mount]($(game.body));
     }
   } catch (err) {
-    $(which === "tm" ? "explore-tm" : "explore-quiz").innerHTML =
+    $(game.body).innerHTML =
       `<p class="status">This could not load (${esc(String(err.message || err))}). Try again shortly.</p>`;
   }
 }
 
 $("explore-tm-btn").addEventListener("click", () => openGame("tm"));
 $("explore-quiz-btn").addEventListener("click", () => openGame("quiz"));
+$("explore-ledger-btn").addEventListener("click", () => openGame("ledger"));
 for (const btn of document.querySelectorAll(".game-close")) {
   btn.addEventListener("click", () => $(btn.dataset.close).close());
 }
@@ -1690,6 +1681,9 @@ async function runAsk(question) {
       });
     }
     if (askAbort !== myAbort) return; // superseded by a newer question
+    // Trim before every use: a whitespace-only answer is truthy and would
+    // otherwise slip past the "(no answer)" fallback and render nothing.
+    const answerText = (data.answer || "").trim();
     const sources = data.sources || [];
     // The Worker flags cited sources (it owns the platform's citation-key
     // format); fall back to the raw citations map for older responses.
@@ -1702,7 +1696,7 @@ async function runAsk(question) {
     // Never fake the split: with no citation data, everything is "retrieved for this answer".
     const citedList = cited.length ? cited : sources;
     const alsoList = cited.length ? retrieved : [];
-    lastAsk = { question, answer: data.answer || "", sources, kind: askKind() };
+    lastAsk = { question, answer: answerText, sources, kind: askKind() };
 
     hideWombat();
     setStatus($("ask-status"), `Answer ready: ${sources.length} sources.`);
@@ -1717,7 +1711,20 @@ async function runAsk(question) {
       behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
       block: "start",
     });
-    renderAnswer($("ask-answer"), data.answer || "(no answer)");
+    if (answerText) {
+      renderAnswer($("ask-answer"), answerText);
+    } else {
+      // Both attempts came back blank (it happens under model load). Own it
+      // plainly and hand the reader a retry, rather than a bare sources list.
+      const p = document.createElement("p");
+      p.textContent = "The record was searched and the sources below were retrieved, but no written answer came back this time.";
+      const retry = document.createElement("button");
+      retry.type = "button";
+      retry.className = "primary";
+      retry.textContent = "Ask again";
+      retry.addEventListener("click", () => runAsk(question));
+      $("ask-answer").replaceChildren(p, retry);
+    }
     $("ask-stamp").textContent =
       `Generated ${fmtDate(localISODate())} · corpus v${corpusVersion()}` +
       ((askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
@@ -2069,7 +2076,7 @@ async function sendChat(question, carry) {
     if (chatAbort !== myAbort) return;
     chatThread.push({
       role: "answer",
-      text: data.answer || "(no answer)",
+      text: (data.answer || "").trim() || "(no answer)",
       sources: data.sources || [],
       // Disclosed under the answer: the carried passage is real corpus text,
       // but this turn's retrieval did not necessarily surface it itself.
@@ -2366,6 +2373,7 @@ async function openDocPage(slug, manageFocus) {
   currentDocSlug = slug;
   currentDoc = null;
   $("doc-title").textContent = "Loading…";
+  document.querySelector("#panel-doc .doc-portrait")?.remove();
   $("doc-meta").textContent = "";
   $("doc-topic").hidden = true;
   $("doc-speaker-links").hidden = true;
@@ -2383,6 +2391,18 @@ async function openDocPage(slug, manageFocus) {
     // The headline is the speaker; raw titles ("Name — 2000-03-07") repeat
     // what the byline says, so they only stand in when no speaker is attached.
     $("doc-title").textContent = doc.speaker || doc.title;
+    // Headshot floats beside the headline; the name is already in the
+    // headline, so the image is decorative (alt "").
+    if (doc.speaker) {
+      loadPhotoMap().then(() => {
+        if (currentDocSlug !== slug) return;
+        const url = photoUrlFor(doc.speaker);
+        if (url && !document.querySelector("#panel-doc .doc-portrait")) {
+          $("doc-title")?.insertAdjacentHTML("beforebegin",
+            `<img class="doc-portrait" src="${esc(url)}" alt="" width="64" height="64">`);
+        }
+      });
+    }
     const topic = doc.metadata?.topic || doc.metadata?.debate;
     $("doc-topic").textContent = topic ? String(topic) : "";
     $("doc-topic").hidden = !topic;
