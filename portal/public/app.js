@@ -16,7 +16,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["ask", "search", "money", "reports", "explore", "doc", "subject", "about", "methods", "stats"];
+const PANELS = ["ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "about", "methods", "stats"];
 
 // --- helpers ----------------------------------------------------------------
 
@@ -237,10 +237,14 @@ function offerExport(rows, context, baseName) {
 // --- panels & routing -------------------------------------------------------
 
 function showPanel(name) {
-  for (const t of document.querySelectorAll(".tab")) {
-    const active = t.dataset.panel === name;
+  // Methods lives under the About menu, so its trigger stays lit there; the
+  // drawer has an exact Methods link of its own.
+  const headerName = name === "methods" ? "about" : name;
+  for (const t of document.querySelectorAll("#primary-nav [data-panel], #nav-drawer [data-panel]")) {
+    const active = t.dataset.panel === (t.closest("#nav-drawer") ? name : headerName);
     t.classList.toggle("active", active);
-    if (active) t.setAttribute("aria-current", "true");
+    if (t.tagName !== "A") continue; // aria-current marks pages, not disclosure buttons
+    if (active) t.setAttribute("aria-current", "page");
     else t.removeAttribute("aria-current");
   }
   for (const p of PANELS) $(`panel-${p}`).hidden = p !== name;
@@ -254,6 +258,7 @@ function showPanel(name) {
 
 const TITLES = {
   ask: "OPAX: ask what Australian politicians actually said",
+  chat: "Keep asking · OPAX",
   search: "Search the record · OPAX",
   money: "Money map · OPAX",
   reports: "Reports · OPAX",
@@ -332,6 +337,10 @@ function route() {
     showPanel("doc");
     document.title = TITLES.doc;
     openDocPage(segs[1], manageFocus);
+  } else if (view === "chat") {
+    showPanel("chat");
+    document.title = TITLES.chat;
+    initChat(manageFocus);
   } else if (view === "search") {
     showPanel("search");
     document.title = TITLES.search;
@@ -381,12 +390,140 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
   document.querySelector("main").focus();
 });
 
-for (const tab of document.querySelectorAll(".tab")) {
-  tab.addEventListener("click", () => {
-    location.hash = tab.dataset.panel === "ask" ? "#/" : `#/${tab.dataset.panel}`;
+window.addEventListener("hashchange", route);
+
+// --- masthead nav: megamenus + mobile drawer --------------------------------
+// Disclosure pattern (button + panel), not role=menu: Enter/Space toggles,
+// Esc closes and returns focus, Tab walks the panel links in DOM order
+// (each panel sits right after its button). Hover opens on fine pointers
+// with a 150ms close delay so diagonal travel to the panel doesn't shut it.
+
+const navMenus = [...document.querySelectorAll("#primary-nav .has-menu")].map((item) => ({
+  item,
+  btn: item.querySelector("button[aria-controls]"),
+  panel: item.querySelector(".megamenu"),
+}));
+let openNavMenu = null;
+let navMenuTimer = 0;
+const hoverFine = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+function reportsMenuHTML(list) {
+  return list.map((r) => `
+    <a class="mm-link" href="#/reports/${esc(r.slug)}">
+      <span class="mm-title">${esc(r.title)}</span>
+      <span class="mm-blurb">${esc(r.blurb)}</span>
+    </a>`).join("");
+}
+
+let reportsMenuFilled = false;
+function fillReportsMenu() {
+  // The static links in the markup are the fallback; the live index replaces
+  // them once, lazily, the first time the menu opens.
+  if (reportsMenuFilled) return;
+  reportsMenuFilled = true;
+  loadReportsIndex().then(() => {
+    if (reportsIndex?.length) $("menu-reports-list").innerHTML = reportsMenuHTML(reportsIndex);
   });
 }
-window.addEventListener("hashchange", route);
+
+/** The panel drops from the navy band, aligned to its trigger but kept inside the band. */
+function placeNavMenu(m) {
+  const header = document.querySelector("header");
+  const hr = header.getBoundingClientRect();
+  const br = m.btn.getBoundingClientRect();
+  const left = Math.max(12, Math.min(br.left - hr.left, hr.width - m.panel.offsetWidth - 12));
+  m.panel.style.left = `${Math.round(left)}px`;
+}
+
+function setNavMenu(m, open) {
+  clearTimeout(navMenuTimer);
+  if (open) {
+    if (openNavMenu && openNavMenu !== m) setNavMenu(openNavMenu, false);
+    if (m.panel.id === "menu-reports") fillReportsMenu();
+    m.panel.hidden = false;
+    placeNavMenu(m);
+    m.btn.setAttribute("aria-expanded", "true");
+    openNavMenu = m;
+  } else {
+    m.panel.hidden = true;
+    m.btn.setAttribute("aria-expanded", "false");
+    m.byHover = false;
+    if (openNavMenu === m) openNavMenu = null;
+  }
+}
+
+for (const m of navMenus) {
+  m.btn.addEventListener("click", () => {
+    // A click right after a hover-open reads as "yes, this menu" — closing
+    // it would punish the most natural gesture. It confirms instead.
+    if (openNavMenu === m && m.byHover) { m.byHover = false; return; }
+    setNavMenu(m, openNavMenu !== m);
+  });
+  m.item.addEventListener("mouseenter", () => {
+    if (!hoverFine.matches) return;
+    clearTimeout(navMenuTimer);
+    if (openNavMenu !== m) { setNavMenu(m, true); m.byHover = true; }
+  });
+  // Following a panel link closes the panel even when the hash is already
+  // the destination (no hashchange fires then).
+  m.panel.addEventListener("click", (e) => {
+    if (e.target.closest("a")) setNavMenu(m, false);
+  });
+  m.item.addEventListener("mouseleave", () => {
+    if (!hoverFine.matches) return;
+    clearTimeout(navMenuTimer);
+    navMenuTimer = setTimeout(() => { if (openNavMenu === m) setNavMenu(m, false); }, 150);
+  });
+  m.item.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && openNavMenu === m) {
+      e.stopPropagation();
+      setNavMenu(m, false);
+      m.btn.focus();
+    }
+  });
+  // Tabbing out of the item (past the panel's last link) closes it quietly.
+  m.item.addEventListener("focusout", (e) => {
+    if (openNavMenu === m && !m.item.contains(e.relatedTarget)) setNavMenu(m, false);
+  });
+}
+document.addEventListener("pointerdown", (e) => {
+  if (openNavMenu && !openNavMenu.item.contains(e.target)) setNavMenu(openNavMenu, false);
+});
+window.addEventListener("hashchange", () => { if (openNavMenu) setNavMenu(openNavMenu, false); });
+window.addEventListener("resize", () => { if (openNavMenu) placeNavMenu(openNavMenu); });
+
+// The drawer is a modal <dialog>: native focus trap, Esc-close, and focus
+// restored to the hamburger when it closes.
+{
+  const drawer = $("nav-drawer");
+  const toggle = $("nav-open");
+  toggle.addEventListener("click", () => {
+    drawer.showModal();
+    toggle.setAttribute("aria-expanded", "true");
+  });
+  drawer.addEventListener("close", () => toggle.setAttribute("aria-expanded", "false"));
+  $("drawer-close").addEventListener("click", () => drawer.close());
+  drawer.addEventListener("click", (e) => {
+    // A link tap navigates (the hash does the routing) and dismisses the drawer.
+    if (e.target.closest("a")) { drawer.close(); return; }
+    const r = drawer.getBoundingClientRect(); // outside the panel = backdrop
+    const inside = e.clientX >= r.left && e.clientX <= r.right &&
+                   e.clientY >= r.top && e.clientY <= r.bottom;
+    if (!inside) drawer.close();
+  });
+  // Growing past the mobile breakpoint with the drawer open would strand a
+  // modal over a page that now shows the full nav.
+  window.matchMedia("(min-width: 861px)").addEventListener("change", (e) => {
+    if (e.matches && drawer.open) drawer.close();
+  });
+}
+
+// Time machine / record quiz entries (megamenu + drawer): the link lands on
+// Explore via its href; the game dialog then opens on top of it.
+document.addEventListener("click", (e) => {
+  const game = e.target.closest("[data-game]");
+  if (game) openGame(game.dataset.game);
+});
 
 // --- ask --------------------------------------------------------------------
 
@@ -1275,8 +1412,8 @@ function renderFrontNumbers() {
 
 async function renderFrontTopic() {
   try {
-    if (!reportsIndex) reportsIndex = (await api("/reports/index.json")).reports || [];
-    if (!reportsIndex.length) return;
+    if (!reportsIndex) await loadReportsIndex();
+    if (!reportsIndex?.length) return;
     const today = reportsIndex[Math.floor(Date.now() / 864e5) % reportsIndex.length];
     const report = await api(`/reports/${encodeURIComponent(today.slug)}.json`);
     const stats = report.stats;
@@ -1435,7 +1572,7 @@ async function runAsk(question) {
     // Never fake the split: with no citation data, everything is "retrieved for this answer".
     const citedList = cited.length ? cited : sources;
     const alsoList = cited.length ? retrieved : [];
-    lastAsk = { question, sources };
+    lastAsk = { question, answer: data.answer || "", sources, kind: askKind() };
 
     hideWombat();
     setStatus($("ask-status"), `Answer ready: ${sources.length} sources.`);
@@ -1491,6 +1628,12 @@ $("ask-export").addEventListener("click", () => {
     "opax-ask-sources");
 });
 
+$("ask-continue").addEventListener("click", () => {
+  if (!lastAsk.question || !lastAsk.answer) return;
+  try { sessionStorage.setItem("opax-chat-seed", JSON.stringify(lastAsk)); } catch { /* still usable unseeded */ }
+  location.hash = "#/chat";
+});
+
 /**
  * Suggested questions as home-page cards. They exist to start a first journey,
  * so they leave the moment a question is asked (runAsk hides the block) and
@@ -1525,6 +1668,244 @@ function setFrontPageHidden(hidden) {
     if (el) el.hidden = hidden;
   }
 }
+
+// --- chat (keep asking) -----------------------------------------------------
+// The ask page's "Keep asking about this" button seeds a conversation with the
+// original question and answer; every later turn goes back to /api/ask with
+// the prior turns as context, and each answer offers follow-up questions the
+// Worker generated from the passages retrieved for that answer (a candidate it
+// cannot ground in those passages is discarded, so a chip is never a question
+// the record would refuse). Thread lives in sessionStorage: it survives
+// reload and navigation, and ends with the tab, like a conversation should.
+
+let chatThread = []; // {role: 'user'|'answer', text, sources?, next?}
+let chatKind = "speech";
+let chatAbort = null;
+let chatFollowAbort = null;
+let chatTimer = null;
+
+function saveChatSession() {
+  try {
+    sessionStorage.setItem("opax-chat", JSON.stringify({ kind: chatKind, thread: chatThread }));
+  } catch { /* private windows: the thread just won't survive reload */ }
+}
+
+function loadChatSession() {
+  try {
+    const data = JSON.parse(sessionStorage.getItem("opax-chat") || "null");
+    if (!data || !Array.isArray(data.thread)) return;
+    chatThread = data.thread.filter((m) => m && typeof m.text === "string");
+    chatKind = data.kind === "all" ? "all" : "speech";
+  } catch { /* malformed storage reads as an empty thread */ }
+}
+
+function initChat(manageFocus) {
+  if (!chatThread.length) loadChatSession();
+  try {
+    const raw = sessionStorage.getItem("opax-chat-seed");
+    if (raw) {
+      sessionStorage.removeItem("opax-chat-seed");
+      const seed = JSON.parse(raw);
+      // Re-seeding with the SAME ask keeps the thread (and its later turns);
+      // a different ask starts a fresh conversation.
+      if (seed?.question && seed?.answer &&
+          !(chatThread[0]?.text === seed.question && chatThread[1]?.text === seed.answer)) {
+        chatThread = [
+          { role: "user", text: seed.question },
+          { role: "answer", text: seed.answer, sources: seed.sources || [] },
+        ];
+        chatKind = seed.kind === "all" ? "all" : "speech";
+        saveChatSession();
+      }
+    }
+  } catch { /* a bad seed leaves the existing thread standing */ }
+  renderChatThread();
+  requestChatFollowups();
+  if (manageFocus) $("chat-input").focus();
+}
+
+function renderChatThread() {
+  const thread = $("chat-thread");
+  thread.replaceChildren();
+  if (!chatThread.length) {
+    const p = document.createElement("p");
+    p.className = "chat-hint";
+    p.textContent = "Ask the record a question below — or ask one on the Ask page and choose “Keep asking about this” to continue it here.";
+    thread.appendChild(p);
+    return;
+  }
+  for (const msg of chatThread) {
+    if (msg.role === "user") {
+      const wrap = document.createElement("div");
+      wrap.className = "chat-turn chat-turn-user";
+      const p = document.createElement("p");
+      p.textContent = msg.text;
+      wrap.appendChild(p);
+      thread.appendChild(wrap);
+    } else {
+      thread.appendChild(chatAnswerEl(msg));
+    }
+  }
+  const next = document.createElement("div");
+  next.id = "chat-next";
+  thread.appendChild(next);
+}
+
+function chatAnswerEl(msg) {
+  const wrap = document.createElement("div");
+  wrap.className = "chat-turn chat-turn-answer";
+  const body = document.createElement("div");
+  body.className = "answer";
+  renderAnswer(body, msg.text || "(no answer)");
+  wrap.appendChild(body);
+  const sources = msg.sources || [];
+  if (sources.length) {
+    const cited = sources.filter((s) => s.cited);
+    const ordered = cited.length ? [...cited, ...sources.filter((s) => !s.cited)] : sources;
+    const citedCount = cited.length || sources.length; // never fake the split
+    const det = document.createElement("details");
+    det.className = "chat-sources";
+    const sum = document.createElement("summary");
+    sum.textContent = cited.length
+      ? `${cited.length} sources cited · ${sources.length} retrieved`
+      : `${sources.length} sources retrieved`;
+    det.appendChild(sum);
+    const ol = document.createElement("ol");
+    ol.className = "source-list";
+    ordered.forEach((s, i) => ol.appendChild(sourceItem(s, i < citedCount ? i + 1 : null)));
+    det.appendChild(ol);
+    wrap.appendChild(det);
+  }
+  return wrap;
+}
+
+async function requestChatFollowups() {
+  if (chatFollowAbort) chatFollowAbort.abort();
+  const last = chatThread[chatThread.length - 1];
+  const asked = chatThread[chatThread.length - 2];
+  if (!last || last.role !== "answer" || asked?.role !== "user") return;
+  if (last.next?.length) { renderChatNext(last.next); return; } // generated once, kept on the message
+  const passages = (last.sources || [])
+    .map((s) => ({ title: s.title || s.slug || "", text: (s.snippet || "").trim() }))
+    .filter((p) => p.text)
+    .slice(0, 8);
+  if (!passages.length) return; // no passages, no follow-ups — never a spinner
+  const myAbort = new AbortController();
+  chatFollowAbort = myAbort;
+  try {
+    const data = await api("/api/followups", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ question: asked.text, answer: last.text, passages }),
+      signal: myAbort.signal,
+    });
+    if (chatFollowAbort !== myAbort || chatThread[chatThread.length - 1] !== last) return;
+    const questions = (data.questions || []).filter((q) => typeof q === "string" && q.trim());
+    if (!questions.length) return;
+    last.next = questions;
+    saveChatSession();
+    renderChatNext(questions);
+  } catch { /* follow-ups are an extra, never an error */ }
+}
+
+function renderChatNext(questions) {
+  const next = $("chat-next");
+  if (!next || !questions.length) return;
+  next.replaceChildren();
+  next.className = "chat-next";
+  const kicker = document.createElement("p");
+  kicker.className = "kicker";
+  kicker.textContent = "Ask next";
+  next.appendChild(kicker);
+  const row = document.createElement("div");
+  row.className = "chat-next-btns";
+  row.setAttribute("role", "group");
+  row.setAttribute("aria-label", "Suggested follow-up questions");
+  for (const q of questions) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip";
+    b.textContent = q;
+    b.addEventListener("click", () => sendChat(q));
+    row.appendChild(b);
+  }
+  next.appendChild(row);
+}
+
+async function sendChat(question) {
+  const q = String(question || "").trim();
+  if (!q) return;
+  if (chatAbort) chatAbort.abort();
+  if (chatFollowAbort) chatFollowAbort.abort();
+  const myAbort = new AbortController();
+  chatAbort = myAbort;
+  // Everything before this question travels as context for the retrieval.
+  const context = chatThread
+    .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.text }))
+    .slice(-12);
+  chatThread.push({ role: "user", text: q });
+  saveChatSession();
+  renderChatThread();
+  $("chat-input").value = "";
+  $("chat-send").disabled = true;
+  setStatus($("chat-status"), "Checking the record.");
+  $("chat-status").classList.add("visually-hidden"); // announced, not displayed
+  const slot = document.createElement("div");
+  slot.setAttribute("role", "status");
+  $("chat-thread").appendChild(slot);
+  let trundler = null;
+  import("/wombat.js")
+    .then((mod) => {
+      if (chatAbort === myAbort && slot.isConnected) {
+        trundler = mod.mountWombat(slot, { label: "Checking the record." });
+        slot.scrollIntoView({ block: "nearest" });
+      }
+    })
+    .catch(() => { /* the status line has it covered */ });
+  const started = Date.now();
+  clearInterval(chatTimer);
+  chatTimer = setInterval(() => {
+    const s = Math.round((Date.now() - started) / 1000);
+    if (s >= 10 && trundler) trundler.setLabel(`Still digging (${s}s). Long questions can take a minute.`);
+  }, 5000);
+  try {
+    const data = await api("/api/ask", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ question: q, kind: chatKind, context }),
+      signal: myAbort.signal,
+    });
+    if (chatAbort !== myAbort) return;
+    chatThread.push({ role: "answer", text: data.answer || "(no answer)", sources: data.sources || [] });
+    saveChatSession();
+    renderChatThread();
+    setStatus($("chat-status"), "Answer ready.");
+    $("chat-status").classList.add("visually-hidden");
+    requestChatFollowups();
+    const answers = $("chat-thread").querySelectorAll(".chat-turn-answer");
+    answers[answers.length - 1]?.scrollIntoView({ block: "start" });
+  } catch (err) {
+    if (chatAbort !== myAbort) return;
+    renderChatThread(); // clears the wombat slot
+    const p = document.createElement("p");
+    p.className = "chat-error";
+    p.textContent = err.name === "AbortError"
+      ? "Cancelled."
+      : `${err.message || err}. The record is still there; try again.`;
+    $("chat-thread").appendChild(p);
+  } finally {
+    if (chatAbort === myAbort) {
+      clearInterval(chatTimer);
+      $("chat-send").disabled = false;
+    }
+  }
+}
+
+$("chat-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const q = $("chat-input").value.trim();
+  if (q) sendChat(q);
+});
 
 // --- corpus meter -----------------------------------------------------------
 
@@ -1729,8 +2110,14 @@ $("guided-go").addEventListener("click", () => {
   $("search-input").value = topic;
   $("search-form").requestSubmit();
 });
-// The guided line is prose, not a <form>, so Enter must be wired by hand.
+// The guided card is prose, not a <form>, so Enter and Go's disabled state
+// (both blanks empty) are wired by hand.
+function updateGuidedGo() {
+  $("guided-go").disabled =
+    !$("guided-speaker").value.trim() && !$("guided-topic").value.trim();
+}
 for (const id of ["guided-speaker", "guided-topic"]) {
+  $(id).addEventListener("input", updateGuidedGo);
   $(id).addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -1738,6 +2125,7 @@ for (const id of ["guided-speaker", "guided-topic"]) {
     }
   });
 }
+updateGuidedGo();
 
 $("search-copylink").addEventListener("click", (e) => {
   copyText(siteUrl(searchHash(lastSearch.query, lastSearch.filters)), e.target);
@@ -1882,15 +2270,25 @@ $("doc-more").addEventListener("click", () => {
 
 // --- reports ----------------------------------------------------------------
 
+// One fetch for everyone who needs the index (reports panel, front page,
+// the Reports megamenu); a failure leaves reportsIndex null so callers keep
+// their own empty states.
+let reportsIndexPromise = null;
+function loadReportsIndex() {
+  reportsIndexPromise ??= api("/reports/index.json")
+    .then((d) => (reportsIndex = d.reports || []))
+    .catch(() => null);
+  return reportsIndexPromise;
+}
+
 async function loadReportsList(manageFocus) {
   const list = $("reports-list");
   currentReportSlug = null;
   $("report-view").hidden = true;
   list.hidden = false;
   if (!reportsIndex) {
-    try {
-      reportsIndex = (await api("/reports/index.json")).reports || [];
-    } catch {
+    await loadReportsIndex();
+    if (!reportsIndex) {
       setStatus($("reports-status"),
         "No reports published yet. They are generated from the corpus and will appear here.");
       return;

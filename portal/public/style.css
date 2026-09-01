@@ -119,11 +119,16 @@ button.link {
 /* ---- masthead ----------------------------------------------------------- */
 
 header {
+  position: relative; /* megamenu panels anchor to the band */
   background: var(--navy);
   border-bottom: 3px solid var(--bronze);
-  padding: 1.1rem 0 0.9rem;
+  padding: 0.9rem 0 0.7rem;
 }
-.masthead { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+/* Focus rings sit on navy here; ledger bronze vanishes against it.
+   (The drawer is paper, so it keeps the default bronze-ink ring.) */
+header :focus-visible { outline-color: var(--bronze-bright); }
+.masthead { display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2.75rem); }
+.masthead-id { flex: 0 1 auto; max-width: 300px; }
 .logo { display: inline-block; line-height: 0; text-decoration: none; }
 /* The mark: the continent in bronze, ringed by seven stars — federation's
    number — in the masthead's soft white. */
@@ -133,13 +138,112 @@ header {
 .logo-mark .logo-land { fill: var(--bronze-bright); }
 .logo-mark .logo-star { fill: var(--on-navy-soft); }
 .logo:hover .logo-star { fill: var(--on-navy); }
-.masthead-sub { margin: 0.4rem 0 0; font-size: 0.8125rem; color: var(--on-navy-soft); }
+.masthead-sub { margin: 0.4rem 0 0; font-size: 0.75rem; line-height: 1.45; color: var(--on-navy-soft); }
 .masthead-link {
-  flex: 0 0 auto; font: 600 0.875rem/1 var(--sans); color: var(--on-navy-soft);
+  flex: 0 0 auto; margin-left: auto; font: 600 0.875rem/1 var(--sans); color: var(--on-navy-soft);
   text-decoration: underline; text-decoration-color: var(--bronze-bright);
   text-underline-offset: 4px; text-decoration-thickness: 1.5px; padding: 0.5rem 0;
 }
 .masthead-link:hover, .masthead-link[aria-current] { color: var(--on-navy); }
+
+/* ---- primary nav (in the band) ------------------------------------------ */
+
+.masthead-nav { flex: 1 1 auto; min-width: 0; }
+.nav-list {
+  display: flex; align-items: center; gap: clamp(0.3rem, 1.6vw, 1.5rem);
+  list-style: none; margin: 0; padding: 0;
+}
+.nav-item { display: flex; }
+.nav-link {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: none; border: none; cursor: pointer; white-space: nowrap;
+  font: 600 0.9375rem/1 var(--sans); color: var(--on-navy-soft);
+  text-decoration: none; padding: 0.4rem 0.15rem; min-height: 44px;
+  border-bottom: 3px solid transparent;
+}
+.nav-link:hover, .nav-link[aria-expanded="true"] { color: var(--on-navy); }
+.nav-link.active { color: var(--on-navy); border-bottom-color: var(--bronze-bright); }
+.nav-caret { width: 10px; height: 6px; flex: 0 0 auto; opacity: 0.7; }
+.nav-link[aria-expanded="true"] .nav-caret { transform: rotate(180deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .nav-caret { transition: transform 150ms ease; }
+}
+
+/* Megamenu panels: paper dropped below the band — the infobox idiom
+   (hairline border, 3px bronze top edge, kicker headings). */
+.megamenu {
+  position: absolute; top: calc(100% + 3px); left: 0; z-index: 30;
+  width: 340px; max-width: calc(100vw - 1.5rem);
+  background: var(--paper); border: 1px solid var(--line);
+  border-top: 3px solid var(--bronze);
+  box-shadow: 0 18px 40px rgba(21, 27, 20, 0.22);
+  padding: 1.1rem 1.25rem 1.15rem;
+}
+.megamenu-wide { width: min(720px, calc(100vw - 1.5rem)); }
+.megamenu .kicker { margin: 0 0 0.5rem; }
+.mm-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.mm-all { font: 600 0.875rem/1.3 var(--sans); white-space: nowrap; }
+.mm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.1rem 1.4rem; }
+.mm-link {
+  display: block; padding: 0.55rem 0.5rem; margin: 0 -0.5rem;
+  text-decoration: none; border-radius: 4px;
+}
+.mm-link:hover, .mm-link:focus-visible { background: var(--paper-sunken); }
+.mm-title { display: block; font: 600 1.0625rem/1.3 var(--serif); color: var(--ink); }
+.mm-link:hover .mm-title { color: var(--bronze-ink); }
+.mm-blurb { display: block; margin-top: 2px; font-size: 0.8125rem; line-height: 1.45; color: var(--ink-soft); }
+.mm-note { margin: 0.7rem 0 0; font-size: 0.8125rem; color: var(--ink-faint); }
+@media (prefers-reduced-motion: no-preference) {
+  .megamenu { animation: menu-in 160ms ease; }
+  @keyframes menu-in {
+    from { opacity: 0; transform: translateY(-6px); }
+  }
+}
+
+/* Hamburger: hidden until the band compacts (≤860px). */
+.nav-toggle {
+  display: none; margin-left: auto; align-items: center; justify-content: center;
+  min-width: 44px; min-height: 44px; padding: 0;
+  background: none; border: none; border-radius: 4px; cursor: pointer;
+  color: var(--on-navy-soft);
+}
+.nav-toggle:hover { color: var(--on-navy); }
+.nav-toggle svg { width: 24px; height: 24px; }
+
+/* ---- mobile nav drawer --------------------------------------------------- */
+
+.nav-drawer {
+  position: fixed; inset: 0 0 0 auto; margin: 0;
+  width: min(340px, 88vw); max-width: none; height: 100dvh; max-height: none;
+  border: none; border-left: 1px solid var(--line-strong);
+  background: var(--paper); color: var(--ink);
+  box-shadow: -18px 0 40px rgba(21, 27, 20, 0.28);
+  padding: 0.6rem 1.25rem 2rem; overflow-y: auto;
+}
+.nav-drawer::backdrop { background: rgba(20, 42, 67, 0.55); }
+@media (prefers-reduced-motion: no-preference) {
+  .nav-drawer[open] { animation: drawer-in 200ms ease; }
+  @keyframes drawer-in {
+    from { transform: translateX(100%); }
+  }
+}
+.drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; }
+.drawer-head .kicker { margin: 0; }
+.drawer-close {
+  background: none; border: none; cursor: pointer; color: var(--ink-soft);
+  font-size: 1.1rem; min-width: 44px; min-height: 44px; border-radius: 4px; margin-right: -0.6rem;
+}
+.drawer-close:hover { color: var(--ink); background: var(--paper-sunken); }
+.drawer-list { list-style: none; margin: 0; padding: 0; }
+.drawer-link, .drawer-sub {
+  display: flex; align-items: center; min-height: 44px; padding: 0.15rem 0 0.15rem 0.75rem;
+  text-decoration: none; border-left: 3px solid transparent;
+}
+.drawer-link { font: 600 1.0625rem/1.3 var(--sans); color: var(--ink); }
+.drawer-sub { font: 400 0.9375rem/1.3 var(--sans); color: var(--ink-soft); min-height: 40px; }
+.drawer-link:hover, .drawer-sub:hover { color: var(--bronze-ink); }
+.drawer-link.active, .drawer-sub.active { border-left-color: var(--bronze); color: var(--ink); }
+.drawer-kicker { margin: 1.1rem 0 0.2rem; padding-top: 0.9rem; border-top: 1px solid var(--line); }
 
 /* ---- hero --------------------------------------------------------------- */
 
@@ -153,20 +257,6 @@ main:focus { outline: none; }
 }
 .standfirst { margin: 0 0 1.4rem; color: var(--ink-soft); font-size: 1.0625rem; line-height: 1.55; max-width: 62ch; }
 main.compact .hero-intro { display: none; }
-
-/* ---- tabs (broadsheet nav) ---------------------------------------------- */
-
-.tabs {
-  display: flex; gap: 1.75rem; border-bottom: 1px solid var(--line);
-  margin-bottom: 1.5rem; overflow-x: auto; scrollbar-width: none;
-}
-.tab {
-  background: none; border: none; cursor: pointer; white-space: nowrap;
-  font: 600 0.9375rem/1 var(--sans); color: var(--ink-soft);
-  padding: 0.85rem 0.1rem; min-height: 44px;
-}
-.tab:hover { color: var(--ink); }
-.tab.active { color: var(--ink); box-shadow: inset 0 -3px 0 var(--bronze); }
 
 /* ---- forms -------------------------------------------------------------- */
 
@@ -214,15 +304,15 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 }
 .chip:hover { background: var(--bronze-wash); color: var(--ink); }
 
-/* Edge fades on the horizontal scrollers (tabs, chip row): content melts into
-   the margin on whichever side holds more, driven by the row's own scroll
-   position — no fade at rest on the left, none at the end on the right, none
-   at all when the row fits. Browsers without scroll-driven animations keep
-   the plain hard edge. */
+/* Edge fades on the horizontal chip row: content melts into the margin on
+   whichever side holds more, driven by the row's own scroll position — no
+   fade at rest on the left, none at the end on the right, none at all when
+   the row fits. Browsers without scroll-driven animations keep the plain
+   hard edge. */
 @property --hfade-l { syntax: "<length>"; inherits: false; initial-value: 0px; }
 @property --hfade-r { syntax: "<length>"; inherits: false; initial-value: 0px; }
 @supports (animation-timeline: scroll(self inline)) {
-  .tabs, .chip-row {
+  .chip-row {
     mask-image: linear-gradient(to right,
       transparent, #000 var(--hfade-l),
       #000 calc(100% - var(--hfade-r)), transparent);
@@ -317,6 +407,37 @@ button.link.source-title { font: 600 1rem/1.35 var(--serif); }
 }
 details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem; padding: 0.4rem 0; }
 
+/* ---- chat (keep asking) -------------------------------------------------- */
+/* The reader's side is the only filled shape; answers sit on the paper like
+   the ask page's, so the record keeps its own register in the conversation. */
+
+.chat-thread { max-width: 46rem; margin-top: 1.2rem; }
+.chat-turn-user { display: flex; justify-content: flex-end; margin: 1.6rem 0 1rem; }
+.chat-turn-user p {
+  margin: 0; max-width: 32rem;
+  background: var(--paper-sunken); border: 1px solid var(--line);
+  border-radius: 10px 10px 3px 10px; padding: 0.65rem 1rem;
+  font-size: 1rem; line-height: 1.5;
+}
+.chat-turn-answer { margin: 0 0 0.6rem; }
+.chat-turn-answer .answer { font-size: 1.0625rem; }
+.chat-sources { margin: 0.2rem 0 0; }
+.chat-sources summary { font-size: 0.875rem; }
+.chat-sources .source-list li { padding: 0.55rem 0; }
+.chat-next { margin: 1.1rem 0 0.4rem; }
+.chat-next .kicker { margin: 0 0 0.55rem; }
+.chat-next-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chat-error { color: var(--ink-soft); font-size: 0.9375rem; margin: 0.6rem 0; }
+.chat-hint { color: var(--ink-faint); font-size: 0.9375rem; margin: 2rem 0 0.5rem; }
+.chat-composer {
+  position: sticky; bottom: 0; z-index: 3;
+  display: flex; gap: 0.6rem; max-width: 46rem;
+  background: var(--paper); border-top: 1px solid var(--line);
+  padding: 0.8rem 0 1rem; margin-top: 0.8rem;
+}
+.chat-composer input { flex: 1 1 auto; min-height: 48px; }
+.chat-composer button { min-height: 48px; }
+
 /* ---- scroll quote rail --------------------------------------------------- */
 /* The passage behind the answer, riding the right margin on wide screens.
    Bronze record-rule bar: these are quotes from the record itself. */
@@ -360,11 +481,47 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
 
 .guided {
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
-  padding: 1rem 1.25rem; margin-bottom: 1.2rem;
+  padding: 1rem 1.25rem 1.1rem; margin-bottom: 1.2rem;
 }
-.guided-lead { margin: 0; font-size: 1.0625rem; line-height: 2.2; }
-.guided input { min-height: 44px; width: 11em; max-width: 40vw; margin: 0 0.3rem; }
-.guided .fineprint { margin: 0.3rem 0 0; }
+.guided .kicker { margin: 0 0 0.7rem; }
+.guided .fineprint { margin: 0.7rem 0 0; }
+.guided button.primary { min-height: 48px; width: 100%; font-size: 0.9375rem; padding: 0 1.5rem; }
+.guided button.primary:disabled { cursor: default; }
+
+/* Narrow: a plain stacked form — the sentence conceit needs one line to work. */
+.guided-lead { display: grid; gap: 0.7rem; }
+.guided-seg { display: grid; gap: 0.25rem; }
+.guided-word { display: none; }
+.guided-label { font-size: 0.75rem; color: var(--ink-faint); }
+.guided input { min-height: 44px; width: 100%; }
+
+/* Wide: the blanks join up into one prose sentence; labels go screen-reader-only
+   and the inputs become underlined blanks in the record's serif. */
+@media (min-width: 701px) {
+  .guided-lead {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem 0.6rem;
+    font: 400 1.25rem/1.5 var(--serif); color: var(--ink);
+  }
+  .guided-seg { display: inline-flex; align-items: center; gap: 0.6rem; white-space: nowrap; }
+  .guided-word { display: inline; }
+  .guided-label {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+  .guided input {
+    width: 12em; max-width: 30vw;
+    background: transparent; border: none; border-bottom: 2px solid var(--line-strong);
+    border-radius: 0; padding: 0.2rem 0.5rem;
+    font: 400 1.25rem/1.3 var(--serif);
+  }
+  .guided input:focus-visible {
+    outline: none; border-bottom-color: var(--bronze-ink);
+    box-shadow: 0 2px 0 0 var(--bronze-ink);
+    background: var(--bronze-wash); border-radius: 3px 3px 0 0;
+  }
+  .guided-q { margin-left: -0.35rem; }
+  .guided button.primary { min-height: 44px; width: auto; margin-left: 0.3rem; }
+}
 
 .search-grid { display: grid; gap: 0.8rem; }
 .query-line { display: flex; gap: 0.6rem; flex-wrap: wrap; }
@@ -717,7 +874,25 @@ footer a:hover { color: var(--bronze-bright); }
 
 @media (forced-colors: active) {
   .scorebar > i, .barrow-track i, .meter-track i { background: CanvasText; }
-  .tab.active { border-bottom: 3px solid CanvasText; box-shadow: none; }
+  /* Transparent inactive borders survive forced colors, so the active
+     underline / left rule keep working; only the hover washes vanish. */
+  .megamenu { border-top-width: 3px; }
+}
+
+/* ---- responsive masthead ------------------------------------------------- */
+
+/* Mid widths: the nav needs the room the tagline occupies. */
+@media (max-width: 1099px) {
+  .masthead-sub { display: none; }
+  .logo-mark { height: 64px; width: 85px; }
+}
+
+/* Compact band: hamburger + drawer replace the inline nav. */
+@media (max-width: 860px) {
+  header { padding: 0.5rem 0; }
+  .masthead-nav, .masthead-link { display: none; }
+  .nav-toggle { display: inline-flex; }
+  .logo-mark { height: 52px; width: 69px; }
 }
 
 /* ---- mobile ------------------------------------------------------------- */
@@ -725,8 +900,6 @@ footer a:hover { color: var(--bronze-bright); }
 @media (max-width: 640px) {
   .ask-row input { min-height: 52px; }
   .ask-row button.primary { width: 100%; min-height: 52px; }
-  .tabs { gap: 0; justify-content: space-between; }
-  .guided input { width: 9em; }
   .query-line button { width: 100%; }
   .chart { padding: 0.75rem; }
   .barrow { grid-template-columns: minmax(90px, 30%) 1fr auto; }

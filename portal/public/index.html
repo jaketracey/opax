@@ -23,9 +23,96 @@
       </a>
       <p class="masthead-sub">Open Parliamentary Accountability eXchange · independent &amp; open source</p>
     </div>
+
+    <nav class="masthead-nav" id="primary-nav" aria-label="Primary">
+      <ul class="nav-list">
+        <li class="nav-item"><a class="nav-link" data-panel="ask" href="#/">Ask</a></li>
+        <li class="nav-item"><a class="nav-link" data-panel="search" href="#/search">Search</a></li>
+        <li class="nav-item"><a class="nav-link" data-panel="money" href="#/money">Money map</a></li>
+        <li class="nav-item has-menu">
+          <button type="button" class="nav-link" data-panel="reports" aria-expanded="false" aria-controls="menu-reports">Reports<svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="megamenu megamenu-wide" id="menu-reports" hidden>
+            <div class="mm-head">
+              <p class="kicker">Standing investigations</p>
+              <a class="mm-all" href="#/reports">All reports<span aria-hidden="true"> →</span></a>
+            </div>
+            <div class="mm-grid" id="menu-reports-list">
+              <!-- Static fallback; refreshed from /reports/index.json on first open. -->
+              <a class="mm-link" href="#/reports/climate"><span class="mm-title">Climate &amp; Energy</span><span class="mm-blurb">The climate debate on the record: targets, coal, renewables and carbon pricing.</span></a>
+              <a class="mm-link" href="#/reports/gambling"><span class="mm-title">Gambling</span><span class="mm-blurb">What parliament says about poker machines, online wagering and gambling reform.</span></a>
+              <a class="mm-link" href="#/reports/housing"><span class="mm-title">Housing</span><span class="mm-blurb">Decades of affordability promises, negative gearing fights and supply debates.</span></a>
+              <a class="mm-link" href="#/reports/immigration"><span class="mm-title">Immigration</span><span class="mm-blurb">Border policy, offshore detention and migration levels across the decades.</span></a>
+              <a class="mm-link" href="#/reports/indigenous"><span class="mm-title">First Nations</span><span class="mm-blurb">Reconciliation, the Voice, Closing the Gap and native title, in parliament's own words.</span></a>
+              <a class="mm-link" href="#/reports/media"><span class="mm-title">Media Ownership</span><span class="mm-blurb">Concentration, regulation and the platforms: parliament on the press.</span></a>
+            </div>
+            <p class="mm-note">Long-running investigations pairing the money with the words, every claim cited.</p>
+          </div>
+        </li>
+        <li class="nav-item has-menu">
+          <button type="button" class="nav-link" data-panel="explore" aria-expanded="false" aria-controls="menu-explore">Explore<svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="megamenu" id="menu-explore" hidden>
+            <p class="kicker">Play with the record</p>
+            <a class="mm-link" href="#/explore" data-game="tm"><span class="mm-title">Time machine</span><span class="mm-blurb">Dial up any year since 1998 and see what parliament was arguing about.</span></a>
+            <a class="mm-link" href="#/explore" data-game="quiz"><span class="mm-title">The record quiz</span><span class="mm-blurb">Guess what the numbers say, then see the receipts.</span></a>
+            <a class="mm-link" href="#/money"><span class="mm-title">The money map</span><span class="mm-blurb">250 donors, 11 parties, 28 years of AEC returns, as territory you can spin.</span></a>
+          </div>
+        </li>
+        <li class="nav-item has-menu">
+          <button type="button" class="nav-link" data-panel="about" aria-expanded="false" aria-controls="menu-about">About<svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="megamenu" id="menu-about" hidden>
+            <p class="kicker">The project</p>
+            <a class="mm-link" href="#/about"><span class="mm-title">About OPAX</span><span class="mm-blurb">What OPAX is, what you can do here, and how answers are produced.</span></a>
+            <a class="mm-link" href="#/methods"><span class="mm-title">Methods &amp; how to cite</span><span class="mm-blurb">How the corpus is built, its known limits, and citation formats.</span></a>
+            <a class="mm-link" href="#/stats"><span class="mm-title">Corpus stats</span><span class="mm-blurb">Live counts for every collection in the index.</span></a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+
     <a class="masthead-link" href="#/stats">Corpus stats</a>
+
+    <button type="button" class="nav-toggle" id="nav-open" aria-expanded="false" aria-controls="nav-drawer">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg>
+      <span class="visually-hidden">Menu</span>
+    </button>
   </div>
 </header>
+
+<dialog class="nav-drawer" id="nav-drawer" aria-label="Menu">
+  <div class="drawer-head">
+    <p class="kicker">OPAX</p>
+    <button type="button" class="drawer-close" id="drawer-close" aria-label="Close menu">✕</button>
+  </div>
+  <nav aria-label="Primary">
+    <ul class="drawer-list">
+      <li><a class="drawer-link" data-panel="ask" href="#/">Ask</a></li>
+      <li><a class="drawer-link" data-panel="search" href="#/search">Search</a></li>
+      <li><a class="drawer-link" data-panel="money" href="#/money">Money map</a></li>
+    </ul>
+    <p class="drawer-kicker kicker">Reports</p>
+    <ul class="drawer-list">
+      <li><a class="drawer-link" data-panel="reports" href="#/reports">All reports</a></li>
+      <li><a class="drawer-sub" href="#/reports/climate">Climate &amp; Energy</a></li>
+      <li><a class="drawer-sub" href="#/reports/gambling">Gambling</a></li>
+      <li><a class="drawer-sub" href="#/reports/housing">Housing</a></li>
+      <li><a class="drawer-sub" href="#/reports/immigration">Immigration</a></li>
+      <li><a class="drawer-sub" href="#/reports/indigenous">First Nations</a></li>
+      <li><a class="drawer-sub" href="#/reports/media">Media Ownership</a></li>
+    </ul>
+    <p class="drawer-kicker kicker">Explore</p>
+    <ul class="drawer-list">
+      <li><a class="drawer-link" data-panel="explore" href="#/explore">Explore</a></li>
+      <li><a class="drawer-sub" href="#/explore" data-game="tm">Time machine</a></li>
+      <li><a class="drawer-sub" href="#/explore" data-game="quiz">The record quiz</a></li>
+    </ul>
+    <p class="drawer-kicker kicker">About</p>
+    <ul class="drawer-list">
+      <li><a class="drawer-link" data-panel="about" href="#/about">About OPAX</a></li>
+      <li><a class="drawer-sub" data-panel="methods" href="#/methods">Methods &amp; how to cite</a></li>
+      <li><a class="drawer-sub" data-panel="stats" href="#/stats">Corpus stats</a></li>
+    </ul>
+  </nav>
+</dialog>
 
 <main id="main" tabindex="-1">
   <div class="wrap">
@@ -33,15 +120,6 @@
     <section class="hero-intro" id="hero-intro">
       <h1>Ask what your politicians actually said.</h1>
     </section>
-
-    <nav class="tabs" aria-label="Sections">
-      <button class="tab" data-panel="ask">Ask</button>
-      <button class="tab" data-panel="search">Search</button>
-      <button class="tab" data-panel="money">Money map</button>
-      <button class="tab" data-panel="reports">Reports</button>
-      <button class="tab" data-panel="explore">Explore</button>
-      <button class="tab" data-panel="about">About</button>
-    </nav>
 
     <!-- ============================== ASK ============================== -->
     <section id="panel-ask" class="panel" aria-label="Ask the record">
@@ -73,6 +151,7 @@
         <article id="ask-answer" class="answer" tabindex="-1"></article>
         <p class="answer-stamp" id="ask-stamp"></p>
         <div class="action-row">
+          <button type="button" class="action-btn" id="ask-continue"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 4.5h13v9h-7l-3.5 3v-3h-2.5z"/><path d="M7 8h6"/><path d="M7 10.8h4"/></svg><span>Keep asking about this</span></button>
           <button type="button" class="action-btn" id="ask-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H4v12h12v-4"/><path d="M11 3.5h5.5V9"/><path d="M16.5 3.5L9.5 10.5"/></svg><span>Copy link to this question</span></button>
           <button type="button" class="action-btn" id="ask-export"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Download sources (BibTeX / RIS / CSV)</span></button>
         </div>
@@ -155,17 +234,38 @@
     </section>
 
     <!-- ============================= SEARCH ============================ -->
+    <section id="panel-chat" class="panel" hidden aria-label="Keep asking">
+      <p class="kicker">Keep asking</p>
+      <p class="fineprint" style="margin-top:0.2rem">Each answer is written fresh from the indexed
+      record and lists its sources; earlier turns give the next question its context.
+      <a href="#/methods">How answers work</a></p>
+      <div id="chat-thread" class="chat-thread" aria-label="Conversation with the record"></div>
+      <div id="chat-status" class="status" role="status"></div>
+      <form id="chat-form" class="chat-composer">
+        <input type="text" id="chat-input" autocomplete="off" placeholder="Ask a follow-up question…"
+               aria-label="Ask a follow-up question">
+        <button type="submit" class="primary" id="chat-send">Ask</button>
+      </form>
+    </section>
+
     <section id="panel-search" class="panel" hidden aria-label="Search the record">
       <div class="guided" id="search-guided">
-        <p class="guided-lead">What did
-          <label class="visually-hidden" for="guided-speaker">speaker name</label><input
-            id="guided-speaker" type="text" autocomplete="off" placeholder="a politician">
-          say about
-          <label class="visually-hidden" for="guided-topic">topic</label><input
-            id="guided-topic" type="text" autocomplete="off" placeholder="a topic">?
-          <button type="button" class="secondary" id="guided-go">Go</button>
-        </p>
-        <p class="fineprint">Names as they appear in Hansard: “Anthony Albanese”, not “the PM”.</p>
+        <p class="kicker">Ask of someone’s record</p>
+        <div class="guided-lead">
+          <span class="guided-seg">
+            <span class="guided-word" aria-hidden="true">What did</span>
+            <label class="guided-label" for="guided-speaker">Who</label>
+            <input id="guided-speaker" type="text" autocomplete="off" placeholder="Anthony Albanese">
+          </span>
+          <span class="guided-seg">
+            <span class="guided-word" aria-hidden="true">say about</span>
+            <label class="guided-label" for="guided-topic">About what</label>
+            <input id="guided-topic" type="text" autocomplete="off" placeholder="housing">
+            <span class="guided-word guided-q" aria-hidden="true">?</span>
+          </span>
+          <button type="button" class="primary" id="guided-go" disabled>Go</button>
+        </div>
+        <p class="fineprint">Leave either blank. Full names as Hansard prints them, not “the PM”.</p>
       </div>
 
       <form id="search-form" class="search-grid">
