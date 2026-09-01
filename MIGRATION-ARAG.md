@@ -86,6 +86,21 @@ All corpus steps run on the WSL box (`desktop`), which holds `parli.db`.
 
 ## Costs — the two open sign-offs
 
+**BYOK input (2026-09-01, verified read-only against the live KB):** ARAG
+supports bring-your-own-key via `PATCH /api/v1/kb/{kb}/configuration`
+`{"user_keys": {...}}` (currently null on the opax KB). Provider groups
+include `palm` (own Gemini key — the KB is pinned to gemini-2.5-flash-lite),
+`openai`, `anthropic`, `azure_openai`, `mistral`, `hf_llm`/`hf_embedding`,
+and `openai_compat` (any OpenAI-compatible endpoint, incl. self-hosted vLLM —
+relevant to the enrichment pass). With a own Gemini key, generation should
+bill at Google list price to our own account instead of ~$0.008/ARAG-token
+with undisclosed multipliers. CAVEATS before relying on it: (1) confirm with
+Progress that BYOK generation is exempt from platform-token billing — a
+markup on top of our own key would be the worst of both worlds; (2) BYOK
+covers generative calls only, not ingest/processing, so the §1 bulk-load
+question stands; (3) any stored key must be API-restricted with a spend cap
+(it lives in the KB config). Set via `scripts/arag_set_models.py`'s endpoint.
+
 ### 1. ARAG platform ingest (blocks step 5)
 
 Processing 13.6 GB / ~3.35B tokens through extraction + embedding consumes platform
