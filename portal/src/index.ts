@@ -799,6 +799,7 @@ interface CatalogPage {
 async function cachedJson(
   cachePath: string,
   build: () => Promise<Response>,
+  maxAge = 600,
 ): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request(`https://opax.com.au${cachePath}`)
@@ -806,7 +807,7 @@ async function cachedJson(
   if (cached) return cached
   const out = await build()
   if (out.ok) {
-    out.headers.set('cache-control', 'public, max-age=600')
+    out.headers.set('cache-control', `public, max-age=${maxAge}`)
     await cache.put(cacheKey, out.clone())
   }
   return out
@@ -882,6 +883,69 @@ async function apiTopic(slug: string, env: Env): Promise<Response> {
   })
 }
 
+/**
+ * Party × topic matrix ("who owns which debate"): one faceted-party call per
+ * topic — the verified faceted+filters shape returns the party split AND the
+ * topic's filtered total together — plus the bare labelset total as the
+ * honest denominator. 22 parallel requests, cached 15 minutes. Columns are
+ * capped at the biggest parties; the long tail folds into "Other" (per-row
+ * sums stay honest: a speech carries at most one party label). `totals` are
+ * filtered totals, never facet sums, so multi-label speeches count once.
+ */
+const MATRIX_PARTY_CAP = 7
+
+async function apiMatrix(env: Env): Promise<Response> {
+  return cachedJson('/api/matrix', async () => {
+    const slugs = [...TOPIC_SLUGS]
+    const [anyRes, ...topicRes] = await Promise.all([
+      kbFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+      ...slugs.map((slug) =>
+        kbFetch(env, `/catalog?faceted=${PARTY_FACET}&filters=${TOPIC_FILTER_PREFIX}/${slug}&page_size=0`),
+      ),
+    ])
+    if (!anyRes.ok || topicRes.some((r) => !r.ok)) return json({ error: 'catalog failed' }, 502)
+    const any = (await anyRes.json()) as CatalogPage
+    const pages = (await Promise.all(topicRes.map((r) => r.json()))) as CatalogPage[]
+
+    const totals: Record<string, number> = {}
+    const raw = new Map<string, Map<string, number>>()
+    const partyTotals = new Map<string, number>()
+    slugs.forEach((slug, i) => {
+      totals[slug] = pages[i].fulltext?.total ?? 0
+      const row = new Map<string, number>()
+      for (const [path, n] of Object.entries(pages[i].fulltext?.facets?.[PARTY_FACET] ?? {})) {
+        const party = path.slice(`${PARTY_FACET}/`.length)
+        row.set(party, n)
+        // Column ordering only — never surfaced as a count (a speech with
+        // three topic labels lands in three rows of this sum).
+        partyTotals.set(party, (partyTotals.get(party) ?? 0) + n)
+      }
+      raw.set(slug, row)
+    })
+
+    const ranked = [...partyTotals.entries()].sort((a, b) => b[1] - a[1])
+    const major = ranked.slice(0, MATRIX_PARTY_CAP).map(([name]) => name)
+    const folded = ranked.length > major.length
+    const cells: Record<string, Record<string, number>> = {}
+    for (const slug of slugs) {
+      const row: Record<string, number> = {}
+      let other = 0
+      for (const [party, n] of raw.get(slug) ?? []) {
+        if (major.includes(party)) row[party] = n
+        else other += n
+      }
+      if (folded && other > 0) row.Other = other
+      cells[slug] = row
+    }
+    return json({
+      labelled: any.fulltext?.total ?? 0,
+      parties: folded ? [...major, 'Other'] : major,
+      cells,
+      totals,
+    })
+  }, 900)
+}
+
 // ---------------------------------------------------------------------------
 
 export default {
@@ -913,6 +977,9 @@ export default {
       const topicMatch = url.pathname.match(/^\/api\/topic\/([a-z][a-z-]*)$/)
       if (topicMatch && request.method === 'GET') {
         return await apiTopic(topicMatch[1], env)
+      }
+      if (url.pathname === '/api/matrix' && request.method === 'GET') {
+        return await apiMatrix(env)
       }
       if (url.pathname === '/api/news' && request.method === 'GET') {
         return await apiNews()
