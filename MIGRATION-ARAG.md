@@ -282,6 +282,54 @@ prod: Wilkie/gambling refusal → 4-citation answer). The note shares the
 platform's 24-turn context budget with chat turns. Do not remove it as
 "redundant" — the filter alone does not tell the model who is speaking.
 
+## Post-enrichment roadmap (planned 2026-09-01, gated on full labeller + summaries passes)
+
+Verified primitives (probed live against the 2K-label sample):
+- `/catalog?faceted=/classification.labels/topic&page_size=0` returns live
+  per-topic counts. VERIFIED.
+- Facets combine with `filters` (probed `/classification.labels/party/Labor`
+  → Labor-only topic counts). VERIFIED. Date-range + state slices should
+  follow the same shape — probe before building the timeline views.
+- Topic labels work as retrieval filters on /find and /ask (verified in the
+  sample eval); summaries live in `da-summary-t-body` (surfaced on doc pages).
+- NOT yet verified: speaker facets (origin.collaborators may not be
+  facetable) — top-speakers-per-topic may need client-side aggregation over
+  /find pages or a static export.
+
+Views/tools to build once the full passes run, in value order:
+
+1. **Topic filter in the ask + search popovers** — a Topic select (21-entry
+   taxonomy) added to both filter popovers, passed as a label filter in
+   filter_expression. Pure plumbing on verified primitives; sharpens
+   retrieval for every broad question. Build first.
+2. **Topic pages** (`#/subject/topic/{slug}`) — the encyclopedia grows an
+   ideas wing: live facet counts by year/party, the money pairing via the
+   industry map, latest on-topic speeches with their machine summaries, a
+   pre-filtered ask box, link into the report. The Money & Words module
+   becomes its front-page teaser.
+3. **Party × topic matrix** ("who owns which debate") — heatmap of speech
+   share from faceted+filters counts, every cell a filtered search link.
+   New Explore entry; the numbers are live, not static exports.
+4. **Words per dollar** — per industry: disclosed donations (money.json) vs
+   on-topic speech share per party. The site's thesis in one view. Needs
+   the industry→topic map (exists in detectMoneyIndustry) + facet slices.
+5. **Then vs now / position tracker** — speaker + topic → two era-filtered
+   asks side by side ("what did X say about climate, 1998-2007 vs
+   2019-2026") with dated quotes; summaries make the era lists scannable.
+   Uses the speaker-provenance turn + created ranges + topic label.
+6. **Topic digests** — "the last fortnight in {topic}": newest on-topic
+   speeches' summaries stitched into a machine briefing (client-side), with
+   a disclosure line. Auto-freshens as the corpus updates.
+7. **Time machine + quiz upgrades** — topic dimension on the year dial;
+   quiz questions computed live from facet counts.
+8. **Doc pages** — topic chips linking to topic pages; "more on this topic
+   that week" via label+created filters.
+
+Sequencing: full labeller (~$70-100) unlocks 1-5 and 7-8; full summaries
+(~$45) unlocks 6 and enriches 2/5. Both remain user-gated and
+load-completion-gated. Items 3-6 warrant one probe each before building
+(facet shape under date ranges; ask latency under tight label filters).
+
 ## Open items
 
 - Speaker filter is exact-match after case/whitespace normalisation only —
