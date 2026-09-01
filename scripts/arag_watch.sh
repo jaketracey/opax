@@ -18,7 +18,7 @@ try:
 except Exception as e:
     print(f"stateerr {e}")
 EOF
-pgrep -f "parli.ingest.arag_sync" > /dev/null && echo RUNNING || echo STOPPED
+kill -0 "$(cat /tmp/arag_sync.pid 2>/dev/null)" 2>/dev/null && echo RUNNING || echo STOPPED
 tail -2 /tmp/arag_sync.log 2>/dev/null' 2>/dev/null
 }
 

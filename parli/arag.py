@@ -86,8 +86,13 @@ def _request(
     timeout: int = 120,
     max_retries: int = _MAX_RETRIES,
 ) -> Any:
-    """HTTP with backpressure-aware retries. Returns parsed JSON (or None for 204)."""
+    """HTTP with backpressure-aware retries. Returns parsed JSON (or None for 204).
+
+    Backpressure 429s never count against max_retries — the platform is pacing
+    a saturated ingest queue, which is expected during bulk load. We wait as
+    told (capped 15 min/cycle, 2 h total per request) instead of failing."""
     attempt = 0
+    bp_waited = 0.0
     while True:
         try:
             res = requests.request(
@@ -111,13 +116,13 @@ def _request(
                 return res.text
 
         err = AragError(res.status_code, url, res.text)
-        if err.retryable and attempt < max_retries:
-            if err.backpressure:
-                # Honour the platform's own try_after, capped at 15 min per wait.
-                wait = max(5.0, min(err.backpressure["try_after"] - time.time(), 900))
-            else:
-                wait = min(2 ** attempt, 60)
+        if err.backpressure and bp_waited < 7200:
+            wait = max(5.0, min(err.backpressure["try_after"] - time.time(), 900))
             time.sleep(wait)
+            bp_waited += wait
+            continue
+        if err.retryable and attempt < max_retries:
+            time.sleep(min(2 ** attempt, 60))
             attempt += 1
             continue
         raise err
