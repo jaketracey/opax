@@ -1566,8 +1566,10 @@ async function openSubject(kind, name, manageFocus) {
       actionBtn("ask",
         askHash(isParty
           ? `What has parliament said about the ${node.label}?`
-          : `What has parliament said about ${industryLabel(node.industry || name)}?`),
-        `Ask what parliament said about ${isParty ? "them" : "this industry"}`, { primary: true }),
+          : ["individual", "other", ""].includes(String(node.industry || "").toLowerCase())
+            ? `What has parliament said about ${node.label}?`
+            : `What has parliament said about ${industryLabel(node.industry)}?`),
+        `Ask what parliament said about ${isParty ? "them" : (["individual", "other", ""].includes(String(node.industry || "").toLowerCase()) ? "this donor" : "this industry")}`, { primary: true }),
       actionBtn("search", searchHash(`"${node.label}"`, {}), "Search mentions in the record"),
       actionBtn("download", "/graph/money.json", "Download the data"),
     ]);

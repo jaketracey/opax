@@ -699,8 +699,10 @@ export async function mountMoneyMap(
           () => setSelection(party.id, { user: true }),
         )
       }
-      trigger(card, askUrl(node.industry.replace(/_/g, ' ')),
-        'What did parliament say about this industry?')
+      if (!['individual', 'other', ''].includes(node.industry.toLowerCase())) {
+        trigger(card, askUrl(node.industry.replace(/_/g, ' ')),
+          'What did parliament say about this industry?')
+      }
       // Quote the suffix-stripped name: MPs say "Philip Morris", never
       // "Philip Morris Limited" - the full label finds nothing.
       trigger(card,
