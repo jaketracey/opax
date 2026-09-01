@@ -129,7 +129,12 @@ header {
 header :focus-visible { outline-color: var(--bronze-bright); }
 .masthead { display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2.75rem); }
 .masthead-id { flex: 0 1 auto; max-width: 300px; }
-.logo { display: inline-block; line-height: 0; text-decoration: none; }
+.logo { display: inline-flex; align-items: center; gap: 0.6rem; line-height: 0; text-decoration: none; }
+.logo-name {
+  font: 700 0.8125rem/1 var(--sans); letter-spacing: 0.22em;
+  color: var(--on-navy-soft); text-transform: uppercase;
+}
+.logo:hover .logo-name { color: var(--on-navy); }
 /* The mark: the continent in bronze, ringed by seven stars — federation's
    number — in the masthead's soft white. */
 /* Explicit box at the mark's own 176:132 ratio — `width: auto` lets some
@@ -320,7 +325,9 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
   display: flex; align-items: center; gap: 0.5rem; margin-top: 0.8rem;
   overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity;
 }
-.chip-label { color: var(--ink-faint); font-size: 0.8125rem; flex: 0 0 auto; }
+/* Snap-aligned like the chips: without it the initial snap pass settles on
+   the first chip and the label sits scrolled out of view under the fade. */
+.chip-label { color: var(--ink-faint); font-size: 0.8125rem; flex: 0 0 auto; scroll-snap-align: start; }
 .chip {
   flex: 0 0 auto; scroll-snap-align: start; cursor: pointer;
   background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;
@@ -441,7 +448,7 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
   font: 700 0.75rem/1 var(--sans); color: var(--bronze-ink);
 }
 .answer-stamp { color: var(--ink-faint); font-size: 0.75rem; margin: 0.8rem 0 0; }
-.action-row { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; margin: 0.6rem 0 0; font-size: 0.875rem; }
+.action-row { display: flex; flex-wrap: wrap; gap: 0.5rem 0.7rem; margin: 0.6rem 0 0; font-size: 0.875rem; }
 
 .source-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
 .source-list li { margin: 0; padding: 0.75rem 0; }
@@ -593,7 +600,8 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
 .filter-item input[type="number"] { width: 6.5em; }
 #f-speaker { width: 13em; }
 .advanced { display: flex; gap: 0.6rem 1rem; align-items: end; }
-.advanced summary { min-height: 44px; display: inline-flex; align-items: center; }
+/* Same register as the ask page's Options control: filter machinery, sans. */
+.advanced summary { min-height: 44px; display: inline-flex; align-items: center; font: 600 0.875rem/1.3 var(--sans); }
 .advanced[open] summary { color: var(--ink); }
 
 .results-bar {
@@ -601,7 +609,7 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
   gap: 0.5rem 1rem; margin-top: 1.2rem; font-size: 0.875rem; color: var(--ink-soft);
 }
 .results-bar select { min-height: 40px; font-size: 0.875rem; padding: 0.3rem 1.6rem 0.3rem 0.6rem; }
-.results-actions { display: inline-flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; }
+.results-actions { display: inline-flex; align-items: center; gap: 0.5rem 0.7rem; flex-wrap: wrap; }
 #results-count { font-variant-numeric: tabular-nums; }
 
 .results { list-style: none; margin: 0.4rem 0 0; padding: 0; }
@@ -641,7 +649,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   border-top: 3px solid var(--bronze); padding: 1rem 1.25rem;
 }
 .search-answer .kicker { margin-top: 0; }
-.answer-compact { font-size: 0.9718rem; line-height: 1.6; }
+.answer-compact { font-size: 0.9375rem; line-height: 1.6; }
 .answer-compact > * { margin-bottom: 0.8rem; }
 .search-answer .source-list li { padding: 0.45rem 0; }
 .search-answer .source-title { font-size: 0.9375rem; }
@@ -705,7 +713,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 
 /* Evidence-brief layers */
 #report-brief .answer { margin-top: 0.6rem; }
-#report-stats { margin-top: 2.5rem; }
+#report-stats { margin-top: 2rem; }
 .report-lead { display: grid; grid-template-columns: 1fr; gap: 1.5rem 2.5rem; align-items: start; }
 @media (min-width: 1100px) {
   .report-lead { grid-template-columns: minmax(0, 1fr) 340px; }
@@ -713,7 +721,6 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   #report-figures .tiles { flex-direction: column; }
   #report-figures .tile { max-width: none; }
 }
-.section-tools { gap: 0.5rem 0.7rem; }
 button.action-btn { background: none; cursor: pointer; font: 600 0.875rem/1.3 var(--sans); }
 a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top: 1.6rem; }
 .tile .tile-source { display: block; margin-top: 0.35rem; font-size: 0.75rem; color: var(--ink-faint); }
@@ -760,11 +767,16 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 .cite-panel h3:first-child { margin-top: 0; }
 .cite-panel pre {
   white-space: pre-wrap; word-break: break-word; background: var(--paper-sunken);
-  border-radius: 6px; padding: 0.6rem 0.8rem; margin: 0.2rem 0; font-size: 0.8125rem;
+  border-radius: 4px; padding: 0.6rem 0.8rem; margin: 0.2rem 0; font-size: 0.8125rem;
 }
 
-#report-back, #doc-back, #subject-back { text-decoration: none; color: var(--ink-soft); }
-#report-back:hover, #doc-back:hover, #subject-back:hover { color: var(--ink); text-decoration: none; }
+/* Quiet back links: no underline, so the hover affordance is the same
+   bronze the other underline-less links (titles, headlines) firm into. */
+#report-back, #doc-back, #subject-back {
+  text-decoration: none; color: var(--ink-soft);
+  display: inline-flex; align-items: center; min-height: 44px;
+}
+#report-back:hover, #doc-back:hover, #subject-back:hover { color: var(--bronze-ink); text-decoration: none; }
 
 .game-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 420px));
@@ -837,7 +849,6 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 .front-main, .front-rail { display: grid; gap: 2rem; align-content: start; min-width: 0; }
 .front-mod { min-width: 0; }
 .front-mod > h2 { margin: 0 0 0.7rem; }
-#mod-reports { margin-top: 2rem; }
 @media (min-width: 1100px) {
   .front-grid { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
 }
@@ -938,6 +949,8 @@ footer {
 .footer-lines p { margin: 0.35rem 0; max-width: 90ch; }
 footer a { color: var(--on-navy); text-decoration-color: var(--bronze-bright); }
 footer a:hover { color: var(--bronze-bright); }
+/* Same navy-band rule as the header: ledger bronze vanishes against navy. */
+footer :focus-visible { outline-color: var(--bronze-bright); }
 
 /* ---- forced colors / high contrast -------------------------------------- */
 
@@ -958,10 +971,12 @@ footer a:hover { color: var(--bronze-bright); }
 
 /* Compact band: hamburger + drawer replace the inline nav. */
 @media (max-width: 860px) {
-  header { padding: 0.5rem 0; }
+  header { padding: 0.35rem 0; }
   .masthead-nav, .masthead-link { display: none; }
   .nav-toggle { display: inline-flex; }
-  .logo-mark { height: 52px; width: 69px; }
+  .logo-mark { height: 46px; width: 61px; }
+  .masthead, .masthead-id { display: flex; align-items: center; }
+  .masthead-id { margin: 0; max-width: none; }
 }
 
 /* ---- mobile ------------------------------------------------------------- */

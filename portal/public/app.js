@@ -330,7 +330,7 @@ async function mountMoney() {
   if (moneyMapHandle || moneyMapLoading) return;
   moneyMapLoading = true;
   const root = $("money-map-root");
-  root.textContent = "Loading the map…";
+  root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   try {
     const { mountMoneyMap } = await import("/money-map.js");
     root.textContent = "";
@@ -342,6 +342,7 @@ async function mountMoney() {
     root.textContent = "";
     const p = document.createElement("p");
     p.className = "status error";
+    p.style.cssText = "margin:0;padding:1rem 1.25rem";
     p.textContent = `The map could not load (${err.message || err}). `;
     const a = document.createElement("a");
     a.href = "/map";
@@ -1200,7 +1201,7 @@ async function subjectNews(name, container) {
       <span class="news-meta"><span class="news-source">${esc(srcName[i.source] || i.source || "")}</span>${i.published ? ` · ${esc(relTime(i.published))}` : ""}</span></li>`).join("");
   container.insertAdjacentHTML("beforeend", `
     <p class="kicker">In the news</p>
-    ${list ? `<ol class="news-list" role="list">${list}</ol>` : `<p class="fineprint" style="margin-top:0.2rem">Nothing in today's politics headlines mentions them.</p>`}
+    ${list ? `<ol class="news-list" role="list">${list}</ol>` : `<p class="status" style="margin-top:0.2rem">Nothing in today's politics headlines mentions them.</p>`}
     <p class="fineprint">Search the outlets:
       <a href="https://www.abc.net.au/news/search?query=${q}" rel="noopener" target="_blank">ABC News ↗</a> ·
       <a href="https://www.theguardian.com/australia-news?query=${q}#search" rel="noopener" target="_blank">The Guardian ↗</a></p>`);
@@ -2286,7 +2287,9 @@ for (const id of ["guided-speaker", "guided-topic"]) {
 updateGuidedGo();
 
 $("search-copylink").addEventListener("click", (e) => {
-  copyText(siteUrl(searchHash(lastSearch.query, lastSearch.filters)), e.target);
+  // Swap only the label span so the "Copied" feedback keeps the icon.
+  copyText(siteUrl(searchHash(lastSearch.query, lastSearch.filters)),
+    e.currentTarget.querySelector("span"));
 });
 
 $("search-export").addEventListener("click", () => {
@@ -2768,7 +2771,7 @@ async function openReport(slug, sectionNum, manageFocus) {
         const linkBtn = document.createElement("button");
         linkBtn.type = "button";
         linkBtn.className = "action-btn";
-        linkBtn.innerHTML = `${iconSvg("external")}<span>Copy link to this section</span>`;
+        linkBtn.innerHTML = `${iconSvg("link")}<span>Copy link to this section</span>`;
         linkBtn.addEventListener("click", (e) =>
           copyText(siteUrl(`#/reports/${slug}/s/${i + 1}`), e.currentTarget.querySelector("span")));
         const askBtn = document.createElement("button");
