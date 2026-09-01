@@ -396,7 +396,7 @@ export async function mountMoneyMap(
 
   const hint = full ? el('p', 'mm-hint', container) : null
   if (hint) {
-    hint.textContent = `Drag to orbit · scroll to zoom · click a node or a flow — AEC returns ${
+    hint.textContent = `Drag to orbit · scroll to zoom · click a node or a flow · AEC returns ${
       raw.meta?.coverage ?? '1998–2026'
     }`
   }
