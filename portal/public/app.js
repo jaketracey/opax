@@ -516,6 +516,104 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
   document.querySelector("main").focus();
 });
 
+// --- masthead quick search ---------------------------------------------------
+// One input over everything with a page: speakers, topics, donors and
+// parties, reports — plus a plain search of the record as the first row.
+{
+  const input = $("mast-q");
+  const panel = $("mast-sugg");
+  let items = [];
+  let active = -1;
+  let seq = 0;
+  let debounce = null;
+  const close = () => {
+    panel.hidden = true;
+    input.setAttribute("aria-expanded", "false");
+    active = -1;
+  };
+  const go = (href) => {
+    close();
+    input.value = "";
+    input.blur();
+    location.hash = href.startsWith("#") ? href.slice(1) : href;
+  };
+  const render = () => {
+    panel.replaceChildren(...items.map((it, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "ms-row" + (i === active ? " ms-active" : "");
+      b.setAttribute("role", "option");
+      b.id = `ms-opt-${i}`;
+      b.setAttribute("aria-selected", String(i === active));
+      const t = document.createElement("span");
+      t.textContent = it.label;
+      const k = document.createElement("span");
+      k.className = "ms-type";
+      k.textContent = it.type;
+      b.append(t, k);
+      // pointerdown beats the input's blur; click would arrive too late.
+      b.addEventListener("pointerdown", (e) => { e.preventDefault(); go(it.href); });
+      return b;
+    }));
+    panel.hidden = !items.length;
+    input.setAttribute("aria-expanded", String(items.length > 0));
+    input.setAttribute("aria-activedescendant", active >= 0 ? `ms-opt-${active}` : "");
+  };
+  const suggest = async () => {
+    const q = input.value.trim();
+    const my = ++seq;
+    if (q.length < 2) { items = []; render(); return; }
+    const ql = q.toLowerCase();
+    const out = [{ label: `Search the record for “${q}”`, type: "Search", href: searchHash(q, {}) }];
+    try {
+      await Promise.all([loadSpeakersDir(), loadMoneyData(), loadReportsIndex()]);
+      if (my !== seq) return;
+      const dir = await loadSpeakersDir();
+      for (const name of (dir?.names || []).filter((n) => n.toLowerCase().includes(ql)).slice(0, 4)) {
+        out.push({ label: name, type: "Speaker", href: subjectHash("person", name) });
+      }
+      for (const [slug, disp] of Object.entries(TOPICS).filter(([, d]) => d.toLowerCase().includes(ql)).slice(0, 3)) {
+        out.push({ label: disp, type: "Topic", href: `#/subject/topic/${slug}` });
+      }
+      for (const n of (moneyData?.nodes || []).filter((n) => n.label.toLowerCase().includes(ql)).slice(0, 3)) {
+        out.push({
+          label: n.label,
+          type: n.kind === "party" ? "Party" : "Donor",
+          href: subjectHash(n.kind === "party" ? "party" : "donor", n.label),
+        });
+      }
+      for (const r of (reportsIndex || []).filter((r) => (r.title || "").toLowerCase().includes(ql)).slice(0, 2)) {
+        out.push({ label: `${r.title} report`, type: "Report", href: `#/reports/${r.slug}` });
+      }
+    } catch { /* the plain-search row stands alone */ }
+    if (my !== seq) return;
+    items = out.slice(0, 10);
+    active = -1;
+    render();
+  };
+  input?.addEventListener("input", () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(suggest, 120);
+  });
+  input?.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown" && items.length) {
+      e.preventDefault(); active = (active + 1) % items.length; render();
+    } else if (e.key === "ArrowUp" && items.length) {
+      e.preventDefault(); active = (active - 1 + items.length) % items.length; render();
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (active >= 0 && items[active]) go(items[active].href);
+      else if (input.value.trim()) go(searchHash(input.value.trim(), {}));
+    } else if (e.key === "Escape" && !panel.hidden) {
+      e.stopPropagation(); close();
+    }
+  });
+  input?.addEventListener("focus", () => { if (items.length) { panel.hidden = false; input.setAttribute("aria-expanded", "true"); } });
+  document.addEventListener("pointerdown", (e) => {
+    if (!panel.hidden && !panel.contains(e.target) && e.target !== input) close();
+  });
+}
+
 // --- the masthead constellation ---------------------------------------------
 // Every now and then two (sometimes three) of the seven federation stars
 // acknowledge each other: a hairline thread breathes in and fades away.
@@ -1183,7 +1281,7 @@ function loadSpeakersDir() {
         bySurname.get(sur).push([name, count]);
       }
       for (const list of bySurname.values()) list.sort((a, b) => b[1] - a[1]);
-      return { exact, bySurname };
+      return { exact, bySurname, names: rows.map(([n]) => n) };
     })
     .catch(() => null);
   return speakersDirPromise;
@@ -1205,6 +1303,28 @@ async function resolveSpeaker(input) {
   if (holders.length === 1) return holders[0][0];
   if (holders.length > 1 && holders[0][1] >= 5 * holders[1][1]) return holders[0][0];
   return null;
+}
+
+// Every speaker input shares one <datalist> typeahead over the directory,
+// populated lazily the first time any of them takes focus.
+let speakersDatalistStarted = false;
+function ensureSpeakersDatalist() {
+  if (speakersDatalistStarted) return;
+  speakersDatalistStarted = true;
+  loadSpeakersDir().then((dir) => {
+    if (!dir?.names || $("speakers-list")) return;
+    const dl = document.createElement("datalist");
+    dl.id = "speakers-list";
+    for (const name of dir.names) {
+      const o = document.createElement("option");
+      o.value = name;
+      dl.appendChild(o);
+    }
+    document.body.appendChild(dl);
+  });
+}
+for (const id of ["a-speaker", "f-speaker", "guided-speaker"]) {
+  $(id)?.addEventListener("focus", ensureSpeakersDatalist, { once: true });
 }
 
 
@@ -2130,6 +2250,8 @@ async function runAsk(question) {
     $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1)));
     $("ask-retrieved").hidden = !alsoList.length;
     $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null)));
+    $("ask-sources-sum").textContent = `Sources (${sources.length})`;
+    $("ask-sources").open = false; // each new answer starts folded
     $("ask-sources").hidden = !sources.length;
     setQuoteRail(citedList);
     $("ask-answer").focus({ preventScroll: true });
@@ -2680,6 +2802,8 @@ async function runSearchAnswer(q, f, mySeq) {
   box.hidden = false;
   $("search-answer-body").replaceChildren();
   $("search-answer-sources").replaceChildren();
+  $("search-answer-fold").hidden = true;
+  $("search-answer-fold").open = false;
   $("search-answer-more").textContent = "";
   setStatus($("search-answer-status"), "Reading the record…");
   try {
@@ -2698,6 +2822,8 @@ async function runSearchAnswer(q, f, mySeq) {
     renderAnswer($("search-answer-body"), answer);
     const cited = (data.sources || []).filter((x) => x.cited).slice(0, 3);
     $("search-answer-sources").replaceChildren(...cited.map((x, i) => sourceItem(x, i + 1)));
+    $("search-answer-sum").textContent = `Sources (${cited.length})`;
+    $("search-answer-fold").hidden = !cited.length;
     $("search-answer-more").innerHTML =
       `Generated from the retrieved passages. <a href="${esc(askHash(q, f.kind))}">Open in Ask</a> for the full sources.`;
   } catch (err) {
@@ -3337,13 +3463,15 @@ async function openReport(slug, sectionNum, manageFocus) {
         renderAnswer(body, s.answer || "");
         sec.append(h, body);
         if (s.sources?.length) {
-          const label = document.createElement("p");
-          label.className = "kicker";
-          label.textContent = "Sources";
+          const det = document.createElement("details");
+          det.className = "chat-sources";
+          const sum = document.createElement("summary");
+          sum.textContent = `Sources (${s.sources.length})`;
           const ol = document.createElement("ol");
           ol.className = "source-list";
           ol.replaceChildren(...s.sources.map((src, j) => sourceItem(src, j + 1)));
-          sec.append(label, ol);
+          det.append(sum, ol);
+          sec.append(det);
         }
         const tools = document.createElement("p");
         tools.className = "section-tools action-row";

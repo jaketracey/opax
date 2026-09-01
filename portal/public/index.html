@@ -21,7 +21,6 @@
       <a class="logo" href="#/" aria-label="OPAX home">
         <svg class="logo-mark" viewBox="0 0 176 132" role="img" aria-hidden="true"><path class="logo-land" d="M110.0 26.5L118.5 41.9L126.3 52.1L135.8 62.6L137.0 69.9L131.2 83.1L128.2 91.4L119.5 95.5L113.6 94.0L105.1 93.1L98.5 86.7L93.6 85.5L81.9 77.2L64.8 80.9L50.2 85.8L42.9 84.0L42.6 73.6L39.0 64.3L40.7 53.6L50.2 49.9L60.4 44.3L67.8 35.8L78.2 36.7L81.4 30.6L85.8 29.9L92.9 36.5L96.3 30.4L101.4 40.6L105.8 43.3L107.8 37.0L107.3 31.1Z"/><path class="logo-land" d="M115.3 99.7L124.1 100.1L120.9 106.5L116.5 103.3Z"/><path class="logo-star" d="M88.0 2.0L90.6 7.4L96.0 10.0L90.6 12.6L88.0 18.0L85.4 12.6L80.0 10.0L85.4 7.4Z"/><path class="logo-star" d="M149.0 25.6L150.8 29.3L154.5 31.1L150.8 32.9L149.0 36.6L147.2 32.9L143.5 31.1L147.2 29.3Z"/><path class="logo-star" d="M164.0 71.5L166.2 76.3L171.0 78.5L166.2 80.7L164.0 85.5L161.8 80.7L157.0 78.5L161.8 76.3Z"/><path class="logo-star" d="M121.8 111.5L123.4 114.9L126.8 116.5L123.4 118.1L121.8 121.5L120.2 118.1L116.8 116.5L120.2 114.9Z"/><path class="logo-star" d="M54.2 108.5L56.8 113.9L62.2 116.5L56.8 119.1L54.2 124.5L51.6 119.1L46.2 116.5L51.6 113.9Z"/><path class="logo-star" d="M12.0 73.0L13.8 76.7L17.5 78.5L13.8 80.3L12.0 84.0L10.2 80.3L6.5 78.5L10.2 76.7Z"/><path class="logo-star" d="M27.0 24.6L29.1 29.0L33.5 31.1L29.1 33.2L27.0 37.6L24.9 33.2L20.5 31.1L24.9 29.0Z"/></svg>
       </a>
-      <p class="masthead-sub">Open Parliamentary Accountability eXchange · independent &amp; open source</p>
     </div>
 
     <nav class="masthead-nav" id="primary-nav" aria-label="Primary">
@@ -71,7 +70,12 @@
       </ul>
     </nav>
 
-    <a class="masthead-link" href="#/stats">Corpus stats</a>
+    <div class="mast-search">
+      <label for="mast-q" class="visually-hidden">Quick search: speakers, topics, donors, reports</label>
+      <input id="mast-q" type="text" autocomplete="off" placeholder="Quick search&#8230;"
+             role="combobox" aria-expanded="false" aria-controls="mast-sugg" aria-autocomplete="list">
+      <div class="mast-sugg" id="mast-sugg" hidden role="listbox" aria-label="Suggestions"></div>
+    </div>
 
     <button type="button" class="nav-toggle" id="nav-open" aria-expanded="false" aria-controls="nav-drawer">
       <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg>
@@ -144,7 +148,7 @@
           </span>
           <span class="filter-item">
             <label for="a-speaker">Speaker</label>
-            <input id="a-speaker" type="text" autocomplete="off" placeholder="any">
+            <input id="a-speaker" type="text" autocomplete="off" placeholder="any" list="speakers-list">
           </span>
           <span class="filter-item">
             <label for="a-party">Party</label>
@@ -201,8 +205,8 @@
           <button type="button" class="action-btn" id="ask-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link to this question</span></button>
           <button type="button" class="action-btn" id="ask-export"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Download sources (BibTeX / RIS / CSV)</span></button>
         </div>
-<div id="ask-sources" hidden>
-          <p class="kicker">Sources: from the record</p>
+<details id="ask-sources" class="chat-sources" hidden>
+          <summary id="ask-sources-sum">Sources</summary>
           <ol id="ask-cited-list" class="source-list"></ol>
           <details id="ask-retrieved" hidden>
             <summary>Also retrieved, not cited in the answer</summary>
@@ -212,7 +216,7 @@
           and currently draw on the speech corpus. If the record is thin, the answer says so.
           Answers are generated fresh each time, so cite the sources, not this text.
           <a href="#/methods">How answers work</a></p>
-        </div>
+        </details>
       </div>
 
       <hr class="ledger-rule" id="front-rule">
@@ -301,7 +305,7 @@
           <span class="guided-seg">
             <span class="guided-word" aria-hidden="true">What did</span>
             <label class="guided-label" for="guided-speaker">Who</label>
-            <input id="guided-speaker" type="text" autocomplete="off" placeholder="Anthony Albanese">
+            <input id="guided-speaker" type="text" autocomplete="off" placeholder="Anthony Albanese" list="speakers-list">
           </span>
           <span class="guided-seg">
             <span class="guided-word" aria-hidden="true">say about</span>
@@ -332,7 +336,7 @@
               </span>
               <span class="filter-item">
                 <label for="f-speaker">Speaker</label>
-                <input id="f-speaker" type="text" autocomplete="off" placeholder="any">
+                <input id="f-speaker" type="text" autocomplete="off" placeholder="any" list="speakers-list">
               </span>
               <span class="filter-item">
                 <label for="f-party">Party</label>
@@ -406,7 +410,10 @@
         <h2 class="kicker" id="search-answer-head">The record's answer</h2>
         <div id="search-answer-status" class="status" role="status"></div>
         <div class="answer answer-compact" id="search-answer-body"></div>
-        <ol class="source-list" id="search-answer-sources"></ol>
+        <details id="search-answer-fold" class="chat-sources" hidden>
+          <summary id="search-answer-sum">Sources</summary>
+          <ol class="source-list" id="search-answer-sources"></ol>
+        </details>
         <p class="fineprint" id="search-answer-more"></p>
       </aside>
       </div>

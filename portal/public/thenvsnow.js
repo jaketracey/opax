@@ -95,6 +95,18 @@ const EXAMPLES = [
 ]
 
 // ---------------------------------------------------------------------------
+function ensureSpeakersDatalist (rows) {
+  if (document.getElementById('speakers-list')) return
+  const dl = document.createElement('datalist')
+  dl.id = 'speakers-list'
+  for (const [name] of rows) {
+    const o = document.createElement('option')
+    o.value = name
+    dl.appendChild(o)
+  }
+  document.body.appendChild(dl)
+}
+
 // Speaker resolution (mirror of app.js: speakers.json + resolveSpeaker)
 // ---------------------------------------------------------------------------
 
@@ -109,6 +121,7 @@ function loadSpeakersDir () {
   speakersDirPromise ??= fetch(SPEAKERS_URL)
     .then((r) => r.json())
     .then((rows) => {
+      ensureSpeakersDatalist(rows)
       const exact = new Map(); const bySurname = new Map()
       for (const [name, count] of rows) {
         const key = speakerKey(name)
@@ -406,7 +419,7 @@ export function mountThenVsNow (container) {
         <label class="tvn-field">
           <span class="tvn-label">Speaker</span>
           <input class="tvn-input tvn-speaker" name="speaker" type="text"
-                 placeholder="e.g. John Howard" autocomplete="off">
+                 placeholder="e.g. John Howard" autocomplete="off" list="speakers-list">
         </label>
         <label class="tvn-field">
           <span class="tvn-label">Topic</span>
