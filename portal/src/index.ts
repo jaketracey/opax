@@ -473,7 +473,7 @@ async function apiRecent(env: Env): Promise<Response> {
     env,
     '/catalog?page_number=0&page_size=14&sort_field=created&sort_order=desc',
   )
-  if (!res.ok) return json({ items: [] })
+  if (!res.ok) return json({ items: [], upstream: res.status, body: (await res.text()).slice(0, 200) })
   const data = (await res.json()) as {
     resources?: Record<string, { slug?: string; title?: string; created?: string }>
   }

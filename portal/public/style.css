@@ -502,7 +502,10 @@ button.link.result-title { font: 600 1.0625rem/1.35 var(--serif); }
 .news-list { list-style: none; margin: 0; padding: 0; }
 .news-list li { border-top: 1px solid var(--line); padding: 0.75rem 0; }
 .news-list li:first-child { border-top: 0; padding-top: 0.1rem; }
-.news-headline { font: 600 1.0625rem/1.4 var(--serif); }
+.news-headline { font: 600 1.0625rem/1.4 var(--serif); text-decoration: none; }
+.news-headline:hover { color: var(--bronze-ink); }
+.news-pivots a { text-decoration: none; color: var(--ink-soft); font-weight: 600; }
+.news-pivots a:hover { color: var(--bronze-ink); }
 .news-meta { display: block; margin-top: 0.25rem; color: var(--ink-faint); font-size: 0.8125rem; }
 .news-source { font: 700 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
 .news-pivots { display: flex; gap: 1.2rem; margin-top: 0.35rem; font-size: 0.8125rem; flex-wrap: wrap; }
