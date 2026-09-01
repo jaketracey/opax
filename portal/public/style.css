@@ -214,6 +214,29 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 }
 .chip:hover { background: var(--bronze-wash); color: var(--ink); }
 
+/* Edge fades on the horizontal scrollers (tabs, chip row): content melts into
+   the margin on whichever side holds more, driven by the row's own scroll
+   position — no fade at rest on the left, none at the end on the right, none
+   at all when the row fits. Browsers without scroll-driven animations keep
+   the plain hard edge. */
+@property --hfade-l { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --hfade-r { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@supports (animation-timeline: scroll(self inline)) {
+  .tabs, .chip-row {
+    mask-image: linear-gradient(to right,
+      transparent, #000 var(--hfade-l),
+      #000 calc(100% - var(--hfade-r)), transparent);
+    animation: hfade linear both;
+    animation-timeline: scroll(self inline);
+  }
+  @keyframes hfade {
+    0%   { --hfade-l: 0px;  --hfade-r: 32px; }
+    12%  { --hfade-l: 32px; --hfade-r: 32px; }
+    88%  { --hfade-l: 32px; --hfade-r: 32px; }
+    100% { --hfade-l: 32px; --hfade-r: 0px; }
+  }
+}
+
 /* Suggested questions as cards — the report-card idiom, home-page sized. */
 #ask-chips { margin-top: 1.6rem; }
 .suggest-grid {
