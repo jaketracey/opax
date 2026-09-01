@@ -440,6 +440,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 
 /* Evidence-brief layers */
 #report-brief .answer { margin-top: 0.6rem; }
+#report-stats { margin-top: 2.5rem; }
 .report-lead { display: grid; grid-template-columns: 1fr; gap: 1.5rem 2.5rem; align-items: start; }
 @media (min-width: 1100px) {
   .report-lead { grid-template-columns: minmax(0, 1fr) 340px; }

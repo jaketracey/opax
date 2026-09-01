@@ -1924,11 +1924,7 @@ function renderStats(container, stats) {
   if (!stats) { container.innerHTML = ""; return; }
   const don = stats.donations;
   const industries = fmtIndustries(don?.industries || []);
-  let htmlOut = `<div class="tiles">
-    ${tile((stats.speech_count ?? 0).toLocaleString(), "speeches on the record")}
-    ${tile((stats.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
-    ${don ? tile(fmtMoney(don.total ?? 0), `donations — ${industries}`) : ""}
-  </div>`;
+  let htmlOut = "";
   htmlOut += moneyWordsCharts(stats);
   if (don?.top_donors?.length) htmlOut += barList(don.top_donors, {
     heading: "Largest donors", fmt: fmtMoney,
@@ -2057,6 +2053,17 @@ async function openReport(slug, sectionNum, manageFocus) {
   $("report-meta").textContent =
     `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record · corpus v${corpusVersion()}`;
   renderStats($("report-stats"), report.stats);
+  {
+    const st = report.stats;
+    if (st) {
+      const don = st.donations;
+      $("report-figures").insertAdjacentHTML("beforeend", `<div class="tiles">
+        ${tile((st.speech_count ?? 0).toLocaleString(), "speeches on the record")}
+        ${tile((st.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
+        ${don ? tile(fmtMoney(don.total ?? 0), `donations — ${fmtIndustries(don.industries || [])}`) : ""}
+      </div>`);
+    }
+  }
   renderReportBrief(report);
   $("report-download").innerHTML =
     `<a class="action-btn report-download-btn" href="/reports/${esc(slug)}.json">${iconSvg("download")}<span>Download the data behind this report</span></a>`;
