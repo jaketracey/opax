@@ -240,7 +240,7 @@ const TITLES = {
   ask: "OPAX — ask what Australian politicians actually said",
   search: "Search the record — OPAX",
   money: "Money map — OPAX",
-  reports: "Standing reports — OPAX",
+  reports: "Reports — OPAX",
   doc: "From the record — OPAX",
   subject: "OPAX encyclopedia",
   explore: "Explore — OPAX",
@@ -1555,8 +1555,7 @@ async function loadReportsList(manageFocus) {
     ...reportsIndex.map((r) => {
       const card = document.createElement("button");
       card.className = "report-card";
-      card.innerHTML = `<span class="card-kicker">Standing report</span>
-        <span class="card-title">${esc(r.title)}</span>
+      card.innerHTML = `<span class="card-title">${esc(r.title)}</span>
         <span class="card-blurb">${esc(r.blurb)}</span>
         <span class="card-meta">Updated ${esc(fmtDate(r.updated || ""))}</span>`;
       card.addEventListener("click", () => { location.hash = `#/reports/${r.slug}`; });
