@@ -199,6 +199,11 @@ member rows, 35K speeches) — don't trust members-derived facts for those.
 
 ## Open items
 
+- If/when the legal push is approved: raise `portal/public/corpus.json`
+  `expected_resources` to include the legal docs — the front-page corpus meter
+  compares it against the KB's total resource count and will otherwise hide
+  while speeches are still incomplete.
+
 - Step-4 sample (~2K docs) → measure Agentic RAG token burn/resource, eval
   flash-lite answer quality → the two §Costs sign-offs.
 - news_articles text column name (scan errored on content/body/text — check schema

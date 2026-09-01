@@ -96,7 +96,7 @@ function download(filename, mime, text) {
   a.href = URL.createObjectURL(new Blob([text], { type: mime }));
   a.download = filename;
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
 
 async function copyText(text, btn, doneLabel) {
@@ -275,8 +275,14 @@ async function mountMoney() {
 
 let firstRoute = true;
 
+function rawFragment() {
+  // location.hash is percent-DECODED in Firefox; parse from href so encoded
+  // & / = / % inside queries survive reload and back/forward everywhere.
+  return location.href.split("#")[1] || "";
+}
+
 function parseHash() {
-  const h = location.hash.replace(/^#\/?/, "");
+  const h = rawFragment().replace(/^\/?/, "");
   const [pathPart, queryPart] = h.split("?");
   const segs = pathPart.split("/").filter(Boolean);
   const params = new URLSearchParams(queryPart || "");
@@ -284,6 +290,8 @@ function parseHash() {
 }
 
 function route() {
+  const frag = rawFragment();
+  if (frag && !frag.startsWith("/")) return; // plain #fragment — native anchor, not a route
   const { segs, params } = parseHash();
   const view = segs[0] || "ask";
   const manageFocus = !firstRoute;
@@ -328,6 +336,11 @@ function route() {
     document.querySelector("main").focus();
   }
 }
+
+document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
+  e.preventDefault();
+  document.querySelector("main").focus();
+});
 
 for (const tab of document.querySelectorAll(".tab")) {
   tab.addEventListener("click", () => {
@@ -477,6 +490,9 @@ function renderChips() {
 function renderCorpusMeter() {
   if (!liveStats || !corpusManifest) return;
   const indexed = liveStats.resources ?? 0;
+  // NOTE: /api/stats counts every KB resource. corpus.json's expected_resources
+  // covers speeches+news only — it MUST be raised when the legal push is
+  // approved, or this meter will hide while speeches are still incomplete.
   const expected = corpusManifest.expected_resources || 0;
   if (!expected) return;
   const meter = $("corpus-meter");
@@ -484,7 +500,7 @@ function renderCorpusMeter() {
   meter.hidden = false;
   $("corpus-meter-text").textContent =
     `${indexed.toLocaleString()} of ${expected.toLocaleString()} collected documents indexed — more added daily. Answers may be incomplete while indexing runs.`;
-  const pct = Math.max(Math.round((indexed / expected) * 100), 1);
+  const pct = Math.min(Math.max(Math.round((indexed / expected) * 100), 1), 100);
   const bar = $("corpus-meter-bar");
   bar.setAttribute("aria-valuenow", String(pct));
   bar.querySelector("i").style.width = `${pct}%`;
@@ -963,7 +979,11 @@ async function openReport(slug, sectionNum, manageFocus) {
   }
   if (sectionNum) {
     const target = $(`report-s-${sectionNum}`);
-    if (target) { target.scrollIntoView(); target.querySelector("h3")?.setAttribute("tabindex", "-1"); }
+    if (target) {
+      target.scrollIntoView();
+      const h = target.querySelector("h3");
+      if (h) { h.setAttribute("tabindex", "-1"); h.focus(); }
+    }
   } else if (manageFocus) {
     $("report-title").focus();
   }

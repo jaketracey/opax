@@ -149,15 +149,16 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
     const slug = resource.slug ?? ''
     const m = SLUG_RE.exec(slug)
     const meta = resource.extra?.metadata ?? {}
+    // Compare paragraphs on the CALIBRATED scale — raw BM25 (unbounded) would
+    // always beat raw semantic (0-1), hijacking snippet choice and ranking.
     let bestText = ''
     let bestScore = 0
-    let bestType = 'BM25'
     for (const field of Object.values(resource.fields ?? {})) {
       for (const para of Object.values(field.paragraphs ?? {})) {
-        if (para.score >= bestScore) {
-          bestScore = para.score
+        const cal = calibrate(para.score, para.score_type)
+        if (cal >= bestScore) {
+          bestScore = cal
           bestText = para.text
-          bestType = para.score_type
         }
       }
     }
@@ -173,7 +174,7 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
       date: (meta.date as string) ?? null,
       url: resource.origin?.url || null, // official record, for exports/citations
       snippet: bestText.slice(0, 600),
-      score: Math.round(calibrate(bestScore, bestType) * 1000) / 1000,
+      score: Math.round(bestScore * 1000) / 1000, // already calibrated above
     }
   })
   results.sort((a, b) => b.score - a.score)

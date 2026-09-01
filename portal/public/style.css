@@ -233,7 +233,7 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 .source-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
 .source-list li { margin: 0; padding: 0.75rem 0 0.75rem 14px; }
 .source-num { font: 700 0.8125rem/1 var(--sans); color: var(--bronze-ink); font-variant-numeric: tabular-nums; margin-right: 0.4rem; }
-.source-title { font: 600 1rem/1.35 var(--serif); }
+button.link.source-title { font: 600 1rem/1.35 var(--serif); }
 .source-meta, .result-meta { display: block; color: var(--ink-faint); font-size: 0.8125rem; margin-top: 0.25rem; }
 .flash { background: var(--bronze-wash); }
 @media (prefers-reduced-motion: no-preference) {
@@ -291,7 +291,7 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
 .results { list-style: none; margin: 0.4rem 0 0; padding: 0; }
 .results li { border-top: 1px solid var(--line); padding: 1rem 0; }
 .results li:first-child { border-top: none; }
-.result-title { font: 600 1.0625rem/1.35 var(--serif); }
+button.link.result-title { font: 600 1.0625rem/1.35 var(--serif); }
 .snippet {
   margin: 0.45rem 0 0; color: var(--ink-soft); font-size: 0.9375rem; max-width: 88ch;
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
