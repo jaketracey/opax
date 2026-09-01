@@ -285,6 +285,14 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 .ask-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 .ask-row input { flex: 1 1 320px; min-height: 56px; font-size: 1.0625rem; }
 
+.ask-options { margin-top: 0.6rem; }
+.ask-options summary {
+  cursor: pointer; color: var(--ink-soft); font: 600 0.8125rem/1.4 var(--sans);
+  min-height: 44px; display: inline-flex; align-items: center; padding-right: 0.5rem;
+}
+.ask-options[open] summary { color: var(--ink); }
+.ask-options .filter-rail { margin-top: 0.3rem; }
+
 .ask-scope {
   display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 0.6rem;
   font-size: 0.8125rem; color: var(--ink-faint); cursor: pointer;
@@ -352,6 +360,14 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
   font-size: 0.8125rem; color: var(--ink-faint);
 }
 .colophon b { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; font-size: 0.9375rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .ask-reveal { animation: askReveal 620ms cubic-bezier(0.22, 0.7, 0.3, 1) both; }
+  @keyframes askReveal {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+}
 
 /* ---- status ------------------------------------------------------------- */
 

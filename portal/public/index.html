@@ -128,8 +128,43 @@
         <input id="ask-input" type="text" autocomplete="off">
         <button type="submit" class="primary" id="ask-submit">Ask the record</button>
       </form>
-      <label class="ask-scope"><input type="checkbox" id="ask-wide">
-        Also search legal documents and news</label>
+      <details class="ask-options">
+        <summary>Options</summary>
+        <div class="filter-rail">
+          <span class="filter-item">
+            <label for="a-speaker">Speaker</label>
+            <input id="a-speaker" type="text" autocomplete="off" placeholder="any">
+          </span>
+          <span class="filter-item">
+            <label for="a-party">Party</label>
+            <select id="a-party">
+              <option value="">any</option>
+              <option>Labor</option><option>Liberal</option><option>Nationals</option>
+              <option>LNP</option><option>Greens</option><option>Independent</option>
+              <option>One Nation</option>
+            </select>
+          </span>
+          <span class="filter-item">
+            <label for="a-state">Parliament</label>
+            <select id="a-state">
+              <option value="">any</option>
+              <option value="federal">Federal</option><option value="nsw">NSW</option>
+              <option value="vic">VIC</option><option value="sa">SA</option>
+              <option value="qld">QLD</option>
+            </select>
+          </span>
+          <span class="filter-item">
+            <label for="a-from">From year</label>
+            <input id="a-from" type="number" min="1993" placeholder="1993">
+          </span>
+          <span class="filter-item">
+            <label for="a-to">To year</label>
+            <input id="a-to" type="number" min="1993" placeholder="2026">
+          </span>
+          <label class="ask-scope"><input type="checkbox" id="ask-wide">
+            Also search legal documents and news</label>
+        </div>
+      </details>
       <div id="ask-chips" hidden>
         <div class="chip-row" id="chip-row">
           <span class="chip-label">Try:</span>
@@ -401,6 +436,7 @@
         <p id="doc-meta" class="doc-meta"></p>
         <div class="doc-toolbar" id="doc-actions" hidden>
           <div class="doc-toolbar-btns" role="group" aria-label="Document actions">
+            <button type="button" class="action-btn action-primary" id="doc-profile">Full profile</button>
             <button type="button" class="action-btn" id="doc-cite" aria-expanded="false" aria-controls="doc-cite-panel">Cite</button>
             <button type="button" class="action-btn" id="doc-more">Their speeches</button>
             <button type="button" class="action-btn" id="doc-similar">Find similar</button>

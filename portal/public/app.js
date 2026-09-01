@@ -157,6 +157,23 @@ function askKind() {
   return $("ask-wide")?.checked ? "all" : "speech";
 }
 
+function askFilters() {
+  const val = (id) => $(id)?.value?.trim() || "";
+  return {
+    speaker: val("a-speaker"), party: val("a-party"), state: val("a-state"),
+    from: val("a-from"), to: val("a-to"),
+  };
+}
+
+function askFilterSummary(f) {
+  const bits = [];
+  if (f.speaker) bits.push(f.speaker);
+  if (f.party) bits.push(f.party);
+  if (f.state) bits.push(STATE_NAMES[f.state] || f.state);
+  if (f.from || f.to) bits.push(`${f.from || "…"}–${f.to || "…"}`);
+  return bits.join(" · ");
+}
+
 function opaxUrl(slug) {
   return siteUrl(`#/doc/${slug}`);
 }
@@ -1556,7 +1573,13 @@ async function runAsk(question) {
     const data = await api("/api/ask", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ question, kind: askKind(), ...(speakerFilter ? { speaker: speakerFilter } : {}) }),
+      body: JSON.stringify((() => {
+        const f = askFilters();
+        if (!f.speaker && speakerFilter) f.speaker = speakerFilter;
+        const body = { question, kind: askKind() };
+        for (const [k, v] of Object.entries(f)) if (v) body[k] = v;
+        return body;
+      })()),
       signal: myAbort.signal,
     });
     if (askAbort !== myAbort) return; // superseded by a newer question
@@ -1577,17 +1600,27 @@ async function runAsk(question) {
     hideWombat();
     setStatus($("ask-status"), `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
-    $("ask-result").hidden = false;
+    const result = $("ask-result");
+    result.hidden = false;
+    // The answer arrives with a gentle rise; the page glides to meet it.
+    result.classList.remove("ask-reveal");
+    void result.offsetWidth;
+    result.classList.add("ask-reveal");
+    result.scrollIntoView({
+      behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
+      block: "start",
+    });
     renderAnswer($("ask-answer"), data.answer || "(no answer)");
     $("ask-stamp").textContent =
       `Generated ${fmtDate(localISODate())} · corpus v${corpusVersion()}` +
-      (speakerFilter ? ` · retrieval filtered to ${speakerFilter}'s speeches` : "");
+      ((askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
+        ? ` · filtered: ${askFilterSummary(askFilters()) || `${speakerFilter}'s speeches`}` : "");
     $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1)));
     $("ask-retrieved").hidden = !alsoList.length;
     $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null)));
     $("ask-sources").hidden = !sources.length;
     setQuoteRail(citedList);
-    $("ask-answer").focus();
+    $("ask-answer").focus({ preventScroll: true });
   } catch (err) {
     if (askAbort !== myAbort) return; // a newer request owns the UI now
     hideWombat();
