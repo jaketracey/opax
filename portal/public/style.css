@@ -271,6 +271,10 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 main { flex: 1; padding: 2.75rem 0 3rem; }
 @media (max-width: 860px) {
   main { padding-top: 0; }
+  /* Narrow screens: the query takes its own line; the submit and the filter
+     icon share the next one instead of the icon orphaning onto a third. */
+  .query-line > input, .ask-row > input { flex-basis: 100%; }
+  .query-line button.secondary, .ask-row button.primary { flex: 1 1 auto; }
   /* The map opens the money page; give it air below the band. */
   #panel-money { padding-top: 1rem; }
 }

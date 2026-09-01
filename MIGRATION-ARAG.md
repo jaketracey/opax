@@ -364,7 +364,11 @@ try_after waits (client honours up to 900s per retry, silently, workers
 all sleeping — looks like a stall but is pacing). Do NOT restart the sync
 for silence alone; check /proc state + established connections first.
 The passes and the load share platform processing; ingest slows while
-enrichment runs hot and recovers on its own.
+enrichment runs hot and recovers on its own. OpenRouter key cap raised to
+$200 by Jake (2026-09-02 morning); the topics EXISTING sweep ended at ~87K
+of ~300K speeches while the config keeps labelling new arrivals - a second
+EXISTING pass (ideally filtered to unlabelled docs) is needed for full
+coverage once the load completes.
 
 ## Open items
 
