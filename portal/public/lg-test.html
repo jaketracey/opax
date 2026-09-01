@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Ledger — test harness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Public+Sans:wght@400..700&display=swap">
+<style>
+  /* Mirror of the host page's design tokens (style.css) so the module renders
+     exactly as it will when mounted for real. */
+  :root {
+    --paper:        #FAF9F6;
+    --paper-raised: #FFFFFF;
+    --paper-sunken: #F1EFE8;
+    --ink:       #23271F;
+    --ink-soft:  #575C52;
+    --ink-faint: #6F7468;
+    --line:        #DFDCD2;
+    --line-strong: #8D897B;
+    --bronze-ink:  #8A5A12;
+    --bronze:      #A0761B;
+    --bronze-wash: rgba(160, 118, 27, 0.16);
+    --navy:        #142A43;
+    --serif: "Merriweather", Georgia, serif;
+    --sans:  "Public Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  body { margin: 0; background: var(--paper); font-family: var(--sans); }
+  .harness { padding: 0.5rem 1rem; font-size: 0.75rem; color: var(--ink-faint); }
+  .harness button { font: inherit; margin-left: 0.5rem; }
+  main { padding: 1rem; max-width: 1200px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div class="harness">
+  lg-test harness ·
+  <button id="toggle" type="button">unmount</button>
+</div>
+<main id="lg-container"></main>
+<script type="module">
+  import { mountLedger } from '/ledger.js'
+  const container = document.getElementById('lg-container')
+  let handle = mountLedger(container)
+  window.__lg = handle // for console poking
+  document.getElementById('toggle').addEventListener('click', (e) => {
+    if (handle) {
+      handle.destroy()
+      handle = null
+      e.target.textContent = 'mount'
+    } else {
+      handle = mountLedger(container)
+      e.target.textContent = 'unmount'
+    }
+    window.__lg = handle
+  })
+</script>
+</body>
+</html>
