@@ -207,6 +207,40 @@ const YEAR_TOPICS = {
   ],
 }
 
+// Mirror of app.js TOPICS (the enrichment taxonomy is canonical there):
+// module-local so this file keeps working standalone in tm-test.html.
+// Distinct from YEAR_TOPICS above: these are the machine labeller's 21
+// topics, selectable as a lens over any year; YEAR_TOPICS are the curated
+// per-year probe queries the default "All topics" view runs.
+const TOPICS = {
+  'gambling': 'Gambling',
+  'financial-services': 'Financial services',
+  'mining-energy': 'Mining & energy',
+  'climate-environment': 'Climate & environment',
+  'property-construction': 'Property & construction',
+  'housing': 'Housing',
+  'health': 'Health',
+  'media-communications': 'Media & communications',
+  'hospitality-alcohol': 'Hospitality & alcohol',
+  'defence-security': 'Defence & security',
+  'agriculture': 'Agriculture',
+  'unions-workplace': 'Unions & workplace',
+  'immigration': 'Immigration',
+  'indigenous-affairs': 'Indigenous affairs',
+  'tax-budget': 'Tax & budget',
+  'education': 'Education',
+  'welfare-social': 'Welfare & social services',
+  'integrity-democracy': 'Integrity & democracy',
+  'infrastructure-transport': 'Infrastructure & transport',
+  'justice-law': 'Justice & law',
+  'foreign-affairs': 'Foreign affairs',
+}
+
+/** The retrieval query for a topic-lens probe (mirror of app.js topicPhrase). */
+function topicPhrase(slug) {
+  return (TOPICS[slug] || slug).toLowerCase().replace(/ & /g, ' and ')
+}
+
 // Friendly names for the AEC donation groupings shipped in the reports.
 const INDUSTRY_PHRASES = {
   gambling: 'the gambling industry',
@@ -363,6 +397,22 @@ const CSS = `
 }
 @media (prefers-reduced-motion: no-preference) {
   .tm-thumb, .tm-fill { transition: left 80ms linear, width 80ms linear; }
+}
+
+/* Topic lens -------------------------------------------------------------- */
+.tm-topic-row {
+  display: flex; align-items: center; justify-content: flex-end; gap: 0.45rem;
+  margin: -0.3rem 0 0.7rem; font-size: 0.78rem; color: var(--ink-faint, #6F7468);
+}
+.tm-topic {
+  font: inherit; font-size: 0.82rem; color: var(--ink, #23271F);
+  background: var(--paper-raised, #fff);
+  border: 1px solid var(--line-strong, #8D897B); border-radius: 6px;
+  padding: 0.3rem 0.45rem; max-width: 100%; min-width: 0;
+}
+.tm-topic:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+@media (max-width: 480px) {
+  .tm-topic { flex: 1; }
 }
 
 /* Panels ------------------------------------------------------------------ */
@@ -671,6 +721,10 @@ export function mountTimeMachine(container) {
     <div class="tm-panels">
       <section aria-label="What they were arguing about">
         <h2 class="tm-h2">What they were <span>arguing about</span></h2>
+        <label class="tm-topic-row">
+          <span>Topic</span>
+          <select class="tm-topic"></select>
+        </label>
         <div class="tm-cards" aria-live="polite" aria-busy="false"></div>
       </section>
       <section aria-label="The year in numbers">
@@ -694,6 +748,23 @@ export function mountTimeMachine(container) {
   const btnRandom = $('.tm-random')
   const btnBack = $('.tm-step-back')
   const btnFwd = $('.tm-step-fwd')
+  const topicSel = $('.tm-topic')
+
+  // Options via textContent (never innerHTML), matching the module's rule for
+  // everything that renders. "All topics" is the default: the curated per-year
+  // probes, exactly as before the lens existed.
+  {
+    const all = el('option')
+    all.value = ''
+    all.textContent = 'All topics'
+    topicSel.appendChild(all)
+    for (const [slug, name] of Object.entries(TOPICS)) {
+      const opt = el('option')
+      opt.value = slug
+      opt.textContent = name
+      topicSel.appendChild(opt)
+    }
+  }
 
   // ruler ticks: one per year, tall + labelled every 5 years and at the ends
   for (let y = YEAR_MIN; y <= YEAR_MAX; y++) {
@@ -712,6 +783,7 @@ export function mountTimeMachine(container) {
 
   // ---- state --------------------------------------------------------------
   let year = START_YEAR
+  let topic = '' // '' = all topics (the curated probes); else a TOPICS slug
   let staticData = { reports: [], progress: null }
   let searchAbort = null       // in-flight headline probes
   let searchTimer = 0          // debounce while scrubbing
@@ -806,7 +878,40 @@ export function mountTimeMachine(container) {
     return card
   }
 
+  // Under the topic lens an empty year has TWO possible causes (the archive
+  // is still loading AND the labelling pass is still running), so the copy
+  // must not pretend to know which — and must not read as "parliament was
+  // quiet about this".
+  function renderEmptyTopicYear() {
+    cardsEl.replaceChildren()
+    const box = el('div', 'tm-empty', { role: 'status' })
+
+    const head = el('strong')
+    head.textContent = `No ${TOPICS[topic]} speeches labelled for ${year} yet.`
+    box.appendChild(head)
+
+    const body = el('p')
+    body.style.margin = '0.4rem 0 0'
+    body.textContent =
+      'The topic lens only sees speeches a still-running machine labelling pass has reached, ' +
+      'on top of an archive that is itself still loading. A quiet result here means the ' +
+      'machines have not caught up with this year, not that parliament was silent about it.'
+    box.appendChild(body)
+
+    const actions = el('div', 'tm-empty-actions')
+    const clear = el('button', 'tm-linkbtn', { type: 'button' })
+    clear.textContent = `Show all topics for ${year} →`
+    clear.addEventListener('click', () => setTopic(''))
+    actions.appendChild(clear)
+    box.appendChild(actions)
+    cardsEl.appendChild(box)
+  }
+
   function renderEmptyYear() {
+    if (topic) {
+      renderEmptyTopicYear()
+      return
+    }
     cardsEl.replaceChildren()
     const box = el('div', 'tm-empty', { role: 'status' })
 
@@ -855,13 +960,22 @@ export function mountTimeMachine(container) {
     if (searchAbort) searchAbort.abort()
     searchAbort = new AbortController()
     const { signal } = searchAbort
-    const probes = YEAR_TOPICS[year] || []
+    // Topic lens: ONE probe, the topic phrase as the query plus the label
+    // filter the enrichment pass writes — the same pairing the topic pages
+    // use — instead of the year's curated queries (intersecting those with
+    // a label filter would mix two topic vocabularies and near-empty most
+    // years). All-topics behaviour is exactly the pre-lens module.
+    const filtered = Boolean(topic)
+    const probes = filtered
+      ? [{ q: topicPhrase(topic), label: TOPICS[topic], topic }]
+      : YEAR_TOPICS[year] || []
     renderSkeletons()
 
     const settled = await Promise.allSettled(
       probes.map((p) =>
         fetchJSON(
-          `/api/search?q=${encodeURIComponent(p.q)}&from=${year}&to=${year}&top_k=6`,
+          `/api/search?q=${encodeURIComponent(p.q)}&from=${year}&to=${year}` +
+            `&top_k=${filtered ? 12 : 6}${p.topic ? `&topic=${encodeURIComponent(p.topic)}` : ''}`,
           signal,
         ).then((data) => ({ probe: p, results: data.results || [] })),
       ),
@@ -880,10 +994,11 @@ export function mountTimeMachine(container) {
     }
 
     // Interleave: best unseen result from each probe, twice around, so every
-    // debate gets a card before any debate gets two.
+    // debate gets a card before any debate gets two. The topic lens has one
+    // probe, so it gets enough rounds to fill the grid on its own.
     const seen = new Set()
     const picks = []
-    for (let round = 0; round < 2 && picks.length < 6; round++) {
+    for (let round = 0; round < (filtered ? 6 : 2) && picks.length < 6; round++) {
       for (const { probe, results } of perProbe) {
         const r = results.find((x) => x.slug && !seen.has(x.slug))
         if (r) {
@@ -903,10 +1018,13 @@ export function mountTimeMachine(container) {
     for (const { probe, r } of picks) cardsEl.appendChild(makeCard(probe.label, r))
 
     // A thin year means the machine is mid-shelving it, not that parliament
-    // went quiet — say so.
+    // went quiet — say so. Under the topic lens the labelling pass is the
+    // second reason a year runs thin, so the caveat names both.
     if (picks.length < 3) {
       const note = el('div', 'tm-empty', { role: 'note' })
-      note.textContent = `That’s everything the machine has shelved for ${year} so far. The archive loads oldest-first, and more of ${year} arrives every day.`
+      note.textContent = filtered
+        ? `That’s every ${TOPICS[topic]}-labelled speech the machine has shelved for ${year} so far. The archive and the topic labeller are both still running, so more may arrive.`
+        : `That’s everything the machine has shelved for ${year} so far. The archive loads oldest-first, and more of ${year} arrives every day.`
       cardsEl.appendChild(note)
     }
   }
@@ -924,6 +1042,18 @@ export function mountTimeMachine(container) {
     // discrete jumps (keyboard steps still coalesce via the short delay).
     searchTimer = setTimeout(loadHeadlines, immediate ? 0 : 350)
   }
+
+  // The topic lens changes the probes, not the year: numbers panel and
+  // scrubber stand, only the headline cards reload.
+  function setTopic(next) {
+    if (next === topic) return
+    topic = next
+    if (topicSel.value !== next) topicSel.value = next
+    clearTimeout(searchTimer)
+    searchTimer = setTimeout(loadHeadlines, 0)
+  }
+  const onTopicChange = () => setTopic(topicSel.value)
+  topicSel.addEventListener('change', onTopicChange)
 
   // ---- input: pointer scrubbing ------------------------------------------
 
@@ -1022,6 +1152,7 @@ export function mountTimeMachine(container) {
       btnBack.removeEventListener('click', onBack)
       btnFwd.removeEventListener('click', onFwd)
       btnRandom.removeEventListener('click', onRandom)
+      topicSel.removeEventListener('change', onTopicChange)
       root.remove()
     },
   }

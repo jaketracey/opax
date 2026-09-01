@@ -2836,6 +2836,8 @@ async function openDocPage(slug, manageFocus) {
   $("doc-title").textContent = "Loading…";
   document.querySelector("#panel-doc .doc-portrait")?.remove();
   $("doc-meta").textContent = "";
+  $("doc-topics").textContent = "";
+  $("doc-topics").hidden = true;
   $("doc-topic").hidden = true;
   $("doc-speaker-links").hidden = true;
   $("doc-text").textContent = "";
@@ -2883,6 +2885,16 @@ async function openDocPage(slug, manageFocus) {
       doc.metadata?.date ? esc(fmtDate(doc.metadata.date)) : "",
       origin ? `<a href="${esc(origin)}" rel="noopener" target="_blank">View original ↗</a>` : "",
     ].filter(Boolean).join(" · ");
+    // Machine topic labels (field-level enrichment; a speech can carry
+    // several). Chips only for slugs the taxonomy knows — an unknown label
+    // has no topic page to link to. Most of the corpus has none yet: the
+    // labelling pass is still running, so absence renders nothing.
+    const topicSlugs = (Array.isArray(doc.topics) ? doc.topics : []).filter((t) => TOPICS[t]);
+    if (topicSlugs.length) {
+      $("doc-topics").innerHTML = topicSlugs.map((t) =>
+        `<a class="topic-chip" href="${esc(subjectHash("topic", t))}">${esc(TOPICS[t])}</a>`).join("");
+      $("doc-topics").hidden = false;
+    }
     // Ways into this speaker's wider record. External links are SEARCHES, so
     // a shared name shows candidates rather than asserting the wrong person.
     const speakerLinks = $("doc-speaker-links");

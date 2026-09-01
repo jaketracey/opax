@@ -580,6 +580,9 @@ async function apiResource(slug: string, env: Env): Promise<Response> {
     title?: string
     origin?: { collaborators?: string[]; url?: string }
     usermetadata?: { classifications?: { labelset: string; label: string }[] }
+    computedmetadata?: {
+      field_classifications?: { classifications?: { labelset: string; label: string }[] }[]
+    }
     extra?: { metadata?: Record<string, unknown> }
     data?: { texts?: Record<string, { value?: { body?: string } }> }
   }
@@ -592,6 +595,16 @@ async function apiResource(slug: string, env: Env): Promise<Response> {
     .join('')
   const labels: Record<string, string> = {}
   for (const c of r.usermetadata?.classifications ?? []) labels[c.labelset] = c.label
+  // Topic labels are written by the enrichment task at the FIELD level
+  // (computedmetadata.field_classifications — the level the /find topic
+  // filter matches), never resource usermetadata, and a speech can carry
+  // several. Kept out of `labels` (single-value by shape) on purpose.
+  const topics: string[] = []
+  for (const fc of r.computedmetadata?.field_classifications ?? []) {
+    for (const c of fc.classifications ?? []) {
+      if (c.labelset === 'topic' && !topics.includes(c.label)) topics.push(c.label)
+    }
+  }
   // Machine summary written by the enrichment pass (ask-task, destination
   // "summary"): lands as the text field "da-summary-t-body". Optional.
   const brief = texts['da-summary-t-body']?.value?.body?.trim() || null
@@ -601,6 +614,7 @@ async function apiResource(slug: string, env: Env): Promise<Response> {
     speaker: r.origin?.collaborators?.[0] ?? null,
     url: r.origin?.url ?? null,
     labels, // kind / source / party / state / chamber — for chips + provenance caveats
+    topics, // machine topic labels (multi-label; empty until the pass reaches this doc)
     metadata: r.extra?.metadata ?? {},
     summary: brief,
     text: bodyText,

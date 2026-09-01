@@ -91,6 +91,34 @@ function industryLabel(key) {
   return INDUSTRY_LABELS[key] || (key.charAt(0).toUpperCase() + key.slice(1)).replace(/_/g, " ");
 }
 
+// Mirror of app.js TOPICS (the enrichment taxonomy is canonical there):
+// module-local so this file keeps working standalone in qz-test.html.
+// These are the machine labeller's 21 topics behind /api/matrix; distinct
+// from the six curated report topics in ctx.reports.
+const TOPICS = {
+  "gambling": "Gambling",
+  "financial-services": "Financial services",
+  "mining-energy": "Mining & energy",
+  "climate-environment": "Climate & environment",
+  "property-construction": "Property & construction",
+  "housing": "Housing",
+  "health": "Health",
+  "media-communications": "Media & communications",
+  "hospitality-alcohol": "Hospitality & alcohol",
+  "defence-security": "Defence & security",
+  "agriculture": "Agriculture",
+  "unions-workplace": "Unions & workplace",
+  "immigration": "Immigration",
+  "indigenous-affairs": "Indigenous affairs",
+  "tax-budget": "Tax & budget",
+  "education": "Education",
+  "welfare-social": "Welfare & social services",
+  "integrity-democracy": "Integrity & democracy",
+  "infrastructure-transport": "Infrastructure & transport",
+  "justice-law": "Justice & law",
+  "foreign-affairs": "Foreign affairs",
+};
+
 /* ----- shared context computed once per round ----- */
 
 function makeCtx(data) {
@@ -113,7 +141,13 @@ function makeCtx(data) {
     .map(([slug, r]) => ({ slug, title: r.title || slug, stats: r.stats || {} }))
     .filter((r) => r.stats.speech_count > 0);
 
-  return { money, donors, donorsById, industries, reports, corpus: data.corpus || null };
+  return {
+    money, donors, donorsById, industries, reports,
+    corpus: data.corpus || null,
+    // Live party × topic counts from the still-running labelling pass;
+    // null when /api/matrix is unreachable (its templates just don't fire).
+    matrix: data.matrix || null,
+  };
 }
 
 /* ----- question templates -----
@@ -396,6 +430,84 @@ const TEMPLATES = [
     },
   },
 
+  /* ----- live topic-label questions (/api/matrix) -----
+   * The labelling pass is still running, so every count is a floor over the
+   * speeches labelled SO FAR — the prompts and reveals both say so, and the
+   * fairness guards (clear leader, minimum volume) keep a mid-pass artefact
+   * from deciding a "right" answer by a whisker. "Other" is the matrix's
+   * fold of small parties, not a party — never an option.
+   */
+  {
+    id: "topic-party-share",
+    build(ctx, rng) {
+      const m = ctx.matrix;
+      if (!m || !m.cells) return null;
+      const cands = Object.entries(m.cells)
+        .map(([slug, row]) => ({
+          slug,
+          total: (m.totals && m.totals[slug]) || 0,
+          parties: Object.entries(row)
+            .filter(([p]) => p !== "Other")
+            .sort((a, b) => b[1] - a[1]),
+        }))
+        .filter((c) => TOPICS[c.slug] && c.total >= 150 && c.parties.length >= 3);
+      if (!cands.length) return null;
+      for (let t = 0; t < 40; t++) {
+        const c = pick(cands, rng);
+        const [top, second, third] = c.parties;
+        if (top[1] < 1.5 * second[1]) continue;
+        const name = TOPICS[c.slug];
+        const options = shuffled([
+          { label: top[0], correct: true },
+          { label: second[0], correct: false },
+          { label: third[0], correct: false },
+        ], rng);
+        return {
+          template: this.id, kind: "mc",
+          prompt: "Which party gives the biggest share of parliament's " + name.toLowerCase() +
+            " debate, in the speeches labelled so far?",
+          options,
+          explanation:
+            top[0] + " has " + fmtCount(top[1]) + " of the " + fmtCount(c.total) +
+            " speeches labelled " + name + " so far, ahead of " + second[0] + " (" +
+            fmtCount(second[1]) + ") and " + third[0] + " (" + fmtCount(third[1]) +
+            "). A machine pass is still labelling the record, so these counts grow every day.",
+          source: "Live topic labels on the parliamentary record via OPAX",
+          link: { href: "#/subject/topic/" + c.slug, label: "See the " + name + " topic page" },
+        };
+      }
+      return null;
+    },
+  },
+
+  {
+    id: "topic-most-labelled",
+    build(ctx, rng) {
+      const m = ctx.matrix;
+      if (!m || !m.totals) return null;
+      const rows = Object.entries(m.totals).filter(([slug, n]) => TOPICS[slug] && n >= 100);
+      if (rows.length < 3) return null;
+      for (let t = 0; t < 40; t++) {
+        const trio = shuffled(rows, rng).slice(0, 3).sort((a, b) => b[1] - a[1]);
+        const [top, s2, s3] = trio;
+        if (top[1] < 1.5 * s2[1]) continue;
+        const options = trio.map(([slug], i) => ({ label: TOPICS[slug], correct: i === 0 }));
+        return {
+          template: this.id, kind: "mc",
+          prompt: "Of these three, which topic has drawn the most parliamentary speeches, in the record labelled so far?",
+          options: shuffled(options, rng),
+          explanation:
+            TOPICS[top[0]] + " leads with " + fmtCount(top[1]) + " speeches labelled so far, ahead of " +
+            TOPICS[s2[0]] + " (" + fmtCount(s2[1]) + ") and " + TOPICS[s3[0]] + " (" + fmtCount(s3[1]) +
+            "). A machine pass is still labelling the record, so every count here is a floor, not a final tally.",
+          source: "Live topic labels on the parliamentary record via OPAX",
+          link: { href: "#/subject/topic/" + top[0], label: "See the " + TOPICS[top[0]] + " topic page" },
+        };
+      }
+      return null;
+    },
+  },
+
   {
     id: "corpus-scale",
     build(ctx, rng) {
@@ -491,7 +603,7 @@ function validQuestion(q) {
   if (!q || !q.prompt || !q.explanation || !Array.isArray(q.options)) return false;
   if (q.options.filter((o) => o.correct).length !== 1) return false;
   if (new Set(q.options.map((o) => o.label)).size !== q.options.length) return false;
-  if (q.link && !/^#\/(money$|reports\/[a-z0-9_-]+$)/.test(q.link.href)) return false;
+  if (q.link && !/^#\/(money$|reports\/[a-z0-9_-]+$|subject\/topic\/[a-z-]+$)/.test(q.link.href)) return false;
   return true;
 }
 
@@ -550,10 +662,13 @@ async function fetchJson(url, signal) {
 }
 
 async function loadData(signal) {
-  const [money, index, corpus] = await Promise.all([
+  const [money, index, corpus, matrix] = await Promise.all([
     fetchJson("/graph/money.json", signal),
     fetchJson("/reports/index.json", signal),
     fetchJson("/corpus.json", signal).catch(() => null),
+    // Live counts for the topic-label questions; optional like corpus.json —
+    // the quiz must open even if the matrix endpoint is down.
+    fetchJson("/api/matrix", signal).catch(() => null),
   ]);
   const reports = {};
   await Promise.all(
@@ -562,7 +677,7 @@ async function loadData(signal) {
       catch (e) { if (e && e.name === "AbortError") throw e; /* skip a broken report */ }
     }),
   );
-  return { money, reports, corpus };
+  return { money, reports, corpus, matrix };
 }
 
 /* ---------------------------------------------------------------- *

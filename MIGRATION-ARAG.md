@@ -322,10 +322,25 @@ Views/tools to build once the full passes run, in value order:
 6. **Topic digests** — DONE 2026-09-02: "The latest, in brief" on every
    topic page, stitched client-side from /api/resource summaries of the
    newest labelled speeches; drops nulls, guards stale navigation.
-7. **Time machine + quiz upgrades** — topic dimension on the year dial;
-   quiz questions computed live from facet counts.
-8. **Doc pages** — topic chips linking to topic pages; "more on this topic
-   that week" via label+created filters.
+7. **Time machine + quiz upgrades** — DONE 2026-09-02 (worktree, deploy
+   pending): optional topic lens on the time machine (module-local TOPICS
+   mirror; one topic-phrase+label-filter probe replaces the curated
+   queries when active, default all-topics path byte-identical; two-cause
+   honest empty/thin copy since archive load AND labelling both run);
+   quiz gains two live templates off /api/matrix (topic-party-share,
+   topic-most-labelled) with clear-leader fairness guards, "labelled so
+   far" hedging in prompt and reveal, receipts linking to topic pages
+   (validQuestion link allowlist extended). Verified live: 200/200 seeds
+   fire, 28/30 rounds carry a topic question.
+8. **Doc pages** — DONE 2026-09-02 (worktree, deploy pending): topic
+   chips under the byline linking to topic pages. Worker probe confirmed
+   topic labels live at resource-level `computedmetadata.
+   field_classifications[].classifications` (labelset `topic`, on the
+   `body` text field — NOT usermetadata, which holds only the sync-time
+   labelsets); apiResource now returns them as `topics: string[]`
+   (multi-label, [] until the pass reaches a doc — chips render nothing).
+   "More on this topic that week" (label+created) not built — the chips →
+   topic page → filtered search path covers it; revisit if wanted.
 
 Sequencing: full labeller (~$70-100) unlocks 1-5 and 7-8; full summaries
 (~$45) unlocks 6 and enriches 2/5. Items 3-6 warrant one probe each before

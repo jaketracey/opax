@@ -781,6 +781,17 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 .doc-topic { font: italic 400 1.0625rem/1.45 var(--serif); color: var(--ink-soft); margin: 0 0 0.4rem; max-width: 68ch; }
 .doc-meta { color: var(--ink-soft); font-size: 0.875rem; margin: 0; }
 .doc-meta .party { vertical-align: 1px; }
+/* Machine topic labels under the byline: quiet party-chip-scale pills that
+   link to their topic pages. Absent entirely on unlabelled docs. */
+.doc-topics { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.6rem 0 0; }
+.topic-chip {
+  display: inline-flex; align-items: center;
+  font: 600 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-soft); text-decoration: none;
+  background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;
+  padding: 0.32rem 0.6rem;
+}
+.topic-chip:hover { color: var(--bronze-ink); border-color: var(--bronze); background: var(--bronze-wash); }
 /* One toolbar row: doc actions left, quiet speaker-research links right;
    both wrap to their own line on narrow screens. */
 .doc-toolbar {
