@@ -703,8 +703,11 @@ function updateQuoteRail() {
   const sourcesEl = $("ask-sources");
   const sourcesTop = sourcesEl.hidden ? Infinity : sourcesEl.getBoundingClientRect().top;
   const clearOfSources = sourcesTop > innerHeight * 0.3 + (rail.offsetHeight || 280) + 12;
+  // The card is fixed at 30vh: it may only appear once the answer's top has
+  // actually scrolled up to that zone — otherwise it floats over the ask form
+  // on short answers before any scrolling happens.
   const visible = space >= 348 && n > 0 && !$("ask-result").hidden && rect.height > 1 &&
-    rect.bottom > innerHeight * 0.28 && rect.top < innerHeight * 0.85 && clearOfSources;
+    rect.top < innerHeight * 0.3 + 8 && rect.bottom > innerHeight * 0.28 && clearOfSources;
   rail.hidden = !visible;
   if (!visible) { quoteRail.idx = -1; return; }
   rail.style.left = `${Math.round(rect.right + Math.min(48, space - 316))}px`;
