@@ -196,7 +196,7 @@ const CSS = `
   background: none; font: inherit; font-size: 12px; color: #4a4942;
   padding: 3px 8px; border-radius: 7px; cursor: pointer; text-align: left; }
 .mm-chip:hover { background: rgba(0, 0, 0, 0.05); }
-.mm-chip[aria-pressed='true'] { background: #33322e; color: #faf9f6; }
+.mm-chip[aria-pressed='true'] { background: #142a43; color: #ffffff; }
 .mm-chip[data-dimmed] { opacity: 0.4; }
 .mm-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
 .mm-card { position: absolute; top: 12px; right: 12px; width: 330px;
@@ -224,9 +224,9 @@ const CSS = `
 .mm-row-amt { font-weight: 600; white-space: nowrap; }
 .mm-row-years { font-size: 11px; color: #8a8578; white-space: nowrap; }
 .mm-ask { display: block; margin-top: 12px; padding: 8px 12px; border-radius: 9px;
-  background: #33322e; color: #faf9f6; font-size: 13px; font-weight: 600;
+  background: #142a43; color: #ffffff; font-size: 13px; font-weight: 600;
   text-decoration: none; text-align: center; }
-.mm-ask:hover { background: #26251f; }
+.mm-ask:hover { background: #1d3a5c; }
 .mm-zoom { position: absolute; right: 12px; bottom: 12px; display: flex;
   flex-direction: column; gap: 4px; }
 .mm-zoom button { width: 34px; height: 34px; border: 1px solid #e4e1d8;
