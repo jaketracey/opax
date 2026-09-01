@@ -371,6 +371,7 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 }
 .colophon b { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; font-size: 0.9375rem; }
 
+#ask-result { scroll-margin-top: 1.75rem; }
 @media (prefers-reduced-motion: no-preference) {
   .ask-reveal { animation: askReveal 620ms cubic-bezier(0.22, 0.7, 0.3, 1) both; }
   @keyframes askReveal {
