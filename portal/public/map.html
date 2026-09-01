@@ -40,7 +40,14 @@
     const container = document.getElementById('map')
     try {
       document.getElementById('status')?.remove()
-      await mountMoneyMap(container, '/graph/money.json')
+      // Embed testbed: /map.html?focus=party:Labor&chrome=mini exercises the
+      // options subject pages use.
+      const params = new URLSearchParams(location.search)
+      await mountMoneyMap(container, '/graph/money.json', {
+        focus: params.get('focus') || undefined,
+        chrome: params.get('chrome') === 'mini' ? 'mini' : undefined,
+        onSelect: (node) => console.log('[money-map] user selected:', node && node.id),
+      })
     } catch (error) {
       container.textContent = 'The money map failed to load: ' + error.message
     }

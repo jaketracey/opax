@@ -16,7 +16,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["ask", "search", "money", "reports", "doc", "subject", "about", "methods", "stats"];
+const PANELS = ["ask", "search", "money", "reports", "explore", "doc", "subject", "about", "methods", "stats"];
 
 // --- helpers ----------------------------------------------------------------
 
@@ -243,6 +243,7 @@ const TITLES = {
   reports: "Standing reports — OPAX",
   doc: "From the record — OPAX",
   subject: "OPAX encyclopedia",
+  explore: "Explore — OPAX",
   about: "About — OPAX",
   methods: "Methods — OPAX",
   stats: "Corpus stats — OPAX",
@@ -328,6 +329,10 @@ function route() {
     showPanel("money");
     document.title = TITLES.money;
     mountMoney();
+  } else if (view === "explore") {
+    showPanel("explore");
+    document.title = TITLES.explore;
+    mountExplore($("explore-tm").hidden ? "quiz" : "tm");
   } else if (view === "about") {
     showPanel("about");
     document.title = TITLES.about;
@@ -1081,6 +1086,36 @@ $("subject-back").addEventListener("click", () => {
   if (routeCount > 1) history.back();
   else location.hash = "#/";
 });
+
+
+// --- explore (time machine + quiz) ------------------------------------------
+// Both are standalone lazy modules with a mount/destroy contract; the page
+// only owns the toggle. Modules are mounted once and kept alive per session.
+
+const explore = { tm: null, quiz: null };
+
+async function mountExplore(which) {
+  $("explore-tm").hidden = which !== "tm";
+  $("explore-quiz").hidden = which !== "quiz";
+  $("explore-tm-btn").setAttribute("aria-pressed", String(which === "tm"));
+  $("explore-quiz-btn").setAttribute("aria-pressed", String(which === "quiz"));
+  try {
+    if (which === "tm" && !explore.tm) {
+      const mod = await import("/timemachine.js");
+      explore.tm = mod.mountTimeMachine($("explore-tm"));
+    }
+    if (which === "quiz" && !explore.quiz) {
+      const mod = await import("/quiz.js");
+      explore.quiz = mod.mountQuiz($("explore-quiz"));
+    }
+  } catch (err) {
+    $(which === "tm" ? "explore-tm" : "explore-quiz").innerHTML =
+      `<p class="status">This explorer could not load (${esc(String(err.message || err))}). It may still be being built — try again shortly.</p>`;
+  }
+}
+
+$("explore-tm-btn").addEventListener("click", () => mountExplore("tm"));
+$("explore-quiz-btn").addEventListener("click", () => mountExplore("quiz"));
 
 async function runAsk(question) {
   if (askAbort) askAbort.abort();

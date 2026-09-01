@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Record Quiz — test harness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Public+Sans:wght@400..700&display=swap">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .harness { max-width: 44rem; margin: 2rem auto; padding: 0 1rem; }
+  .harness-controls { margin-bottom: 1rem; display: flex; gap: 0.5rem; }
+</style>
+</head>
+<body>
+<div class="harness">
+  <div class="harness-controls">
+    <button id="btn-destroy" type="button">destroy()</button>
+    <button id="btn-remount" type="button">mount again</button>
+  </div>
+  <div id="quiz-host"></div>
+</div>
+<script type="module">
+  import { mountQuiz } from "/quiz.js";
+  const host = document.getElementById("quiz-host");
+  let quiz = mountQuiz(host);
+  window.__quiz = quiz;
+  document.getElementById("btn-destroy").addEventListener("click", () => {
+    quiz && quiz.destroy(); quiz = null;
+  });
+  document.getElementById("btn-remount").addEventListener("click", () => {
+    if (!quiz) { quiz = mountQuiz(host); window.__quiz = quiz; }
+  });
+</script>
+</body>
+</html>

@@ -42,6 +42,7 @@
       <button class="tab" data-panel="search">Search</button>
       <button class="tab" data-panel="money">Money map</button>
       <button class="tab" data-panel="reports">Reports</button>
+      <button class="tab" data-panel="explore">Explore</button>
       <button class="tab" data-panel="about">About</button>
     </nav>
 
@@ -236,6 +237,18 @@
       <div id="doc-status" class="status" role="status"></div>
       <pre id="doc-text" class="doc-text"></pre>
       <p class="fineprint" id="doc-caveat" hidden></p>
+    </section>
+
+    <!-- ============================ EXPLORE ============================ -->
+    <section id="panel-explore" class="panel" hidden aria-label="Explore">
+      <p class="standfirst">Two ways into the record that don't start with a question:
+      spin through the years, or test yourself against the actual numbers.</p>
+      <div class="explore-nav" role="group" aria-label="Explore modes">
+        <button type="button" class="secondary" id="explore-quiz-btn" aria-pressed="true">The record quiz</button>
+        <button type="button" class="secondary" id="explore-tm-btn" aria-pressed="false">Time machine</button>
+      </div>
+      <div id="explore-quiz" class="explore-slot"></div>
+      <div id="explore-tm" class="explore-slot" hidden></div>
     </section>
 
     <!-- ============================ SUBJECT ============================ -->

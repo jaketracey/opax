@@ -475,6 +475,12 @@ button.link.result-title { font: 600 1.0625rem/1.35 var(--serif); }
 #report-back, #doc-back, #subject-back { text-decoration: none; color: var(--ink-soft); }
 #report-back:hover, #doc-back:hover, #subject-back:hover { color: var(--ink); text-decoration: none; }
 
+.explore-nav { display: flex; gap: 0.6rem; margin: 0 0 1.2rem; flex-wrap: wrap; }
+.explore-nav .secondary[aria-pressed="true"] {
+  background: var(--navy); color: var(--on-navy); border-color: var(--navy);
+}
+.explore-slot { min-height: 300px; }
+
 /* ---- subject entries (the encyclopedia) --------------------------------- */
 
 .subject-head h2 { font: 700 clamp(1.75rem, 3.5vw, 2.6rem)/1.15 var(--serif); margin: 0.2rem 0 0.3rem; }

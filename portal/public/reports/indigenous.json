@@ -2,8 +2,8 @@
  "slug": "indigenous",
  "title": "First Nations",
  "blurb": "Reconciliation, the Voice, Closing the Gap and native title, in parliament's own words.",
- "generated_at": "2026-09-01T07:37:18+00:00",
- "corpus_resources": 70556,
+ "generated_at": "2026-09-01T08:04:42+00:00",
+ "corpus_resources": 78163,
  "stats": {
   "speech_count": 51381,
   "unique_speakers": 2641,
@@ -150,28 +150,35 @@
  },
  "brief": {
   "question": "What does the parliamentary record show about first nations?",
-  "answer": ""
+  "answer": "The parliamentary record shows first nations were most prominently addressed through the proposed constitutional preamble of 1999, which Prime Minister Howard framed as a historic and uniting statement about indigenous Australians. He said the reference honouring Aboriginal and Torres Strait Islanders as \"the nation's first people\" for their \"deep kinship with their lands\" was more important than his beloved word \"mateship,\" which he dropped to reach agreement with the Australian Democrats. Government MPs praised the wording as \"absolutely perfect\" and \"superb,\" and Howard argued that passing up the chance to say something \"generous, positive, relevant and uniting\" about indigenous people would be a dereliction of duty. The sharpest disagreement, however, was over accuracy, inclusion and process: critics said Torres Strait Islanders were not the \"first people,\" that the term should be \"first peoples\" given indigenous diversity, and that \"kinship with their lands\" was both a grammatical and anthropological nonsense. Gatjil Djerrkura, the government-appointed chair of ATSIC, said the changes negotiated with the Democrats \"served to weaken rather than strengthen the recognition of Australia's first nations\" and were \"clearly a lost opportunity.\"\n\nOver time the debate shifted from the omissions of Federation toward formal symbolic recognition, but the record shows the shift was contested at every step. Speakers marking the centenary of parliament acknowledged that at Federation indigenous people and women were not at the table, and that the early Commonwealth was built on the White Australia policy. By 1999, the proposed preamble was an attempt to repair that legacy, yet it was attacked for being a backroom deal. One opposition member called it a \"sleazy, grubby deal\" and said the process was flawed because indigenous people were not genuinely consulted; another noted that the Council for Aboriginal Reconciliation's own draft used the phrase \"original owners and custodians of traditional lands and waters,\" which was stronger than the government's \"kinship\" wording. The record also shows that a constitutional convention had earlier agreed on the word \"custodianship,\" but the Prime Minister objected to it, and that word did not survive.\n\nThe sharpest point of disagreement was whether the preamble should be a unifying people's document or a precise legal and historical statement. Supporters insisted the indigenous reference was noble, generous and appropriate, and that it could unite Australians across political views. Opponents said it was historically inaccurate, linguistically wrong and politically captured, warning it would be \"doomed\" and would repeat the Federation-era pattern of indigenous people being excluded from decisions about them. One critic said the Prime Minister would be remembered as the leader \"who failed to apologise\" and \"failed in relation to our indigenous Australians\" if he did not change course. What was promised was"
  },
  "key_stats": [
   {
    "value": "16th report",
    "label": "Committee's 16th report",
-   "detail": "Warren Snowdon presented the committee's 16th report on CERD and the Native Title Amendment Act.",
+   "detail": "Warren Snowdon presented the committee's 16th report, incorporating a dissenting report, entitled CERD and the Native Title Amendment Act.",
    "slug": "speech-45519",
    "source_title": "Warren Snowdon \u2014 2000-06-28"
   },
   {
    "value": "2 years",
    "label": "Extension of committee operation",
-   "detail": "Philip Ruddock presented a bill to extend for 2 years the operation of the Parliamentary Joint Committee on Native Title.",
+   "detail": "Philip Ruddock presented a bill to extend for 2 years the operation of the Parliamentary Joint Committee on Native Title and the Aboriginal and Torres Strait Islander Land Fund.",
    "slug": "speech-110714",
    "source_title": "Philip Ruddock \u2014 2004-02-17"
+  },
+  {
+   "value": "1998 amendments",
+   "label": "Year of Native Title Act amendments",
+   "detail": "Daryl Williams stated the government's 1998 amendments to the Native Title Act provide a mechanism for dealing with native title.",
+   "slug": "speech-40264",
+   "source_title": "Daryl Williams \u2014 2000-04-10"
   }
  ],
  "positions": [
   {
    "party": "Liberal",
-   "position": "The Liberal government supports its 1998 amendments to the Native Title Act as providing a fair, effective and efficient mechanism for dealing with native title, and considers the native title debate resolved by parliament, rejecting UN findings on the matter.",
+   "position": "The Liberal government supports its native title legislation and amendments, viewing the 1998 amendments as providing a fair, effective and efficient mechanism for dealing with native title, and supports extending the Parliamentary Joint Committee on Native Title.",
    "slug": "speech-40264",
    "source_title": "Daryl Williams \u2014 2000-04-10",
    "speaker": "Daryl Williams",
@@ -179,15 +186,15 @@
   },
   {
    "party": "Labor",
-   "position": "Labor raised questions and concerns about native title and Aboriginal reconciliation, including questioning the government's approach and the treatment of native title legislation and related matters.",
-   "slug": "speech-98041",
-   "source_title": "Mark Latham \u2014 2003-06-17",
-   "speaker": "Mark Latham",
-   "date": "2003-06-17"
+   "position": "Labor has raised concerns about the government's native title and Indigenous affairs policies, including questioning the government's approach to Aboriginal reconciliation and criticising the Aboriginal and Torres Strait Islander Commission Amendment Bill 2004 as 'Howard's Revenge.'",
+   "slug": "speech-117437",
+   "source_title": "Carmen Lawrence \u2014 2004-06-01",
+   "speaker": "Carmen Lawrence",
+   "date": "2004-06-01"
   },
   {
    "party": "Greens",
-   "position": "The Greens expressed dismay at the Prime Minister's claim that his government's relationship with Aborigines was good, noting that people no longer asked him for an apology.",
+   "position": "The Greens expressed dismay at the Prime Minister's comments about his government's relationship with Aboriginal people, particularly his claim that people no longer asked him for an apology.",
    "slug": "speech-104076",
    "source_title": "Michael Organ \u2014 2003-09-16",
    "speaker": "Michael Organ",
@@ -195,22 +202,6 @@
   }
  ],
  "key_moments": [
-  {
-   "slug": "speech-36296",
-   "title": "Philip Ruddock \u2014 1999-12-09",
-   "speaker": "Philip Ruddock",
-   "party": "Liberal",
-   "state": "federal",
-   "date": "1999-12-09"
-  },
-  {
-   "slug": "speech-39001",
-   "title": "Martin Ferguson \u2014 2000-03-15",
-   "speaker": "Martin Ferguson",
-   "party": "Labor",
-   "state": "federal",
-   "date": "2000-03-15"
-  },
   {
    "slug": "speech-29532",
    "title": "Peter Slipper \u2014 1999-08-26",
@@ -220,12 +211,12 @@
    "date": "1999-08-26"
   },
   {
-   "slug": "speech-68984",
-   "title": "John Howard \u2014 2001-09-17",
-   "speaker": "John Howard",
+   "slug": "speech-36296",
+   "title": "Philip Ruddock \u2014 1999-12-09",
+   "speaker": "Philip Ruddock",
    "party": "Liberal",
    "state": "federal",
-   "date": "2001-09-17"
+   "date": "1999-12-09"
   },
   {
    "slug": "speech-54408",
@@ -236,32 +227,48 @@
    "date": "2000-11-30"
   },
   {
-   "slug": "speech-85243",
-   "title": "Barry Wakelin \u2014 2002-10-16",
-   "speaker": "Barry Wakelin",
+   "slug": "speech-118659",
+   "title": "Ian Macfarlane \u2014 2004-06-17",
+   "speaker": "Ian Macfarlane",
    "party": "Liberal",
    "state": "federal",
-   "date": "2002-10-16"
+   "date": "2004-06-17"
+  },
+  {
+   "slug": "speech-29422",
+   "title": "Daryl Melham \u2014 1999-08-26",
+   "speaker": "Daryl Melham",
+   "party": "Labor",
+   "state": "federal",
+   "date": "1999-08-26"
+  },
+  {
+   "slug": "speech-112842",
+   "title": "Harry Quick \u2014 2004-03-10",
+   "speaker": "Harry Quick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2004-03-10"
   }
  ],
  "sections": [
   {
    "question": "What have MPs said about reconciliation and recognition of First Nations peoples?",
-   "answer": "Based on the provided context, MPs expressed a range of views about reconciliation and the recognition of First Nations peoples:\n\n- Some MPs spoke strongly in favour of reconciliation as a process of acknowledging past wrongs, healing, and moving forward together. One MP said reconciliation requires \u201cacknowledging the wrongs of the past and building a new, inclusive, relationship with Aboriginal Australians.\u201d Another read statements from students emphasising that reconciliation means Aboriginal and non-Aboriginal Australians \u201cworking as one\u201d and accepting one another\u2019s cultural backgrounds.\n\n- Several MPs called for an apology. One MP argued the Prime Minister should come into parliament and say \u201cI'm sorry,\u201d noting ordinary Australians had said sorry during the reconciliation walks. Another MP said the Prime Minister \u201cfailed to apologise\u201d and would be remembered for that failure if he did not change course.\n\n- Government speakers highlighted their commitment to \u201cpractical reconciliation,\u201d including funding for Indigenous health, housing, education, and employment. They also noted that parliament had expressed \u201cdeep and sincere regret\u201d for past injustices, but did not support personal apologies or a treaty.\n\n- There were also statements about the proposed constitutional preamble. Some MPs supported wording that honoured Aboriginal and Torres Strait Islander peoples as \u201cthe nation's first people\u201d with \u201cdeep kinship to their lands.\u201d Others criticised the wording as historically inaccurate, arguing Aboriginal and Torres Strait Islander peoples are \u201cpeoples\u201d (distinct groups) rather than one \u201cpeople,\u201d and that kinship applies between people, not with land.\n\n- MPs also debated the idea of a treaty. Government speakers opposed a treaty, saying it would entrench division and harm reconciliation, while some on the other side supported moving forward with reconciliation and criticised the government\u2019s approach.\n\n- MPs also spoke in support of Reconciliation Place as a symbolic national site to honour Indigenous history and the reconciliation process, while stressing that symbolic gestures must be accompanied by tangible improvements in Indigenous lives.",
+   "answer": "MPs expressed a range of views about reconciliation and the recognition of First Nations peoples.\n\nMany MPs strongly supported reconciliation and called for recognition of Aboriginal and Torres Strait Islander peoples as the original owners and custodians of the land. Some supported symbolic recognition such as Reconciliation Place, and several urged the Government to apologise for past injustices, including the removal of Indigenous children, with one formal motion proposed that the House \u201cexpresses its sorrow and apologises unreservedly\u201d for the hurt and suffering caused by past government policies.\n\nOther MPs emphasised the importance of \u201cpractical reconciliation,\u201d focusing on improving Indigenous health, housing, education and employment. Government MPs defended their record, citing increased funding and a commitment to working constructively with Indigenous communities.\n\nThere was also criticism. Some MPs said the proposed constitutional preamble was historically inaccurate, arguing that the wording should refer to \u201cpeoples\u201d rather than \u201cpeople,\u201d and that the phrase \u201cdeep kinship with their lands\u201d was inappropriate. They also criticised the process as not inclusive of Indigenous voices.\n\nOne MP questioned the term \u201creconciliation\u201d itself, saying it implied there was a conflict, while another praised the preamble\u2019s wording as \u201cabsolutely perfect.\u201d Overall, no single view was held by all MPs.",
    "sources": [
     {
-     "slug": "speech-38180",
-     "title": "Snowdon \u2014 2000-03-09",
+     "slug": "speech-28438",
+     "title": "Daryl Melham \u2014 1999-08-11",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-61024",
-     "title": "Sharman Stone \u2014 2001-05-22",
+     "slug": "speech-54105",
+     "title": "Andrew Theophanous \u2014 2000-11-29",
      "speaker": null,
-     "party": "Liberal",
+     "party": null,
      "state": "federal",
      "date": null
     },
@@ -274,10 +281,34 @@
      "date": null
     },
     {
-     "slug": "speech-64954",
-     "title": "Danna Vale \u2014 2001-06-27",
+     "slug": "speech-29423",
+     "title": "Philip Ruddock \u2014 1999-08-26",
      "speaker": null,
      "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-38180",
+     "title": "Snowdon \u2014 2000-03-09",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-28447",
+     "title": "Warren Snowdon \u2014 1999-08-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-59130",
+     "title": "Andrew Theophanous \u2014 2001-03-26",
+     "speaker": null,
+     "party": null,
      "state": "federal",
      "date": null
     },
@@ -286,6 +317,70 @@
      "title": "Philip Ruddock \u2014 2001-03-26",
      "speaker": null,
      "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-28754",
+     "title": "Sharman Stone \u2014 1999-08-12",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-40243",
+     "title": "Philip Ruddock \u2014 2000-04-10",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-98041",
+     "title": "Mark Latham \u2014 2003-06-17",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-28436",
+     "title": "Robert McClelland \u2014 1999-08-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-57305",
+     "title": "Andrew Theophanous \u2014 2001-02-27",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-64954",
+     "title": "Danna Vale \u2014 2001-06-27",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-61024",
+     "title": "Sharman Stone \u2014 2001-05-22",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-117543",
+     "title": "Bob Katter \u2014 2004-06-02",
+     "speaker": null,
+     "party": "Independent",
      "state": "federal",
      "date": null
     },
@@ -306,82 +401,10 @@
      "date": null
     },
     {
-     "slug": "speech-98041",
-     "title": "Mark Latham \u2014 2003-06-17",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-42167",
-     "title": "John Anderson \u2014 2000-05-30",
-     "speaker": null,
-     "party": "Nationals",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-28754",
-     "title": "Sharman Stone \u2014 1999-08-12",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-28447",
-     "title": "Warren Snowdon \u2014 1999-08-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-28436",
-     "title": "Robert McClelland \u2014 1999-08-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-29423",
-     "title": "Philip Ruddock \u2014 1999-08-26",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-59130",
-     "title": "Andrew Theophanous \u2014 2001-03-26",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
      "slug": "speech-55760",
      "title": "Anna Burke \u2014 2000-12-07",
      "speaker": null,
      "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-54105",
-     "title": "Andrew Theophanous \u2014 2000-11-29",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-40243",
-     "title": "Philip Ruddock \u2014 2000-04-10",
-     "speaker": null,
-     "party": "Liberal",
      "state": "federal",
      "date": null
     },
@@ -392,22 +415,6 @@
      "party": "Labor",
      "state": "federal",
      "date": null
-    },
-    {
-     "slug": "speech-28438",
-     "title": "Daryl Melham \u2014 1999-08-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-57305",
-     "title": "Andrew Theophanous \u2014 2001-02-27",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
     }
    ]
   },
@@ -415,54 +422,6 @@
    "question": "What was said in parliament about the Voice to Parliament referendum?",
    "answer": "Not enough data to answer this.",
    "sources": [
-    {
-     "slug": "speech-27882",
-     "title": "Bob Charles \u2014 1999-08-09",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-29378",
-     "title": "John Murphy \u2014 1999-08-25",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-27721",
-     "title": "Bob Charles \u2014 1999-08-09",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-72262",
-     "title": "Janice Crosio \u2014 2002-02-20",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-93174",
-     "title": "Simon Crean \u2014 2003-03-20",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-20912",
-     "title": "Gavan O'Connor \u2014 1999-03-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
     {
      "slug": "speech-4899",
      "title": "John Howard \u2014 1998-04-02",
@@ -472,34 +431,18 @@
      "date": null
     },
     {
-     "slug": "speech-45990",
-     "title": "Ross Cameron \u2014 2000-08-14",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-97730",
-     "title": "Peter King \u2014 2003-06-16",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-74210",
-     "title": "Harry Jenkins \u2014 2002-03-20",
+     "slug": "speech-4900",
+     "title": "Kim Beazley \u2014 1998-04-02",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-39665",
-     "title": "John Howard \u2014 2000-04-04",
+     "slug": "speech-21351",
+     "title": "Robert McClelland \u2014 1999-03-23",
      "speaker": null,
-     "party": "Liberal",
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
@@ -508,6 +451,14 @@
      "title": "Elizabeth Grace \u2014 1998-06-30",
      "speaker": null,
      "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-29383",
+     "title": "Paul Neville \u2014 1999-08-25",
+     "speaker": null,
+     "party": "Nationals",
      "state": "federal",
      "date": null
     },
@@ -528,8 +479,24 @@
      "date": null
     },
     {
-     "slug": "speech-29720",
-     "title": "Nicola Roxon \u2014 1999-08-30",
+     "slug": "speech-45990",
+     "title": "Ross Cameron \u2014 2000-08-14",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-93174",
+     "title": "Simon Crean \u2014 2003-03-20",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-29378",
+     "title": "John Murphy \u2014 1999-08-25",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -544,18 +511,10 @@
      "date": null
     },
     {
-     "slug": "speech-29383",
-     "title": "Paul Neville \u2014 1999-08-25",
+     "slug": "speech-27882",
+     "title": "Bob Charles \u2014 1999-08-09",
      "speaker": null,
-     "party": "Nationals",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-4900",
-     "title": "Kim Beazley \u2014 1998-04-02",
-     "speaker": null,
-     "party": "Labor",
+     "party": "Liberal",
      "state": "federal",
      "date": null
     },
@@ -568,8 +527,56 @@
      "date": null
     },
     {
+     "slug": "speech-97730",
+     "title": "Peter King \u2014 2003-06-16",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-39665",
+     "title": "John Howard \u2014 2000-04-04",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-29720",
+     "title": "Nicola Roxon \u2014 1999-08-30",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-27721",
+     "title": "Bob Charles \u2014 1999-08-09",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-74210",
+     "title": "Harry Jenkins \u2014 2002-03-20",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
      "slug": "speech-27870",
      "title": "Michael Danby \u2014 1999-08-09",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-72262",
+     "title": "Janice Crosio \u2014 2002-02-20",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -579,147 +586,11 @@
   },
   {
    "question": "How has parliament discussed Closing the Gap outcomes?",
-   "answer": "Based on the provided context, Parliament discussed the life expectancy gap between Indigenous and non-Indigenous Australians through a question to the Minister representing the Minister for Immigration and Multicultural and Indigenous Affairs. The question noted that Australia\u2019s performance in closing this gap is \u201cthe worst in the Western world,\u201d cited the Fred Hollows Foundation\u2019s view that Australia had fallen behind comparable countries, and asked why Indigenous life expectancy is 15 to 20 years less, compared with smaller gaps in New Zealand, Canada, and the United States.\n\nParliament also discussed related Indigenous reconciliation and recognition matters, including a motion and remarks about Indigenous Australians being \u201cvisibly and actively part of our national life.\u201d",
+   "answer": "Based only on the provided context, parliament discussed Indigenous health and life-expectancy outcomes\u2014which relate to Closing the Gap\u2014by:\n\n- Noting a 2000 committee report that recommended **annual reporting to parliament** on Indigenous health, so that legislators could not ignore the facts.\n- Citing statistics showing **diabetes is eight times higher, respiratory conditions four times higher, and circulatory conditions three times higher** for Aboriginal Australians, and that **Indigenous life expectancy is still 20 years less** than for non-Indigenous Australians.\n- Comparing Australia\u2019s gap to comparable countries: the life-expectancy gap there is only **five to seven years**, whereas Australia\u2019s is worse.\n- Arguing that parliament needs to **discuss how to improve the way Indigenous communities deal with these problems**, in partnership with them, listening to their views and acting on their suggestions.\n- Highlighting the need to address not only health but also **proper housing, access to employment, and a sense of belonging and grievance for past acts**.\n- A parliamentary question also raised that **Australia\u2019s performance in closing the life expectancy gap was the worst in the Western world**, citing much smaller gaps in New Zealand, Canada, and the United States.",
    "sources": [
     {
-     "slug": "speech-33477",
-     "title": "Andrew Thomson \u2014 1999-10-18",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-34968",
-     "title": "Duncan Kerr \u2014 1999-11-25",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-100775",
-     "title": "John Howard \u2014 2003-08-12",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-32116",
-     "title": "Duncan Kerr \u2014 1999-09-29",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-109250",
-     "title": "Jann McFarlane \u2014 2003-12-03",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-35303",
-     "title": "Alexander Downer \u2014 1999-12-06",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-77805",
-     "title": "Alexander Downer \u2014 2002-06-18",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-100837",
-     "title": "Simon Crean \u2014 2003-08-13",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-32534",
-     "title": "Alexander Downer \u2014 1999-10-12",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-37994",
-     "title": "Peter Slipper \u2014 2000-03-09",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-97170",
-     "title": "Trish Worth \u2014 2003-06-04",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-51906",
-     "title": "Michael Lee \u2014 2000-11-02",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-105974",
-     "title": "Bob McMullan \u2014 2003-10-15",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-63342",
-     "title": "Michael Wooldridge \u2014 2001-06-19",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-5531",
-     "title": "Trish Worth \u2014 1998-04-06",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-29423",
-     "title": "Philip Ruddock \u2014 1999-08-26",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-100118",
-     "title": "Simon Crean \u2014 2003-08-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-33481",
-     "title": "Kim Wilkie \u2014 1999-10-18",
+     "slug": "speech-19606",
+     "title": "Kelvin Thomson \u2014 1999-02-18",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -734,8 +605,144 @@
      "date": null
     },
     {
+     "slug": "speech-97170",
+     "title": "Trish Worth \u2014 2003-06-04",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-100837",
+     "title": "Simon Crean \u2014 2003-08-13",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-111721",
+     "title": "Harry Jenkins \u2014 2004-03-02",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-63342",
+     "title": "Michael Wooldridge \u2014 2001-06-19",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
      "slug": "speech-16369",
      "title": "Michael Wooldridge \u2014 1998-12-07",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-34968",
+     "title": "Duncan Kerr \u2014 1999-11-25",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-51906",
+     "title": "Michael Lee \u2014 2000-11-02",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-4565",
+     "title": "Simon Crean \u2014 1998-04-01",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-33481",
+     "title": "Kim Wilkie \u2014 1999-10-18",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-35303",
+     "title": "Alexander Downer \u2014 1999-12-06",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-105974",
+     "title": "Bob McMullan \u2014 2003-10-15",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-109250",
+     "title": "Jann McFarlane \u2014 2003-12-03",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-100118",
+     "title": "Simon Crean \u2014 2003-08-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-33477",
+     "title": "Andrew Thomson \u2014 1999-10-18",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-37994",
+     "title": "Peter Slipper \u2014 2000-03-09",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-100775",
+     "title": "John Howard \u2014 2003-08-12",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-32534",
+     "title": "Alexander Downer \u2014 1999-10-12",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-77805",
+     "title": "Alexander Downer \u2014 2002-06-18",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",

@@ -2,8 +2,8 @@
  "slug": "immigration",
  "title": "Immigration",
  "blurb": "Border policy, offshore detention and migration levels across the decades.",
- "generated_at": "2026-09-01T07:38:17+00:00",
- "corpus_resources": 70556,
+ "generated_at": "2026-09-01T08:06:11+00:00",
+ "corpus_resources": 78163,
  "stats": {
   "speech_count": 49867,
   "unique_speakers": 2351,
@@ -150,67 +150,67 @@
  },
  "brief": {
   "question": "What does the parliamentary record show about immigration?",
-  "answer": ""
+  "answer": "Based on the provided parliamentary record, immigration was a recurring, often divisive but sometimes bipartisan issue. Here is what the record shows:\n\n## Strongest findings\n\n- **Australia\u2019s identity is built on immigration.** Multiple speakers describe Australia as \u201ca nation of immigrants\u201d and a multicultural society founded on tolerance, acceptance and diversity.\n- **The integrity of the immigration system is the central concern.** Speeches repeatedly stress that public support for immigration depends on trust that the system is not being rorted, and that it must be fair, rigorous and transparent.\n- **The refugee problem is global and not solved by legislation.** One speaker notes that changing the definition of \u201crefugee\u201d solves a political problem, not the humanitarian problem, and that people will keep coming on boats while refugee camps remain.\n- **Australia\u2019s border response is costly.** The record cites that the Nauru option was estimated to cost $112 million, about 3.3 times the $33.5 million cost of onshore processing, with the military exercise costing around $3 million per day.\n- **Migrants contribute economically and socially.** Speakers say migrants have contributed skills, cultural diversity and economic growth, and that there is evidence migrants and refugees contribute greatly to the economy.\n- **The original Border Protection Bill 2001 was widely criticised.** It was described as \u201cdraconian,\u201d introduced without proper consultation, partly unconstitutional, and later replaced by a bill that adopted Labor\u2019s objections.\n- **Children in immigration detention were the subject of a major report.** A HREOC report was tabled: \u201cA last resort? National Inquiry into children in Immigration Detention,\u201d indicating serious welfare concerns.\n\n## How the debate shifted over time\n\n- **Earlier period (1998\u20132000): more cooperative.** Speeches from 1998 emphasise constructive debate, cooperation between the minister and opposition, and agreement on amendments. Both sides stressed the need for bipartisanship to preserve the integrity of the migration program.\n- **2001: crisis and sharp conflict.** The Tampa affair, the Border Protection Bill, excision of Christmas Island"
  },
  "key_stats": [],
  "positions": [
   {
    "party": "Liberal",
-   "position": "The Liberal Party supports strong border protection, a tough approach to illegal migration and people-smuggling, and defending the government's detention policy and border protection measures.",
-   "slug": "speech-108140",
-   "source_title": "Alexander Downer \u2014 2003-11-26",
-   "speaker": "Alexander Downer",
-   "date": "2003-11-26"
+   "position": "The Liberal Party supports protecting Australia's borders, maintaining a tough approach to illegal migration and people-smuggling, and upholding the integrity of immigration detention and border protection measures.",
+   "slug": "speech-75815",
+   "source_title": "Philip Ruddock \u2014 2002-05-29",
+   "speaker": "Philip Ruddock",
+   "date": "2002-05-29"
   },
   {
    "party": "Labor",
-   "position": "Labor members questioned the government's immigration policies, calling for more effective and sensible policies to deal with illegal immigration and raising concerns about the government's approach.",
-   "slug": "speech-67504",
-   "source_title": "Janice Crosio \u2014 2001-08-23",
-   "speaker": "Janice Crosio",
-   "date": "2001-08-23"
+   "position": "The Labor Party supports amendments that benefit the migration system, including advances for children in detention and people on temporary protection visas, and calls for more effective and sensible policies to deal with illegal immigration.",
+   "slug": "speech-115012",
+   "source_title": "Stephen Smith \u2014 2004-04-01",
+   "speaker": "Stephen Smith",
+   "date": "2004-04-01"
   }
  ],
  "key_moments": [
   {
-   "slug": "speech-65810",
-   "title": "John Murphy \u2014 2001-08-06",
-   "speaker": "John Murphy",
-   "party": "Labor",
-   "state": "federal",
-   "date": "2001-08-06"
-  },
-  {
-   "slug": "speech-104874",
-   "title": "Laurie Ferguson \u2014 2003-10-07",
-   "speaker": "Laurie Ferguson",
-   "party": "Labor",
-   "state": "federal",
-   "date": "2003-10-07"
-  },
-  {
-   "slug": "speech-74253",
-   "title": "Tony Abbott \u2014 2002-03-21",
-   "speaker": "Tony Abbott",
-   "party": "Liberal",
-   "state": "federal",
-   "date": "2002-03-21"
-  },
-  {
-   "slug": "speech-37442",
-   "title": "Philip Ruddock \u2014 2000-03-06",
+   "slug": "speech-37621",
+   "title": "Philip Ruddock \u2014 2000-03-07",
    "speaker": "Philip Ruddock",
    "party": "Liberal",
    "state": "federal",
-   "date": "2000-03-06"
+   "date": "2000-03-07"
   },
   {
-   "slug": "speech-54408",
-   "title": "John Anderson \u2014 2000-11-30",
-   "speaker": "John Anderson",
-   "party": "Nationals",
+   "slug": "speech-66146",
+   "title": "Michael Lee \u2014 2001-08-08",
+   "speaker": "Michael Lee",
+   "party": "Labor",
    "state": "federal",
-   "date": "2000-11-30"
+   "date": "2001-08-08"
+  },
+  {
+   "slug": "speech-68984",
+   "title": "John Howard \u2014 2001-09-17",
+   "speaker": "John Howard",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2001-09-17"
+  },
+  {
+   "slug": "speech-112842",
+   "title": "Harry Quick \u2014 2004-03-10",
+   "speaker": "Harry Quick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2004-03-10"
+  },
+  {
+   "slug": "speech-55972",
+   "title": "Craig Emerson \u2014 2001-02-06",
+   "speaker": "Craig Emerson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2001-02-06"
   },
   {
    "slug": "speech-29765",
@@ -224,7 +224,7 @@
  "sections": [
   {
    "question": "What positions have MPs taken on asylum seekers and offshore detention?",
-   "answer": "Based on the provided context, MPs took a range of positions:\n\n- **Government/Ministerial position (e.g., Minister for Immigration Ruddock):** Strongly supported mandatory detention and offshore processing of asylum seekers. He argued detention was needed to maintain border integrity, process claims, address health/character/security risks, and ensure failed asylum seekers could be removed. He defended the policy as working, citing no unauthorised boat arrivals and contrasting it with European countries\u2019 difficulties.\n- **Some Government MPs:** Defended strong border protection and criticised the Labor Party for allegedly creating conditions that encouraged people-smuggling.\n- **Opposition/Labor MPs (e.g., Kate Lundy, Dr Theophanous, Mr Murphy, Ms Gillard, Ms Plibersek, Dr Lawrence):** Raised concerns about mandatory detention and offshore processing. Kate Lundy stated that mandatory detention in its current form was not acceptable and that immigration policy should not be about protecting borders. Others asked about alternatives such as the \u201cSwedish Model,\u201d community-based alternatives, conditions in detention, and possible human rights abuses.\n- **Other MPs (e.g., member for Warringah):** Presented a petition requesting an end to detention of asylum seekers and to temporary protection visas.\n\nThus, MPs were split: some strongly supported offshore detention and mandatory detention, while others questioned, criticised, or opposed it.",
+   "answer": "Based on the context, MPs\u2019 positions on asylum seekers and offshore detention fall into two broad groups:\n\n- **Government ministers and supportive government MPs** strongly defended mandatory detention, offshore processing, temporary protection visas, and border protection. They argued that these policies were working, deterred people-smuggling, and were necessary to maintain the integrity of Australia\u2019s borders. One unnamed government MP with detention centres in their electorate called for faster removal of failed asylum seekers and for closing legal loopholes, and criticised opposition MPs for delaying such changes.\n\n- **Opposition MPs and some ALP figures** raised concerns or opposed elements of the policy. For example:\n  - Shadow minister Kate Lundy said mandatory detention in its current form was not acceptable and that immigration policy should not be about \u201cprotecting our borders.\u201d\n  - Queensland and New South Wales ALP branches expressed views against mandatory detention and temporary protection visas.\n  - Several opposition MPs asked critical questions about detention conditions, children\u2019s education, isolation of detainees, medical care, community-based alternatives, the safety of people returned to their home countries, and the management and monitoring of offshore detention centres such as Nauru and Manus Island.\n\nSo, overall, government MPs generally supported offshore detention and mandatory detention, while opposition MPs and some Labor-aligned figures questioned or opposed those policies.",
    "sources": [
     {
      "slug": "speech-79169",
@@ -239,22 +239,6 @@
      "title": "Peter Andren \u2014 2002-08-19",
      "speaker": null,
      "party": "Independent",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-86558",
-     "title": "Julia Gillard \u2014 2002-11-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-68801",
-     "title": "Chris Pyne \u2014 2001-08-30",
-     "speaker": null,
-     "party": "Liberal",
      "state": "federal",
      "date": null
     },
@@ -331,10 +315,26 @@
      "date": null
     },
     {
+     "slug": "speech-114664",
+     "title": "Barry Haase \u2014 2004-03-31",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
      "slug": "speech-76505",
      "title": "Philip Ruddock \u2014 2002-06-03",
      "speaker": null,
      "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-116746",
+     "title": "Peter Andren \u2014 2004-05-26",
+     "speaker": null,
+     "party": "Independent",
      "state": "federal",
      "date": null
     },
@@ -347,18 +347,18 @@
      "date": null
     },
     {
-     "slug": "speech-66325",
-     "title": "Roger Price \u2014 2001-08-08",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
      "slug": "speech-76656",
      "title": "Philip Ruddock \u2014 2002-06-04",
      "speaker": null,
      "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-120884",
+     "title": "Robert McClelland \u2014 2004-08-04",
+     "speaker": null,
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
@@ -390,11 +390,19 @@
   },
   {
    "question": "What has been said about immigration levels and skilled migration?",
-   "answer": "The context says the government emphasised maintaining proper skill levels in the migration program and balancing skilled migration with family reunion. Skilled migration was described as having a positive economic impact: it boosts living standards, workforce productivity, labour force participation, and contributes significantly to the Commonwealth budget. For example, skilled migration was estimated to contribute about $1.4 billion to the budget over five years. It was also stated that a substantially larger intake focused on skilled migration would involve diluting selection standards\u2014particularly age and skill\u2014and would dilute the economic benefits.\n\nThe context also mentions that the government increased the migration program by 6,000 places, with 5,000 in the skilled stream, making skilled migration about 52 per cent of the program. There are also comments from other speakers who criticised placing only economic value on migrants, stressed the importance of family reunion, and argued that skilled migration should not come at the expense of jobs, apprenticeships, and traineeships for Australians. Some also said more migrants were needed, especially in regional areas, and linked skilled migration with regional development.",
+   "answer": "Based on the context, several things were said about immigration levels and skilled migration:\n\n- The government defended its immigration program, saying it had restored integrity by balancing skilled migration and family migration, and that a properly structured immigration program produces significant benefits for the Australian community.\n- It was stated that immigration now has an \u201cunequivocally positive impact\u201d due to changes in its composition, with a switch to the skilled stream and higher overall skill levels.\n- Reports were cited showing that skilled migration raised living standards, boosted annual consumption per head, increased workforce productivity, and improved labour force participation.\n- A skilled stream migrant was estimated to contribute about $1.4 billion to the Commonwealth budget over five years, and without the skilled stream immigration would have a negative budget impact.\n- The government announced a 6,000 place increase in the migration program, with 5,000 in the skilled stream, bringing the skilled stream to about 52 per cent of the program\u2014the best outcome in a decade.\n- The OECD was quoted as finding Australia\u2019s immigration policies successful in improving economic returns, with selection focused on skilled entry.\n- Some speakers criticised this approach, saying the government valued migrants only in monetary terms and ignored family reunion and humanitarian migration. One member said the old style of \u201crich, middle-class, educated immigration\u201d was back.\n- Another speaker said skilled migration should not be supported at the expense of apprenticeships and traineeships for unemployed Australians, and that priority should be jobs for Australians.\n- A parliamentary committee report recommended changes to improve competitiveness, including removing the age limit, increasing points for spouses, and using the internet to inform potential migrants about settlement opportunities.\n- There was discussion about regional migration, with the government saying 24,000 skilled migrants and their families had settled in regional Australia since 1996-97, and that over 7,000 additional settlers would go to regional Australia that financial year.",
    "sources": [
     {
      "slug": "speech-5652",
      "title": "Philip Ruddock \u2014 1998-04-07",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-114174",
+     "title": "Teresa Gambaro \u2014 2004-03-29",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
@@ -417,10 +425,10 @@
      "date": null
     },
     {
-     "slug": "speech-37777",
-     "title": "Philip Ruddock \u2014 2000-03-08",
+     "slug": "speech-114175",
+     "title": "Bernie Ripoll \u2014 2004-03-29",
      "speaker": null,
-     "party": "Liberal",
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
@@ -457,14 +465,6 @@
      "date": null
     },
     {
-     "slug": "speech-4575",
-     "title": "Joe Hockey \u2014 1998-04-01",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
      "slug": "speech-40079",
      "title": "Philip Ruddock \u2014 2000-04-06",
      "speaker": null,
@@ -489,14 +489,6 @@
      "date": null
     },
     {
-     "slug": "speech-98835",
-     "title": "Philip Ruddock \u2014 2003-06-23",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
      "slug": "speech-102882",
      "title": "Philip Ruddock \u2014 2003-09-09",
      "speaker": null,
@@ -505,8 +497,16 @@
      "date": null
     },
     {
-     "slug": "speech-36263",
-     "title": "Chris Pyne \u2014 1999-12-09",
+     "slug": "speech-98835",
+     "title": "Philip Ruddock \u2014 2003-06-23",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-122576",
+     "title": "Peter Costello \u2014 2004-11-29",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
