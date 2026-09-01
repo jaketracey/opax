@@ -1550,6 +1550,14 @@ function renderFrontNumbers() {
   }
 }
 
+// How each report topic reads mid-sentence in a prewired question ("What did
+// X say about …?"). Falls back to the lowercased title for future reports.
+const TOPIC_PHRASE = {
+  climate: "climate and energy",
+  indigenous: "First Nations issues",
+  media: "media ownership",
+};
+
 async function renderFrontTopic() {
   try {
     if (!reportsIndex) await loadReportsIndex();
@@ -1559,14 +1567,56 @@ async function renderFrontTopic() {
     const stats = report.stats;
     if (!stats) return;
     const don = stats.donations;
+    const phrase = TOPIC_PHRASE[today.slug] || report.title.toLowerCase();
+    // "mining and fossil fuels", not "mining, fossil_fuels".
+    const inds = (don?.industries || []).map(industryLabel);
+    const indPhrase = inds.length > 1
+      ? `${inds.slice(0, -1).join(", ")} and ${inds[inds.length - 1]}`
+      : inds[0] || "";
+    const speechYears = toYearSeries(stats.timeline ?? []);
+    const firstYear = speechYears.size ? Math.min(...speechYears.keys()) : null;
+    const [peakYear] = peakOf(speechYears.entries()) ?? [];
     $("h-mw").textContent = `Money & words: ${report.title}`;
+
+    // The module's name, enacted: the words and the money in one sentence.
+    const lede = `<b>${esc((stats.speech_count ?? 0).toLocaleString())}</b> speeches` +
+      (stats.unique_speakers ? ` from <b>${esc(Number(stats.unique_speakers).toLocaleString())}</b> speakers` : "") +
+      (firstYear ? ` since ${esc(String(firstYear))}` : "") +
+      (don?.total
+        ? `, and <b>${esc(fmtMoney(don.total))}</b> in disclosed donations from ${esc(indPhrase)} interests to political parties over the same years.`
+        : `. No donor industry in the AEC disclosures maps onto this debate, so today the words stand alone.`);
+
+    // Prewired questions, each built from this topic's own data.
+    const chips = [];
+    if (don?.industries?.length) {
+      const ind = industryLabel(don.industries[0]);
+      chips.push(ind === phrase
+        ? `Who takes ${ind} money and what do they say about ${ind} reform?`
+        : `Who takes ${ind} money and what do they say about ${phrase}?`);
+    } else if (firstYear) {
+      chips.push(`How has the debate over ${phrase} changed since ${firstYear}?`);
+    }
+    if (peakYear) chips.push(`Why did parliament talk so much about ${phrase} in ${peakYear}?`);
+    const loudest = stats.top_speakers?.[0]?.[0];
+    if (loudest) chips.push(`What did ${loudest} say about ${phrase}?`);
+
     $("front-mw").innerHTML = `
-      <p class="fineprint" style="margin:-0.3rem 0 0.4rem">Today's topic. Changes daily.
-      ${esc((stats.speech_count ?? 0).toLocaleString())} speeches${don ? ` · ${esc(fmtMoney(don.total ?? 0))} disclosed by ${esc(fmtIndustries(don.industries || []))} donors` : ""}.</p>
-      ${moneyWordsCharts(stats)}
-      ${don?.top_donors?.length ? barList(don.top_donors.slice(0, 5), {
-        heading: "Largest donors", fmt: fmtMoney, linkTo: (nm) => subjectHash("donor", nm) }) : ""}
-      <p class="fineprint"><a href="#/reports/${esc(today.slug)}">Read the ${esc(report.title)} report</a> ·
+      <p class="mw-lede">${lede}</p>
+      ${moneyWordsCharts(stats, { topic: report.title })}
+      <div class="mw-cols">
+        ${stats.top_speakers?.length ? barList(stats.top_speakers.slice(0, 3), {
+          heading: "Most speeches on this topic", fmt: (v) => Number(v).toLocaleString(),
+          linkTo: (nm) => subjectHash("person", nm) }) : ""}
+        ${don?.top_donors?.length ? barList(don.top_donors.slice(0, 3), {
+          heading: `Largest ${indPhrase} donors`, fmt: fmtMoney,
+          linkTo: (nm) => subjectHash("donor", nm) }) : ""}
+      </div>
+      ${chips.length ? `<nav class="mw-chips" aria-label="Ask about ${esc(report.title)}">
+        <span class="chip-label">Ask the record:</span>
+        ${chips.map((q) => `<a class="chip" href="${esc(askHash(q))}">${esc(q)}</a>`).join("")}
+      </nav>` : ""}
+      <p class="fineprint" style="margin-top:0.9rem">The topic rotates daily.
+      <a href="#/reports/${esc(today.slug)}">Read the full ${esc(report.title)} report</a> ·
       <a href="#/reports">All reports</a></p>`;
     $("mod-mw").hidden = false;
 
@@ -2188,15 +2238,28 @@ function fillMeter(boxId, textId, barId) {
 // --- search / workbench -----------------------------------------------------
 
 function currentFilters() {
+  // Year sliders mirror the ask popover: crossed thumbs swap, and the full
+  // range means "no year filter".
+  let from = $("f-from").value.trim(), to = $("f-to").value.trim();
+  if (Number(from) > Number(to)) [from, to] = [to, from];
+  if (from === "1993" && to === "2026") { from = ""; to = ""; }
   return {
     speaker: $("f-speaker").value.trim(),
     party: $("f-party").value,
     state: $("f-state").value,
-    from: $("f-from").value.trim(),
-    to: $("f-to").value.trim(),
+    from,
+    to,
     kind: $("search-kind").value,
     mode: $("search-mode").value,
   };
+}
+
+function updateSearchYearsLabel() {
+  const lab = $("f-years-label");
+  if (!lab) return;
+  let a = Number($("f-from").value), b = Number($("f-to").value);
+  if (a > b) [a, b] = [b, a];
+  lab.textContent = `${a}–${b}`;
 }
 
 function searchHash(q, f) {
@@ -2206,6 +2269,32 @@ function searchHash(q, f) {
   if (f.kind && f.kind !== "speech") p.set("kind", f.kind);
   if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
   return `#/search?${p.toString()}`;
+}
+
+// Search filters popover: same behavior as the ask page's options button.
+{
+  const btn = $("search-options-btn");
+  const pop = $("search-options-pop");
+  btn?.addEventListener("click", () => {
+    pop.hidden = !pop.hidden;
+    btn.setAttribute("aria-expanded", String(!pop.hidden));
+  });
+  document.addEventListener("pointerdown", (e) => {
+    if (!pop || pop.hidden) return;
+    if (!pop.contains(e.target) && !btn.contains(e.target)) {
+      pop.hidden = true;
+      btn.setAttribute("aria-expanded", "false");
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && pop && !pop.hidden) {
+      pop.hidden = true;
+      btn.setAttribute("aria-expanded", "false");
+      btn.focus();
+    }
+  });
+  $("f-from")?.addEventListener("input", updateSearchYearsLabel);
+  $("f-to")?.addEventListener("input", updateSearchYearsLabel);
 }
 
 let searchApplied = ""; // guards re-running the same URL state
@@ -2219,8 +2308,11 @@ function applySearchParams(params) {
     $("f-speaker").value = params.get("speaker") || "";
     $("f-party").value = params.get("party") || "";
     $("f-state").value = params.get("state") || "";
-    $("f-from").value = params.get("from") || "";
-    $("f-to").value = params.get("to") || "";
+    // Range inputs reset to their midpoint on "", so absent params pin the
+    // slider ends (which currentFilters reads back as "no year filter").
+    $("f-from").value = params.get("from") || "1993";
+    $("f-to").value = params.get("to") || "2026";
+    updateSearchYearsLabel();
     $("search-kind").value = params.get("kind") || "speech";
     $("search-mode").value = params.get("mode") || "hybrid";
     runSearch();
@@ -2588,7 +2680,9 @@ async function loadReportsList(manageFocus) {
 }
 
 // Charts: single-hue bronze marks (CSS-owned); sr-only data table carries the values.
-function columnChart(pairs, { fmt = String, heading, note }) {
+// `note` is escaped here; `noteHTML` is trusted markup the caller has already
+// escaped piece by piece (it exists so a note can carry a link).
+function columnChart(pairs, { fmt = String, heading, note, noteHTML }) {
   const W = 640, H = 150, pad = 4, base = H - 18;
   const max = Math.max(...pairs.map(([, v]) => v), 1);
   const bw = Math.max((W - pad * 2) / pairs.length - 2, 2);
@@ -2619,6 +2713,7 @@ function columnChart(pairs, { fmt = String, heading, note }) {
       <text x="${W - pad}" y="${H - 4}" class="chart-tick" text-anchor="end">${esc(String(last))}</text>
     </svg>
     ${srTable}
+    ${noteHTML ? `<p class="chart-note">${noteHTML}</p>` : ""}
     ${note ? `<p class="chart-note">${esc(note)}</p>` : ""}
   </figure>`;
 }
@@ -2671,8 +2766,43 @@ function toYearSeries(series) {
   return m;
 }
 
+/** Peak entry ([year, value]) of a year→value map. */
+function peakOf(series) {
+  let best = null;
+  for (const e of series) if (!best || e[1] > best[1]) best = e;
+  return best;
+}
+
+/**
+ * What the speech timeline actually says: where the peak was, how the latest
+ * FULL year compares (the current year is always mid-count), and a link into
+ * search filtered to the peak year when we know the topic to search for.
+ * Returns trusted HTML for columnChart's noteHTML slot.
+ */
+function speechTrendNote(speechYears, topic) {
+  const entries = [...speechYears.entries()].sort((a, b) => a[0] - b[0]);
+  const [peakY, peakV] = peakOf(entries) ?? [];
+  if (!peakY) return "";
+  const nowY = new Date().getFullYear();
+  const full = entries.filter(([y, v]) => y < nowY && v > 0);
+  const [lastY, lastV] = full[full.length - 1] ?? [];
+  let sentence;
+  if (!lastY || peakY >= lastY) {
+    sentence = `Mentions peaked in ${peakY} with ${peakV.toLocaleString()} speeches, the biggest year on record.`;
+  } else {
+    const drop = Math.round((1 - lastV / peakV) * 100);
+    sentence = drop === 0
+      ? `Mentions peaked in ${peakY} with ${peakV.toLocaleString()} speeches, and ${lastY} matched it.`
+      : `Mentions peaked in ${peakY} with ${peakV.toLocaleString()} speeches; ${lastY} came in ${drop}% lower.`;
+  }
+  const link = topic
+    ? ` <a href="${esc(searchHash(topic, { from: String(peakY), to: String(peakY) }))}">Read the ${esc(String(peakY))} speeches</a>.`
+    : "";
+  return esc(sentence) + link;
+}
+
 /** The paired speech/donation charts on one shared year axis (report page + homepage). */
-function moneyWordsCharts(stats) {
+function moneyWordsCharts(stats, { topic } = {}) {
   const don = stats.donations;
   const industries = fmtIndustries(don?.industries || []);
   const speechYears = toYearSeries(stats.timeline ?? []);
@@ -2689,27 +2819,31 @@ function moneyWordsCharts(stats) {
   const seriesFor = (m) => (domain ?? [...m.keys()].sort()).map((y) => [y, m.get(y) ?? 0]);
   let out = "";
   if (speechYears.size > 1) {
-    out += columnChart(seriesFor(speechYears),
-      { heading: "Speeches per year", fmt: (v) => v.toLocaleString() });
+    out += columnChart(seriesFor(speechYears), {
+      heading: "Speeches per year", fmt: (v) => v.toLocaleString(),
+      noteHTML: speechTrendNote(speechYears, topic),
+    });
   }
   if (donYears.size > 1) {
+    const [dPeakY, dPeakV] = peakOf(donYears.entries()) ?? [];
     out += columnChart(seriesFor(donYears), {
       heading: `Donations per financial year, plotted at end year (${industries})`,
       fmt: fmtMoney,
-      note: (paired
-        ? "Shown together for comparison. OPAX does not claim one series causes the other. "
-        : "") + AEC_NOTE,
+      note: (dPeakY ? `The biggest year ended ${dPeakY}, with ${fmtMoney(dPeakV)} disclosed. ` : "") +
+        (paired
+          ? "Shown together for comparison. OPAX does not claim one series causes the other. "
+          : "") + AEC_NOTE,
     });
   }
   return out;
 }
 
-function renderStats(container, stats) {
+function renderStats(container, stats, topic) {
   if (!stats) { container.innerHTML = ""; return; }
   const don = stats.donations;
   const industries = fmtIndustries(don?.industries || []);
   let htmlOut = "";
-  htmlOut += moneyWordsCharts(stats);
+  htmlOut += moneyWordsCharts(stats, { topic });
   if (don?.top_donors?.length) htmlOut += barList(don.top_donors, {
     heading: "Largest donors", fmt: fmtMoney,
     linkTo: (nm) => subjectHash("donor", nm) });
@@ -2835,7 +2969,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   $("report-blurb").textContent = report.blurb;
   $("report-meta").textContent =
     `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record · corpus v${corpusVersion()}`;
-  renderStats($("report-stats"), report.stats);
+  renderStats($("report-stats"), report.stats, report.title);
   {
     const st = report.stats;
     if (st) {

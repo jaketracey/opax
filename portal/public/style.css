@@ -252,7 +252,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 /* ---- hero --------------------------------------------------------------- */
 
 main { flex: 1; padding: 2.75rem 0 3rem; }
-@media (max-width: 860px) { main { padding-top: 1rem; } }
+@media (max-width: 860px) { main { padding-top: 0; } }
 main:focus { outline: none; }
 
 .hero-intro h1 {
@@ -612,17 +612,15 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
 
 .search-grid { display: grid; gap: 0.8rem; }
 .query-line { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-.query-line input { flex: 1 1 280px; min-height: 48px; }
+.query-line > input { flex: 1 1 280px; min-height: 48px; }
+#search-options-btn { min-height: 48px; width: 48px; justify-content: center; padding: 0; }
+#search-options-btn .btn-icon { width: 22px; height: 22px; }
+#search-options-btn[aria-expanded="true"] { border-color: var(--ink); }
 .filter-rail { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: end; }
 .filter-item { display: inline-flex; flex-direction: column; gap: 0.2rem; }
 .filter-item label { font-size: 0.75rem; color: var(--ink-faint); }
 .filter-item input, .filter-item select { min-height: 44px; font-size: 0.9375rem; }
 .filter-item input[type="number"] { width: 6.5em; }
-#f-speaker { width: 13em; }
-.advanced { display: flex; gap: 0.6rem 1rem; align-items: end; }
-/* Same register as the ask page's Options control: filter machinery, sans. */
-.advanced summary { min-height: 44px; display: inline-flex; align-items: center; font: 600 0.875rem/1.3 var(--sans); }
-.advanced[open] summary { color: var(--ink); }
 
 .results-bar {
   display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
@@ -716,6 +714,9 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .chart {
   margin: 1.1rem 0 0; background: var(--paper-raised); border: 1px solid var(--line);
   border-radius: 4px; padding: 0.9rem 1.1rem; max-width: 920px;
+  /* Contain the sr-only data table: tables refuse widths below min-content,
+     so on narrow screens it would otherwise widen the page's scroll area. */
+  position: relative; overflow: hidden;
 }
 .chart figcaption { color: var(--ink-soft); margin-bottom: 0.6rem; }
 .chart svg { width: 100%; height: auto; display: block; }
@@ -730,6 +731,22 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .barrow-track { height: 8px; background: var(--paper-sunken); border-radius: 4px; overflow: hidden; }
 .barrow-track i { display: block; height: 100%; background: var(--chart-mark); border-radius: 4px; }
 .barrow-value { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+/* ---- money & words (daily topic panel) ---------------------------------- */
+
+/* The lede pairs the words with the money in the record's own voice. */
+.mw-lede { font: 400 0.9375rem/1.65 var(--serif); color: var(--ink-soft); margin: 0.1rem 0 0; max-width: 62ch; }
+.mw-lede b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.mw-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 1.4rem; }
+.mw-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 1.1rem; }
+.mw-chips .chip { text-decoration: none; display: inline-flex; align-items: center; }
+@media (max-width: 700px) {
+  .mw-cols { grid-template-columns: 1fr; }
+  .mw-chips .chip {
+    width: 100%; border-radius: 10px; padding: 0.65rem 1rem;
+    text-align: left; line-height: 1.4;
+  }
+}
 
 /* Evidence-brief layers */
 #report-brief .answer { margin-top: 0.6rem; }
@@ -757,7 +774,6 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 
 /* ---- document page ------------------------------------------------------ */
 
-.doc-backline { margin-bottom: 0; }
 #panel-doc h2 { font: 700 clamp(1.55rem, 2.8vw, 2.1rem)/1.2 var(--serif); margin: 0.15rem 0 0.35rem; max-width: 68ch; }
 .doc-topic { font: italic 400 1.0625rem/1.45 var(--serif); color: var(--ink-soft); margin: 0 0 0.4rem; max-width: 68ch; }
 .doc-meta { color: var(--ink-soft); font-size: 0.875rem; margin: 0; }
@@ -797,11 +813,16 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 
 /* Quiet back links: no underline, so the hover affordance is the same
    bronze the other underline-less links (titles, headlines) firm into. */
+/* Back reads in the kicker register (like the DONOR label above the title),
+   sitting flush at the top of the page. */
+.backline { margin: 0; }
 #report-back, #doc-back, #subject-back {
-  text-decoration: none; color: var(--ink-soft);
-  display: inline-flex; align-items: center; min-height: 44px;
+  text-decoration: none;
+  font: 700 0.6875rem/1.3 var(--sans); color: var(--bronze-ink);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  display: inline-flex; align-items: center; gap: 0.15rem; min-height: 44px;
 }
-#report-back:hover, #doc-back:hover, #subject-back:hover { color: var(--bronze-ink); text-decoration: none; }
+#report-back:hover, #doc-back:hover, #subject-back:hover { color: var(--ink); text-decoration: none; }
 
 .game-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 420px));
@@ -1022,7 +1043,9 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   /* Ask stretches, the options icon rides at its right on the same line. */
   .ask-row button.primary { flex: 1 1 auto; min-height: 52px; }
   #ask-options-btn { min-height: 52px; width: 52px; }
-  .query-line button { width: 100%; }
+  /* Same pattern on search: the submit stretches, the filter icon beside it. */
+  .query-line button.secondary { flex: 1 1 auto; min-height: 52px; }
+  #search-options-btn { min-height: 52px; width: 52px; }
   .chart { padding: 0.75rem; }
   .barrow { grid-template-columns: minmax(90px, 30%) 1fr auto; }
   .tile { min-width: 140px; }

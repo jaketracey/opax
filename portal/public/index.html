@@ -310,61 +310,62 @@
           <label for="search-input" class="visually-hidden">Search the corpus</label>
           <input id="search-input" type="text" autocomplete="off" placeholder="Search half a million speeches…">
           <button type="submit" class="secondary">Search</button>
-        </div>
-        <div class="filter-rail">
-          <span class="filter-item">
-            <label for="f-speaker">Speaker</label>
-            <input id="f-speaker" type="text" autocomplete="off" placeholder="any">
-          </span>
-          <span class="filter-item">
-            <label for="f-party">Party</label>
-            <select id="f-party">
-              <option value="">any</option>
-              <option>Labor</option><option>Liberal</option><option>Nationals</option>
-              <option>LNP</option><option>Greens</option><option>Independent</option>
-              <option>One Nation</option><option>Centre Alliance</option>
-              <option>Katter's Australian Party</option><option>United Australia Party</option>
-              <option>Australian Democrats</option><option>Country Liberal Party</option>
-              <option>Family First</option><option>DLP</option><option>JLN</option>
-            </select>
-          </span>
-          <span class="filter-item">
-            <label for="f-state">Parliament</label>
-            <select id="f-state">
-              <option value="">any</option>
-              <option value="federal">Federal</option><option value="nsw">NSW</option>
-              <option value="vic">VIC</option><option value="sa">SA</option>
-              <option value="qld">QLD</option>
-            </select>
-          </span>
-          <span class="filter-item">
-            <label for="f-from">From year</label>
-            <input id="f-from" type="number" min="1993" placeholder="1993">
-          </span>
-          <span class="filter-item">
-            <label for="f-to">To year</label>
-            <input id="f-to" type="number" min="1993" placeholder="2026">
-          </span>
-          <details class="advanced">
-            <summary>Advanced</summary>
-            <span class="filter-item">
-              <label for="search-kind">Corpus</label>
-              <select id="search-kind">
-                <option value="speech">Speeches</option>
-                <option value="legal">Legal documents</option>
-                <option value="news">News</option>
-                <option value="all">Everything</option>
-              </select>
-            </span>
-            <span class="filter-item">
-              <label for="search-mode">Mode</label>
-              <select id="search-mode">
-                <option value="hybrid">Hybrid</option>
-                <option value="semantic">Semantic</option>
-                <option value="keyword">Keyword</option>
-              </select>
-            </span>
-          </details>
+          <div class="ask-options-wrap">
+          <button type="button" class="action-btn" id="search-options-btn" aria-expanded="false" aria-controls="search-options-pop" aria-label="Search filters" title="Filters">
+            <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
+          </button>
+          <div class="ask-options-pop" id="search-options-pop" hidden>
+            <div class="filter-rail ask-pop-rail">
+              <span class="filter-item filter-item-wide">
+                <label for="f-from">Years <b id="f-years-label">1993–2026</b></label>
+                <input id="f-from" type="range" min="1993" max="2026" value="1993" aria-label="From year">
+                <input id="f-to" type="range" min="1993" max="2026" value="2026" aria-label="To year">
+              </span>
+              <span class="filter-item">
+                <label for="f-speaker">Speaker</label>
+                <input id="f-speaker" type="text" autocomplete="off" placeholder="any">
+              </span>
+              <span class="filter-item">
+                <label for="f-party">Party</label>
+                <select id="f-party">
+                  <option value="">any</option>
+                  <option>Labor</option><option>Liberal</option><option>Nationals</option>
+                  <option>LNP</option><option>Greens</option><option>Independent</option>
+                  <option>One Nation</option><option>Centre Alliance</option>
+                  <option>Katter's Australian Party</option><option>United Australia Party</option>
+                  <option>Australian Democrats</option><option>Country Liberal Party</option>
+                  <option>Family First</option><option>DLP</option><option>JLN</option>
+                </select>
+              </span>
+              <span class="filter-item">
+                <label for="f-state">Parliament</label>
+                <select id="f-state">
+                  <option value="">any</option>
+                  <option value="federal">Federal</option><option value="nsw">NSW</option>
+                  <option value="vic">VIC</option><option value="sa">SA</option>
+                  <option value="qld">QLD</option>
+                </select>
+              </span>
+              <span class="filter-item">
+                <label for="search-kind">Corpus</label>
+                <select id="search-kind">
+                  <option value="speech">Speeches</option>
+                  <option value="legal">Legal documents</option>
+                  <option value="news">News</option>
+                  <option value="all">Everything</option>
+                </select>
+              </span>
+              <span class="filter-item">
+                <label for="search-mode">Mode</label>
+                <select id="search-mode">
+                  <option value="hybrid">Hybrid</option>
+                  <option value="semantic">Semantic</option>
+                  <option value="keyword">Keyword</option>
+                </select>
+              </span>
+            </div>
+          </div>
+          </div>
         </div>
       </form>
 
@@ -413,7 +414,7 @@
       <div id="reports-list" class="report-cards"></div>
       <div id="reports-status" class="status" role="status"></div>
       <article id="report-view" hidden>
-        <p><button id="report-back" class="link"><span aria-hidden="true">← </span>All reports</button></p>
+        <p class="backline"><button id="report-back" class="link"><span aria-hidden="true">&lt; </span>All reports</button></p>
         <h2 id="report-title" tabindex="-1"></h2>
         <p id="report-blurb" class="report-blurb"></p>
         <p id="report-meta" class="report-meta"></p>
@@ -431,7 +432,7 @@
 
     <!-- ============================== DOC ============================== -->
     <section id="panel-doc" class="panel" hidden aria-label="Document from the record">
-      <p class="doc-backline"><button id="doc-back" class="link"><span aria-hidden="true">← </span>Back</button></p>
+      <p class="backline"><button id="doc-back" class="link"><span aria-hidden="true">&lt; </span>Back</button></p>
       <div class="doc-head">
         <p class="kicker">From the record</p>
         <h2 id="doc-title" tabindex="-1"></h2>
@@ -531,7 +532,7 @@
 
     <!-- ============================ SUBJECT ============================ -->
     <section id="panel-subject" class="panel" hidden aria-label="Subject entry">
-      <p><button id="subject-back" class="link"><span aria-hidden="true">← </span>Back</button></p>
+      <p class="backline"><button id="subject-back" class="link"><span aria-hidden="true">&lt; </span>Back</button></p>
       <div id="subject-body"><!-- entry injected --></div>
     </section>
 
