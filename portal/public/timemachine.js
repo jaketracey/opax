@@ -289,27 +289,15 @@ const CSS = `
 .tm-root * { box-sizing: border-box; }
 
 /* Masthead ---------------------------------------------------------------- */
-.tm-masthead {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.75rem 1.25rem;
-  border-bottom: 3px double var(--line-strong, #8D897B);
-  padding-bottom: 0.75rem; margin-bottom: 1.25rem;
-}
-.tm-kicker {
-  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.22em;
-  text-transform: uppercase; color: var(--bronze-ink, #8A5A12);
-  display: inline-flex; align-items: center; gap: 0.45rem;
-}
-.tm-kicker svg { flex: none; }
-.tm-tagline { font-size: 0.85rem; color: var(--ink-soft, #575C52); }
 .tm-random {
-  margin-left: auto;
+  margin-top: 0.6rem;
   font: inherit; font-size: 0.82rem; font-weight: 600;
-  color: var(--paper-raised, #fff); background: var(--navy, #142A43);
-  border: 1px solid var(--navy, #142A43); border-radius: 999px;
+  color: var(--ink-soft, #575C52); background: none;
+  border: 1px solid var(--line-strong, #8D897B); border-radius: 999px;
   padding: 0.45rem 1rem; cursor: pointer;
   display: inline-flex; align-items: center; gap: 0.4rem;
 }
-.tm-random:hover { background: var(--bronze-ink, #8A5A12); border-color: var(--bronze-ink, #8A5A12); }
+.tm-random:hover { color: var(--bronze-ink, #8A5A12); border-color: var(--bronze-ink, #8A5A12); }
 .tm-random:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
 
 /* Year hero --------------------------------------------------------------- */
@@ -653,23 +641,6 @@ export function mountTimeMachine(container) {
   // ---- static chrome (no user/API data goes through this template) --------
   const root = el('section', 'tm-root', { 'aria-label': 'Time Machine: explore the parliamentary record by year' })
   root.innerHTML = `
-    <header class="tm-masthead">
-      <span class="tm-kicker">
-        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-          <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M8 4.5V8l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        The Time Machine
-      </span>
-      <span class="tm-tagline">Spin the dial through ${YEAR_MAX - YEAR_MIN + 1} years of what parliament actually said.</span>
-      <button type="button" class="tm-random" aria-label="Take me to a random year">
-        <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M8 0l1.8 6.2L16 8l-6.2 1.8L8 16 6.2 9.8 0 8l6.2-1.8z" fill="currentColor"/>
-        </svg>
-        Take me somewhere
-      </button>
-    </header>
-
     <div class="tm-hero">
       <div class="tm-hero-eyebrow">Parliament in</div>
       <div class="tm-hero-row">
@@ -677,6 +648,12 @@ export function mountTimeMachine(container) {
         <div class="tm-year" aria-hidden="true"></div>
         <button type="button" class="tm-step tm-step-fwd" aria-label="Next year">›</button>
       </div>
+      <button type="button" class="tm-random" aria-label="Take me to a random year">
+        <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 0l1.8 6.2L16 8l-6.2 1.8L8 16 6.2 9.8 0 8l6.2-1.8z" fill="currentColor"/>
+        </svg>
+        Take me somewhere
+      </button>
     </div>
 
     <div class="tm-scrubber">

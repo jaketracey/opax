@@ -75,6 +75,12 @@
           <button type="button" class="link" id="ask-copylink">Copy link to this question</button>
           <button type="button" class="link" id="ask-export">Download sources (BibTeX / RIS / CSV)</button>
         </div>
+<section class="front-mod" aria-labelledby="h-reports" id="mod-reports" hidden>
+          <h2 class="kicker" id="h-reports">Reports</h2>
+          <p class="fineprint" style="margin:-0.2rem 0 0.6rem">Long-running investigations pairing
+          the money with the words — every claim cited.</p>
+          <div class="report-cards" id="front-reports"></div>
+        </section>
         <div id="ask-sources" hidden>
           <p class="kicker">Sources — from the record</p>
           <ol id="ask-cited-list" class="source-list"></ol>
@@ -91,32 +97,36 @@
 
       <hr class="ledger-rule" id="front-rule">
       <div class="front-grid" id="front-page">
-        <section class="front-mod span-8" aria-labelledby="h-news" id="mod-news">
+        <div class="front-main">
+        <section class="front-mod" aria-labelledby="h-news" id="mod-news">
           <h2 class="kicker" id="h-news">In the news right now</h2>
           <div id="front-news"><p class="status">Fetching today's headlines…</p></div>
         </section>
-        <section class="front-mod span-4" aria-labelledby="h-numbers">
+<section class="front-mod" aria-labelledby="h-mw" id="mod-mw" hidden>
+          <h2 class="kicker" id="h-mw">Money &amp; words</h2>
+          <div id="front-mw"></div>
+        </section>
+<section class="front-mod" aria-labelledby="h-added" id="mod-added" hidden>
+          <h2 class="kicker" id="h-added">Just added to the record</h2>
+          <div class="split-list" id="front-added"></div>
+          <p class="fineprint">The newest documents to enter the index — the corpus updates as
+          parliaments publish.</p>
+          <p style="margin:0.6rem 0 0"><a class="action-btn search-everything" href="#/search"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg><span>Search everything</span></a></p>
+        </section>
+        </div>
+        <aside class="front-rail">
+        <section class="front-mod" aria-labelledby="h-numbers">
           <h2 class="kicker" id="h-numbers">Today's numbers</h2>
           <div class="tiles tiles-compact" id="front-numbers"></div>
           <p class="fineprint" id="front-numbers-note">Live from the search index.
           <a href="#/stats">Full corpus breakdown</a></p>
         </section>
-        <section class="front-mod span-8" aria-labelledby="h-mw" id="mod-mw" hidden>
-          <h2 class="kicker" id="h-mw">Money &amp; words</h2>
-          <div id="front-mw"></div>
-        </section>
-        <section class="front-mod span-4" aria-labelledby="h-ency" id="mod-ency" hidden>
+<section class="front-mod" aria-labelledby="h-ency" id="mod-ency" hidden>
           <h2 class="kicker" id="h-ency">From the encyclopedia</h2>
           <div class="entry-stack" id="front-ency"></div>
           <p class="fineprint">From AEC disclosures and the speech index — totals are a floor, not a ceiling.</p>
         </section>
-        <section class="front-mod span-8" aria-labelledby="h-added" id="mod-added" hidden>
-          <h2 class="kicker" id="h-added">Just added to the record</h2>
-          <div class="split-list" id="front-added"></div>
-          <p class="fineprint">The newest documents to enter the index — the corpus updates as
-          parliaments publish. <a href="#/search">Search everything</a></p>
-        </section>
-        <section class="front-mod span-4" aria-labelledby="h-ways">
+<section class="front-mod" aria-labelledby="h-ways">
           <h2 class="kicker" id="h-ways">More ways in</h2>
           <div class="entry-stack">
             <a class="report-card" href="#/money">
@@ -139,13 +149,8 @@
             </a>
           </div>
         </section>
-        <section class="front-mod" aria-labelledby="h-reports" id="mod-reports" hidden>
-          <h2 class="kicker" id="h-reports">Reports</h2>
-          <p class="fineprint" style="margin:-0.2rem 0 0.6rem">Long-running investigations pairing
-          the money with the words — every claim cited.</p>
-          <div class="report-cards" id="front-reports"></div>
-        </section>
-      </div>
+        </aside>
+                                              </div>
     </section>
 
     <!-- ============================= SEARCH ============================ -->

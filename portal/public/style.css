@@ -536,21 +536,18 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .action-btn.action-primary:hover { background: var(--navy-raised); }
 .action-btn.action-primary .btn-icon { color: var(--bronze-bright); }
 .party-dot-only { margin-right: 0.45rem; }
+.search-everything { display: inline-flex; }
 
 /* ---- front page grid ---------------------------------------------------- */
 
-.front-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 2rem 1.5rem;
-  margin-top: 1.4rem;
-}
+.front-grid { display: grid; grid-template-columns: 1fr; gap: 2rem 2rem; margin-top: 1.4rem; }
 #front-rule { margin-top: 2rem; }
-.front-mod { grid-column: span 12; min-width: 0; }
+.front-main, .front-rail { display: grid; gap: 2rem; align-content: start; min-width: 0; }
+.front-mod { min-width: 0; }
 .front-mod > h2 { margin: 0 0 0.7rem; }
+#mod-reports { margin-top: 2rem; }
 @media (min-width: 1100px) {
-  .front-mod.span-8 { grid-column: span 8; }
-  .front-mod.span-4 { grid-column: span 4; }
+  .front-grid { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
 }
 .split-list { display: grid; grid-template-columns: 1fr; gap: 0 2.5rem; }
 @media (min-width: 1100px) { .split-list { grid-template-columns: 1fr 1fr; } }
