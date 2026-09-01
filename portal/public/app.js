@@ -1957,7 +1957,6 @@ function renderFrontNumbers() {
     [liveStats ? (liveStats.paragraphs ?? 0).toLocaleString() : "—", "passages searchable"],
     [corpusManifest ? (corpusManifest.collected_speeches ?? 0).toLocaleString() : "—", "speeches collected"],
     [aec ? aec.docs.toLocaleString() : "—", "donations classified"],
-    ["5", "parliaments"],
   ];
   holder.innerHTML = tiles.map(([v, l]) => tile(v, l)).join("");
   if (corpusManifest) {
