@@ -24,7 +24,12 @@ The OpenRouter key lives in `.env` (gitignored) and platform-side in the KB
 config — it transited a chat transcript on setup, so rotate or spend-cap it.
 OPEN QUESTION with a live experiment attached: watch whether ARAG platform
 token burn for /ask drops to ~zero on the account dashboard — that answers
-whether BYOK generation is exempt from platform billing. Embeddings remain
+whether BYOK generation is exempt from platform billing. CAVEAT when reading
+the dashboard: the Keep-asking follow-up generator (`/api/followups`, added
+2026-09-01 evening) deliberately runs on platform-side `gemini-2.5-flash-lite`
+per-request override (BYOK DeepSeek 412s structured output and burns its
+whole output cap on reasoning) — so small nonzero platform-token numbers are
+EXPECTED from follow-ups; only the main /ask line should flatline. Embeddings remain
 platform `multilingual-2024-05-06`. (The old gemini upgrade ladder is
 superseded while BYOK holds — any OpenRouter model id is now a config edit.)
 
