@@ -141,6 +141,13 @@ Recommendation: Batch API always (no urgency in a corpus pass); trial Flash-Lite
 a 1K-doc sample first — if quality holds for classification-shaped work, the whole
 corpus is ~$228.
 
+**BYOK re-pricing (2026-09-01, deepseek-v4-flash via OpenRouter at
+$0.081/$0.162 per 1M):** portal asks ≈ $0.0014 each (~70K answers per $100);
+speeches-only enrichment pass ≈ **$68** (fits a $100-capped key); whole
+filtered corpus incl. legal ≈ $270. Generation is now on our own dime at list
+price — the undisclosed-multiplier ARAG-token line applies (pending the
+dashboard experiment) only to ingest/processing.
+
 ### Enrichment (DA tasks) — deferred, deliberately
 
 Nothing registers or starts DA tasks in any code path here; `KbClient.start_task()`
