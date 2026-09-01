@@ -326,9 +326,19 @@ Views/tools to build once the full passes run, in value order:
    that week" via label+created filters.
 
 Sequencing: full labeller (~$70-100) unlocks 1-5 and 7-8; full summaries
-(~$45) unlocks 6 and enriches 2/5. Both remain user-gated and
-load-completion-gated. Items 3-6 warrant one probe each before building
-(facet shape under date ranges; ask latency under tight label filters).
+(~$45) unlocks 6 and enriches 2/5. Items 3-6 warrant one probe each before
+building (facet shape under date ranges; ask latency under tight filters).
+
+**STARTED 2026-09-01 (Jake: "go on both", mid-load in parallel):**
+labeller task `e0f57668` (opax-topics), summaries task `38f2747c`
+(opax-summaries), both apply=ALL so they cover the ~174K loaded speeches
+AND every new arrival as the bulk load continues — nothing waits, nothing
+is missed. Both carry the OpenRouter key per-task (never platform compute).
+The scripts' load-completion gates now yield to `OPAX_ENRICH_NOW=1`
+(the env check short-circuits BEFORE load_still_running(), which matters:
+that function shells out to ssh, and ssh eats the stdin that the confirm
+prompt needs). Track with `python3 scripts/arag_enrich.py status`; build
+the roadmap views as label coverage grows (facet counts show progress).
 
 ## Open items
 

@@ -23,6 +23,7 @@ always pinned (unpinned tasks 200 then fail silently).
 """
 
 import json
+import os
 import random
 import sys
 import urllib.request
@@ -268,7 +269,7 @@ def main() -> None:
         print("started:", json.dumps(out)[:300])
 
     elif cmd == "start-full-summaries":
-        if load_still_running():
+        if not os.environ.get("OPAX_ENRICH_NOW") and load_still_running():
             sys.exit("Bulk load is still RUNNING - full summaries wait for load completion.")
         print("This summarises the WHOLE speech corpus (~519K docs) on the OpenRouter key (~$45).")
         typed = input("Type 'summarise the corpus' to confirm: ").strip()
@@ -348,7 +349,7 @@ def main() -> None:
                   "inspect one labeled resource raw if status says done.")
 
     elif cmd == "start-full":
-        if load_still_running():
+        if not os.environ.get("OPAX_ENRICH_NOW") and load_still_running():
             sys.exit("Bulk load is still RUNNING on desktop — full enrichment waits for load "
                      "completion so every speech gets labeled exactly once.")
         print(f"This labels the WHOLE speech corpus (~519K docs) on the OpenRouter key.")
