@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import {
+  formatMoney,
   type GroupStyle,
   type Insets,
   type MapEdge,
@@ -109,6 +110,10 @@ type NodeVisual = {
   opacity: Fade
   shellOpacity: Fade
   scale: Fade
+  /** 0..1 - how far the node has come forward towards the camera on hover. */
+  lift: Fade
+  /** Edges on the node, for the hover card (a donor's parties, a party's donors). */
+  degree: number
   /** Entrance stagger - the tick count before this node grows in. */
   bornAt: number
   label: HTMLDivElement
@@ -270,6 +275,11 @@ export class KnowledgeMapEngine {
   private traceRingMaterial: THREE.MeshBasicMaterial
 
   private palette: Palette3D
+  private popup: HTMLDivElement
+  private popupName: HTMLDivElement
+  private popupMeta: HTMLDivElement
+  private popupCounts: HTMLDivElement
+  private placedLabelBoxes: { x1: number; y1: number; x2: number; y2: number }[] = []
 
   private data: EngineData | null = null
   private sim: ForceSim3D | null = null
@@ -352,6 +362,23 @@ export class KnowledgeMapEngine {
 
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false })
     this.renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio || 1, 2))
+
+    // The hover card - one pooled element, filled per node. DOM in the label
+    // layer idiom: inert to the pointer, styled by the adapter's stylesheet.
+    this.popup = document.createElement('div')
+    this.popup.className = 'rp-map3d-popup'
+    this.popup.style.display = 'none'
+    this.popupName = document.createElement('div')
+    this.popupName.className = 'rp-map3d-popup-name'
+    this.popupMeta = document.createElement('div')
+    this.popupMeta.className = 'rp-map3d-popup-meta'
+    this.popupCounts = document.createElement('div')
+    this.popupCounts.className = 'rp-map3d-popup-counts'
+    const popupHint = document.createElement('div')
+    popupHint.className = 'rp-map3d-popup-hint'
+    popupHint.textContent = 'Click for details'
+    this.popup.append(this.popupName, this.popupMeta, this.popupCounts, popupHint)
+    labelLayer.appendChild(this.popup)
 
     this.palette = buildPalette()
 
@@ -576,6 +603,8 @@ export class KnowledgeMapEngine {
           current: firstBuild && !this.reduced ? 0.001 : 1,
           target: 1,
         },
+        lift: { current: 0, target: 0 },
+        degree,
         bornAt: firstBuild && !this.reduced ? performance.now() + Math.min(index * 9, 900) : 0,
         label,
       }
@@ -725,6 +754,7 @@ export class KnowledgeMapEngine {
   private setHovered(id: string | null) {
     if (this.hoveredId === id) return
     this.hoveredId = id
+    this.updatePopup()
     this.canvas.style.cursor = id ? 'pointer' : 'grab'
     this.updateEmphasisSets()
   }
@@ -764,13 +794,25 @@ export class KnowledgeMapEngine {
       const onPath = this.pathNodeIds?.has(id) ?? false
       const dimmed = (this.pathNodeIds && !onPath) || (!this.pathNodeIds && !inNeighbourhood)
       const emphasised = isSelected || isHovered || isPathStart || onPath
-      visual.opacity.target = dimmed ? 0.12 : visual.unlinked && !emphasised ? 0.55 : 1
+      // Dimmed marks recede but stay clearly there - they still carry the
+      // shape of the map, and the depth fog is already quietening the far
+      // side, so a hard fade here would wash the back of the scene out.
+      visual.opacity.target = dimmed ? 0.3 : visual.unlinked && !emphasised ? 0.6 : 1
       visual.shellOpacity.target = visual.hollow
-        ? (dimmed ? 0.14 : 0.95)
+        ? (dimmed ? 0.2 : 0.95)
         : isHovered && !isSelected
         ? 0.4
         : 0
-      visual.scale.target = emphasised ? 1.08 : 1
+      // The hovered node comes forward decisively; the selected one holds a
+      // quieter, steadier presence under its ring.
+      visual.scale.target = isHovered && !isSelected
+        ? 1.24
+        : isSelected
+        ? 1.14
+        : emphasised
+        ? 1.08
+        : 1
+      visual.lift.target = isHovered && !isSelected ? 1 : 0
     }
 
     for (const visual of this.edgeVisuals) {
@@ -781,10 +823,78 @@ export class KnowledgeMapEngine {
         (focus !== null && !touchesFocus && !this.pathEdgeKeys)
       const emphasised = onPath || touchesFocus
       visual.emphasised = emphasised
-      visual.opacity.target = dimmed ? 0.04 : emphasised ? 0.92 : visual.crossing ? 0.16 : 0.4
+      visual.opacity.target = dimmed ? 0.06 : emphasised ? 0.92 : visual.crossing ? 0.16 : 0.4
       this.applyEdgeColour(visual)
     }
+    this.updatePopup()
     this.renderDirty = true
+  }
+
+  /**
+   * Fill and show the hover card for the hovered node, or hide it. The card
+   * is for scouting - the info card already tells the selected node's story,
+   * so a hovered node that is also selected shows nothing.
+   */
+  private updatePopup() {
+    const visual = this.hoveredId ? this.nodeVisuals.get(this.hoveredId) : undefined
+    if (!visual || visual.node.id === this.emphasis.selectedId) {
+      this.popup.style.display = 'none'
+      return
+    }
+    const node = visual.node
+    this.popupName.textContent = node.label
+    this.popupMeta.replaceChildren()
+    const dot = document.createElement('span')
+    dot.className = 'rp-map3d-popup-dot'
+    dot.style.background = `#${visual.colour.getHexString()}`
+    const category = document.createElement('span')
+    category.textContent = node.kind === 'party'
+      ? 'political party'
+      : (node.industry ?? node.group).replace(/_/g, ' ')
+    category.style.color = this.palette.inks[visual.slot] ?? '#5A616B'
+    this.popupMeta.append(dot, category)
+    const links = visual.degree === 1 ? '1' : `${visual.degree}`
+    const who = node.kind === 'party'
+      ? (visual.degree === 1 ? '1 donor shown' : `${links} donors shown`)
+      : (visual.degree === 1 ? '1 party' : `${links} parties`)
+    this.popupCounts.textContent = node.total !== undefined
+      ? `${formatMoney(node.total)} · ${who}`
+      : who
+    // Kept as the layer's last child so it rides above every label.
+    this.labelLayer.appendChild(this.popup)
+    this.popup.style.display = 'block'
+    this.positionPopup()
+  }
+
+  /** Pin the card beside the hovered node, flipped inside the canvas edges. */
+  private positionPopup() {
+    if (this.popup.style.display === 'none') return
+    const visual = this.hoveredId ? this.nodeVisuals.get(this.hoveredId) : undefined
+    if (!visual) {
+      this.popup.style.display = 'none'
+      return
+    }
+    this.labelVec.set(visual.sim.x, visual.sim.y, visual.sim.z).project(this.camera)
+    if (this.labelVec.z > 1 || this.labelVec.z < -1) {
+      this.popup.style.display = 'none'
+      return
+    }
+    const sx = (this.labelVec.x * 0.5 + 0.5) * this.width
+    const sy = (-this.labelVec.y * 0.5 + 0.5) * this.height
+    const camDist = Math.hypot(
+      visual.sim.x - this.camera.position.x,
+      visual.sim.y - this.camera.position.y,
+      visual.sim.z - this.camera.position.z,
+    )
+    const halfTan = Math.tan(THREE.MathUtils.degToRad(FOV / 2))
+    const screenR = ((visual.r * visual.scale.current * (this.height / 2)) /
+      (camDist * halfTan)) * (1 + visual.lift.current * 0.15)
+    const w = this.popup.offsetWidth
+    const h = this.popup.offsetHeight
+    let x = sx + screenR + 16
+    if (x + w > this.width - 8) x = sx - screenR - 16 - w
+    const y = Math.max(8, Math.min(this.height - h - 8, sy - h / 2))
+    this.popup.style.transform = `translate(${Math.max(8, x).toFixed(1)}px, ${y.toFixed(1)}px)`
   }
 
   // -------------------------------------------------------------------
@@ -1199,6 +1309,9 @@ export class KnowledgeMapEngine {
       return
     }
     if (this.pointers.size > 2 || this.pinch) return
+    // A press means the reader is acting, not scouting - the hover card and
+    // lift depart before the gesture starts.
+    this.setHovered(null)
 
     const hit = event.button === 0 ? this.raycastNode(point.x, point.y) : null
     if (hit && this.sim) {
@@ -1485,6 +1598,7 @@ export class KnowledgeMapEngine {
       }
       step(visual.opacity)
       step(visual.shellOpacity)
+      step(visual.lift)
     }
     for (const visual of this.edgeVisuals) step(visual.opacity)
     return active
@@ -1559,16 +1673,28 @@ export class KnowledgeMapEngine {
     )
     this.camera.lookAt(target)
     this.camera.updateMatrixWorld()
-    // Fog rides the camera so depth always fades at the same visual rate:
-    // the far side of the map melts into the paper at any zoom.
-    this.fog.near = dist + this.worldRadius * 0.1
-    this.fog.far = dist + this.worldRadius * 2.1
+    // Fog rides the camera so depth always fades at the same visual rate.
+    // Gentle: the far side of the map softens into the paper but every mark
+    // stays clearly readable at the fitted view - depth is a cue, not a veil.
+    this.fog.near = dist + this.worldRadius * 0.35
+    this.fog.far = dist + this.worldRadius * 4.4
   }
+
+  private nodeLiftDir = new THREE.Vector3()
 
   private updateNodeMeshes() {
     for (const visual of this.nodeVisuals.values()) {
       const scale = Math.max(0.001, visual.r * visual.scale.current)
       visual.mesh.position.set(visual.sim.x, visual.sim.y, visual.sim.z)
+      if (visual.lift.current > 0.001) {
+        // The lift runs along the view axis, so the node comes towards the
+        // reader without sliding off its own edges on screen.
+        this.nodeLiftDir.copy(this.camera.position).sub(visual.mesh.position).normalize()
+        visual.mesh.position.addScaledVector(
+          this.nodeLiftDir,
+          visual.lift.current * (visual.r * 0.6 + 10),
+        )
+      }
       visual.mesh.scale.setScalar(scale)
       visual.material.opacity = visual.opacity.current
       visual.material.depthWrite = visual.opacity.current > 0.5
@@ -1732,7 +1858,10 @@ export class KnowledgeMapEngine {
         visual.sim.y - cam.position.y,
         visual.sim.z - cam.position.z,
       )
-      const screenR = (visual.r * visual.scale.current * (this.height / 2)) / (camDist * halfTan)
+      // A lifted (hovered) node is nearer the camera than its sim position
+      // says, so its apparent radius grows a touch beyond this figure.
+      const screenR = ((visual.r * visual.scale.current * (this.height / 2)) /
+        (camDist * halfTan)) * (1 + visual.lift.current * 0.15)
       return { ok, sx, sy, camDist, screenR, opacity: visual.opacity.current }
     })
 
@@ -1745,8 +1874,9 @@ export class KnowledgeMapEngine {
         visual.node.id === this.emphasis.pathFrom ||
         (this.pathNodeIds?.has(visual.node.id) ?? false)
       const inNeighbourhood = this.neighbourIds?.has(visual.node.id) ?? false
-      const wanted = emphasised || inNeighbourhood || kept < budget
-      if (!wanted || visual.opacity.current < 0.2 || !disc.ok) {
+      const hovered = visual.node.id === this.hoveredId
+      const wanted = emphasised || inNeighbourhood || hovered || kept < budget
+      if (!wanted || (visual.opacity.current < 0.2 && !hovered) || !disc.ok) {
         label.style.display = 'none'
         continue
       }
@@ -1758,7 +1888,7 @@ export class KnowledgeMapEngine {
       const text = label.textContent ?? ''
       const halfW = text.length * 6.2 * 0.5
       const box = { x1: sx - halfW, x2: sx + halfW, y1: sy - screenR - 22, y2: sy - screenR - 4 }
-      if (!emphasised && !inNeighbourhood) {
+      if (!emphasised && !inNeighbourhood && !hovered) {
         // The label box's centre must not sit on the face of a nearer,
         // clearly-visible sphere of readable size - see the discs note.
         const ax = sx
@@ -1793,11 +1923,15 @@ export class KnowledgeMapEngine {
         (sy - screenR - 4).toFixed(1)
       }px)`
       label.style.opacity = String(
-        Math.max(0.06, (1 - fogT * 0.92) * Math.min(1, visual.opacity.current + 0.1)),
+        Math.max(0.35, (1 - fogT * 0.5) * Math.min(1, visual.opacity.current + 0.1)),
       )
       if (emphasised) label.setAttribute('data-emphasised', '')
       else label.removeAttribute('data-emphasised')
+      if (visual.node.id === this.emphasis.selectedId) label.setAttribute('data-selected', '')
+      else label.removeAttribute('data-selected')
     }
+    this.placedLabelBoxes = placed
+    this.positionPopup()
 
     // Territory captions above their volume, dimmed while something has focus.
     for (const territory of this.territories) {
@@ -1849,6 +1983,17 @@ export class KnowledgeMapEngine {
       }
       const sx = (this.labelVec.x * 0.5 + 0.5) * this.width
       const sy = (-this.labelVec.y * 0.5 + 0.5) * this.height
+      // Relation labels give way to node labels: an amount riding an edge
+      // that mushes into a donor's name reads as neither.
+      const halfW = visual.edge.label.length * 5.4 * 0.5
+      const box = { x1: sx - halfW, x2: sx + halfW, y1: sy - 21, y2: sy - 5 }
+      const hits = this.placedLabelBoxes.some((p) =>
+        box.x1 < p.x2 && box.x2 > p.x1 && box.y1 < p.y2 && box.y2 > p.y1
+      )
+      if (hits) {
+        visual.label.style.display = 'none'
+        continue
+      }
       visual.label.style.display = 'block'
       visual.label.style.transform = `translate(-50%, -140%) translate(${sx.toFixed(1)}px, ${
         sy.toFixed(1)
@@ -1868,6 +2013,7 @@ export class KnowledgeMapEngine {
     this.reducedQuery?.removeEventListener('change', this.onReducedChange)
     this.resizeObserver.disconnect()
     this.clearScene()
+    this.popup.remove()
     this.sphereGeo.dispose()
     this.shellGeo.dispose()
     this.tubeGeo.dispose()

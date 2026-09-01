@@ -274,6 +274,7 @@ async function mountMoney() {
 }
 
 let firstRoute = true;
+let routeCount = 0; // in-app navigations — Back inside the app is only safe past the first
 
 function rawFragment() {
   // location.hash is percent-DECODED in Firefox; parse from href so encoded
@@ -296,6 +297,7 @@ function route() {
   const view = segs[0] || "ask";
   const manageFocus = !firstRoute;
   firstRoute = false;
+  routeCount++;
 
   if (view === "doc" && segs[1]) {
     showPanel("doc");
@@ -721,7 +723,10 @@ async function openDocPage(slug, manageFocus) {
 }
 
 $("doc-back").addEventListener("click", () => {
-  if (history.length > 1) history.back();
+  // history.length counts cross-origin entries too: a visitor arriving on a
+  // shared citation link would be sent back OFF the site. Only go back if
+  // this app has navigated at least once; otherwise go home.
+  if (routeCount > 1) history.back();
   else location.hash = "#/";
 });
 $("doc-cite").addEventListener("click", () => {

@@ -16,6 +16,7 @@
 
 import {
   buildDegrees,
+  formatMoney,
   type GroupStyle,
   type Insets,
   type MapEdge,
@@ -27,7 +28,7 @@ import { ACCENT, CLUSTER_COLOURS, clusterColour, SURFACE } from './palette.ts'
 // Re-exported so a Node smoke test can exercise the pure layout/data layer
 // without a DOM or a WebGL context.
 export { clusterCentres3D, ForceSim3D } from './force3d.ts'
-export { buildDegrees, radiusFor, shortLabel } from './map-types.ts'
+export { buildDegrees, formatMoney, radiusFor, shortLabel } from './map-types.ts'
 export { webglAvailable }
 
 /** One node of the exported money.json graph. */
@@ -73,14 +74,6 @@ export type MoneyMapHandle = {
 
 /** Dollars -> the engine's size weight: $10k ~ 1, so log sizing spans well. */
 const WEIGHT_SCALE = 10_000
-
-export function formatMoney(value: number): string {
-  const v = Math.abs(value)
-  if (v >= 1e9) return `$${(value / 1e9).toFixed(1)}b`
-  if (v >= 1e6) return `$${(value / 1e6).toFixed(1)}m`
-  if (v >= 1e3) return `$${Math.round(value / 1e3)}k`
-  return `$${Math.round(value)}`
-}
 
 function yearSpan(first: number | null, last: number | null): string {
   if (!first) return ''
@@ -162,15 +155,40 @@ const CSS = `
   font-size: 11px; color: #4a4942; will-change: transform;
   text-shadow: 0 0 4px ${SURFACE}, 0 0 8px ${SURFACE}; }
 .rp-map3d-label[data-emphasised] { font-size: 12px; font-weight: 600; color: #26251f; }
+.rp-map3d-label[data-selected] { font-size: 13px; }
 .rp-map3d-territory { position: absolute; top: 0; left: 0; white-space: nowrap;
   font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
   text-shadow: 0 0 4px ${SURFACE}; transition: opacity 160ms; }
 .rp-map3d-edge-label { position: absolute; top: 0; left: 0; white-space: nowrap;
   font-size: 10.5px; font-weight: 600; color: #57503c;
   background: rgba(250, 249, 246, 0.85); padding: 1px 5px; border-radius: 4px; }
+/* The hover card - scouting information beside the node under the pointer.
+   Same translucent idiom as the panels, inert to the pointer, gone cleanly. */
+.rp-map3d-popup { position: absolute; left: 0; top: 0; width: max-content;
+  max-width: 15rem; padding: 10px 12px; border: 1px solid #e4e1d8;
+  border-radius: 10px; background: rgba(250, 249, 246, 0.88);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  will-change: transform; }
+.rp-map3d-popup-name { font-size: 13px; font-weight: 600; line-height: 1.3;
+  color: #26251f; }
+.rp-map3d-popup-meta { display: flex; align-items: center; gap: 6px;
+  margin-top: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+  text-transform: uppercase; }
+.rp-map3d-popup-dot { width: 8px; height: 8px; border-radius: 9999px;
+  flex-shrink: 0; }
+.rp-map3d-popup-counts { margin-top: 4px; font-size: 12px; color: #57544a; }
+.rp-map3d-popup-hint { margin-top: 6px; font-size: 11px; color: #8a8578; }
+/* Floating panels sit light over the scene: translucent surface with a
+   blurred backdrop so the map glows through, borders kept, no shadow. */
+.mm-legend, .mm-card {
+  background: rgba(250, 249, 246, 0.78);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .mm-legend, .mm-card, .rp-map3d-popup { background: rgba(250, 249, 246, 0.96); }
+}
 .mm-legend { position: absolute; top: 12px; left: 12px; display: flex;
   flex-direction: column; gap: 2px; max-height: calc(100% - 70px); overflow: auto;
-  background: rgba(250, 249, 246, 0.88); backdrop-filter: blur(4px);
   border: 1px solid #e4e1d8; border-radius: 10px; padding: 8px; }
 .mm-legend-title { font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
   color: #8a8578; text-transform: uppercase; padding: 0 6px 4px; }
@@ -183,9 +201,8 @@ const CSS = `
 .mm-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
 .mm-card { position: absolute; top: 12px; right: 12px; width: 330px;
   max-width: calc(100% - 24px); max-height: calc(100% - 24px); overflow: auto;
-  background: rgba(250, 249, 246, 0.96); backdrop-filter: blur(6px);
   border: 1px solid #e4e1d8; border-radius: 12px; padding: 14px 16px;
-  box-shadow: 0 6px 24px rgba(40, 36, 20, 0.12); outline: none; }
+  outline: none; }
 .mm-card:focus-visible { outline: 2px solid ${ACCENT}; }
 .mm-card h2 { margin: 0 24px 2px 0; font-size: 16px; line-height: 1.25; }
 .mm-card-tag { display: inline-block; font-size: 11px; font-weight: 600;
@@ -221,6 +238,9 @@ const CSS = `
   white-space: nowrap; }
 .mm-fallback { display: flex; align-items: center; justify-content: center;
   height: 100%; padding: 24px; text-align: center; color: #57544a; }
+@media (prefers-reduced-motion: reduce) {
+  .rp-map3d-territory { transition: none; }
+}
 @media (max-width: 720px) {
   .mm-legend { flex-direction: row; flex-wrap: nowrap; overflow-x: auto;
     max-width: calc(100% - 24px); max-height: none; align-items: center; }

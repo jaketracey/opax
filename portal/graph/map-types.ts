@@ -66,6 +66,15 @@ export function shortLabel(label: string): string {
   return label.length > 34 ? `${label.slice(0, 32)}…` : label
 }
 
+/** Dollars for labels and cards: $1.2b / $12.3m / $46k / $123. */
+export function formatMoney(value: number): string {
+  const v = Math.abs(value)
+  if (v >= 1e9) return `$${(value / 1e9).toFixed(1)}b`
+  if (v >= 1e6) return `$${(value / 1e6).toFixed(1)}m`
+  if (v >= 1e3) return `$${Math.round(value / 1e3)}k`
+  return `$${Math.round(value)}`
+}
+
 /**
  * Node radius. The money map sizes by dollars on a log scale ('resources'
  * measure): weight = dollars / 10,000 puts a $10k donor at ~7.5 and caps
