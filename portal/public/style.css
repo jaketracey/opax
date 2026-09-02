@@ -221,6 +221,11 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .mm-title { display: block; font: 600 1.0625rem/1.3 var(--serif); color: var(--ink); }
 .mm-link:hover .mm-title { color: var(--bronze-ink); }
 .mm-blurb { display: block; margin-top: 2px; font-size: 0.8125rem; line-height: 1.45; color: var(--ink-soft); }
+/* Report pictograms: bronze hairline glyph in its own column, title and blurb
+   hanging beside it. Links without a glyph (Explore, unknown slugs) keep the
+   plain block layout. */
+.mm-link:has(.mm-glyph) { display: grid; grid-template-columns: auto 1fr; column-gap: 0.7rem; align-items: start; }
+.mm-glyph { grid-row: 1 / span 2; width: 30px; height: 30px; margin-top: 3px; color: var(--bronze-ink); }
 .mm-note { margin: 0.7rem 0 0; font-size: 0.8125rem; color: var(--ink-faint); }
 @media (prefers-reduced-motion: no-preference) {
   .megamenu { animation: menu-in 160ms ease; }
@@ -783,11 +788,13 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .report-card:hover, .report-card:focus-visible { border-color: var(--line-strong); }
 .report-card:hover .card-title { text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px; }  /* mirrors the link treatment */
 .card-kicker { display: block; margin-bottom: 0.4rem; }
+.card-glyph { display: block; width: 28px; height: 28px; margin-bottom: 0.55rem; color: var(--bronze-ink); }
 .card-title { display: block; font: 600 1.25rem/1.3 var(--serif); margin-bottom: 0.35rem; }
 .card-blurb { display: block; color: var(--ink-soft); font-size: 0.875rem; margin-bottom: 0.5rem; }
 .card-meta { display: block; color: var(--ink-faint); font-size: 0.75rem; }
 
 #report-view h2 { font: 600 2rem/1.2 var(--serif); margin: 0.2rem 0 0.4rem; }
+.report-glyph { display: inline-block; width: 1.05em; height: 1.05em; vertical-align: -0.15em; margin-right: 0.4rem; color: var(--bronze-ink); }
 .report-blurb { font: 400 italic 1.125rem/1.5 var(--serif); color: var(--ink-soft); margin: 0 0 0.4rem; max-width: 62ch; }
 .report-meta { color: var(--ink-faint); font-size: 0.8125rem; margin: 0 0 1rem; }
 

@@ -943,9 +943,29 @@ let openNavMenu = null;
 let navMenuTimer = 0;
 const hoverFine = window.matchMedia("(hover: hover) and (pointer: fine)");
 
+// Report pictograms, keyed by slug: hairline line art on a 24-unit grid, the
+// same stroke and bronze as the house icons. The static menu markup in
+// index.html carries the same drawings; keep the two in step. Unknown slugs
+// get no glyph. First Nations is the continent (Country) with an open ring at
+// its heart: no sacred or ceremonial symbols, no dot-painting imitation.
+const REPORT_GLYPHS = {
+  climate: '<circle cx="12" cy="10" r="1.3"/><path d="M12 8.4C9.9 6.6 10.2 3.4 12 2 13.8 3.4 14.1 6.6 12 8.4Z"/><path d="M12 8.4C9.9 6.6 10.2 3.4 12 2 13.8 3.4 14.1 6.6 12 8.4Z" transform="rotate(120 12 10)"/><path d="M12 8.4C9.9 6.6 10.2 3.4 12 2 13.8 3.4 14.1 6.6 12 8.4Z" transform="rotate(240 12 10)"/><path d="M12 11.3V21M8.5 21h7"/>',
+  gambling: '<path d="M11 9V4.6a1.6 1.6 0 0 1 1.6-1.6h6.8A1.6 1.6 0 0 1 21 4.6v6.8a1.6 1.6 0 0 1-1.6 1.6H15"/><circle cx="13.9" cy="5.9" r=".7"/><circle cx="18.1" cy="10.1" r=".7"/><rect x="3" y="9" width="12" height="12" rx="1.6"/><circle cx="6.2" cy="12.2" r=".7"/><circle cx="9" cy="15" r=".7"/><circle cx="11.8" cy="17.8" r=".7"/>',
+  housing: '<path d="M3 11.2L12 3.2l9 8"/><path d="M5.2 9.3V21h13.6V9.3"/><path d="M10.94 14.87A1.9 1.9 0 1 1 13.06 14.87L13.5 18.5H10.5Z"/>',
+  immigration: '<rect x="5" y="2.5" width="14" height="19" rx="1.6"/><circle cx="12" cy="9.8" r="3.4"/><path d="M8.6 9.8h6.8"/><path d="M12 6.4c-2 1.9-2 4.9 0 6.8 2-1.9 2-4.9 0-6.8z"/><path d="M8.5 16.4h7M8.5 18.9h4"/>',
+  indigenous: '<path d="M16.3 3L17.9 5.6L19.6 8L21.3 10L21.4 11.8L20.3 14.6L19.7 16.4L18.1 17.4L15.4 16.8L14 15.3L10.8 13.2L7.4 14.3L4.7 15.1L3.4 14.5L3.4 12.6L2.6 10.3L3 8L4.7 7.1L6.8 6L8.2 4.4L10.2 4.5L10.8 3.3L12.4 3.1L13.3 4.6L14.6 5.5L15.7 4.6Z"/><path d="M17.3 18.6L18.9 18.7L18.4 20.4L17.6 19.7Z"/><circle cx="12.2" cy="9.8" r="1.7"/>',
+  media: '<path d="M17 8.5h4v9a2 2 0 0 1-4 0V4.5H3v13a2 2 0 0 0 2 2h14"/><path d="M6 7.5h4.6v3.6H6z"/><path d="M6 13.7h8M6 16.2h5.5"/>',
+};
+
+function reportGlyph(slug, cls) {
+  const d = REPORT_GLYPHS[slug];
+  if (!d) return "";
+  return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+}
+
 function reportsMenuHTML(list) {
   return list.map((r) => `
-    <a class="mm-link" href="#/reports/${esc(r.slug)}">
+    <a class="mm-link" href="#/reports/${esc(r.slug)}">${reportGlyph(r.slug, "mm-glyph")}
       <span class="mm-title">${esc(r.title)}</span>
       <span class="mm-blurb">${esc(r.blurb)}</span>
     </a>`).join("");
@@ -4182,7 +4202,7 @@ async function loadReportsList(manageFocus) {
     ...reportsIndex.map((r) => {
       const card = document.createElement("button");
       card.className = "report-card";
-      card.innerHTML = `<span class="card-title">${esc(r.title)}</span>
+      card.innerHTML = `${reportGlyph(r.slug, "card-glyph")}<span class="card-title">${esc(r.title)}</span>
         <span class="card-blurb">${esc(r.blurb)}</span>
         <span class="card-meta">Updated ${esc(fmtDate(r.updated || ""))}</span>`;
       card.addEventListener("click", () => { location.hash = `#/reports/${r.slug}`; });
@@ -4478,7 +4498,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   $("reports-list").hidden = true;
   const view = $("report-view");
   view.hidden = false;
-  $("report-title").textContent = report.title;
+  $("report-title").innerHTML = `${reportGlyph(slug, "report-glyph")}${esc(report.title)}`;
   $("report-blurb").textContent = report.blurb;
   $("report-meta").textContent =
     `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record · corpus v${corpusVersion()}`;
