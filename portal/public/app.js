@@ -2385,7 +2385,7 @@ async function renderPersonVotes(name, personId, sections) {
 }
 
 async function openSubject(kind, name, manageFocus) {
-  const key = `${kind}:${name}`;
+  let key = `${kind}:${name}`;
   if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
   currentSubjectKey = key;
   destroySubjectMap();
@@ -2399,6 +2399,16 @@ async function openSubject(kind, name, manageFocus) {
     const [, fits] = await Promise.all([loadMoneyData(), loadFits()]);
     if (currentSubjectKey !== key) return;
     const node = findMoneyNode(kind, name);
+    // An old spelling reaches the canonical entry: retitle to the canonical
+    // name so the totals below are never attributed to one of its aliases.
+    if (node && normName(node.label) !== normName(name)) {
+      const h = $("subject-title");
+      if (h) h.textContent = node.label;
+      history.replaceState(null, "", subjectHash(kind, node.label));
+      currentSubjectKey = `${kind}:${node.label}`;
+      key = currentSubjectKey;
+      setCrumbs([{ label: kind === "party" ? "Parties" : "Donors", href: `#/subject/${kind}` }, { label: node.label }]);
+    }
     const sections = $("subject-sections");
     const box = $("subject-infobox");
     if (!node) {
