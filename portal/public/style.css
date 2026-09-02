@@ -193,7 +193,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
    number — in the masthead's soft white. */
 /* Explicit box at the mark's own 176:132 ratio — `width: auto` lets some
    engines fall back to a default that squashes the continent. */
-.logo-mark { height: 78px; width: 104px; }
+.logo-mark { height: 78px; width: 86px; }
 .logo-mark .logo-land { fill: var(--bronze-bright); }
 .logo-mark .logo-star { fill: var(--on-navy-soft); }
 .logo-mark .logo-thread {
@@ -202,7 +202,10 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 }
 .logo:hover .logo-star { fill: var(--on-navy); }
 /* Quick search: one input, suggestions across speakers/topics/donors/reports. */
-.mast-search { position: relative; flex: 0 1 300px; margin-left: auto; }
+/* The masthead stretches so the nav can sit on its bottom edge; these two
+   must not stretch with it, or the search icon loses the input's centre. */
+.mast-search { position: relative; flex: 0 1 300px; margin-left: auto; align-self: center; }
+.nav-toggle { align-self: center; }
 .mast-search input[type="text"] {
   width: 100%; min-height: 40px; padding: 0 0.9rem 0 2.3rem;
   background: rgba(255, 255, 255, 0.09); border: 1px solid rgba(255, 255, 255, 0.18);
@@ -1192,6 +1195,9 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 }
 .action-btn.action-gold:hover { background: var(--bronze-ink); border-color: var(--bronze-ink); color: #FFF; }
 .action-btn.action-gold .btn-icon { color: currentColor; }
+/* A compact button for inline rows such as the news pivots. */
+.action-btn.action-small { padding: 0.3rem 0.65rem; font-size: 0.8125rem; min-height: 0; }
+.news-pivots { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: var(--space-3); }
 /* The map's caption and its way in sit on one line, the button to the right. */
 .front-map-foot { display: flex; align-items: flex-end; gap: 1.4rem; margin-top: var(--space-3); }
 .front-map-foot .fineprint { margin: 0; flex: 1 1 auto; }
@@ -1622,7 +1628,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 /* Mid widths: the nav needs the room the tagline occupies. */
 @media (max-width: 1099px) {
   .mast-search { flex-basis: 220px; }
-  .logo-mark { height: 64px; width: 85px; }
+  .logo-mark { height: 64px; width: 70px; }
 }
 
 /* Compact band: hamburger + drawer replace the inline nav. */
@@ -1630,7 +1636,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   header { padding: 0.35rem 0; }
   .masthead-nav, .mast-search { display: none; }
   .nav-toggle { display: inline-flex; }
-  .logo-mark { height: 46px; width: 61px; }
+  .logo-mark { height: 46px; width: 51px; }
   .masthead, .masthead-id { display: flex; align-items: center; }
   .masthead-id { margin: 0; max-width: none; }
 }

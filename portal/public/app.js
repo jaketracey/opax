@@ -3765,6 +3765,44 @@ function relTime(iso) {
   return fmtDate(iso.slice(0, 10));
 }
 
+// A news headline is not a parliamentary phrase, so passing it to search finds
+// nothing. These keywords map a headline onto the taxonomy the corpus is
+// labelled with; the pivot then asks about a subject parliament debates.
+const NEWS_TOPIC_HINTS = [
+  ["housing", ["housing", "rent", "renter", "mortgage", "homeless", "home buyer", "negative gearing"]],
+  ["health", ["health", "hospital", "medicare", "doctor", "nurse", "ambulance", "aged care", "ndis", "vaccine", "mental health"]],
+  ["education", ["school", "student", "university", "teacher", "childcare", "child care", "hecs", "curriculum"]],
+  ["immigration", ["immigration", "migrant", "migration", "visa", "asylum", "refugee", "border"]],
+  ["climate-environment", ["climate", "emission", "renewable", "solar", "coal", "gas", "environment", "bushfire", "flood", "drought", "water"]],
+  ["mining-energy", ["mining", "mine", "energy", "electricity", "power price", "petrol", "fuel", "nuclear"]],
+  ["tax-budget", ["tax", "budget", "deficit", "surplus", "treasury", "inflation", "interest rate", "cost of living"]],
+  ["welfare-social", ["welfare", "centrelink", "pension", "jobseeker", "disability", "poverty", "payment"]],
+  ["justice-law", ["police", "court", "crime", "prison", "sentencing", "assault", "shooting", "murder", "bail", "domestic violence"]],
+  ["integrity-democracy", ["corruption", "integrity", "icac", "donation", "lobbying", "electoral", "election", "poll", "referendum"]],
+  ["defence-security", ["defence", "military", "adf", "army", "navy", "war", "aukus", "submarine", "veteran", "security"]],
+  ["foreign-affairs", ["foreign", "china", "united states", "ukraine", "israel", "gaza", "pacific", "indonesia", "trade deal", "diplomat"]],
+  ["indigenous-affairs", ["indigenous", "first nations", "aboriginal", "closing the gap", "native title", "uluru", "voice to parliament"]],
+  ["unions-workplace", ["union", "worker", "wage", "workplace", "industrial", "strike", "employment", "jobs"]],
+  ["media-communications", ["media", "broadcast", "abc", "news corp", "social media", "privacy", "tech giant", "internet", "telecommunications"]],
+  ["infrastructure-transport", ["transport", "road", "rail", "airport", "airline", "infrastructure", "nbn", "traffic"]],
+  ["agriculture", ["farm", "farmer", "agriculture", "livestock", "fisheries", "biosecurity"]],
+  ["gambling", ["gambling", "poker machine", "pokies", "wagering", "betting", "casino"]],
+  ["hospitality-alcohol", ["alcohol", "pub", "hotel", "hospitality", "tobacco", "vaping"]],
+  ["financial-services", ["bank", "banking", "superannuation", "insurance", "financial"]],
+  ["property-construction", ["construction", "builder", "developer", "property", "planning"]],
+];
+
+/** The topic slug a headline is about, or null when nothing matches cleanly. */
+function newsTopicSlug(headline) {
+  const h = ` ${String(headline || "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ")} `;
+  let best = null, bestHits = 0;
+  for (const [slug, words] of NEWS_TOPIC_HINTS) {
+    const hits = words.reduce((n, w) => n + (h.includes(` ${w}`) ? 1 : 0), 0);
+    if (hits > bestHits) { bestHits = hits; best = slug; }
+  }
+  return bestHits > 0 ? best : null;
+}
+
 async function renderFrontNews() {
   const holder = $("front-news");
   try {
@@ -3773,10 +3811,14 @@ async function renderFrontNews() {
     if (!items.length) { $("mod-news").hidden = true; return; }
     const srcName = { ABC: "ABC News", Guardian: "The Guardian" };
     holder.innerHTML = `<ol class="news-list" role="list">${items.map((i) => {
-      const topic = String(i.topic || "").trim();
-      const pivots = topic ? `<span class="news-pivots">
-          <a href="${esc(askHash(`What has parliament said about ${topic}?`))}">What does the record say?</a>
-          <a href="${esc(searchHash(topic, {}))}">Search the speeches</a>
+      // Ask and search the SUBJECT, not the headline: a labelled topic when the
+      // headline names one, otherwise the two strongest words it left behind.
+      const slug = newsTopicSlug(i.title);
+      const subject = slug ? TOPICS[slug]
+        : String(i.topic || "").trim().split(/\s+/).slice(0, 2).join(" ");
+      const pivots = subject ? `<span class="news-pivots">
+          <a class="action-btn action-small" href="${esc(askHash(`What has parliament said about ${subject.toLowerCase()}?`))}">What does the record say?</a>
+          <a class="action-btn action-small" href="${esc(slug ? searchHash(subject, { topic: slug }) : searchHash(subject, {}))}">Search the speeches</a>
         </span>` : "";
       const when = relTime(i.published);
       return `<li>
