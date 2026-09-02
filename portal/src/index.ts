@@ -286,12 +286,45 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
   const filters = filterExpression({ kind: kind ?? 'speech', speaker, party, state, topic, from, to })
   if (filters) body.filter_expression = filters
 
-  const res = await kbFetch(env, '/ask', { body, headers: { 'x-synchronous': 'true' } })
-  if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
-  const answer = (await res.json()) as {
+  // Filtered asks own their prompt. The platform default's fallback line
+  // ("Not enough data to answer this.") fires on any mixed context even after
+  // guidance turns (measured: 2 in 3 refusals on 8/20 on-topic passages, still
+  // 1 in 5 with stronger guidance). A custom template states the retrieval
+  // contract plainly and reserves the refusal for a truly empty record.
+  if (filtered) {
+    body.prompt = {
+      system:
+        'You are OPAX, a research assistant over the Australian parliamentary record. You answer strictly from the passages provided, citing them. You never invent facts.',
+      user:
+        'Passages from the record (each is a speech by the named speaker; first-person text is their own words):\n{context}\n\n' +
+        'Question: {question}\n\n' +
+        'Instructions: Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
+        'Ignore passages that are off-topic. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
+        'Only if NO passage mentions the subject at all, reply exactly: The record retrieved for this question does not discuss it.',
+    }
+  }
+
+  type AskAnswer = {
     answer?: string
     citations?: Record<string, unknown>
     retrieval_results?: { resources?: Record<string, FindResource> }
+  }
+  const askOnce = async (): Promise<AskAnswer | Response> => {
+    const res = await kbFetch(env, '/ask', { body, headers: { 'x-synchronous': 'true' } })
+    if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
+    return (await res.json()) as AskAnswer
+  }
+  const isRefusal = (a: AskAnswer): boolean => {
+    const t = (a.answer ?? '').trim().toLowerCase()
+    return !t || t.startsWith('not enough data') || t.startsWith('the record retrieved for this question does not discuss')
+  }
+  let answer = await askOnce()
+  if (answer instanceof Response) return answer
+  // A refusal or empty answer over a healthy retrieval (5+ resources) is a
+  // generation stumble, not a corpus verdict: one silent retry, like the UI.
+  if (isRefusal(answer) && Object.keys(answer.retrieval_results?.resources ?? {}).length >= 5) {
+    const again = await askOnce()
+    if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
 
   // Citation keys are ARAG paragraph ids ("<rid>/f/<field>/..."); the leading
