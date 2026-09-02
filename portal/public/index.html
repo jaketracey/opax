@@ -418,10 +418,15 @@
 
     <!-- ============================ MONEY MAP ========================== -->
     <section id="panel-money" class="panel" hidden aria-label="Money map">
+      <div class="money-chrome">
+        <span class="money-chrome-label" id="money-jur-label">Jurisdiction</span>
+        <div id="money-jur" class="money-jur" role="group" aria-labelledby="money-jur-label"></div>
+      </div>
       <div id="money-map-root" class="money-map-root"></div>
-      <p class="fineprint">AEC disclosure data: donations under the disclosure threshold are not
+      <p class="fineprint" id="money-fineprint">AEC disclosure data: donations under the disclosure threshold are not
       reported and cannot appear here, so totals are a floor, not a ceiling. Public electoral
-      funding and internal party transfers are excluded.
+      funding and internal party transfers are excluded. State and federal returns are not summed:
+      AEC returns already include state branch receipts.
       <a href="/graph/money.json">Download the data</a> · <a href="/map">Full-screen map</a></p>
     </section>
 

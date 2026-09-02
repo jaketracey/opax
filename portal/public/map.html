@@ -43,7 +43,20 @@
       // Embed testbed: /map.html?focus=party:Labor&chrome=mini exercises the
       // options subject pages use.
       const params = new URLSearchParams(location.search)
-      await mountMoneyMap(container, '/graph/money.json', {
+      // ?jur=qld|vic loads a state commission export (same shape as the
+      // federal file; the two are never summed - see docs/DATA-MONEY.md).
+      const STATE_FILES = {
+        qld: ['/graph/money.qld.json', 'Electoral Commission of Queensland gifts register'],
+        vic: ['/graph/money.vic.json', 'Victorian Electoral Commission disclosures'],
+      }
+      const state = STATE_FILES[params.get('jur')]
+      if (state) {
+        document.querySelector('header p').textContent =
+          'Who funds state politics: the top disclosed donors and the parties they gave to, from the ' +
+          state[1] + '. Colour and territory are the donor\'s industry; size is disclosed dollars. ' +
+          'Gifts under the disclosure threshold are not reported; state and federal returns are not summed.'
+      }
+      await mountMoneyMap(container, state ? state[0] : '/graph/money.json', {
         focus: params.get('focus') || undefined,
         chrome: params.get('chrome') === 'mini' ? 'mini' : undefined,
         onSelect: (node) => console.log('[money-map] user selected:', node && node.id),

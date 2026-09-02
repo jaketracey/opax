@@ -191,13 +191,14 @@ Lobbyists
 Per MIGRATION-ARAG.md, structured money stays out of the KB; the portal reads static JSON
 under `portal/public/graph/`. Proposed additions, in value order:
 
-1. **Money map by jurisdiction.** Generalise `scripts/export_money_graph.py` with
-   `--jurisdiction {federal,qld,vic,wa}` reading `ext_donations` for the states (same
-   exclusions; `recipient_party` -> party nodes; `norm_key` on donors; drop `compulsory party
-   levy`), writing `graph/money.qld.json` etc. with the **same node/edge shape** and a
-   `meta.jurisdiction` + `meta.licence` block. The map gets a jurisdiction selector beside
-   the industry chips; files are separate on purpose (no cross-jurisdiction sums, see §3).
-   WA stays behind the licence gate: generate it but do not ship until WAEC use is cleared.
+1. **Money map by jurisdiction. Shipped 2026-09-02 (QLD, VIC); see §4.1.**
+   `scripts/export_state_money.py {qld|vic|wa}` reads `ext_donations` with the federal
+   export's rules (`recipient_party` -> party nodes; `norm_key` on donors; public funding and
+   party-internal exclusions) and writes `graph/money.qld.json` / `money.vic.json` in the
+   **same node/edge shape** plus a `meta` block (`jurisdiction, commission, sourceShort,
+   licence, coverage, threshold, not_summed`). Files are separate on purpose (no
+   cross-jurisdiction sums, see §3). WA stays behind the licence gate: the script refuses
+   `wa` without `--gated`, and nothing WA is served.
 2. **Expenses on person pages** (`#/subject/person/{name}`). Export
    `graph/expenses/index.json` (per member: latest four quarters, lifetime total, rank) and
    `graph/expenses/{slug}.json` (quarter x category totals, top descriptions, member vs
@@ -222,6 +223,50 @@ under `portal/public/graph/`. Proposed additions, in value order:
    processing on the platform; cost it from the step-4 sample before enabling. Donations,
    expenses and registers should **not** go into the KB -- they are tables.
 
+### 4.1 State donations on the portal (shipped 2026-09-02)
+
+Files (`portal/public/graph/`, static, committed):
+
+| File | Size | Rows used | Donors | Parties | Edges | Top donors |
+|---|---:|---:|---:|---:|---:|---|
+| `money.qld.json` | ~98 KB | 22,703 gifts to parties (of 23,618) | 250 | 10 | 369 | Mineralogy $3.78m; Duncan Turpie $1.33m; United Voice QLD $829k; J.J. Richards & Sons $794k; CEPU Electrical Division QLD/NT $781k; CPSU PSU Group $768k; United Workers Union $745k; AWU QLD $643k; AMWU $497k; Pharmacy Guild QLD $430k |
+| `money.vic.json` | ~82 KB | 3,416 donations to parties (of 4,237) | 250 | 11 | 291 | Jason McClintock $110k; Malik Zaveer $70k; Darren Natale $55k; Lucas Moon $48k; Peter Walsh $48k; Louise Staley $47k; Tim Read $42k; Matt Fregon $40k; Richard Welch $38k; Victorian Automotive Chamber of Commerce $24k |
+| `money.wa.json` | not generated for the portal | | | | | **WA is excluded from public exposure**: WAEC asserts full Crown copyright with no open licence. `export_state_money.py wa --gated` produces a research copy outside `portal/public`. |
+
+Rules on top of the federal export: gifts to candidates, committees and third parties
+are out (no `recipient_party`); the other/NULL-industry floor is per jurisdiction (QLD
+$100k, VIC $10k, WA $50k; the federal $5m would empty a state file); VIC `loan` rows and WA
+`compulsory party levy` rows are dropped as not-gifts. QLD keeps every gift and reports the
+`is_political_donation` split in `meta.political_donation_flag` (the flag only exists from
+2022-23: 2,449 flagged political donations, 5,123 gifts the Act does not class as political
+donations, 15,131 unflagged older rows). VIC's top disclosed donors are mostly individuals
+and many are sitting MPs paying their own party (the register does not tag these the way WA
+tags its levy); they are shown as disclosed.
+
+Where it appears:
+
+- `#/money` gets a Jurisdiction switch (Federal, Queensland, Victoria) above the map; the
+  choice deep-links as `#/money?jur=qld` and defaults to Federal. Switching destroys and
+  remounts the 3D map on the matching file; the ask and search triggers on the cards are
+  unchanged. `/map?jur=qld` does the same on the full-screen page. The map hint reads
+  `meta.sourceShort` ("ECQ gifts register 2012-13 to 2026-27") instead of "AEC returns".
+- The Ledger (`ledger.js`) has the same switch; filters survive a switch only if the new
+  file offers the same industry/party. The fineprint, the Raw data link and the CSV comment
+  header are built from the loaded file's `meta` (commission, coverage, threshold, licence).
+- Donor pages (`#/subject/donor/...`) get "Also disclosed to state commissions": one row per
+  state file the donor appears in (jurisdiction, total, gift count, years, recipient parties)
+  linking to that jurisdiction's map; exact match after `normName` (case and company
+  suffixes), so "Mineralogy" (AEC) and "Mineralogy Pty Ltd" (ECQ) meet, spelling variants do
+  not. Also rendered for donors outside the federal top 250.
+- **Money & Words and Words per dollar stay federal.** They pair AEC industry totals with
+  the speech index; adding state files would require a per-jurisdiction words series and
+  would invite the sum the fineprint forbids. Left as-is on purpose.
+
+Fineprint everywhere (map panel, ledger, donor section, CSV header) names the commission
+as source, states the disclosure-threshold floor ("totals are a floor, not a ceiling") and
+carries: *State and federal returns are not summed: AEC returns already include state
+branch receipts.*
+
 ## 5. Runbook
 
 `uv run` fails on this Mac (the lock pins a CUDA torch wheel), so use the worktree venv
@@ -237,6 +282,7 @@ once, then `PYTHONPATH=. .venv/bin/python -m parli.ingest.<module>`. Writers def
 | QLD diaries | `money_diaries --jurisdiction qld` (current govt; `--period 2020-2024` for former) | monthly |
 | Lobbyists | `money_lobbyists` (all six, ~25 min; `--jurisdiction qld` alone for the contact log) | monthly |
 | Classification | `money_classify --report` after any donation load | with donations |
+| State money maps | `ssh desktop python3 - qld < scripts/export_state_money.py > portal/public/graph/money.qld.json` (and `vic`); then from `portal/`: `node graph/smoke-test.mjs` | after a state donation load |
 
 Run-time 2026-09-02 (laptop, polite delays): donations ~5 min, IPEA ~35 min (37 CSV
 downloads), NSW diaries ~40 min (633 PDFs), QLD diaries ~25 min (611 PDFs), lobbyists

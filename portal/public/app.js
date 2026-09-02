@@ -1497,6 +1497,87 @@ function subjectHash(kind, label) {
   return `#/subject/${kind}/${encodeURIComponent(label)}`;
 }
 
+// Declared interests on person pages: the registers of members' interests
+// (House 48th, QLD 58th, a Senate sample) exported by scripts/export_interests.py
+// as /interests/index.json plus one file per person. Facts with a link to the
+// page of the source PDF, never the statement re-rendered (aph.gov.au is
+// CC BY-NC-ND). Federal people are keyed by the portrait id; QLD and unmatched
+// members by a name slug the index resolves. The slot is placed synchronously
+// so the section keeps its position however long the fetches take.
+async function renderPersonInterests(name, personId, sections) {
+  const key = currentSubjectKey;
+  const slot = document.createElement("div");
+  slot.id = "subject-interests";
+  sections.appendChild(slot);
+  const getJSON = (url) => fetch(url).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  renderPersonInterests.index ??= getJSON("/interests/index.json");
+  const [index] = await Promise.all([renderPersonInterests.index, loadPhotoMap()]);
+  if (currentSubjectKey !== key) return;
+  const lname = String(name || "").trim().toLowerCase();
+  const pid = personId || photoMap?.[lname] || null;
+  const id = pid && index?.people?.[pid] ? pid : index?._by_name?.[lname];
+  if (!id || !/^[\w-]+$/.test(id)) { slot.remove(); return; }
+  const data = await getJSON(`/interests/${encodeURIComponent(id)}.json`);
+  if (currentSubjectKey !== key) return;
+  if (!data?.total || !data.buckets) { slot.remove(); return; }
+
+  const LABELS = {
+    shareholdings: "Shareholdings", real_estate: "Real estate", trusts: "Trusts",
+    directorships: "Directorships", gifts: "Gifts", travel: "Sponsored travel and hospitality",
+    memberships: "Memberships and offices", liabilities: "Liabilities",
+    other: "Other (savings, income, assets, partnerships)",
+  };
+  const HOLDER = { self: "Self", spouse: "Spouse", children: "Dependent" };
+  const REGISTER = {
+    house: "Register of Members' Interests", senate: "Register of Senators' Interests",
+    qld_la: "Queensland Register of Members' Interests",
+  };
+  const ordinal = (n) => `${n}${["th", "st", "nd", "rd"][(n % 100 > 10 && n % 100 < 14) ? 0 : (n % 10 < 4 ? n % 10 : 0)]}`;
+  const num = (n) => (Number(n) || 0).toLocaleString();
+  const base = safeUrl(data.source_url);
+  const buckets = Object.keys(LABELS).filter((b) => data.buckets[b]?.count > 0);
+  const hasHolders = buckets.some((b) => (data.buckets[b].items || []).some((it) => HOLDER[it.holder]));
+
+  const itemHTML = (it) => {
+    const src = safeUrl(it.url) || base;
+    const meta = [
+      it.kind === "addition" ? `added ${esc(fmtDate(it.date) || "later")}` : "",
+      it.kind === "deletion" ? `deleted ${esc(fmtDate(it.date) || "later")}` : "",
+      it.ocr ? "machine-read from a scan" : "",
+      src ? `<a href="${esc(it.page ? `${src}#page=${Number(it.page) || 1}` : src)}" rel="noopener" target="_blank">${it.page ? `page ${esc(String(Number(it.page)))}` : "source"} ↗</a>` : "",
+    ].filter(Boolean).join(" · ");
+    return `<li class="interests-item${it.kind === "deletion" ? " interests-deleted" : ""}">
+      ${hasHolders ? `<span class="interests-holder">${esc(HOLDER[it.holder] || "")}</span>` : ""}
+      <span class="interests-desc">${esc(it.description || "")}</span>
+      ${meta ? `<span class="result-meta">${meta}</span>` : ""}</li>`;
+  };
+  const rows = buckets.map((b) => {
+    const { count, items = [] } = data.buckets[b];
+    return `<li><details class="chat-sources interests-bucket">
+      <summary>${esc(LABELS[b])}<span class="interests-count">${num(count)}</span></summary>
+      <ol class="source-list interests-items${hasHolders ? " interests-holders" : ""}">${items.map(itemHTML).join("")}</ol>
+      ${count > items.length ? `<p class="fineprint">Showing ${num(items.length)} of ${num(count)} entries; the full list is in the register.</p>` : ""}
+    </details></li>`;
+  }).join("");
+
+  const added = Number(data.alterations?.added) || 0;
+  const deleted = Number(data.alterations?.deleted) || 0;
+  const since = data.statement_date ? `since the statement of ${esc(fmtDate(data.statement_date))}` : "since the statement";
+  const alterations = added || deleted
+    ? `+${num(added)} addition${added === 1 ? "" : "s"}, -${num(deleted)} deletion${deleted === 1 ? "" : "s"} ${since}`
+    : `no alterations notified ${since}`;
+  const register = `${REGISTER[data.chamber] || "Register of interests"}${data.parliament ? `, ${ordinal(Number(data.parliament))} Parliament` : ""}${data.as_at ? `, as at ${esc(fmtDate(data.as_at))}` : ""}`;
+  slot.innerHTML = `
+    <p class="kicker">Declared interests</p>
+    <p class="interests-summary"><b>${num(data.total)}</b> ${data.total === 1 ? "entry" : "entries"} across ${num(buckets.length)} ${buckets.length === 1 ? "category" : "categories"} · ${alterations}</p>
+    <ul class="subject-list interests-list" role="list">${rows}</ul>
+    <p class="fineprint">${esc(register)}; entries as declared, not verified by OPAX. One entry is one cell of the form, so a list typed in one cell counts once.${base ? ` <a href="${esc(base)}" rel="noopener" target="_blank">Open the register entry ↗</a>` : ""}</p>
+    ${data.ocr_rows > 0 ? `<p class="fineprint">${num(data.ocr_rows)} ${data.ocr_rows === 1 ? "entry comes" : "entries come"} from scanned pages and may contain recognition errors.</p>` : ""}
+    ${data.unread_pages > 0 ? `<p class="fineprint">${num(data.unread_pages)} ${data.unread_pages === 1 ? "page" : "pages"} of the source could not be read by machine; the register itself is complete.</p>` : ""}`;
+  $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
+    `<dt>Declared interests</dt><dd>${num(data.total)} ${data.total === 1 ? "entry" : "entries"}</dd>`);
+}
+
 function normName(x) {
   return String(x || "").toLowerCase().replace(/[^a-z0-9]+/g, " ")
     .replace(/\b(pty|ltd|limited|the|inc|co|holdings)\b/g, "").replace(/\s+/g, " ").trim();
@@ -1614,6 +1695,53 @@ function weeklyFunFact(node) {
     ${years} year${years > 1 ? "s" : ""}, all from published AEC disclosures.`;
 }
 
+/**
+ * "Also disclosed to state commissions" on a donor page: one hairline row per
+ * state file the donor appears in (exact match after normalising case and
+ * company suffixes), linking to that jurisdiction's map. A placeholder keeps
+ * the section's place under the money flows while the files load. State and
+ * federal figures sit side by side and are never added together.
+ */
+async function renderDonorStateMoney(name, sections) {
+  const key = currentSubjectKey;
+  const slot = document.createElement("div");
+  slot.className = "state-money";
+  sections.appendChild(slot);
+  const jurs = Object.keys(MONEY_JURISDICTIONS).filter((j) => j !== "federal");
+  const files = await Promise.all(jurs.map((j) => loadMoneyFile(j)));
+  if (currentSubjectKey !== key) return;
+  const nn = normName(name);
+  const hits = [];
+  jurs.forEach((jur, i) => {
+    const data = files[i];
+    if (!data?.nodes || !nn) return;
+    const node = data.nodes.find((n) => n.kind === "donor" && normName(n.label) === nn);
+    if (!node) return;
+    const parties = (data.edges || []).filter((e) => e.source === node.id)
+      .sort((a, b) => (b.total || 0) - (a.total || 0))
+      .map((e) => String(e.target).replace(/^party:/, ""));
+    hits.push({ jur, node, meta: data.meta || {}, parties });
+  });
+  if (!hits.length) { slot.remove(); return; }
+  const items = hits.map(({ jur, node, meta, parties }) => {
+    const years = node.firstYear === node.lastYear ? String(node.firstYear) : `${node.firstYear}–${node.lastYear}`;
+    const detail = [
+      `${fmtMoney(node.total || 0)} across ${(node.count || 0).toLocaleString()} disclosed gifts`,
+      years,
+      meta.sourceShort || "",
+      parties.length ? `to ${parties.join(", ")}` : "",
+    ].filter(Boolean).join(" · ");
+    return `<li><a class="source-title" href="${esc(moneyHash(jur))}">${esc(meta.jurisdictionLabel || MONEY_JURISDICTIONS[jur].label)}</a>
+      <span class="result-meta">${esc(detail)}</span></li>`;
+  }).join("");
+  const commissions = [...new Set(hits.map((h) => h.meta.commission).filter(Boolean))];
+  slot.innerHTML = `
+    <p class="kicker">Also disclosed to state commissions</p>
+    <ul class="subject-list" role="list">${items}</ul>
+    <p class="fineprint">Source: ${esc(commissions.join("; "))}. Gifts under each state's disclosure
+      threshold are not reported, so these totals are a floor, not a ceiling. ${esc(STATE_NOT_SUMMED)}</p>`;
+}
+
 // --- parliamentary expenses (IPEA) ------------------------------------------
 // Per-person totals, category split, per-year series and the five largest
 // lines, exported by scripts/export_expenses.py from the IPEA quarterly
@@ -1665,6 +1793,156 @@ async function renderPersonExpenses(name, personId, sections) {
     <p class="fineprint">${esc(IPEA_NOTE)}${src ? ` <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗</a>` : ""}</p>`);
   $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Claimed expenses</dt><dd><b>${esc(fmtMoney(e.total))}</b></dd>`);
+}
+
+// --- access: the money <-> access join ---------------------------------------
+// scripts/export_access.py joins the money map's 250 donors to the NSW and QLD
+// ministerial diary disclosures and the six lobbyist registers, and summarises
+// each minister's disclosed diary. One static file, fetched by the first donor
+// or minister page that needs it.
+
+let accessData = null;
+let accessPromise = null;
+const ACCESS_JUR = { federal: "Federal", nsw: "NSW", qld: "QLD", vic: "VIC", sa: "SA", wa: "WA" };
+
+/** Donor page "Access": the ministers who met them and the lobbyists registered
+ *  to act for them. A placeholder keeps the section's place while access.json
+ *  loads; a donor that matches nothing gets no section at all. */
+async function renderDonorAccess(label, container) {
+  const key = currentSubjectKey;
+  container.insertAdjacentHTML("beforeend", `<div id="subject-access"></div>`);
+  accessPromise ??= fetch("/access.json").then((r) => (r.ok ? r.json() : null)).then((d) => (accessData = d)).catch(() => null);
+  const acc = await accessPromise;
+  if (currentSubjectKey !== key) return;
+  const slot = $("subject-access");
+  if (!slot) return;
+  const d = acc?.donors?.[label];
+  if (!d) { slot.remove(); return; }
+  const jur = (j) => ACCESS_JUR[j] || String(j || "").toUpperCase();
+  const meta = (safeText) => `<span style="color:var(--ink-faint);font-size:0.8125rem"> · ${safeText}</span>`;
+  const meetings = d.meetings || [];
+  const firms = d.lobbyists || [];
+  const total = d.meetings_total || 0;
+  const kicker = meetings.length && firms.length ? "Who they met and who lobbies for them"
+    : meetings.length ? "Who they met" : "Who lobbies for them";
+  let html = `<p class="kicker">${esc(kicker)}</p>`;
+  if (meetings.length) {
+    html += `<ul class="subject-list" role="list">${meetings.map((m) => `
+      <li>${m.page
+        ? `<a class="source-title" href="${esc(subjectHash("person", m.page))}">${esc(m.minister)}</a>`
+        : `<span class="source-title">${esc(m.minister)}</span>`}${meta(esc(jur(m.jurisdiction)) + (m.date ? ` · ${esc(fmtDate(m.date))}` : ""))}
+        ${m.purpose ? `<p class="snippet" style="margin-top:0.15rem">${esc(m.purpose)}</p>` : ""}</li>`).join("")}</ul>
+      <p class="fineprint" style="margin-top:0.5rem"><b>${total.toLocaleString()}</b> disclosed meeting${total === 1 ? "" : "s"}${total > meetings.length ? `, newest ${meetings.length} shown` : ""}.</p>`;
+  }
+  if (firms.length) {
+    html += `<p class="kicker" style="margin-top:1.1rem">Registered lobbying client of</p>
+      <ul class="subject-list" role="list">${firms.map((f) => `
+      <li><span class="source-title">${esc(f.firm)}</span>${meta(esc(f.jurisdiction) + (f.registered ? ` · from ${esc(fmtDate(f.registered))}` : "") + (f.ceased ? " · ceased" : ""))}</li>`).join("")}</ul>
+      ${(d.lobbyists_total || 0) > firms.length ? `<p class="fineprint" style="margin-top:0.5rem">${d.lobbyists_total} registered firms, ${firms.length} shown.</p>` : ""}`;
+  }
+  html += `<p class="fineprint">From NSW and QLD ministerial diary disclosures and the six lobbyist registers;
+    name matching is exact after normalisation, so a company using several trading names may be under-counted.</p>`;
+  slot.innerHTML = html;
+}
+
+/** Person page "Ministerial diary" for NSW and QLD ministers in access.json.
+ *  Bare-surname keys (QLD Hansard speakers) and alias hits only count when the
+ *  page's chamber matches the diary's jurisdiction, so a namesake in another
+ *  parliament never inherits a minister's meetings. */
+async function renderPersonDiary(name, container, chambers) {
+  const key = currentSubjectKey;
+  container.insertAdjacentHTML("beforeend", `<div id="subject-diary"></div>`);
+  accessPromise ??= fetch("/access.json").then((r) => (r.ok ? r.json() : null)).then((d) => (accessData = d)).catch(() => null);
+  const acc = await accessPromise;
+  if (currentSubjectKey !== key) return;
+  const slot = $("subject-diary");
+  if (!slot) return;
+  const nn = normName(name);
+  const mkey = acc?.ministers?.[nn] ? nn : acc?.aliases?.[nn];
+  const m = mkey ? acc.ministers[mkey] : null;
+  const states = (chambers || []).map((c) => String(c).toLowerCase());
+  if (!m || ((m.surname_key || mkey !== nn) && !states.includes(m.jurisdiction))) { slot.remove(); return; }
+  await loadMoneyData();
+  if (currentSubjectKey !== key) return;
+  const linkTo = (org) => {
+    const node = findMoneyNode("donor", org);
+    return node && normName(node.label) === normName(org) ? subjectHash("donor", node.label) : searchHash(`"${org}"`, {});
+  };
+  const recent = (m.recent || []).map((r) => `
+    <li><span class="source-title">${esc(r.org)}</span><span style="color:var(--ink-faint);font-size:0.8125rem"> · ${esc(fmtDate(r.date))}</span>
+      ${r.purpose ? `<p class="snippet" style="margin-top:0.15rem">${esc(r.purpose)}</p>` : ""}</li>`).join("");
+  const scheme = m.jurisdiction === "qld"
+    ? `From the Queensland Government's monthly ministerial diary disclosures, published for ${esc(m.name)}.`
+    : "From the NSW Cabinet Office's quarterly ministers' diary disclosures. NSW diaries are published by office, so meetings are attributed to the minister holding that office on the date.";
+  slot.innerHTML = `
+    <p class="kicker">Ministerial diary</p>
+    <div class="tiles">
+      ${tile((m.meetings_total || 0).toLocaleString(), "disclosed meetings")}
+      ${tile((m.external_total || 0).toLocaleString(), "with people and organisations outside government")}
+    </div>
+    ${m.by_org?.length ? barList(m.by_org, { heading: "Most-met organisations", linkTo }) : ""}
+    ${recent ? `<p class="kicker" style="margin-top:1.1rem">Recent meetings</p><ul class="subject-list" role="list">${recent}</ul>` : ""}
+    <p class="fineprint">${scheme} Staff, cabinet, departmental and other government meetings are counted
+      but left out of the lists. Organisation names link to a donor's entry where the name matches an AEC donor
+      exactly, otherwise to the record.${m.latest_pdf ? ` <a href="${esc(safeUrl(m.latest_pdf) || "#")}" rel="noopener" target="_blank">Latest diary (PDF) ↗</a>` : ""}</p>`;
+}
+
+// --- voting record on person pages -------------------------------------------
+// Reads the static votes.json (scripts/export_votes.py): federal divisions via
+// TheyVoteForYou keyed by TVFY person id, state divisions from the Hansard
+// sample keyed "{jurisdiction}:{slug}", plus a `_names` index so a page with no
+// portrait id still finds its records. Lazy: fetched on first use, never at boot.
+
+/** "Voting record" section: counts, the bill questions backed and opposed (up to
+ *  six each, newest first, tagged by jurisdiction), and the provenance fineprint.
+ *  A placeholder holds the section's place while votes.json loads. */
+async function renderPersonVotes(name, personId, sections) {
+  const key = currentSubjectKey;
+  sections.insertAdjacentHTML("beforeend", `<div id="subject-votes"></div>`);
+  await Promise.all([loadPhotoMap(), loadVotes()]);
+  if (currentSubjectKey !== key) return;
+  const slot = $("subject-votes");
+  if (!slot) return;
+  const lname = String(name || "").trim().toLowerCase();
+  const keys = [...new Set([personId, photoMap?.[lname], ...(votesData?._names?.[lname] || [])].filter(Boolean))];
+  const recs = keys.map((k) => votesData?.[k]).filter((r) => r && typeof r === "object");
+  if (!recs.length) { slot.remove(); return; }
+  const sum = (field) => recs.reduce((a, r) => a + (Number(r[field]) || 0), 0);
+  const years = recs.flatMap((r) => (Array.isArray(r.years) ? r.years : [])).map(Number).filter(Number.isFinite);
+  const jurs = [...new Set(recs.map((r) => r.jurisdiction).filter(Boolean))];
+  const jurName = (j) => STATE_NAMES[j] || String(j || "").toUpperCase();
+  const jurChip = (j) => `<span class="party party-oth" style="--pc:var(--bronze)"><i aria-hidden="true"></i>${esc(jurName(j))}</span>`;
+  const side = (field) => recs
+    .flatMap((r) => (Array.isArray(r[field]) ? r[field] : []).map((d) => ({ ...d, jur: d.jur || r.jurisdiction })))
+    .sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 6);
+  const col = (label, rows) => rows.length ? `
+    <div>
+      <span class="ency-votes-label">${esc(label)}</span>
+      <ul class="ency-votes-list" role="list">${rows.map((d) => `
+        <li><span class="ency-bill">${esc(d.name)}</span>
+          <span class="ency-year">${d.stage ? `${esc(d.stage)} · ` : ""}${esc(String(d.date || "").slice(0, 4))} ${jurChip(d.jur)}</span></li>`).join("")}
+      </ul>
+    </div>` : "";
+  const forRows = side("for");
+  const againstRows = side("against");
+  const total = sum("divisions_total");
+  const span = years.length ? ` between ${esc(String(Math.min(...years)))} and ${esc(String(Math.max(...years)))}` : "";
+  const where = jurs.length ? ` in the ${esc(jurs.map(jurName).join(" and "))} parliament${jurs.length > 1 ? "s" : ""}` : "";
+  const federal = recs.some((r) => r.jurisdiction === "federal");
+  slot.innerHTML = `
+    <p class="kicker">Voting record</p>
+    <p style="margin:0.2rem 0 0.6rem">${esc(name)} is on the record in <b>${esc(total.toLocaleString())}</b>
+      division${total === 1 ? "" : "s"}${span}${where}: <b>${esc(sum("ayes").toLocaleString())}</b> ayes and
+      <b>${esc(sum("noes").toLocaleString())}</b> noes.</p>
+    ${forRows.length || againstRows.length
+      ? `<div class="ency-votes" style="grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:0.6rem 1.6rem">${col("Voted for", forRows)}${col("Voted against", againstRows)}</div>`
+      : `<p class="status" style="margin-top:0.2rem">None of their recorded divisions was a vote on a bill itself.</p>`}
+    <p class="fineprint">Only divisions (formal recorded votes) are counted. Most questions are decided on the voices and
+      leave no per-member record, so a bill missing here was not necessarily unvoted on. "Voted for" and "Voted against"
+      list divisions on the bill itself, a second or third reading or agreeing to the bill; amendments, gag motions and
+      other procedural votes are left out because an aye there says nothing about the bill. Sources: They Vote For You
+      (federal divisions, OpenAustralia Foundation, ODbL) and the NSW, Victorian and Queensland Hansard for state divisions.
+      ${federal ? `<a href="https://theyvoteforyou.org.au/search?query=${encodeURIComponent(name)}" rel="noopener" target="_blank">Their full record on They Vote For You ↗</a>` : ""}</p>`;
 }
 
 async function openSubject(kind, name, manageFocus) {
@@ -1737,6 +2015,7 @@ async function openSubject(kind, name, manageFocus) {
     sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
     if (!isParty) renderDonorStateMoney(node.label, sections);
+    renderDonorAccess(node.label, sections);
     await subjectMentions(node.label, sections, "In parliament");
     subjectNews(node.label, sections);
     mountSubjectMap(node.id);
@@ -1803,6 +2082,9 @@ async function openSubject(kind, name, manageFocus) {
       `<p class="status">No speeches by “${esc(name)}” in the indexed corpus yet. Names appear as in
        Hansard, and the record is still loading. <a href="${esc(searchHash(name, {}))}">Search the record instead</a>.</p>`);
   }
+  renderPersonInterests(name, null, sections);
+  renderPersonDiary(name, sections, chambers);
+  renderPersonVotes(name, photoMap?.[name.trim().toLowerCase()] ?? null, sections);
   await subjectNews(name, sections);
   await renderPersonExpenses(name, photoMap?.[name.trim().toLowerCase()], sections);
   if (party) {

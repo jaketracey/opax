@@ -688,6 +688,23 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   background: var(--paper-raised);
 }
 
+/* Jurisdiction switch above the map: one hairline segmented control, the
+   loaded file in navy. One file per jurisdiction, never summed. */
+.money-chrome { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin: 0 0 0.6rem; }
+.money-chrome-label {
+  color: var(--ink-faint); font: 600 0.6875rem/1 var(--sans);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.money-jur { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 2px; overflow: hidden; }
+.money-jur button {
+  font: 600 0.8125rem/1.2 var(--sans); color: var(--ink-soft); cursor: pointer;
+  background: var(--paper-raised); border: 0; padding: 0.45rem 0.9rem; min-height: 2.125rem;
+}
+.money-jur button + button { border-left: 1px solid var(--line-strong); }
+.money-jur button:hover { background: var(--bronze-wash); color: var(--ink); }
+.money-jur button[aria-pressed="true"] { background: var(--navy); color: var(--on-navy); }
+.money-jur button:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: -2px; }
+
 .search-results-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem 2.5rem; align-items: start; margin-top: 1.25rem; }
 @media (min-width: 1100px) {
   .search-results-grid { grid-template-columns: minmax(0, 1fr) 380px; }
@@ -1050,6 +1067,18 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .subject-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
 .subject-list li { border-top: 1px solid var(--line); padding: 0.7rem 0; }
 .subject-list li:first-child { border-top: none; }
+/* Declared interests (person pages): a hairline list of register buckets, each
+   a chat-sources disclosure with its count at the right; rows are
+   holder | declaration with the date and page link beneath. */
+.interests-summary { margin: 0.2rem 0 0.4rem; color: var(--ink-soft); font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
+.interests-list > li { padding: 0; }
+.interests-bucket > summary { display: flex; width: 100%; }
+.interests-count { margin-left: auto; color: var(--ink-faint); letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.interests-items { margin: 0 0 0.6rem; font-size: 0.9375rem; line-height: 1.45; }
+.interests-holders li { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); column-gap: 0.6rem; }
+.interests-holder { color: var(--ink-faint); font-size: 0.8125rem; padding-top: 0.1rem; }
+.interests-holders .result-meta { grid-column: 2; }
+.interests-deleted .interests-desc { text-decoration: line-through; color: var(--ink-faint); }
 .topic-digest { max-width: 68ch; }
 .topic-digest-item { border-top: 1px solid var(--line); padding: 0.85rem 0 0.9rem; }
 .topic-digest-item:first-of-type { border-top: none; padding-top: 0.1rem; }

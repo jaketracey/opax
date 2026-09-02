@@ -7,11 +7,16 @@
  *
  *   import { mountLedger } from '/ledger.js'
  *   const lg = mountLedger(container)   // renders into container
+ *   mountLedger(container, { jurisdiction: 'qld' })  // open on a state file
  *   lg.destroy()                        // removes DOM + aborts loads
  *
- * Data source (same-origin): GET /graph/money.json
+ * Data source (same-origin): GET /graph/money.json, or one state file per
+ * jurisdiction (/graph/money.qld.json, /graph/money.vic.json) in the same shape
  *   nodes: donors + parties (label, industry, colour, lifetime totals)
  *   edges: aggregated donor→party flows (total, count, firstYear, lastYear)
+ *   meta:  state files carry jurisdiction, commission, licence, threshold
+ * The jurisdiction switch loads ONE file at a time. State and federal returns
+ * are never summed: AEC returns already include state branch receipts.
  *
  * Two views over the same filtered set of flows:
  *   Flows    — one row per donor→party edge (573 rows max)
@@ -25,7 +30,13 @@
  * and the CSV header both carry that caveat.
  */
 
-const DATA_URL = '/graph/money.json'
+const JURISDICTIONS = {
+  federal: { label: 'Federal', file: '/graph/money.json' },
+  qld: { label: 'Queensland', file: '/graph/money.qld.json' },
+  vic: { label: 'Victoria', file: '/graph/money.vic.json' },
+}
+const NOT_SUMMED =
+  'State and federal returns are not summed: AEC returns already include state branch receipts.'
 const YEAR_MIN = 1998
 const YEAR_MAX = 2026
 const STYLE_ID = 'lg-styles'
@@ -269,16 +280,16 @@ const CSS = `
 .lg-yearrow span { color: var(--ink-faint, #6F7468); }
 
 .lg-views { display: flex; }
-.lg-view {
+.lg-view, .lg-jur {
   font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer;
   padding: 0.4rem 0.85rem; min-height: 2.125rem;
   background: var(--paper-raised, #FFFFFF); color: var(--ink-soft, #575C52);
   border: 1px solid var(--line-strong, #8D897B);
 }
-.lg-view + .lg-view { border-left: 0; }
-.lg-view:first-child { border-radius: 2px 0 0 2px; }
-.lg-view:last-child { border-radius: 0 2px 2px 0; }
-.lg-view[aria-pressed="true"] {
+.lg-view + .lg-view, .lg-jur + .lg-jur { border-left: 0; }
+.lg-view:first-child, .lg-jur:first-child { border-radius: 2px 0 0 2px; }
+.lg-view:last-child, .lg-jur:last-child { border-radius: 0 2px 2px 0; }
+.lg-view[aria-pressed="true"], .lg-jur[aria-pressed="true"] {
   background: var(--navy, #142A43); border-color: var(--navy, #142A43); color: #FFFFFF;
 }
 
@@ -408,10 +419,11 @@ function yearsText (r) {
 // mountLedger
 // ---------------------------------------------------------------------------
 
-export function mountLedger (container) {
+export function mountLedger (container, opts = {}) {
   injectStyles()
 
   const state = {
+    jur: JURISDICTIONS[opts.jurisdiction] ? opts.jurisdiction : 'federal',
     view: 'flows',                 // 'flows' | 'donors'
     q: '',
     industry: '',
@@ -426,7 +438,10 @@ export function mountLedger (container) {
   }
 
   let flows = []                   // joined edge rows, set once data lands
+  let meta = {}                    // the loaded file's meta block (state files describe themselves)
   let currentRows = []             // what the table shows now (for export)
+  let loadSeq = 0                  // a switch mid-load must not let the old file land
+  const cache = new Map()          // jurisdiction -> parsed export
   const aborter = new AbortController()
 
   // ---- static chrome (no data passes through this template) ---------------
@@ -434,6 +449,13 @@ export function mountLedger (container) {
   root.setAttribute('aria-label', 'The Ledger: disclosed donations, donor by donor')
   root.innerHTML = `
     <div class="lg-toolbar" role="group" aria-label="Ledger filters">
+      <div class="lg-field" role="group" aria-label="Jurisdiction">
+        <span class="lg-label" aria-hidden="true">Jurisdiction</span>
+        <div class="lg-views">
+          ${Object.entries(JURISDICTIONS).map(([k, j]) =>
+            `<button type="button" class="lg-jur" data-jur="${k}" aria-pressed="${k === state.jur ? 'true' : 'false'}">${j.label}</button>`).join('')}
+        </div>
+      </div>
       <div class="lg-field" role="group" aria-label="View">
         <span class="lg-label" aria-hidden="true">View</span>
         <div class="lg-views">
@@ -490,16 +512,11 @@ export function mountLedger (container) {
       </table>
     </div>
 
-    <p class="lg-fineprint">
-      AEC disclosures ${YEAR_MIN}–${YEAR_MAX}, top 250 disclosed donors. Donations under
-      the disclosure threshold are not reported: totals are a floor, not a ceiling.
-      Public electoral funding and internal party transfers excluded.
-      <a href="#/methods">Methodology</a> ·
-      <a href="/graph/money.json">Raw data</a>
-    </p>
+    <p class="lg-fineprint"></p>
   `
 
   const $ = (sel) => root.querySelector(sel)
+  const fineEl = $('.lg-fineprint')
   const searchEl = $('#lg-q')
   const industryEl = $('#lg-industry')
   const partyEl = $('#lg-party')
@@ -643,21 +660,30 @@ export function mountLedger (container) {
 
   function exportCSV () {
     const sort = state.sort[state.view]
+    const file = JURISDICTIONS[state.jur].file
     const comments = [
       state.view === 'flows'
         ? 'OPAX — The Ledger: disclosed donor→party flows'
         : 'OPAX — The Ledger: donors aggregated over the filtered flows',
-      `Source: AEC donation disclosure returns ${YEAR_MIN}–${YEAR_MAX} (top 250 disclosed donors), via opax.com.au/graph/money.json`,
+      meta.jurisdiction
+        ? `Source: ${meta.commission} disclosures (${meta.sourceShort}), ${meta.coverage}, top disclosed donors, via opax.com.au${file}`
+        : `Source: AEC donation disclosure returns ${YEAR_MIN}–${YEAR_MAX} (top 250 disclosed donors), via opax.com.au${file}`,
       `Exported ${new Date().toISOString().slice(0, 10)} · ${currentRows.length} rows · filters: ${describeFilters()} · sorted by ${sort.key} ${sort.dir}`,
-      'Caveat: donations under the AEC disclosure threshold are not reported — totals are a floor, not a ceiling.',
-      'Excluded: public electoral funding and internal party transfers.',
+      meta.jurisdiction
+        ? `Caveat: ${meta.threshold} Totals are a floor, not a ceiling.`
+        : 'Caveat: donations under the AEC disclosure threshold are not reported: totals are a floor, not a ceiling.',
+      meta.jurisdiction
+        ? 'Excluded: gifts to candidates and committees, public funding and internal party transfers.'
+        : 'Excluded: public electoral funding and internal party transfers.',
+      meta.not_summed || NOT_SUMMED,
     ]
+    if (meta.licence) comments.push(`Licence: ${meta.licence}`)
     const csv = buildCSV(state.view, currentRows, comments)
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `opax-ledger-${state.view}-${new Date().toISOString().slice(0, 10)}.csv`
+    a.download = `opax-ledger-${state.jur}-${state.view}-${new Date().toISOString().slice(0, 10)}.csv`
     document.body.appendChild(a)
     a.click()
     a.remove()
@@ -692,6 +718,13 @@ export function mountLedger (container) {
 
   exportBtn.addEventListener('click', exportCSV)
 
+  for (const btn of root.querySelectorAll('.lg-jur')) {
+    btn.addEventListener('click', () => {
+      if (state.jur === btn.dataset.jur) return
+      load(btn.dataset.jur)
+    })
+  }
+
   for (const btn of root.querySelectorAll('.lg-view')) {
     btn.addEventListener('click', () => {
       if (state.view === btn.dataset.view) return
@@ -722,6 +755,8 @@ export function mountLedger (container) {
   // ---- data ---------------------------------------------------------------
 
   function populateSelects (data) {
+    industryEl.length = 1 // keep "All industries"; the rest belong to the previous file
+    partyEl.length = 1
     const industries = [...new Set(
       data.nodes.filter((n) => n.kind === 'donor').map((n) => n.industry || 'other'),
     )].sort((a, b) => a.localeCompare(b, 'en'))
@@ -739,35 +774,76 @@ export function mountLedger (container) {
       opt.value = party
       partyEl.appendChild(opt)
     }
+    // A filter survives a jurisdiction switch only if the new file offers it.
+    if (![...industryEl.options].some((o) => o.value === state.industry)) state.industry = ''
+    industryEl.value = state.industry
+    if (![...partyEl.options].some((o) => o.value === state.party)) state.party = ''
+    partyEl.value = state.party
   }
 
-  async function load () {
+  /** Fineprint from the file itself: state exports name their commission,
+   *  threshold and licence in meta; the federal file predates those fields. */
+  function renderFineprint (data) {
+    const m = data.meta || {}
+    const donors = data.nodes.filter((n) => n.kind === 'donor').length
+    fineEl.textContent = m.jurisdiction
+      ? `${m.commission} (${m.sourceShort}), ${m.coverage}, top ${NUM.format(donors)} disclosed donors. ` +
+        `${m.threshold} Totals are a floor, not a ceiling. Gifts to candidates and committees, ` +
+        `public funding and internal party transfers excluded. ${m.not_summed || NOT_SUMMED} ` +
+        `Licence: ${m.licence}. `
+      : `AEC disclosures ${YEAR_MIN}–${YEAR_MAX}, top ${NUM.format(donors)} disclosed donors. Donations under ` +
+        'the disclosure threshold are not reported: totals are a floor, not a ceiling. ' +
+        `Public electoral funding and internal party transfers excluded. ${NOT_SUMMED} `
+    const methods = el('a', null, 'Methodology')
+    methods.href = '#/methods'
+    const rawLink = el('a', null, 'Raw data')
+    rawLink.href = JURISDICTIONS[state.jur].file
+    fineEl.append(methods, ' · ', rawLink)
+  }
+
+  async function fetchData (jur) {
+    if (cache.has(jur)) return cache.get(jur)
+    const url = JURISDICTIONS[jur].file
+    const res = await fetch(url, { signal: aborter.signal })
+    if (!res.ok) throw new Error(`${url} → ${res.status}`)
+    const data = await res.json()
+    cache.set(jur, data)
+    return data
+  }
+
+  async function load (jur = state.jur) {
+    state.jur = JURISDICTIONS[jur] ? jur : 'federal'
+    for (const b of root.querySelectorAll('.lg-jur')) {
+      b.setAttribute('aria-pressed', b.dataset.jur === state.jur ? 'true' : 'false')
+    }
+    const token = ++loadSeq
     statusEl.hidden = false
     statusEl.textContent = 'Loading the ledger…'
     tableEl.hidden = true
     try {
-      const res = await fetch(DATA_URL, { signal: aborter.signal })
-      if (!res.ok) throw new Error(`${DATA_URL} → ${res.status}`)
-      const data = await res.json()
+      const data = await fetchData(state.jur)
+      if (token !== loadSeq) return
+      meta = data.meta || {}
       flows = buildFlows(data)
       populateSelects(data)
+      renderFineprint(data)
       statusEl.hidden = true
       tableEl.hidden = false
       renderHead()
       render()
     } catch (err) {
-      if (aborter.signal.aborted) return
+      if (aborter.signal.aborted || token !== loadSeq) return
       statusEl.hidden = false
       statusEl.textContent = 'The ledger could not be loaded.'
       const retry = el('button', 'lg-btn', 'Try again')
       retry.type = 'button'
-      retry.addEventListener('click', load)
+      retry.addEventListener('click', () => load(state.jur))
       statusEl.appendChild(retry)
     }
   }
 
   container.appendChild(root)
-  load()
+  load(state.jur)
 
   let destroyed = false
   return {
