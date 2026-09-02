@@ -176,6 +176,19 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 /* ---- primary nav (in the band) ------------------------------------------ */
 
 .masthead-nav { flex: 1 1 auto; min-width: 0; }
+/* The full name sits over the nav like a nameplate over a section bar;
+   the acronym's four letters take the bronze. It lives in the nav column,
+   so it compacts away with the nav (the drawer carries the name instead). */
+.masthead-name {
+  margin: 0 0 0.15rem; padding-left: 0.15rem;
+  font: 400 1.125rem/1.25 var(--serif); letter-spacing: 0.01em; white-space: nowrap;
+}
+.masthead-name a { color: var(--on-navy); text-decoration: none; }
+.masthead-name a:hover {
+  color: var(--on-navy); text-decoration: underline;
+  text-decoration-color: var(--bronze-bright); text-underline-offset: 4px;
+}
+.masthead-name b { font-weight: inherit; color: var(--bronze-bright); }
 .nav-list {
   display: flex; align-items: center; gap: clamp(0.3rem, 1.6vw, 1.5rem);
   list-style: none; margin: 0; padding: 0;
@@ -1169,6 +1182,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 @media (max-width: 1099px) {
   .mast-search { flex-basis: 220px; }
   .logo-mark { height: 64px; width: 85px; }
+  .masthead-name { font-size: 1.0625rem; }
 }
 
 /* Compact band: hamburger + drawer replace the inline nav. */

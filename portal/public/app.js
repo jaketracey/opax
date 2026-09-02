@@ -605,13 +605,14 @@ function resetAsk() {
   renderChips();
 }
 
-document.querySelector(".logo")?.addEventListener("click", () => {
-  // Tapping the mark always means "take me home, fresh".
+// Tapping the mark, or the name over the nav, always means "take me home, fresh".
+const goHomeFresh = () => {
   resetAsk();
   if (location.hash && location.hash !== "#/") location.hash = "#/";
   else { showPanel("ask"); renderFrontPage(); }
   window.scrollTo(0, 0);
-});
+};
+for (const el of document.querySelectorAll(".logo, .masthead-name a")) el.addEventListener("click", goHomeFresh);
 
 document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
   e.preventDefault();
