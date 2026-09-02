@@ -2493,6 +2493,10 @@ async function renderDonorAccess(label, container) {
   const meetings = d.meetings || [];
   const firms = d.lobbyists || [];
   const total = d.meetings_total || 0;
+  // A donor can appear in access.json with neither list populated. The heading
+  // and the sourcing note are not content, so the section goes rather than
+  // standing over an empty space.
+  if (!meetings.length && !firms.length) { slot.remove(); return; }
   const kicker = meetings.length && firms.length ? "Who they met and who lobbies for them"
     : meetings.length ? "Who they met" : "Who lobbies for them";
   let html = `<p class="kicker">${esc(kicker)}</p>`;
@@ -2505,7 +2509,7 @@ async function renderDonorAccess(label, container) {
       <p class="fineprint" style="margin-top:0.5rem"><b>${total.toLocaleString()}</b> disclosed meeting${total === 1 ? "" : "s"}${total > meetings.length ? `, newest ${meetings.length} shown` : ""}.</p>`;
   }
   if (firms.length) {
-    html += `<p class="kicker kicker-sub">Registered lobbying client of</p>
+    html += `${meetings.length ? `<p class="kicker kicker-sub">Registered lobbying client of</p>` : ""}
       <ul class="subject-list" role="list">${firms.map((f) => `
       <li><span class="source-title">${esc(f.firm)}</span>${meta(esc(f.jurisdiction) + (f.registered ? ` · from ${esc(fmtDate(f.registered))}` : "") + (f.ceased ? " · ceased" : ""))}</li>`).join("")}</ul>
       ${(d.lobbyists_total || 0) > firms.length ? `<p class="fineprint" style="margin-top:0.5rem">${d.lobbyists_total} registered firms, ${firms.length} shown.</p>` : ""}`;
