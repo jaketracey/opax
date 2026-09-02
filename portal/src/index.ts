@@ -1883,7 +1883,7 @@ const publisher = { '@type': 'Organization', name: 'OPAX', url: SITE_ORIGIN, log
 
 // --- per-route metadata -------------------------------------------------------
 
-async function buildMeta(route: SeoRoute, url: URL, env: Env): Promise<PageMeta> {
+async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<PageMeta> {
   const base = (over: Partial<PageMeta>): PageMeta => ({
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
@@ -2000,7 +2000,7 @@ async function buildMeta(route: SeoRoute, url: URL, env: Env): Promise<PageMeta>
       return route.dir === 'person' ? personMeta(route.name, url, env) : moneySubjectMeta(route.dir, route.name, url, env)
 
     case 'doc':
-      return docMeta(route.slug, url, env)
+      return docMeta(route.slug, url, request, env, ctx)
   }
 }
 
@@ -2086,7 +2086,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
 }
 
 /** /doc/<slug>: the existing /api/resource logic under a hard time cap. */
-async function docMeta(slug: string, url: URL, env: Env): Promise<PageMeta> {
+async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<PageMeta> {
   const canonical = `${SITE_ORIGIN}/doc/${slug}`
   const generic: PageMeta = {
     title: 'From the record · OPAX',
@@ -2101,7 +2101,7 @@ async function docMeta(slug: string, url: URL, env: Env): Promise<PageMeta> {
   let res: Response | null
   try {
     res = await Promise.race([
-      apiResource(slug, env),
+      apiResource(request, url, slug, env, ctx),
       new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500)),
     ])
   } catch {
@@ -2170,10 +2170,10 @@ class SetText {
   element(el: Element) { el.setInnerContent(this.value) }
 }
 
-async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: Env): Promise<Response> {
+async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const [shell, meta] = await Promise.all([
     env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`)),
-    buildMeta(route, url, env),
+    buildMeta(route, url, request, env, ctx),
   ])
   if (!shell.ok) return shell
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
@@ -2294,7 +2294,7 @@ export default {
         if (url.pathname === '/sitemap.xml') return await sitemapXml(env)
         if (url.pathname === '/robots.txt') return robotsTxt()
         const seoRoute = matchSeoRoute(url)
-        if (seoRoute) return await serveSeoPage(seoRoute, url, request, env)
+        if (seoRoute) return await serveSeoPage(seoRoute, url, request, env, ctx)
       }
       return await env.ASSETS.fetch(request)
     } catch (err) {
