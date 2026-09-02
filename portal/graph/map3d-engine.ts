@@ -1195,6 +1195,7 @@ export class KnowledgeMapEngine {
     let dist = keepDist
     if (dist === null) {
       let span = visual.r + 30
+      let neighbours = 0
       for (const edgeVisual of this.edgeVisuals) {
         const otherId = edgeVisual.edge.source === id
           ? edgeVisual.edge.target
@@ -1204,6 +1205,7 @@ export class KnowledgeMapEngine {
         if (otherId === null) continue
         const other = this.nodeVisuals.get(otherId)
         if (!other) continue
+        neighbours++
         const d = Math.hypot(
           other.sim.x - visual.sim.x,
           other.sim.y - visual.sim.y,
@@ -1212,11 +1214,14 @@ export class KnowledgeMapEngine {
         if (d > span) span = d
       }
       const { dist: fits } = this.frameFor(span * 1.12)
-      // Never zoom OUT past the reader's own zoom, mirroring the 2D rule.
-      dist = Math.min(
-        this.view.dist,
-        Math.max(FOCUS_MIN_DIST, Math.min(FOCUS_MAX_DIST, fits)),
-      )
+      // Hubs (a major party with hundreds of flows) need the whole
+      // neighbourhood in frame: lift the ceiling with the log of the degree
+      // and allow zooming OUT for them. The never-zoom-out rule (mirroring
+      // the 2D map) only guards nodes with a handful of neighbours.
+      const hub = neighbours >= 40
+      const ceiling = hub ? FOCUS_MAX_DIST * (1 + Math.log10(neighbours / 20)) : FOCUS_MAX_DIST
+      const fitted = Math.max(FOCUS_MIN_DIST, Math.min(ceiling, fits))
+      dist = hub ? fitted : Math.min(this.view.dist, fitted)
     }
     dist = Math.max(this.minDist(), Math.min(this.maxDist(), dist))
 

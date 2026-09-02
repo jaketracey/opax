@@ -2089,7 +2089,7 @@ async function openSubject(kind, name, manageFocus) {
     chambers.length && ["Parliament", esc(chambers.join(", "))],
     dates.length && ["Indexed speeches span", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
   ], "", [
-    actionBtn("speeches", searchHash("", { speaker: name }), "All their speeches on OPAX", { primary: true }),
+    actionBtn("speeches", searchHash("", { speaker: name }), "View all their speeches", { primary: true }),
     actionBtn("external", `https://theyvoteforyou.org.au/search?query=${q}`, "Voting record", { external: true }),
     actionBtn("external", `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliamentary profile", { external: true }),
     actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
