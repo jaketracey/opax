@@ -1771,11 +1771,12 @@ function peopleCardHTML(people) {
     const sub = p.party
       ? partyChipHTML(p.party)
       : (p.state ? esc(STATE_NAMES[p.state] || p.state) : "");
-    return `<li class="people-row">` +
+    return `<li>` +
+      `<a class="people-row" href="${esc(subjectHash("person", p.name))}" tabindex="-1">` +
       `<span class="people-face" data-speaker="${esc(p.name)}">` +
       `<span class="people-face-mono">${esc(p.name.slice(0, 1))}</span></span>` +
       `<span><span class="people-name">${esc(p.name)}</span>` +
-      (sub ? `<span class="people-sub">${sub}</span>` : "") + `</span></li>`;
+      (sub ? `<span class="people-sub">${sub}</span>` : "") + `</span></a></li>`;
   }).join("");
   const rest = people.length - PEOPLE_MAX;
   return `<span class="kicker">Whose words this draws on</span>` +

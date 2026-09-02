@@ -808,7 +808,12 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 }
 .people-card .kicker { display: block; margin: 0 0 var(--space-3); }
 .people-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
-.people-row { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 0.6rem; align-items: center; }
+.people-row {
+  display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 0.6rem; align-items: center;
+  text-decoration: none; color: inherit;
+}
+.people-row:hover .people-name { color: var(--bronze-ink); text-decoration: underline;
+  text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
 .people-face, .people-face img, .people-face-mono { width: 28px; height: 28px; border-radius: 50%; }
 .people-face { display: block; }
 .people-face img { display: block; object-fit: cover;
