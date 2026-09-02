@@ -16,7 +16,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "about", "methods", "stats"];
+const PANELS = ["ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "about", "methods", "stats", "expenses"];
 
 // --- helpers ----------------------------------------------------------------
 
@@ -525,9 +525,9 @@ function offerExport(rows, context, baseName) {
 // --- panels & routing -------------------------------------------------------
 
 function showPanel(name) {
-  // Methods lives under the About menu, so its trigger stays lit there; the
-  // drawer has an exact Methods link of its own.
-  const headerName = name === "methods" ? "about" : name;
+  // Methods and the expense-category glossary live under the About menu, so its
+  // trigger stays lit there; the drawer has exact links of its own.
+  const headerName = name === "methods" || name === "expenses" ? "about" : name;
   for (const t of document.querySelectorAll("#primary-nav [data-panel], #nav-drawer [data-panel]")) {
     const active = t.dataset.panel === (t.closest("#nav-drawer") ? name : headerName);
     t.classList.toggle("active", active);
@@ -556,6 +556,7 @@ const TITLES = {
   about: "About · OPAX",
   methods: "Methods · OPAX",
   stats: "Corpus stats · OPAX",
+  expenses: "What the expense categories mean · OPAX",
 };
 
 // --- money map (lazy-loaded 3D bundle) --------------------------------------
@@ -832,6 +833,11 @@ function route() {
     showPanel("stats");
     document.title = TITLES.stats;
     setCrumbs([{ label: "About", href: "#/about" }, { label: "Corpus stats" }]);
+  } else if (view === "expenses") {
+    showPanel("expenses");
+    document.title = TITLES.expenses;
+    setCrumbs([{ label: "About", href: "#/about" }, { label: "Expense categories" }]);
+    renderExpenseGlossary();
   } else {
     showPanel("ask");
     document.title = TITLES.ask;
@@ -2127,7 +2133,7 @@ const IPEA_NOTE =
  *  Silent when the person has no IPEA entry (state MPs, pre-2017 members). */
 async function renderPersonExpenses(name, personId, sections) {
   const key = currentSubjectKey;
-  await Promise.all([loadExpenses(), loadPhotoMap()]);
+  await Promise.all([loadExpenses(), loadPhotoMap(), loadExpenseDefs()]);
   if (currentSubjectKey !== key || !expensesData?.people) return;
   const nameKey = String(name || "").trim().toLowerCase();
   const pid = personId || photoMap?.[nameKey] || expensesData.names?.[nameKey];
@@ -2147,16 +2153,200 @@ async function renderPersonExpenses(name, personId, sections) {
     <p class="kicker">Parliamentary expenses</p>
     <p style="margin:0.2rem 0 0.6rem"><b>${esc(fmtMoney(e.total))}</b> claimed, ${esc(span)},
       across ${lines.toLocaleString()} published line${lines === 1 ? "" : "s"}.</p>
-    ${e.by_category?.length ? barList(e.by_category, { fmt: fmtMoney, heading: "By category" }) : ""}
+    ${e.by_category?.length ? barList(e.by_category, { fmt: fmtMoney, heading: "By category", term: expenseTermKey }) : ""}
     ${e.by_year?.length > 1 ? columnChart(e.by_year, {
       fmt: fmtMoney, heading: "Claimed per year",
       note: "Summed by reporting quarter. IPEA data starts in April 2017 and runs to the latest published quarter, so the first and last years can be partial.",
     }) : ""}
     ${items ? `<figure class="chart"><figcaption>Five largest line items</figcaption>
       <ul class="subject-list" role="list" style="margin:0">${items}</ul></figure>` : ""}
-    <p class="fineprint">${esc(IPEA_NOTE)}${src ? ` <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗</a>` : ""}</p>`);
+    <p class="fineprint">${esc(IPEA_NOTE)} <a href="#/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗</a>` : ""}</p>`);
   $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Claimed expenses</dt><dd><b>${esc(fmtMoney(e.total))}</b></dd>`);
+}
+
+// --- expense categories: definitions, popover and glossary page --------------
+// IPEA publishes its own category names and OPAX reproduces them unchanged, so
+// most readers meet "COMCAR" or "Private-Plated Vehicle" with no idea what they
+// cover. /expense-categories.json carries one definition per category, kept out
+// of expenses.json because that is a per-person export regenerated from the DB
+// by scripts/export_expenses.py and this is editorial copy. The same file feeds
+// the row popovers and the #/expenses glossary.
+
+let expenseDefs = null;         // { meta, groups, byName, categories }
+let expenseDefsPromise = null;
+
+function loadExpenseDefs() {
+  expenseDefsPromise ??= fetch("/expense-categories.json")
+    .then((r) => (r.ok ? r.json() : null))
+    .then((d) => {
+      if (!d?.categories) return null;
+      d.byName = Object.fromEntries(d.categories.map((c) => [c.name, c]));
+      expenseDefs = d;
+      initTermTips();
+      return d;
+    })
+    .catch(() => null);
+  return expenseDefsPromise;
+}
+
+/** The bar list's key for a category label, or null when nothing defines it.
+ *  export_expenses.py rolls the tail up as "Other (N categories)". */
+function expenseTermKey(name) {
+  if (!expenseDefs) return null;
+  if (expenseDefs.byName[name]) return name;
+  return /^Other \(\d+ categor/.test(name) && expenseDefs.byName.Other ? "Other" : null;
+}
+
+// One popover for the whole page, moved next to whichever trigger opened it so
+// Tab reaches its link, positioned in viewport coordinates so it can flip above
+// the trigger and clamp to the screen edges.
+let termTipEl = null;
+let termTipTrigger = null;
+let termTipTimer = 0;
+let termTipsWired = false;
+
+function termTip() {
+  if (termTipEl) return termTipEl;
+  const tip = document.createElement("div");
+  tip.id = "term-tip";
+  tip.className = "term-tip";
+  tip.hidden = true;
+  tip.setAttribute("role", "tooltip");
+  tip.innerHTML = '<b class="term-tip-name"></b><p class="term-tip-text"></p>' +
+    '<p class="term-tip-note"></p>' +
+    '<a class="term-tip-action" href="#/expenses">What the categories mean</a>';
+  tip.addEventListener("pointerenter", cancelTermTipHide);
+  tip.addEventListener("pointerleave", scheduleTermTipHide);
+  document.body.append(tip);
+  termTipEl = tip;
+  return tip;
+}
+
+function showTermTip(trigger) {
+  const def = expenseDefs?.byName?.[trigger.dataset.term];
+  if (!def) return;
+  cancelTermTipHide();
+  const tip = termTip();
+  tip.querySelector(".term-tip-name").textContent = def.name;
+  tip.querySelector(".term-tip-text").textContent = def.text || "";
+  const note = tip.querySelector(".term-tip-note");
+  note.textContent = def.note || "";
+  note.hidden = !def.note;
+  if (termTipTrigger && termTipTrigger !== trigger) termTipTrigger.removeAttribute("aria-describedby");
+  termTipTrigger = trigger;
+  trigger.setAttribute("aria-describedby", "term-tip");
+  if (tip.previousElementSibling !== trigger) trigger.insertAdjacentElement("afterend", tip);
+  tip.hidden = false;
+  placeTermTip();
+}
+
+/** Below the trigger by default; above it when the card would run off the
+ *  bottom; always inside the viewport horizontally. */
+function placeTermTip() {
+  const tip = termTipEl;
+  if (!tip || tip.hidden || !termTipTrigger) return;
+  const M = 8, GAP = 8;
+  const r = termTipTrigger.getBoundingClientRect();
+  const vw = document.documentElement.clientWidth;
+  const vh = document.documentElement.clientHeight;
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let top = r.bottom + GAP;
+  if (top + h > vh - M && r.top - GAP - h >= M) top = r.top - GAP - h;
+  top = Math.max(M, Math.min(top, vh - h - M));
+  const left = Math.max(M, Math.min(r.left, vw - w - M));
+  tip.style.left = `${Math.round(left)}px`;
+  tip.style.top = `${Math.round(top)}px`;
+}
+
+function hideTermTip(refocus) {
+  cancelTermTipHide();
+  if (!termTipEl || termTipEl.hidden) return;
+  termTipEl.hidden = true;
+  const trigger = termTipTrigger;
+  termTipTrigger = null;
+  trigger?.removeAttribute("aria-describedby");
+  if (refocus) trigger?.focus();
+}
+
+function scheduleTermTipHide() {
+  clearTimeout(termTipTimer);
+  termTipTimer = setTimeout(() => hideTermTip(false), 160);
+}
+function cancelTermTipHide() { clearTimeout(termTipTimer); }
+
+const termTipTarget = (e, sel) => (e.target instanceof Element ? e.target.closest(sel) : null);
+
+/** Hover, focus and tap all open the popover; Escape, blur, a pointer that
+ *  leaves both trigger and card, and any route change close it. */
+function initTermTips() {
+  if (termTipsWired) return;
+  termTipsWired = true;
+  document.addEventListener("pointerover", (e) => {
+    const trigger = termTipTarget(e, "[data-term]");
+    if (trigger) { if (e.pointerType !== "touch") showTermTip(trigger); return; }
+    if (!termTipTarget(e, ".term-tip")) scheduleTermTipHide();
+  });
+  document.addEventListener("click", (e) => {
+    const trigger = termTipTarget(e, "[data-term]");
+    if (trigger) {
+      if (trigger === termTipTrigger && !termTipEl?.hidden) hideTermTip(false);
+      else showTermTip(trigger);
+      return;
+    }
+    if (!termTipTarget(e, ".term-tip")) hideTermTip(false);
+  });
+  document.addEventListener("focusin", (e) => {
+    const trigger = termTipTarget(e, "[data-term]");
+    if (trigger) { showTermTip(trigger); return; }
+    if (!termTipTarget(e, ".term-tip")) hideTermTip(false);
+  });
+  document.addEventListener("focusout", (e) => {
+    if (!termTipTarget(e, "[data-term], .term-tip")) return;
+    const to = e.relatedTarget instanceof Element ? e.relatedTarget : null;
+    if (to && (to.closest(".term-tip") || to.closest("[data-term]") === termTipTrigger)) return;
+    hideTermTip(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || !termTipEl || termTipEl.hidden) return;
+    const inside = document.activeElement === termTipTrigger ||
+      (document.activeElement instanceof Element && termTipEl.contains(document.activeElement));
+    hideTermTip(inside);
+  });
+  window.addEventListener("scroll", placeTermTip, { passive: true, capture: true });
+  window.addEventListener("resize", placeTermTip);
+  window.addEventListener("hashchange", () => hideTermTip(false));
+}
+
+/** #/expenses: every category IPEA publishes, grouped, each with its source. */
+let expenseGlossaryDone = false;
+async function renderExpenseGlossary() {
+  const body = $("expenses-defs");
+  if (!body || expenseGlossaryDone) return;
+  const d = await loadExpenseDefs();
+  if (!d) {
+    body.innerHTML = '<p class="status error">The category definitions could not be loaded.</p>';
+    return;
+  }
+  expenseGlossaryDone = true;
+  const meta = d.meta || {};
+  body.innerHTML = (d.groups || []).map((g) => {
+    const rows = d.categories.filter((c) => c.group === g.id);
+    if (!rows.length) return "";
+    return `<h3>${esc(g.title)}</h3>
+      ${g.blurb ? `<p>${esc(g.blurb)}</p>` : ""}
+      <dl class="defs">${rows.map((c) => {
+        const url = safeUrl(c.url);
+        return `<dt>${esc(c.name)}</dt>
+          <dd><p>${esc(c.text)}${c.note ? ` ${esc(c.note)}` : ""}</p>
+            <p class="defs-src">${esc(c.source || "")}${url ? ` <a href="${esc(url)}" rel="noopener" target="_blank">source ↗</a>` : ""}</p>
+          </dd>`;
+      }).join("")}</dl>`;
+  }).join("") +
+    (meta.licence_note
+      ? `<h3>Sources and licence</h3><p class="fineprint">${esc(meta.licence_note)}${
+        safeUrl(meta.source_url) ? ` <a href="${esc(meta.source_url)}" rel="noopener" target="_blank">IPEA expenditure reports ↗</a>` : ""}</p>`
+      : "");
 }
 
 // --- access: the money <-> access join ---------------------------------------
@@ -5118,16 +5308,25 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {
   </figure>`;
 }
 
-function barList(rows, { fmt = String, heading, linkTo, partyDots = false }) {
+/** `term(name)` turns a row label into a definition popover trigger (see
+ *  initTermTips); the button's text is still the label, so its accessible name
+ *  reads as the category. Only used where nothing else claims the label. */
+function barList(rows, { fmt = String, heading, linkTo, partyDots = false, term = null }) {
   const max = Math.max(...rows.map(([, v]) => v), 1);
-  const items = rows.map(([name, v]) => `
+  const items = rows.map(([name, v]) => {
+    const key = linkTo ? null : term?.(name);
+    const label = `${partyDots ? partyDotHTML(name) : ""}${esc(name)}`;
+    return `
     <div class="barrow">
       ${linkTo
-        ? `<a class="barrow-name" title="${esc(name)}" href="${esc(linkTo(name))}">${partyDots ? partyDotHTML(name) : ""}${esc(name)}</a>`
-        : `<span class="barrow-name" title="${esc(name)}">${partyDots ? partyDotHTML(name) : ""}${esc(name)}</span>`}
+        ? `<a class="barrow-name" title="${esc(name)}" href="${esc(linkTo(name))}">${label}</a>`
+        : key
+          ? `<button type="button" class="barrow-name barrow-term" data-term="${esc(key)}">${label}</button>`
+          : `<span class="barrow-name" title="${esc(name)}">${label}</span>`}
       <span class="barrow-track" aria-hidden="true"><i style="width:${Math.max((v / max) * 100, 1)}%"></i></span>
       <span class="barrow-value">${esc(fmt(v))}</span>
-    </div>`).join("");
+    </div>`;
+  }).join("");
   return `<figure class="chart"><figcaption>${esc(heading)}</figcaption>${items}</figure>`;
 }
 
@@ -5551,6 +5750,7 @@ const VIEW_DESCRIPTIONS = {
   about: "What OPAX is, what you can do here, and how answers are produced.",
   methods: "How the OPAX corpus is built, its known limits, and how to cite an answer or a speech.",
   stats: "Live counts for every collection in the OPAX index.",
+  expenses: "What each category in the Independent Parliamentary Expenses Authority's quarterly reports covers.",
 };
 function syncPathMeta() {
   const frag = rawFragment();

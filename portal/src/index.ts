@@ -1659,6 +1659,10 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     title: 'Corpus stats · OPAX',
     description: 'Live counts for every collection in the OPAX index: speeches, divisions, legislation and news, by parliament and year.',
   },
+  expenses: {
+    title: 'What the expense categories mean · OPAX',
+    description: 'Plain definitions of every parliamentary work expense category the Independent Parliamentary Expenses Authority publishes, from COMCAR and travel allowance to the private-plated vehicle.',
+  },
 }
 
 type SeoRoute =
@@ -2233,7 +2237,7 @@ async function sitemapXml(env: Env): Promise<Response> {
       rows.push(`<url><loc>${escXml(`${SITE_ORIGIN}${path}`)}</loc>${mod}</url>`)
     }
     add('/')
-    for (const page of ['search', 'money', 'reports', 'explore', 'about', 'methods', 'stats']) add(`/${page}`)
+    for (const page of ['search', 'money', 'reports', 'explore', 'about', 'methods', 'stats', 'expenses']) add(`/${page}`)
     for (const r of reports.reports) add(`/reports/${r.slug}`, r.updated)
     add('/subject/topic')
     for (const slug of Object.keys(TOPIC_NAMES)) add(`/subject/topic/${slug}`)
