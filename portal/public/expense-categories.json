@@ -120,7 +120,7 @@
       "name": "Employee Costs",
       "group": "staff",
       "text": "Domestic and international travel expenses for the parliamentarian's employed staff, where the travel can be attributed to an individual employee.",
-      "note": "This is travel, not salary; staff pay does not appear in IPEA's expenditure reports at all. In later reporting periods the same spending is labelled Domestic Travel and International Travel.",
+      "note": "This is travel, not salary; staff pay does not appear in IPEA's expenditure reports at all. IPEA publishes it as an aggregate rather than naming employees, and in later reporting periods the same spending is labelled Domestic Travel and International Travel.",
       "source": "IPEA, Explanatory notes (employee travel)",
       "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
     },
@@ -128,7 +128,7 @@
       "name": "Domestic Travel",
       "group": "staff",
       "text": "Travel within Australia by the parliamentarian's employed staff, including travel allowance, motor vehicle allowance, scheduled fares, taxis, ride share, hire cars, tolls and parking.",
-      "note": "This is staff travel, not the parliamentarian's own. Earlier reporting periods label the same spending Employee Costs.",
+      "note": "This is staff travel, not the parliamentarian's own, and it arrives as one aggregated total per reporting period rather than trip by trip, so a large figure here covers a whole office. Earlier reporting periods label the same spending Employee Costs.",
       "source": "IPEA, Explanatory notes (employee travel)",
       "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
     },
@@ -136,7 +136,7 @@
       "name": "International Travel",
       "group": "staff",
       "text": "Overseas travel by the parliamentarian's employed staff, generally scheduled fares, meal and incidental allowances, passport costs and travel equipment allowances.",
-      "note": "Staff accommodation and meals overseas often cannot be attributed to an individual employee, so IPEA reports those with the parliamentarian's own international expenses instead.",
+      "note": "IPEA aggregates these costs per trip rather than naming employees. Staff accommodation and meals overseas often cannot be attributed to an individual employee, so IPEA reports those with the parliamentarian's own international expenses instead.",
       "source": "IPEA, Explanatory notes (employee travel)",
       "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
     },
