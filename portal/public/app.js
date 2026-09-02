@@ -3482,10 +3482,7 @@ async function renderFrontNews() {
         <a class="news-headline" href="${esc(safeUrl(i.url))}" rel="noopener" target="_blank">${esc(i.title)} ↗</a>
         <span class="news-meta"><span class="news-source">${esc(srcName[i.source] || i.source || "")}</span>${when ? ` · ${esc(when)}` : ""}</span>
         ${pivots}</li>`;
-    }).join("")}</ol>
-    <p class="fineprint">Headlines link to ABC News and The Guardian: their words, not ours.
-    “What does the record say?” asks OPAX’s corpus of parliamentary speeches; the two are
-    independent sources shown side by side.</p>`;
+    }).join("")}</ol>`;
   } catch {
     $("mod-news").hidden = true;
   }
