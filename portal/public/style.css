@@ -541,6 +541,10 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .rail-wombat .wb-label:empty { display: none; }
 .rail-wombat .wb-label { font-size: 0.8125rem; color: var(--ink-faint); text-align: center; }
 .rail-wombat { padding: 0.4rem 0 0.8rem; }
+/* Page loaders under a subject title (topic, topics index): left-set, modest width. */
+.subject-loader { display: block; max-width: 22rem; margin: 0.15rem 0 0; }
+.subject-loader .wb-label { text-align: left; font-size: 0.9375rem; color: var(--ink-soft); }
+.subject-loader:empty { display: none; }
 #search-wombat { padding: 1.2rem 0 0.4rem; }
 .chat-sources { margin: 0.2rem 0 0; }
 .chat-sources > summary {
@@ -832,6 +836,9 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .chart-note { color: var(--ink-faint); font-size: 0.8125rem; margin: 0.6rem 0 0; }
 .barrow { display: grid; grid-template-columns: minmax(110px, 34%) 1fr auto; gap: 0.7rem; align-items: center; margin: 0.35rem 0; font-size: 0.875rem; }
 .barrow-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Bar names read as labels, not links: no underline, bronze on hover. */
+a.barrow-name { text-decoration: none; }
+a.barrow-name:hover { color: var(--bronze-ink); }
 .barrow-track { height: 8px; background: var(--paper-sunken); border-radius: 4px; overflow: hidden; }
 .barrow-track i { display: block; height: 100%; background: var(--chart-mark); border-radius: 4px; }
 .barrow-value { color: var(--ink-soft); font-variant-numeric: tabular-nums; }

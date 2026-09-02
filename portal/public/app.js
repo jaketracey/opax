@@ -1248,17 +1248,37 @@ function parseDocBlocks(body) {
 
 /** Inline treatment: **bold** only — text nodes and <strong>, nothing else. */
 function appendInline(el, text) {
+  // Bold splits first so a ** pair is never read as two italics markers.
   const parts = String(text).split(/\*\*(.+?)\*\*/);
   parts.forEach((part, j) => {
     if (!part) return;
     if (j % 2 === 1) {
       const b = document.createElement("strong");
-      b.textContent = part;
+      appendEmphasis(b, part);
       el.appendChild(b);
     } else {
-      el.appendChild(document.createTextNode(part));
+      appendEmphasis(el, part);
     }
   });
+}
+
+// Italics (*text* or _text_ standing on word boundaries) and `code` inside a
+// run of text. Everything else stays a text node; model text never reaches
+// innerHTML.
+function appendEmphasis(el, text) {
+  const re = /(^|[\s(\["“'])(?:\*(\S(?:[^*\n]*?\S)?)\*|_(\S(?:[^_\n]*?\S)?)_)(?=$|[\s.,;:!?)\]"”'])|`([^`\n]+?)`/g;
+  let last = 0;
+  let m;
+  while ((m = re.exec(text))) {
+    const isCode = m[4] !== undefined;
+    const start = m.index + (isCode ? 0 : m[1].length);
+    if (start > last) el.appendChild(document.createTextNode(text.slice(last, start)));
+    const node = document.createElement(isCode ? "code" : "em");
+    node.textContent = isCode ? m[4] : (m[2] ?? m[3]);
+    el.appendChild(node);
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) el.appendChild(document.createTextNode(text.slice(last)));
 }
 
 function renderAnswer(container, text) {
@@ -2390,11 +2410,12 @@ async function openTopicPage(slug, manageFocus) {
       <a href="#/subject/topic">All topics</a></p>`;
     return;
   }
-  body.innerHTML = subjectSkeleton("Topic", name,
-    `<span class="status" style="margin:0">Counting the labelled record…</span>`);
+  body.innerHTML = subjectSkeleton("Topic", name, `<span id="subject-loader" class="subject-loader"></span>`);
   if (manageFocus) $("subject-title")?.focus();
+  showPageLoader("subject-loader", "Counting the labelled record.");
   const sections = $("subject-sections");
   const box = $("subject-infobox");
+  box.hidden = true; // fills once the counts land
   const phrase = topicPhrase(slug);
   const searchTopic = searchHash(phrase, { topic: slug });
 
@@ -2407,12 +2428,14 @@ async function openTopicPage(slug, manageFocus) {
 
   const count = data?.count ?? null;
   const labelled = data?.labelled ?? 0;
+  clearPageLoader("subject-loader");
   body.querySelector(".subject-tag").innerHTML = count === null
     ? `<span>The live counts could not be loaded. The searches below still work.</span>`
     : `<span>${esc(count.toLocaleString())} speeches carry this label so far, of
        ${esc(labelled.toLocaleString())} labelled to date. The labelling pass is still running.</span>`;
 
   const share = count && labelled ? `${((count / labelled) * 100).toFixed(1)}%` : null;
+  box.hidden = false;
   box.innerHTML = infoboxHTML([
     ["Type", "Topic"],
     count !== null && ["Labelled so far", `<b>${esc(count.toLocaleString())}</b> speeches`],
@@ -2480,8 +2503,8 @@ async function openTopicPage(slug, manageFocus) {
           <p class="kicker">The latest, in brief</p>
           ${briefed.map((d) => `
             <div class="topic-digest-item">
-              <a class="topic-digest-source" href="#/doc/${esc(d.slug)}">${partyDotHTML(d.party)}${esc(d.speaker || d.title)}${d.date ? `, ${esc(fmtDate(d.date))}` : ""}</a>
-              <p class="topic-digest-text">${esc(d.summary)}</p>
+              <a class="topic-digest-source" href="#/doc/${esc(d.slug)}">${partyDotHTML(d.party)}${esc(d.speaker || String(d.title || "").replace(/\s+—\s+\d{4}-\d{2}-\d{2}\s*$/, ""))}${d.date ? `, ${esc(fmtDate(d.date))}` : ""}</a>
+              <p class="topic-digest-text">${inlineHTML(d.summary)}</p>
             </div>`).join("")}
           <p class="fineprint">Machine summaries of the newest speeches to enter the index
             with this label; each links to the full record.</p>
@@ -2500,14 +2523,16 @@ async function openTopicsIndex(manageFocus) {
   body.innerHTML = `
     <div class="subject-head">
       <h2 id="subject-title" tabindex="-1">Topics A-Z</h2>
-      <p class="subject-tag"><span class="status" style="margin:0">Counting the labelled record…</span></p>
+      <p class="subject-tag"><span id="subject-loader" class="subject-loader"></span></p>
     </div>
     <div id="subject-sections"></div>`;
   if (manageFocus) $("subject-title")?.focus();
+  showPageLoader("subject-loader", "Counting the labelled record.");
   let data = null;
   try { data = await api("/api/topics"); } catch { /* honest failure below */ }
   if (currentSubjectKey !== key) return;
   const tag = body.querySelector(".subject-tag");
+  clearPageLoader("subject-loader");
   if (!data?.topics?.length) {
     tag.innerHTML = `<span>The live counts could not be loaded. Try again shortly.</span>`;
     return;
@@ -3019,6 +3044,22 @@ async function showLoader(slotId, label) {
 function hideLoader(slotId) {
   const slot = $(slotId);
   if (slot) slot.hidden = true;
+}
+// Loaders in slots a page rebuilds on every render: the controller cached
+// for the last visit points at a removed element, so it is dropped first.
+function showPageLoader(slotId, label) {
+  clearPageLoader(slotId);
+  return showLoader(slotId, label);
+}
+function clearPageLoader(slotId) {
+  loaders.get(slotId)?.destroy?.();
+  loaders.delete(slotId);
+}
+/** Inline markdown (bold, italics, code) as safe HTML, for one-paragraph texts. */
+function inlineHTML(text) {
+  const el = document.createElement("span");
+  appendInline(el, String(text || ""));
+  return el.innerHTML;
 }
 
 /** Show the ask result once: a gentle rise, and the page glides to meet it. */
