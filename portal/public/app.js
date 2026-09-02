@@ -2128,7 +2128,7 @@ function iconSvg(name) {
 function actionBtn(icon, href, label, { external = false, primary = false } = {}) {
   const ext = external ? ` rel="noopener" target="_blank"` : "";
   return `<a class="action-btn${primary ? " action-primary" : ""}" href="${esc(href)}"${ext}>` +
-    `${iconSvg(icon)}<span>${esc(label)}${external ? " ↗" : ""}</span></a>`;
+    `${iconSvg(icon)}<span>${esc(label)}${external ? " ↗︎" : ""}</span></a>`;
 }
 
 
@@ -2223,7 +2223,7 @@ async function renderPersonInterests(name, personId, sections) {
       it.kind === "addition" ? `added ${esc(fmtDate(it.date) || "later")}` : "",
       it.kind === "deletion" ? `deleted ${esc(fmtDate(it.date) || "later")}` : "",
       it.ocr ? "machine-read from a scan" : "",
-      src ? `<a href="${esc(it.page ? `${src}#page=${Number(it.page) || 1}` : src)}" rel="noopener" target="_blank">${it.page ? `page ${esc(String(Number(it.page)))}` : "source"} ↗</a>` : "",
+      src ? `<a href="${esc(it.page ? `${src}#page=${Number(it.page) || 1}` : src)}" rel="noopener" target="_blank">${it.page ? `page ${esc(String(Number(it.page)))}` : "source"} ↗︎</a>` : "",
     ].filter(Boolean).join(" · ");
     return `<li class="interests-item${it.kind === "deletion" ? " interests-deleted" : ""}">
       ${hasHolders ? `<span class="interests-holder">${esc(HOLDER[it.holder] || "")}</span>` : ""}
@@ -2250,7 +2250,7 @@ async function renderPersonInterests(name, personId, sections) {
     <p class="kicker">Declared interests</p>
     <p class="interests-summary"><b>${num(data.total)}</b> ${data.total === 1 ? "entry" : "entries"} across ${num(buckets.length)} ${buckets.length === 1 ? "category" : "categories"} · ${alterations}</p>
     <ul class="subject-list interests-list" role="list">${rows}</ul>
-    <p class="fineprint">${esc(register)}; entries as declared, not verified by OPAX. One entry is one cell of the form, so a list typed in one cell counts once.${base ? ` <a href="${esc(base)}" rel="noopener" target="_blank">Open the register entry ↗</a>` : ""}</p>
+    <p class="fineprint">${esc(register)}; entries as declared, not verified by OPAX. One entry is one cell of the form, so a list typed in one cell counts once.${base ? ` <a href="${esc(base)}" rel="noopener" target="_blank">Open the register entry ↗︎</a>` : ""}</p>
     ${data.ocr_rows > 0 ? `<p class="fineprint">${num(data.ocr_rows)} ${data.ocr_rows === 1 ? "entry comes" : "entries come"} from scanned pages and may contain recognition errors.</p>` : ""}
     ${data.unread_pages > 0 ? `<p class="fineprint">${num(data.unread_pages)} ${data.unread_pages === 1 ? "page" : "pages"} of the source could not be read by machine; the register itself is complete.</p>` : ""}`;
   $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
@@ -2360,14 +2360,14 @@ async function subjectNews(name, container) {
   const q = encodeURIComponent(name);
   const srcName = { ABC: "ABC News", Guardian: "The Guardian" };
   const list = items.slice(0, 4).map((i) => `
-    <li><a class="news-headline" href="${esc(safeUrl(i.url) || "#")}" rel="noopener" target="_blank">${esc(i.title)} ↗</a>
+    <li><a class="news-headline" href="${esc(safeUrl(i.url) || "#")}" rel="noopener" target="_blank">${esc(i.title)} ↗︎</a>
       <span class="news-meta"><span class="news-source">${esc(srcName[i.source] || i.source || "")}</span>${i.published ? ` · ${esc(relTime(i.published))}` : ""}</span></li>`).join("");
   container.insertAdjacentHTML("beforeend", `
     <p class="kicker">In the news</p>
     ${list ? `<ol class="news-list" role="list">${list}</ol>` : `<p class="status" style="margin-top:0.2rem">Nothing in today's politics headlines mentions them.</p>`}
     <p class="fineprint">Search the outlets:
-      <a href="https://www.abc.net.au/news/search?query=${q}" rel="noopener" target="_blank">ABC News ↗</a> ·
-      <a href="https://www.theguardian.com/australia-news?query=${q}#search" rel="noopener" target="_blank">The Guardian ↗</a></p>`);
+      <a href="https://www.abc.net.au/news/search?query=${q}" rel="noopener" target="_blank">ABC News ↗︎</a> ·
+      <a href="https://www.theguardian.com/australia-news?query=${q}#search" rel="noopener" target="_blank">The Guardian ↗︎</a></p>`);
 }
 
 async function subjectMentions(name, container, heading) {
@@ -2487,7 +2487,7 @@ async function renderPersonExpenses(name, personId, sections) {
     }) : ""}
     ${items ? `<figure class="chart"><figcaption>Five largest line items</figcaption>
       <ul class="subject-list" role="list" style="margin:0">${items}</ul></figure>` : ""}
-    <p class="fineprint">${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗</a>` : ""}</p>`);
+    <p class="fineprint">${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗︎</a>` : ""}</p>`);
   $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Claimed expenses</dt><dd><b>${esc(fmtMoney(e.total))}</b></dd>`);
 }
@@ -2721,13 +2721,13 @@ async function renderExpenseGlossary() {
         const url = safeUrl(c.url);
         return `<dt>${esc(c.name)}</dt>
           <dd><p>${esc(c.text)}${c.note ? ` ${esc(c.note)}` : ""}</p>
-            <p class="defs-src">${esc(c.source || "")}${url ? ` <a href="${esc(url)}" rel="noopener" target="_blank">source ↗</a>` : ""}</p>
+            <p class="defs-src">${esc(c.source || "")}${url ? ` <a href="${esc(url)}" rel="noopener" target="_blank">source ↗︎</a>` : ""}</p>
           </dd>`;
       }).join("")}</dl>`;
   }).join("") +
     (meta.licence_note
       ? `<h3>Sources and licence</h3><p class="fineprint">${esc(meta.licence_note)}${
-        safeUrl(meta.source_url) ? ` <a href="${esc(meta.source_url)}" rel="noopener" target="_blank">IPEA expenditure reports ↗</a>` : ""}</p>`
+        safeUrl(meta.source_url) ? ` <a href="${esc(meta.source_url)}" rel="noopener" target="_blank">IPEA expenditure reports ↗︎</a>` : ""}</p>`
       : "");
 }
 
@@ -2824,7 +2824,7 @@ async function renderPersonDiary(name, container, chambers) {
     ${recent ? `<p class="kicker kicker-sub">Recent meetings</p><ul class="subject-list" role="list">${recent}</ul>` : ""}
     <p class="fineprint">${scheme} Staff, cabinet, departmental and other government meetings are counted
       but left out of the lists. Organisation names link to a donor's entry where the name matches an AEC donor
-      exactly, otherwise to the record.${m.latest_pdf ? ` <a href="${esc(safeUrl(m.latest_pdf) || "#")}" rel="noopener" target="_blank">Latest diary (PDF) ↗</a>` : ""}</p>`;
+      exactly, otherwise to the record.${m.latest_pdf ? ` <a href="${esc(safeUrl(m.latest_pdf) || "#")}" rel="noopener" target="_blank">Latest diary (PDF) ↗︎</a>` : ""}</p>`;
 }
 
 // --- debts and other funding on party pages -----------------------------------
@@ -2883,7 +2883,7 @@ async function renderPartyDebts(label, sections) {
   const reg = safeUrl(extras.meta?.register_url);
   html += `<p class="fineprint">Debts are the balances the party's branches listed as owed at 30 June on their own AEC
     annual returns, all branches summed: bank loans sit beside trade creditors and tax owed, and a balance is not new
-    borrowing. Creditors under the disclosure threshold are not itemised. Source: AEC Transparency Register, CC BY 4.0.${reg ? ` <a href="${esc(reg)}" rel="noopener" target="_blank">Open the register ↗</a>` : ""}</p>`;
+    borrowing. Creditors under the disclosure threshold are not itemised. Source: AEC Transparency Register, CC BY 4.0.${reg ? ` <a href="${esc(reg)}" rel="noopener" target="_blank">Open the register ↗︎</a>` : ""}</p>`;
   slot.innerHTML = html;
   if (d) $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Debts at 30 June ${esc(endOf(d.year))}</dt><dd><b>${esc(fmtMoney(d.total || 0))}</b></dd>`);
@@ -3465,7 +3465,7 @@ function fitsInfoRow(fits, bucket, name) {
   // the infobox's label column is `auto`, so a longer term squeezes every value.
   return ["Foreign influence",
     `${sentence}
-     ${url ? `<a href="${esc(url)}" rel="noopener" target="_blank" style="display:inline-block;margin-top:0.15rem">Register entry&nbsp;↗</a>` : ""}
+     ${url ? `<a href="${esc(url)}" rel="noopener" target="_blank" style="display:inline-block;margin-top:0.15rem">Register entry&nbsp;↗︎</a>` : ""}
      <span style="display:block;color:var(--ink-faint);font-size:0.75rem;line-height:1.4;margin-top:0.2rem">Registration is a disclosure the scheme requires by law, not a finding of wrongdoing.</span>`];
 }
 
@@ -4107,13 +4107,17 @@ async function renderFrontNews() {
       // about phrases like "populist one" and retrieved nothing.
       const slug = newsTopicSlug(i.title);
       const subject = slug ? TOPICS[slug] : "";
+      // Six identical pairs of buttons read as a form, not as a way in. The
+      // topic leads instead, so every row differs where the eye lands, and the
+      // two ways in are quiet verbs after it rather than boxes.
       const pivots = subject ? `<span class="news-pivots">
-          <a class="action-btn action-small" href="${esc(askHash(`What has parliament said about ${subject.toLowerCase()}?`))}">What does the record say?</a>
-          <a class="action-btn action-small" href="${esc(searchHash(subject, { topic: slug }))}">Search the speeches</a>
+          <a class="news-pivot-topic" href="${esc(askHash(`What has parliament said about ${subject.toLowerCase()}?`))}">${esc(subject)}</a>
+          <span class="news-pivot-rest">in the record<span aria-hidden="true"> · </span><a
+            href="${esc(searchHash(subject, { topic: slug }))}">search the speeches</a></span>
         </span>` : "";
       const when = relTime(i.published);
       return `<li>
-        <a class="news-headline" href="${esc(safeUrl(i.url))}" rel="noopener" target="_blank">${esc(i.title)} ↗</a>
+        <a class="news-headline" href="${esc(safeUrl(i.url))}" rel="noopener" target="_blank">${esc(i.title)}</a>
         <span class="news-meta"><span class="news-source">${esc(srcName[i.source] || i.source || "")}</span>${when ? ` · ${esc(when)}` : ""}</span>
         ${pivots}</li>`;
     }).join("")}</ol>`;
@@ -5671,7 +5675,7 @@ function renderSearchEmpty(q, f) {
   if (q && bare !== q) actions.push(`<a class="action-btn" href="${esc(searchHash(bare, f))}">Try without the quotes</a>`);
   if (q && f.mode === "keyword") actions.push(`<a class="action-btn" href="${esc(searchHash(q, { ...f, mode: "hybrid" }))}">Match by meaning too</a>`);
   if (q && activeFilterSummary(f)) actions.push(`<a class="action-btn" href="${esc(searchHash(q, { kind: f.kind, mode: f.mode }))}">Search without filters</a>`);
-  if (shown) actions.push(`<a class="action-btn" href="${esc(webSearchUrl(shown))}" target="_blank" rel="noopener">Search the web ↗</a>`);
+  if (shown) actions.push(`<a class="action-btn" href="${esc(webSearchUrl(shown))}" target="_blank" rel="noopener">Search the web ↗︎</a>`);
   box.innerHTML = `
     <span class="empty-mark" aria-hidden="true">“ ”</span>
     <h2 class="empty-title">Nothing in the record for “${esc(shown)}”.</h2>
@@ -6011,7 +6015,7 @@ async function openDocPage(slug, manageFocus) {
       doc.metadata?.electorate ? `Member for ${esc(doc.metadata.electorate)}` : "",
       house ? esc(house) : "",
       doc.metadata?.date ? esc(fmtDate(doc.metadata.date)) : "",
-      origin ? `<a href="${esc(origin)}" rel="noopener" target="_blank">View original ↗</a>` : "",
+      origin ? `<a href="${esc(origin)}" rel="noopener" target="_blank">View original ↗︎</a>` : "",
     ].filter(Boolean).join(" · ");
     // Machine topic labels (field-level enrichment; a speech can carry
     // several). Chips only for slugs the taxonomy knows — an unknown label
@@ -6029,7 +6033,7 @@ async function openDocPage(slug, manageFocus) {
     if (doc.speaker) {
       const q = encodeURIComponent(doc.speaker);
       const ext = (href, label) =>
-        `<a href="${href}" rel="noopener" target="_blank">${label} ↗</a>`;
+        `<a href="${href}" rel="noopener" target="_blank">${label} ↗︎</a>`;
       speakerLinks.innerHTML = `Research ${esc(doc.speaker)}: ` + [
         ext(`https://theyvoteforyou.org.au/search?query=${q}`, "voting record"),
         ext(`https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "parliamentary profile"),

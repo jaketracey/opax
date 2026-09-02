@@ -1294,7 +1294,6 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 .action-btn.action-gold .btn-icon { color: currentColor; }
 /* A compact button for inline rows such as the news pivots. */
 .action-btn.action-small { padding: 0.3rem 0.65rem; font-size: 0.8125rem; min-height: 0; }
-.news-pivots { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: var(--space-3); }
 /* The map's caption and its way in sit on one line, the button to the right. */
 .front-map-foot { display: flex; align-items: flex-end; gap: 1.4rem; margin-top: var(--space-3); }
 .front-map-foot .fineprint { margin: 0; flex: 1 1 auto; }
@@ -1379,11 +1378,16 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 .news-list li:first-child { border-top: 0; padding-top: var(--space-1); }
 .news-headline { font: 600 1.0625rem/1.4 var(--serif); text-decoration: none; }
 .news-headline:hover { color: var(--bronze-ink); }
-.news-pivots a { text-decoration: none; color: var(--ink-soft); font-weight: 600; }
-.news-pivots a:hover { color: var(--bronze-ink); }
 .news-meta { display: block; margin-top: var(--space-1); color: var(--ink-faint); font-size: 0.8125rem; }
 .news-source { font: 700 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
-.news-pivots { display: flex; gap: 1.2rem; margin-top: 0.35rem; font-size: 0.8125rem; flex-wrap: wrap; }
+.news-pivots {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem;
+  margin-top: 0.35rem; font-size: 0.8125rem;
+}
+.news-pivot-topic { color: var(--bronze-ink); font-weight: 600; }
+.news-pivot-rest { color: var(--ink-faint); }
+.news-pivots a { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.news-pivots a:hover { text-decoration-color: currentColor; }
 
 a.report-card { display: block; text-decoration: none; }
 a.report-card .card-meta { color: var(--ink-soft); }
