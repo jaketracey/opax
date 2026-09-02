@@ -1286,16 +1286,40 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 /* White on the gold, label and icon together. Dark ink on the lighter bronze
    only reached 3.69 to 1; white on this half step toward bronze-ink reaches
    4.71, so the button reads as gold and still passes AA at its weight. */
+/* Struck metal rather than flat paint: the gradient runs dark at the edges and
+   bright through the middle, and a narrow highlight crosses it now and then.
+   Both ends of the gradient hold white above 4.5 to 1 (7.39 at the edges,
+   4.71 at the peak), so the label passes wherever it happens to sit. */
 .action-btn.action-gold {
-  background: #966C17; border-color: #966C17; color: #FFF;
-  font-weight: 700;
+  position: relative; overflow: hidden; isolation: isolate;
+  border-color: #7A4B0E; color: #FFF; font-weight: 700;
+  background: linear-gradient(100deg, #7A4B0E 0%, #966C17 42%, #966C17 58%, #7A4B0E 100%);
 }
-.action-btn.action-gold:hover { background: var(--bronze-ink); border-color: var(--bronze-ink); color: #FFF; }
-.action-btn.action-gold .btn-icon { color: currentColor; }
+.action-btn.action-gold:hover {
+  border-color: var(--bronze-ink);
+  background: linear-gradient(100deg, #6E430C 0%, #7A4B0E 42%, #7A4B0E 58%, #6E430C 100%);
+}
+.action-btn.action-gold .btn-glyph {
+  font: 800 1.0625rem/1 var(--sans); flex: 0 0 auto;
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Mostly off screen: a glint every few seconds, not a strobe. */
+  .action-btn.action-gold::after {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,0.26) 50%, transparent 58%);
+    transform: translateX(-130%);
+    animation: goldSweep 4.2s ease-in-out infinite;
+  }
+  @keyframes goldSweep {
+    0% { transform: translateX(-130%); }
+    38%, 100% { transform: translateX(130%); }
+  }
+  .action-btn.action-gold:hover::after { animation-duration: 1.6s; }
+}
 /* A compact button for inline rows such as the news pivots. */
 .action-btn.action-small { padding: 0.3rem 0.65rem; font-size: 0.8125rem; min-height: 0; }
 /* The map's caption and its way in sit on one line, the button to the right. */
-.front-map-foot { display: flex; align-items: flex-end; gap: 1.4rem; margin-top: var(--space-3); }
+.front-map-foot { display: flex; align-items: flex-start; gap: 1.4rem; margin-top: var(--space-3); }
 .front-map-foot .fineprint { margin: 0; flex: 1 1 auto; }
 .front-map-foot .action-btn { flex: 0 0 auto; }
 @media (max-width: 700px) {
