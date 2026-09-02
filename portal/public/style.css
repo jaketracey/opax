@@ -422,6 +422,9 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
   padding: 0.55rem 1rem; min-height: 40px;
 }
 .chip:hover { background: var(--bronze-wash); color: var(--ink); }
+/* Example searches on an empty search page: they rise in one after another. */
+.search-chips { margin-top: 1.1rem; }
+.search-chips:empty { display: none; }
 @media (max-width: 700px) {
   /* Phones see every suggestion: stacked, wrapping, full width. */
   .chip-row { flex-direction: column; align-items: stretch; overflow: visible; }

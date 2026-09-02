@@ -4448,7 +4448,7 @@ function searchHash(q, f) {
   $("f-to")?.addEventListener("input", updateSearchYearsLabel);
 }
 
-let searchApplied = ""; // guards re-running the same URL state
+let searchApplied = null; // guards re-running the same URL state (null: nothing applied yet)
 
 function applySearchParams(params) {
   const key = params.toString();
@@ -4477,7 +4477,47 @@ function applySearchParams(params) {
     setStatus($("search-status"), name
       ? `Filtered to the ${name} parliament. Type a question or a phrase to search its record.`
       : "");
+    renderSearchChips();
+  } else {
+    // A bare search page: nothing asked yet, so offer somewhere to start.
+    renderSearchChips();
   }
+}
+
+// Example searches for an empty search page. Plain phrases a reader might
+// actually wonder about, not jargon; each returns real passages.
+const SEARCH_EXAMPLES = [
+  "cost of living", "negative gearing", "poker machines", "rental crisis",
+  "aged care", "childcare", "bulk billing", "student debt",
+  "supermarket prices", "penalty rates", "climate change", "renewable energy",
+  "housing affordability", "robodebt", "gambling advertising", "Uluru Statement",
+  "submarines", "bushfires", "domestic violence", "public transport",
+  "vaping", "interest rates", "aged pension", "childcare subsidy",
+];
+
+/** Six examples, fading up in turn, on a search page with nothing on it yet. */
+function renderSearchChips() {
+  const row = $("search-chips");
+  if (!row) return;
+  row.replaceChildren();
+  const label = document.createElement("span");
+  label.className = "chip-label";
+  label.textContent = "Try:";
+  row.appendChild(label);
+  const picks = [...SEARCH_EXAMPLES].sort(() => Math.random() - 0.5).slice(0, 6);
+  picks.forEach((q, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip rise-in";
+    b.style.setProperty("--i", String(i + 1));
+    b.textContent = q;
+    b.addEventListener("click", () => {
+      $("search-input").value = q;
+      $("search-form").requestSubmit();
+    });
+    row.appendChild(b);
+  });
+  row.hidden = false;
 }
 
 function activeFilterSummary(f) {
@@ -4664,6 +4704,7 @@ async function runSearch() {
   showLoader("search-wombat", "Searching the record.");
   $("results-bar").hidden = true;
   $("search-results").replaceChildren();
+  $("search-chips").hidden = true; // the examples step aside once a search runs
   $("search-empty").hidden = true;
   $("search-answer-empty").hidden = true;
   try {
