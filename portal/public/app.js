@@ -762,11 +762,15 @@ function route() {
     showPanel("subject");
     document.title = TITLES.subject;
     const name = decodeURIComponent(segs[2]);
-    // No index page yet for people, parties or donors, so the group is a
-    // plain step; the money map is the nearest thing for donors and parties.
-    const group = { person: "Parliamentarians", party: "Parties", donor: "Donors" }[segs[1]] || "Encyclopedia";
-    setCrumbs([{ label: group }, { label: name }]);
+    // The group step leads to that kind's index (#/subject/person etc.).
+    const group = DIRECTORY_KINDS[segs[1]];
+    setCrumbs([group ? { label: group, href: `#/subject/${segs[1]}` } : { label: "Encyclopedia" }, { label: name }]);
     openSubject(segs[1], name, manageFocus);
+  } else if (view === "subject" && DIRECTORY_KINDS[segs[1]]) {
+    showPanel("subject");
+    document.title = `${DIRECTORY_KINDS[segs[1]]} · OPAX`;
+    setCrumbs([{ label: DIRECTORY_KINDS[segs[1]] }]);
+    openDirectory(segs[1], params, manageFocus);
   } else if (view === "doc" && segs[1]) {
     showPanel("doc");
     document.title = TITLES.doc;
@@ -2336,7 +2340,7 @@ async function openSubject(kind, name, manageFocus) {
     const isParty = node.kind === "party";
     // The money data's spelling of the name is the entry's; the trail follows it.
     if (node.label && node.label !== name) {
-      setCrumbs([{ label: isParty ? "Parties" : "Donors" }, { label: node.label }]);
+      setCrumbs([{ label: isParty ? "Parties" : "Donors", href: `#/subject/${node.kind}` }, { label: node.label }]);
     }
     const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id);
     const counter = new Map();
@@ -2667,6 +2671,557 @@ async function openTopicsIndex(manageFocus) {
     <p class="fineprint">A machine pass is labelling every speech in the corpus by subject;
     these counts are live and grow as it runs. A topic with few speeches yet is not a quiet
     debate, just one the pass has not reached.</p>`;
+}
+
+// --- encyclopedia indexes (directories) -------------------------------------
+// Parliamentarians, Parties and Donors each get a full list at
+// #/subject/<kind>: instant search, filters, a sort, and every control
+// mirrored into the hash (history.replaceState) so a filtered view is a URL
+// that survives sharing and the back button. One renderer serves all three;
+// each page supplies its rows, filters and sorts. Rows render in chunks of
+// DIR_CHUNK with a "Show more" button so 1,400 people stay instant.
+
+const DIRECTORY_KINDS = { person: "Parliamentarians", party: "Parties", donor: "Donors" };
+const DIR_CHUNK = 60;
+
+// Chamber codes as parli.db records them, in the order the filter lists them.
+const DIR_CHAMBERS = {
+  representatives: "House of Representatives", senate: "Senate", senate_committee: "Senate committees",
+  nsw_la: "NSW Legislative Assembly", nsw_lc: "NSW Legislative Council",
+  vic_la: "Victorian Legislative Assembly", vic_lc: "Victorian Legislative Council",
+  sa_ha: "SA House of Assembly", sa_lc: "SA Legislative Council",
+  qld_la: "Queensland Legislative Assembly",
+};
+
+// The money map's cluster hues (mirror of ledger.js GROUP_COLOURS and
+// graph/palette.ts): donor nodes carry a `group` but no colour of their own.
+const DONOR_GROUP_COLOURS = {
+  "parties": "#9AA0A8", "unions": "#E15759", "finance": "#4E79A7", "individuals": "#79706E",
+  "property": "#F28E2B", "mining & energy": "#9C755F", "hospitality": "#EDC948",
+  "media & tech": "#76B7B2", "health & pharma": "#59A14F", "gambling": "#B07AA1",
+  "legal & lobbying": "#6A51A3", "defence & security": "#37474F", "agriculture": "#6B8E23",
+  "retail": "#FF9DA7", "tobacco & alcohol": "#A65628", "other": "#999966",
+};
+const donorGroupColour = (group) => DONOR_GROUP_COLOURS[String(group || "").toLowerCase()] || "#999966";
+
+/** Search key: lowercase, accents and apostrophes stripped, punctuation to spaces. */
+function foldText(s) {
+  return String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function directoryHash(kind, state) {
+  const p = new URLSearchParams();
+  for (const [k, v] of Object.entries(state)) if (v) p.set(k, v);
+  const q = p.toString();
+  return `#/subject/${kind}${q ? `?${q}` : ""}`;
+}
+
+/** A year span for a row: "1998–2019", or the one year. */
+function yearSpan(first, last) {
+  if (!first && !last) return "";
+  return first === last || !last ? String(first || last) : `${first}–${last}`;
+}
+
+/** Party dot for a label the party map may not know (state-only parties): the money file's colour stands in. */
+function anyPartyDotHTML(label, colours) {
+  const cls = partyClass(label);
+  if (cls) return `<span class="party party-${cls} party-dot-only"><i aria-hidden="true"></i></span>`;
+  const c = colours?.get(label);
+  return `<span class="party party-oth party-dot-only"${c ? ` style="--pc:${esc(c)}"` : ""}><i aria-hidden="true"></i></span>`;
+}
+
+let parliamentariansPromise = null;
+function loadParliamentarians() {
+  parliamentariansPromise ??= fetch("/parliamentarians.json")
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return parliamentariansPromise;
+}
+function loadAccess() {
+  accessPromise ??= fetch("/access.json").then((r) => (r.ok ? r.json() : null)).then((d) => (accessData = d)).catch(() => null);
+  return accessPromise;
+}
+
+// The live directory, so a second visit to the same index with other hash
+// params (a menu link while filtered) re-applies them instead of rebuilding.
+let activeDirectory = null;
+
+/**
+ * Render one directory into #subject-body.
+ *   spec.kind      person | party | donor (the route and hash base)
+ *   spec.title     serif heading; spec.lede: one sentence with the counts (HTML)
+ *   spec.tiles     [[value, label]] figures for the whole directory
+ *   spec.items     rows; spec.text(item) is what the search box matches
+ *   spec.filters   [{ key, label, options: [[value, label]], test(item, value) }]
+ *                  or { key, label, check: true, test(item) } for a checkbox
+ *   spec.sorts     [[value, label, cmp]]; the first is the default
+ *   spec.row(item) one <li>; spec.fineprint: HTML for the sources note
+ *   spec.params    URLSearchParams from the hash
+ */
+function renderDirectory(spec) {
+  const body = $("subject-body");
+  const state = { q: "", sort: spec.sorts[0][0] };
+  for (const f of spec.filters) state[f.key] = "";
+  const readParams = (params) => {
+    state.q = params.get("q") || "";
+    const sort = params.get("sort");
+    state.sort = spec.sorts.some(([v]) => v === sort) ? sort : spec.sorts[0][0];
+    for (const f of spec.filters) {
+      const v = params.get(f.key) || "";
+      state[f.key] = f.check ? (v ? "1" : "") : (f.options.some(([o]) => o === v) ? v : "");
+    }
+  };
+  readParams(spec.params);
+  for (const it of spec.items) it._text = foldText(spec.text(it));
+
+  const filterHTML = (f) => f.check
+    ? `<label class="dir-check"><input type="checkbox" data-filter="${esc(f.key)}"${state[f.key] ? " checked" : ""}>${esc(f.label)}</label>`
+    : `<label class="dir-field"><span>${esc(f.label)}</span>
+        <select data-filter="${esc(f.key)}">
+          <option value="">${esc(f.any || "All")}</option>
+          ${f.options.map(([v, l]) => `<option value="${esc(v)}"${state[f.key] === v ? " selected" : ""}>${esc(l)}</option>`).join("")}
+        </select></label>`;
+  body.innerHTML = `
+    <p class="kicker">Encyclopedia</p>
+    <div class="subject-head">
+      <h2 id="subject-title" tabindex="-1">${esc(spec.title)}</h2>
+      <p class="subject-tag"><span>${spec.lede}</span></p>
+    </div>
+    <div class="tiles tiles-compact dir-tiles">${spec.tiles.map(([v, l]) => tile(v, l)).join("")}</div>
+    <form class="dir-controls" id="dir-controls" role="search" aria-label="Filter the list">
+      <label class="visually-hidden" for="dir-q">Search ${esc(spec.title.toLowerCase())} by name</label>
+      <input id="dir-q" type="search" autocomplete="off" spellcheck="false"
+             placeholder="Search by name…" value="${esc(state.q)}">
+      ${spec.filters.filter((f) => !f.check).map(filterHTML).join("")}
+      <label class="dir-field"><span>Sort</span>
+        <select id="dir-sort">${spec.sorts.map(([v, l]) => `<option value="${esc(v)}"${state.sort === v ? " selected" : ""}>${esc(l)}</option>`).join("")}</select></label>
+      ${spec.filters.some((f) => f.check) ? `<div class="dir-checks">${spec.filters.filter((f) => f.check).map(filterHTML).join("")}</div>` : ""}
+    </form>
+    <p class="dir-count" id="dir-count" role="status" aria-live="polite"></p>
+    <ul class="subject-list dir-list" id="dir-list" role="list"></ul>
+    <div class="dir-empty" id="dir-empty" hidden>
+      <span>Nothing in the ${esc(spec.title.toLowerCase())} directory matches that.</span>
+      <button type="button" class="secondary" id="dir-clear">Clear filters</button>
+    </div>
+    <p class="dir-more-row"><button type="button" class="secondary" id="dir-more" hidden>Show more</button></p>
+    <p class="fineprint">${spec.fineprint}</p>`;
+
+  const list = $("dir-list"), count = $("dir-count"), empty = $("dir-empty"), moreBtn = $("dir-more");
+  const form = $("dir-controls"), input = $("dir-q"), sortSel = $("dir-sort");
+  const sortMap = new Map(spec.sorts.map(([v, , cmp]) => [v, cmp]));
+  let matched = [], shown = 0;
+  const noun = spec.title.toLowerCase();
+
+  const more = () => {
+    const next = matched.slice(shown, shown + DIR_CHUNK);
+    list.insertAdjacentHTML("beforeend", next.map(spec.row).join(""));
+    shown += next.length;
+    moreBtn.hidden = shown >= matched.length;
+    if (!moreBtn.hidden) moreBtn.textContent = `Show more (${(matched.length - shown).toLocaleString()} more)`;
+  };
+  const apply = () => {
+    const terms = foldText(state.q).split(" ").filter(Boolean);
+    matched = spec.items.filter((it) =>
+      terms.every((t) => it._text.includes(t)) &&
+      spec.filters.every((f) => !state[f.key] || f.test(it, state[f.key])));
+    const cmp = sortMap.get(state.sort) || spec.sorts[0][2];
+    matched.sort((a, b) => cmp(a, b, state)); // comparators may read the filters (a jurisdiction's own figure)
+    list.innerHTML = "";
+    shown = 0;
+    more();
+    const filtered = matched.length !== spec.items.length;
+    count.textContent = filtered
+      ? `${matched.length.toLocaleString()} of ${spec.items.length.toLocaleString()} ${noun}`
+      : `${spec.items.length.toLocaleString()} ${noun}`;
+    empty.hidden = matched.length > 0;
+    const hashState = { ...state, sort: state.sort === spec.sorts[0][0] ? "" : state.sort };
+    history.replaceState(null, "", directoryHash(spec.kind, hashState));
+  };
+  const syncControls = () => {
+    input.value = state.q;
+    sortSel.value = state.sort;
+    for (const el of form.querySelectorAll("[data-filter]")) {
+      if (el.type === "checkbox") el.checked = Boolean(state[el.dataset.filter]);
+      else el.value = state[el.dataset.filter];
+    }
+  };
+
+  let timer = 0;
+  input.addEventListener("input", () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { state.q = input.value.trim(); apply(); }, 120);
+  });
+  form.addEventListener("submit", (e) => { e.preventDefault(); clearTimeout(timer); state.q = input.value.trim(); apply(); });
+  form.addEventListener("change", (e) => {
+    const el = e.target;
+    if (el === sortSel) { state.sort = el.value; apply(); return; }
+    if (!el.dataset.filter) return;
+    state[el.dataset.filter] = el.type === "checkbox" ? (el.checked ? "1" : "") : el.value;
+    apply();
+  });
+  $("dir-clear").addEventListener("click", () => {
+    readParams(new URLSearchParams());
+    syncControls();
+    apply();
+    input.focus();
+  });
+  moreBtn.addEventListener("click", () => {
+    const firstNew = shown;
+    more();
+    list.children[firstNew]?.querySelector("a")?.focus();
+  });
+  apply();
+  activeDirectory = {
+    key: `dir:${spec.kind}`,
+    setParams(params) { readParams(params); syncControls(); apply(); },
+  };
+}
+
+async function openDirectory(kind, params, manageFocus) {
+  const key = `dir:${kind}`;
+  if (currentSubjectKey === key) {
+    activeDirectory?.setParams(params);
+    if (manageFocus) $("subject-title")?.focus();
+    return;
+  }
+  currentSubjectKey = key;
+  activeDirectory = null;
+  destroySubjectMap();
+  const body = $("subject-body");
+  body.innerHTML = `
+    <p class="kicker">Encyclopedia</p>
+    <div class="subject-head">
+      <h2 id="subject-title" tabindex="-1">${esc(DIRECTORY_KINDS[kind])}</h2>
+      <p class="subject-tag"><span id="subject-loader" class="subject-loader"></span></p>
+    </div>`;
+  if (manageFocus) $("subject-title")?.focus();
+  showPageLoader("subject-loader", "Opening the directory.");
+  const build = { person: buildPeopleDirectory, party: buildPartiesDirectory, donor: buildDonorsDirectory }[kind];
+  let spec = null;
+  try { spec = await build(); } catch { /* honest failure below */ }
+  if (currentSubjectKey !== key) return;
+  clearPageLoader("subject-loader");
+  if (!spec) {
+    body.querySelector(".subject-tag").innerHTML = `<span>The directory could not be loaded. Try again shortly.</span>`;
+    return;
+  }
+  spec.kind = kind;
+  spec.params = params;
+  renderDirectory(spec);
+}
+
+const byNumDesc = (get) => (a, b, state) => (get(b, state) || 0) - (get(a, state) || 0) || a._sortName.localeCompare(b._sortName);
+/** Disclosed money for a row: the filtered commission's own figure when one is chosen, else the headline. */
+const moneyFor = (row, state) => (state?.jur && row.money[state.jur]) ? row.money[state.jur].total : row._total;
+const byName = (a, b) => a._sortName.localeCompare(b._sortName);
+/** A select option carrying its count: ["Labor", "Labor (383)"]. */
+const countOpt = (value, label, n) => [value, `${label} (${Number(n || 0).toLocaleString()})`];
+
+/** Parliamentarians: parliamentarians.json joined to portraits and votes by lowercased name. */
+async function buildPeopleDirectory() {
+  const [data] = await Promise.all([loadParliamentarians(), loadPhotoMap(), loadVotes()]);
+  if (!data?.people?.length) return null;
+  const items = data.people;
+  for (const p of items) {
+    const lname = p.name.toLowerCase();
+    p._photo = photoUrlFor(p.name);
+    const keys = [...new Set([p.pid, photoMap?.[lname], ...(votesData?._names?.[lname] || [])].filter(Boolean))];
+    p._divisions = keys.reduce((a, k) => a + (Number(votesData?.[k]?.divisions_total) || 0), 0);
+    p._sortName = `${lname.split(" ").pop()} ${lname}`;
+  }
+  const partyCounts = new Map();
+  const chamberCounts = new Map();
+  const stateCounts = new Map();
+  for (const p of items) {
+    if (p.party) partyCounts.set(p.party, (partyCounts.get(p.party) || 0) + 1);
+    for (const c of p.chambers || []) chamberCounts.set(c, (chamberCounts.get(c) || 0) + 1);
+    for (const s of p.states || []) stateCounts.set(s, (stateCounts.get(s) || 0) + 1);
+  }
+  const partyOptions = [...partyCounts.entries()].sort((a, b) => b[1] - a[1])
+    .map(([party, n]) => countOpt(party, party, n));
+  partyOptions.push(countOpt("none", "No party recorded", items.filter((p) => !p.party).length));
+  const speeches = items.reduce((a, p) => a + (p.speeches || 0), 0);
+  const withVotes = items.filter((p) => p._divisions > 0).length;
+  const meta = data.meta || {};
+  const num = (n) => Number(n || 0).toLocaleString();
+
+  const row = (p) => {
+    const portrait = p._photo
+      ? `<span class="dir-portrait"><img src="${esc(p._photo)}" alt="" width="40" height="40" loading="lazy"></span>`
+      : `<span class="dir-mono" aria-hidden="true">${esc(p.name.slice(0, 1))}</span>`;
+    const where = (p.states || []).map((s) => STATE_NAMES[s] || s).join(", ");
+    const metaLine = [
+      p.party ? partyChipHTML(p.party) : `<span class="dir-muted">No party recorded</span>`,
+      (p.parties || []).length > 1 ? `<span class="dir-muted">also ${esc(p.parties.slice(1).join(", "))}</span>` : "",
+      where ? esc(where) : "",
+      yearSpan(p.first, p.last) ? esc(yearSpan(p.first, p.last)) : "",
+    ].filter(Boolean).join(" · ");
+    return `<li class="dir-row">
+      ${portrait}
+      <div class="dir-main">
+        <a class="source-title dir-name" href="${esc(subjectHash("person", p.name))}">${esc(p.name)}</a>${p.full ? `<span class="dir-alt">${esc(p.full)}</span>` : ""}
+        <span class="result-meta">${metaLine}</span>
+      </div>
+      <div class="dir-figs">
+        <span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>
+        ${p._divisions ? `<span class="dir-fig"><b>${num(p._divisions)}</b>division${p._divisions === 1 ? "" : "s"}</span>` : ""}
+      </div>
+    </li>`;
+  };
+
+  return {
+    title: "Parliamentarians",
+    lede: `<b>${num(items.length)}</b> people who spoke in ${stateCounts.size} parliaments since the 1993 election,
+      with ${num(speeches)} speeches between them under the site's corpus rule. Every name opens its entry.`,
+    tiles: [[num(items.length), "people listed"], [String(partyCounts.size), "parties"],
+      [String(stateCounts.size), "parliaments"], [num(speeches), "speeches in the corpus"], [num(withVotes), "with a voting record"]],
+    items,
+    text: (p) => `${p.name} ${p.full || ""} ${p.party || ""} ${(p.states || []).map((s) => STATE_NAMES[s] || s).join(" ")}`,
+    filters: [
+      { key: "party", label: "Party", options: partyOptions,
+        test: (p, v) => v === "none" ? !p.party : (p.party === v || (p.parties || []).includes(v)) },
+      { key: "state", label: "Parliament",
+        options: Object.keys(STATE_NAMES).filter((s) => stateCounts.has(s)).map((s) => countOpt(s, STATE_NAMES[s], stateCounts.get(s))),
+        test: (p, v) => (p.states || []).includes(v) },
+      { key: "chamber", label: "Chamber",
+        options: Object.keys(DIR_CHAMBERS).filter((c) => chamberCounts.has(c)).map((c) => countOpt(c, DIR_CHAMBERS[c], chamberCounts.get(c))),
+        test: (p, v) => (p.chambers || []).includes(v) },
+      { key: "votes", label: "Voting record", check: true, test: (p) => p._divisions > 0 },
+      { key: "photo", label: "Portrait", check: true, test: (p) => Boolean(p._photo) },
+    ],
+    sorts: [
+      ["speeches", "Most speeches", byNumDesc((p) => p.speeches)],
+      ["name", "Name A-Z", byName],
+      ["recent", "Most recent", (a, b) => (b.last || 0) - (a.last || 0) || (b.speeches || 0) - (a.speeches || 0)],
+      ["divisions", "Most divisions", byNumDesc((p) => p._divisions)],
+    ],
+    row,
+    fineprint: `Names appear as Hansard prints them, so a surname-only print ("Shoebridge") is its own entry, with the
+      members register's full name beside it where the record knows it. Speech counts follow the site's corpus rule
+      (speeches since the 1993 election, 200+ characters, procedural rows removed) and are counted from the
+      corpus itself, so they can run ahead of what the index has loaded so far; speakers with fewer than
+      ${num(meta.floor || 5)} indexed speeches${meta.witnesses_excluded ? ` and ${num(meta.witnesses_excluded)} people who appear only as committee witnesses` : ""}
+      are not listed. Party is the label the person's speeches carry, or the members register's where they carry none;
+      many state Hansard rows record neither. Portraits are official APH and OpenAustralia photos; divisions come from
+      They Vote For You and the NSW, Victorian and Queensland Hansard.`,
+  };
+}
+
+/** Parties: money-file party nodes, the record's party facet and the directory's member counts. */
+async function buildPartiesDirectory() {
+  const [fed, qld, vic, live, dir] = await Promise.all([
+    loadMoneyFile("federal"), loadMoneyFile("qld"), loadMoneyFile("vic"),
+    api("/api/parties").catch(() => null), loadParliamentarians(),
+  ]);
+  const files = [["federal", fed], ["qld", qld], ["vic", vic]].filter(([, d]) => d?.nodes);
+  if (!files.length && !live?.parties?.length) return null;
+  const parties = new Map();
+  const get = (label) => {
+    if (!parties.has(label)) parties.set(label, { label, colour: null, speeches: 0, members: 0, money: {}, _sortName: label.toLowerCase() });
+    return parties.get(label);
+  };
+  for (const [jur, data] of files) {
+    for (const n of data.nodes) if (n.kind === "party") {
+      const p = get(n.label);
+      p.colour ??= n.colour || null;
+      p.money[jur] = { total: n.total || 0, count: n.count || 0, first: n.firstYear, last: n.lastYear, donors: 0 };
+    }
+    for (const e of data.edges || []) {
+      const p = parties.get(String(e.target).replace(/^party:/, ""));
+      if (p?.money[jur]) p.money[jur].donors += 1;
+    }
+  }
+  for (const r of live?.parties || []) if (r.label) get(r.label).speeches = r.count || 0;
+  for (const p of dir?.people || []) if (p.party) get(p.party).members += 1;
+  const items = [...parties.values()];
+  const colours = new Map(items.filter((p) => p.colour).map((p) => [p.label, p.colour]));
+  const sourceShort = { federal: "AEC returns", qld: (qld?.meta?.sourceShort) || "ECQ", vic: (vic?.meta?.sourceShort) || "VEC" };
+  for (const p of items) {
+    const jurs = Object.keys(p.money);
+    // Headline receipts: the AEC figure where there is one (it already
+    // includes state branches); a state-only party shows its largest file.
+    p._total = p.money.federal ? p.money.federal.total : Math.max(0, ...jurs.map((j) => p.money[j].total));
+    p._first = Math.min(...jurs.map((j) => p.money[j].first || 9999));
+    p._last = Math.max(...jurs.map((j) => p.money[j].last || 0));
+  }
+  const num = (n) => Number(n || 0).toLocaleString();
+  const aecTotal = items.reduce((a, p) => a + (p.money.federal?.total || 0), 0);
+  const members = items.reduce((a, p) => a + p.members, 0);
+
+  const row = (p) => {
+    const jurs = Object.keys(p.money);
+    const meta = [
+      jurs.length ? esc(`Disclosures: ${jurs.map((j) => MONEY_JURISDICTIONS[j]?.label || j).join(", ")}`) : `<span class="dir-muted">No party-level disclosure file</span>`,
+      jurs.length && p._first < 9999 ? esc(yearSpan(p._first, p._last)) : "",
+    ].filter(Boolean).join(" · ");
+    const figs = [
+      `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>`,
+      `<span class="dir-fig"><b>${num(p.members)}</b>in the directory</span>`,
+      ...jurs.map((j) => `<span class="dir-fig"><b>${esc(fmtMoney(p.money[j].total))}</b>${esc(sourceShort[j] || j)}</span>`),
+    ].join("");
+    return `<li class="dir-row dir-row-plain">
+      <div class="dir-main">
+        <a class="source-title dir-name" href="${esc(subjectHash("party", p.label))}">${anyPartyDotHTML(p.label, colours)}${esc(p.label)}</a>
+        <span class="result-meta">${meta}</span>
+      </div>
+      <div class="dir-figs">${figs}</div>
+    </li>`;
+  };
+
+  return {
+    title: "Parties",
+    lede: `<b>${num(items.length)}</b> parties, from the record's party labels, the parliamentarians directory and the
+      disclosure returns of ${files.length} commission${files.length === 1 ? "" : "s"}. Every name opens its entry.`,
+    tiles: [[num(items.length), "parties listed"], [num(live?.labelled), "speeches with a party label"],
+      [num(members), "directory members with a party"], [fmtMoney(aecTotal), "disclosed to the AEC, all parties"]],
+    items,
+    text: (p) => p.label,
+    filters: [
+      { key: "jur", label: "Disclosures", any: "Any commission",
+        options: [["federal", "Federal (AEC)"], ["qld", "Queensland (ECQ)"], ["vic", "Victoria (VEC)"]],
+        test: (p, v) => Boolean(p.money[v]) },
+      { key: "show", label: "Show", any: "Every party",
+        options: [["speeches", "With speeches in the record"], ["members", "With members in the directory"], ["money", "With disclosed receipts"]],
+        test: (p, v) => v === "speeches" ? p.speeches > 0 : v === "members" ? p.members > 0 : Object.keys(p.money).length > 0 },
+    ],
+    sorts: [
+      ["speeches", "Most speeches", byNumDesc((p) => p.speeches)],
+      ["donations", "Most disclosed receipts", byNumDesc(moneyFor)],
+      ["members", "Most members", byNumDesc((p) => p.members)],
+      ["name", "Name A-Z", byName],
+    ],
+    row,
+    fineprint: `Speech counts are the index's live party labels; a speech with no party label (many state Hansard
+      rows) is not counted, and a party with speeches but no disclosure file (independents, parties that wound up
+      before 1998) still lists. Receipts are per commission and are not summed: ${esc(STATE_NOT_SUMMED)}
+      ${esc(AEC_NOTE)}`,
+  };
+}
+
+/** Donors: donor nodes across the three money files, merged by normalised name, with access.json markers. */
+async function buildDonorsDirectory() {
+  const [fed, qld, vic, acc] = await Promise.all([
+    loadMoneyFile("federal"), loadMoneyFile("qld"), loadMoneyFile("vic"), loadAccess(),
+  ]);
+  const files = [["federal", fed], ["qld", qld], ["vic", vic]].filter(([, d]) => d?.nodes);
+  if (!files.length) return null;
+  const donors = new Map();
+  const colours = new Map();
+  for (const [jur, data] of files) {
+    const byId = new Map(data.nodes.map((n) => [n.id, n]));
+    for (const n of data.nodes) {
+      if (n.kind === "party") { if (n.colour && !colours.has(n.label)) colours.set(n.label, n.colour); continue; }
+      if (n.kind !== "donor") continue;
+      const k = normName(n.label) || String(n.label).toLowerCase();
+      if (!donors.has(k)) {
+        donors.set(k, { label: n.label, labels: new Set(), industry: n.industry, group: n.group, money: {},
+          parties: new Map(), first: n.firstYear || 9999, last: n.lastYear || 0 });
+      }
+      const d = donors.get(k);
+      d.labels.add(n.label);
+      if (jur === "federal") { d.label = n.label; d.industry = n.industry; d.group = n.group; }
+      d.money[jur] = { total: n.total || 0, count: n.count || 0, first: n.firstYear, last: n.lastYear };
+      d.first = Math.min(d.first, n.firstYear || 9999);
+      d.last = Math.max(d.last, n.lastYear || 0);
+    }
+    for (const e of data.edges || []) {
+      const n = byId.get(e.source);
+      const d = n && donors.get(normName(n.label) || String(n.label).toLowerCase());
+      if (!d) continue;
+      const party = String(e.target).replace(/^party:/, "");
+      d.parties.set(party, (d.parties.get(party) || 0) + (e.total || 0));
+    }
+  }
+  const items = [...donors.values()];
+  const sourceShort = { federal: "AEC returns", qld: (qld?.meta?.sourceShort) || "ECQ", vic: (vic?.meta?.sourceShort) || "VEC" };
+  for (const d of items) {
+    d._sortName = d.label.toLowerCase();
+    d._partyList = [...d.parties.entries()].sort((a, b) => b[1] - a[1]).map(([p]) => p);
+    // Headline: the AEC figure where there is one; else the largest state file.
+    const jurs = Object.keys(d.money);
+    d._total = d.money.federal ? d.money.federal.total : Math.max(0, ...jurs.map((j) => d.money[j].total));
+    d._count = d.money.federal ? d.money.federal.count : Math.max(0, ...jurs.map((j) => d.money[j].count));
+    const access = [...d.labels].map((l) => acc?.donors?.[l]).find(Boolean) || null;
+    d._lobbyists = Number(access?.lobbyists_total) || (access?.lobbyists?.length || 0);
+    d._meetings = Number(access?.meetings_total) || (access?.meetings?.length || 0);
+  }
+  const groupCounts = new Map();
+  const partyCounts = new Map();
+  for (const d of items) {
+    const g = d.group || "other";
+    groupCounts.set(g, (groupCounts.get(g) || 0) + 1);
+    for (const p of d._partyList) partyCounts.set(p, (partyCounts.get(p) || 0) + 1);
+  }
+  const num = (n) => Number(n || 0).toLocaleString();
+  const aecTotal = items.reduce((a, d) => a + (d.money.federal?.total || 0), 0);
+  const withAccess = items.filter((d) => d._lobbyists || d._meetings).length;
+
+  const row = (d) => {
+    const colour = donorGroupColour(d.group);
+    const shownParties = d._partyList.slice(0, 3);
+    const more = d._partyList.length - shownParties.length;
+    const partiesHTML = shownParties.length
+      ? `<span class="dir-parties">to ${shownParties.map((p) => `${anyPartyDotHTML(p, colours)}${esc(p)}`).join(", ")}${more > 0 ? ` and ${more} more` : ""}</span>`
+      : "";
+    const marks = [
+      d._lobbyists ? `<span class="dir-mark" title="${esc(`${d._lobbyists} registered lobbying firm${d._lobbyists === 1 ? "" : "s"}`)}">lobbyists</span>` : "",
+      d._meetings ? `<span class="dir-mark" title="${esc(`${d._meetings} disclosed ministerial meeting${d._meetings === 1 ? "" : "s"}`)}">meetings</span>` : "",
+    ].filter(Boolean).join(" ");
+    const meta = [
+      `<span class="party party-oth" style="--pc:${esc(colour)}"><i aria-hidden="true"></i>${esc(industryLabel(d.industry || d.group || "other"))}</span>`,
+      d.first < 9999 ? esc(yearSpan(d.first, d.last)) : "",
+      partiesHTML,
+      marks,
+    ].filter(Boolean).join(" · ");
+    const jurs = Object.keys(d.money);
+    const figs = [
+      ...jurs.map((j) => `<span class="dir-fig"><b>${esc(fmtMoney(d.money[j].total))}</b>${esc(sourceShort[j] || j)}</span>`),
+      `<span class="dir-fig"><b>${num(d._count)}</b>donation${d._count === 1 ? "" : "s"}</span>`,
+    ].join("");
+    return `<li class="dir-row">
+      <span class="dir-mono dir-mono-ind" style="--pc:${esc(colour)}" aria-hidden="true">${esc(d.label.slice(0, 1))}</span>
+      <div class="dir-main">
+        <a class="source-title dir-name" href="${esc(subjectHash("donor", d.label))}">${esc(d.label)}</a>
+        <span class="result-meta">${meta}</span>
+      </div>
+      <div class="dir-figs">${figs}</div>
+    </li>`;
+  };
+
+  const commissions = files.map(([j, d]) => d.meta?.commission || (j === "federal" ? "Australian Electoral Commission" : j));
+  return {
+    title: "Donors",
+    lede: `The <b>${num(items.length)}</b> largest disclosed donors to registered parties across ${files.length} disclosure
+      files, merged where one name appears in more than one. Every name opens its entry.`,
+    tiles: [[num(items.length), "donors listed"], [fmtMoney(aecTotal), "disclosed to the AEC"],
+      [String(partyCounts.size), "parties given to"], [num(withAccess), "with lobbyists or meetings"]],
+    items,
+    text: (d) => `${[...d.labels].join(" ")} ${d.industry || ""} ${d.group || ""} ${d._partyList.join(" ")}`,
+    filters: [
+      { key: "industry", label: "Industry",
+        options: [...groupCounts.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([g, n]) => [g, `${g} (${n.toLocaleString()})`]),
+        test: (d, v) => (d.group || "other") === v },
+      { key: "jur", label: "Disclosed to", any: "Any commission",
+        options: [["federal", "Federal (AEC)"], ["qld", "Queensland (ECQ)"], ["vic", "Victoria (VEC)"]],
+        test: (d, v) => Boolean(d.money[v]) },
+      { key: "party", label: "Party given to", any: "Any party",
+        options: [...partyCounts.entries()].sort((a, b) => b[1] - a[1]).map(([p, n]) => [p, `${p} (${n.toLocaleString()})`]),
+        test: (d, v) => d._partyList.includes(v) },
+      { key: "access", label: "Lobbyists or meetings", check: true, test: (d) => d._lobbyists > 0 || d._meetings > 0 },
+    ],
+    sorts: [
+      ["total", "Largest disclosed total", byNumDesc(moneyFor)],
+      ["count", "Most donations", byNumDesc((d, s) => (s?.jur && d.money[s.jur]) ? d.money[s.jur].count : d._count)],
+      ["recent", "Most recent", (a, b, s) => (b.last || 0) - (a.last || 0) || moneyFor(b, s) - moneyFor(a, s)],
+      ["name", "Name A-Z", byName],
+    ],
+    row,
+    fineprint: `These are the largest disclosed donors per commission (the top 250 in each file), not every donor.
+      ${esc(AEC_NOTE)} The same goes for gifts under each state's disclosure threshold.
+      ${esc(STATE_NOT_SUMMED)} Source: ${esc(commissions.join("; "))}. Lobbyist and meeting markers
+      come from the six lobbyist registers and the NSW and QLD ministerial diaries; name matching is exact after
+      normalisation, so a company using several trading names may be under-counted.`,
+  };
 }
 
 // --- explore (time machine + quiz) ------------------------------------------

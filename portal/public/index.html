@@ -49,13 +49,23 @@
         </li>
         <li class="nav-item has-menu">
           <button type="button" class="nav-link" data-panel="explore" aria-expanded="false" aria-controls="menu-explore">Explore<svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="megamenu" id="menu-explore" hidden>
-            <p class="kicker">Play with the record</p>
-            <a class="mm-link" href="#/explore" data-game="tm"><span class="mm-title">Time machine</span><span class="mm-blurb">Dial up any year since 1998 and see what parliament was arguing about.</span></a>
-            <a class="mm-link" href="#/explore" data-game="quiz"><span class="mm-title">The record quiz</span><span class="mm-blurb">Guess what the numbers say, then see the receipts.</span></a>
-            <a class="mm-link" href="#/explore" data-game="ledger"><span class="mm-title">The ledger</span><span class="mm-blurb">Every disclosed donation flow in one sortable, exportable table.</span></a>
-            <a class="mm-link" href="#/money"><span class="mm-title">The money map</span><span class="mm-blurb">250 donors, 11 parties, 28 years of AEC returns, as territory you can spin.</span></a>
-            <a class="mm-link" href="#/subject/topic"><span class="mm-title">Topics A-Z</span><span class="mm-blurb">Every debate in the record, by subject, with live counts.</span></a>
+          <div class="megamenu megamenu-wide" id="menu-explore" hidden>
+            <div class="mm-cols">
+              <div>
+                <p class="kicker">Play with the record</p>
+                <a class="mm-link" href="#/explore" data-game="tm"><span class="mm-title">Time machine</span><span class="mm-blurb">Dial up any year since 1998 and see what parliament was arguing about.</span></a>
+                <a class="mm-link" href="#/explore" data-game="quiz"><span class="mm-title">The record quiz</span><span class="mm-blurb">Guess what the numbers say, then see the receipts.</span></a>
+                <a class="mm-link" href="#/explore" data-game="ledger"><span class="mm-title">The ledger</span><span class="mm-blurb">Every disclosed donation flow in one sortable, exportable table.</span></a>
+                <a class="mm-link" href="#/money"><span class="mm-title">The money map</span><span class="mm-blurb">250 donors, 11 parties, 28 years of AEC returns, as territory you can spin.</span></a>
+              </div>
+              <div>
+                <p class="kicker">Encyclopedia</p>
+                <a class="mm-link" href="#/subject/person"><span class="mm-title">Parliamentarians</span><span class="mm-blurb">Every speaker in the record, searchable by name, party and parliament.</span></a>
+                <a class="mm-link" href="#/subject/party"><span class="mm-title">Parties</span><span class="mm-blurb">Speeches, members and disclosed receipts, party by party.</span></a>
+                <a class="mm-link" href="#/subject/donor"><span class="mm-title">Donors</span><span class="mm-blurb">The largest disclosed donors, by industry and by the parties they fund.</span></a>
+                <a class="mm-link" href="#/subject/topic"><span class="mm-title">Topics A-Z</span><span class="mm-blurb">Every debate in the record, by subject, with live counts.</span></a>
+              </div>
+            </div>
           </div>
         </li>
         <li class="nav-item has-menu">
@@ -117,6 +127,12 @@
       <li><a class="drawer-sub" href="#/explore" data-game="tm">Time machine</a></li>
       <li><a class="drawer-sub" href="#/explore" data-game="quiz">The record quiz</a></li>
       <li><a class="drawer-sub" href="#/explore" data-game="ledger">The ledger</a></li>
+    </ul>
+    <p class="drawer-kicker kicker">Encyclopedia</p>
+    <ul class="drawer-list">
+      <li><a class="drawer-sub" href="#/subject/person">Parliamentarians</a></li>
+      <li><a class="drawer-sub" href="#/subject/party">Parties</a></li>
+      <li><a class="drawer-sub" href="#/subject/donor">Donors</a></li>
       <li><a class="drawer-sub" href="#/subject/topic">Topics A-Z</a></li>
     </ul>
     <p class="drawer-kicker kicker">About</p>
