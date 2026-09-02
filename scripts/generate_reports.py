@@ -73,7 +73,7 @@ REPORTS: dict[str, dict] = {
     },
     "media": {
         "title": "Media Ownership",
-        "blurb": "Concentration, regulation and the platforms — parliament on the press.",
+        "blurb": "Concentration, regulation and the platforms: parliament on the press.",
         "questions": [
             "What have MPs said about media ownership concentration in Australia?",
             "What was said about the news media bargaining code and tech platforms?",
