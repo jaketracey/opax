@@ -372,35 +372,104 @@ const TITLES = {
 };
 
 // --- money map (lazy-loaded 3D bundle) --------------------------------------
+// One export per jurisdiction, all in the same node/edge shape, loaded one at
+// a time: AEC returns of federally registered parties already include their
+// state branches' receipts, so a Queensland gift to the LNP can sit in both
+// the federal and the Queensland file. Jurisdiction is a filter, never a sum.
+// Western Australia is in parli.db but WAEC asserts Crown copyright with no
+// open licence, so it is not shipped (docs/DATA-MONEY.md).
+
+const STATE_NOT_SUMMED =
+  "State and federal returns are not summed: AEC returns already include state branch receipts.";
+
+const MONEY_JURISDICTIONS = {
+  federal: { label: "Federal", file: "/graph/money.json" },
+  qld: { label: "Queensland", file: "/graph/money.qld.json" },
+  vic: { label: "Victoria", file: "/graph/money.vic.json" },
+};
+
+const moneyFiles = {}; // jurisdiction -> promise of the parsed export (federal shares loadMoneyData)
+function loadMoneyFile(jur) {
+  const cfg = MONEY_JURISDICTIONS[jur];
+  if (!cfg) return Promise.resolve(null);
+  if (jur === "federal") return loadMoneyData();
+  moneyFiles[jur] ??= fetch(cfg.file)
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return moneyFiles[jur];
+}
+
+function moneyHash(jur) {
+  return jur === "federal" ? "#/money" : `#/money?jur=${encodeURIComponent(jur)}`;
+}
+
+function renderMoneySwitch(jur) {
+  const box = $("money-jur");
+  if (!box) return;
+  box.innerHTML = Object.entries(MONEY_JURISDICTIONS).map(([k, c]) =>
+    `<button type="button" data-jur="${esc(k)}" aria-pressed="${k === jur ? "true" : "false"}">${esc(c.label)}</button>`).join("");
+  for (const btn of box.querySelectorAll("button")) {
+    btn.addEventListener("click", () => { location.hash = moneyHash(btn.dataset.jur); });
+  }
+}
+
+/** The panel fineprint, from the loaded file's meta block where it has one. */
+function moneyFineprintHTML(jur, meta) {
+  const cfg = MONEY_JURISDICTIONS[jur];
+  const parts = [];
+  if (meta?.jurisdiction) {
+    parts.push(`Source: ${meta.commission} (${meta.sourceShort}), ${meta.coverage}; licence: ${meta.licence}.`);
+    parts.push(meta.threshold, "Totals are a floor, not a ceiling.");
+    parts.push("Gifts to candidates and committees, public funding and internal party transfers are excluded.");
+    parts.push(meta.not_summed || STATE_NOT_SUMMED);
+  } else {
+    parts.push("Source: Australian Electoral Commission annual and election returns, financial years 1998-99 to 2025-26.");
+    parts.push(AEC_NOTE, "Public electoral funding and internal party transfers are excluded.", STATE_NOT_SUMMED);
+  }
+  const full = jur === "federal" ? "/map" : `/map?jur=${encodeURIComponent(jur)}`;
+  return `${parts.filter(Boolean).map((s) => esc(s)).join(" ")}
+      <a href="${esc(cfg.file)}">Download the data</a> · <a href="${esc(full)}">Full-screen map</a>`;
+}
 
 let moneyMapHandle = null;
-let moneyMapLoading = false;
+let moneyMapJur = null;     // jurisdiction the mounted map shows
+let moneyMapLoading = null; // jurisdiction of the mount in flight
 
-async function mountMoney() {
-  if (moneyMapHandle || moneyMapLoading) return;
-  moneyMapLoading = true;
+async function mountMoney(jurParam) {
+  const jur = MONEY_JURISDICTIONS[jurParam] ? jurParam : "federal";
+  renderMoneySwitch(jur);
+  if ((moneyMapHandle && moneyMapJur === jur) || moneyMapLoading === jur) return;
+  moneyMapLoading = jur;
+  if (moneyMapHandle) { moneyMapHandle.destroy(); moneyMapHandle = null; moneyMapJur = null; }
   const root = $("money-map-root");
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
+  const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const { mountMoneyMap } = await import("/money-map.js");
+    const [{ mountMoneyMap }, data] = await Promise.all([import("/money-map.js"), loadMoneyFile(jur)]);
+    if (moneyMapLoading !== jur) return; // switched again while loading
+    const fine = $("money-fineprint");
+    if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
     root.textContent = "";
-    moneyMapHandle = await mountMoneyMap(root, "/graph/money.json", {
+    const handle = await mountMoneyMap(root, cfg.file, {
       askUrl: (industry) =>
         askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
     });
+    if (moneyMapLoading !== jur) { handle.destroy(); return; }
+    moneyMapHandle = handle;
+    moneyMapJur = jur;
   } catch (err) {
+    if (moneyMapLoading !== jur) return;
     root.textContent = "";
     const p = document.createElement("p");
     p.className = "status error";
     p.style.cssText = "margin:0;padding:1rem 1.25rem";
     p.textContent = `The map could not load (${err.message || err}). `;
     const a = document.createElement("a");
-    a.href = "/map";
+    a.href = jur === "federal" ? "/map" : `/map?jur=${encodeURIComponent(jur)}`;
     a.textContent = "Try the full-screen map";
     p.appendChild(a);
     root.appendChild(p);
   } finally {
-    moneyMapLoading = false;
+    if (moneyMapLoading === jur) moneyMapLoading = null;
   }
 }
 
@@ -460,7 +529,7 @@ function route() {
   } else if (view === "money") {
     showPanel("money");
     document.title = TITLES.money;
-    mountMoney();
+    mountMoney(params.get("jur"));
   } else if (view === "explore") {
     showPanel("explore");
     document.title = TITLES.explore;
@@ -1545,6 +1614,59 @@ function weeklyFunFact(node) {
     ${years} year${years > 1 ? "s" : ""}, all from published AEC disclosures.`;
 }
 
+// --- parliamentary expenses (IPEA) ------------------------------------------
+// Per-person totals, category split, per-year series and the five largest
+// lines, exported by scripts/export_expenses.py from the IPEA quarterly
+// reports and served static. Keyed by person_id, with a name index for the
+// people who have no portrait entry; fetched only when a person page opens.
+let expensesData = null;
+let expensesPromise = null;
+function loadExpenses() {
+  expensesPromise ??= fetch("/expenses.json")
+    .then((r) => (r.ok ? r.json() : null)).then((d) => (expensesData = d)).catch(() => null);
+  return expensesPromise;
+}
+
+const IPEA_NOTE =
+  "Independent Parliamentary Expenses Authority quarterly reports, CC BY 4.0. Figures are as " +
+  "published; IPEA corrects prior quarters, so treat totals as indicative.";
+
+/** "Parliamentary expenses" on a person page plus the infobox quick fact.
+ *  Silent when the person has no IPEA entry (state MPs, pre-2017 members). */
+async function renderPersonExpenses(name, personId, sections) {
+  const key = currentSubjectKey;
+  await Promise.all([loadExpenses(), loadPhotoMap()]);
+  if (currentSubjectKey !== key || !expensesData?.people) return;
+  const nameKey = String(name || "").trim().toLowerCase();
+  const pid = personId || photoMap?.[nameKey] || expensesData.names?.[nameKey];
+  const e = pid && expensesData.people[pid];
+  if (!e) return;
+  const fmtDollars = (n) => `$${Math.round(n).toLocaleString()}`;
+  const span = e.from === e.to ? `in ${e.from}` : `${e.from} to ${e.to}`;
+  const lines = Number(e.lines || 0);
+  const items = (e.top || []).map((t) => `
+    <li class="barrow" style="grid-template-columns:auto minmax(0,1fr) auto">
+      <span class="barrow-value">${esc(fmtDate(t.date))}</span>
+      <span class="barrow-name" title="${esc(t.description ? `${t.category}: ${t.description}` : t.category)}">${esc(t.category)}${t.description ? ` · ${esc(t.description)}` : ""}</span>
+      <b class="barrow-value">${esc(fmtDollars(t.amount))}</b>
+    </li>`).join("");
+  const src = safeUrl(expensesData.meta?.source_url);
+  sections.insertAdjacentHTML("beforeend", `
+    <p class="kicker">Parliamentary expenses</p>
+    <p style="margin:0.2rem 0 0.6rem"><b>${esc(fmtMoney(e.total))}</b> claimed, ${esc(span)},
+      across ${lines.toLocaleString()} published line${lines === 1 ? "" : "s"}.</p>
+    ${e.by_category?.length ? barList(e.by_category, { fmt: fmtMoney, heading: "By category" }) : ""}
+    ${e.by_year?.length > 1 ? columnChart(e.by_year, {
+      fmt: fmtMoney, heading: "Claimed per year",
+      note: "Summed by reporting quarter. IPEA data starts in April 2017 and runs to the latest published quarter, so the first and last years can be partial.",
+    }) : ""}
+    ${items ? `<figure class="chart"><figcaption>Five largest line items</figcaption>
+      <ul class="subject-list" role="list" style="margin:0">${items}</ul></figure>` : ""}
+    <p class="fineprint">${esc(IPEA_NOTE)}${src ? ` <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗</a>` : ""}</p>`);
+  $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
+    `<dt>Claimed expenses</dt><dd><b>${esc(fmtMoney(e.total))}</b></dd>`);
+}
+
 async function openSubject(kind, name, manageFocus) {
   const key = `${kind}:${name}`;
   if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
@@ -1569,6 +1691,7 @@ async function openSubject(kind, name, manageFocus) {
         [["Type", kind === "party" ? "Political party" : "Organisation"]], "",
         [actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for them", { primary: true }),
          actionBtn("map", "#/money", "Open the money map")]);
+      if (kind === "donor") renderDonorStateMoney(name, sections);
       subjectMentions(name, sections, "In parliament");
       return;
     }
@@ -1613,6 +1736,7 @@ async function openSubject(kind, name, manageFocus) {
     }));
     sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
+    if (!isParty) renderDonorStateMoney(node.label, sections);
     await subjectMentions(node.label, sections, "In parliament");
     subjectNews(node.label, sections);
     mountSubjectMap(node.id);
@@ -1680,6 +1804,7 @@ async function openSubject(kind, name, manageFocus) {
        Hansard, and the record is still loading. <a href="${esc(searchHash(name, {}))}">Search the record instead</a>.</p>`);
   }
   await subjectNews(name, sections);
+  await renderPersonExpenses(name, photoMap?.[name.trim().toLowerCase()], sections);
   if (party) {
     await loadMoneyData();
     if (currentSubjectKey !== key) return;
