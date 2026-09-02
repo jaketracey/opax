@@ -134,12 +134,12 @@ JURISDICTIONS = {
             "`ext_donations` (source tas_tec)"
         ),
         "source_url": "https://www.tec.tas.gov.au/disclosure-and-funding/registers-and-reports/",
+        # The full quotation and the disclosures-subdomain caveat are in
+        # docs/DATA-MONEY.md section 1.1; the fineprint keeps the house one-liner
+        # plus the attribution the licence actually requires.
         "licence": (
-            "CC BY 4.0 (tec.tas.gov.au/info/Copyright.html: \"Unless otherwise noted, the TEC has "
-            "applied the Creative Commons Attribution 4.0 International Licence to all material on "
-            "this website with the exception of: TEC logos, and content supplied by a third party.\") "
-            "Attribute '© Tasmanian Electoral Commission'. The disclosures.tec.tas.gov.au subdomain "
-            "carries no licence statement of its own; the site-wide TEC licence is read as reaching it."
+            "CC BY 4.0 (TEC copyright statement, tec.tas.gov.au/info/Copyright.html); "
+            "attribute '© Tasmanian Electoral Commission'"
         ),
         "threshold": (
             "Reportable political donations of $1,000 or more (single or aggregated within a financial year) "

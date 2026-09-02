@@ -11,7 +11,7 @@
  *   lg.destroy()                        // removes DOM + aborts loads
  *
  * Data source (same-origin): GET /graph/money.json, or one state file per
- * jurisdiction (/graph/money.qld.json, /graph/money.vic.json) in the same shape
+ * jurisdiction (/graph/money.qld.json, .vic, .tas) in the same shape
  *   nodes: donors + parties (label, industry, colour, lifetime totals)
  *   edges: aggregated donor→party flows (total, count, firstYear, lastYear)
  *   meta:  state files carry jurisdiction, commission, licence, threshold
@@ -34,6 +34,7 @@ const JURISDICTIONS = {
   federal: { label: 'Federal', file: '/graph/money.json' },
   qld: { label: 'Queensland', file: '/graph/money.qld.json' },
   vic: { label: 'Victoria', file: '/graph/money.vic.json' },
+  tas: { label: 'Tasmania', file: '/graph/money.tas.json' },
 }
 const NOT_SUMMED =
   'State and federal returns are not summed: AEC returns already include state branch receipts.'

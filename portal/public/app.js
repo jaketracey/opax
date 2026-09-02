@@ -563,8 +563,9 @@ const TITLES = {
 // a time: AEC returns of federally registered parties already include their
 // state branches' receipts, so a Queensland gift to the LNP can sit in both
 // the federal and the Queensland file. Jurisdiction is a filter, never a sum.
-// Western Australia is in parli.db but WAEC asserts Crown copyright with no
-// open licence, so it is not shipped (docs/DATA-MONEY.md).
+// Western Australia, the ACT and the Northern Territory are in parli.db but
+// WAEC, Elections ACT and the NTEC each assert copyright with no open licence,
+// so they are not shipped (docs/DATA-MONEY.md section 1.1).
 
 const STATE_NOT_SUMMED =
   "State and federal returns are not summed: AEC returns already include state branch receipts.";
@@ -573,6 +574,7 @@ const MONEY_JURISDICTIONS = {
   federal: { label: "Federal", file: "/graph/money.json" },
   qld: { label: "Queensland", file: "/graph/money.qld.json" },
   vic: { label: "Victoria", file: "/graph/money.vic.json" },
+  tas: { label: "Tasmania", file: "/graph/money.tas.json" },
 };
 
 const moneyFiles = {}; // jurisdiction -> promise of the parsed export (federal shares loadMoneyData)

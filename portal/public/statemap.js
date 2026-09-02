@@ -12,9 +12,10 @@
  *
  * The corpus holds five parliaments: the Commonwealth and NSW, VIC, SA and QLD.
  * Each state with a parliament in the record is labelled with its speech count
- * and links to the search filtered to that parliament; Queensland and Victoria
- * also offer their state donations file. Western Australia, the Northern
- * Territory and Tasmania are drawn dimmed: not yet in the record. Counts and
+ * and links to the search filtered to that parliament; Queensland, Victoria and
+ * Tasmania also offer their state donations file. Western Australia, the
+ * Northern Territory and Tasmania are drawn dimmed: not yet in the record --
+ * Tasmania's popover therefore offers donations without a search. Counts and
  * coverage are read from the manifest's `sources`, never typed in here, so the
  * plate cannot claim more than the index holds.
  *
@@ -67,8 +68,10 @@ const STATE_SOURCE = {
 }
 const FEDERAL_SOURCE = /^Federal Hansard|^Senate committee/
 
-/** Jurisdictions with a state donations file on the money map. */
-const MONEY_FILES = new Set(['qld', 'vic'])
+/** Jurisdictions with a state donations file on the money map. Tasmania has a
+ *  donations file but no parliament in the corpus, so its shape stays dimmed
+ *  and its popover offers only the donations link. */
+const MONEY_FILES = new Set(['qld', 'vic', 'tas'])
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
 const STYLE_ID = 'state-map-styles'
@@ -220,13 +223,16 @@ export function mountStateMap(container, opts = {}) {
     tip.replaceChildren()
     el('span', 'sm-tip-name', tip).textContent = state.label
     el('span', 'sm-tip-meta', tip).textContent = info ? describe(info) : 'Not yet in the record'
-    if (info) {
+    const hasMoney = MONEY_FILES.has(id)
+    if (info || hasMoney) {
       const actions = el('span', 'sm-tip-actions', tip)
-      const search = el('a', 'sm-primary', actions)
-      search.href = searchHref(id)
-      search.textContent = 'Search this parliament'
-      if (MONEY_FILES.has(id)) {
-        const money = el('a', '', actions)
+      if (info) {
+        const search = el('a', 'sm-primary', actions)
+        search.href = searchHref(id)
+        search.textContent = 'Search this parliament'
+      }
+      if (hasMoney) {
+        const money = el('a', info ? '' : 'sm-primary', actions)
         money.href = moneyHref(id)
         money.textContent = 'State donations'
       }
