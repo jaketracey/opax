@@ -29,6 +29,10 @@ interface FindResource {
 }
 
 const SLUG_RE = /^(speech|legal|news)-(\d+)$/
+// Division records (parli.ingest.votes_ingest) carry composite ids:
+// division-nsw-la-2025-12-22-3, division-federal-senate-10113. Public too.
+const DIVISION_SLUG_RE = /^division-[a-z0-9-]+$/
+const isPublicSlug = (slug: string): boolean => SLUG_RE.test(slug) || DIVISION_SLUG_RE.test(slug)
 
 /**
  * Build a /find//ask filter_expression from the portal's filter vocabulary.
@@ -230,16 +234,19 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
     // Window the snippet around the first hit so the relevant sentence shows.
     const start = hitAt > 220 ? Math.max(0, lower_bound(bestText, hitAt - 200)) : 0
     const windowed = (start > 0 ? '…' : '') + bestText.slice(start, start + 600)
+    const division = DIVISION_SLUG_RE.test(slug)
     return {
-      kind: m?.[1] ?? 'unknown',
+      kind: m?.[1] ?? (division ? 'division' : 'unknown'),
       id: m ? Number(m[2]) : null,
       slug,
       resource: rid,
       title: resource.title ?? slug,
-      speaker: resource.origin?.collaborators?.[0] ?? null,
+      // A division's collaborators are its voters, not a speaker.
+      speaker: division ? null : (resource.origin?.collaborators?.[0] ?? null),
       party: label(resource, 'party'),
       state: label(resource, 'state'),
-      date: (meta.date as string) ?? null,
+      // Divisions carry their date on origin.created rather than in metadata.
+      date: (meta.date as string) ?? (resource.origin as { created?: string } | undefined)?.created?.slice(0, 10) ?? null,
       url: resource.origin?.url || null, // official record, for exports/citations
       snippet: windowed,
       score: Math.round(bestScore * 1000) / 1000, // already calibrated above
@@ -855,7 +862,7 @@ async function apiFollowups(request: Request, env: Env): Promise<Response> {
 }
 
 async function apiResource(slug: string, env: Env): Promise<Response> {
-  if (!SLUG_RE.test(slug)) return json({ error: 'bad slug' }, 400)
+  if (!isPublicSlug(slug)) return json({ error: 'bad slug' }, 400)
   const res = await kbFetch(
     env,
     `/slug/${slug}?show=basic&show=origin&show=extra&show=values&show=extracted&extracted=text`,
@@ -897,7 +904,7 @@ async function apiResource(slug: string, env: Env): Promise<Response> {
   return json({
     slug,
     title: r.title ?? slug,
-    speaker: r.origin?.collaborators?.[0] ?? null,
+    speaker: DIVISION_SLUG_RE.test(slug) ? null : (r.origin?.collaborators?.[0] ?? null), // voters are not a speaker
     url: r.origin?.url ?? null,
     labels, // kind / source / party / state / chamber — for chips + provenance caveats
     topics, // machine topic labels (multi-label; empty until the pass reaches this doc)
@@ -1276,7 +1283,8 @@ export default {
       if (url.pathname === '/api/followups' && request.method === 'POST') {
         return await apiFollowups(request, env)
       }
-      const resourceMatch = url.pathname.match(/^\/api\/resource\/([a-z]+-\d+)$/)
+      // Speech/legal/news ids and composite division ids; apiResource validates the shape.
+      const resourceMatch = url.pathname.match(/^\/api\/resource\/([a-z][a-z0-9-]*)$/)
       if (resourceMatch && request.method === 'GET') {
         return await apiResource(resourceMatch[1], env)
       }
