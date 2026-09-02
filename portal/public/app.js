@@ -1679,6 +1679,96 @@ function setQuoteRail(sources) {
   updateQuoteRail();
 }
 
+// --- people rail ------------------------------------------------------------
+// The rail opens on the people, not the passages: before a line has been read,
+// the faces say whose words the answer rests on. The reader's first real
+// scroll trades them for the quotes in the same slot, once and for good, so
+// the rail never flickers between two panels on the way back up.
+
+const peopleRail = { list: [], scrolled: false, base: 0, settleUntil: 0 };
+const PEOPLE_MAX = 6;
+/** Below this the page has not really moved: a trackpad twitch, not a read. */
+const PEOPLE_SCROLL_PX = 24;
+
+/**
+ * The page also scrolls itself (the answer reveal, the hero folding away).
+ * That motion is not the reader's, so hold the handover while it plays out.
+ */
+function holdPeopleRail(ms) {
+  peopleRail.settleUntil = Math.max(peopleRail.settleUntil, Date.now() + ms);
+  peopleRail.base = scrollY;
+}
+
+/** Distinct speakers behind these sources, in the order the answer cites them. */
+function peopleFromSources(sources) {
+  const seen = new Map();
+  for (const s of sources || []) {
+    const name = String(s.speaker || "").trim();
+    if (!name || seen.has(name)) continue;
+    seen.set(name, { name, party: s.party || "", state: s.state || "" });
+  }
+  return [...seen.values()];
+}
+
+function peopleCardHTML(people) {
+  const rows = people.slice(0, PEOPLE_MAX).map((p) => {
+    // Party where it is known; otherwise the parliament they sat in, which is
+    // the only other thing a retrieved speech reliably says about a speaker.
+    const sub = p.party
+      ? partyChipHTML(p.party)
+      : (p.state ? esc(STATE_NAMES[p.state] || p.state) : "");
+    return `<li class="people-row">` +
+      `<span class="people-face" data-speaker="${esc(p.name)}">` +
+      `<span class="people-face-mono">${esc(p.name.slice(0, 1))}</span></span>` +
+      `<span><span class="people-name">${esc(p.name)}</span>` +
+      (sub ? `<span class="people-sub">${sub}</span>` : "") + `</span></li>`;
+  }).join("");
+  const rest = people.length - PEOPLE_MAX;
+  return `<span class="kicker">Whose words this draws on</span>` +
+    `<ul class="people-list">${rows}</ul>` +
+    (rest > 0 ? `<p class="people-more">and ${rest} more in the sources</p>` : "");
+}
+
+/**
+ * Hand the rail this answer's people. An answer that cites nobody nameable (a
+ * procedural reply, or one drawn from news rather than speeches) leaves the
+ * list empty and the quotes take the rail from the start, as they always did.
+ */
+function setPeopleRail(sources) {
+  peopleRail.list = peopleRail.scrolled ? [] : peopleFromSources(sources);
+  const card = $("people-card");
+  card.innerHTML = peopleRail.list.length ? peopleCardHTML(peopleRail.list) : "";
+  if (peopleRail.list.length) {
+    loadPhotoMap().then(() => {
+      for (const slot of card.querySelectorAll(".people-face[data-speaker]")) {
+        const url = photoUrlFor(slot.dataset.speaker);
+        if (url) slot.innerHTML = `<img src="${esc(url)}" alt="" width="28" height="28">`;
+      }
+    });
+  }
+  updateQuoteRail();
+}
+
+/** A new question: the people clear, and the first-scroll gate is re-armed. */
+function resetPeopleRail() {
+  peopleRail.list = [];
+  peopleRail.scrolled = false;
+  $("people-card").classList.remove("shown");
+  $("people-card").replaceChildren();
+  // Long enough to cover the hero folding away 900ms in and its transition.
+  holdPeopleRail(1600);
+}
+
+/** Has the reader scrolled, as opposed to the page moving under them? */
+function notePeopleScroll() {
+  if (peopleRail.scrolled) return;
+  // Inside a settling window every sample is the new baseline, so the page's
+  // own motion cannot accumulate into the threshold.
+  if (Date.now() < peopleRail.settleUntil) { peopleRail.base = scrollY; return; }
+  if (Math.abs(scrollY - peopleRail.base) < PEOPLE_SCROLL_PX) return;
+  peopleRail.scrolled = true;
+}
+
 function updateQuoteRail() {
   const rail = $("quote-rail");
   const n = quoteRail.sources.length;
@@ -1690,15 +1780,39 @@ function updateQuoteRail() {
   // before that block climbs into its zone rather than sitting on top of it.
   const sourcesEl = $("ask-sources");
   const sourcesTop = sourcesEl.hidden ? Infinity : sourcesEl.getBoundingClientRect().top;
-  const clearOfSources = sourcesTop > innerHeight * 0.3 + (rail.offsetHeight || 280) + 12;
+  const clearOf = (h) => sourcesTop > innerHeight * 0.3 + (h || 280) + 12;
+  const clearOfSources = clearOf(rail.offsetHeight);
+  // Both states want the same thing: room to the answer's right, and an answer
+  // to sit beside. Narrow screens have no rail, so neither state appears.
+  const room = space >= 348 && !$("ask-result").hidden && rect.height > 1;
+  // The people hold the slot until the reader's first real scroll. Reduced
+  // motion skips the state outright rather than snapping between two panels.
+  const people = room && peopleRail.list.length > 0 && !peopleRail.scrolled &&
+    !matchMedia("(prefers-reduced-motion: reduce)").matches &&
+    rect.bottom > innerHeight * 0.32 && clearOf($("people-card").offsetHeight);
   // The card is fixed at 30vh: it may only appear once the answer's top has
   // actually scrolled up to that zone — otherwise it floats over the ask form
   // on short answers before any scrolling happens.
-  const visible = space >= 348 && n > 0 && !$("ask-result").hidden && rect.height > 1 &&
+  const visible = room && !people && n > 0 &&
     rect.top < innerHeight * 0.3 + 8 && rect.bottom > innerHeight * 0.28 && clearOfSources;
-  rail.hidden = !visible;
-  if (!visible) { quoteRail.idx = -1; return; }
-  rail.style.left = `${Math.round(rect.right + Math.min(48, space - 316))}px`;
+  rail.hidden = !(visible || people);
+  // Both states ride the answer's right edge, so the left is set for whichever
+  // one is up, not only for the quotes.
+  if (visible || people) rail.style.left = `${Math.round(rect.right + Math.min(48, space - 316))}px`;
+  const peopleCard = $("people-card");
+  // The rail was display:none a statement ago; give the browser its zero state
+  // to leave from, or the faces would land at full strength with no fade.
+  if (people && !peopleCard.classList.contains("shown")) void peopleCard.offsetWidth;
+  peopleCard.classList.toggle("shown", people);
+  if (!visible) {
+    quoteRail.idx = -1;
+    // The rail can still be up with the people in it, so the quote has to be
+    // put away by name rather than left to the rail's own hidden flag. A swap
+    // already in flight would otherwise land on top of them.
+    clearTimeout(quoteRail.swap);
+    $("quote-card").classList.remove("shown");
+    return;
+  }
   // The reading line: whichever slice of the answer crosses it decides the quote.
   const progress = Math.min(1, Math.max(0, (innerHeight * 0.38 - rect.top) / rect.height));
   const idx = Math.min(n - 1, Math.floor(progress * n));
@@ -1728,7 +1842,11 @@ function updateQuoteRail() {
 
 addEventListener("scroll", () => {
   if (quoteRail.raf) return;
-  quoteRail.raf = requestAnimationFrame(() => { quoteRail.raf = 0; updateQuoteRail(); });
+  quoteRail.raf = requestAnimationFrame(() => {
+    quoteRail.raf = 0;
+    notePeopleScroll();
+    updateQuoteRail();
+  });
 }, { passive: true });
 addEventListener("resize", () => updateQuoteRail());
 addEventListener("hashchange", () => updateQuoteRail());
@@ -4368,6 +4486,8 @@ function revealAskResult() {
   result.classList.remove("ask-reveal");
   void result.offsetWidth;
   result.classList.add("ask-reveal");
+  // The page is about to glide on its own; that is not the reader scrolling.
+  holdPeopleRail(1000);
   result.scrollIntoView({
     behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
     block: "start",
@@ -4406,6 +4526,7 @@ async function runAsk(question) {
   $("ask-chips").hidden = true;
   setFrontPageHidden(true);
   setQuoteRail([]);
+  resetPeopleRail();
   const started = Date.now();
   setStatus($("ask-status"), "Checking the record. This can take up to a minute.");
   $("ask-status").classList.add("visually-hidden");
@@ -4519,6 +4640,11 @@ async function runAsk(question) {
     $("ask-sources-sum").textContent = `Sources (${sources.length})`;
     $("ask-sources").open = false; // each new answer starts folded
     $("ask-sources").hidden = !sources.length;
+    // The finished answer replaces the streamed one: let that settle before a
+    // shift in the page counts as the reader deciding to move on. People first,
+    // so the rail opens on them rather than flashing a quote on the way.
+    holdPeopleRail(600);
+    setPeopleRail(citedList);
     setQuoteRail(citedList);
     $("ask-answer").focus({ preventScroll: true });
   } catch (err) {

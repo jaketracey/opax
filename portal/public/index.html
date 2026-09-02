@@ -56,7 +56,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=ce63ae7545">
+<link rel="stylesheet" href="/style.css?v=88e63791e2">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -267,6 +267,10 @@
            the right as the reader scrolls. Content duplicates the sources
            list below; the card is mouse-only (keyboard readers use the list). -->
       <aside id="quote-rail" class="quote-rail" aria-label="Passage from the record behind this part of the answer" hidden>
+        <!-- Before the reader scrolls the same slot carries the people whose
+             speeches the answer rests on; it duplicates the sources list, so
+             it stays out of the accessibility tree like the card below it. -->
+        <div id="people-card" class="people-card record-rule" aria-hidden="true"></div>
         <a id="quote-card" class="quote-card record-rule" href="#" tabindex="-1"></a>
       </aside>
       <div id="ask-result" hidden>
@@ -870,6 +874,6 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/app.js?v=51a7681a55" defer></script>
+<script src="/app.js?v=00e3a61c90" defer></script>
 </body>
 </html>

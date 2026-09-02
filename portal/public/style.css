@@ -786,6 +786,42 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .quote-card:hover blockquote { color: var(--ink); }
 .quote-card .quote-meta { display: block; margin-top: 0.45rem; font-size: 0.8125rem; color: var(--ink-faint); }
 .quote-card .quote-speaker { font-weight: 600; color: var(--ink); }
+/* An unwritten card must take no height: the rail's measured footprint is what
+   keeps it clear of the sources block, and a bare padding box would lie. */
+.quote-card:empty { display: none; }
+
+/* ---- people rail --------------------------------------------------------- */
+/* The first thing the rail says is whose words the answer rests on; the quotes
+   take the slot on the reader's first scroll. Absolutely placed inside the
+   fixed rail so the two states share one top edge and neither adds height. */
+.people-card {
+  position: absolute; top: 0; left: 0; width: 100%;
+  padding: 0.15rem 0 0.15rem 14px;
+  opacity: 0; transform: translateY(10px); pointer-events: none;
+}
+.people-card.shown { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: no-preference) {
+  /* The same pacing as the quote card, so the handover reads as one move. */
+  .people-card { transition: opacity 240ms ease-in, transform 240ms ease-in; }
+  .people-card.shown { transition: opacity 520ms cubic-bezier(0.2, 0.6, 0.2, 1), transform 520ms cubic-bezier(0.2, 0.6, 0.2, 1); }
+}
+.people-card .kicker { display: block; margin: 0 0 var(--space-3); }
+.people-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.people-row { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 0.6rem; align-items: center; }
+.people-face, .people-face img, .people-face-mono { width: 28px; height: 28px; border-radius: 50%; }
+.people-face { display: block; }
+.people-face img { display: block; object-fit: cover;
+  border: 1.5px solid var(--paper-raised); box-shadow: 0 0 0 1px var(--line); }
+/* The initial holds the row's height while the photo map loads, so a portrait
+   arriving late swaps in place instead of nudging the list. */
+.people-face-mono {
+  display: grid; place-items: center;
+  background: var(--paper-sunken); color: var(--ink-soft);
+  font: 700 0.8125rem/1 var(--serif); box-shadow: inset 0 0 0 1px var(--line);
+}
+.people-name { display: block; font: 600 0.9375rem/1.3 var(--serif); color: var(--ink); }
+.people-sub { display: block; margin-top: 1px; font-size: 0.75rem; color: var(--ink-faint); }
+.people-more { margin: var(--space-3) 0 0; font-size: 0.75rem; color: var(--ink-faint); }
 
 /* ---- party chip --------------------------------------------------------- */
 
