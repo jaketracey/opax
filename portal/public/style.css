@@ -704,8 +704,8 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
   #ask-money .money-charts .chart { margin-top: 0; }
 }
 #ask-money > .fineprint { margin: 1.5rem 0 0; }
-/* With the figures on the page, the answer opens under its own hairline. */
-#ask-money:not([hidden]) ~ #ask-result { margin-top: 2.5rem; border-top: 1px solid var(--line); }
+/* With the answer on the page, the figures open under their own hairline. */
+#ask-result:not([hidden]) ~ #ask-money { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
 @media (prefers-reduced-motion: no-preference) {
   .rise-in { animation: riseIn 460ms cubic-bezier(0.22, 0.7, 0.3, 1) both; animation-delay: calc(var(--i, 0) * 80ms); }
   @keyframes riseIn {

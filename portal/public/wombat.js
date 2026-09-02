@@ -319,6 +319,19 @@ function css() {
 .wb-leg-i { transform-origin: 50% 0; }
 .wb-eye   { animation: wb-blink 5.2s linear infinite; }
 
+/* The trailing dots count up while the record is being read, so a slow answer
+   still looks like it is moving. The box is a fixed three dots wide and the
+   dots are painted, not inserted, so the sentence above never jogs sideways as
+   they appear. */
+.wb-dots { display: inline-block; width: 1.15em; text-align: left; }
+.wb-dots > i { font-style: normal; opacity: 0; }
+.wb-dots > i:nth-child(1) { animation: wb-dot1 1.6s steps(1, end) infinite; }
+.wb-dots > i:nth-child(2) { animation: wb-dot2 1.6s steps(1, end) infinite; }
+.wb-dots > i:nth-child(3) { animation: wb-dot3 1.6s steps(1, end) infinite; }
+@keyframes wb-dot1 { 0% { opacity: 0 } 25%, 100% { opacity: 1 } }
+@keyframes wb-dot2 { 0% { opacity: 0 } 50%, 100% { opacity: 1 } }
+@keyframes wb-dot3 { 0% { opacity: 0 } 75%, 100% { opacity: 1 } }
+
 .wb-label {
   margin: 2px 0 0;
   max-width: 320px;
@@ -343,6 +356,7 @@ function css() {
   .wb-trundle { animation: none; left: calc(50% - 33px); }
   .wb-beat, .wb-rock, .wb-leg-i, .wb-aux { animation: none; }
   /* the eye keeps its opacity-only blink, so it still reads as alive */
+  .wb-dots > i { animation: none; opacity: 1; }
 }
 ${Object.entries(ANIMALS).map(([name, a]) => animalCss(name, a)).join("\n")}`;
 }
@@ -363,7 +377,7 @@ function markup(name) {
       </svg>
     </div>
   </div>
-  <p class="wb-label"></p>`;
+  <p class="wb-label"><span class="wb-label-text"></span><span class="wb-dots" aria-hidden="true" hidden><i>.</i><i>.</i><i>.</i></span></p>`;
 }
 
 export function mountWombat(container, { label = "Checking the record. This can take up to a minute.", animal } = {}) {
@@ -376,11 +390,24 @@ export function mountWombat(container, { label = "Checking the record. This can 
   const wrap = document.createElement("div");
   wrap.className = "wb-wrap";
   wrap.innerHTML = markup(animal ?? kinds[Math.floor(Math.random() * kinds.length)]);
-  const labelEl = wrap.querySelector(".wb-label");
-  labelEl.textContent = label;
+  const labelEl = wrap.querySelector(".wb-label-text");
+  const dotsEl = wrap.querySelector(".wb-dots");
+  /* One short sentence gets counting dots in place of its full stop. A label
+     that carries a second sentence keeps its punctuation: dots after "Long
+     questions can take a minute." would read as a truncation, not as progress.
+     The dots are aria-hidden and the announced text keeps the sentence whole,
+     so a screen reader is not told the same thing four times a second. */
+  const setLabel = (text) => {
+    const body = String(text ?? "").trim();
+    const stem = body.replace(/[.\u2026]+$/, "");
+    const counts = stem !== body && !stem.includes(".");
+    labelEl.textContent = counts ? stem : body;
+    dotsEl.hidden = !counts;
+  };
+  setLabel(label);
   container.appendChild(wrap);
   return {
-    setLabel(text) { labelEl.textContent = text; },
+    setLabel,
     destroy() { wrap.remove(); },
   };
 }

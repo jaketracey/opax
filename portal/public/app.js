@@ -338,6 +338,45 @@ function streamRenderer(container, alive) {
   };
 }
 
+/**
+ * Replay a finished answer through the streaming painter, so an answer served
+ * from cache arrives the way a freshly written one does. It is the same
+ * machinery, fed on a timer: the text goes in as a fixed number of slices cut
+ * on whitespace, and the painter already coalesces to one parse every 120ms,
+ * so a long answer costs no more paints than a short one. Readers who ask for
+ * less motion get the finished text at once.
+ */
+function replayAnswer(container, text, alive) {
+  const body = String(text || "");
+  if (!body || !matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+    renderAnswer(container, body);
+    return;
+  }
+  const SLICES = 16, TOTAL_MS = 850;
+  const cuts = [];
+  for (let i = 1; i <= SLICES; i++) {
+    const at = Math.round((body.length * i) / SLICES);
+    const ws = i === SLICES ? body.length : body.indexOf(" ", at);
+    const cut = ws === -1 ? body.length : ws;
+    if (cut > (cuts[cuts.length - 1] ?? 0)) cuts.push(cut);
+  }
+  const live = streamRenderer(container, alive);
+  let n = 0, from = 0;
+  const step = () => {
+    if (alive && !alive()) { live.stop(); return; }
+    const to = cuts[n++];
+    live.push(body.slice(from, to));
+    from = to;
+    if (n < cuts.length) { setTimeout(step, TOTAL_MS / cuts.length); return; }
+    // The painter trims trailing half-written markdown as it goes. If that
+    // trimming would change the finished text, repaint it exactly once done.
+    if (streamSafeText(body) !== body) {
+      setTimeout(() => { if (!alive || alive()) renderAnswer(container, body); }, 160);
+    }
+  };
+  step();
+}
+
 function setStatus(el, message, isError = false) {
   el.textContent = message || "";
   el.classList.toggle("error", isError);
@@ -4399,7 +4438,10 @@ async function runAsk(question) {
     revealAskResult();
     $("ask-result").querySelector(".action-row").hidden = false;
     if (answerText) {
-      renderAnswer($("ask-answer"), answerText);
+      // A streamed answer has already painted itself; only a cached or
+      // non-streaming one arrives whole, and it should not just appear.
+      if ($("ask-answer").childElementCount) renderAnswer($("ask-answer"), answerText);
+      else replayAnswer($("ask-answer"), answerText, () => askAbort === myAbort);
     } else {
       // Both attempts came back blank (it happens under model load). Own it
       // plainly and hand the reader a retry, rather than a bare sources list.
@@ -4698,7 +4740,11 @@ function renderChatNext(questions) {
     if (!item?.question) continue;
     const b = document.createElement("button");
     b.type = "button";
-    b.className = "chat-next-btn";
+    // They land together but read as a list, so they arrive as one: rise-in
+    // staggers off --i, and the stylesheet drops the motion under
+    // prefers-reduced-motion.
+    b.className = "chat-next-btn rise-in";
+    b.style.setProperty("--i", String(row.children.length));
     const text = document.createElement("span");
     text.textContent = item.question;
     const arrow = document.createElement("span");

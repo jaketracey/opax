@@ -56,7 +56,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=cd20849864">
+<link rel="stylesheet" href="/style.css?v=bfcd5f87a3">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -263,7 +263,6 @@
       </div>
       <div id="ask-status" class="status" role="status"></div>
       <div id="ask-wombat" hidden></div>
-      <div id="ask-money" hidden></div>
       <!-- The passage behind the part of the answer being read, fading up on
            the right as the reader scrolls. Content duplicates the sources
            list below; the card is mouse-only (keyboard readers use the list). -->
@@ -292,6 +291,11 @@
           <a href="/methods">How answers work</a></p>
         </details>
       </div>
+      <!-- The figures follow the answer: the reader asked a question, so the
+           answer is what they came for. The panel draws on local data and is
+           ready first, but arriving above the answer it pushed the answer
+           below the fold. -->
+      <div id="ask-money" hidden></div>
 
       <section class="front-map" id="front-map" aria-label="Two maps of the record">
         <div class="front-map-grid">
@@ -861,6 +865,6 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/app.js?v=c0078ebc74" defer></script>
+<script src="/app.js?v=c02b1c5b16" defer></script>
 </body>
 </html>
