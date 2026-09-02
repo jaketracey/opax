@@ -797,6 +797,31 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .results-actions { display: inline-flex; align-items: center; gap: 0.5rem 0.7rem; flex-wrap: wrap; }
 #results-count { font-variant-numeric: tabular-nums; }
 
+/* Active filters, said out loud under the search box. Quieter than .chip
+   (these are state, not suggestions), borrowing .map-chip's sunken pill. */
+.filter-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-top: 0.9rem; }
+.fchip {
+  display: inline-flex; align-items: center; gap: 0.3rem; min-height: 30px;
+  background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;
+  font: 400 0.75rem/1.2 var(--sans); color: var(--ink-soft);
+  padding: 0.15rem 0.2rem 0.15rem 0.65rem; max-width: 100%;
+}
+.fchip-k { color: var(--ink-faint); flex: 0 0 auto; }
+.fchip-v { font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fchip-x {
+  display: inline-grid; place-items: center; flex: 0 0 auto;
+  width: 22px; height: 22px; padding: 0; margin-left: 0.1rem;
+  background: none; border: none; border-radius: 50%; cursor: pointer; color: var(--ink-faint);
+}
+.fchip-x svg { width: 11px; height: 11px; }
+.fchip-x:hover { background: var(--bronze-wash); color: var(--bronze-ink); }
+.fchip-clear {
+  background: none; border: none; cursor: pointer; padding: 0.25rem 0.35rem; margin-left: 0.15rem;
+  font: 400 0.75rem/1.2 var(--sans); color: var(--ink-faint);
+  text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px;
+}
+.fchip-clear:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze-ink); }
+
 .results { list-style: none; margin: 0.4rem 0 0; padding: 0; }
 .results li { border-top: 1px solid var(--line); padding: var(--space-4) 0; }
 .results li:first-child { border-top: none; }
@@ -811,6 +836,32 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   border-radius: 2px; background: var(--paper-sunken); overflow: hidden; margin-left: 0.5rem;
 }
 .scorebar > i { display: block; height: 100%; background: var(--bronze); }
+
+/* Pager. The band keeps its height on a one-page result (the controls go
+   invisible, not away) so the footer does not jump between pages. */
+.pager {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+  min-height: 44px; margin-top: var(--space-5);
+  border-top: 1px solid var(--line); padding-top: var(--space-4);
+}
+.pager-btn {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  background: none; border: 1px solid var(--line-strong); border-radius: 4px;
+  padding: 0.5rem 0.8rem; cursor: pointer;
+  font: 600 0.875rem/1.3 var(--sans); color: var(--ink);
+}
+.pager-btn .btn-icon { width: 16px; height: 16px; flex: 0 0 auto; color: var(--bronze-ink); }
+.pager-btn:hover:not(:disabled) { border-color: var(--ink); }
+.pager-btn:disabled {
+  cursor: default; color: var(--ink-faint);
+  border-color: var(--line); border-style: dashed; background: var(--paper-sunken);
+}
+.pager-btn:disabled .btn-icon { color: var(--ink-faint); }
+.pager-where {
+  flex: 1 1 auto; text-align: center; font-size: 0.875rem;
+  color: var(--ink-soft); font-variant-numeric: tabular-nums;
+}
+.pager[data-single="1"] .pager-btn { visibility: hidden; }
 
 /* ---- money map ---------------------------------------------------------- */
 

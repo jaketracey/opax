@@ -463,6 +463,10 @@
         </div>
       </form>
 
+      <!-- Which filters are on, outside the popover that set them. Rendered
+           before the fetch resolves, so it never shifts the results below. -->
+      <div id="search-filter-chips" class="filter-chips" role="group" aria-label="Active filters" hidden></div>
+
       <nav id="search-chips" class="chip-row search-chips" aria-label="Example searches" hidden></nav>
       <div id="search-status" class="status" role="status"></div>
       <div id="search-wombat" hidden></div>
@@ -472,8 +476,8 @@
       <div class="results-bar" id="results-bar" hidden>
         <span id="results-count"></span>
         <span class="results-actions">
-          <label for="search-sort" class="visually-hidden">Sort results</label>
-          <select id="search-sort">
+          <label for="search-sort" class="visually-hidden">Sort every retrieved match</label>
+          <select id="search-sort" title="Sorts every page of the retrieved matches, not just this one.">
             <option value="relevance">Relevance</option>
             <option value="newest">Newest first</option>
           </select>
@@ -482,6 +486,15 @@
         </span>
       </div>
       <ul id="search-results" class="results" role="list"></ul>
+      <!-- The band keeps its height whether or not there is a second page, so
+           arriving at a short last page does not lift the footer. -->
+      <nav id="search-pager" class="pager" aria-label="Result pages" hidden>
+        <button type="button" class="pager-btn" id="pager-prev">
+          <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg><span>Previous</span></button>
+        <span class="pager-where" id="pager-where"></span>
+        <button type="button" class="pager-btn" id="pager-next">
+          <span>Next</span><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4l6 6-6 6"/></svg></button>
+      </nav>
       </div>
       <aside class="search-answer" id="search-answer" hidden aria-label="Answer from the record">
         <h2 class="kicker" id="search-answer-head">The record's answer</h2>
