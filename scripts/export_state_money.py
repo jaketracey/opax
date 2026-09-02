@@ -315,6 +315,34 @@ def year_of(fy: str | None) -> int | None:
     return BY_ELECTION_YEAR.get(fy.strip().lower())
 
 
+def year_cells() -> dict:
+    """The per-year tally every aggregate carries: {year: [dollars, count]}
+    for the rows with a year, plus the undated remainder."""
+    return {"byYear": defaultdict(lambda: [0.0, 0]), "undated": [0.0, 0]}
+
+
+def tally(agg: dict, year: int | None, amount: float) -> None:
+    """Add one row to an aggregate's total, count and per-year cell."""
+    agg["total"] += amount
+    agg["count"] += 1
+    cell = agg["byYear"][year] if year else agg["undated"]
+    cell[0] += amount
+    cell[1] += 1
+
+
+def year_fields(agg: dict) -> dict:
+    """firstYear/lastYear and the per-year map behind them (meta.by_year)."""
+    years = sorted(agg["byYear"])
+    out = {
+        "firstYear": years[0] if years else None,
+        "lastYear": years[-1] if years else None,
+        "byYear": {str(y): [round(agg["byYear"][y][0]), agg["byYear"][y][1]] for y in years},
+    }
+    if agg["undated"][1]:
+        out["undated"] = [round(agg["undated"][0]), agg["undated"][1]]
+    return out
+
+
 def load_canonical(db) -> tuple[dict, dict]:
     """(alias_raw -> entity_id, entity_id -> {name, kind}) from the resolver tables.
 
@@ -434,25 +462,18 @@ def main() -> None:
                 "names": defaultdict(float),
                 "total": 0.0,
                 "count": 0,
-                "years": [],
+                **year_cells(),
                 "industries": defaultdict(float),
-                "parties": defaultdict(lambda: {"total": 0.0, "count": 0, "years": []}),
+                "parties": defaultdict(lambda: {"total": 0.0, "count": 0, **year_cells()}),
             }
         amt = float(r["amount"])
         d["names"][name] += amt
-        d["total"] += amt
-        d["count"] += 1
         y = year_of(r["financial_year"])
-        if y:
-            d["years"].append(y)
-        else:
+        if not y:
             rows_without_year += 1
+        tally(d, y, amt)
         d["industries"][r["industry"] or "other"] += amt
-        p = d["parties"][r["party"]]
-        p["total"] += amt
-        p["count"] += 1
-        if y:
-            p["years"].append(y)
+        tally(d["parties"][r["party"]], y, amt)
 
     def dominant_industry(d: dict) -> str:
         # A union is a union: see export_money_graph.py for why rolled-up
@@ -484,17 +505,12 @@ def main() -> None:
             break
 
     # Party aggregates over the FULL cleaned row set (not just top donors).
-    party_totals = defaultdict(lambda: {"total": 0.0, "count": 0, "years": []})
+    party_totals = defaultdict(lambda: {"total": 0.0, "count": 0, **year_cells()})
     for r in rows:
         name = (r["donor_name"] or "").strip()
         if PUBLIC_FUNDING_RE.search(name):
             continue
-        pt = party_totals[r["party"]]
-        pt["total"] += float(r["amount"])
-        pt["count"] += 1
-        y = year_of(r["financial_year"])
-        if y:
-            pt["years"].append(y)
+        tally(party_totals[r["party"]], year_of(r["financial_year"]), float(r["amount"]))
 
     nodes = []
     edges = []
@@ -508,8 +524,7 @@ def main() -> None:
             "colour": PARTY_COLOURS.get(party, "#8A8F98"),
             "total": round(pt["total"]),
             "count": pt["count"],
-            "firstYear": min(pt["years"]) if pt["years"] else None,
-            "lastYear": max(pt["years"]) if pt["years"] else None,
+            **year_fields(pt),
         })
 
     for d in picked:
@@ -533,8 +548,7 @@ def main() -> None:
             "group": CLUSTER_OF.get(ind, FALLBACK_CLUSTER),
             "total": round(d["total"]),
             "count": d["count"],
-            "firstYear": min(d["years"]) if d["years"] else None,
-            "lastYear": max(d["years"]) if d["years"] else None,
+            **year_fields(d),
             "aliases": others,
         })
         for party, p in sorted(d["parties"].items(), key=lambda kv: -kv[1]["total"]):
@@ -543,8 +557,7 @@ def main() -> None:
                 "target": f"party:{party}",
                 "total": round(p["total"]),
                 "count": p["count"],
-                "firstYear": min(p["years"]) if p["years"] else None,
-                "lastYear": max(p["years"]) if p["years"] else None,
+                **year_fields(p),
             })
 
     floor_text = f"${cfg['other_floor'] / 1000:,.0f}k".replace(",", "")
@@ -591,6 +604,12 @@ def main() -> None:
                 "ext_donor_entities (exact-normalised, rule-based suffix/branch stripping, "
                 "then the hand-curated parli/ingest/donor_aliases.json). Node label is the "
                 "canonical name; node.aliases lists the other spellings it answers to."
+            ),
+            "by_year": (
+                "byYear maps the first year of each financial year (2023 for 2023-24; "
+                "election returns by polling year) to [dollars, donations] for that node "
+                "or flow; undated holds the rows with no year. The cells sum to total and "
+                "count up to rounding, so a year window can re-sum every figure."
             ),
             "exclusions": exclusions,
             "rows_considered": considered,

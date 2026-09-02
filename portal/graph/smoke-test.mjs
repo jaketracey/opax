@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises'
 import assert from 'node:assert/strict'
 
 const bundle = await import('../public/money-map.js')
-const { buildGraph, clusterCentres3D, ForceSim3D, formatMoney, radiusFor } = bundle
+const { buildGraph, clusterCentres3D, ForceSim3D, formatMoney, radiusFor, windowFigures } = bundle
 assert.ok(typeof bundle.mountMoneyMap === 'function', 'mountMoneyMap exported')
 
 const raw = JSON.parse(await readFile(new URL('../public/graph/money.json', import.meta.url)))
@@ -25,6 +25,54 @@ for (const node of graph.nodes) {
   assert.ok(graph.groupStyles.has(node.group), `group styled: ${node.group}`)
   const r = radiusFor('resources', node.weight)
   assert.ok(r >= 7 && r <= 26, `radius in range for ${node.id}`)
+}
+
+// Per-year cells (scripts/export_money_graph.py byYear): every node and flow
+// re-sums to its lifetime figures, the span is the cells' extent, and the
+// window re-sum the scrub runs picks out exactly the years asked for.
+const checkCells = (items, label) => {
+  for (const x of items) {
+    const id = x.id ?? `${x.source}->${x.target}`
+    assert.ok(x.byYear && typeof x.byYear === 'object', `${label}: byYear on ${id}`)
+    const years = Object.keys(x.byYear).map(Number)
+    let dollars = x.undated?.[0] ?? 0
+    let count = x.undated?.[1] ?? 0
+    for (const [d, c] of Object.values(x.byYear)) {
+      dollars += d
+      count += c
+    }
+    assert.equal(count, x.count, `${label}: cells count ${id}`)
+    assert.ok(Math.abs(dollars - x.total) <= years.length + 1, `${label}: cells sum ${id}`)
+    if (years.length) {
+      assert.equal(Math.min(...years), x.firstYear, `${label}: firstYear ${id}`)
+      assert.equal(Math.max(...years), x.lastYear, `${label}: lastYear ${id}`)
+    }
+  }
+}
+checkCells(raw.nodes, 'money')
+checkCells(raw.edges, 'money')
+{
+  const flow = raw.edges.find((e) => Object.keys(e.byYear).length > 2 && !e.undated)
+  const years = Object.keys(flow.byYear).map(Number).sort((a, b) => a - b)
+  const year = years[1]
+  const one = windowFigures(flow, year, year)
+  assert.deepEqual(
+    [one.total, one.count, one.firstYear, one.lastYear],
+    [...flow.byYear[year], year, year],
+    'one-year window keeps that year',
+  )
+  const none = windowFigures(flow, 1900, 1901)
+  assert.deepEqual([none.total, none.count, none.firstYear, none.lastYear], [0, 0, null, null])
+  const all = windowFigures(flow, years[0], years[years.length - 1])
+  assert.equal(all.count, flow.count, 'full window keeps the count')
+  assert.equal(all.firstYear, flow.firstYear)
+  const dated = raw.edges.find((e) => e.undated)
+  if (dated) {
+    const off = windowFigures(dated, 1900, 1901)
+    assert.equal(off.count, dated.undated[1], 'undated rows survive any window')
+  }
+  const legacy = { total: 5, count: 1, firstYear: 2001, lastYear: 2001 }
+  assert.equal(windowFigures(legacy, 1900, 1901), legacy, 'no cells: figures untouched')
 }
 
 // Cluster centres: parties pinned to the origin, industries ringed clear of it.
@@ -72,7 +120,7 @@ console.log(
 // State files (scripts/export_state_money.py) share the node/edge shape but
 // are smaller and carry a jurisdiction block; they must build on the same
 // engine and never be merged with the federal file.
-for (const jur of ['qld', 'vic']) {
+for (const jur of ['qld', 'vic', 'tas']) {
   const state = JSON.parse(
     await readFile(new URL(`../public/graph/money.${jur}.json`, import.meta.url)),
   )
@@ -84,6 +132,8 @@ for (const jur of ['qld', 'vic']) {
   assert.ok(state.meta.party_nodes >= 3, `${jur}: holds the main parties`)
   assert.equal(state.nodes.length, state.meta.donor_nodes + state.meta.party_nodes)
   assert.equal(state.edges.length, state.meta.edge_count)
+  checkCells(state.nodes, jur)
+  checkCells(state.edges, jur)
   const stateGraph = buildGraph(state)
   const stateIds = new Set(stateGraph.nodes.map((n) => n.id))
   assert.equal(stateIds.size, stateGraph.nodes.length, `${jur}: node ids unique`)
