@@ -2746,9 +2746,16 @@ async function openSubject(kind, name, manageFocus) {
       ["Rank", `#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed donors"}`],
       !isParty && fitsInfoRow(fits, "by_entity", node.label),
       // The registers spell one donor many ways; the totals above cover them all.
-      !isParty && (node.aliases || []).length > 0 && ["Also disclosed as",
-        `${node.aliases.slice(0, 6).map(esc).join("; ")}${
-          node.aliases.length > 6 ? ` <span class="fineprint">and ${node.aliases.length - 6} more spellings</span>` : ""}`],
+      // A merged donor can carry dozens of spellings, so the row shows three and
+      // opens the rest in place rather than running down the whole column.
+      !isParty && (node.aliases || []).length > 0 && ["Also disclosed as", (() => {
+        const a = node.aliases;
+        const head = a.slice(0, 3).map(esc).join("; ");
+        if (a.length <= 3) return `<span class="alias-list">${head}</span>`;
+        return `<details class="alias-more"><summary><span class="alias-list">${head}</span>` +
+          `<span class="alias-toggle">and ${a.length - 3} more</span></summary>` +
+          `<span class="alias-list alias-rest">${a.slice(3).map(esc).join("; ")}</span></details>`;
+      })()],
     ], weeklyFunFact(node), [
       actionBtn("ask",
         askHash(isParty

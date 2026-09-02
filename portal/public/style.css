@@ -1127,6 +1127,22 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
   box-shadow: 0 24px 48px rgba(30, 26, 18, 0.18);
 }
 .game-dialog::backdrop { background: rgba(20, 42, 67, 0.55); }
+/* Scrollbars inside dialogs and other framed panels: a bronze hairline on
+   paper rather than the platform's grey slab. */
+.game-dialog, .game-dialog *, .mm-card, .infobox, .chart, .subject-map {
+  scrollbar-width: thin; scrollbar-color: var(--bronze-rule) transparent;
+}
+.game-dialog ::-webkit-scrollbar, .game-dialog::-webkit-scrollbar,
+.mm-card::-webkit-scrollbar { width: 10px; height: 10px; }
+.game-dialog ::-webkit-scrollbar-track, .game-dialog::-webkit-scrollbar-track,
+.mm-card::-webkit-scrollbar-track { background: transparent; }
+.game-dialog ::-webkit-scrollbar-thumb, .game-dialog::-webkit-scrollbar-thumb,
+.mm-card::-webkit-scrollbar-thumb {
+  background: var(--bronze-rule); border-radius: 999px;
+  border: 3px solid transparent; background-clip: content-box;
+}
+.game-dialog ::-webkit-scrollbar-thumb:hover, .game-dialog::-webkit-scrollbar-thumb:hover,
+.mm-card::-webkit-scrollbar-thumb:hover { background: var(--bronze-ink); background-clip: content-box; }
 .game-dialog-head {
   position: sticky; top: 0; z-index: 5; display: flex; justify-content: flex-end;
   background: var(--paper); padding: 0.4rem 0.4rem 0;
@@ -1373,6 +1389,15 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .infobox dt { color: var(--ink-faint); font-size: 0.8125rem; }
 .infobox dd { margin: 0; font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
 .infobox .actions { margin-top: 0.9rem; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.875rem; }
+/* A long list of spellings is reference material, not a headline figure:
+   it sets smaller than the facts above it and opens on request. */
+.alias-list { font-size: 0.8125rem; line-height: 1.45; color: var(--ink-soft); }
+.alias-more > summary { cursor: pointer; list-style: none; }
+.alias-more > summary::-webkit-details-marker { display: none; }
+.alias-toggle { display: block; margin-top: 0.2rem; font-size: 0.75rem; color: var(--bronze-ink);
+  text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.alias-more[open] > summary .alias-toggle::after { content: " (hide)"; }
+.alias-rest { display: block; margin-top: 0.3rem; }
 .funfact {
   background: var(--bronze-wash); border-radius: 4px; padding: 0.8rem 1rem;
   margin-top: 0.9rem; font-size: 0.9375rem; line-height: 1.5;
