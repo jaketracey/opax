@@ -16,12 +16,17 @@ import json
 import sqlite3
 import sys
 import time
+import os
 import urllib.error
+import urllib.parse
 import urllib.request
 
 DB_PATH = "/home/jake/.cache/autoresearch/parli.db"
 API_BASE = "https://theyvoteforyou.org.au/api/v1"
-API_KEY = "b%2BiPzux7zTSPPV33hrKE"
+# The TheyVoteForYou key lives in the environment (see .env.example), never in the tree.
+API_KEY = os.environ.get("TVFY_API_KEY", "").strip()
+if not API_KEY:
+    sys.exit("TVFY_API_KEY is not set: export it or put it in .env (see .env.example)")
 RATE_LIMIT = 1.0
 MAX_RETRIES = 3
 
@@ -65,7 +70,7 @@ def get_pending_division_ids(db):
 
 def fetch_division_detail(division_id):
     """Fetch division detail from API. Returns parsed JSON or None."""
-    url = f"{API_BASE}/divisions/{division_id}.json?key={API_KEY}"
+    url = f"{API_BASE}/divisions/{division_id}.json?key={urllib.parse.quote(API_KEY, safe='')}"
     req = urllib.request.Request(url, headers={"User-Agent": "ParliIntel/1.0"})
 
     for attempt in range(MAX_RETRIES):

@@ -7,6 +7,7 @@ Usage: uv run dashboard.py
 """
 
 import json
+import os
 import sqlite3
 from pathlib import Path
 
@@ -39,9 +40,10 @@ TOPIC_KEYWORDS = {
     "Cost of Living": "cost of living,grocery,energy prices,fuel,electricity",
 }
 
+# The TheyVoteForYou key lives in the environment (see .env.example), never in the tree.
 TVFY_POLICY_URL = (
     "https://theyvoteforyou.org.au/api/v1/policies/39.json"
-    "?key=b%2BiPzux7zTSPPV33hrKE"
+    f"?key={os.environ.get('TVFY_API_KEY', '')}"
 )
 
 def get_conn():

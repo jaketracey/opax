@@ -56,7 +56,6 @@ LIST_CAP = 100          # the list endpoint silently truncates at 100 rows
 SETTLED_DAYS = 45       # a month older than this is not re-listed
 HOUSES = ("representatives", "senate")
 TVFY_FIRST = date(2006, 1, 1)
-LEGACY_KEY = "b%2BiPzux7zTSPPV33hrKE"   # fetch_division_votes.py:24 (URL-encoded); rotate and move to .env
 
 PARTY_CANONICAL = {}
 for _canon, _aliases in {
@@ -109,7 +108,7 @@ def api_key() -> str:
                         return v
         except OSError:
             continue
-    return urllib.parse.unquote(LEGACY_KEY)
+    raise SystemExit("TVFY_API_KEY is not set: export it or put it in .env (see .env.example)")
 
 
 KEY = api_key()
