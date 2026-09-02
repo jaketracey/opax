@@ -1082,7 +1082,7 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 }
 .map-chip:hover { background: var(--bronze-wash); color: var(--ink); }
 .map-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
-.map-chip-n { color: var(--ink-faint); font-weight: 400; font-variant-numeric: tabular-nums; }
+.map-chip-n { color: var(--ink-soft); font-weight: 400; font-variant-numeric: tabular-nums; }  /* weight, not colour, carries the hierarchy: faint failed contrast on the sunken chip */
 @media (max-width: 700px) {
   .front-map { margin-top: 2.5rem; }
   .front-map-grid { grid-template-columns: 1fr; }

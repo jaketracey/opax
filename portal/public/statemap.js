@@ -95,7 +95,7 @@ const CSS = `
   color: var(--ink-soft, #575C52); }
 .sm-label small { display: block; font-size: 0.6875rem; line-height: 1.3; color: var(--ink-faint, #6F7468);
   font-variant-numeric: tabular-nums; }
-.sm-label[data-absent] b { color: var(--ink-faint, #6F7468); opacity: 0.7; }
+.sm-label[data-absent] b { color: var(--ink-soft, #575C52); opacity: 0.9; }
 .sm-federal { position: absolute; top: 0; left: 0; z-index: 1; display: grid; gap: 0.1rem;
   max-width: 46%; text-decoration: none; color: inherit;
   text-shadow: 0 0 3px var(--paper, #FAF9F6), 0 0 3px var(--paper, #FAF9F6); }
@@ -175,7 +175,8 @@ export function mountStateMap(container, opts = {}) {
   if (data.federal) {
     const fed = el('a', 'sm-federal', root)
     fed.href = searchHref('federal')
-    fed.setAttribute('aria-label', `Federal Parliament: ${describe(data.federal)}. Search its record`)
+    // The accessible name must contain the visible text, so no colon splits them.
+    fed.setAttribute('aria-label', `Federal Parliament ${describe(data.federal)}. Search its record`)
     el('b', '', fed).textContent = 'Federal Parliament'
     el('small', '', fed).textContent = describe(data.federal)
   }
