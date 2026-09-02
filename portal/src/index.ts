@@ -2276,20 +2276,29 @@ const BASE_SECURITY_HEADERS: Record<string, string> = {
 
 // Derived from what the app actually loads (see docs/HARDENING.md for the
 // inventory). No 'unsafe-inline' and no 'unsafe-eval' for scripts: index.html
-// carries exactly one <script src>, and nothing in the bundle eval()s. Styles
+// carries only <script src> tags, and nothing in the bundle eval()s. Styles
 // need 'unsafe-inline' because every module injects its own <style> element
 // and app.js sets style="" attributes on the relevance bars — neither is a
 // script-execution vector. Fonts are self-hosted, so no third-party origin.
+//
+// The googletagmanager/google-analytics origins are for Tag Manager container
+// GTM-PNDM87LW, loaded by the same-origin /gtm.js. They are enumerated, not
+// wildcarded to "anything Google": a tag added later through the Tag Manager
+// UI that reaches a host not listed here WILL be silently blocked, and the fix
+// is to add that host — never to loosen script-src. docs/HARDENING.md explains
+// why that trade is the right way round.
+const GTM = 'https://www.googletagmanager.com'
+const GA = 'https://*.google-analytics.com https://*.analytics.google.com'
 const CSP_PAGE = [
   "default-src 'self'",
-  "script-src 'self'",
+  `script-src 'self' ${GTM}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self'",
+  `img-src 'self' ${GTM} ${GA}`,
   "font-src 'self'",
-  "connect-src 'self'",
+  `connect-src 'self' ${GTM} ${GA}`,
   "worker-src 'self'",
   "manifest-src 'self'",
-  "frame-src 'none'",
+  `frame-src ${GTM}`,
   "object-src 'none'",
   "base-uri 'none'",
   "form-action 'self'",
