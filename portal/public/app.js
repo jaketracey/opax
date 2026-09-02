@@ -455,14 +455,17 @@ function askFilters() {
   };
 }
 
+function updateAskYearsLabel() {
+  const lab = $("a-years-label");
+  if (!lab) return;
+  let a = Number($("a-from").value), b = Number($("a-to").value);
+  if (a > b) [a, b] = [b, a];
+  lab.textContent = `${a}–${b}`;
+}
+
 {
   const btn = $("ask-options-btn");
   const pop = $("ask-options-pop");
-  const yearsLabel = () => {
-    let a = Number($("a-from").value), b = Number($("a-to").value);
-    if (a > b) [a, b] = [b, a];
-    $("a-years-label").textContent = `${a}–${b}`;
-  };
   btn?.addEventListener("click", () => {
     pop.hidden = !pop.hidden;
     btn.setAttribute("aria-expanded", String(!pop.hidden));
@@ -481,8 +484,14 @@ function askFilters() {
       btn.focus();
     }
   });
-  $("a-from")?.addEventListener("input", yearsLabel);
-  $("a-to")?.addEventListener("input", yearsLabel);
+  $("a-from")?.addEventListener("input", updateAskYearsLabel);
+  $("a-to")?.addEventListener("input", updateAskYearsLabel);
+  // Chips and popover in step both ways: a control changing re-draws the chips
+  // and, once a question is on the page, asks it again under the new filters.
+  // Range inputs fire `change` on release, so dragging a year is one ask.
+  for (const id of ["a-speaker", "a-party", "a-state", "a-topic", "a-from", "a-to", "ask-wide"]) {
+    $(id)?.addEventListener("change", askFiltersChanged);
+  }
 }
 
 function askFilterSummary(f) {
@@ -945,6 +954,7 @@ function route() {
     if (view === "ask" && q && q !== lastAsk.question) {
       $("ask-input").value = q;
       if ($("ask-wide")) $("ask-wide").checked = params.get("kind") === "all";
+      renderAskFilterChips(); // a shared &kind=all link arrives with a filter on
       runAsk(q);
     } else if (!q && $("ask-result").hidden) {
       renderFrontPage();
@@ -4546,7 +4556,7 @@ async function runAsk(question) {
     const aSpeaker = $("a-speaker");
     if (aSpeaker?.value.trim()) {
       const canon = await resolveSpeaker(aSpeaker.value);
-      if (canon) aSpeaker.value = canon;
+      if (canon) { aSpeaker.value = canon; renderAskFilterChips(); }
     } else if (speakerFilter) {
       // A lone surname must resolve to be usable as a filter; an unresolved
       // full name still passes through as typed.
@@ -4707,7 +4717,7 @@ $("ask-continue").addEventListener("click", () => {
 function renderChips() {
   // An ask already underway (status set synchronously at runAsk start) or
   // answered: the chips and the front page stay out of the way.
-  if (lastAsk.question || !$("ask-result").hidden || $("ask-status").textContent) return;
+  if (askInPlay()) return;
   if (!suggestions.length) return;
   const row = $("chip-row");
   for (const el of row.querySelectorAll(".chip")) el.remove();
@@ -5185,16 +5195,21 @@ function searchQueryParams(q, f, page, sort) {
 }
 
 // --- active filters, shown outside the popover that set them ----------------
+// Search and ask offer nearly the same filters behind nearly the same popover,
+// so both say what is on with the same chips: one builder for the labels, one
+// renderer, and a per-page clear function behind each cross.
 
-const SEARCH_KIND_LABELS = {
+const FILTER_KIND_LABELS = {
   speech: "Speeches", news: "News", division: "Divisions", all: "Everything",
 };
-const SEARCH_MODE_LABELS = { hybrid: "Hybrid", semantic: "Semantic", keyword: "Keyword" };
+const FILTER_MODE_LABELS = { hybrid: "Hybrid", semantic: "Semantic", keyword: "Keyword" };
 
 /**
- * One entry per genuinely non-default filter. Corpus and mode have defaults
- * (speeches, hybrid) so they only earn a chip when changed; the year slider at
- * full extent is not a filter at all, which currentFilters() already blanks.
+ * One entry per genuinely non-default filter, over the union of what the two
+ * pages offer: each passes only the keys it has, so search's mode never earns
+ * a chip on ask. Corpus and mode have defaults (speeches, hybrid) so they only
+ * earn one when changed; the year slider at full extent is not a filter at all,
+ * which currentFilters() and askFilters() already blank.
  */
 function filterChipSpecs(f) {
   const out = [];
@@ -5207,20 +5222,23 @@ function filterChipSpecs(f) {
     out.push({ id: "years", k: "Years", v: a === b ? a : `${a} to ${b}` });
   }
   if (f.kind && f.kind !== "speech") {
-    out.push({ id: "kind", k: "Corpus", v: SEARCH_KIND_LABELS[f.kind] || f.kind });
+    out.push({ id: "kind", k: "Corpus", v: FILTER_KIND_LABELS[f.kind] || f.kind });
   }
   if (f.mode && f.mode !== "hybrid") {
-    out.push({ id: "mode", k: "Mode", v: SEARCH_MODE_LABELS[f.mode] || f.mode });
+    out.push({ id: "mode", k: "Mode", v: FILTER_MODE_LABELS[f.mode] || f.mode });
   }
   return out;
 }
 
-function renderFilterChips() {
-  const row = $("search-filter-chips");
+/**
+ * Draw `f`'s chips into `row`; each cross calls `clear` with the spec's id, and
+ * the link past two chips calls it with "all". An emptied row folds away in CSS
+ * (`.filter-chips:empty`), so nothing here has to juggle `hidden`.
+ */
+function renderFilterChipsInto(row, f, clear) {
   if (!row) return;
-  const specs = filterChipSpecs(currentFilters());
+  const specs = filterChipSpecs(f);
   row.replaceChildren();
-  if (!specs.length) { row.hidden = true; return; }
   for (const s of specs) {
     const chip = document.createElement("span");
     chip.className = "fchip";
@@ -5228,7 +5246,7 @@ function renderFilterChips() {
       `<span class="fchip-k">${esc(s.k)}</span><span class="fchip-v">${esc(s.v)}</span>` +
       `<button type="button" class="fchip-x" aria-label="Remove the ${esc(s.k.toLowerCase())} filter, ${esc(s.v)}">` +
       `<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2.6 2.6l6.8 6.8M9.4 2.6l-6.8 6.8"/></svg></button>`;
-    chip.querySelector("button").addEventListener("click", () => clearSearchFilter(s.id));
+    chip.querySelector("button").addEventListener("click", () => clear(s.id));
     row.appendChild(chip);
   }
   if (specs.length > 1) {
@@ -5236,10 +5254,13 @@ function renderFilterChips() {
     all.type = "button";
     all.className = "fchip-clear";
     all.textContent = "Clear all";
-    all.addEventListener("click", () => clearSearchFilter("all"));
+    all.addEventListener("click", () => clear("all"));
     row.appendChild(all);
   }
-  row.hidden = false;
+}
+
+function renderFilterChips() {
+  renderFilterChipsInto($("search-filter-chips"), currentFilters(), clearSearchFilter);
 }
 
 const SEARCH_FILTER_RESETS = {
@@ -5272,6 +5293,51 @@ function searchFiltersChanged() {
   }
   // A wider or narrower set: page one, never page seven of two.
   goRoute(searchHash(q, f, 1, $("search-sort").value));
+}
+
+// The same three pieces for the ask page. Its scope checkbox ("Also search
+// legal documents and news") is the corpus filter under another name, so it
+// arrives as `kind` and earns the same Corpus chip search shows.
+function askChipFilters() {
+  return { ...askFilters(), kind: askKind() };
+}
+
+function renderAskFilterChips() {
+  renderFilterChipsInto($("ask-filter-chips"), askChipFilters(), clearAskFilter);
+}
+
+const ASK_FILTER_RESETS = {
+  speaker: () => { $("a-speaker").value = ""; },
+  party: () => { $("a-party").value = ""; },
+  state: () => { $("a-state").value = ""; },
+  topic: () => { $("a-topic").value = ""; },
+  years: () => { $("a-from").value = "1993"; $("a-to").value = "2026"; updateAskYearsLabel(); },
+  kind: () => { $("ask-wide").checked = false; },
+};
+
+function clearAskFilter(id) {
+  if (id === "all") for (const reset of Object.values(ASK_FILTER_RESETS)) reset();
+  else ASK_FILTER_RESETS[id]?.();
+  askFiltersChanged();
+}
+
+/** A question is answered, or on its way: a filter change has an ask to redo. */
+function askInPlay() {
+  return Boolean(lastAsk.question) || !$("ask-result").hidden ||
+    Boolean($("ask-status").textContent);
+}
+
+/** A filter moved, from a chip's cross or from the popover. */
+function askFiltersChanged() {
+  renderAskFilterChips();
+  if (!askInPlay()) return; // nothing asked yet: the chips are the whole feedback
+  const q = lastAsk.question || $("ask-input").value.trim();
+  if (!q) return;
+  // The answer standing on the page was written under the old filters, so ask
+  // again under the new ones. The URL carries the scope the way it always has,
+  // so the link still re-asks what is being read.
+  replaceRoute(askHash(q, askKind()));
+  runAsk(q);
 }
 
 let searchApplied = null; // guards re-running the same URL state (null: nothing applied yet)

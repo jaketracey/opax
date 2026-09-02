@@ -255,6 +255,10 @@
       </div>
       </div>
       </form>
+      <!-- Which filters are on, outside the popover that set them. This row
+           holds its line whether or not anything is set, so a chip arriving
+           never shoves the answer below it down. -->
+      <div id="ask-filter-chips" class="filter-chips" role="group" aria-label="Active filters"></div>
       <div id="ask-chips" hidden>
         <div class="chip-row" id="chip-row">
           <span class="chip-label">Try:</span>
@@ -475,8 +479,9 @@
       </form>
 
       <!-- Which filters are on, outside the popover that set them. Rendered
-           before the fetch resolves, so it never shifts the results below. -->
-      <div id="search-filter-chips" class="filter-chips" role="group" aria-label="Active filters" hidden></div>
+           before the fetch resolves, so it never shifts the results below.
+           Empty means no filters, and an empty row folds away in CSS. -->
+      <div id="search-filter-chips" class="filter-chips" role="group" aria-label="Active filters"></div>
 
       <nav id="search-chips" class="chip-row search-chips" aria-label="Example searches" hidden></nav>
       <div id="search-status" class="status" role="status"></div>

@@ -860,9 +860,15 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .results-actions { display: inline-flex; align-items: center; gap: 0.5rem 0.7rem; flex-wrap: wrap; }
 #results-count { font-variant-numeric: tabular-nums; }
 
-/* Active filters, said out loud under the search box. Quieter than .chip
-   (these are state, not suggestions), borrowing .map-chip's sunken pill. */
+/* Active filters, said out loud under the search box and the ask box. Quieter
+   than .chip (these are state, not suggestions), borrowing .map-chip's sunken
+   pill. */
 .filter-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-top: 0.9rem; }
+/* No filters, no row: the renderer just empties it and the layout closes up. */
+.filter-chips:empty { display: none; }
+/* Except on ask, where the row keeps its line: a chip can arrive from a shared
+   link as the page loads, and the answer below must not jump when it does. */
+#ask-filter-chips:empty { display: flex; min-height: 30px; }
 .fchip {
   display: inline-flex; align-items: center; gap: 0.3rem; min-height: 30px;
   background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;
