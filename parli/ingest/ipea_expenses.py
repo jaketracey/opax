@@ -15,13 +15,15 @@ This module:
   2. Downloads only the main expenses CSVs (the newsworthy line-items)
   3. Maps columns to the existing mp_expenses table schema
   4. Links records to the members table via name matching
-  5. Is safe to re-run (idempotent: deletes source='ipea' before reload)
+  5. Is safe to re-run (idempotent per quarter: only the quarters being
+     loaded are cleared and reloaded; --new-only never deletes anything)
 
 Usage:
     python -m parli.ingest.ipea_expenses                # download + ingest all
     python -m parli.ingest.ipea_expenses --download-only
     python -m parli.ingest.ipea_expenses --skip-download
     python -m parli.ingest.ipea_expenses --since 2023   # only quarters >= 2023
+    python -m parli.ingest.ipea_expenses --since 2026 --new-only  # daily: add new quarters
 """
 
 import argparse
@@ -300,10 +302,33 @@ def parse_int(s: str) -> int | None:
         return None
 
 
-def ingest_expenses(db, csv_paths: list[Path], since: str | None = None) -> int:
+QUARTER_LABELS = {
+    1: "1 January - 31 March {year}",
+    2: "1 April - 30 June {year}",
+    3: "1 July - 30 September {year}",
+    4: "1 October - 31 December {year}",
+}
+
+
+def quarter_of(csv_path: Path) -> tuple[str, str] | None:
+    """('2026q01', '1 January - 31 March 2026') from an IPEA CSV filename."""
+    qmatch = re.search(r"(\d{4})q(\d{2})", csv_path.name)
+    if not qmatch:
+        return None
+    year, qnum = qmatch.group(1), int(qmatch.group(2))
+    label = QUARTER_LABELS.get(qnum, "Q{qnum} {year}").format(year=year, qnum=qnum)
+    return f"{year}q{qnum:02d}", label
+
+
+def ingest_expenses(db, csv_paths: list[Path], since: str | None = None,
+                    new_only: bool = False) -> int:
     """Load IPEA expense CSVs into the mp_expenses table.
 
-    Clears existing source='ipea' data first (idempotent).
+    Idempotent per quarter: only the quarters being loaded are cleared and
+    reloaded. (The original version deleted every source='ipea' row before
+    loading, which with --since silently dropped all earlier quarters.)
+    With new_only, quarters already present are skipped and nothing is
+    deleted at all -- the mode for the unattended daily refresh.
     """
     # Add person_id column if table exists without it (older schema)
     try:
@@ -325,10 +350,45 @@ def ingest_expenses(db, csv_paths: list[Path], since: str | None = None) -> int:
             pass
     db.commit()
 
-    # Clear existing IPEA data
-    deleted = db.execute("DELETE FROM mp_expenses WHERE source = 'ipea'").rowcount
-    if deleted:
-        print(f"  Cleared {deleted:,} existing IPEA records")
+    # Decide which quarters this run loads
+    selected: list[tuple[Path, str]] = []
+    for csv_path in sorted(csv_paths):
+        q = quarter_of(csv_path)
+        if q is None:
+            print(f"  Skipping {csv_path.name} (can't parse quarter)")
+            continue
+        qid, period = q
+        if since and qid < since:
+            continue
+        selected.append((csv_path, period))
+
+    existing = {
+        r[0] for r in db.execute(
+            "SELECT DISTINCT period FROM mp_expenses WHERE source = 'ipea'"
+        )
+    }
+    if new_only:
+        already = [p for _, p in selected if p in existing]
+        selected = [(c, p) for c, p in selected if p not in existing]
+        if already:
+            print(f"  --new-only: skipping {len(already)} quarters already loaded")
+    else:
+        reload_periods = [p for _, p in selected if p in existing]
+        if reload_periods:
+            marks = ",".join("?" * len(reload_periods))
+            deleted = db.execute(
+                f"DELETE FROM mp_expenses WHERE source = 'ipea' AND period IN ({marks})",
+                reload_periods,
+            ).rowcount
+            print(f"  Cleared {deleted:,} existing IPEA records across "
+                  f"{len(reload_periods)} quarters being reloaded")
+    db.commit()
+
+    if not selected:
+        print("  Nothing to load.")
+        return 0
+    print(f"  Loading {len(selected)} quarters: "
+          + ", ".join(p for _, p in selected))
 
     # Build name matching index
     name_index = build_name_index(db)
@@ -338,29 +398,8 @@ def ingest_expenses(db, csv_paths: list[Path], since: str | None = None) -> int:
     matched = 0
     unmatched_names = set()
 
-    for csv_path in sorted(csv_paths):
+    for csv_path, period in selected:
         fname = csv_path.name
-
-        # Extract quarter from filename
-        qmatch = re.search(r"(\d{4})q(\d{2})", fname)
-        if not qmatch:
-            print(f"  Skipping {fname} (can't parse quarter)")
-            continue
-
-        year = qmatch.group(1)
-        qnum = int(qmatch.group(2))
-
-        if since and f"{year}q{qnum:02d}" < since:
-            continue
-
-        # Map quarter number to period label
-        quarter_labels = {
-            1: f"1 January - 31 March {year}",
-            2: f"1 April - 30 June {year}",
-            3: f"1 July - 30 September {year}",
-            4: f"1 October - 31 December {year}",
-        }
-        period = quarter_labels.get(qnum, f"Q{qnum} {year}")
 
         batch = []
         file_count = 0
@@ -605,6 +644,9 @@ def main():
                         help="Only process quarters >= this (e.g. '2023' or '2023q01')")
     parser.add_argument("--stats-only", action="store_true",
                         help="Just print statistics, no download or ingest")
+    parser.add_argument("--new-only", action="store_true",
+                        help="Only load quarters not already in mp_expenses; "
+                             "never delete existing rows (daily-refresh mode)")
     parser.add_argument("--db", type=str, default=None,
                         help="Database path (default: ~/.cache/autoresearch/parli.db)")
     args = parser.parse_args()
@@ -647,7 +689,7 @@ def main():
 
     # Ingest
     print("\n=== Ingesting into mp_expenses table ===")
-    count = ingest_expenses(db, csv_paths, since=args.since)
+    count = ingest_expenses(db, csv_paths, since=args.since, new_only=args.new_only)
 
     # Print stats
     print_stats(db)

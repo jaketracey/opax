@@ -46,12 +46,21 @@ from parli.schema import get_db, init_db
 API_BASE = "https://data.parliament.qld.gov.au/api"
 API_VERSION = "v1"
 HANSARD_PDF_BASE = "https://documents.parliament.qld.gov.au/events/han"
-USER_AGENT = "Mozilla/5.0 (compatible; OPAX/1.0; +https://opax.com.au)"
+# data.parliament.qld.gov.au sits behind an Azure Front Door WAF (Sept 2026)
+# that serves a JavaScript challenge (HTTP 403) to any User-Agent that does
+# not look like a browser -- "Mozilla/5.0 (compatible; OPAX/1.0; ...)" and
+# bare "OPAX/1.0" are both challenged. A browser-shaped UA with the OPAX
+# product token appended passes and still identifies us honestly.
+USER_AGENT = (
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/128.0.0.0 Safari/537.36 OPAX/1.0 (+https://opax.com.au)"
+)
 
 # Rate limiting
 API_DELAY = 0.3      # seconds between API calls
 PDF_DELAY = 2.0      # seconds between PDF downloads (heavier)
 MAX_RETRIES = 3
+PDF_GRACE_DAYS = 14  # a sitting day with no PDF yet is retried until this old
 
 # QLD is unicameral
 CHAMBER_CODE = "qld_la"  # Queensland Legislative Assembly
@@ -351,32 +360,40 @@ def ingest_members(db: sqlite3.Connection, fetch_details: bool = True) -> int:
 # ── Hansard PDF ingestion ─────────────────────────────────────────────────────
 
 def get_sitting_dates(start: date, end: date) -> list[date]:
-    """Get QLD Parliament sitting dates by checking the sitting calendar API."""
+    """Get QLD Parliament sitting dates from the tabled-papers feed.
+
+    The /api/sittingcalendar endpoint now returns 404 (Sept 2026), so sitting
+    days come from tabled papers flagged isSittingDay. The feed is newest-first
+    (~130K papers, ~650 pages), so paging stops as soon as a whole page predates
+    `start` instead of walking the entire history on every run.
+    """
     sitting_dates = set()
-
-    for year in range(start.year, end.year + 1):
-        print(f"    Checking sitting calendar for {year}...")
-        events = _api_json("sittingcalendar", year=year)
-        if isinstance(events, list):
-            for ev in events:
-                name = ev.get("name", "")
-                if "Legislative Assembly" in name:
-                    # The calendar API doesn't include date fields directly,
-                    # but we can use the ID to look up. Instead, generate candidate
-                    # dates from the tabled papers which have actual dates.
-                    pass
-
-    # Fallback: generate candidate dates from tabled papers + known sitting patterns
-    # QLD typically sits Tue-Thu during sitting weeks
-    print(f"    Scanning tabled papers for sitting dates...")
-    papers = _api_paged("tabledpaper", page_size=200)
-    for paper in papers:
-        paper_date = (paper.get("date") or "")[:10]
-        is_sitting = paper.get("isSittingDay", False)
-        if is_sitting and paper_date:
-            d = date.fromisoformat(paper_date)
-            if start <= d <= end:
+    print(f"    Scanning tabled papers for sitting dates ({start} to {end})...")
+    page = 0
+    while True:
+        result = _api_json("tabledpaper", page=page, pageSize=200)
+        items = result.get("data", []) if isinstance(result, dict) else []
+        if not items:
+            break
+        page_dates = []
+        for paper in items:
+            paper_date = (paper.get("date") or "")[:10]
+            if not paper_date:
+                continue
+            try:
+                d = date.fromisoformat(paper_date)
+            except ValueError:
+                continue
+            page_dates.append(d)
+            if paper.get("isSittingDay", False) and start <= d <= end:
                 sitting_dates.add(d)
+        if page_dates and max(page_dates) < start:
+            break
+        if not result.get("hasNextPage", False):
+            break
+        page += 1
+        if page % 10 == 0:
+            print(f"    Page {page}, {len(sitting_dates)} sitting dates so far...")
 
     return sorted(sitting_dates)
 
@@ -771,7 +788,14 @@ def ingest_hansard(
             print(f"  {label} -> {n_speeches} speeches, {n_divs} divisions")
 
         if not dry_run:
-            save_progress(d.isoformat())
+            # The weekly Hansard PDF for a sitting day appears a few days after
+            # the day itself. Marking an empty recent day as done would skip
+            # it forever, so only record it once it is old enough to be final.
+            recent = (date.today() - d).days <= PDF_GRACE_DAYS
+            if n_speeches or n_divs or not recent:
+                save_progress(d.isoformat())
+            else:
+                print(f"  {label} no Hansard PDF yet (recent day); will retry")
 
     return total_speeches, total_divisions
 

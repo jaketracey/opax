@@ -31,12 +31,17 @@ API_KEY = os.environ.get("OPENAUSTRALIA_API_KEY", "")
 SITE_BASE = "https://www.openaustralia.org.au"
 OUTPUT_DIR = Path(os.path.expanduser("~/.cache/autoresearch/hansard/modern"))
 DEFAULT_START = "2023-01-01"
-DEFAULT_END = "2026-03-28"
+DEFAULT_END = date.today().isoformat()
 BACKFILL_START = "2006-02-07"
-BACKFILL_END = "2026-03-28"
+BACKFILL_END = date.today().isoformat()
 API_RATE_LIMIT = 1.0  # seconds between API calls
 SCRAPE_RATE_LIMIT = 0.2  # seconds between scrape requests per worker
 USER_AGENT = "AutoResearch-Hansard/2.0 (async)"
+# OpenAustralia publishes a sitting day's Hansard a day or two later. An
+# empty result for a recent day is therefore "not yet", not "never": no
+# marker file is written for it, so the next run retries. Older empty days
+# are recorded (empty file) so they are skipped forever.
+EMPTY_DAY_GRACE_DAYS = 10
 
 
 # ---------------------------------------------------------------------------
@@ -416,7 +421,11 @@ async def run(args):
                 stats["days_processed"] += 1
                 print(f"  -> {len(records)} records saved")
             else:
-                save_records([], date_str, chamber)
+                age = (date.today() - date.fromisoformat(date_str)).days
+                if age > EMPTY_DAY_GRACE_DAYS:
+                    save_records([], date_str, chamber)
+                else:
+                    print("  -> no data yet (recent day); will retry on a later run")
                 stats["days_empty"] += 1
 
     elapsed_total = time.monotonic() - t_start
@@ -465,7 +474,7 @@ def main():
     parser.add_argument(
         "--backfill-all",
         action="store_true",
-        help="Download everything: both chambers, 2006-02-07 to 2026-03-28",
+        help="Download everything: both chambers, 2006-02-07 to today",
     )
     args = parser.parse_args()
     asyncio.run(run(args))

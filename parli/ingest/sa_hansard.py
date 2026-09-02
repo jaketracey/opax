@@ -111,6 +111,14 @@ def get_sitting_dates_for_year(year: int) -> list[str]:
         html = _api_get(url).decode("utf-8", errors="replace")
     except Exception as e:
         print(f"  Error fetching calendar for {year}: {e}")
+        if "403" in str(e):
+            # Since Sept 2026 hansardsearch.parliament.sa.gov.au sits behind an
+            # Azure Front Door WAF that answers every non-browser request (any
+            # UA, any IP, even /robots.txt) with a JavaScript challenge. There
+            # is no API or alternate host; the ingestor cannot proceed.
+            print("  hansardsearch.parliament.sa.gov.au is serving an Azure WAF "
+                  "JavaScript challenge to non-browser clients; SA Hansard "
+                  "cannot be fetched server-side until that changes.")
         return []
 
     # Parse getEvents("DD/MM/YYYY", ...) calls from the HTML
