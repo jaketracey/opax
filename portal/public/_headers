@@ -1,0 +1,57 @@
+# Workers static-assets headers. Natively supported by Workers Assets (same
+# format as Pages): parsed by the platform, never served as a file.
+#
+# This file governs ONLY responses the asset server produces. /api/* and
+# anything the Worker returns get the same set from withSecurityHeaders() in
+# src/index.ts — keep the two in step. Rationale: docs/HARDENING.md.
+
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
+
+# --- caching -----------------------------------------------------------------
+# A request matching several rules inherits ALL their headers, and same-name
+# values are JOINED. So the generic rules come first and a specific rule
+# detaches with "! Cache-Control" before setting its own. Patterns allow one
+# splat each, and a splat matches "/" too (/*.json covers /graph/money.json).
+#
+# The shell always revalidates; its ETag makes that a 304.
+/
+  Cache-Control: public, max-age=0, must-revalidate
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Modules are dynamically import()ed by bare path from app.js, so they cannot
+# carry a stamp: short TTL, then a day of stale-while-revalidate.
+/*.js
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+
+# Data exports and portraits: hourly freshness is plenty. (/photos is scoped to
+# .webp so /photos/people.json is left to the /*.json rule and not double-set.)
+/*.json
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+/photos/*.webp
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/favicon.svg
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# Self-hosted faces. Names are stable, so not "immutable": a month, with a
+# year of stale grace, still means one fetch per visitor per month.
+/fonts/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=31536000
+
+# index.html references /app.js?v=<hash> and /style.css?v=<hash>, stamped by
+# scripts/stamp_assets.mjs on every `npm run deploy`. A new release is a new
+# URL, so these two can be immutable. NEVER `wrangler deploy` by hand — an
+# unstamped deploy leaves returning visitors on the cached old bundle.
+/app.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/style.css
+  Cache-Control: public, max-age=31536000, immutable

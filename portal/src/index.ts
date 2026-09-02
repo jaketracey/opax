@@ -1328,11 +1328,18 @@ async function apiRecent(env: Env): Promise<Response> {
     '/catalog?page_number=0&page_size=14&sort_field=created&sort_order=desc',
   )
   if (!res.ok) {
-    // Not cached: an upstream stumble must not pin an empty rail for 5 minutes.
-    return withCacheStatus(
-      json({ items: [], upstream: res.status, body: (await res.text()).slice(0, 200) }),
-      'MISS',
+    // The upstream body echoed the failing request back to the client. Log it,
+    // serve an empty rail: a knowledge-box error is not the browser's business.
+    // Not cached either: a stumble must not pin an empty rail for five minutes.
+    console.error(
+      JSON.stringify({
+        level: 'error',
+        path: '/api/recent',
+        upstream: res.status,
+        detail: (await res.text()).slice(0, 500),
+      }),
     )
+    return withCacheStatus(json({ items: [] }), 'MISS')
   }
   const data = (await res.json()) as {
     resources?: Record<string, { slug?: string; title?: string; created?: string }>
@@ -2243,20 +2250,217 @@ async function sitemapXml(env: Env): Promise<Response> {
   }, 86400)
 }
 
+
+// Router-level hardening
+//
+// Everything below is a wrapper around the route table: response headers, and
+// the shape checks that keep untrusted input out of the upstream KB call. The
+// handlers themselves are untouched, so this stays mergeable alongside the
+// per-route caching and SEO work.
 // ---------------------------------------------------------------------------
 
-export default {
-  async fetch(request, env, ctx): Promise<Response> {
-    const url = new URL(request.url)
-    try {
+/**
+ * Sent on every response this Worker produces. public/_headers carries the
+ * same set for responses the asset server produces on its own — which, while
+ * run_worker_first is scoped to /api/*, is every non-API request. The two
+ * lists must stay in step; docs/HARDENING.md explains each line.
+ */
+const BASE_SECURITY_HEADERS: Record<string, string> = {
+  'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+  'x-content-type-options': 'nosniff',
+  'referrer-policy': 'strict-origin-when-cross-origin',
+  'x-frame-options': 'DENY',
+  'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+  'cross-origin-opener-policy': 'same-origin',
+}
+
+// Derived from what the app actually loads (see docs/HARDENING.md for the
+// inventory). No 'unsafe-inline' and no 'unsafe-eval' for scripts: index.html
+// carries exactly one <script src>, and nothing in the bundle eval()s. Styles
+// need 'unsafe-inline' because every module injects its own <style> element
+// and app.js sets style="" attributes on the relevance bars — neither is a
+// script-execution vector. Fonts are self-hosted, so no third-party origin.
+const CSP_PAGE = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self'",
+  "font-src 'self'",
+  "connect-src 'self'",
+  "worker-src 'self'",
+  "manifest-src 'self'",
+  "frame-src 'none'",
+  "object-src 'none'",
+  "base-uri 'none'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join('; ')
+
+// A JSON or SSE body is never a document, so it needs to load nothing at all.
+const CSP_API = "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+
+// Statuses whose Response must be constructed with a null body.
+const NULL_BODY_STATUS = new Set([101, 204, 205, 304])
+
+// Routes with nothing cacheable in them: an answer to one question, or one
+// query's result set. Every other /api route is the caching work's to own, so
+// its Cache-Control is left exactly as the handler returned it — and even here
+// a handler that sets its own (the SSE stream does) wins.
+const NO_STORE_PATHS = new Set(['/api/ask', '/api/followups', '/api/search'])
+
+function withSecurityHeaders(res: Response, url: URL): Response {
+  const isApi = url.pathname.startsWith('/api/')
+  // Responses from the ASSETS binding are immutable; re-wrap to edit headers.
+  // res.body is passed through unread, so SSE keeps streaming.
+  const out = new Response(NULL_BODY_STATUS.has(res.status) ? null : res.body, res)
+  for (const [k, v] of Object.entries(BASE_SECURITY_HEADERS)) out.headers.set(k, v)
+  out.headers.set('content-security-policy', isApi ? CSP_API : CSP_PAGE)
+  if (NO_STORE_PATHS.has(url.pathname) && !out.headers.has('cache-control')) {
+    out.headers.set('cache-control', 'no-store')
+  }
+  return out
+}
+
+// --- request validation ------------------------------------------------------
+
+const MAX_BODY_BYTES = 16 * 1024
+const MAX_QUESTION_CHARS = 2000
+const MAX_SPEAKER_CHARS = 120
+const MAX_PARTY_CHARS = 64
+// A sanity window, deliberately wider than the corpus (1993-) so extending it
+// backwards never needs a Worker change. filterExpression still requires \d{4}.
+const MIN_YEAR = 1900
+const MAX_YEAR = 2100
+
+const KINDS = new Set(['speech', 'legal', 'news', 'division', 'all'])
+const STATES = new Set(['federal', 'nsw', 'vic', 'sa', 'qld'])
+const MODES = new Set(['hybrid', 'semantic', 'keyword'])
+// Party labels are the KB's own facet values (served by /api/parties) and grow
+// with the corpus, so this is a shape check rather than a value enum: it keeps
+// anything that is not a plausible party name out of the filter expression
+// without breaking the encyclopedia the day a new party is indexed.
+const NAME_RE = /^[\p{L}\p{N} .,'’&()\/-]+$/u
+
+const FILTER_KEYS = ['kind', 'speaker', 'party', 'state', 'topic', 'from', 'to'] as const
+
+/** Allow-list every filter value. Returns a client-safe message, or null. */
+function validateFilters(get: (key: string) => unknown): string | null {
+  for (const key of FILTER_KEYS) {
+    const raw = get(key)
+    if (raw === undefined || raw === null) continue
+    if (typeof raw !== 'string') return `${key} must be a string`
+    const v = raw.trim()
+    if (!v) continue
+    switch (key) {
+      case 'kind':
+        if (!KINDS.has(v)) return 'unknown kind'
+        break
+      case 'state':
+        if (!STATES.has(v)) return 'unknown state'
+        break
+      case 'topic':
+        if (!TOPIC_SLUGS.has(v)) return 'unknown topic'
+        break
+      case 'party':
+        if (v.length > MAX_PARTY_CHARS || !NAME_RE.test(v)) return 'bad party'
+        break
+      case 'speaker':
+        if (v.length > MAX_SPEAKER_CHARS || !NAME_RE.test(v)) return 'bad speaker'
+        break
+      case 'from':
+      case 'to': {
+        if (!/^\d{4}$/.test(v)) return `${key} must be a four-digit year`
+        const year = Number(v)
+        if (year < MIN_YEAR || year > MAX_YEAR) return `${key} is out of range`
+        break
+      }
+    }
+  }
+  return null
+}
+
+function validateSearchQuery(url: URL): Response | null {
+  const q = url.searchParams.get('q')?.trim() ?? ''
+  if (!q) return json({ error: 'q is required' }, 400)
+  if (q.length > MAX_QUESTION_CHARS) {
+    return json({ error: `q must be ${MAX_QUESTION_CHARS} characters or fewer` }, 400)
+  }
+  const mode = url.searchParams.get('mode')
+  if (mode && !MODES.has(mode)) return json({ error: 'unknown mode' }, 400)
+  const err = validateFilters((k) => url.searchParams.get(k))
+  return err ? json({ error: err }, 400) : null
+}
+
+/**
+ * Read a POST body under a hard cap, insist it is JSON, and hand back both the
+ * parsed object (for validation here) and the raw text (to rebuild the request
+ * the handler will re-parse). Buffering is the point: it is what bounds the
+ * body, and 16 KB is an order of magnitude more than the biggest legitimate
+ * ask — a 2,000-char question plus 24 turns of clipped context.
+ */
+async function readJsonBody(
+  request: Request,
+): Promise<{ text: string; value: Record<string, unknown> } | Response> {
+  const type = (request.headers.get('content-type') ?? '').split(';')[0].trim().toLowerCase()
+  if (type !== 'application/json') {
+    return json({ error: 'expected content-type: application/json' }, 415)
+  }
+  const declared = Number(request.headers.get('content-length'))
+  if (Number.isFinite(declared) && declared > MAX_BODY_BYTES) {
+    return json({ error: 'request body too large' }, 413)
+  }
+  const raw = await request.arrayBuffer()
+  if (raw.byteLength > MAX_BODY_BYTES) return json({ error: 'request body too large' }, 413)
+  const text = new TextDecoder().decode(raw)
+  let value: unknown
+  try {
+    value = JSON.parse(text)
+  } catch {
+    return json({ error: 'body is not valid JSON' }, 400)
+  }
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    return json({ error: 'body must be a JSON object' }, 400)
+  }
+  return { text, value: value as Record<string, unknown> }
+}
+
+/** Rebuild a consumed POST so the handler can call request.json() as before. */
+const replayPost = (request: Request, body: string) =>
+  new Request(request.url, { method: 'POST', headers: request.headers, body })
+
+// ---------------------------------------------------------------------------
+
+async function route(
+  request: Request,
+  url: URL,
+  env: Env,
+  ctx: ExecutionContext,
+): Promise<Response> {
+  // The route table keeps the indentation it had inside the old fetch handler,
+  // held by this block, so the caching and SEO work landing on these same lines
+  // merges line-by-line instead of conflicting on the whole hunk.
+  {
       if (url.pathname === '/api/search' && request.method === 'GET') {
-        return await apiSearch(request, url, env, ctx)
+        return validateSearchQuery(url) ?? (await apiSearch(request, url, env, ctx))
       }
       if (url.pathname === '/api/ask' && request.method === 'POST') {
-        return await apiAsk(request, env, ctx)
+        const body = await readJsonBody(request)
+        if (body instanceof Response) return body
+        const question = body.value.question
+        if (typeof question !== 'string' || !question.trim()) {
+          return json({ error: 'question is required' }, 400)
+        }
+        if (question.length > MAX_QUESTION_CHARS) {
+          return json({ error: `question must be ${MAX_QUESTION_CHARS} characters or fewer` }, 400)
+        }
+        const bad = validateFilters((k) => body.value[k])
+        if (bad) return json({ error: bad }, 400)
+        return await apiAsk(replayPost(request, body.text), env, ctx)
       }
       if (url.pathname === '/api/followups' && request.method === 'POST') {
-        return await apiFollowups(request, env, ctx)
+        const body = await readJsonBody(request)
+        if (body instanceof Response) return body
+        return await apiFollowups(replayPost(request, body.text), env, ctx)
       }
       // Speech/legal/news ids and composite division ids; apiResource validates the shape.
       const resourceMatch = url.pathname.match(/^\/api\/resource\/([a-z][a-z0-9-]*)$/)
@@ -2297,9 +2501,31 @@ export default {
         if (seoRoute) return await serveSeoPage(seoRoute, url, request, env, ctx)
       }
       return await env.ASSETS.fetch(request)
+  }
+}
+
+export default {
+  async fetch(request, env, ctx): Promise<Response> {
+    const url = new URL(request.url)
+    const isApi = url.pathname.startsWith('/api/')
+    try {
+      // The route table only matches GET, so a HEAD (curl -I, uptime probes)
+      // used to fall through to the 404. Run it as a GET and drop the body.
+      if (isApi && request.method === 'HEAD') {
+        const got = await route(
+          new Request(url.toString(), { method: 'GET', headers: request.headers }),
+          url,
+          env,
+          ctx,
+        )
+        return withSecurityHeaders(new Response(null, got), url)
+      }
+      return withSecurityHeaders(await route(request, url, env, ctx), url)
     } catch (err) {
-      console.log(JSON.stringify({ level: 'error', path: url.pathname, message: String(err) }))
-      return json({ error: 'internal error' }, 500)
+      // The detail goes to the log, never to the client: upstream error text
+      // can carry request echoes and internal identifiers.
+      console.error(JSON.stringify({ level: 'error', path: url.pathname, message: String(err) }))
+      return withSecurityHeaders(json({ error: 'internal error' }, 500), url)
     }
   },
 } satisfies ExportedHandler<Env>

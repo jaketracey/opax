@@ -4,9 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "stamp": "node ../scripts/stamp_assets.mjs",
+    "deploy": "node ../scripts/stamp_assets.mjs && wrangler deploy",
     "types": "wrangler types",
-    "check": "wrangler types && tsc --noEmit"
+    "check": "wrangler types && tsc --noEmit && node ../scripts/stamp_assets.mjs --check"
   },
   "devDependencies": {
     "@types/three": "^0.185.4",

@@ -58,7 +58,13 @@ printf 'ARAG_KB_TOKEN=...\n' > .dev.vars   # the knowledge box token; zone and K
 npx wrangler dev                              # http://localhost:8787
 ```
 
-Deploy with `npx wrangler deploy` from `portal/`. The committed `public/money-map.js` must equal a fresh build:
+Deploy with `npm run deploy` from `portal/` — **not** `npx wrangler deploy`. The
+npm script runs `scripts/stamp_assets.mjs` first, which content-hash stamps the
+`?v=` on `/app.js` and `/style.css` in `index.html`; those two are served
+`immutable` for a year, so an unstamped deploy strands returning visitors on the
+old bundle. See `docs/HARDENING.md`.
+
+The committed `public/money-map.js` must equal a fresh build:
 
 ```bash
 npx esbuild graph/index.ts --bundle --minify --format=esm --target=es2022 --outfile=public/money-map.js
