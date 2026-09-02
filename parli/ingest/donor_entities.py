@@ -166,8 +166,12 @@ PARTY_RX = re.compile(
     r"\blabor\b|\bliberal\b|\bliberals\b|\bgreens\b|\bnationals\b|\bone nation\b|\bunited australia\b|"
     r"\bkatter\b|\bfamily first\b|\bcentre alliance\b|\bcountry liberal\b|\blnp\b|\balp\b|"
     r"\bcormack foundation\b|\bjohn curtin house\b|\bfree enterprise foundation\b|\bnational party\b|"
-    r"\bdemocrats\b|\bsocialist alliance\b|\banimal justice party\b|\bshooters\b|\breason party\b|"
-    r"\blegalise cannabis\b|\bfusion party\b|\bsustainable australia\b|\bpalmer united\b|\bteal\b",
+    r"\bdemocrats\b|\bsocialist alliance\b|\banimal justice party\b|\breason party\b|"
+    # "shooters" alone is a gun shop, a shooting club and the Sporting Shooters
+    # Association long before it is a party, so the party words must be present.
+    r"\bshooters,?\s*(?:and\s+|&\s*)?fishers\b|\bshooters party\b|"
+    r"\blegalise cannabis\b|\bfusion party\b|\bsustainable australia\b|\bpalmer united\b|"
+    r"\bteal independents?\b",
     re.I,
 )
 ASSOCIATION_RX = re.compile(

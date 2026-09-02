@@ -30,9 +30,16 @@ recorded in each file's `meta` block:
 4. Internal party transfers are excluded (industry = 'party_internal' or a party
    word in the donor name): the Greens' national body gifting its QLD branch, etc.
 5. Donors with industry other/NULL/unidentified need a per-jurisdiction lifetime
-   floor to earn a place (the federal $5m floor would empty a state file).
-6. Donor names are normalised (case, punctuation, PTY/LTD suffixes) before
-   aggregation, exactly as the federal export does.
+   floor to earn a place (the federal $5m floor would empty a state file). A
+   donor's industry is the biggest CLASSIFIED tag across its rows; 'other' and
+   'unidentified' mean "not classified" and never outvote a real tag.
+6. Donations are aggregated per CANONICAL DONOR ENTITY, exactly as the federal
+   export does: ext_donor_aliases maps every raw donor_name to an entity in
+   ext_donor_entities (parli.ingest.donor_entities), the node `label` is the
+   canonical name and `aliases` lists the other spellings behind it. Entities
+   resolved to kind='government' or kind='party_unit' are dropped. A donor_name
+   with no alias row falls back to the old light normalisation and is counted in
+   meta.donors_unresolved.
 7. Per-source rows that are not gifts are dropped: VIC `loan` rows (repayable)
    and WA `compulsory party levy` rows (sitting members paying their own party).
    QLD lists every gift to a party and, since 2022-23, flags which ones the Act
@@ -287,12 +294,45 @@ def norm_key(name: str) -> str:
     return " ".join(tokens)
 
 
+# Some registers put an event name where a financial year belongs, and a
+# by-election event carries no digits at all (see export_money_graph.py).
+BY_ELECTION_YEAR = {
+    "braddon by-election": 2018,
+    "wentworth by-election": 2018,
+    "eden-monaro by-election": 2020,
+    "fadden by-election": 2023,
+}
+
+
 def year_of(fy: str | None) -> int | None:
-    """First 4-digit year in a financial_year string ('2012-13' -> 2012)."""
+    """First 4-digit year in a financial_year string ('2012-13' -> 2012), or the
+    polling year of a named by-election."""
     if not fy:
         return None
     m = re.search(r"\b(19|20)\d\d\b", fy)
-    return int(m.group(0)) if m else None
+    if m:
+        return int(m.group(0))
+    return BY_ELECTION_YEAR.get(fy.strip().lower())
+
+
+def load_canonical(db) -> tuple[dict, dict]:
+    """(alias_raw -> entity_id, entity_id -> {name, kind}) from the resolver tables.
+
+    Returns empty maps if the tables are absent, so the export still runs on a
+    database where parli.ingest.donor_entities has never been loaded.
+    """
+    have = {r[0] for r in db.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' "
+        "AND name IN ('ext_donor_entities','ext_donor_aliases')")}
+    if len(have) < 2:
+        sys.stderr.write("export_state_money: no ext_donor_* tables; "
+                         "falling back to per-spelling aggregation\n")
+        return {}, {}
+    ents = {r["entity_id"]: {"name": r["canonical_name"], "kind": r["kind"]}
+            for r in db.execute("SELECT entity_id, canonical_name, kind FROM ext_donor_entities")}
+    alias = {r["alias_raw"]: r["entity_id"] for r in db.execute(
+        "SELECT alias_raw, entity_id FROM ext_donor_aliases")}
+    return alias, ents
 
 
 # --- export -----------------------------------------------------------------
@@ -316,6 +356,7 @@ def main() -> None:
 
     db = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
+    alias_to_entity, entities = load_canonical(db)
 
     rows = db.execute(
         """
@@ -360,17 +401,26 @@ def main() -> None:
         else:
             flag_counts["gift_not_political_donation"] += 1
 
-    # Aggregate per normalised donor.
+    # Aggregate per canonical donor entity (rule 6).
     donors: dict[str, dict] = {}
-    excluded = {"public_funding": 0, "party_internal": 0}
+    excluded = {"public_funding": 0, "party_internal": 0, "government_entity": 0}
+    unresolved = set()
+    rows_without_year = 0
     for r in rows:
         name = (r["donor_name"] or "").strip()
         if not name:
             continue
-        key = norm_key(name)
+        eid = alias_to_entity.get(name)
+        ent = entities.get(eid) if eid else None
+        if ent is None:
+            unresolved.add(name)
+        if ent and ent["kind"] in ("government", "party_unit"):
+            excluded["government_entity"] += 1
+            continue
+        key = eid or norm_key(name)
         if not key:
             continue
-        if PUBLIC_FUNDING_RE.search(name) or PUBLIC_FUNDING_RE.search(key):
+        if PUBLIC_FUNDING_RE.search(name) or PUBLIC_FUNDING_RE.search(norm_key(name)):
             excluded["public_funding"] += 1
             continue
         if r["industry"] == "party_internal" or PARTY_WORD_RE.search(name):
@@ -379,6 +429,8 @@ def main() -> None:
         d = donors.get(key)
         if d is None:
             d = donors[key] = {
+                "canonical": ent["name"] if ent else None,
+                "entity_kind": ent["kind"] if ent else None,
                 "names": defaultdict(float),
                 "total": 0.0,
                 "count": 0,
@@ -393,6 +445,8 @@ def main() -> None:
         y = year_of(r["financial_year"])
         if y:
             d["years"].append(y)
+        else:
+            rows_without_year += 1
         d["industries"][r["industry"] or "other"] += amt
         p = d["parties"][r["party"]]
         p["total"] += amt
@@ -401,8 +455,19 @@ def main() -> None:
             p["years"].append(y)
 
     def dominant_industry(d: dict) -> str:
-        ind = max(d["industries"].items(), key=lambda kv: kv[1])[0]
-        return "other" if ind in ("other", "unidentified") else ind
+        # A union is a union: see export_money_graph.py for why rolled-up
+        # branches must not be recoloured by one oddly-tagged branch.
+        if d.get("entity_kind") == "union":
+            return "unions"
+        # 'other'/'unidentified' means "not classified", so it must not outvote a
+        # real tag: a donor filed once as 'finance' and twice untagged is finance.
+        # Rolling spellings up made this matter -- the untagged spellings of a
+        # merged donor could otherwise push it into 'other' and out of the map.
+        known = {k: v for k, v in d["industries"].items()
+                 if k and k not in ("other", "unidentified")}
+        if known:
+            return max(known.items(), key=lambda kv: kv[1])[0]
+        return "other"
 
     ranked = sorted(donors.values(), key=lambda d: -d["total"])
     picked = []
@@ -448,12 +513,16 @@ def main() -> None:
         })
 
     for d in picked:
-        display = max(d["names"].items(), key=lambda kv: kv[1])[0]
-        if display.isupper():
-            display = display.title()
-        display = re.sub(r"\bPTY\b", "Pty", display)
-        display = re.sub(r"\bLTD\b", "Ltd", display)
-        display = re.sub(r"\bLIMITED\b", "Limited", display)
+        display = d["canonical"]
+        if not display:
+            display = max(d["names"].items(), key=lambda kv: kv[1])[0]
+            if display.isupper():
+                display = display.title()
+            display = re.sub(r"\bPTY\b", "Pty", display)
+            display = re.sub(r"\bLTD\b", "Ltd", display)
+            display = re.sub(r"\bLIMITED\b", "Limited", display)
+        others = [n for n, _ in sorted(d["names"].items(), key=lambda kv: -kv[1])
+                  if norm_key(n) != norm_key(display)]
         ind = dominant_industry(d)
         node_id = "donor:" + norm_key(display)
         nodes.append({
@@ -466,6 +535,7 @@ def main() -> None:
             "count": d["count"],
             "firstYear": min(d["years"]) if d["years"] else None,
             "lastYear": max(d["years"]) if d["years"] else None,
+            "aliases": others,
         })
         for party, p in sorted(d["parties"].items(), key=lambda kv: -kv[1]["total"]):
             edges.append({
@@ -481,6 +551,7 @@ def main() -> None:
     exclusions = [
         "gifts to candidates, committees, third parties and independents (no canonical party recipient)",
         "public electoral funding and government bodies (electoral commissions / ATO / departments; industry 'government')",
+        "donor entities resolved to kind='government' or kind='party_unit'",
         "internal party transfers (industry='party_internal' or donor named after a party)",
         f"donors with industry other/unknown under {floor_text} lifetime in this jurisdiction",
     ]
@@ -510,15 +581,25 @@ def main() -> None:
             "not_summed": NOT_SUMMED,
             "methodology": (
                 f"Donor->party flows from {cfg['commission']} disclosures with a canonical party "
-                "recipient; amounts aggregated per (normalised donor, party). Top "
+                "recipient; amounts aggregated per (canonical donor entity, party) using "
+                "ext_donor_aliases, so every spelling of a donor counts once. Top "
                 f"{TOP_DONORS} donors by lifetime total in this jurisdiction shown. "
                 "Same shape and rules as the federal money.json; the two are never combined."
+            ),
+            "entity_resolution": (
+                "parli.ingest.donor_entities resolves each raw donor_name to an entity in "
+                "ext_donor_entities (exact-normalised, rule-based suffix/branch stripping, "
+                "then the hand-curated parli/ingest/donor_aliases.json). Node label is the "
+                "canonical name; node.aliases lists the other spellings it answers to."
             ),
             "exclusions": exclusions,
             "rows_considered": considered,
             "rows_used": len(rows),
             "rows_excluded_public_funding": excluded["public_funding"],
             "rows_excluded_party_internal": excluded["party_internal"],
+            "rows_excluded_government_entity": excluded["government_entity"],
+            "rows_without_year": rows_without_year,
+            "donors_unresolved": len(unresolved),
             "rows_dropped_by_disclosure_type": dict(dropped_types),
             "rows_dropped_election_duplicates": dropped_election or None,
             "political_donation_flag": flag_counts if jur == "qld" else None,

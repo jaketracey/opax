@@ -28,11 +28,30 @@ Methodology / exclusion rules (all documented in the output's `meta` block):
 5. Donors with industry in ('other', NULL, 'unidentified') are excluded from
    the top list unless their lifetime total clears $5m -- they carry no
    industry signal for the map's colour/cluster grammar, so only the huge
-   ones earn a place (shown under 'other').
-6. Donor names are lightly normalised before aggregation (case folded,
-   punctuation stripped, company suffixes like PTY/LTD/LIMITED dropped) so
-   'Mineralogy Pty Ltd' and 'MINERALOGY PTY LTD' merge. No deeper entity
-   resolution is attempted.
+   ones earn a place (shown under 'other'). A donor's industry is the biggest
+   CLASSIFIED tag across its rows: 'other'/'unidentified' mean "not
+   classified" and never outvote a real tag, or a merged donor's untagged
+   spellings could drag a classified donor off the map.
+6. Donations are aggregated per CANONICAL DONOR ENTITY, not per spelling.
+   `ext_donor_aliases` maps every raw `donor_name` to an entity in
+   `ext_donor_entities` (parli.ingest.donor_entities), so the seven ways the
+   AEC spells Westpac are one donor with one total. The node's `label` is the
+   canonical name and `aliases` lists the other spellings behind it, biggest
+   first. A donor_name with no alias row (a return loaded after the resolver
+   last ran) falls back to the old light normalisation and is counted in
+   meta.donors_unresolved.
+7. Entities whose kind is 'government' or 'party_unit' are dropped. This is
+   what finally removes "Dept of Finance" and "Dept Finance" -- two spellings
+   of one department that the rule-3 name regex missed (it looks for
+   "department of", not "dept of") and that carried a bogus
+   industry='individual' tag.
+
+`financial_year` is not always a year: AEC election returns store the event
+name, and by-election events ("Wentworth by-election") carry no digits at all.
+`year_of` reads the first 4-digit year and falls back to BY_ELECTION_YEAR for
+the named by-elections, so those rows contribute to firstYear/lastYear instead
+of silently dropping out. Rows still without a year are counted in
+meta.rows_without_year.
 """
 
 import json
@@ -123,17 +142,52 @@ def norm_key(name: str) -> str:
     return " ".join(tokens)
 
 
+# `financial_year` holds the AEC event name for election returns, and a
+# by-election event carries no year at all. Polling days, for the record:
+# Braddon and Wentworth 2018, Eden-Monaro 2020, Fadden 2023.
+BY_ELECTION_YEAR = {
+    "braddon by-election": 2018,
+    "wentworth by-election": 2018,
+    "eden-monaro by-election": 2020,
+    "fadden by-election": 2023,
+}
+
+
 def year_of(fy: str | None) -> int | None:
-    """First 4-digit year in a financial_year string ('1998-99', '2004 Federal Election')."""
+    """First 4-digit year in a financial_year string ('1998-99', '2004 Federal
+    Election'), or the polling year of a named by-election."""
     if not fy:
         return None
     m = re.search(r"\b(19|20)\d\d\b", fy)
-    return int(m.group(0)) if m else None
+    if m:
+        return int(m.group(0))
+    return BY_ELECTION_YEAR.get(fy.strip().lower())
+
+
+def load_canonical(db) -> tuple[dict, dict]:
+    """(alias_raw -> entity_id, entity_id -> {name, kind}) from the resolver tables.
+
+    Returns empty maps if the tables are absent, so the export still runs on a
+    database where parli.ingest.donor_entities has never been loaded.
+    """
+    have = {r[0] for r in db.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' "
+        "AND name IN ('ext_donor_entities','ext_donor_aliases')")}
+    if len(have) < 2:
+        sys.stderr.write("export_money_graph: no ext_donor_* tables; "
+                         "falling back to per-spelling aggregation\n")
+        return {}, {}
+    ents = {r["entity_id"]: {"name": r["canonical_name"], "kind": r["kind"]}
+            for r in db.execute("SELECT entity_id, canonical_name, kind FROM ext_donor_entities")}
+    alias = {r["alias_raw"]: r["entity_id"] for r in db.execute(
+        "SELECT alias_raw, entity_id FROM ext_donor_aliases")}
+    return alias, ents
 
 
 def main() -> None:
     db = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
+    alias_to_entity, entities = load_canonical(db)
 
     rows = db.execute(
         """
@@ -147,17 +201,27 @@ def main() -> None:
     ).fetchall()
     used_rows = len(rows)
 
-    # Aggregate per normalised donor.
+    # Aggregate per canonical donor entity (rule 6).
     donors: dict[str, dict] = {}
-    excluded = {"public_funding": 0, "party_internal": 0}
+    excluded = {"public_funding": 0, "party_internal": 0, "government_entity": 0}
+    unresolved = set()
+    rows_without_year = 0
     for r in rows:
         name = (r["donor_name"] or "").strip()
         if not name:
             continue
-        key = norm_key(name)
+        eid = alias_to_entity.get(name)
+        ent = entities.get(eid) if eid else None
+        if ent is None:
+            unresolved.add(name)
+        # rule 7: the resolver knows a department or a party unit when it sees one
+        if ent and ent["kind"] in ("government", "party_unit"):
+            excluded["government_entity"] += 1
+            continue
+        key = eid or norm_key(name)
         if not key:
             continue
-        if PUBLIC_FUNDING_RE.search(name) or PUBLIC_FUNDING_RE.search(key):
+        if PUBLIC_FUNDING_RE.search(name) or PUBLIC_FUNDING_RE.search(norm_key(name)):
             excluded["public_funding"] += 1
             continue
         if r["industry"] == "party_internal" or PARTY_WORD_RE.search(name):
@@ -166,6 +230,8 @@ def main() -> None:
         d = donors.get(key)
         if d is None:
             d = donors[key] = {
+                "canonical": ent["name"] if ent else None,
+                "entity_kind": ent["kind"] if ent else None,
                 "names": defaultdict(float),
                 "total": 0.0,
                 "count": 0,
@@ -180,6 +246,8 @@ def main() -> None:
         y = year_of(r["financial_year"])
         if y:
             d["years"].append(y)
+        else:
+            rows_without_year += 1
         d["industries"][r["industry"] or "other"] += amt
         p = d["parties"][r["party"]]
         p["total"] += amt
@@ -189,8 +257,20 @@ def main() -> None:
 
     # Rank donors; rule 5 for industry-less donors.
     def dominant_industry(d: dict) -> str:
-        ind = max(d["industries"].items(), key=lambda kv: kv[1])[0]
-        return "other" if ind in ("other", "unidentified") else ind
+        # A union is a union. Rolling branches up can let one oddly-tagged branch
+        # (a CFMEU building fund tagged 'property') outweigh the rest and recolour
+        # the whole union on the map, so the resolver's kind wins for unions.
+        if d.get("entity_kind") == "union":
+            return "unions"
+        # 'other'/'unidentified' means "not classified", so it must not outvote a
+        # real tag: a donor filed once as 'finance' and twice untagged is finance.
+        # Rolling spellings up made this matter -- the untagged spellings of a
+        # merged donor could otherwise push it into 'other' and out of the map.
+        known = {k: v for k, v in d["industries"].items()
+                 if k and k not in ("other", "unidentified")}
+        if known:
+            return max(known.items(), key=lambda kv: kv[1])[0]
+        return "other"
 
     ranked = sorted(donors.values(), key=lambda d: -d["total"])
     picked = []
@@ -234,13 +314,19 @@ def main() -> None:
         })
 
     for d in picked:
-        display = max(d["names"].items(), key=lambda kv: kv[1])[0]
-        # Title-case ALL-CAPS AEC filings for readability; keep acronyms.
-        if display.isupper():
-            display = display.title()
-        display = re.sub(r"\bPTY\b", "Pty", display)
-        display = re.sub(r"\bLTD\b", "Ltd", display)
-        display = re.sub(r"\bLIMITED\b", "Limited", display)
+        display = d["canonical"]
+        if not display:
+            # unresolved: fall back to the biggest-dollar spelling, tidied
+            display = max(d["names"].items(), key=lambda kv: kv[1])[0]
+            # Title-case ALL-CAPS AEC filings for readability; keep acronyms.
+            if display.isupper():
+                display = display.title()
+            display = re.sub(r"\bPTY\b", "Pty", display)
+            display = re.sub(r"\bLTD\b", "Ltd", display)
+            display = re.sub(r"\bLIMITED\b", "Limited", display)
+        # Every other spelling the map should still answer to, biggest first.
+        others = [n for n, _ in sorted(d["names"].items(), key=lambda kv: -kv[1])
+                  if norm_key(n) != norm_key(display)]
         ind = dominant_industry(d)
         node_id = "donor:" + norm_key(display)
         nodes.append({
@@ -253,6 +339,7 @@ def main() -> None:
             "count": d["count"],
             "firstYear": min(d["years"]) if d["years"] else None,
             "lastYear": max(d["years"]) if d["years"] else None,
+            "aliases": others,
         })
         for party, p in sorted(d["parties"].items(), key=lambda kv: -kv[1]["total"]):
             edges.append({
@@ -271,22 +358,42 @@ def main() -> None:
             "coverage": "financial years 1998-99 to 2025-26",
             "methodology": (
                 "Donor->party flows from rows with a canonical party recipient; "
-                "amounts aggregated per (normalised donor, party). Top "
+                "amounts aggregated per (canonical donor entity, party) using "
+                "ext_donor_aliases, so every spelling of a donor counts once. Top "
                 f"{TOP_DONORS} donors by lifetime total shown."
+            ),
+            "entity_resolution": (
+                "parli.ingest.donor_entities resolves each raw donor_name to an entity in "
+                "ext_donor_entities (exact-normalised, rule-based suffix/branch stripping, "
+                "then the hand-curated parli/ingest/donor_aliases.json). Node label is the "
+                "canonical name; node.aliases lists the other spellings it answers to."
+            ),
+            "year_derivation": (
+                "financial_year is the AEC event name on election returns; the first 4-digit "
+                "year is used, and named by-elections fall back to their polling year "
+                "(Braddon/Wentworth 2018, Eden-Monaro 2020, Fadden 2023)."
             ),
             "exclusions": [
                 "rows without a canonical party recipient (receipts of unions/associated entities)",
                 "donation_type='flagged_review' rows (data-quality outliers)",
                 "public electoral funding (AEC / state electoral commissions / ATO / Dept of Finance)",
+                "donor entities resolved to kind='government' or kind='party_unit'",
                 "internal party transfers (industry='party_internal' or donor named after a party)",
                 "donors with industry other/unknown under $5m lifetime",
             ],
             "rows_considered": used_rows,
             "rows_excluded_public_funding": excluded["public_funding"],
             "rows_excluded_party_internal": excluded["party_internal"],
+            "rows_excluded_government_entity": excluded["government_entity"],
+            "rows_without_year": rows_without_year,
+            "donors_unresolved": len(unresolved),
             "donor_nodes": len(picked),
             "party_nodes": len(party_totals),
             "edge_count": len(edges),
+            "party_totals_note": (
+                "Party node totals cover all cleaned rows except public funding, "
+                "unchanged by entity resolution."
+            ),
         },
         "nodes": nodes,
         "edges": edges,

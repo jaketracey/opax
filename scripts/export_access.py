@@ -27,6 +27,10 @@ Output shape:
 
 Method, so the numbers can be defended:
 
+0. Donors are the canonical entities of the money map (parli.ingest.donor_entities).
+   Each donor is looked up under its canonical name AND every spelling in the
+   node's `aliases`, so a register entry filed under an old or partial name
+   ("Westpac Bank") still reaches the right donor page.
 1. Donor <-> organisation/client matching is EXACT after normalisation: lower-case,
    punctuation to spaces, and the tokens pty/ltd/limited/the/inc/co/holdings/group/
    australia/proprietary/incorporated dropped. "Tabcorp Holdings Limited" therefore meets
@@ -203,15 +207,29 @@ def main():
     for n in speaker_names:
         speaker_norm.setdefault(norm_name(n), n)
 
-    donor_labels = [n["label"] for n in money["nodes"] if n.get("kind") == "donor"]
+    donor_nodes = [n for n in money["nodes"] if n.get("kind") == "donor"]
+    donor_labels = [n["label"] for n in donor_nodes]
+    # A donor is looked up under its canonical name AND every spelling the money
+    # map records for it, so a lobbyist client registered as "Westpac Bank" still
+    # lands on the "Westpac Banking Corporation" donor page. Generic keys are
+    # dropped per spelling, not per donor: one vague alias must not sink the rest.
     donor_keys = {}
     skipped_generic = []
-    for label in donor_labels:
-        k = norm(label)
-        if generic_key(k):
+    alias_only_keys = 0
+    for n in donor_nodes:
+        label = n["label"]
+        keys, seen = [], set()
+        for spelling in [label] + list(n.get("aliases") or []):
+            k = norm(spelling)
+            if not k or k in seen or generic_key(k):
+                continue
+            seen.add(k)
+            keys.append(k)
+        if not keys:
             skipped_generic.append(label)
             continue
-        donor_keys[label] = k
+        alias_only_keys += len(keys) - 1
+        donor_keys[label] = keys
 
     db = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
@@ -346,9 +364,18 @@ def main():
     # ---- donors ----------------------------------------------------------------------------
     donors_out = {}
     n_meet = n_lob = 0
-    for label, key in donor_keys.items():
-        ms = by_org.get(key, [])
-        ls = by_client.get(key, [])
+    for label, keys in donor_keys.items():
+        # union across the donor's spellings, keeping each source row once
+        ms, ls, seen_m, seen_l = [], [], set(), set()
+        for key in keys:
+            for m in by_org.get(key, []):
+                if id(m) not in seen_m:
+                    seen_m.add(id(m))
+                    ms.append(m)
+            for c in by_client.get(key, []):
+                if id(c) not in seen_l:
+                    seen_l.add(id(c))
+                    ls.append(c)
         if not ms and not ls:
             continue
         entry = {}
@@ -380,7 +407,9 @@ def main():
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sources": ["ext_ministerial_meetings (NSW Cabinet Office, QLD Cabinet diaries)",
                     "ext_lobbyist_clients x ext_lobbyists (AGD, NSW EC, QLD Integrity, VPSC, SA DPC, WA PSC)"],
-        "matching": "exact after normalisation; see scripts/export_access.py",
+        "matching": ("exact after normalisation, tried against the donor's canonical name and "
+                     "every alias the money map records for it; see scripts/export_access.py"),
+        "alias_lookup_keys": alias_only_keys,
         "donors_in_map": len(donor_labels), "donors_skipped_generic": skipped_generic,
         "donors_with_meetings": n_meet, "donors_with_lobbyists": n_lob, "donors_with_either": len(donors_out),
         "meetings_rows": len(rows), "ministers": len(minister_out),

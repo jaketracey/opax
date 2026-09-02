@@ -2945,6 +2945,76 @@
         "EnergyAustralia"
       ],
       "notes": "Retailer; pinned off Energy Super and the Energy Industries Superannuation Scheme."
+    },
+    {
+      "canonical": "Sporting Shooters Association of Australia",
+      "kind": "association",
+      "aliases": [
+        {
+          "name": "Sporting Shooters ASSN of AUST (QLD) Inc",
+          "branch": "Queensland"
+        },
+        {
+          "name": "Sporting Shooters Association of Australia (Queensland) Inc",
+          "branch": "Queensland"
+        },
+        {
+          "name": "Sporting Shooters Association of Australia (NSW) Inc.",
+          "branch": "NSW"
+        },
+        {
+          "name": "Sporting Shooters Association of Australia (Queensland)",
+          "branch": "Queensland"
+        },
+        {
+          "name": "Sporting Shooters of Australia Association Qld",
+          "branch": "Queensland"
+        },
+        {
+          "name": "Sporting Shooters Association of Australia (WA) Inc",
+          "branch": "WA"
+        },
+        {
+          "name": "SSAA (Sporting Shooters Association Australia)",
+          "branch": null
+        },
+        {
+          "name": "Sporting Shooters Association",
+          "branch": null
+        },
+        {
+          "name": "Sporting Shooters Association of Australia (VIC) Ltd",
+          "branch": "Victoria"
+        },
+        {
+          "name": "Sporting Shooters Association of Australia (Bendigo Branch)",
+          "branch": "Bendigo Branch"
+        },
+        {
+          "name": "SSAA",
+          "branch": null
+        }
+      ],
+      "notes": "A shooting-sports and firearms lobby association, not the Shooters, Fishers and Farmers Party. State bodies are separately incorporated but file as the SSAA; the branch is kept on each alias."
+    },
+    {
+      "canonical": "Shooters Union Australia",
+      "kind": "association",
+      "aliases": [
+        {
+          "name": "Shooters Union Qld Pty Ltd",
+          "branch": "Queensland"
+        },
+        {
+          "name": "Shooters Union of Queensland Pty Ltd",
+          "branch": "Queensland"
+        },
+        {
+          "name": "Shooters Union Victoria Pty Ltd",
+          "branch": "Victoria"
+        }
+      ],
+      "notes": "A firearms advocacy group, not a party and not the SSAA."
     }
   ]
 }

@@ -1944,14 +1944,18 @@ function normName(x) {
 function findMoneyNode(kind, name) {
   if (!moneyData) return null;
   const nn = normName(name);
-  let best = null;
+  let best = null, byAlias = null;
   for (const n of moneyData.nodes) {
     if (kind && n.kind !== kind) continue;
     const c = normName(n.label);
     if (c === nn) return n;
+    // A donor answers to every spelling the money data records for it, so a
+    // #/subject/donor/Westpac%20Bank link still opens Westpac Banking
+    // Corporation after the seven Westpac spellings became one entity.
+    if (!byAlias && n.aliases && n.aliases.some((a) => normName(a) === nn)) byAlias = n;
     if (!best && nn && (c.startsWith(nn) || nn.startsWith(c))) best = n;
   }
-  return best;
+  return byAlias || best;
 }
 
 function subjectSkeleton(kindLabel, name, tagHTML) {
@@ -2437,6 +2441,10 @@ async function openSubject(kind, name, manageFocus) {
       ["Active years", `${node.firstYear}–${node.lastYear}`],
       ["Rank", `#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed donors"}`],
       !isParty && fitsInfoRow(fits, "by_entity", node.label),
+      // The registers spell one donor many ways; the totals above cover them all.
+      !isParty && (node.aliases || []).length > 0 && ["Also disclosed as",
+        `${node.aliases.slice(0, 6).map(esc).join("; ")}${
+          node.aliases.length > 6 ? ` <span class="fineprint">and ${node.aliases.length - 6} more spellings</span>` : ""}`],
     ], weeklyFunFact(node), [
       actionBtn("ask",
         askHash(isParty
