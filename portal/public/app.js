@@ -3833,7 +3833,7 @@ function renderSearchEmpty(q, f) {
 // rather than let the rail wait on a model that has no passages.
 function giveUpSearchAnswer() {
   const box = $("search-answer");
-  if (box.hidden) return;
+  if (!searchAnswerWanted) return;
   if (searchAnswerAbort) { searchAnswerAbort.abort(); searchAnswerAbort = null; }
   clearTimeout(searchAnswerStill);
   hideLoader("search-answer-wombat");
@@ -3845,6 +3845,7 @@ function giveUpSearchAnswer() {
   empty.innerHTML = `<p class="rail-empty-line">Nothing to read from.</p>
     <p class="fineprint">The record answers only from passages it can cite. None matched this search, so it stays silent rather than guess.</p>`;
   empty.hidden = false;
+  box.hidden = false;
 }
 
 
@@ -3852,6 +3853,7 @@ function giveUpSearchAnswer() {
 
 let searchAnswerAbort = null;
 let searchAnswerStill = null;
+let searchAnswerWanted = false; // an ask runs beside this search (there was a query)
 
 async function runSearchAnswer(q, f, mySeq) {
   const box = $("search-answer");
@@ -3859,7 +3861,8 @@ async function runSearchAnswer(q, f, mySeq) {
   if (searchAnswerAbort) searchAnswerAbort.abort();
   const abort = new AbortController();
   searchAnswerAbort = abort;
-  box.hidden = false;
+  // The rail stays hidden until the results land: the answer always takes
+  // longer than the search, and an empty rail with a loader reads as a stall.
   $("search-answer-body").replaceChildren();
   $("search-answer-sources").replaceChildren();
   $("search-answer-fold").hidden = true;
@@ -3940,6 +3943,8 @@ async function runSearch() {
   const f = currentFilters();
   if (!q && !f.speaker) return;
   const mySeq = ++searchSeq;
+  searchAnswerWanted = !!q;
+  $("search-answer").hidden = true;
   runSearchAnswer(q, f, mySeq);
   const btn = $("search-form").querySelector('button[type="submit"]');
   btn.disabled = true;
@@ -3971,6 +3976,7 @@ async function runSearch() {
         `${data.count} results from the record${active ? ` · ${active}` : ""} (top ${data.count} matches)`;
       $("results-bar").hidden = false;
       renderResults(lastSearch.results);
+      if (searchAnswerWanted) $("search-answer").hidden = false; // the rail joins the results
     }
   } catch (err) {
     if (mySeq !== searchSeq) return;
