@@ -1192,12 +1192,14 @@ function sourceItem(s, num) {
     li.appendChild(numEl);
   }
   li.appendChild(btn);
-  const meta = metaHTML(s);
+  // Speaker portrait, and the speaker and party open their own pages.
+  const meta = metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: true });
   if (meta) {
     const span = document.createElement("span");
     span.className = "source-meta";
     span.innerHTML = meta;
     li.appendChild(span);
+    decorateMetaPortraits(li);
   }
   return li;
 }
@@ -3527,6 +3529,49 @@ function renderResults(results) {
   decorateMetaPortraits($("search-results"));
 }
 
+// --- empty record ------------------------------------------------------------
+// A blank record is a finding in itself, so it gets the page's own register
+// rather than a grey status line: what was looked for, why Hansard may not
+// hold it, and the ways out (looser phrase, fewer filters, the web).
+
+function renderSearchEmpty(q, f) {
+  const box = $("search-empty");
+  const bare = q.replace(/["“”]/g, "").trim();
+  const shown = bare || f.speaker;
+  const lede = f.speaker
+    ? `No speeches found for “${f.speaker}”${bare ? ` on ${bare}` : ""}. Names appear as Hansard prints them: “Anthony Albanese”, not “the PM”.`
+    : "No indexed speech uses that phrase. Hansard is literal: a company, a place or a person is usually named in full, and often only once.";
+  const actions = [];
+  if (q && bare !== q) actions.push(`<a class="action-btn" href="${esc(searchHash(bare, f))}">Try without the quotes</a>`);
+  if (q && f.mode === "keyword") actions.push(`<a class="action-btn" href="${esc(searchHash(q, { ...f, mode: "hybrid" }))}">Match by meaning too</a>`);
+  if (q && activeFilterSummary(f)) actions.push(`<a class="action-btn" href="${esc(searchHash(q, { kind: f.kind, mode: f.mode }))}">Search without filters</a>`);
+  if (shown) actions.push(`<a class="action-btn" href="${esc(webSearchUrl(shown))}" target="_blank" rel="noopener">Search the web ↗</a>`);
+  box.innerHTML = `
+    <span class="empty-mark" aria-hidden="true">“ ”</span>
+    <h2 class="empty-title">Nothing in the record for “${esc(shown)}”.</h2>
+    <p class="empty-lede">${esc(lede)}</p>
+    <div class="empty-actions">${actions.join("")}</div>`;
+  box.hidden = false;
+}
+
+// With nothing retrieved there is nothing to answer from: stop the reader
+// rather than let the rail wait on a model that has no passages.
+function giveUpSearchAnswer() {
+  const box = $("search-answer");
+  if (box.hidden) return;
+  if (searchAnswerAbort) { searchAnswerAbort.abort(); searchAnswerAbort = null; }
+  clearTimeout(searchAnswerStill);
+  hideLoader("search-answer-wombat");
+  setStatus($("search-answer-status"), "");
+  $("search-answer-body").replaceChildren();
+  $("search-answer-fold").hidden = true;
+  $("search-answer-more").textContent = "";
+  const empty = $("search-answer-empty");
+  empty.innerHTML = `<p class="rail-empty-line">Nothing to read from.</p>
+    <p class="fineprint">The record answers only from passages it can cite. None matched this search, so it stays silent rather than guess.</p>`;
+  empty.hidden = false;
+}
+
 
 // --- search answer (the record's answer beside the results) -----------------
 
@@ -3611,6 +3656,8 @@ async function runSearch() {
   showLoader("search-wombat", "Searching the record.");
   $("results-bar").hidden = true;
   $("search-results").replaceChildren();
+  $("search-empty").hidden = true;
+  $("search-answer-empty").hidden = true;
   try {
     const params = new URLSearchParams({ q: q || f.speaker, kind: f.kind, mode: f.mode });
     for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) params.set(k, f[k]);
@@ -3618,14 +3665,11 @@ async function runSearch() {
     if (mySeq !== searchSeq) return; // a newer search owns the results now
     lastSearch = { query: q, filters: f, results: data.results || [] };
     if (!data.count) {
-      const hints = [];
-      if (f.speaker) hints.push(`No speeches found for “${f.speaker}”. Names appear as in Hansard: “Anthony Albanese”, not “the PM”.`);
-      if (f.mode === "keyword") hints.push("Try hybrid mode. It also matches by meaning.");
-      const active = activeFilterSummary(f);
-      if (active) hints.push(`Filters active: ${active}. Try removing one.`);
       hideLoader("search-wombat");
-      $("search-status").classList.remove("visually-hidden");
-      setStatus($("search-status"), hints.join(" ") || "No results from the record.");
+      setStatus($("search-status"), "No results from the record.");
+      $("search-status").classList.add("visually-hidden"); // announced; the empty state carries the words
+      renderSearchEmpty(q, f);
+      giveUpSearchAnswer();
     } else {
       hideLoader("search-wombat");
       $("search-status").classList.remove("visually-hidden");

@@ -179,16 +179,6 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 /* The full name sits over the nav like a nameplate over a section bar;
    the acronym's four letters take the bronze. It lives in the nav column,
    so it compacts away with the nav (the drawer carries the name instead). */
-.masthead-name {
-  margin: 0 0 0.15rem; padding-left: 0.15rem;
-  font: 400 1.125rem/1.25 var(--serif); letter-spacing: 0.01em; white-space: nowrap;
-}
-.masthead-name a { color: var(--on-navy); text-decoration: none; }
-.masthead-name a:hover {
-  color: var(--on-navy); text-decoration: underline;
-  text-decoration-color: var(--bronze-bright); text-underline-offset: 4px;
-}
-.masthead-name b { font-weight: inherit; color: var(--bronze-bright); }
 .nav-list {
   display: flex; align-items: center; gap: clamp(0.3rem, 1.6vw, 1.5rem);
   list-style: none; margin: 0; padding: 0;
@@ -525,6 +515,17 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
 .chat-turn-answer { margin: 0 0 0.6rem; }
 .chat-turn-answer .answer { font-size: 1.0625rem; }
 .result-meta { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 0.35rem; }
+.source-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem; }
+/* Numbered source rows: the number keeps its own column so the title and the
+   speaker line beneath it share a left edge. */
+.source-list li:has(> .source-num) { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 0.45rem; align-items: baseline; }
+.source-list li:has(> .source-num) > .source-num { margin-right: 0; }
+.source-list li:has(> .source-num) > .source-meta { grid-column: 2; }
+.source-meta .meta-portrait img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; vertical-align: middle;
+  border: 1.5px solid var(--paper-raised); box-shadow: 0 0 0 1px var(--line); }
+.source-meta .meta-portrait:empty { display: none; }
+.source-meta a, .source-meta a.meta-party { text-decoration: none; color: inherit; }
+.source-meta a:hover { color: var(--bronze-ink); }
 .result-meta .meta-portrait img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; vertical-align: middle;
   border: 1.5px solid var(--paper-raised); box-shadow: 0 0 0 1px var(--line); }
 .result-meta .meta-portrait:empty { display: none; }
@@ -748,6 +749,26 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .answer-compact > * { margin-bottom: 0.8rem; }
 .search-answer .source-list li { padding: 0.45rem 0; }
 .search-answer .source-title { font-size: 0.9375rem; }
+
+/* ---- empty record --------------------------------------------------------- */
+/* A pair of empty quotation marks in bronze: the record was asked and had
+   nothing to say. Serif title, one plain sentence, then the ways out. */
+.empty-state {
+  margin-top: 1.25rem; padding: 2.25rem 1.5rem 2rem; text-align: center;
+  background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
+}
+.empty-mark {
+  display: block; margin-bottom: 0.75rem;
+  font: 400 3.25rem/0.8 var(--serif); letter-spacing: 0.12em; color: var(--bronze);
+}
+.empty-title { margin: 0 0 0.55rem; font: 400 1.375rem/1.3 var(--serif); color: var(--ink); overflow-wrap: anywhere; }
+.empty-lede { margin: 0 auto; max-width: 54ch; color: var(--ink-soft); font-size: 0.9375rem; line-height: 1.55; }
+.empty-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin-top: 1.5rem; }
+.empty-actions:empty { display: none; }
+.empty-actions .action-btn { display: inline-flex; }
+.rail-empty { padding: 0.35rem 0 0.25rem; }
+.rail-empty-line { margin: 0 0 0.5rem; font: italic 400 1.0625rem/1.4 var(--serif); color: var(--ink-soft); }
+.rail-empty .fineprint { margin: 0; }
 
 .chat-next-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .chat-next-btns .chip {
@@ -1274,7 +1295,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 @media (max-width: 1099px) {
   .mast-search { flex-basis: 220px; }
   .logo-mark { height: 64px; width: 85px; }
-  .masthead-name { font-size: 1.0625rem; }
 }
 
 /* Compact band: hamburger + drawer replace the inline nav. */

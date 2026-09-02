@@ -24,7 +24,6 @@
     </div>
 
     <nav class="masthead-nav" id="primary-nav" aria-label="Primary">
-      <p class="masthead-name"><a href="#/"><b>O</b>pen <b>P</b>arliamentary <b>A</b>ccountability e<b>X</b>change</a></p>
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-link" data-panel="ask" href="#/">Ask</a></li>
         <li class="nav-item"><a class="nav-link" data-panel="search" href="#/search">Search</a></li>
@@ -413,6 +412,7 @@
       <div id="search-wombat" hidden></div>
       <div class="search-results-grid">
       <div class="search-results-main">
+      <div id="search-empty" class="empty-state" hidden></div>
       <div class="results-bar" id="results-bar" hidden>
         <span id="results-count"></span>
         <span class="results-actions">
@@ -431,6 +431,7 @@
         <h2 class="kicker" id="search-answer-head">The record's answer</h2>
         <div id="search-answer-status" class="status" role="status"></div>
         <div id="search-answer-wombat" class="rail-wombat" hidden></div>
+        <div id="search-answer-empty" class="rail-empty" hidden></div>
         <div class="answer answer-compact" id="search-answer-body"></div>
         <details id="search-answer-fold" class="chat-sources" hidden>
           <summary id="search-answer-sum">Sources</summary>

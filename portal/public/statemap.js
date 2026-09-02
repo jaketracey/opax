@@ -104,16 +104,19 @@ const CSS = `
   font-variant-numeric: tabular-nums; }
 .sm-federal:hover b { color: var(--bronze-ink, #8A5A12); text-decoration: underline;
   text-decoration-color: var(--bronze-ink, #8A5A12); text-underline-offset: 3px; }
-.sm-tip { position: absolute; z-index: 2; left: 0; top: 0; width: max-content; max-width: min(16rem, 90%);
-  padding: 0.55rem 0.75rem 0.6rem; background: var(--paper-raised, #fff);
+.sm-tip { position: absolute; z-index: 2; left: 0; top: 0; width: max-content; min-width: 13rem; max-width: min(16rem, 90%);
+  padding: 0.6rem 0.75rem 0.7rem; background: var(--paper-raised, #fff);
   border: 1px solid var(--line, #DFDCD2); border-top: 2px solid var(--bronze, #A0761B); border-radius: 4px; }
 .sm-tip-name { display: block; font: 600 0.875rem/1.3 var(--sans, sans-serif); }
 .sm-tip-meta { display: block; margin-top: 0.15rem; font-size: 0.75rem; color: var(--ink-faint, #6F7468);
   font-variant-numeric: tabular-nums; }
-.sm-tip-actions { display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; margin-top: 0.45rem; font-size: 0.75rem; }
-.sm-tip-actions a { color: var(--ink, #23271F); font-weight: 600; text-decoration: underline;
-  text-decoration-color: var(--bronze-ink, #8A5A12); text-underline-offset: 3px; }
-.sm-tip-actions a:hover { color: var(--bronze-ink, #8A5A12); }
+.sm-tip-actions { display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.65rem; }
+.sm-tip-actions a { display: flex; align-items: center; justify-content: center; padding: 0.45rem 0.75rem;
+  border: 1px solid var(--line-strong, #8D897B); border-radius: 4px; text-decoration: none;
+  font: 600 0.8125rem/1.3 var(--sans, sans-serif); color: var(--ink, #23271F); }
+.sm-tip-actions a:hover { border-color: var(--ink, #23271F); color: var(--ink, #23271F); }
+.sm-tip-actions a.sm-primary { background: var(--navy, #142A43); border-color: var(--navy, #142A43); color: var(--on-navy, #fff); }
+.sm-tip-actions a.sm-primary:hover { background: var(--navy-raised, #1D3A5C); border-color: var(--navy-raised, #1D3A5C); color: var(--on-navy, #fff); }
 @media (prefers-reduced-motion: no-preference) { .sm-state { transition: fill 150ms; } }
 @media (max-width: 700px) { .sm-label small { display: none; } .sm-federal { max-width: 60%; } }
 `
@@ -218,7 +221,7 @@ export function mountStateMap(container, opts = {}) {
     el('span', 'sm-tip-meta', tip).textContent = info ? describe(info) : 'Not yet in the record'
     if (info) {
       const actions = el('span', 'sm-tip-actions', tip)
-      const search = el('a', '', actions)
+      const search = el('a', 'sm-primary', actions)
       search.href = searchHref(id)
       search.textContent = 'Search this parliament'
       if (MONEY_FILES.has(id)) {
