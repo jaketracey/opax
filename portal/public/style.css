@@ -1304,6 +1304,16 @@ a.ency-name:hover, a.ency-name:focus-visible {
   position: relative; height: 420px; border: 1px solid var(--line);
   border-radius: 4px; overflow: hidden; background: var(--paper-raised);
 }
+/* The plate holds its height from the first paint and breathes quietly until
+   the scene arrives, so nothing below it is shoved down. */
+.subject-map.is-waiting { background: var(--paper-sunken); }
+@media (prefers-reduced-motion: no-preference) {
+  .subject-map.is-waiting { animation: plateWait 1.6s ease-in-out infinite; }
+  @keyframes plateWait { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.85; } }
+}
+/* Two rows of industry chips arrive with the map's data; hold their space. */
+#front-map-chips { min-height: 76px; }
+@media (max-width: 700px) { #front-map-chips { min-height: 44px; } }
 .infobox {
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
   border-top: 3px solid var(--bronze); padding: var(--space-4) 1.2rem; position: sticky; top: calc(var(--header-h) + 1rem);

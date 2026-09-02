@@ -1989,6 +1989,16 @@ function infoboxHTML(rows, funfact, actions) {
     <div class="actions">${actions.join("")}</div>`;
 }
 
+/** Hold (or release) the entry-page map's height before it has anything to show. */
+function reserveSubjectMap(on) {
+  const el = $("subject-map");
+  if (!el) return;
+  el.hidden = !on;
+  el.classList.toggle("is-waiting", !!on);
+  const hint = $("subject-map-hint");
+  if (hint) hint.hidden = !on;
+}
+
 async function mountSubjectMap(nodeId) {
   const key = currentSubjectKey;
   const el = $("subject-map");
@@ -2010,6 +2020,7 @@ async function mountSubjectMap(nodeId) {
       },
     });
     if (currentSubjectKey !== key) { handle.destroy?.(); return; } // navigated away while mounting
+    el.classList.remove("is-waiting");
     subjectMapHandle = handle;
     subjectMapHandle.select?.(nodeId);
   } catch {
@@ -2587,6 +2598,7 @@ async function openSubject(kind, name, manageFocus) {
   if (manageFocus) $("subject-title")?.focus();
 
   if (kind === "donor" || kind === "party") {
+    reserveSubjectMap(true);
     const [, fits] = await Promise.all([loadMoneyData(), loadFits()]);
     if (currentSubjectKey !== key) return;
     const node = findMoneyNode(kind, name);
@@ -2603,6 +2615,7 @@ async function openSubject(kind, name, manageFocus) {
     const sections = $("subject-sections");
     const box = $("subject-infobox");
     if (!node) {
+      reserveSubjectMap(false); // no map for this one: give the space back
       body.querySelector(".subject-tag").innerHTML =
         `<span>Not among the top 250 disclosed donors in the money data. The record may still mention them.</span>`;
       box.innerHTML = infoboxHTML(
@@ -3939,7 +3952,17 @@ let frontMapObserver = null;
 
 function mountFrontMaps() {
   mountStateMap();
-  mountFrontMap();
+  // The money map is a 167 KB bundle plus its data. The plate reserves its own
+  // height, so deferring the mount until it nears the viewport costs no layout
+  // shift and keeps the bundle off the home page's critical path.
+  const root = $("front-map-root");
+  if (!root || !("IntersectionObserver" in window)) { mountFrontMap(); return; }
+  const io = new IntersectionObserver((entries) => {
+    if (!entries.some((e) => e.isIntersecting)) return;
+    io.disconnect();
+    mountFrontMap();
+  }, { rootMargin: "300px" });
+  io.observe(root);
 }
 
 async function mountStateMap() {
