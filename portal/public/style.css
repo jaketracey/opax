@@ -62,6 +62,11 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+/* Crawler text the Worker injects into <main> for /subject/... and /reports/...
+   paths (see docs/SEO.md). app.js flags the document as it boots and the app's
+   own render takes over; without JavaScript the block stays readable. */
+.spa-ready #prerender { display: none; }
+#prerender { padding-bottom: 1.5rem; }
 html { scroll-padding-top: calc(var(--header-h) + 0.5rem); }
 
 body {

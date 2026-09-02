@@ -1294,6 +1294,691 @@ async function apiMatrix(env: Env): Promise<Response> {
 }
 
 // ---------------------------------------------------------------------------
+// SEO: real paths for the hash-routed app
+//
+// The frontend routes on the hash (#/subject/person/Name), which crawlers and
+// link previews treat as one page. For GET requests on a known route PATH the
+// Worker serves index.html with the head rewritten per route (title,
+// description, canonical, Open Graph, Twitter card, JSON-LD) and, for entry
+// pages, a small static block in <main> that app.js hides once it boots.
+// app.js folds the path back into a hash before its first route(). Titles and
+// descriptions come from the static data files the app itself reads
+// (parliamentarians.json, graph/money*.json, reports/index.json) via the
+// ASSETS binding; /doc/<slug> asks the KB with a hard time cap. Unknown paths
+// still fall through to the assets layer. Home (/) is an asset hit that never
+// reaches the Worker, so index.html carries the home page's tags statically.
+// ---------------------------------------------------------------------------
+
+const SITE_ORIGIN = 'https://opax.com.au'
+const OG_IMAGE = `${SITE_ORIGIN}/og-default.png`
+const SITE_TITLE = 'OPAX: ask what Australian politicians actually said'
+const SITE_DESCRIPTION =
+  'Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.'
+
+// Mirror of app.js TOPICS (scripts/arag_enrich.py is canonical for both).
+const TOPIC_NAMES: Record<string, string> = {
+  'gambling': 'Gambling',
+  'financial-services': 'Financial services',
+  'mining-energy': 'Mining & energy',
+  'climate-environment': 'Climate & environment',
+  'property-construction': 'Property & construction',
+  'housing': 'Housing',
+  'health': 'Health',
+  'media-communications': 'Media & communications',
+  'hospitality-alcohol': 'Hospitality & alcohol',
+  'defence-security': 'Defence & security',
+  'agriculture': 'Agriculture',
+  'unions-workplace': 'Unions & workplace',
+  'immigration': 'Immigration',
+  'indigenous-affairs': 'Indigenous affairs',
+  'tax-budget': 'Tax & budget',
+  'education': 'Education',
+  'welfare-social': 'Welfare & social services',
+  'integrity-democracy': 'Integrity & democracy',
+  'infrastructure-transport': 'Infrastructure & transport',
+  'justice-law': 'Justice & law',
+  'foreign-affairs': 'Foreign affairs',
+}
+
+const STATE_NAMES: Record<string, string> = {
+  federal: 'federal parliament', nsw: 'NSW parliament', vic: 'Victorian parliament',
+  qld: 'Queensland parliament', sa: 'South Australian parliament',
+}
+const CHAMBER_NAMES: Record<string, string> = {
+  representatives: 'House of Representatives', senate: 'Senate',
+  assembly: 'Legislative Assembly', council: 'Legislative Council',
+}
+const DIRECTORY_KINDS: Record<string, string> = { person: 'Parliamentarians', party: 'Parties', donor: 'Donors' }
+
+// Static pages: title as app.js TITLES sets it, blurb from the masthead menus.
+const STATIC_PAGES: Record<string, { title: string; description: string; query?: boolean }> = {
+  ask: { title: SITE_TITLE, description: SITE_DESCRIPTION, query: true },
+  search: {
+    title: 'Search the record · OPAX',
+    description: 'Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year. Every result links to the official record.',
+    query: true,
+  },
+  money: {
+    title: 'Money map · OPAX',
+    description: 'Disclosed political donations as territory you can spin: 250 donors, 11 parties and 28 years of AEC returns, with Queensland and Victorian registers.',
+    query: true,
+  },
+  reports: {
+    title: 'Reports · OPAX',
+    description: 'Standing investigations pairing the money with the words: climate, gambling, housing, immigration, First Nations and media ownership, every claim cited.',
+  },
+  explore: {
+    title: 'Explore · OPAX',
+    description: 'Play with the parliamentary record: the time machine, the record quiz, the donations ledger and the money map.',
+  },
+  chat: {
+    title: 'Keep asking · OPAX',
+    description: 'Follow-up questions on an answer from the Australian parliamentary record, each reply cited to the speeches it draws on.',
+  },
+  about: {
+    title: 'About · OPAX',
+    description: 'What OPAX is, what you can do here, and how answers are produced from the Australian parliamentary record and disclosed donations.',
+  },
+  methods: {
+    title: 'Methods · OPAX',
+    description: 'How the OPAX corpus is built from Hansard and electoral disclosures, its known limits, and how to cite an answer or a speech.',
+  },
+  stats: {
+    title: 'Corpus stats · OPAX',
+    description: 'Live counts for every collection in the OPAX index: speeches, divisions, legislation and news, by parliament and year.',
+  },
+}
+
+type SeoRoute =
+  | { kind: 'static'; page: keyof typeof STATIC_PAGES }
+  | { kind: 'report'; slug: string }
+  | { kind: 'index'; dir: 'person' | 'party' | 'donor' }
+  | { kind: 'topics' }
+  | { kind: 'topic'; slug: string }
+  | { kind: 'subject'; dir: 'person' | 'party' | 'donor'; name: string }
+  | { kind: 'doc'; slug: string }
+
+interface PageMeta {
+  title: string
+  description: string
+  canonical: string
+  ogType: 'website' | 'article' | 'profile'
+  status: number
+  jsonLd: Record<string, unknown> | null
+  prerender: string | null
+}
+
+/** Route table for real paths. Trailing slashes tolerated, never canonical. */
+function matchSeoRoute(url: URL): SeoRoute | null {
+  const path = url.pathname.replace(/\/+$/, '') || '/'
+  if (path === '/') return null // an asset hit; index.html carries the home tags
+  const segs = path.slice(1).split('/')
+  let dec: string[]
+  try {
+    dec = segs.map((s) => decodeURIComponent(s))
+  } catch {
+    return null
+  }
+  if (segs.length === 1 && dec[0] in STATIC_PAGES) return { kind: 'static', page: dec[0] }
+  if (dec[0] === 'reports' && /^[a-z][a-z0-9-]*$/.test(dec[1] ?? '')) {
+    // /reports/<slug> and its section deep links /reports/<slug>/s/<n>
+    if (segs.length === 2 || (segs.length === 4 && dec[2] === 's' && /^\d+$/.test(dec[3]))) {
+      return { kind: 'report', slug: dec[1] }
+    }
+    return null
+  }
+  if (dec[0] === 'subject') {
+    if (dec[1] === 'topic') {
+      if (segs.length === 2) return { kind: 'topics' }
+      if (segs.length === 3 && /^[a-z][a-z-]*$/.test(dec[2])) return { kind: 'topic', slug: dec[2] }
+      return null
+    }
+    if (dec[1] === 'person' || dec[1] === 'party' || dec[1] === 'donor') {
+      if (segs.length === 2) return { kind: 'index', dir: dec[1] }
+      if (segs.length === 3 && dec[2].trim() && dec[2].length <= 120) {
+        return { kind: 'subject', dir: dec[1], name: dec[2].trim() }
+      }
+    }
+    return null
+  }
+  if (dec[0] === 'doc' && segs.length === 2 && /^[a-z][a-z0-9-]*$/.test(dec[1])) {
+    return { kind: 'doc', slug: dec[1] }
+  }
+  return null
+}
+
+// --- static data via the ASSETS binding (memoised per isolate; a deploy
+// replaces both the files and the isolates, so nothing here goes stale) -----
+
+interface Person {
+  name: string
+  speeches: number
+  party: string | null
+  states: string[]
+  chambers: string[]
+  first: number | null
+  last: number | null
+  pid?: string
+}
+interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person> }
+
+interface MoneyNode {
+  id: string
+  label: string
+  kind: 'donor' | 'party'
+  industry: string
+  group: string
+  total: number
+  count: number
+  firstYear: number
+  lastYear: number
+}
+interface MoneyEntry extends MoneyNode { sourceShort: string; generated: string }
+interface MoneyData { generated: string; donors: Map<string, MoneyEntry>; parties: Map<string, MoneyEntry> }
+
+interface ReportEntry { slug: string; title: string; blurb: string; updated?: string }
+interface ReportsData { reports: ReportEntry[]; bySlug: Map<string, ReportEntry> }
+
+/** Names as typed vs as stored: curly apostrophes, doubled spaces, case. */
+const foldName = (s: string): string =>
+  s.normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase()
+
+async function assetJson<T>(env: Env, path: string): Promise<T> {
+  const res = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}${path}`))
+  if (!res.ok) throw new Error(`asset ${path} ${res.status}`)
+  return (await res.json()) as T
+}
+
+let peopleMemo: Promise<PeopleData> | null = null
+function loadPeople(env: Env): Promise<PeopleData> {
+  peopleMemo ??= assetJson<{ meta?: { generated?: string }; people: Person[] }>(env, '/parliamentarians.json')
+    .then((raw) => {
+      const byName = new Map<string, Person>()
+      const byFold = new Map<string, Person>()
+      for (const p of raw.people) {
+        byName.set(p.name, p)
+        const f = foldName(p.name)
+        const prev = byFold.get(f)
+        if (!prev || p.speeches > prev.speeches) byFold.set(f, p) // curly/straight twins: keep the fuller entry
+      }
+      return { generated: raw.meta?.generated ?? '', people: raw.people, byName, byFold }
+    })
+    .catch((err) => {
+      peopleMemo = null
+      throw err
+    })
+  return peopleMemo
+}
+
+let moneyMemo: Promise<MoneyData> | null = null
+function loadMoney(env: Env): Promise<MoneyData> {
+  moneyMemo ??= Promise.all(
+    ['/graph/money.json', '/graph/money.qld.json', '/graph/money.vic.json'].map((p) =>
+      assetJson<{ meta?: { generated?: string; sourceShort?: string }; nodes: MoneyNode[] }>(env, p),
+    ),
+  )
+    .then((files) => {
+      const donors = new Map<string, MoneyEntry>()
+      const parties = new Map<string, MoneyEntry>()
+      let generated = ''
+      files.forEach((f, i) => {
+        const sourceShort = f.meta?.sourceShort ?? 'AEC returns'
+        const gen = f.meta?.generated ?? ''
+        if (gen > generated) generated = gen
+        for (const n of f.nodes) {
+          const map = n.kind === 'party' ? parties : n.kind === 'donor' ? donors : null
+          if (!map) continue
+          const key = foldName(n.label)
+          const prev = map.get(key)
+          // Federal (first file) wins; a state-only node stands in otherwise.
+          // Jurisdictions are never summed (see money.qld.json meta.not_summed).
+          if (!prev || (i === 0 && prev.sourceShort !== 'AEC returns')) {
+            map.set(key, { ...n, sourceShort, generated: gen })
+          }
+        }
+      })
+      return { generated, donors, parties }
+    })
+    .catch((err) => {
+      moneyMemo = null
+      throw err
+    })
+  return moneyMemo
+}
+
+let reportsMemo: Promise<ReportsData> | null = null
+function loadReports(env: Env): Promise<ReportsData> {
+  reportsMemo ??= assetJson<{ reports: ReportEntry[] }>(env, '/reports/index.json')
+    .then((raw) => ({ reports: raw.reports, bySlug: new Map(raw.reports.map((r) => [r.slug, r])) }))
+    .catch((err) => {
+      reportsMemo = null
+      throw err
+    })
+  return reportsMemo
+}
+
+// --- text helpers ------------------------------------------------------------
+
+const escHtml = (s: string): string =>
+  s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string)
+const escXml = (s: string): string =>
+  s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' })[c] as string)
+
+/** Meta descriptions: one line, no em dashes, at most `max` chars on a word boundary. */
+function clip(s: string, max = 158): string {
+  const one = s.replace(/\s+/g, ' ').replace(/—/g, ',').trim()
+  if (one.length <= max) return one
+  const cut = one.slice(0, max - 1)
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), 40)).replace(/[,;:]$/, '')}…`
+}
+
+/**
+ * A description ending on a full stop rather than an ellipsis: the facts first,
+ * the invitation only when it fits. Names and totals vary in length, so the
+ * tail is what gives way (Google shows about 155 characters).
+ */
+function withTail(facts: string, tail: string, max = 158): string {
+  const one = clip(facts, max)
+  return tail && one.length + 1 + tail.length <= max ? `${one} ${tail}` : one
+}
+
+const num = (n: number): string => n.toLocaleString('en-AU')
+function money(n: number): string {
+  if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`
+  if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`
+  if (n >= 1e3) return `$${Math.round(n / 1e3)}K`
+  return `$${Math.round(n)}`
+}
+const years = (a: number | null | undefined, b: number | null | undefined): string =>
+  a && b && a !== b ? `${a} to ${b}` : String(a || b || '')
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+function longDate(iso: string | null | undefined): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso ?? '')
+  if (!m) return iso ?? ''
+  return `${Number(m[3])} ${MONTHS[Number(m[2]) - 1]} ${m[1]}`
+}
+const industryLabel = (ind: string): string => ind.replace(/_/g, ' ')
+
+const indexLinks = (): string =>
+  `<p><a href="/subject/person">Parliamentarians</a> · <a href="/subject/party">Parties</a> · ` +
+  `<a href="/subject/donor">Donors</a> · <a href="/subject/topic">Topics</a></p>`
+
+function prerenderBlock(heading: string, sentence: string, kicker: string): string {
+  return `<section id="prerender" class="wrap"><p class="kicker">${escHtml(kicker)}</p>` +
+    `<h1>${escHtml(heading)}</h1><p>${escHtml(sentence)}</p>${indexLinks()}</section>`
+}
+
+/** Canonical for a route: the clean path, plus the query only where it names the page. */
+function canonicalFor(url: URL, keepQuery: boolean): string {
+  const path = url.pathname.replace(/\/+$/, '') || '/'
+  return `${SITE_ORIGIN}${path}${keepQuery && url.search ? url.search : ''}`
+}
+
+const publisher = { '@type': 'Organization', name: 'OPAX', url: SITE_ORIGIN, logo: `${SITE_ORIGIN}/favicon.svg` }
+
+// --- per-route metadata -------------------------------------------------------
+
+async function buildMeta(route: SeoRoute, url: URL, env: Env): Promise<PageMeta> {
+  const base = (over: Partial<PageMeta>): PageMeta => ({
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    canonical: canonicalFor(url, false),
+    ogType: 'website',
+    status: 200,
+    jsonLd: null,
+    prerender: null,
+    ...over,
+  })
+
+  switch (route.kind) {
+    case 'static': {
+      const page = STATIC_PAGES[route.page]
+      const q = url.searchParams.get('q')?.trim()
+      const canonical = canonicalFor(url, Boolean(page.query))
+      if (route.page === 'ask' && q) {
+        return base({
+          title: clip(`${q} · OPAX`, 90),
+          description: clip(`"${q}": an answer from the Australian parliamentary record, cited to the speeches it draws on, with the money behind the speakers.`),
+          canonical,
+        })
+      }
+      if (route.page === 'search' && q) {
+        return base({
+          title: clip(`Search: ${q} · OPAX`, 90),
+          description: clip(`Speeches matching "${q}" in the Australian parliamentary record, with speaker, party, date and a link to the official source for each.`),
+          canonical,
+        })
+      }
+      return base({
+        title: page.title,
+        description: page.description,
+        canonical,
+        jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: page.title, description: page.description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
+      })
+    }
+
+    case 'report': {
+      const reports = await loadReports(env)
+      const r = reports.bySlug.get(route.slug)
+      const canonical = `${SITE_ORIGIN}/reports/${route.slug}`
+      if (!r) return base({ title: 'Report not found · OPAX', description: STATIC_PAGES.reports.description, canonical, status: 404 })
+      const description = withTail(`${r.title}: ${r.blurb}`, 'A standing OPAX investigation, every claim cited.')
+      return base({
+        title: `${r.title} · Reports · OPAX`,
+        description,
+        canonical,
+        ogType: 'article',
+        jsonLd: {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: r.title,
+          description: r.blurb,
+          url: canonical,
+          mainEntityOfPage: canonical,
+          image: OG_IMAGE,
+          ...(r.updated ? { dateModified: r.updated } : {}),
+          author: publisher,
+          publisher,
+        },
+        prerender: prerenderBlock(r.title, `${r.blurb} A standing OPAX investigation pairing disclosed donations with what was said in parliament, every claim cited to the record.`, 'Report'),
+      })
+    }
+
+    case 'index': {
+      const label = DIRECTORY_KINDS[route.dir]
+      const canonical = canonicalFor(url, true)
+      let description: string
+      if (route.dir === 'person') {
+        const people = await loadPeople(env).catch(() => null)
+        description = clip(`Every parliamentarian in the OPAX record${people ? `: ${num(people.people.length)} speakers` : ''} since 1993, searchable by name, party and parliament, each with their speeches.`)
+      } else if (route.dir === 'party') {
+        description = 'Australian political parties in the record: speeches, members and disclosed receipts, party by party, from Hansard and electoral commission returns.'
+      } else {
+        description = 'The largest disclosed political donors in Australia, by industry and by the parties they fund, from AEC, ECQ and VEC returns.'
+      }
+      return base({
+        title: `${label} · OPAX`,
+        description,
+        canonical,
+        jsonLd: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: `${label} · OPAX`, description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
+      })
+    }
+
+    case 'topics': {
+      const description = 'Every debate in the Australian parliamentary record by subject: 21 topics with live speech counts, from gambling and housing to defence and tax.'
+      return base({
+        title: 'Topics A-Z · OPAX',
+        description,
+        jsonLd: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Topics A-Z · OPAX', description, url: canonicalFor(url, false), isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
+      })
+    }
+
+    case 'topic': {
+      const name = TOPIC_NAMES[route.slug]
+      if (!name) return base({ title: 'Topic not found · OPAX', description: STATIC_PAGES.search.description, status: 404 })
+      const lower = name.toLowerCase()
+      const description = withTail(
+        `Parliament on ${lower}: every speech labelled ${lower} in the Australian parliamentary record, split by party and by year.`,
+        'Newest first, each with its source.',
+      )
+      const canonical = canonicalFor(url, false)
+      return base({
+        title: `${name} · Topics · OPAX`,
+        description,
+        canonical,
+        jsonLd: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: `${name} in the parliamentary record`, about: name, description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
+        prerender: prerenderBlock(name, `Speeches on ${lower} in the Australian parliamentary record, by party and by year, with the newest labelled speeches and a link to the official source for each.`, 'Topic'),
+      })
+    }
+
+    case 'subject':
+      return route.dir === 'person' ? personMeta(route.name, url, env) : moneySubjectMeta(route.dir, route.name, url, env)
+
+    case 'doc':
+      return docMeta(route.slug, url, env)
+  }
+}
+
+async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
+  const people = await loadPeople(env).catch(() => null)
+  const p = people?.byName.get(name) ?? people?.byFold.get(foldName(name)) ?? null
+  const display = p?.name ?? name
+  const canonical = `${SITE_ORIGIN}/subject/person/${encodeURIComponent(display)}`
+  const title = `${display} · OPAX`
+  if (!p) {
+    // Below the 5-speech floor of parliamentarians.json, or a name the record
+    // spells differently. The app still tries the live index, so no 404 here.
+    const description = clip(`${display} in the OPAX record of Australian parliamentary speeches and disclosed political donations.`)
+    return { title, description, canonical, ogType: 'profile', status: 200, jsonLd: null, prerender: prerenderBlock(display, description, 'Parliamentarian') }
+  }
+  const where = p.chambers.length === 1 && CHAMBER_NAMES[p.chambers[0]]
+    ? `${p.states.length === 1 && p.states[0] !== 'federal' ? `${STATE_NAMES[p.states[0]]?.replace(' parliament', '') ?? p.states[0]} ` : ''}${CHAMBER_NAMES[p.chambers[0]]}`
+    : p.states.map((s) => STATE_NAMES[s] ?? s).join(' and ')
+  const who = [p.party, where].filter(Boolean).join(', ')
+  const facts = `${display}${who ? ` (${who})` : ''}: ${num(p.speeches)} speeches in the Australian parliamentary record, ${years(p.first, p.last)}.`
+  const tail = 'What they said, and who funds them.'
+  const federal = p.states.includes('federal')
+  return {
+    title,
+    description: withTail(facts, tail),
+    canonical,
+    ogType: 'profile',
+    status: 200,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: display,
+      url: canonical,
+      jobTitle: 'Parliamentarian',
+      ...(p.party ? { memberOf: { '@type': 'Organization', name: p.party } } : {}),
+      // app.js links the same APH search for federal people (no stable profile URL in the data).
+      ...(federal ? { sameAs: [`https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${encodeURIComponent(display)}`] } : {}),
+    },
+    prerender: prerenderBlock(display, `${facts} ${tail}`, 'Parliamentarian'),
+  }
+}
+
+async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, env: Env): Promise<PageMeta> {
+  const [moneyData, people] = await Promise.all([loadMoney(env).catch(() => null), loadPeople(env).catch(() => null)])
+  const node = (dir === 'party' ? moneyData?.parties : moneyData?.donors)?.get(foldName(name)) ?? null
+  const display = node?.label ?? name
+  const canonical = `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
+  const title = `${display} · OPAX`
+  let facts: string
+  let tail = ''
+  let ldType = 'Organization'
+  if (dir === 'party') {
+    const members = people?.people.filter((p) => p.party && foldName(p.party) === foldName(display)) ?? []
+    const speeches = members.reduce((s, p) => s + p.speeches, 0)
+    const parts: string[] = []
+    if (members.length) parts.push(`${num(members.length)} parliamentarians and ${num(speeches)} speeches in the record`)
+    if (node) parts.push(`${money(node.total)} in disclosed receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`)
+    if (parts.length) {
+      facts = `${display}: ${parts.join('; ')}.`
+      tail = 'What its members said, and who paid.'
+    } else {
+      facts = `${display} in the OPAX record of Australian parliamentary speeches and disclosed political donations.`
+    }
+  } else if (node) {
+    ldType = node.industry === 'individual' ? 'Person' : 'Organization'
+    const what = node.industry === 'individual' ? 'individual donor' : `${industryLabel(node.industry)} donor`
+    facts = `${display}: disclosed political ${what}, ${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort}).`
+    tail = 'Which parties it funded.'
+  } else {
+    facts = `${display}: not among the top disclosed donors in the OPAX money data. Search the parliamentary record for mentions.`
+  }
+  const sentence = tail ? `${facts} ${tail}` : facts
+  const description = withTail(facts, tail)
+  return {
+    title,
+    description,
+    canonical,
+    ogType: 'profile',
+    status: 200,
+    jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: display, url: canonical, description },
+    prerender: prerenderBlock(display, sentence, dir === 'party' ? 'Political party' : 'Donor'),
+  }
+}
+
+/** /doc/<slug>: the existing /api/resource logic under a hard time cap. */
+async function docMeta(slug: string, url: URL, env: Env): Promise<PageMeta> {
+  const canonical = `${SITE_ORIGIN}/doc/${slug}`
+  const generic: PageMeta = {
+    title: 'From the record · OPAX',
+    description: 'A document from the Australian parliamentary record on OPAX, with its speaker, date and a link to the official source.',
+    canonical,
+    ogType: 'article',
+    status: 200,
+    jsonLd: null,
+    prerender: null,
+  }
+  if (!isPublicSlug(slug)) return { ...generic, title: 'Document not found · OPAX', status: 404 }
+  let res: Response | null
+  try {
+    res = await Promise.race([
+      apiResource(slug, env),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500)),
+    ])
+  } catch {
+    res = null
+  }
+  if (!res) return generic // KB slow or down: the app will fetch it itself
+  if (res.status === 404) return { ...generic, title: 'Document not found · OPAX', status: 404 }
+  if (!res.ok) return generic
+  const r = (await res.json()) as {
+    title: string
+    speaker: string | null
+    labels: Record<string, string>
+    metadata: Record<string, unknown>
+    summary: string | null
+  }
+  const date = typeof r.metadata.date === 'string' ? r.metadata.date : null
+  const chamber = CHAMBER_NAMES[r.labels.chamber] ?? r.labels.chamber
+  if (r.labels.kind === 'division' || DIVISION_SLUG_RE.test(slug)) {
+    const ayes = r.metadata.ayes_count, noes = r.metadata.noes_count
+    const bill = typeof r.metadata.bill_ref === 'string' ? r.metadata.bill_ref : ''
+    const outcome = r.labels.result === 'affirmative' ? 'Passed' : r.labels.result === 'negative' ? 'Defeated' : ''
+    const description = clip(
+      `${chamber ?? 'Parliamentary'} division${date ? `, ${longDate(date)}` : ''}${bill ? `: ${bill}` : ''}. ` +
+      `${outcome}${typeof ayes === 'number' && typeof noes === 'number' ? ` ${ayes} votes to ${noes}` : ''}. Who voted which way, on OPAX.`,
+    )
+    return {
+      ...generic,
+      // Division titles run long; trim the motion, never the masthead.
+      title: `${clip(r.title, 90)} · OPAX`,
+      description,
+      jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: r.title, description, url: canonical, ...(date ? { datePublished: date } : {}), publisher },
+    }
+  }
+  const speaker = r.speaker ?? 'Unknown speaker'
+  const who = [r.labels.party, chamber].filter(Boolean).join(', ')
+  const words = typeof r.metadata.word_count === 'number' ? `${num(r.metadata.word_count)} words` : 'a speech'
+  const description = clip(
+    r.summary?.trim() ||
+      `Speech by ${speaker}${who ? ` (${who})` : ''}${date ? `, ${longDate(date)}` : ''}: ${words} from the official ${r.labels.state === 'federal' ? 'federal' : (r.labels.state ?? '').toUpperCase()} parliamentary record, on OPAX.`,
+  )
+  return {
+    ...generic,
+    title: `${speaker}${date ? `, ${longDate(date)}` : ''} · From the record · OPAX`,
+    description,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: r.title,
+      description,
+      url: canonical,
+      ...(date ? { datePublished: date } : {}),
+      ...(r.speaker ? { author: { '@type': 'Person', name: r.speaker, url: `${SITE_ORIGIN}/subject/person/${encodeURIComponent(r.speaker)}` } } : {}),
+      publisher,
+    },
+  }
+}
+
+// --- serving ------------------------------------------------------------------
+
+class SetAttr {
+  constructor(private attr: string, private value: string) {}
+  element(el: Element) { el.setAttribute(this.attr, this.value) }
+}
+class SetText {
+  constructor(private value: string) {}
+  element(el: Element) { el.setInnerContent(this.value) }
+}
+
+async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: Env): Promise<Response> {
+  const [shell, meta] = await Promise.all([
+    env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`)),
+    buildMeta(route, url, env),
+  ])
+  if (!shell.ok) return shell
+  // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
+  const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
+  const rewriter = new HTMLRewriter()
+    .on('title', new SetText(meta.title))
+    .on('meta[name="description"]', new SetAttr('content', meta.description))
+    .on('link[rel="canonical"]', new SetAttr('href', meta.canonical))
+    .on('meta[property="og:title"]', new SetAttr('content', meta.title))
+    .on('meta[property="og:description"]', new SetAttr('content', meta.description))
+    .on('meta[property="og:url"]', new SetAttr('content', meta.canonical))
+    .on('meta[property="og:type"]', new SetAttr('content', meta.ogType))
+    .on('meta[name="twitter:title"]', new SetAttr('content', meta.title))
+    .on('meta[name="twitter:description"]', new SetAttr('content', meta.description))
+    .on('script#ld-page', {
+      element(el) {
+        if (ld) el.setInnerContent(ld, { html: true })
+        else el.remove() // the WebSite block belongs to the home page only
+      },
+    })
+    .on('head', {
+      element(el) {
+        if (meta.status === 404) el.append('<meta name="robots" content="noindex">', { html: true })
+      },
+    })
+  if (meta.prerender) {
+    rewriter.on('main', { element(el) { el.prepend(meta.prerender as string, { html: true }) } })
+  }
+  const out = rewriter.transform(shell)
+  const headers = new Headers(out.headers)
+  headers.delete('etag') // the asset's tag describes the unrewritten file
+  headers.delete('content-length')
+  headers.set('content-type', 'text/html; charset=utf-8')
+  headers.set('x-robots-tag', meta.status === 404 ? 'noindex' : 'all')
+  return new Response(request.method === 'HEAD' ? null : out.body, { status: meta.status, headers })
+}
+
+function robotsTxt(): Response {
+  const body = ['User-agent: *', 'Allow: /', 'Disallow: /api/', '', `Sitemap: ${SITE_ORIGIN}/sitemap.xml`, ''].join('\n')
+  return new Response(body, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=86400' } })
+}
+
+/** Every indexable page, rebuilt from the data files and cached a day. */
+async function sitemapXml(env: Env): Promise<Response> {
+  return cachedJson('/sitemap.xml', async () => {
+    const [people, moneyData, reports] = await Promise.all([loadPeople(env), loadMoney(env), loadReports(env)])
+    const rows: string[] = []
+    const add = (path: string, lastmod?: string) => {
+      const mod = lastmod ? `<lastmod>${lastmod.slice(0, 10)}</lastmod>` : ''
+      rows.push(`<url><loc>${escXml(`${SITE_ORIGIN}${path}`)}</loc>${mod}</url>`)
+    }
+    add('/')
+    for (const page of ['search', 'money', 'reports', 'explore', 'about', 'methods', 'stats']) add(`/${page}`)
+    for (const r of reports.reports) add(`/reports/${r.slug}`, r.updated)
+    add('/subject/topic')
+    for (const slug of Object.keys(TOPIC_NAMES)) add(`/subject/topic/${slug}`)
+    for (const dir of ['person', 'party', 'donor']) add(`/subject/${dir}`)
+    // Parties: every label the money data or the people data knows.
+    const partyLabels = new Map<string, string>()
+    for (const n of moneyData.parties.values()) partyLabels.set(foldName(n.label), n.label)
+    for (const p of people.people) if (p.party) partyLabels.set(foldName(p.party), partyLabels.get(foldName(p.party)) ?? p.party)
+    for (const label of [...partyLabels.values()].sort()) add(`/subject/party/${encodeURIComponent(label)}`, moneyData.generated || people.generated)
+    for (const p of people.people) add(`/subject/person/${encodeURIComponent(p.name)}`, people.generated)
+    for (const n of moneyData.donors.values()) add(`/subject/donor/${encodeURIComponent(n.label)}`, n.generated || moneyData.generated)
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${rows.join('\n')}\n</urlset>\n`
+    return new Response(xml, { headers: { 'content-type': 'application/xml; charset=utf-8' } })
+  }, 86400)
+}
+
+// ---------------------------------------------------------------------------
 
 export default {
   async fetch(request, env, ctx): Promise<Response> {
@@ -1337,6 +2022,14 @@ export default {
       }
       if (url.pathname.startsWith('/api/')) {
         return json({ error: 'not found' }, 404)
+      }
+      // Real paths for the hash-routed app (see the SEO section): only paths
+      // no asset answers reach here, so index.html itself is never rewritten.
+      if (request.method === 'GET' || request.method === 'HEAD') {
+        if (url.pathname === '/sitemap.xml') return await sitemapXml(env)
+        if (url.pathname === '/robots.txt') return robotsTxt()
+        const seoRoute = matchSeoRoute(url)
+        if (seoRoute) return await serveSeoPage(seoRoute, url, request, env)
       }
       return await env.ASSETS.fetch(request)
     } catch (err) {
