@@ -859,6 +859,7 @@ function route() {
 
 function resetAsk() {
   if (askAbort) { askAbort.abort(); askAbort = null; }
+  foldHero(false);
   clearInterval(askTimer);
   // The abandoned ask's finally no longer sees itself as current, so the
   // button is restored here.
@@ -3875,10 +3876,21 @@ function revealAskResult() {
   });
 }
 
+let heroFoldTimer = 0;
+/** The hero line folds away a beat after a question is asked, or comes back. */
+function foldHero(folded) {
+  clearTimeout(heroFoldTimer);
+  const hero = $("hero-intro");
+  if (!hero) return;
+  if (!folded) { hero.classList.remove("hero-folded"); return; }
+  heroFoldTimer = setTimeout(() => hero.classList.add("hero-folded"), 900);
+}
+
 async function runAsk(question) {
   if (askAbort) askAbort.abort();
   const myAbort = new AbortController();
   askAbort = myAbort;
+  foldHero(true);
   const btn = $("ask-submit");
   // Structured money answer, rendered immediately from local data.
   const moneyInd = detectMoneyIndustry(question);

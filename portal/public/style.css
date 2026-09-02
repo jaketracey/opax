@@ -349,6 +349,13 @@ main:focus { outline: none; }
   letter-spacing: 0.005em;
 }
 main.compact .hero-intro { display: none; }
+/* Once an ask is under way the masthead line has done its work: it fades and
+   folds, and the question rises into its place. */
+.hero-intro { overflow: hidden; }
+.hero-intro.hero-folded { opacity: 0; max-height: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-intro { transition: opacity 320ms ease, max-height 520ms cubic-bezier(0.22, 0.7, 0.3, 1); max-height: 14rem; }
+}
 
 /* ---- forms -------------------------------------------------------------- */
 
