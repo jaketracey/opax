@@ -376,8 +376,11 @@ function splitName(full) {
 // BibTeX/RIS (footnotes must survive a staging deploy), single-sourced here.
 const SITE_ORIGIN = "https://opax.com.au";
 
+// Shared and cited links take the PATH form (https://opax.com.au/doc/speech-1):
+// the Worker serves those paths with per-page titles and previews, and the
+// app folds them back into its hash route on load (docs/SEO.md).
 function siteUrl(hash) {
-  return `${SITE_ORIGIN}/${hash}`;
+  return `${SITE_ORIGIN}${hash.startsWith("#/") ? hash.slice(1) : `/${hash}`}`;
 }
 
 function askHash(q, kind) {
@@ -842,6 +845,7 @@ function route() {
       renderFrontPage();
     }
   }
+  syncPathMeta();
   // A view change can hide the element that held focus (e.g. a button on the
   // page just left); catch the drop so keyboard users keep a place in the page.
   if (manageFocus && document.activeElement === document.body) {
@@ -5410,6 +5414,65 @@ api("/api/stats")
   const legacyAsk = new URLSearchParams(location.search).get("ask");
   if (legacyAsk) {
     history.replaceState(null, "", `/${askHash(legacyAsk)}`);
+  }
+}
+
+// Path entry contract (docs/SEO.md): the Worker serves real paths such as
+// /subject/person/Name, /reports/gambling and /search?q=... for crawlers and
+// shared links. The app still routes on the hash, so fold the path into it
+// before the first route(); the Worker's crawler block (#prerender) then
+// yields to the app's own render. What the Worker wrote into the head names
+// this one page ("Anthony Albanese · OPAX"); route() would replace it with the
+// view's generic title, so keep it for as long as that page is the one showing
+// (a renderer such as Googlebot sees the named version, not "OPAX encyclopedia").
+const BOOT_META = {
+  url: document.querySelector('link[rel="canonical"]')?.getAttribute("href") || "",
+  title: document.title,
+  description: document.querySelector('meta[name="description"]')?.getAttribute("content") || "",
+};
+{
+  const path = location.pathname;
+  if (path !== "/" && !location.hash) {
+    history.replaceState(null, "", `/#${path}${location.search}`);
+  }
+  document.documentElement.classList.add("spa-ready");
+}
+
+// Keeps the head's canonical/og:url on the PATH form of the current hash after
+// each route(), and the title/description on the view now showing.
+const VIEW_DESCRIPTIONS = {
+  search: "Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year.",
+  money: "Disclosed political donations as territory you can spin: donors, parties and 28 years of returns.",
+  reports: "Standing investigations pairing the money with the words, every claim cited to the record.",
+  subject: "An entry in the OPAX encyclopedia of Australian parliamentarians, parties, donors and topics.",
+  doc: "A document from the Australian parliamentary record, with its speaker, date and official source.",
+  explore: "Play with the parliamentary record: the time machine, the record quiz, the ledger and the money map.",
+  chat: "Follow-up questions on an answer from the parliamentary record, each reply cited to its sources.",
+  about: "What OPAX is, what you can do here, and how answers are produced.",
+  methods: "How the OPAX corpus is built, its known limits, and how to cite an answer or a speech.",
+  stats: "Live counts for every collection in the OPAX index.",
+};
+function syncPathMeta() {
+  const frag = rawFragment();
+  const path = frag.startsWith("/") ? frag : "/";
+  const url = `${SITE_ORIGIN}${path}`;
+  // Still on the page the Worker described: its title and description name
+  // this subject, so they beat anything the view would set.
+  const landed = url === BOOT_META.url;
+  if (landed && BOOT_META.title) document.title = BOOT_META.title;
+  const view = path.replace(/^\//, "").split(/[/?]/)[0];
+  const desc = landed
+    ? BOOT_META.description
+    : view && view !== "ask"
+      ? (VIEW_DESCRIPTIONS[view] || VIEW_DESCRIPTIONS.subject)
+      : "Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.";
+  document.querySelector('link[rel="canonical"]')?.setAttribute("href", url);
+  document.querySelector('meta[property="og:url"]')?.setAttribute("content", url);
+  for (const sel of ['meta[name="description"]', 'meta[property="og:description"]', 'meta[name="twitter:description"]']) {
+    document.querySelector(sel)?.setAttribute("content", desc);
+  }
+  for (const sel of ['meta[property="og:title"]', 'meta[name="twitter:title"]']) {
+    document.querySelector(sel)?.setAttribute("content", document.title);
   }
 }
 
