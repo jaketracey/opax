@@ -15,8 +15,11 @@
     "Rules applied here:",
     "  - union branches roll UP to the parent union; the branch is kept on the",
     "    alias row so a donor page can say 'also disclosed as: NSW Branch'",
-    "  - individuals are never merged except on an exact normalised match, so no",
-    "    person appears in this file",
+    "  - individuals merge only on the person-normalised exact match: honorifics",
+    "    and post-nominals off and 'Surname, Given' turned around ('Turpie, Duncan'",
+    "    = 'Mr Duncan Turpie' = 'Duncan Turpie'). A person is curated only for a",
+    "    given-name short form with the same surname and the same recipients",
+    "    ('Pam Wall' = 'Pamela Wall'); surname-plus-initial never merges",
     "  - a company and its distinctly-branded operating businesses stay apart",
     "    (Wilson Parking / Wilson Security); only spellings, typos, branches and",
     "    renames of the SAME business merge",
@@ -147,9 +150,11 @@
       "kind": "company",
       "aliases": [
         "Macquarie Technology Operations Pty Ltd",
-        "Macquarie Telecom Group"
+        "Macquarie Telecom Group",
+        "Macquarie Telecom",
+        "Macquarie Telecommunications"
       ],
-      "notes": "Formerly Macquarie Telecom. No relationship to Macquarie Group Limited despite the shared name; pinned so the two never merge."
+      "notes": "Formerly Macquarie Telecom. No relationship to Macquarie Group Limited despite the shared name; pinned so the two never merge. The bare 'Macquarie Telecom' is two words with no company keyword, which the resolver reads as person-shaped and keeps off the rule tier, so it is listed in full."
     },
     {
       "canonical": "Morgans Financial Limited",
@@ -3015,6 +3020,98 @@
         }
       ],
       "notes": "A firearms advocacy group, not a party and not the SSAA."
+    },
+    {
+      "canonical": "KPMG",
+      "kind": "company",
+      "aliases": [
+        "KPMG Australia",
+        "KPMG Administration (NSW) Pty Ltd",
+        {
+          "name": "KPMG Corporate Finance (NSW)",
+          "branch": "Corporate Finance, NSW"
+        },
+        {
+          "name": "KPMG Management Consulting (NSW)",
+          "branch": "Management Consulting, NSW"
+        },
+        {
+          "name": "Kpmg (ACT)",
+          "branch": "ACT"
+        },
+        {
+          "name": "Kpmg (QLD)",
+          "branch": "QLD"
+        },
+        {
+          "name": "Kpmg (SA)",
+          "branch": "SA"
+        },
+        {
+          "name": "Kpmg (VIC)",
+          "branch": "VIC"
+        }
+      ],
+      "notes": "One partnership filing as 'KPMG' and 'KPMG Australia' across the same years, plus its state offices and service entities (the Westpac precedent: divisions of one business). 52 of the 79 'KPMG' AEC annual rows repeat a 'KPMG Australia' row on recipient, amount and year: the party-side and donor-side returns of one receipt."
+    },
+    {
+      "canonical": "Incat",
+      "kind": "company",
+      "aliases": [
+        "Incat Australia Pty Ltd"
+      ],
+      "notes": "Hobart shipbuilder; the Pty Ltd form in the TEC disclosures is the same business."
+    },
+    {
+      "canonical": "LGT Crestone",
+      "kind": "company",
+      "aliases": [
+        "LGT Crestone Wealth Management Limited"
+      ],
+      "notes": "Brand and legal name of one wealth manager (Crestone Wealth Management, LGT-owned since 2022)."
+    },
+    {
+      "canonical": "Community and Public Sector Union",
+      "kind": "union",
+      "aliases": [
+        "CPSU",
+        "Cpsu - Community & Public Sector Union",
+        "CPSU Community & Public Sector",
+        "CPSU - COMMUNITY & PUBLIC SECTOR UNION for 00055376",
+        "CPSU National",
+        "CPSU National Secretariat",
+        {
+          "name": "CPSU PSU Group",
+          "branch": "PSU Group"
+        },
+        {
+          "name": "Community and Public Sector Union (PSU Group)",
+          "branch": "PSU Group"
+        },
+        {
+          "name": "Community & Public Sector Union - PSU Group",
+          "branch": "PSU Group"
+        },
+        {
+          "name": "Cpsu - Psu",
+          "branch": "PSU Group"
+        },
+        {
+          "name": "CPSU PSU Group Csiro Section",
+          "branch": "PSU Group, CSIRO Section"
+        }
+      ],
+      "notes": "The federal union and its PSU Group (Commonwealth public sector), which files under both names. The SPSF Group and its state branches (PSA NSW, CPSU/CSA WA, ...) are separately registered state unions and stay apart; 'Cpsu (NSW)' is ambiguous between the two groups and stays apart too."
+    },
+    {
+      "canonical": "Pamela Wall",
+      "kind": "individual",
+      "aliases": [
+        "Pam Wall",
+        "Wall, Pamela",
+        "Wall OAM, Pamela"
+      ],
+      "notes": "One donor filed three ways. 'Pam' is a given-name short form no automatic tier equates. All four 'Pam Wall' rows in 2024-25 repeat a 'Wall, Pamela' row on recipient, amount and year (donor-side and party-side returns of the same gifts), so the merged total shows that double count on one row until receipts are de-duplicated."
     }
   ]
 }
