@@ -398,7 +398,7 @@ main { flex: 1; padding: 2.75rem 0 3rem; }
   /* Narrow screens: the query takes its own line; the submit and the filter
      icon share the next one instead of the icon orphaning onto a third. */
   .query-line > input, .ask-row > input { flex-basis: 100%; }
-  .query-line button.secondary, .ask-row button.primary { flex: 1 1 auto; }
+  .query-line button.primary, .ask-row button.primary { flex: 1 1 auto; }
 }
 main:focus { outline: none; }
 
@@ -921,7 +921,10 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
   border-top: 3px solid var(--bronze); padding: 1rem 1.25rem;
 }
-.search-answer .kicker { margin-top: 0; }
+.search-answer .kicker {
+  margin: 0 0 var(--space-3); padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--line);
+}
 .answer-compact { font-size: 0.9375rem; line-height: 1.6; }
 .answer-compact > * { margin-bottom: 0.8rem; }
 .search-answer .source-list li { padding: 0.45rem 0; }
@@ -1649,7 +1652,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   .ask-row button.primary { flex: 1 1 auto; min-height: 52px; }
   #ask-options-btn { min-height: 52px; width: 52px; }
   /* Same pattern on search: the submit stretches, the filter icon beside it. */
-  .query-line button.secondary { flex: 1 1 auto; min-height: 52px; }
+  .query-line button.primary { flex: 1 1 auto; min-height: 52px; }
   #search-options-btn { min-height: 52px; width: 52px; }
   .chart { padding: 0.75rem; }
   .barrow { grid-template-columns: minmax(90px, 30%) 1fr auto; }

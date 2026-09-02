@@ -535,6 +535,18 @@ function offerExport(rows, context, baseName) {
 
 // --- panels & routing -------------------------------------------------------
 
+/* A reader who lands on a box they came to type in should already hold the
+   caret. Guarded three ways: never when the box already holds a query (paging
+   back to results must not steal focus), never without a fine pointer (on a
+   phone the keyboard would cover the page they came to read), and never with a
+   scroll, so the caret does not drag the view. */
+function focusEntry(id) {
+  if (!matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  const el = $(id);
+  if (!el || el.value.trim()) return;
+  el.focus({ preventScroll: true });
+}
+
 function showPanel(name) {
   // Methods and the expense-category glossary live under the About menu, so its
   // trigger stays lit there; the drawer has exact links of its own.
@@ -840,6 +852,7 @@ function route() {
     document.title = TITLES.search;
     setCrumbs([{ label: "Search" }]);
     applySearchParams(params);
+    focusEntry("search-input");
   } else if (view === "reports") {
     showPanel("reports");
     document.title = TITLES.reports;
@@ -896,6 +909,7 @@ function route() {
       runAsk(q);
     } else if (!q && $("ask-result").hidden) {
       renderFrontPage();
+      focusEntry("ask-input");
     }
   }
   syncPathMeta();
