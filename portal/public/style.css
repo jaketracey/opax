@@ -1184,11 +1184,31 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 }
 .doc-toolbar-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .doc-rule { margin: 1.2rem 0 1.4rem; }
-.doc-brief { margin: 1.3rem 0 0.5rem; max-width: 68ch; }
-.doc-brief .kicker { margin: 0 0 0.45rem; }
-.doc-brief #doc-brief-text {
-  font: 400 1.0625rem/1.65 var(--serif); color: var(--ink); margin: 0 0 0.4rem;
+/* The summary sits apart from the record it summarises: sunken paper behind a
+   bronze rule, and set in the sans. The serif is parliament's voice everywhere
+   on this site, so a machine summary must not borrow it. */
+.doc-brief {
+  margin: 1.4rem 0 0; max-width: 68ch;
+  background: var(--paper-sunken); border-left: 3px solid var(--bronze);
+  border-radius: 0 4px 4px 0; padding: 0.9rem 1.1rem 1rem;
 }
+.doc-brief-head {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 0.5rem;
+}
+.doc-brief-head .kicker { margin: 0; }
+.doc-brief-tag {
+  font: 600 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-faint); border: 1px solid var(--line); border-radius: 999px;
+  padding: 0.2rem 0.5rem; background: var(--paper);
+}
+.doc-brief #doc-brief-text {
+  font: 400 0.9375rem/1.6 var(--sans); color: var(--ink); margin: 0;
+}
+.doc-brief-note {
+  margin: 0.6rem 0 0; font: 400 0.75rem/1.5 var(--sans); color: var(--ink-faint);
+}
+/* Names the serif below as the record, now that something else stands above it. */
+.doc-record-head { margin: var(--space-5) 0 var(--space-2); }
 .doc-text {
   font-family: var(--serif);
   font-size: 1.03125rem;

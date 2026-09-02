@@ -5964,6 +5964,7 @@ async function openDocPage(slug, manageFocus) {
   $("doc-speaker-links").hidden = true;
   $("doc-text").textContent = "";
   $("doc-brief").hidden = true;
+  $("doc-record-head").hidden = true;
   $("doc-caveat").hidden = true;
   $("doc-cite-panel").hidden = true;
   $("doc-cite").setAttribute("aria-expanded", "false");
@@ -6044,6 +6045,8 @@ async function openDocPage(slug, manageFocus) {
     if (doc.summary) {
       $("doc-brief-text").textContent = doc.summary;
       $("doc-brief").hidden = false;
+      // Only worth naming when something else stands above it.
+      $("doc-record-head").hidden = false;
     }
     $("doc-text").textContent = doc.text || "(no text)";
     $("doc-actions").hidden = false;
