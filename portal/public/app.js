@@ -377,10 +377,11 @@ function splitName(full) {
 const SITE_ORIGIN = "https://opax.com.au";
 
 // Shared and cited links take the PATH form (https://opax.com.au/doc/speech-1):
-// the Worker serves those paths with per-page titles and previews, and the
-// app folds them back into its hash route on load (docs/SEO.md).
-function siteUrl(hash) {
-  return `${SITE_ORIGIN}${hash.startsWith("#/") ? hash.slice(1) : `/${hash}`}`;
+// the Worker serves those paths with per-page titles and previews, and the app
+// routes on them (docs/SEO.md). pathFor() accepts either form, so a caller
+// passing the older "#/..." shape still gets a clean permalink.
+function siteUrl(target) {
+  return `${SITE_ORIGIN}${pathFor(target)}`;
 }
 
 function askHash(q, kind) {
@@ -602,7 +603,7 @@ function renderMoneySwitch(jur) {
   box.innerHTML = Object.entries(MONEY_JURISDICTIONS).map(([k, c]) =>
     `<button type="button" data-jur="${esc(k)}" aria-pressed="${k === jur ? "true" : "false"}">${esc(c.label)}</button>`).join("");
   for (const btn of box.querySelectorAll("button")) {
-    btn.addEventListener("click", () => { location.hash = moneyHash(btn.dataset.jur); });
+    btn.addEventListener("click", () => { goRoute(moneyHash(btn.dataset.jur)); });
   }
 }
 
@@ -737,8 +738,41 @@ function rawFragment() {
   return location.href.split("#")[1] || "";
 }
 
+/* --- routes are real paths --------------------------------------------------
+   /subject/person/Anthony%20Albanese, /reports/gambling, /search?q=…: the
+   Worker serves each one with its own head (docs/SEO.md) and the address bar
+   shows what a reader can copy. The older "#/…" form is still understood
+   everywhere it survives — bookmarks, shared links, the bundled explore
+   modules, anything assigning location.hash — and is folded to the path form
+   as it arrives, so one page never has two URLs. */
+
+/** The route now showing, as "/path?query"; a route-shaped hash still wins. */
+function hereRoute() {
+  const frag = rawFragment();
+  return frag.startsWith("/") ? frag : `${location.pathname}${location.search}`;
+}
+
+/** The path form of a link target: "#/money", "/#/money" and "/money" all give "/money". */
+function pathFor(target) {
+  const s = String(target ?? "");
+  const cut = s.startsWith("/#") ? s.slice(2) : s.startsWith("#") ? s.slice(1) : s;
+  return cut.startsWith("/") ? cut : `/${cut}`;
+}
+
+/** Rewrite the address bar to a route without adding a history entry. */
+function replaceRoute(target) {
+  history.replaceState(null, "", pathFor(target));
+}
+
+/** Navigate inside the app: a history entry, then a render. */
+function goRoute(target) {
+  const to = pathFor(target);
+  if (rawFragment() || to !== `${location.pathname}${location.search}`) history.pushState(null, "", to);
+  route();
+}
+
 function parseHash() {
-  const h = rawFragment().replace(/^\/?/, "");
+  const h = hereRoute().replace(/^\/?/, "");
   const [pathPart, queryPart] = h.split("?");
   const segs = pathPart.split("/").filter(Boolean);
   const params = new URLSearchParams(queryPart || "");
@@ -855,6 +889,9 @@ function route() {
     }
   }
   syncPathMeta();
+  // A pushState fires no event of its own, so the render announces itself:
+  // gtm.js counts a page view from this (title and canonical already set).
+  dispatchEvent(new Event("opax:route"));
   // A view change can hide the element that held focus (e.g. a button on the
   // page just left); catch the drop so keyboard users keep a place in the page.
   if (manageFocus && document.activeElement === document.body) {
@@ -883,10 +920,12 @@ function resetAsk() {
 }
 
 // Tapping the mark, or the name over the nav, always means "take me home, fresh".
-const goHomeFresh = () => {
+// It owns the click (the delegated router below would otherwise navigate a
+// second time), clears the ask, and lands on "/" with the front page rebuilt.
+const goHomeFresh = (e) => {
+  e?.preventDefault?.();
   resetAsk();
-  if (location.hash && location.hash !== "#/") location.hash = "#/";
-  else { showPanel("ask"); renderFrontPage(); }
+  goRoute("/");
   window.scrollTo(0, 0);
 };
 for (const el of document.querySelectorAll(".logo, .masthead-name a")) el.addEventListener("click", goHomeFresh);
@@ -915,7 +954,7 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
     close();
     input.value = "";
     input.blur();
-    location.hash = href.startsWith("#") ? href.slice(1) : href;
+    goRoute(href);
   };
   const render = () => {
     panel.replaceChildren(...items.map((it, i) => {
@@ -1029,7 +1068,48 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
   schedule();
 })();
 
-window.addEventListener("hashchange", route);
+// A file under a route's own prefix is still a file: /reports/gambling.json is
+// the report's data download, not the report page.
+const ROUTE_FILE = /\.(json|csv|xml|txt|pdf|zip|png|jpe?g|webp|svg|js|css|html?)$/i;
+/** Is this path one of ours to render, or a real file for the browser to fetch? */
+const isRoute = (path) => {
+  const bare = path.split("?")[0];
+  if (ROUTE_FILE.test(bare)) return false;
+  const first = bare.replace(/^\//, "").split("/")[0];
+  return first === "" || PANELS.includes(first);
+};
+// One delegated listener owns in-app navigation. An anchor whose href is a
+// route of ours — the path form, or the "#/…" form still written by the app's
+// own markup and by the bundled explore modules — is followed in place, so the
+// address bar keeps the real path and nothing reloads. Modified clicks, new
+// tabs, downloads, off-site links, real files (/map, /reports/x.json) and
+// plain in-page anchors (#main) are left to the browser.
+document.addEventListener("click", (e) => {
+  if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const a = e.target instanceof Element ? e.target.closest("a[href]") : null;
+  if (!(a instanceof HTMLAnchorElement) || a.target || a.hasAttribute("download")) return;
+  const raw = a.getAttribute("href") || "";
+  let to;
+  if (raw.startsWith("#/")) to = raw.slice(1);
+  else if (raw.startsWith("/#/")) to = raw.slice(2);
+  else if (raw.startsWith("#")) return; // native in-page anchor
+  else if (a.origin === location.origin) to = `${a.pathname}${a.search}`;
+  else return;
+  if (!isRoute(to)) return;
+  e.preventDefault();
+  goRoute(to);
+});
+
+// Back and forward now move between real paths, so popstate does the routing.
+// hashchange stays for anything still assigning location.hash (older code, and
+// code arriving from another branch); it folds that assignment to the path
+// form before rendering, so the hash never survives a navigation.
+window.addEventListener("popstate", route);
+window.addEventListener("hashchange", () => {
+  const frag = rawFragment();
+  if (frag.startsWith("/")) replaceRoute(frag);
+  route();
+});
 
 // --- masthead nav: megamenus + mobile drawer --------------------------------
 // Disclosure pattern (button + panel), not role=menu: Enter/Space toggles,
@@ -1486,7 +1566,7 @@ function sourceItem(s, num) {
   btn.type = "button";
   btn.className = "link source-title";
   btn.textContent = s.title || s.slug;
-  btn.addEventListener("click", () => { location.hash = `#/doc/${s.slug}`; });
+  btn.addEventListener("click", () => { goRoute(`/doc/${s.slug}`); });
   if (num) {
     const numEl = document.createElement("span");
     numEl.className = "source-num";
@@ -1570,7 +1650,7 @@ function updateQuoteRail() {
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   quoteRail.swap = setTimeout(() => {
     card.innerHTML = quoteCardHTML(s, idx, n);
-    card.onclick = (e) => { e.preventDefault(); location.hash = `#/doc/${s.slug}`; };
+    card.onclick = (e) => { e.preventDefault(); goRoute(`/doc/${s.slug}`); };
     void card.offsetWidth; // restart the fade-up from the bottom
     card.classList.add("shown");
     loadPhotoMap().then(() => {
@@ -2016,7 +2096,7 @@ async function mountSubjectMap(nodeId) {
       askUrl: (industry) => askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
       onSelect: (node) => {
         if (!node || node.id === nodeId) return;
-        location.hash = subjectHash(node.kind === "party" ? "party" : "donor", node.label);
+        goRoute(subjectHash(node.kind === "party" ? "party" : "donor", node.label));
       },
     });
     if (currentSubjectKey !== key) { handle.destroy?.(); return; } // navigated away while mounting
@@ -2607,7 +2687,7 @@ async function openSubject(kind, name, manageFocus) {
     if (node && normName(node.label) !== normName(name)) {
       const h = $("subject-title");
       if (h) h.textContent = node.label;
-      history.replaceState(null, "", subjectHash(kind, node.label));
+      replaceRoute(subjectHash(kind, node.label));
       currentSubjectKey = `${kind}:${node.label}`;
       key = currentSubjectKey;
       setCrumbs([{ label: kind === "party" ? "Parties" : "Donors", href: `#/subject/${kind}` }, { label: node.label }]);
@@ -2738,7 +2818,7 @@ async function openSubject(kind, name, manageFocus) {
   $("subject-ask-form").addEventListener("submit", (e) => {
     e.preventDefault();
     const topic = $("subject-ask-topic").value.trim();
-    if (topic) location.hash = askHash(`What did ${name} say about ${topic}?`);
+    if (topic) goRoute(askHash(`What did ${name} say about ${topic}?`));
   });
   // The structured record first; the speeches follow it.
   renderPersonVotes(name, photoMap?.[name.trim().toLowerCase()] ?? null, sections);
@@ -2977,8 +3057,8 @@ async function openTopicsIndex(manageFocus) {
 
 // --- encyclopedia indexes (directories) -------------------------------------
 // Parliamentarians, Parties and Donors each get a full list at
-// #/subject/<kind>: instant search, filters, a sort, and every control
-// mirrored into the hash (history.replaceState) so a filtered view is a URL
+// /subject/<kind>: instant search, filters, a sort, and every control
+// mirrored into the URL (replaceRoute) so a filtered view is a link
 // that survives sharing and the back button. One renderer serves all three;
 // each page supplies its rows, filters and sorts. Rows render in chunks of
 // DIR_CHUNK with a "Show more" button so 1,400 people stay instant.
@@ -3185,7 +3265,7 @@ function renderDirectory(spec) {
       : `${spec.items.length.toLocaleString()} ${noun}`;
     empty.hidden = matched.length > 0;
     const hashState = { ...state, sort: state.sort === spec.sorts[0][0] ? "" : state.sort };
-    history.replaceState(null, "", directoryHash(spec.kind, hashState));
+    replaceRoute(directoryHash(spec.kind, hashState));
   };
   const syncControls = () => {
     input.value = state.q;
@@ -3996,7 +4076,7 @@ async function mountFrontMap() {
       chrome: "mini",
       askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`),
       onSelect: (node) => {
-        if (node) location.hash = subjectHash(node.kind === "party" ? "party" : "donor", node.label);
+        if (node) goRoute(subjectHash(node.kind === "party" ? "party" : "donor", node.label));
       },
     });
     frontMapHandle = handle;
@@ -4287,7 +4367,7 @@ $("ask-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const q = $("ask-input").value.trim();
   if (!q) return;
-  history.replaceState(null, "", askHash(q, askKind()));
+  replaceRoute(askHash(q, askKind()));
   setCrumbs([{ label: "Ask" }]); // replaceState fires no hashchange, so the router will not
   runAsk(q);
 });
@@ -4308,7 +4388,7 @@ $("ask-export").addEventListener("click", () => {
 $("ask-continue").addEventListener("click", () => {
   if (!lastAsk.question || !lastAsk.answer) return;
   try { sessionStorage.setItem("opax-chat-seed", JSON.stringify(lastAsk)); } catch { /* still usable unseeded */ }
-  location.hash = "#/chat";
+  goRoute("/chat");
 });
 
 /**
@@ -4331,7 +4411,7 @@ function renderChips() {
     b.textContent = q.length > 60 ? q.slice(0, 57) + "…" : q;
     b.addEventListener("click", () => {
       $("ask-input").value = q;
-      history.replaceState(null, "", askHash(q));
+      replaceRoute(askHash(q));
       setCrumbs([{ label: "Ask" }]);
       runAsk(q);
     });
@@ -4862,7 +4942,7 @@ function renderResults(results) {
         <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true, portrait: true })}</span>
         <p class="snippet">${highlightHTML(r.snippet, $("search-input").value)}</p>`;
       li.querySelector("button").addEventListener("click", () => {
-        location.hash = `#/doc/${r.slug}`;
+        goRoute(`/doc/${r.slug}`);
       });
       return li;
     }),
@@ -5059,7 +5139,7 @@ $("search-form").addEventListener("submit", (e) => {
   const f = currentFilters();
   if (!q && !f.speaker) return;
   searchApplied = searchHash(q, f).replace(/^#\/search\?/, "");
-  history.replaceState(null, "", searchHash(q, f));
+  replaceRoute(searchHash(q, f));
   runSearch();
 });
 
@@ -5231,15 +5311,15 @@ $("doc-copylink").addEventListener("click", () => {
 $("doc-similar").addEventListener("click", () => {
   if (!currentDoc) return;
   const topic = (currentDoc.title || "").split("—")[1]?.trim() || currentDoc.title;
-  location.hash = searchHash(topic, {});
+  goRoute(searchHash(topic, {}));
 });
 $("doc-more").addEventListener("click", () => {
   if (!currentDoc?.speaker) return;
-  location.hash = searchHash("", { speaker: currentDoc.speaker });
+  goRoute(searchHash("", { speaker: currentDoc.speaker }));
 });
 $("doc-profile").addEventListener("click", () => {
   if (!currentDoc?.speaker) return;
-  location.hash = subjectHash("person", currentDoc.speaker);
+  goRoute(subjectHash("person", currentDoc.speaker));
 });
 
 // --- reports ----------------------------------------------------------------
@@ -5276,7 +5356,7 @@ async function loadReportsList(manageFocus) {
       card.innerHTML = `${reportGlyph(r.slug, "card-glyph")}<span class="card-title">${esc(r.title)}</span>
         <span class="card-blurb">${esc(r.blurb)}</span>
         <span class="card-meta">Updated ${esc(fmtDate(r.updated || ""))}</span>`;
-      card.addEventListener("click", () => { location.hash = `#/reports/${r.slug}`; });
+      card.addEventListener("click", () => { goRoute(`/reports/${r.slug}`); });
       return card;
     }),
   );
@@ -5584,7 +5664,7 @@ async function openReport(slug, sectionNum, manageFocus) {
     return;
   }
   // Stale-resolution guard: only render if the hash still points at this report.
-  if (!location.hash.startsWith(`#/reports/${slug}`)) return;
+  if (!hereRoute().startsWith(`/reports/${slug}`)) return;
   currentReportSlug = slug;
   setStatus($("reports-status"), "");
   $("reports-list").hidden = true;
@@ -5652,7 +5732,7 @@ async function openReport(slug, sectionNum, manageFocus) {
         askBtn.className = "action-btn";
         askBtn.innerHTML = `${iconSvg("ask")}<span>Ask the record about this</span>`;
         askBtn.addEventListener("click", () => {
-          location.hash = askHash(s.question);
+          goRoute(askHash(s.question));
         });
         tools.append(linkBtn, askBtn);
         sec.append(tools);
@@ -5736,33 +5816,34 @@ api("/api/stats")
 {
   const legacyAsk = new URLSearchParams(location.search).get("ask");
   if (legacyAsk) {
-    history.replaceState(null, "", `/${askHash(legacyAsk)}`);
+    replaceRoute(askHash(legacyAsk));
   }
 }
 
 // Path entry contract (docs/SEO.md): the Worker serves real paths such as
 // /subject/person/Name, /reports/gambling and /search?q=... for crawlers and
-// shared links. The app still routes on the hash, so fold the path into it
-// before the first route(); the Worker's crawler block (#prerender) then
-// yields to the app's own render. What the Worker wrote into the head names
-// this one page ("Anthony Albanese · OPAX"); route() would replace it with the
-// view's generic title, so keep it for as long as that page is the one showing
-// (a renderer such as Googlebot sees the named version, not "OPAX encyclopedia").
+// shared links, and the app routes on those paths directly; the Worker's
+// crawler block (#prerender) then yields to the app's own render. What the
+// Worker wrote into the head names this one page ("Anthony Albanese · OPAX");
+// route() would replace it with the view's generic title, so keep it for as
+// long as that page is the one showing (a renderer such as Googlebot sees the
+// named version, not "OPAX encyclopedia").
 const BOOT_META = {
   url: document.querySelector('link[rel="canonical"]')?.getAttribute("href") || "",
   title: document.title,
   description: document.querySelector('meta[name="description"]')?.getAttribute("content") || "",
 };
 {
-  const path = location.pathname;
-  if (path !== "/" && !location.hash) {
-    history.replaceState(null, "", `/#${path}${location.search}`);
-  }
+  // A link from before real paths ("/#/subject/donor/Name", still live in
+  // bookmarks and other people's posts) becomes its path form before the first
+  // route(), so the page a reader landed on has exactly one URL.
+  const frag = rawFragment();
+  if (frag.startsWith("/")) history.replaceState(null, "", pathFor(frag));
   document.documentElement.classList.add("spa-ready");
 }
 
-// Keeps the head's canonical/og:url on the PATH form of the current hash after
-// each route(), and the title/description on the view now showing.
+// Keeps the head's canonical/og:url on the current route after each route(),
+// and the title/description on the view now showing.
 const VIEW_DESCRIPTIONS = {
   search: "Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year.",
   money: "Disclosed political donations as territory you can spin: donors, parties and 28 years of returns.",
@@ -5777,8 +5858,7 @@ const VIEW_DESCRIPTIONS = {
   expenses: "What each category in the Independent Parliamentary Expenses Authority's quarterly reports covers.",
 };
 function syncPathMeta() {
-  const frag = rawFragment();
-  const path = frag.startsWith("/") ? frag : "/";
+  const path = hereRoute();
   const url = `${SITE_ORIGIN}${path}`;
   // Still on the page the Worker described: its title and description name
   // this subject, so they beat anything the view would set.
