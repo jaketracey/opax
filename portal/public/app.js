@@ -11,7 +11,12 @@ let corpusManifest = null; // /corpus.json
 let liveStats = null; // /api/stats
 let suggestions = []; // /suggestions.json
 let reportsIndex = null;
-let lastSearch = { query: "", filters: {}, results: [] };
+// `key` is the search identity (query + filters, no page, no sort): it says
+// whether a run is a new result set or another page of the one on screen.
+let lastSearch = {
+  key: "", query: "", filters: {}, sort: "relevance", results: [],
+  page: 1, perPage: 20, pageCount: 1, total: 0, truncated: false,
+};
 let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
@@ -4813,13 +4818,35 @@ function updateSearchYearsLabel() {
   lab.textContent = `${a}–${b}`;
 }
 
-function searchHash(q, f) {
+/**
+ * The search URL. `page` and `sort` are optional and omitted at their defaults,
+ * so searchHash(q, f) is still the search's identity — what the answer rail and
+ * the "search without filters" links key on — while searchHash(q, f, 3, sort)
+ * is a shareable link to one page of it.
+ */
+function searchHash(q, f, page, sort) {
   const p = new URLSearchParams();
   if (q) p.set("q", q);
   for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
   if (f.kind && f.kind !== "speech") p.set("kind", f.kind);
   if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
+  if (sort && sort !== "relevance") p.set("sort", sort);
+  if (page > 1) p.set("page", String(page));
   return `/search?${p.toString()}`;
+}
+
+const SEARCH_PER_PAGE = 20;
+// One request can take the whole retrieved window, which is what Export needs.
+// Matches SEARCH_PER_MAX in the Worker.
+const SEARCH_EXPORT_MAX = 200;
+
+function searchQueryParams(q, f, page, sort) {
+  const p = new URLSearchParams({
+    q: q || f.speaker, kind: f.kind || "speech", mode: f.mode || "hybrid",
+    page: String(page || 1), per: String(SEARCH_PER_PAGE), sort: sort || "relevance",
+  });
+  for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
+  return p;
 }
 
 // Search filters popover: same behavior as the ask page's options button.
@@ -4846,6 +4873,103 @@ function searchHash(q, f) {
   });
   $("f-from")?.addEventListener("input", updateSearchYearsLabel);
   $("f-to")?.addEventListener("input", updateSearchYearsLabel);
+  // Chips and popover in step both ways: a control changing re-draws the chips
+  // and, once something has been searched, re-runs at page one. Range inputs
+  // fire `change` on release, so dragging a year is one search, not thirty.
+  for (const id of ["f-speaker", "f-party", "f-state", "f-topic", "f-from", "f-to",
+    "search-kind", "search-mode"]) {
+    $(id)?.addEventListener("change", searchFiltersChanged);
+  }
+}
+
+// --- active filters, shown outside the popover that set them ----------------
+
+const SEARCH_KIND_LABELS = {
+  speech: "Speeches", news: "News", division: "Divisions", all: "Everything",
+};
+const SEARCH_MODE_LABELS = { hybrid: "Hybrid", semantic: "Semantic", keyword: "Keyword" };
+
+/**
+ * One entry per genuinely non-default filter. Corpus and mode have defaults
+ * (speeches, hybrid) so they only earn a chip when changed; the year slider at
+ * full extent is not a filter at all, which currentFilters() already blanks.
+ */
+function filterChipSpecs(f) {
+  const out = [];
+  if (f.speaker) out.push({ id: "speaker", k: "Speaker", v: f.speaker });
+  if (f.party) out.push({ id: "party", k: "Party", v: f.party });
+  if (f.state) out.push({ id: "state", k: "Parliament", v: STATE_NAMES[f.state] || f.state });
+  if (f.topic) out.push({ id: "topic", k: "Topic", v: TOPICS[f.topic] || f.topic });
+  if (f.from || f.to) {
+    const a = f.from || "1993", b = f.to || "2026";
+    out.push({ id: "years", k: "Years", v: a === b ? a : `${a} to ${b}` });
+  }
+  if (f.kind && f.kind !== "speech") {
+    out.push({ id: "kind", k: "Corpus", v: SEARCH_KIND_LABELS[f.kind] || f.kind });
+  }
+  if (f.mode && f.mode !== "hybrid") {
+    out.push({ id: "mode", k: "Mode", v: SEARCH_MODE_LABELS[f.mode] || f.mode });
+  }
+  return out;
+}
+
+function renderFilterChips() {
+  const row = $("search-filter-chips");
+  if (!row) return;
+  const specs = filterChipSpecs(currentFilters());
+  row.replaceChildren();
+  if (!specs.length) { row.hidden = true; return; }
+  for (const s of specs) {
+    const chip = document.createElement("span");
+    chip.className = "fchip";
+    chip.innerHTML =
+      `<span class="fchip-k">${esc(s.k)}</span><span class="fchip-v">${esc(s.v)}</span>` +
+      `<button type="button" class="fchip-x" aria-label="Remove the ${esc(s.k.toLowerCase())} filter, ${esc(s.v)}">` +
+      `<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2.6 2.6l6.8 6.8M9.4 2.6l-6.8 6.8"/></svg></button>`;
+    chip.querySelector("button").addEventListener("click", () => clearSearchFilter(s.id));
+    row.appendChild(chip);
+  }
+  if (specs.length > 1) {
+    const all = document.createElement("button");
+    all.type = "button";
+    all.className = "fchip-clear";
+    all.textContent = "Clear all";
+    all.addEventListener("click", () => clearSearchFilter("all"));
+    row.appendChild(all);
+  }
+  row.hidden = false;
+}
+
+const SEARCH_FILTER_RESETS = {
+  speaker: () => { $("f-speaker").value = ""; },
+  party: () => { $("f-party").value = ""; },
+  state: () => { $("f-state").value = ""; },
+  topic: () => { $("f-topic").value = ""; },
+  years: () => { $("f-from").value = "1993"; $("f-to").value = "2026"; updateSearchYearsLabel(); },
+  kind: () => { $("search-kind").value = "speech"; },
+  mode: () => { $("search-mode").value = "hybrid"; },
+};
+
+function clearSearchFilter(id) {
+  if (id === "all") for (const reset of Object.values(SEARCH_FILTER_RESETS)) reset();
+  else SEARCH_FILTER_RESETS[id]?.();
+  searchFiltersChanged();
+}
+
+/** A filter moved, from a chip's cross or from the popover. */
+function searchFiltersChanged() {
+  renderFilterChips();
+  if (!lastSearch.key) return; // nothing searched yet: the chips are the whole feedback
+  const q = $("search-input").value.trim();
+  const f = currentFilters();
+  if (!q && !f.speaker) {
+    // Dropping the speaker chip on a speaker-only search leaves nothing to
+    // search for, so go back to a blank search page rather than stale results.
+    goRoute("/search");
+    return;
+  }
+  // A wider or narrower set: page one, never page seven of two.
+  goRoute(searchHash(q, f, 1, $("search-sort").value));
 }
 
 let searchApplied = null; // guards re-running the same URL state (null: nothing applied yet)
@@ -4867,7 +4991,11 @@ function applySearchParams(params) {
     updateSearchYearsLabel();
     $("search-kind").value = params.get("kind") || "speech";
     $("search-mode").value = params.get("mode") || "hybrid";
-    runSearch();
+    $("search-sort").value = params.get("sort") === "newest" ? "newest" : "relevance";
+    renderFilterChips();
+    // The page rides in the hash, so back, forward and a pasted &page=3 all
+    // land on the same twenty results.
+    runSearch(Number(params.get("page")) || 1);
   } else if (params.has("state")) {
     // A parliament alone (the home page's state map): preset the filter and
     // say so; there is no query to run until the reader types one.
@@ -4877,11 +5005,28 @@ function applySearchParams(params) {
     setStatus($("search-status"), name
       ? `Filtered to the ${name} parliament. Type a question or a phrase to search its record.`
       : "");
+    renderFilterChips();
     renderSearchChips();
   } else {
     // A bare search page: nothing asked yet, so offer somewhere to start.
+    clearSearchResults();
+    renderFilterChips();
     renderSearchChips();
   }
+}
+
+/** Back to a search page with nothing on it (a cleared filter can land here). */
+function clearSearchResults() {
+  lastSearch = {
+    key: "", query: "", filters: {}, sort: "relevance", results: [],
+    page: 1, perPage: SEARCH_PER_PAGE, pageCount: 1, total: 0, truncated: false,
+  };
+  $("search-results").replaceChildren();
+  $("results-bar").hidden = true;
+  $("search-pager").hidden = true;
+  $("search-empty").hidden = true;
+  $("search-answer").hidden = true;
+  setStatus($("search-status"), "");
 }
 
 // Example searches for an empty search page. Plain phrases a reader might
@@ -4930,12 +5075,12 @@ function activeFilterSummary(f) {
   return bits.join(", ");
 }
 
+// Sorting is the Worker's job now. It orders every retrieved match before it
+// slices the page, so "newest first" means newest of the whole result set and
+// not merely newest of the twenty in hand.
 function renderResults(results) {
-  const sort = $("search-sort").value;
-  const rows = [...results];
-  if (sort === "newest") rows.sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
   $("search-results").replaceChildren(
-    ...rows.map((r) => {
+    ...results.map((r) => {
       const li = document.createElement("li");
       const pct = Math.round((r.score || 0) * 100);
       li.innerHTML = `
@@ -4954,6 +5099,72 @@ function renderResults(results) {
   );
   decorateMetaPortraits($("search-results"));
 }
+
+/**
+ * The count line. It says how many are shown and how many were retrieved, and
+ * when retrieval hit its ceiling it says the record holds more rather than
+ * implying the ceiling is the answer. The filters are not repeated here: the
+ * chips under the search box carry them.
+ */
+function resultsCountLine(s) {
+  const n = s.total.toLocaleString();
+  if (s.pageCount <= 1) {
+    return s.truncated
+      ? `The ${n} strongest matches. The record holds more.`
+      : `All ${n} ${s.total === 1 ? "match" : "matches"} in the record.`;
+  }
+  const from = ((s.page - 1) * s.perPage + 1).toLocaleString();
+  const to = Math.min(s.page * s.perPage, s.total).toLocaleString();
+  return s.truncated
+    ? `Showing ${from} to ${to} of the ${n} strongest matches. The record holds more.`
+    : `Showing ${from} to ${to} of ${n} matches in the record.`;
+}
+
+function renderPager() {
+  const nav = $("search-pager");
+  const s = lastSearch;
+  if (!nav) return;
+  if (!s.results.length) { nav.hidden = true; return; }
+  nav.hidden = false;
+  // One page still keeps the band: the controls go invisible, not away, so
+  // arriving at a short last page never lifts everything below it.
+  nav.dataset.single = s.pageCount > 1 ? "0" : "1";
+  const prev = $("pager-prev"), next = $("pager-next");
+  prev.disabled = s.page <= 1;
+  next.disabled = s.page >= s.pageCount;
+  prev.setAttribute("aria-label",
+    prev.disabled ? "Previous page (you are on the first page)" : `Previous page, page ${s.page - 1} of ${s.pageCount}`);
+  next.setAttribute("aria-label",
+    next.disabled ? "Next page (you are on the last page)" : `Next page, page ${s.page + 1} of ${s.pageCount}`);
+  $("pager-where").textContent = s.pageCount > 1 ? `Page ${s.page} of ${s.pageCount}` : "";
+}
+
+let searchScrollPending = false;
+
+/** Put the reader at the top of the results, not the top of the document.
+ *  scrollIntoView honours html { scroll-padding-top }, so the sticky header
+ *  does not sit over the first result. */
+function scrollToResults() {
+  const anchor = $("results-bar");
+  if (!anchor || anchor.hidden) return;
+  anchor.scrollIntoView({
+    block: "start",
+    behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
+  });
+}
+
+function goToSearchPage(n) {
+  const s = lastSearch;
+  const target = Math.min(Math.max(1, n), s.pageCount);
+  if (target === s.page) return;
+  searchScrollPending = true;
+  // A real navigation, so back and forward walk the pages and a copied link
+  // opens the page the reader was on.
+  goRoute(searchHash(s.query, s.filters, target, s.sort));
+}
+
+$("pager-prev")?.addEventListener("click", () => goToSearchPage(lastSearch.page - 1));
+$("pager-next")?.addEventListener("click", () => goToSearchPage(lastSearch.page + 1));
 
 // --- empty record ------------------------------------------------------------
 // A blank record is a finding in itself, so it gets the page's own register
@@ -5081,7 +5292,7 @@ async function runSearchAnswer(q, f, mySeq) {
 
 let searchSeq = 0;
 
-async function runSearch() {
+async function runSearch(page = 1) {
   const q = $("search-input").value.trim();
   // Canonicalize the speaker box before currentFilters() reads it, writing the
   // resolved name back so the user sees what was actually filtered. Covers
@@ -5093,48 +5304,74 @@ async function runSearch() {
   }
   const f = currentFilters();
   if (!q && !f.speaker) return;
+  renderFilterChips(); // in place before the results land, so nothing shifts
+  const sort = $("search-sort").value;
+  const key = searchHash(q, f);
+  // A different result set, or another page of the one on screen? Only the
+  // first is worth a new answer: the rail asks once per search, not per page.
+  const fresh = key !== lastSearch.key;
   const mySeq = ++searchSeq;
-  searchAnswerWanted = !!q;
-  $("search-answer").hidden = true;
-  runSearchAnswer(q, f, mySeq);
+  if (fresh) {
+    searchAnswerWanted = !!q;
+    $("search-answer").hidden = true;
+    $("search-answer-empty").hidden = true;
+    runSearchAnswer(q, f, mySeq);
+  }
   const btn = $("search-form").querySelector('button[type="submit"]');
   btn.disabled = true;
   setStatus($("search-status"), "Searching the record…");
   $("search-status").classList.add("visually-hidden"); // announced; the loader shows it
-  showLoader("search-wombat", "Searching the record.");
-  $("results-bar").hidden = true;
+  showLoader("search-wombat", fresh ? "Searching the record." : "Turning the page.");
+  // Paging keeps the bar and the pager in place: only the list is swapped, so
+  // the page does not collapse and rebuild under the reader.
+  if (fresh) { $("results-bar").hidden = true; $("search-pager").hidden = true; }
   $("search-results").replaceChildren();
   $("search-chips").hidden = true; // the examples step aside once a search runs
   $("search-empty").hidden = true;
-  $("search-answer-empty").hidden = true;
   try {
-    const params = new URLSearchParams({ q: q || f.speaker, kind: f.kind, mode: f.mode });
-    for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) params.set(k, f[k]);
-    const data = await api(`/api/search?${params}`);
+    const data = await api(`/api/search?${searchQueryParams(q, f, page, sort)}`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
-    lastSearch = { query: q, filters: f, results: data.results || [] };
+    const results = data.results || [];
+    lastSearch = {
+      key, query: q, filters: f, sort, results,
+      page: data.page || 1,
+      perPage: data.per_page || SEARCH_PER_PAGE,
+      pageCount: data.page_count || 1,
+      total: data.total ?? results.length,
+      truncated: !!data.truncated,
+    };
     if (!data.count) {
       hideLoader("search-wombat");
       setStatus($("search-status"), "No results from the record.");
       $("search-status").classList.add("visually-hidden"); // announced; the empty state carries the words
+      $("results-bar").hidden = true;
+      $("search-pager").hidden = true;
       renderSearchEmpty(q, f);
       giveUpSearchAnswer();
     } else {
       hideLoader("search-wombat");
       $("search-status").classList.remove("visually-hidden");
       setStatus($("search-status"), "");
-      const active = activeFilterSummary(f);
-      $("results-count").textContent =
-        `${data.count} results from the record${active ? ` · ${active}` : ""} (top ${data.count} matches)`;
+      $("results-count").textContent = resultsCountLine(lastSearch);
       $("results-bar").hidden = false;
-      renderResults(lastSearch.results);
-      if (searchAnswerWanted) $("search-answer").hidden = false; // the rail joins the results
+      renderResults(results);
+      renderPager();
+      // A stale &page=9 past the end lands on the last real page; correct the
+      // URL in place so the link the reader copies is the page they can see.
+      if (lastSearch.page !== page) {
+        const fixed = searchHash(q, f, lastSearch.page, sort);
+        searchApplied = fixed.replace(/^#\/search\?/, "");
+        history.replaceState(null, "", fixed);
+      }
+      if (searchAnswerWanted && fresh) $("search-answer").hidden = false; // the rail joins the results
+      if (searchScrollPending) scrollToResults();
     }
   } catch (err) {
     if (mySeq !== searchSeq) return;
+    hideLoader("search-wombat");
     setStatus($("search-status"), String(err.message || err), true);
   } finally {
-    if (mySeq === searchSeq) btn.disabled = false;
+    if (mySeq === searchSeq) { btn.disabled = false; searchScrollPending = false; }
   }
 }
 
@@ -5143,25 +5380,60 @@ $("search-form").addEventListener("submit", (e) => {
   const q = $("search-input").value.trim();
   const f = currentFilters();
   if (!q && !f.speaker) return;
-  searchApplied = searchHash(q, f).split("?")[1] || "";
-  replaceRoute(searchHash(q, f));
-  runSearch();
+  // A new query always starts at page one.
+  const sort = $("search-sort").value;
+  searchApplied = searchHash(q, f, 1, sort).split("?")[1] || "";
+  replaceRoute(searchHash(q, f, 1, sort));
+  runSearch(1);
 });
 
-$("search-sort").addEventListener("change", () => renderResults(lastSearch.results));
+// The sort is applied by the Worker across every retrieved match, so changing
+// it is a new first page, not a reshuffle of the twenty on screen.
+$("search-sort").addEventListener("change", () => {
+  if (!lastSearch.key) return;
+  goRoute(searchHash(lastSearch.query, lastSearch.filters, 1, $("search-sort").value));
+});
 
 $("search-copylink").addEventListener("click", (e) => {
   // Swap only the label span so the "Copied" feedback keeps the icon.
-  copyText(siteUrl(searchHash(lastSearch.query, lastSearch.filters)),
+  // The page goes with the link: what you share is what you were reading.
+  copyText(siteUrl(searchHash(lastSearch.query, lastSearch.filters, lastSearch.page, lastSearch.sort)),
     e.currentTarget.querySelector("span"));
 });
 
-$("search-export").addEventListener("click", () => {
-  const f = lastSearch.filters;
-  offerExport(lastSearch.results, [
-    `# query: ${lastSearch.query}`,
-    `# filters: ${activeFilterSummary(f) || "none"} · corpus: ${f.kind || "speech"} · mode: ${f.mode || "hybrid"}`,
-    `# results are the top matches only (top_k cap)`,
+// Export means the whole result set, not the page in hand. The Worker keeps
+// the retrieved window assembled, so `per` takes all of it in one request.
+$("search-export").addEventListener("click", async (e) => {
+  const s = lastSearch;
+  if (!s.results.length) return;
+  const btn = e.currentTarget;
+  const label = btn.querySelector("span");
+  const wording = label.textContent;
+  let rows = s.results;
+  let scope = `all ${s.total} retrieved matches`;
+  if (s.pageCount > 1) {
+    btn.disabled = true;
+    label.textContent = "Collecting every page…";
+    try {
+      const params = searchQueryParams(s.query, s.filters, 1, s.sort);
+      params.set("per", String(SEARCH_EXPORT_MAX));
+      const data = await api(`/api/search?${params}`);
+      rows = data.results?.length ? data.results : rows;
+    } catch {
+      scope = `page ${s.page} of ${s.pageCount} only (collecting the rest failed)`;
+    } finally {
+      btn.disabled = false;
+      label.textContent = wording;
+    }
+  }
+  const f = s.filters;
+  offerExport(rows, [
+    `# query: ${s.query}`,
+    `# filters: ${activeFilterSummary(f) || "none"} · corpus: ${f.kind || "speech"} · mode: ${f.mode || "hybrid"} · sort: ${s.sort}`,
+    `# scope: ${scope}`,
+    s.truncated
+      ? `# retrieval reaches the ${s.total} strongest matches; the record holds more`
+      : `# retrieval reached every match in the record for this query`,
   ], "opax-search");
 });
 
