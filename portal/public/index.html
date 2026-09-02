@@ -56,7 +56,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=896e8ca0c9">
+<link rel="stylesheet" href="/style.css?v=0d01fab8fa">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -73,6 +73,7 @@
     </div>
 
     <nav class="masthead-nav" id="primary-nav" aria-label="Primary">
+      <p class="masthead-name">Open Parliamentary Accountability eXchange</p>
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-link" data-panel="ask" href="/">Ask</a></li>
         <li class="nav-item"><a class="nav-link" data-panel="search" href="/search">Search</a></li>
@@ -308,10 +309,12 @@
             <h2 class="kicker" id="h-map-money">Where the money goes</h2>
             <div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div>
             <nav class="map-chips" id="front-map-chips" aria-label="Industries on the money map"></nav>
-            <p class="fineprint">The 250 largest donors in 28 years of AEC returns, ringed by industry
-            around the parties they gave to. Drag to orbit; click a donor or party to open its entry;
-            pick an industry to see that cluster alone on the full map.
-            <a href="/money">Open the money map</a></p>
+            <div class="front-map-foot">
+              <p class="fineprint">The 250 largest donors in 28 years of AEC returns, ringed by industry
+              around the parties they gave to. Drag to orbit; click a donor or party to open its entry;
+              pick an industry to see that cluster alone on the full map.</p>
+              <a class="action-btn action-gold" href="/money"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 5.5l5-2 5 2 5-2v11l-5 2-5-2-5 2z"/><path d="M7.5 3.5v11M12.5 5.5v11"/></svg><span>Open the money map</span></a>
+            </div>
           </section>
         </div>
       </section>

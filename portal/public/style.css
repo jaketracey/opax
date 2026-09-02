@@ -181,7 +181,7 @@ header {
   position: sticky; top: 0; z-index: 50;
   background: var(--navy);
   border-bottom: 3px solid var(--bronze);
-  padding: 0.9rem 0 0.7rem;
+  padding: 0.9rem 0 0;
 }
 /* Focus rings sit on navy here; ledger bronze vanishes against it.
    (The drawer is paper, so it keeps the default bronze-ink ring.) */
@@ -234,7 +234,23 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 
 /* ---- primary nav (in the band) ------------------------------------------ */
 
-.masthead-nav { flex: 1 1 auto; min-width: 0; }
+.masthead { display: flex; align-items: stretch; gap: clamp(1rem, 2.5vw, 2.75rem); }
+.masthead-id { display: flex; align-items: center; }
+/* The nav column is two rows: the site's full name over the links, with the
+   links sitting on the header's bottom edge. */
+.masthead-nav {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 0.55rem;
+}
+.masthead-name {
+  margin: 0; padding-left: 0.15rem; white-space: nowrap;
+  font: 600 0.9375rem/1.2 var(--sans); letter-spacing: 0.02em;
+  color: var(--on-navy-soft);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .masthead-name { animation: nameRise 620ms cubic-bezier(0.22, 0.7, 0.3, 1) both; }
+  @keyframes nameRise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+}
 /* The full name sits over the nav like a nameplate over a section bar;
    the acronym's four letters take the bronze. It lives in the nav column,
    so it compacts away with the nav (the drawer carries the name instead). */
@@ -243,6 +259,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
   list-style: none; margin: 0; padding: 0;
 }
 .nav-item { display: flex; }
+.nav-link { padding-bottom: 0.55rem; }
 .nav-link {
   display: inline-flex; align-items: center; gap: 0.4rem;
   background: none; border: none; cursor: pointer; white-space: nowrap;
@@ -1167,6 +1184,22 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 }
 .action-btn.action-primary:hover { background: var(--navy-raised); }
 .action-btn.action-primary .btn-icon { color: var(--bronze-bright); }
+/* The gold call to action: reserved for the one thing on a page worth
+   opening next. Bronze fill, ink on top so it stays legible. */
+.action-btn.action-gold {
+  background: var(--bronze); border-color: var(--bronze); color: #23271F;
+  font-weight: 700;
+}
+.action-btn.action-gold:hover { background: var(--bronze-ink); border-color: var(--bronze-ink); color: #FFF; }
+.action-btn.action-gold .btn-icon { color: currentColor; }
+/* The map's caption and its way in sit on one line, the button to the right. */
+.front-map-foot { display: flex; align-items: flex-end; gap: 1.4rem; margin-top: var(--space-3); }
+.front-map-foot .fineprint { margin: 0; flex: 1 1 auto; }
+.front-map-foot .action-btn { flex: 0 0 auto; }
+@media (max-width: 700px) {
+  .front-map-foot { flex-direction: column; align-items: stretch; gap: 0.9rem; }
+  .front-map-foot .action-btn { justify-content: center; }
+}
 .party-dot-only { margin-right: 0.45rem; }
 .subject-active {
   display: inline-flex; align-items: center; gap: 5px;
