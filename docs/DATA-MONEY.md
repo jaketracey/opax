@@ -16,9 +16,12 @@ knowledge base; every KB idea below is marked as the user's cost decision.
 | `ext_lobbyist_clients` | 14,922 | same six | |
 | `ext_lobbyist_people` | 5,943 | same six | |
 | `ext_lobbyist_contacts` | 8,235 | QLD Integrity contact log | Sep 2016 to Sep 2026 |
+| `ext_aec_debts` | 14,680 | AEC Transparency Register (annual returns bundle) | 2000-01 to 2024-25 |
+| `ext_aec_benefits` | 1,102 | AEC Transparency Register | discretionary benefits 2018-19 to 2024-25; capital contributions 2000-01 to 2024-25 |
+| `ext_aec_returns` | 20,983 | AEC Transparency Register | 1998-99 to 2024-25 (see §1.5) |
 
 Fetchers (all `parli/ingest/`): `money_state_donations.py`, `money_ipea.py`,
-`money_diaries.py`, `money_lobbyists.py`, `money_classify.py`; shared plumbing in
+`money_diaries.py`, `money_lobbyists.py`, `money_classify.py`, `money_aec_extras.py`; shared plumbing in
 `ext_common.py` (session/UA, date+money parsing, Power Pages grid client, `ExtWriter`
 that ships gzip JSONL over ssh and loads inside one transaction). Everything identifies
 as `OPAX research (opax.com.au; contact jake.tracey@noice.work)` and rate-limits.
@@ -34,7 +37,7 @@ as `OPAX research (opax.com.au; contact jake.tracey@noice.work)` and rate-limits
 | **WA** WAEC Online Disclosure System | Power Pages entity list `waec_disclosure` on `https://disclosures.elections.wa.gov.au/public-dashboard/` | JSON grid; dates render m/d/yyyy | **Full Crown copyright, no open licence** (WAEC copyright notice) | real-time gifts since 1 Jul 2024; earlier years are PDF annual returns | continuous (7-day disclosure) | **pulled in full: 7,875 disclosures, $16.2m** (public exposure is a licence gate) |
 | **NSW** Electoral Commission "Funding and disclosure online" | `https://efadisclosures.elections.nsw.gov.au/` (Salesforce Visualforce app `FDCLiteDisclosures`; has a `getDownloadURL` remoting action) | interactive search only; no published bulk file (the "downloadable resources" anchor on the disclosures page is empty; data.nsw.gov.au has only annual-report PDFs) | site terms: **"You are not allowed to use any software (like bots, scraper tools etc.) to access, monitor or copy the portal or its contents"**; robots.txt Content-Signal `ai-train=no` | 2018-19 onwards online | half-yearly + pre-election real time | **not pulled (terms).** Path: the Commission emails copies on request (`fdc@elections.nsw.gov.au`, stated on the View Disclosures page) -- ask for a CSV extract |
 | **SA** ECSA | `https://www.ecsa.sa.gov.au/parties-and-candidates/disclosure-returns-%E2%80%93-state-elections` | ~18 PDF returns per election (party + associated-entity returns, edocman downloads); `disclosures.ecsa.sa.gov.au` no longer resolves | not stated (SA Government default CC BY) | 2022 state election returns; **SA banned political donations from 1 Jul 2025** | per election | **not pulled (PDF only, scheme ended).** Low value; skip |
-| Federal AEC | already in `donations` (199,233 rows, 1998-99 to 2025-26) | | | | | out of scope here |
+| Federal AEC | already in `donations` (199,233 rows, 1998-99 to 2025-26) | | | | | receipts out of scope here; debts, benefits and return totals are §1.5 |
 
 Unified schema (`ext_donations`): `jurisdiction, source, source_record_id, donor_name,
 donor_type (individual|organisation|other), donor_suburb/state/postcode, recipient,
@@ -89,6 +92,65 @@ so re-parses are offline.
 
 342 ABNs appear in more than one register; the most widely represented clients
 (DoorDash, Bunnings, Mars, Optus, Rio Tinto, IFM Investors, Eli Lilly ...) are on all six.
+
+### 1.5 AEC Transparency Register: debts, benefits, return totals -> `ext_aec_debts` / `ext_aec_benefits` / `ext_aec_returns`
+
+`parli.ingest.donations` loads the register's receipts and donations into `donations`
+and stops there. Three more things the same bundle carries, loaded 2026-09-02 by
+`parli/ingest/money_aec_extras.py` (run on `desktop`, `--db` local mode, one transaction
+per table):
+
+| Item | Detail |
+|---|---|
+| Endpoint | `https://transparency.aec.gov.au/Download/AllAnnualData` -- one ZIP (~2.5 MB) of the annual-return CSVs. Fetched **once** and cached at `~/.cache/autoresearch/aec/AllAnnualData.zip` (2026-09-02); `--refresh` re-downloads. `AllElectionsData` / `AllReferendumData` sit beside it but are not used here |
+| Licence | **CC BY 4.0.** "Unless otherwise noted, the AEC has applied the Creative Commons Attribution 4.0 International Licence to all material on this website with the exception of the Commonwealth Coat of Arms, AEC's logos, AEC's maps and content supplied by third parties" -- https://www.aec.gov.au/footer/Copyright.htm (confirmed 2026-09-02). The register is an AEC site; attribution: *Australian Electoral Commission, Transparency Register* |
+| Files used | `Detailed Debts.csv` (14,680 rows), `Detailed Discretionary Benefits.csv` (857), `Capital Contributions.csv` (245), `Party Returns.csv` (2,229), `Associated Entity Returns.csv` (4,363), `Significant Third Party Returns.csv` (277, incl. the pre-2022 *Political Campaigner Return* rows), `Third Party Returns.csv` (747), `Donor Returns.csv` (13,315), `MemberOfParliamentReturns.csv` (52); `Detailed Receipts.csv` is read only to sum its *Receipt Type* per return |
+| Not loaded | receipts themselves (already `donations`); election / referendum bundles; `Media Returns` |
+
+Tables (all carry `source='aec_annual'`, `source_file`, `source_url`, `ingested_at`; loads
+replace per source):
+
+- **`ext_aec_debts`** -- one row per creditor a lodger itemised: `financial_year, return_type`
+  (the register's own name: *Political Party Return* 4,587 / *Associated Entity Return* 8,172 /
+  *Significant Third Party Return* 1,251 / *Political Campaigner Return* 670), `kind` (OPAX
+  bucket), `recipient` (the debtor), `recipient_canonical` (party bucket, **party returns
+  only**), `associated_party` + `associated_party_canonical` (for associated entities, from
+  the AssociatedParties field of the entity's own return; 7,283 of 8,172 resolve),
+  `lender_name`, `amount` (balance owed at 30 June), `lender_type` (*Financial* 721 /
+  *Non-financial* 13,959 -- the register's flag).
+- **`ext_aec_benefits`** -- `benefit_type` = `discretionary_benefit` (857; government payments
+  other than public election funding, itemised from 2018-19; `date` where given, 125 blank)
+  or `capital_contribution` (245; capital put into associated entities, 2000-01 on). Same
+  recipient / party columns as debts plus `provider_name`. Both categories are *also* in
+  `donations` as undifferentiated `aec_annual` rows (that loader treats every annual CSV as a
+  donation); here they keep their category. Do not add the two tables.
+- **`ext_aec_returns`** -- one row per lodged return with the lodger's own headline totals:
+  `kind` party 2,229 (274 distinct names) / associated_entity 4,363 (488) /
+  significant_third_party 213 (65) / political_campaigner 64 (24) / third_party 747 (240) /
+  donor 13,315 (7,151) / member_of_parliament 52 (30); `total_receipts, total_payments,
+  total_debts, total_benefits, total_capital_contributions, electoral_expenditure,
+  total_donations_made, total_donations_received, donor_count`, plus `party_group`,
+  `associated_parties`, `lodged_on_behalf_of`, `abn`, `client_file_id`, `client_type`. The
+  `itemised_donations / _other_receipts / _subscriptions / _public_funding / _unspecified`
+  columns sum `Detailed Receipts` by its *Receipt Type* for the same return (1,265 of 2,229
+  party returns have itemised lines), so a party's income splits without re-loading
+  receipts; they cover only lines above the threshold and sum to less than `total_receipts`.
+
+Party canonicalisation reuses `ext_common.canonical_party` (the money map's grammar) with
+three guards decided first: *Democratic Labor*, *Liberal Democrat* and *Libertarian* stay
+unbucketed (the shared grammar would file them under Labor / Liberal; `donations` leaves them
+NULL too), and *Country Liberal* / *Centre Alliance* map to their money-map node names (the
+shared list tests `liberal` before `country liberal` and has no Centre Alliance rule). Every
+party node in `graph/money.json` now has a matching key in the export.
+
+Headline figures 2024-25 (party returns, all branches summed; balances at 30 June 2025):
+Liberal $8.10m owed to 30 creditors (Atomic 212 $2.99m, Bunori $1.42m, Vapold $1.0m,
+Liberal Properties $0.90m, Google $0.36m); Nationals $2.43m (Westpac $1.5m and NAB $0.18m are
+the only bank loans of size among the majors; National Building Foundation $0.36m); Greens
+$1.19m (Google $0.27m, Dept of Finance $0.20m, ATO $0.15m); LNP $0.92m (Atomic 212 $0.44m);
+Labor $0.83m across 21 creditors (Message4U $0.13m, ATO $0.10m); One Nation $0.63m
+(Stepmates Studios $0.16m, Westpac $0.10m). Lifetime (2000-01 to 2024-25) party-return debt
+balances: Liberal $299.5m, Labor $190.3m, Nationals $46.9m, Greens $20.4m, UAP $20.3m.
 
 ## 2. Industry classification of state donors (`money_classify.py`)
 
@@ -186,6 +248,25 @@ Lobbyists
 - SA `client.active` is derived from a missing end date; WA has no status/dates beyond
   `lastUpdated`.
 
+AEC extras (§1.5)
+- A "debt" is whatever the lodger listed as owed at 30 June to one creditor above the
+  threshold: bank loans, trade creditors (ad agencies, SMS vendors, venues), the ATO and
+  Department of Finance advances all appear. `lender_type='Financial'` is the register's own
+  flag and is the only way to isolate loans; a balance is not new borrowing, and a year with
+  nothing itemised is not a year with no debt.
+- Names are as disclosed and HTML-escaped in the CSV (`&amp;`); the loader unescapes. The
+  same creditor recurs under spellings ("Dept Finance", "Department of Finance", "ATO",
+  "Australian Taxation Office (ATO)"); the export aggregates with `norm_key` only.
+- Financial years arrive as `2000-2001` in older files and `2024-25` in newer ones; the loader
+  normalises to `2000-01`. `Political Campaigner Return` is the 2018-19 to 2021-22 name of
+  what is now a `Significant Third Party Return`; `kind` keeps them apart, `return_type`
+  keeps the register's word. `Third Party Returns.csv` carries a `ClientType` that is the
+  lodger's *current* class (258 of 747 rows are entities now registered as associated
+  entities), stored as `client_type`.
+- Party totals sum every branch lodging under the party's name; the federal secretariat and
+  each state branch are separate returns, and the money map's rule against adding state and
+  federal *donation* totals does not apply to these branch sums (they are one register).
+
 ## 4. Exposure design (money stays relational / static JSON)
 
 Per MIGRATION-ARAG.md, structured money stays out of the KB; the portal reads static JSON
@@ -267,6 +348,39 @@ as source, states the disclosure-threshold floor ("totals are a floor, not a cei
 carries: *State and federal returns are not summed: AEC returns already include state
 branch receipts.*
 
+### 4.2 AEC debts, benefits and the third-party roster (built 2026-09-02)
+
+`scripts/export_aec_extras.py` (run `ssh desktop python3 - < scripts/export_aec_extras.py >
+portal/public/graph/aec-extras.json`) writes one static file, **~235 KB raw / ~61 KB gzipped**:
+
+- `meta` -- source, licence (CC BY 4.0 + URL), coverage per table, `latest_year`, the
+  column names of every compact year array, caps, counts, and the caveats above as
+  sentences.
+- `parties["<money-map label>"]` (16 keys, every `money.json` party among them) --
+  `returns` (per year: receipts, payments, debts, branches, itemised donations / other
+  receipts / public funding), `debts` (latest year with itemised debts: total, financial-
+  institution total, creditor count, top 12 creditors aggregated across branches with the
+  branches named, and a per-year series), `benefits` (latest year's discretionary benefits,
+  top 8 providers, per-year series), `associated_entities` (top 12 by receipts on their
+  latest return, out of `associated_entities_total`).
+- `entities` -- the roster: 290 of 701 distinct associated entities, significant third
+  parties, political campaigners and third parties (caps 150 / 150 / 150 / 80 per kind,
+  $100k floor on peak annual receipts or expenditure), each with the register's return
+  types, ABN, canonical associated parties and a per-year series of its own headline totals
+  (receipts, payments, debts, electoral expenditure, gifts received). Donor and MP returns
+  are not exported (donors have the money map).
+
+Where it appears: the party entry page (`openSubject`, party branch) gains **"Debts and
+other funding"** after "Where it came from": three tiles (owed at 30 June, of it to financial
+institutions, creditors listed), a bar list of the largest creditors in the latest year with
+"(financial institution)" on the register's flagged ones, a column chart of the year-end
+balance series, one sentence on discretionary benefits, and the six largest associated
+entities linking to a record search (not to donor pages: entity resolution there is another
+agent's). The infobox gains "Debts at 30 June YYYY". The fineprint says balances, not
+borrowing; trade creditors and tax beside loans; threshold; source and licence, with a link
+to the register. Donor index and donor pages: nothing yet (the roster is in the JSON for
+whoever builds it). Third-party / associated-entity pages: not built; the data is there.
+
 ## 5. Runbook
 
 `uv run` fails on this Mac (the lock pins a CUDA torch wheel), so use the worktree venv
@@ -283,6 +397,7 @@ once, then `PYTHONPATH=. .venv/bin/python -m parli.ingest.<module>`. Writers def
 | Lobbyists | `money_lobbyists` (all six, ~25 min; `--jurisdiction qld` alone for the contact log) | monthly |
 | Classification | `money_classify --report` after any donation load | with donations |
 | State money maps | `ssh desktop python3 - qld < scripts/export_state_money.py > portal/public/graph/money.qld.json` (and `vic`); then from `portal/`: `node graph/smoke-test.mjs` | after a state donation load |
+| AEC extras | on desktop: `PYTHONPATH=. .venv/bin/python -m parli.ingest.money_aec_extras --refresh --db ~/.cache/autoresearch/parli.db` (~10 s; `--table debts` etc. for one), then `ssh desktop python3 - < scripts/export_aec_extras.py > portal/public/graph/aec-extras.json` | yearly, after the AEC's early-February release of annual returns; the bundle is one fetch |
 
 Run-time 2026-09-02 (laptop, polite delays): donations ~5 min, IPEA ~35 min (37 CSV
 downloads), NSW diaries ~40 min (633 PDFs), QLD diaries ~25 min (611 PDFs), lobbyists
