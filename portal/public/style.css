@@ -824,6 +824,11 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .chart-axis { stroke: var(--line); stroke-width: 1; }
 .chart-bar { fill: var(--chart-mark); }
 .chart-bar:hover { opacity: 0.8; }
+/* Linked columns: the full column height is the target; the bar darkens on hover. */
+.chart-bar-link { cursor: pointer; outline: none; }
+.chart-hit { fill: transparent; }
+.chart-bar-link:hover .chart-bar, .chart-bar-link:focus-visible .chart-bar { fill: var(--bronze-ink); opacity: 1; }
+.chart-bar-link:hover .chart-hit { fill: var(--bronze-wash); }
 .chart-tick { fill: var(--ink-faint); font-size: 11px; }
 .chart-peak { fill: var(--ink); font-size: 11px; }
 .chart-note { color: var(--ink-faint); font-size: 0.8125rem; margin: 0.6rem 0 0; }

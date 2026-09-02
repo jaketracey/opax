@@ -4221,7 +4221,10 @@ async function loadReportsList(manageFocus) {
 // Charts: single-hue bronze marks (CSS-owned); sr-only data table carries the values.
 // `note` is escaped here; `noteHTML` is trusted markup the caller has already
 // escaped piece by piece (it exists so a note can carry a link).
-function columnChart(pairs, { fmt = String, heading, note, noteHTML }) {
+// `linkTo(key)` makes each column a link (the whole column height is the hit
+// area, so a thin bar is as easy to reach as a tall one); the hidden table
+// carries the same links for screen readers.
+function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {
   const W = 640, H = 150, pad = 4, base = H - 18;
   const max = Math.max(...pairs.map(([, v]) => v), 1);
   const bw = Math.max((W - pad * 2) / pairs.length - 2, 2);
@@ -4233,7 +4236,11 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML }) {
     const y = base - h;
     const r = Math.min(2, bw / 2, h);
     if (h > 0) {
-      bars += `<path class="chart-bar" d="M${x},${base} V${y + r} Q${x},${y} ${x + r},${y} H${x + bw - r} Q${x + bw},${y} ${x + bw},${y + r} V${base} Z"><title>${esc(String(k))}: ${esc(fmt(v))}</title></path>`;
+      const bar = `<path class="chart-bar" d="M${x},${base} V${y + r} Q${x},${y} ${x + r},${y} H${x + bw - r} Q${x + bw},${y} ${x + bw},${y + r} V${base} Z"/>`;
+      const tip = `<title>${esc(String(k))}: ${esc(fmt(v))}${linkTo ? ". Open these speeches" : ""}</title>`;
+      bars += linkTo
+        ? `<a class="chart-bar-link" href="${esc(linkTo(k))}" tabindex="-1">${tip}<rect class="chart-hit" x="${x}" y="0" width="${bw}" height="${base}"/>${bar}</a>`
+        : bar.replace("/>", `>${tip}</path>`);
     }
     if (i === peakIdx) {
       bars += `<text x="${Math.min(Math.max(x + bw / 2, 24), W - 24)}" y="${y - 5}" class="chart-peak" text-anchor="middle">${esc(fmt(v))}</text>`;
@@ -4242,7 +4249,7 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML }) {
   const first = pairs[0]?.[0] ?? "", last = pairs[pairs.length - 1]?.[0] ?? "";
   const srTable = `<table class="visually-hidden"><caption>${esc(heading)}</caption>
     <thead><tr><th scope="col">Year</th><th scope="col">Value</th></tr></thead>
-    <tbody>${pairs.map(([k, v]) => `<tr><td>${esc(String(k))}</td><td>${esc(fmt(v))}</td></tr>`).join("")}</tbody></table>`;
+    <tbody>${pairs.map(([k, v]) => `<tr><td>${linkTo ? `<a href="${esc(linkTo(k))}">${esc(String(k))}</a>` : esc(String(k))}</td><td>${esc(fmt(v))}</td></tr>`).join("")}</tbody></table>`;
   return `<figure class="chart">
     <figcaption>${esc(heading)}</figcaption>
     <svg viewBox="0 0 ${W} ${H}" aria-hidden="true">
@@ -4361,6 +4368,7 @@ function moneyWordsCharts(stats, { topic } = {}) {
     out += columnChart(seriesFor(speechYears), {
       heading: "Speeches per year", fmt: (v) => v.toLocaleString(),
       noteHTML: speechTrendNote(speechYears, topic),
+      linkTo: (y) => searchHash(topic, { from: String(y), to: String(y) }), // a bar opens that year's speeches
     });
   }
   if (donYears.size > 1) {
