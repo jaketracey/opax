@@ -2384,7 +2384,7 @@ async function openSubject(kind, name, manageFocus) {
   if (manageFocus) $("subject-title")?.focus();
 
   if (kind === "donor" || kind === "party") {
-    await loadMoneyData();
+    const [, fits] = await Promise.all([loadMoneyData(), loadFits()]);
     if (currentSubjectKey !== key) return;
     const node = findMoneyNode(kind, name);
     const sections = $("subject-sections");
@@ -2393,7 +2393,8 @@ async function openSubject(kind, name, manageFocus) {
       body.querySelector(".subject-tag").innerHTML =
         `<span>Not among the top 250 disclosed donors in the money data. The record may still mention them.</span>`;
       box.innerHTML = infoboxHTML(
-        [["Type", kind === "party" ? "Political party" : "Organisation"]], "",
+        [["Type", kind === "party" ? "Political party" : "Organisation"],
+         kind === "donor" && fitsInfoRow(fits, "by_entity", name)], "",
         [actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for them", { primary: true }),
          actionBtn("map", "#/money", "Open the money map"),
          actionBtn("external", webSearchUrl(name), "Search the web", { external: true })]);
@@ -2427,6 +2428,7 @@ async function openSubject(kind, name, manageFocus) {
       ["Donations counted", (node.count || 0).toLocaleString()],
       ["Active years", `${node.firstYear}–${node.lastYear}`],
       ["Rank", `#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed donors"}`],
+      !isParty && fitsInfoRow(fits, "by_entity", node.label),
     ], weeklyFunFact(node), [
       actionBtn("ask",
         askHash(isParty
@@ -2481,11 +2483,14 @@ async function openSubject(kind, name, manageFocus) {
     chambers.length ? `<span>${esc(chambers.join(" · "))} parliament</span>` : "",
   ].filter(Boolean).join(" · ") || "<span>From the parliamentary record</span>";
   const q = encodeURIComponent(name);
+  const fits = await loadFits();
+  if (currentSubjectKey !== key) return;
   box.innerHTML = infoboxHTML([
     ["Type", "Parliamentarian"],
     party && ["Party", partyChipHTML(party)],
     chambers.length && ["Parliament", esc(chambers.join(", "))],
     dates.length && ["Indexed speeches span", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
+    fitsInfoRow(fits, "people", name),
   ], "", [
     actionBtn("speeches", searchHash("", { speaker: name }), "View all their speeches", { primary: true }),
     actionBtn("external", `https://theyvoteforyou.org.au/search?query=${q}`, "Voting record", { external: true }),
@@ -2807,6 +2812,54 @@ function loadParliamentarians() {
 function loadAccess() {
   accessPromise ??= fetch("/access.json").then((r) => (r.ok ? r.json() : null)).then((d) => (accessData = d)).catch(() => null);
   return accessPromise;
+}
+
+/** fits.json: Foreign Influence Transparency Scheme registrations, keyed by normName()
+ *  of the donor label (`by_entity`) or the person page name (`people`). */
+let fitsPromise = null;
+function loadFits() {
+  fitsPromise ??= fetch("/fits.json").then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return fitsPromise;
+}
+
+/** Quick-facts row for an entry on the FITS register; null when nothing matches.
+ *  Registration is a disclosure the scheme requires, so the row states the fact,
+ *  names the principals and leaves it there. Current relationships are shown
+ *  first (up to three) and ceased ones are only counted, so the tense is never
+ *  wrong: a registrant with nothing current reads "was registered". */
+function fitsInfoRow(fits, bucket, name) {
+  const list = fits?.[bucket]?.[normName(name)];
+  if (!list?.length) return null;
+  const current = list.filter((r) => r.status === "current");
+  // One line per principal, newest relationship first: a registrant that renews for the same
+  // principal has one row per term ("Home Office UK" twice for Alexander Downer), and naming
+  // it twice reads as two principals. Two at most — the register link carries the rest.
+  const pool = current.length ? current : list;
+  const seenPrincipal = new Set();
+  const byPrincipal = pool.filter((r) => {
+    const p = r.principal || r.url;
+    return seenPrincipal.has(p) ? false : (seenPrincipal.add(p), true); // keep the newest term
+  });
+  const shown = byPrincipal.slice(0, 2);
+  const more = byPrincipal.length - shown.length;
+  const ceased = current.length ? list.length - current.length : 0;
+  const url = safeUrl(shown[0].url);
+  const year = (d) => String(d || "").slice(0, 4);
+  const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  const who = shown.map((r) => `<b>${esc(r.principal || "an unnamed principal")}</b>${r.country ? ` (${esc(r.country)})` : ""}${
+    r.from ? (r.status === "current" ? `, since ${esc(year(r.from))}` : `, ${esc(year(r.from))}–${esc(year(r.to) || "ceased")}`) : ""}`);
+  const sentence = current.length
+    ? `Registered under the Foreign Influence Transparency Scheme for ${who.join("; ")}${
+        more > 0 ? ` and ${plural(more, "other current principal", "other current principals")}` : ""}.${
+        ceased > 0 ? ` ${plural(ceased, "earlier relationship has", "earlier relationships have")} ceased.` : ""}`
+    : `Was registered under the Foreign Influence Transparency Scheme for ${who.join("; ")}${
+        more > 0 ? ` and ${plural(more, "other principal", "other principals")}` : ""}; every relationship has ceased.`;
+  // The label stays as short as the longest existing one ("Donations counted"):
+  // the infobox's label column is `auto`, so a longer term squeezes every value.
+  return ["Foreign influence",
+    `${sentence}
+     ${url ? `<a href="${esc(url)}" rel="noopener" target="_blank" style="display:inline-block;margin-top:0.15rem">Register entry&nbsp;↗</a>` : ""}
+     <span style="display:block;color:var(--ink-faint);font-size:0.75rem;line-height:1.4;margin-top:0.2rem">Registration is a disclosure the scheme requires by law, not a finding of wrongdoing.</span>`];
 }
 
 // The live directory, so a second visit to the same index with other hash
@@ -3167,8 +3220,8 @@ async function buildPartiesDirectory() {
 
 /** Donors: donor nodes across the three money files, merged by normalised name, with access.json markers. */
 async function buildDonorsDirectory() {
-  const [fed, qld, vic, acc] = await Promise.all([
-    loadMoneyFile("federal"), loadMoneyFile("qld"), loadMoneyFile("vic"), loadAccess(),
+  const [fed, qld, vic, acc, fits] = await Promise.all([
+    loadMoneyFile("federal"), loadMoneyFile("qld"), loadMoneyFile("vic"), loadAccess(), loadFits(),
   ]);
   const files = [["federal", fed], ["qld", qld], ["vic", vic]].filter(([, d]) => d?.nodes);
   if (!files.length) return null;
@@ -3211,6 +3264,7 @@ async function buildDonorsDirectory() {
     const access = [...d.labels].map((l) => acc?.donors?.[l]).find(Boolean) || null;
     d._lobbyists = Number(access?.lobbyists_total) || (access?.lobbyists?.length || 0);
     d._meetings = Number(access?.meetings_total) || (access?.meetings?.length || 0);
+    d._fits = [...d.labels].map((l) => fits?.by_entity?.[normName(l)]).find((x) => x?.length) || null;
   }
   const groupCounts = new Map();
   const partyCounts = new Map();
@@ -3233,6 +3287,7 @@ async function buildDonorsDirectory() {
     const marks = [
       d._lobbyists ? `<span class="dir-mark" title="${esc(`${d._lobbyists} registered lobbying firm${d._lobbyists === 1 ? "" : "s"}`)}">lobbyists</span>` : "",
       d._meetings ? `<span class="dir-mark" title="${esc(`${d._meetings} disclosed ministerial meeting${d._meetings === 1 ? "" : "s"}`)}">meetings</span>` : "",
+      d._fits ? `<span class="dir-mark" title="${esc(`On the Foreign Influence Transparency Scheme register for ${[...new Set(d._fits.map((r) => r.principal).filter(Boolean))].slice(0, 3).join(", ") || "a foreign principal"}`)}">FITS</span>` : "",
     ].filter(Boolean).join(" ");
     const meta = [
       `<span class="party party-oth" style="--pc:${esc(colour)}"><i aria-hidden="true"></i>${esc(industryLabel(d.industry || d.group || "other"))}</span>`,
@@ -3275,6 +3330,7 @@ async function buildDonorsDirectory() {
         options: [...partyCounts.entries()].sort((a, b) => b[1] - a[1]).map(([p, n]) => [p, `${p} (${n.toLocaleString()})`]),
         test: (d, v) => d._partyList.includes(v) },
       { key: "access", label: "Lobbyists or meetings", check: true, test: (d) => d._lobbyists > 0 || d._meetings > 0 },
+      { key: "fits", label: "Foreign influence register", check: true, test: (d) => Boolean(d._fits) },
     ],
     sorts: [
       ["total", "Largest disclosed total", byNumDesc(moneyFor)],
@@ -3287,7 +3343,9 @@ async function buildDonorsDirectory() {
       ${esc(AEC_NOTE)} The same goes for gifts under each state's disclosure threshold.
       ${esc(STATE_NOT_SUMMED)} Source: ${esc(commissions.join("; "))}. Lobbyist and meeting markers
       come from the six lobbyist registers and the NSW and QLD ministerial diaries; name matching is exact after
-      normalisation, so a company using several trading names may be under-counted.`,
+      normalisation, so a company using several trading names may be under-counted. The FITS marker means the
+      donor is on the Attorney-General's Foreign Influence Transparency Scheme register; registration is a
+      disclosure the scheme requires by law, not a finding of wrongdoing.`,
   };
 }
 
