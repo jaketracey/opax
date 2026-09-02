@@ -480,6 +480,8 @@ export async function mountMoneyMap(
     if (sig !== fitSig) {
       const firstFit = fitSig === ''
       fitSig = sig
+      // The fit lands in the space the chrome (and an open card) leaves free.
+      engine.setInsets(measureInsets())
       engine.fit(!firstFit)
     }
     if (selectedId && !visibleIds.has(selectedId)) setSelection(null)
@@ -493,10 +495,16 @@ export async function mountMoneyMap(
     // scatter the graph twice per round trip. Keep the layout for its return.
     const rect = container.getBoundingClientRect()
     if (rect.width < 1 || rect.height < 1) return
+    // The chrome reflows with the host (the legend becomes a top row on
+    // narrow screens), so the free area is re-measured on every resize; a
+    // view the reader has not taken is refitted into it.
+    engine.setInsets(measureInsets())
     const bucket = aspectBucket()
     if (bucket !== lastBucket) {
       lastBucket = bucket
       pushData()
+    } else if (!engine.viewOwned) {
+      engine.fit(false)
     }
   })
   resizeObserver.observe(container)
@@ -870,14 +878,63 @@ export async function mountMoneyMap(
     }
   }
 
+  /**
+   * The canvas the floating chrome covers, so the fit and every focus move
+   * centre the scene in the unobstructed area: the legend (a left column, or
+   * a top row on narrow screens), the find box along the top, the zoom
+   * buttons on the right, the scrub and the hint along the bottom. Measured
+   * rather than assumed, so a host that restyles the chrome keeps a clear
+   * fit; each side is capped so a strange layout cannot squeeze the scene
+   * away.
+   */
+  const chromeInsets = (): Insets => {
+    const insets: Insets = { left: 0, right: 0, top: 0, bottom: 0 }
+    const host = container.getBoundingClientRect()
+    if (host.width < 1 || host.height < 1) return insets
+    const gap = 10
+    const cover = (element: HTMLElement | null, edge: keyof Insets) => {
+      if (!element) return
+      const rect = element.getBoundingClientRect()
+      if (rect.width < 1 || rect.height < 1) return
+      // A panel along the top or bottom that already sits inside the left
+      // or right strip (the scrub under the legend's column) costs nothing
+      // more; a full-width band for it would only squeeze the scene.
+      if (edge === 'top' || edge === 'bottom') {
+        const beyondLeft = rect.right - host.left - insets.left
+        const beyondRight = host.right - rect.left - insets.right
+        if (beyondLeft <= 24 || beyondRight <= 24) return
+      }
+      const extent = edge === 'left'
+        ? rect.right - host.left
+        : edge === 'right'
+        ? host.right - rect.left
+        : edge === 'top'
+        ? rect.bottom - host.top
+        : host.bottom - rect.top
+      const cap = edge === 'left' || edge === 'right' ? host.width * 0.4 : host.height * 0.4
+      insets[edge] = Math.max(insets[edge], Math.min(extent + gap, cap))
+    }
+    // Columns first, so the bands along the top and bottom can defer to them.
+    const legendAsRow = legend !== null && legend.getBoundingClientRect().width > host.width * 0.5
+    if (legend && !legendAsRow) cover(legend, 'left')
+    cover(zoom, 'right')
+    if (legend && legendAsRow) cover(legend, 'top')
+    cover(find, 'top')
+    cover(scrub, 'bottom')
+    cover(hint, 'bottom')
+    return insets
+  }
+
+  /** The chrome insets plus the info card while it is open. */
   const measureInsets = (): Insets => {
-    if (card.hidden) return { left: 0, right: 0, bottom: 0 }
+    const insets = chromeInsets()
+    if (card.hidden) return insets
     const rect = card.getBoundingClientRect()
     const host = container.getBoundingClientRect()
     // The card is a bottom sheet on narrow screens, a right panel otherwise.
-    return rect.width >= host.width - 40
-      ? { left: 0, right: 0, bottom: rect.height + 16 }
-      : { left: 0, right: rect.width + 24, bottom: 0 }
+    if (rect.width >= host.width - 40) insets.bottom = Math.max(insets.bottom, rect.height + 16)
+    else insets.right = Math.max(insets.right, rect.width + 24)
+    return insets
   }
 
   /**
@@ -904,7 +961,7 @@ export async function mountMoneyMap(
     } else {
       card.hidden = true
       card.innerHTML = ''
-      engine.setInsets({ left: 0, right: 0, bottom: 0 })
+      engine.setInsets(chromeInsets())
     }
     words.select(node, card)
     if (user) opts.onSelect?.(node)
@@ -929,7 +986,7 @@ export async function mountMoneyMap(
     } else {
       card.hidden = true
       card.innerHTML = ''
-      engine.setInsets({ left: 0, right: 0, bottom: 0 })
+      engine.setInsets(chromeInsets())
     }
     words.selectEdge(edge)
   }

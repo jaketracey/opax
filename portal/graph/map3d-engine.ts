@@ -58,8 +58,17 @@ const FIT_MS = 520
 const FOCUS_MIN_DIST = 230
 const FOCUS_MAX_DIST = 560
 
-/** Idle drift, radians per second. Slow enough to read as alive, not busy. */
-const IDLE_SPIN = 0.05
+/**
+ * Idle drift: a slow sway of +-IDLE_SWAY radians about the landing azimuth,
+ * one full swing every IDLE_SWAY_PERIOD seconds (peak speed about 0.03 rad/s,
+ * slow enough to read as alive, not busy). A sway rather than a spin: the
+ * cluster ring is an ellipse up to 3.4:1, so a full turn would either walk
+ * the clusters off the plate or, held in frame, need a fit two to four
+ * times further out for the moment the long axis points at the camera. The
+ * sway re-fits the view each frame it moves (see frame()).
+ */
+const IDLE_SWAY = 0.22
+const IDLE_SWAY_PERIOD = 48
 
 /** Polar clamp - the camera never goes underneath or straight overhead. */
 const PHI_MIN = 0.35
@@ -72,18 +81,24 @@ const PHI_MAX = Math.PI - 0.55
 // hysteresis that keeps a wheel notch near the boundary from flickering.
 // Thresholds are in CSS pixels of the cluster's radius, so the same rule
 // gives the 380px front-page embed an all-hubs view and the full page a mixed
-// one at its fitted distance (measured: the seven big clusters draw at 89 to
-// 114px there, the rest at 24 to 68px; on the embed nothing exceeds 67px).
+// one at its fitted distance (measured with the chrome insets in the fit: the
+// seven big clusters draw at 73 to 93px there, the rest at 19 to 56px; on the
+// 740x380 embed nothing exceeds 63px).
 // ---------------------------------------------------------------------------
 
-const COLLAPSE_PX = 76
-const EXPAND_PX = 96
+const COLLAPSE_PX = 68
+const EXPAND_PX = 86
 /** The collapse/expand choreography - eased both ways, no overshoot. */
 const LOD_MS = 420
 /** The camera flight into a clicked hub. */
 const DIVE_MS = 560
 /** A cluster this small has nothing to fold: one dot stays a dot. */
 const HUB_MIN_MEMBERS = 2
+
+/** Cluster caption box height in CSS px (the folded variant is the taller). */
+const CAPTION_H = 17
+/** Captions keep this far inside the plate edge. */
+const PLATE_INSET = 6
 
 /** Hub mark radius from the donor count - area follows count, like the blobs. */
 function hubRadius(count: number): number {
@@ -470,12 +485,15 @@ export class KnowledgeMapEngine {
   private pathNodeIds: Set<string> | null = null
   private pathEdgeKeys: Set<string> | null = null
 
-  private insets: Insets = { left: 0, right: 0, bottom: 0 }
+  private insets: Insets = { left: 0, right: 0, top: 0, bottom: 0 }
 
   private view: View
   private distGoal: number
   private tween: ViewTween | null = null
   private idleSpin: boolean
+  /** The azimuth the idle sway swings about, and where in the swing it is. */
+  private idleAnchor = -0.5
+  private idlePhase = 0
   private reduced: boolean
   private reducedQuery: MediaQueryList | null = null
   private onContextLost: ((event: Event) => void) | null = null
@@ -786,6 +804,8 @@ export class KnowledgeMapEngine {
     // keeps it.
     if (!this.viewOwnedFlag && centres.size > 2) {
       this.view.theta = this.bestTheta(centres)
+      this.idleAnchor = this.view.theta
+      this.idlePhase = 0
     }
 
     const radiusOf = (node: MapNode) =>
@@ -1494,12 +1514,12 @@ export class KnowledgeMapEngine {
   /** The part of the canvas the floating panels leave free, in pixels. */
   private freeBox() {
     const w = Math.max(1, this.width - this.insets.left - this.insets.right)
-    const h = Math.max(1, this.height - this.insets.bottom)
+    const h = Math.max(1, this.height - this.insets.top - this.insets.bottom)
     return {
       w,
       h,
       cx: this.insets.left + w / 2,
-      cy: h / 2,
+      cy: this.insets.top + h / 2,
     }
   }
 
@@ -1524,19 +1544,25 @@ export class KnowledgeMapEngine {
     return (2 * dist * Math.tan(THREE.MathUtils.degToRad(FOV / 2))) / this.height
   }
 
-  /** Shift a target so `point` projects at the free box's centre. */
+  private offsetRight = new THREE.Vector3()
+  private offsetUp = new THREE.Vector3()
+  private offsetForward = new THREE.Vector3()
+  private offsetOut = new THREE.Vector3()
+
+  /**
+   * Shift a target so `point` projects at the free box's centre. Returns a
+   * scratch vector (the idle sway calls this every frame): copy it before
+   * the next call if it has to outlive one.
+   */
   private offsetTarget(point: THREE.Vector3, dist: number): THREE.Vector3 {
     const box = this.freeBox()
     const wpp = this.worldPerPixel(dist)
     const ox = box.cx - this.width / 2
     const oy = box.cy - this.height / 2
-    const right = new THREE.Vector3()
-    const up = new THREE.Vector3()
-    const forward = new THREE.Vector3()
-    this.camera.matrixWorld.extractBasis(right, up, forward)
-    return point.clone()
-      .addScaledVector(right, -ox * wpp)
-      .addScaledVector(up, oy * wpp)
+    this.camera.matrixWorld.extractBasis(this.offsetRight, this.offsetUp, this.offsetForward)
+    return this.offsetOut.copy(point)
+      .addScaledVector(this.offsetRight, -ox * wpp)
+      .addScaledVector(this.offsetUp, oy * wpp)
   }
 
   fit(animate = true) {
@@ -1549,7 +1575,7 @@ export class KnowledgeMapEngine {
     this.updateCamera()
     const dist = this.fitDistance()
     this.fitDist = dist
-    const target = this.offsetTarget(this.worldCentre, dist)
+    const target = this.offsetTarget(this.fitCentre, dist).clone()
     const to: View = {
       target,
       theta: this.view.theta,
@@ -1598,42 +1624,128 @@ export class KnowledgeMapEngine {
     return best
   }
 
+  /** The point the last fit framed: the scene's extents' midpoint, not its centroid. */
+  private fitCentre = new THREE.Vector3()
+  private fitMidR = 0
+  private fitMidU = 0
+
   /**
-   * The distance at which every node fits the free box at the CURRENT
-   * orientation. A 3D bounding sphere is rotation-proof but wasteful: seen
-   * from the map's natural elevation the cluster ring is far wider than it
-   * is deep on screen, and a sphere fit strands half the canvas. Each node
-   * instead constrains the camera along its own line of sight -
-   * dist >= lateral / tan(halfAngle) + depth.
+   * The distance at which every node and every cluster caption fits the
+   * free box at the CURRENT orientation, with fitCentre set to the point to
+   * frame. A 3D bounding sphere would be rotation-proof but wasteful: from
+   * the map's natural elevation the cluster ring is far wider than it is
+   * deep on screen, and a sphere fit strands half the canvas. Two passes:
+   * the first, about the centroid, measures the scene's extents at the
+   * distance it finds; the second re-solves about their midpoint, so both
+   * sides of the plate bind and neither is left slack. The idle sway calls
+   * this every frame it turns, which is what keeps the framing tight and
+   * the clusters on the plate as the ring moves.
    */
   private fitDistance(): number {
     const { theta, phi } = this.view
+    this.fitCentre.copy(this.worldCentre)
+    this.fitDistanceAt(theta, phi, true)
+    this.fitCentre
+      .addScaledVector(this.fitVecRight, this.fitMidR)
+      .addScaledVector(this.fitVecUp, this.fitMidU)
+    return this.fitDistanceAt(theta, phi, false)
+  }
+
+  private fitVecE = new THREE.Vector3()
+  private fitVecRight = new THREE.Vector3()
+  private fitVecUp = new THREE.Vector3()
+  private fitVecD = new THREE.Vector3()
+
+  /**
+   * Each node constrains the camera along its own line of sight -
+   * dist >= lateral / tan(halfAngle) + depth. A caption is set in screen
+   * pixels, so its extent GROWS with the distance (px * worldPerPixel(dist));
+   * the same inequality with that term solves in closed form to
+   * dist >= (lateral / tan + depth) / (1 - px * k / tan), k being world
+   * units per pixel per unit of distance. With `measure`, the shift of the
+   * frame centre that balances the two sides is recorded as fitMidR and
+   * fitMidU (in this orientation's screen basis): each side's binding
+   * quantity is extent + tan * depth, not the bare extent, so the balance
+   * point is half the difference of the two one-sided maxima of that.
+   */
+  private fitDistanceAt(theta: number, phi: number, measure: boolean): number {
     // The basis the view will have, from the same spherical coordinates
     // updateCamera uses; e points from the target towards the camera.
-    const e = new THREE.Vector3(
+    const e = this.fitVecE.set(
       Math.sin(phi) * Math.sin(theta),
       Math.cos(phi),
       Math.sin(phi) * Math.cos(theta),
     )
-    const right = new THREE.Vector3().crossVectors(new THREE.Vector3(0, 1, 0), e)
+    const right = this.fitVecRight.crossVectors(this.edgeUp, e)
     if (right.lengthSq() < 0.001) right.set(1, 0, 0)
     right.normalize()
-    const up = new THREE.Vector3().crossVectors(e, right)
+    const up = this.fitVecUp.crossVectors(e, right)
     const box = this.freeBox()
     const vHalf = THREE.MathUtils.degToRad(FOV / 2)
-    const hLimit = Math.atan(
-      Math.tan(vHalf) * this.camera.aspect * Math.max(0.2, box.w / this.width) * 0.92,
-    )
-    const vLimit = Math.atan(Math.tan(vHalf) * Math.max(0.2, box.h / this.height) * 0.92)
-    const d = new THREE.Vector3()
+    const tanH = Math.tan(vHalf) * this.camera.aspect * Math.max(0.2, box.w / this.width) * 0.92
+    const tanV = Math.tan(vHalf) * Math.max(0.2, box.h / this.height) * 0.92
+    const k = (2 * Math.tan(vHalf)) / this.height
+    const centre = this.fitCentre
+    const d = this.fitVecD
     let dist = 240
+    // One-sided maxima of extent + tan * depth, per screen axis.
+    let plusR = -Infinity
+    let minusR = -Infinity
+    let plusU = -Infinity
+    let minusU = -Infinity
     for (const visual of this.nodeVisuals.values()) {
-      d.set(visual.sim.x, visual.sim.y, visual.sim.z).sub(this.worldCentre)
+      d.set(visual.sim.x, visual.sim.y, visual.sim.z).sub(centre)
       const depth = d.dot(e)
-      const lx = Math.abs(d.dot(right)) + visual.r
-      // Headroom for the labels and territory captions above the marks.
-      const ly = Math.abs(d.dot(up)) + visual.r + 26
-      dist = Math.max(dist, lx / Math.tan(hLimit) + depth, ly / Math.tan(vLimit) + depth)
+      const pr = d.dot(right)
+      const pu = d.dot(up)
+      const lx = Math.abs(pr) + visual.r
+      // Headroom for the labels above the marks - above only, so the frame
+      // reserves no phantom room below the near side.
+      const ly = Math.max(pu + visual.r + 26, -pu + visual.r)
+      dist = Math.max(dist, lx / tanH + depth, ly / tanV + depth)
+      if (measure) {
+        const dh = tanH * depth
+        const dv = tanV * depth
+        if (pr + visual.r + dh > plusR) plusR = pr + visual.r + dh
+        if (-pr + visual.r + dh > minusR) minusR = -pr + visual.r + dh
+        if (pu + visual.r + 26 + dv > plusU) plusU = pu + visual.r + 26 + dv
+        if (-pu + visual.r + dv > minusU) minusU = -pu + visual.r + dv
+      }
+    }
+    // Captions: centred on the cluster, half a caption wide to either side,
+    // and a caption tall above the territory's rim (above, where the
+    // placement pass puts it first; the nodes already hold the side below).
+    const tall = CAPTION_H + 5 + PLATE_INSET
+    const fracV = (tall * k) / tanV
+    for (const territory of this.territories) {
+      d.copy(territory.centre).sub(centre)
+      const depth = d.dot(e)
+      const halfW = Math.max(territory.captionW, territory.captionHubW) / 2 + 4 + PLATE_INSET
+      const fracH = (halfW * k) / tanH
+      if (fracH < 0.9) {
+        dist = Math.max(dist, (Math.abs(d.dot(right)) / tanH + depth) / (1 - fracH))
+      }
+      const top = d.dot(up) + territory.r
+      if (fracV < 0.9 && top > 0) {
+        dist = Math.max(dist, (top / tanV + depth) / (1 - fracV))
+      }
+    }
+    if (measure) {
+      // The captions' extents are only known once the distance is.
+      for (const territory of this.territories) {
+        d.copy(territory.centre).sub(centre)
+        const depth = d.dot(e)
+        const pr = d.dot(right)
+        const pu = d.dot(up)
+        const halfW = (Math.max(territory.captionW, territory.captionHubW) / 2 + 4 + PLATE_INSET) * k * dist
+        const dh = tanH * depth
+        if (pr + halfW + dh > plusR) plusR = pr + halfW + dh
+        if (-pr + halfW + dh > minusR) minusR = -pr + halfW + dh
+        const top = pu + territory.r + tall * k * dist + tanV * depth
+        if (top > plusU) plusU = top
+      }
+      this.fitMidR = Number.isFinite(plusR) && Number.isFinite(minusR) ? (plusR - minusR) / 2 : 0
+      this.fitMidU = Number.isFinite(plusU) && Number.isFinite(minusU) ? (plusU - minusU) / 2 : 0
     }
     return dist
   }
@@ -1659,7 +1771,7 @@ export class KnowledgeMapEngine {
     const marginY = Math.min(90, box.h * 0.18)
     const settled = projected.z < 1 &&
       sx > this.insets.left + marginX && sx < this.insets.left + box.w - marginX &&
-      sy > marginY && sy < box.h - marginY
+      sy > this.insets.top + marginY && sy < this.insets.top + box.h - marginY
     // A node inside a folded cluster is "in view" only as a hub: the fold
     // rule is about to open its cluster, and the camera should go with it.
     const folded = visual.territory?.hub?.lodTarget === 1
@@ -2356,7 +2468,20 @@ export class KnowledgeMapEngine {
         this.renderDirty = true
       }
       if (this.idleSpin && this.nodeVisuals.size > 0) {
-        this.view.theta += (IDLE_SPIN * dt) / 1000
+        this.idlePhase += dt / 1000
+        this.view.theta = this.idleAnchor +
+          IDLE_SWAY * Math.sin((this.idlePhase / IDLE_SWAY_PERIOD) * Math.PI * 2)
+        // The fit holds for one orientation, so the sway re-fits as it
+        // turns: the framing stays tight and nothing walks off the plate or
+        // under a panel. The change is a few percent over a whole swing.
+        if (!this.viewOwnedFlag) {
+          this.updateCamera()
+          const dist = this.fitDistance()
+          this.fitDist = dist
+          this.view.dist = dist
+          this.distGoal = dist
+          this.view.target.copy(this.offsetTarget(this.fitCentre, dist))
+        }
         this.renderDirty = true
       }
     }
@@ -2782,6 +2907,49 @@ export class KnowledgeMapEngine {
     return true
   }
 
+  /** The last successful caption placement - fields, so the pass allocates nothing. */
+  private capText = ''
+  private capBaseline = 0
+  private capX = 0
+
+  /**
+   * Find room for a cluster caption of width `w` around a mark at (sx, sy)
+   * with screen radius `screenR`: above the mark, below it, then each again
+   * shifted sideways just far enough to stay inside the plate. The plate is
+   * the canvas less the panels' insets, and it is a hard edge - a caption is
+   * never drawn cut off, nor under a panel. Sets capText, capX and
+   * capBaseline on success.
+   */
+  private placeCaption(text: string, w: number, sx: number, sy: number, screenR: number): boolean {
+    const half = w / 2 + 4
+    const plateL = this.insets.left + PLATE_INSET
+    const plateR = this.width - this.insets.right - PLATE_INSET
+    const plateT = this.insets.top + PLATE_INSET
+    const plateB = this.height - this.insets.bottom - PLATE_INSET
+    if (half * 2 > plateR - plateL) return false
+    for (let pass = 0; pass < 2; pass++) {
+      for (let side = 0; side < 2; side++) {
+        const y1 = side === 0 ? sy - screenR - 5 - CAPTION_H : sy + screenR + 5
+        const y2 = y1 + CAPTION_H
+        if (y1 < plateT || y2 > plateB) continue
+        let x1 = sx - half
+        let x2 = sx + half
+        if (x1 < plateL || x2 > plateR) {
+          if (pass === 0) continue
+          const shift = x1 < plateL ? plateL - x1 : plateR - x2
+          x1 += shift
+          x2 += shift
+        }
+        if (!this.placeBox(x1, y1, x2, y2)) continue
+        this.capText = text
+        this.capBaseline = y2
+        this.capX = (x1 + x2) / 2
+        return true
+      }
+    }
+    return false
+  }
+
   private discCount = 0
 
   /** Record a mark's screen disc in the pooled list; returns its index. */
@@ -2805,10 +2973,11 @@ export class KnowledgeMapEngine {
   /**
    * Labels, in three tiers so no two ever sit on top of each other:
    *
-   *   1. cluster captions, largest cluster first - above the mark, else
-   *      below it, else the name without its count, else nothing;
-   *   2. the emphasised few (selection, hover, a selected flow's ends) -
+   *   1. the emphasised few (selection, hover, a selected flow's ends) -
    *      always shown, and everything after them keeps clear of them;
+   *   2. cluster captions, largest cluster first - above the mark, else
+   *      below it, then each shifted to stay inside the plate, else the name
+   *      without its count, else nothing;
    *   3. the rest by size - a focused view names only the neighbourhood, a
    *      free view names the biggest within a budget that grows as the
    *      camera comes closer, each new name fading in rather than popping.
@@ -2848,8 +3017,38 @@ export class KnowledgeMapEngine {
     const discs = this.discs
     const discCount = this.discCount
 
-    // 1. Captions.
-    const captionH = 17
+    const isEmphasised = (id: string) =>
+      id === focus || id === this.hoveredId || id === pathFrom || (this.pathNodeIds?.has(id) ?? false)
+    const show = (visual: NodeVisual, sx: number, y: number, opacity: number) => {
+      const label = visual.label
+      label.style.display = 'block'
+      label.style.transform = `translate(-50%, -100%) translate(${sx.toFixed(1)}px, ${y.toFixed(1)}px)`
+      label.style.opacity = opacity.toFixed(2)
+    }
+
+    // 1. The emphasised few - the selection and its path are always named,
+    // and everything after them, captions included, keeps clear of them.
+    for (let rank = 0; rank < this.paintRank.length; rank++) {
+      const visual = this.paintRank[rank]
+      const disc = discs[rank]
+      if (!visual || !disc) continue
+      const id = visual.node.id
+      if (!isEmphasised(id)) continue
+      const label = visual.label
+      if (!disc.ok) {
+        label.style.display = 'none'
+        continue
+      }
+      const { sx, sy, screenR } = disc
+      const half = visual.labelW * (id === selectedId ? 1.2 : 1.1) / 2 + 4
+      this.placeBox(sx - half, sy - screenR - 25, sx + half, sy - screenR - 3, true)
+      show(visual, sx, sy - screenR - 4, 1)
+      label.setAttribute('data-emphasised', '')
+      if (id === selectedId) label.setAttribute('data-selected', '')
+      else label.removeAttribute('data-selected')
+    }
+
+    // 2. Captions.
     for (const territory of this.captionRank) {
       const caption = territory.caption
       const hub = territory.hub
@@ -2872,33 +3071,21 @@ export class KnowledgeMapEngine {
         : territory.r
       const screenR = (worldR * (this.height / 2)) / (Math.max(1, camDist) * halfTan)
       const isHub = lod > 0.5
-      let text: string | null = null
-      let baseline = 0
-      const tryText = (t: string, w: number): boolean => {
-        const half = w / 2 + 4
-        if (this.placeBox(sx - half, sy - screenR - 5 - captionH, sx + half, sy - screenR - 5)) {
-          text = t
-          baseline = sy - screenR - 5
-          return true
-        }
-        if (this.placeBox(sx - half, sy + screenR + 5, sx + half, sy + screenR + 5 + captionH)) {
-          text = t
-          baseline = sy + screenR + 5 + captionH
-          return true
-        }
-        return false
-      }
       if (
-        !tryText(territory.captionFull, isHub ? territory.captionHubW : territory.captionW) &&
-        !tryText(territory.captionShort, isHub ? territory.captionShortHubW : territory.captionShortW)
+        !this.placeCaption(
+          territory.captionFull, isHub ? territory.captionHubW : territory.captionW, sx, sy, screenR,
+        ) &&
+        !this.placeCaption(
+          territory.captionShort, isHub ? territory.captionShortHubW : territory.captionShortW, sx, sy, screenR,
+        )
       ) {
         caption.style.display = 'none'
         continue
       }
-      if (caption.textContent !== text) caption.textContent = text
+      if (caption.textContent !== this.capText) caption.textContent = this.capText
       caption.style.display = 'block'
-      caption.style.transform = `translate(-50%, -100%) translate(${sx.toFixed(1)}px, ${
-        baseline.toFixed(1)
+      caption.style.transform = `translate(-50%, -100%) translate(${this.capX.toFixed(1)}px, ${
+        this.capBaseline.toFixed(1)
       }px)`
       // A folded cluster's caption is its name: it dims with the hub, never
       // to the whisper an open territory's caption drops to under focus.
@@ -2908,36 +3095,6 @@ export class KnowledgeMapEngine {
       caption.style.opacity = opacity.toFixed(2)
       if (isHub) caption.setAttribute('data-hub', '')
       else caption.removeAttribute('data-hub')
-    }
-
-    const isEmphasised = (id: string) =>
-      id === focus || id === this.hoveredId || id === pathFrom || (this.pathNodeIds?.has(id) ?? false)
-    const show = (visual: NodeVisual, sx: number, y: number, opacity: number) => {
-      const label = visual.label
-      label.style.display = 'block'
-      label.style.transform = `translate(-50%, -100%) translate(${sx.toFixed(1)}px, ${y.toFixed(1)}px)`
-      label.style.opacity = opacity.toFixed(2)
-    }
-
-    // 2. The emphasised few.
-    for (let rank = 0; rank < this.paintRank.length; rank++) {
-      const visual = this.paintRank[rank]
-      const disc = discs[rank]
-      if (!visual || !disc) continue
-      const id = visual.node.id
-      if (!isEmphasised(id)) continue
-      const label = visual.label
-      if (!disc.ok) {
-        label.style.display = 'none'
-        continue
-      }
-      const { sx, sy, screenR } = disc
-      const half = visual.labelW * (id === selectedId ? 1.2 : 1.1) / 2 + 4
-      this.placeBox(sx - half, sy - screenR - 25, sx + half, sy - screenR - 3, true)
-      show(visual, sx, sy - screenR - 4, 1)
-      label.setAttribute('data-emphasised', '')
-      if (id === selectedId) label.setAttribute('data-selected', '')
-      else label.removeAttribute('data-selected')
     }
 
     // 3. The rest. The budget grows as the camera comes closer, like the 2D
@@ -2965,7 +3122,15 @@ export class KnowledgeMapEngine {
         continue
       }
       const { sx, sy, camDist, screenR } = disc
-      if (sx < -40 || sx > this.width + 40 || sy < -20 || sy > this.height + 20) {
+      // A name that would be cut by the plate edge, or sit under a panel, is
+      // not drawn at all.
+      const half = visual.labelW / 2 + 4
+      if (
+        sx - half < this.insets.left + PLATE_INSET ||
+        sx + half > this.width - this.insets.right - PLATE_INSET ||
+        sy - screenR - 23 < this.insets.top + PLATE_INSET ||
+        sy - screenR - 3 > this.height - this.insets.bottom - PLATE_INSET
+      ) {
         label.style.display = 'none'
         continue
       }
@@ -2989,7 +3154,6 @@ export class KnowledgeMapEngine {
         label.style.display = 'none'
         continue
       }
-      const half = visual.labelW / 2 + 4
       if (!this.placeBox(sx - half, sy - screenR - 23, sx + half, sy - screenR - 3)) {
         label.style.display = 'none'
         continue

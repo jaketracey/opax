@@ -69,13 +69,15 @@ out to tell its donors apart, and unfolds again on the way in
 (`map3d-engine.ts`, "Semantic zoom"):
 
 - The rule is per cluster and in screen pixels: a cluster whose spread would
-  draw narrower than `COLLAPSE_PX` (58) folds; a folded one unfolds past
-  `EXPAND_PX` (80). The gap is the hysteresis, so a wheel notch at the
+  draw narrower than `COLLAPSE_PX` (68) folds; a folded one unfolds past
+  `EXPAND_PX` (86). The gap is the hysteresis, so a wheel notch at the
   boundary never flickers. The decision uses the camera's GOAL distance, so
   the fold starts as the wheel turns rather than after the dolly catches up.
-  The same rule gives the 380px front-page embed an all-hubs view and the
-  full page a mixed one at its fitted distance; the smallest clusters fold
-  first as the reader zooms out.
+  The same rule gives the 740x380 front-page embed an all-hubs view and the
+  full page a mixed one at its fitted distance (the seven largest clusters
+  open, measured at 73 to 93px on a 1440px window; the embed's largest draws
+  at 63px); the smallest clusters fold first as the reader zooms out, and a
+  smaller window folds more.
 - A hub is one sphere in the cluster's hue, radius from the donor count
   (`hubRadius`), a hairline ring in the cluster's ink, and the cluster's
   caption ("UNIONS · 49") moved onto it. Its flows to each party are summed
@@ -94,11 +96,30 @@ out to tell its donors apart, and unfolds again on the way in
   folds.
 
 Labels never overlap: captions claim space first (largest cluster first,
-above the mark, else below, else the name without its count), then the
-emphasised few, then the rest by size within a zoom-dependent budget, each
-new name fading in. Widths are measured (`measureLabels`) with the labels'
-computed fonts, so a host that restyles them stays collision-free. With a
-focus, only the neighbourhood is named.
+above the mark, else below, then each again shifted sideways to stay inside
+the plate, else the name without its count, else hidden - the plate edge is
+hard, a caption is never drawn cut off), then the emphasised few, then the
+rest by size within a zoom-dependent budget, each new name fading in. Widths
+are measured (`measureLabels`) with the labels' computed fonts, so a host
+that restyles them stays collision-free. With a focus, only the
+neighbourhood is named.
+
+The fit (`fitDistance`) accounts for the captions in pixels (closed form, so
+a caption at the ring's edge has room inside the plate) and frames the
+scene's balance point rather than its centroid: a first pass measures each
+side's binding quantity (extent plus tan times depth), the second re-solves
+about the point that equalises them, so both sides of the plate bind. The
+idle motion is a slow sway of +-0.22 rad about the landing azimuth
+(`IDLE_SWAY`, 48s per swing) rather than an endless spin: the ring is an
+ellipse up to 3.4:1, and a full turn would walk clusters off the plate or
+need a fit two to four times further out. The sway re-fits the view every
+frame it moves (a few percent over a swing), so the framing stays tight;
+once the reader holds the view, the sway stops and fits are to the current
+orientation. The adapter measures the chrome (`chromeInsets`: legend, find
+box, zoom buttons, scrub, hint; a bottom or top panel already inside a side
+strip, like the scrub under the legend, adds nothing) plus the open card
+into `Insets` (now with `top`), so the fitted scene sits in the unobstructed
+area and is refitted on resize while the view is not owned.
 
 ## The words layer
 

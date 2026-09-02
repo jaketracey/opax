@@ -62,11 +62,12 @@ export type GroupStyle = {
 }
 
 /**
- * How much of the canvas floating panels are covering, in canvas pixels.
- * The info card reports its own width so the focus move can centre a
- * selection in the space the card leaves free.
+ * How much of the canvas floating panels are covering, in canvas pixels:
+ * the legend on the left, the find box along the top, the zoom buttons on
+ * the right, the scrub and hint along the bottom, and the info card when it
+ * is open. The fit and every focus move centre the scene in what is left.
  */
-export type Insets = { left: number; right: number; bottom: number }
+export type Insets = { left: number; right: number; top: number; bottom: number }
 
 /** Canvas label - long donor names get an ellipsis; the card shows the full name. */
 export function shortLabel(label: string): string {
