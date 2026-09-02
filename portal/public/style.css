@@ -1083,6 +1083,18 @@ a.ency-name:hover, a.ency-name:focus-visible {
 /* ---- subject entries (the encyclopedia) --------------------------------- */
 
 .subject-head h2 { font: 700 clamp(1.75rem, 3.5vw, 2.6rem)/1.15 var(--serif); margin: 0.2rem 0 0.3rem; }
+/* With a portrait, the header reads as a byline card on wider screens: the
+   photo at left spans the name and the tag line. Pages without a portrait
+   (donors, parties, people we have no photo for) keep the stacked layout. */
+@media (min-width: 701px) {
+  .subject-head:has(.subject-portrait) {
+    display: grid; grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: 1.4rem; align-items: center; margin: 0.3rem 0 1.1rem;
+  }
+  .subject-head:has(.subject-portrait) .subject-portrait { grid-row: 1 / span 2; margin: 0; }
+  .subject-head:has(.subject-portrait) h2 { align-self: end; margin: 0; }
+  .subject-head:has(.subject-portrait) .subject-tag { align-self: start; margin: 0.4rem 0 0; }
+}
 .subject-tag { color: var(--ink-soft); font-size: 0.9375rem; margin: 0 0 1rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
 .subject-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 1.5rem; align-items: start; }
 .subject-main { min-width: 0; }
