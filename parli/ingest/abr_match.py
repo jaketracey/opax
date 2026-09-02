@@ -227,9 +227,14 @@ def match_entity(idx: Index, canonical: str, aliases: list[str]) -> dict | None:
             if abn:
                 return _hit(abn, row, method, canonical)
             ambiguous = ambiguous or {"abn": None, "method": "ambiguous", "candidates": row, "matched": canonical, "on": method}
-    # 3: any alias against main names
+    # 3: any alias against main names. An acronym alias is not evidence: "CEPU"
+    # is also the legal name of an unrelated CEPU Pty Limited, and matching on it
+    # gave the plumbers' union a shelf company's ABN. Only aliases with two or
+    # more significant words are allowed to carry a match.
     for a in names[1:]:
         if looks_like_person(a):
+            continue
+        if len([t for t in norm_rule(a).split() if t not in STOPWORDS]) < 2:
             continue
         rows = [r for r in idx.by_rule(norm_rule(a)) if r["ntype"] == "MN"]
         if rows:

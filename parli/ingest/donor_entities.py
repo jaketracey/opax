@@ -423,13 +423,15 @@ def load_curated(path: Path = CURATED_PATH) -> list[dict]:
 # ── resolution ───────────────────────────────────────────────────────────────
 
 class Entity:
-    __slots__ = ("entity_id", "canonical", "kind", "abn", "notes", "method", "members", "total", "curated")
+    __slots__ = ("entity_id", "canonical", "kind", "abn", "abn_info", "notes", "method",
+                 "members", "total", "curated")
 
     def __init__(self, entity_id, canonical, kind, method, curated=None):
         self.entity_id = entity_id
         self.canonical = canonical
         self.kind = kind
         self.abn = None
+        self.abn_info = None
         self.notes = None
         self.method = method
         self.members: list[tuple[RawName, str | None, str]] = []  # (name, branch, method)
