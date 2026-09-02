@@ -50,6 +50,30 @@
   --serif: "Merriweather", Georgia, "Times New Roman", serif;
   --sans:  "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
+  /* ---- vertical rhythm --------------------------------------------------
+     One scale, ratio ~1.6 — the same step the type takes. Every vertical gap
+     on an entry, index or report page is drawn from it; nothing on those
+     pages sets a number of its own. Four sizes of silence carry the whole
+     hierarchy, each roughly double the one under it:
+       --space-1/2    5px, a line bound to the line above it (a date under
+                      a title, a note under its figure) — one unit, read once
+       --row-gap      10px either side of a hairline, so 21px between rows
+                      and the rule itself carries the separation
+       --sub-gap      42px, a second list inside one section — 2x a row
+       --section-gap  67px above a section kicker — 3x a row, which is what
+                      lets the eye find the boundary before it reads a word */
+  --space-1: 0.25rem;  /*  4px */
+  --space-2: 0.4rem;   /*  6px */
+  --space-3: 0.65rem;  /* 10px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.6rem;   /* 26px */
+  --space-6: 2.6rem;   /* 42px */
+  --space-7: 4.2rem;   /* 67px */
+
+  --row-gap:     var(--space-3);
+  --sub-gap:     var(--space-6);
+  --section-gap: var(--space-7);
+
   /* The masthead stays put while the page scrolls; anything scrolled into
      view has to clear it. These are per-breakpoint estimates (the band's
      padding + mark + bronze rule); app.js writes the measured height over
@@ -58,6 +82,14 @@
 }
 @media (max-width: 1099px) { :root { --header-h: 93px; } }
 @media (max-width: 860px)  { :root { --header-h: 61px; } }
+
+/* On a phone the three structural steps each drop one notch, so the column a
+   third as wide keeps the same relationships: a section still opens on about
+   three rows' worth of silence, a sub-heading on two. The small steps are
+   bound to the type and hold. */
+@media (max-width: 700px) {
+  :root { --space-3: 0.5rem; --space-6: 2rem; --space-7: 3.25rem; }
+}
 
 
 * { box-sizing: border-box; }
@@ -114,8 +146,10 @@ a.visually-hidden:focus-visible {
   font: 700 0.6875rem/1.3 var(--sans); color: var(--bronze-ink);
   text-transform: uppercase; letter-spacing: 0.08em;
 }
-.kicker { margin: 1.6rem 0 0.5rem; }
-.fineprint { color: var(--ink-faint); font-size: 0.8125rem; line-height: 1.5; max-width: 68ch; }
+.kicker { margin: var(--space-5) 0 var(--space-2); }
+/* A trailing note belongs to the section above it, never to the one below:
+   it sits a row's breath under the last row and takes no bottom margin. */
+.fineprint { color: var(--ink-faint); font-size: 0.8125rem; line-height: 1.5; max-width: 68ch; margin: var(--space-3) 0 0; }
 /* The money map's source note sits under a full-width map, so it runs the
    same width and puts its two ways out on a row of their own. */
 #money-fineprint { max-width: none; }
@@ -564,12 +598,12 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 .action-row { display: flex; flex-wrap: wrap; gap: 0.5rem 0.7rem; margin: 0.6rem 0 0; font-size: 0.875rem; }
 
 .source-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
-.source-list li { margin: 0; padding: 0.75rem 0; }
+.source-list li { margin: 0; padding: var(--row-gap) 0; }
 .source-num { font: 700 0.8125rem/1 var(--sans); color: var(--bronze-ink); font-variant-numeric: tabular-nums; margin-right: 0.4rem; }
 button.link.source-title { font: 600 1rem/1.35 var(--serif); }
 .source-title, button.link.source-title, a.source-title { text-decoration: none; }
 .source-title:hover, button.link.source-title:hover, a.source-title:hover { color: var(--bronze-ink); }
-.source-meta, .result-meta { display: block; color: var(--ink-faint); font-size: 0.8125rem; margin-top: 0.25rem; }
+.source-meta, .result-meta { display: block; color: var(--ink-faint); font-size: 0.8125rem; margin-top: var(--space-1); }
 .flash { background: var(--bronze-wash); }
 @media (prefers-reduced-motion: no-preference) {
   .source-list li { transition: background 600ms ease; }
@@ -758,12 +792,12 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 #results-count { font-variant-numeric: tabular-nums; }
 
 .results { list-style: none; margin: 0.4rem 0 0; padding: 0; }
-.results li { border-top: 1px solid var(--line); padding: 1rem 0; }
+.results li { border-top: 1px solid var(--line); padding: var(--space-4) 0; }
 .results li:first-child { border-top: none; }
 button.link.result-title { font: 600 1.0625rem/1.35 var(--serif); text-decoration: none; }
 button.link.result-title:hover { color: var(--bronze-ink); }
 .snippet {
-  margin: 0.45rem 0 0; color: var(--ink-soft); font-size: 0.9375rem; max-width: 88ch;
+  margin: var(--space-2) 0 0; color: var(--ink-soft); font-size: 0.9375rem; max-width: 88ch;
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
 }
 .scorebar {
@@ -786,7 +820,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 
 /* Jurisdiction switch above the map: one hairline segmented control, the
    loaded file in navy. One file per jurisdiction, never summed. */
-.money-chrome { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin: 0 0 0.6rem; }
+.money-chrome { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin: 0 0 var(--space-3); }
 .money-chrome-label {
   color: var(--ink-faint); font: 600 0.6875rem/1 var(--sans);
   letter-spacing: 0.08em; text-transform: uppercase;
@@ -872,7 +906,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 
 /* Figures read as ledger entries, not cards: a short bronze rule, the number
    set in the record's serif beneath it, a muted caption under that. */
-.tiles { display: flex; flex-wrap: wrap; gap: 1.1rem 1.75rem; margin: 1.4rem 0 0.6rem; }
+.tiles { display: flex; flex-wrap: wrap; gap: 1.1rem 1.75rem; margin: var(--space-4) 0 var(--space-3); }
 .tile {
   padding: 0.85rem 0 0.3rem; min-width: 150px; flex: 1 1 160px; max-width: 340px;
   border-top: 2px solid var(--bronze);
@@ -930,7 +964,7 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 
 /* Evidence-brief layers */
 #report-brief .answer { margin-top: 0.6rem; }
-#report-stats { margin-top: 2rem; }
+#report-stats:not(:empty) { margin-top: var(--section-gap); }
 .report-lead { display: grid; grid-template-columns: 1fr; gap: 1.5rem 2.5rem; align-items: start; }
 @media (min-width: 1100px) {
   .report-lead { grid-template-columns: minmax(0, 1fr) 340px; }
@@ -942,14 +976,16 @@ button.action-btn { background: none; cursor: pointer; font: 600 0.875rem/1.3 va
 a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top: 1.6rem; }
 .tile .tile-source { display: block; margin-top: 0.35rem; font-size: 0.75rem; color: var(--ink-faint); }
 .tile .tile-source a { color: var(--ink-faint); }
-.position-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
-.position-list li { margin: 0; padding: 0.7rem 0; max-width: 78ch; }
+.position-list { list-style: none; margin: 0; padding: 0; }
+.position-list li { margin: 0; padding: var(--row-gap) 0; max-width: 78ch; }
 .position-party { margin-right: 0.35rem; }
 .position-text { font-size: 0.9375rem; }
-.position-list .source-meta { margin-top: 0.3rem; }
+.position-list .source-meta { margin-top: var(--space-1); }
 
-.report-section { margin-top: 2rem; }
-.report-section h3 { font: 600 1.25rem/1.3 var(--serif); margin: 0 0 1.1rem; }
+/* A report's body sections are headed by a serif h3, which already reads as
+   a break, so they take the middle step rather than the full section gap. */
+.report-section { margin-top: var(--sub-gap); }
+.report-section h3 { font: 600 1.25rem/1.3 var(--serif); margin: 0 0 var(--space-4); }
 .section-tools { margin: 0.5rem 0 0; }
 
 /* ---- document page ------------------------------------------------------ */
@@ -1130,13 +1166,13 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 @media (min-width: 1100px) { .split-list { grid-template-columns: 1fr 1fr; } }
 
 .news-list { list-style: none; margin: 0; padding: 0; }
-.news-list li { border-top: 1px solid var(--line); padding: 0.75rem 0; }
-.news-list li:first-child { border-top: 0; padding-top: 0.1rem; }
+.news-list li { border-top: 1px solid var(--line); padding: var(--row-gap) 0; }
+.news-list li:first-child { border-top: 0; padding-top: var(--space-1); }
 .news-headline { font: 600 1.0625rem/1.4 var(--serif); text-decoration: none; }
 .news-headline:hover { color: var(--bronze-ink); }
 .news-pivots a { text-decoration: none; color: var(--ink-soft); font-weight: 600; }
 .news-pivots a:hover { color: var(--bronze-ink); }
-.news-meta { display: block; margin-top: 0.25rem; color: var(--ink-faint); font-size: 0.8125rem; }
+.news-meta { display: block; margin-top: var(--space-1); color: var(--ink-faint); font-size: 0.8125rem; }
 .news-source { font: 700 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
 .news-pivots { display: flex; gap: 1.2rem; margin-top: 0.35rem; font-size: 0.8125rem; flex-wrap: wrap; }
 
@@ -1178,10 +1214,10 @@ a.ency-name:hover, a.ency-name:focus-visible {
 /* Person page speech rows: date-led, debate title, passage clamp */
 .speech-rows { list-style: none; margin: 0; padding: 0; }
 .speech-rows li {
-  display: grid; grid-template-columns: 6.75rem minmax(0, 1fr); gap: 0.15rem 1.1rem;
-  padding: 0.75rem 0; border-top: 1px solid var(--line);
+  display: grid; grid-template-columns: 6.75rem minmax(0, 1fr); gap: var(--space-1) 1.1rem;
+  padding: var(--row-gap) 0; border-top: 1px solid var(--line);
 }
-.speech-rows li:first-child { border-top: none; padding-top: 0.2rem; }
+.speech-rows li:first-child { border-top: none; padding-top: var(--space-1); }
 .speech-rows time { font: 500 0.8125rem/1.5 var(--sans); color: var(--ink-faint); font-variant-numeric: tabular-nums; padding-top: 0.2rem; }
 .speech-debate { font: 600 1rem/1.35 var(--serif); color: var(--ink); text-decoration: none; }
 .speech-passage {
@@ -1192,20 +1228,20 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .speech-debate:hover { color: var(--bronze-ink); }
 .speech-where { font: 600 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-left: 0.4rem; }
 .speech-snip {
-  margin: 0.2rem 0 0; font-size: 0.9rem; line-height: 1.5; color: var(--ink-soft);
+  margin: var(--space-2) 0 0; font-size: 0.9rem; line-height: 1.5; color: var(--ink-soft);
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 @media (max-width: 600px) { .speech-rows li { grid-template-columns: 1fr; gap: 0.1rem; } }
 /* Person page voting record */
-.votes-tiles { margin-top: 0.4rem; }
+.votes-tiles { margin-top: var(--space-1); }
 .votes-split { height: 6px; max-width: 520px; margin: 0.9rem 0 0; border-radius: 3px; background: var(--paper-sunken); overflow: hidden; }
 .votes-split i { display: block; height: 100%; background: var(--bronze); }
-.votes-lede { margin: 0.4rem 0 0; }
+.votes-lede { margin: var(--space-2) 0 0; }
 .votes-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 0 2.2rem; }
-.votes-col-kicker { margin: 1.1rem 0 0.2rem; }
-.votes-cols .subject-list li { padding: 0.5rem 0; }
-.votes-method { margin-top: 0.6rem; }
-.votes-method .fineprint { margin: 0.2rem 0 0.4rem; }
+.votes-col-kicker { margin: var(--sub-gap) 0 var(--space-2); }
+.votes-cols .subject-list li { padding: var(--space-2) 0; }
+.votes-method { margin-top: var(--space-3); }
+.votes-method .fineprint { margin: var(--space-1) 0 var(--space-2); }
 .ency-votes { display: grid; gap: 0.6rem; border-top: 1px solid var(--line); padding-top: 0.65rem; }
 .ency-votes-label {
   display: block; margin-bottom: 0.25rem; color: var(--ink-faint);
@@ -1256,7 +1292,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
   .subject-head:has(.subject-portrait) .subject-tag { align-self: start; margin: 0.4rem 0 0; }
 }
 .subject-tag { color: var(--ink-soft); font-size: 0.9375rem; margin: 0 0 1rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
-.subject-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 1.5rem; align-items: start; }
+.subject-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--space-5) var(--space-6); align-items: start; }
 .subject-main { min-width: 0; }
 .subject-map {
   position: relative; height: 420px; border: 1px solid var(--line);
@@ -1264,9 +1300,9 @@ a.ency-name:hover, a.ency-name:focus-visible {
 }
 .infobox {
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
-  border-top: 3px solid var(--bronze); padding: 1rem 1.2rem; position: sticky; top: calc(var(--header-h) + 1rem);
+  border-top: 3px solid var(--bronze); padding: var(--space-4) 1.2rem; position: sticky; top: calc(var(--header-h) + 1rem);
 }
-.infobox dl { margin: 0.4rem 0 0; display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1rem; }
+.infobox dl { margin: var(--space-2) 0 0; display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1rem; }
 .infobox dt { color: var(--ink-faint); font-size: 0.8125rem; }
 .infobox dd { margin: 0; font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
 .infobox .actions { margin-top: 0.9rem; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.875rem; }
@@ -1275,8 +1311,8 @@ a.ency-name:hover, a.ency-name:focus-visible {
   margin-top: 0.9rem; font-size: 0.9375rem; line-height: 1.5;
 }
 .funfact b { font-variant-numeric: tabular-nums; }
-.subject-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
-.subject-list li { border-top: 1px solid var(--line); padding: 0.7rem 0; }
+.subject-list { list-style: none; margin: 0; padding: 0; }
+.subject-list li { border-top: 1px solid var(--line); padding: var(--row-gap) 0; }
 .subject-list li:first-child { border-top: none; }
 
 /* ---- encyclopedia indexes (directories) --------------------------------- */
@@ -1284,7 +1320,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
    then selects and the sort; wraps on phones), a hairline list whose rows
    are portrait | name and meta | figures, and a "Show more" button. */
 .dir-tiles { margin-bottom: 0.2rem; }
-.dir-controls { display: flex; flex-wrap: wrap; gap: 0.6rem 0.8rem; align-items: end; margin: 1.1rem 0 0.2rem; }
+.dir-controls { display: flex; flex-wrap: wrap; gap: 0.6rem 0.8rem; align-items: end; margin: var(--space-5) 0 var(--space-1); }
 .dir-controls input[type="search"] {
   flex: 1 1 240px; min-width: 0; min-height: 44px;
   background: var(--paper-raised); color: var(--ink);
@@ -1301,7 +1337,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .dir-count { margin: 0.5rem 0 0; color: var(--ink-faint); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
 .dir-list li.dir-row {
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 0.25rem 0.9rem; align-items: center; padding: 0.7rem 0;
+  gap: var(--space-1) 0.9rem; align-items: center; padding: var(--row-gap) 0;
 }
 .dir-list li.dir-row-plain { grid-template-columns: minmax(0, 1fr) auto; }
 .dir-portrait, .dir-mono { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; }
@@ -1348,7 +1384,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 /* Declared interests (person pages): a hairline list of register buckets, each
    a chat-sources disclosure with its count at the right; rows are
    holder | declaration with the date and page link beneath. */
-.interests-summary { margin: 0.2rem 0 0.4rem; color: var(--ink-soft); font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
+.interests-summary { margin: var(--space-1) 0 var(--space-2); color: var(--ink-soft); font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
 .interests-list > li { padding: 0; }
 .interests-bucket > summary { display: flex; width: 100%; }
 .interests-count { margin-left: auto; color: var(--ink-faint); letter-spacing: 0; font-variant-numeric: tabular-nums; }
@@ -1358,12 +1394,12 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .interests-holders .result-meta { grid-column: 2; }
 .interests-deleted .interests-desc { text-decoration: line-through; color: var(--ink-faint); }
 .topic-digest { max-width: 68ch; }
-.topic-digest-item { border-top: 1px solid var(--line); padding: 0.85rem 0 0.9rem; }
-.topic-digest-item:first-of-type { border-top: none; padding-top: 0.1rem; }
+.topic-digest-item { border-top: 1px solid var(--line); padding: var(--row-gap) 0; }
+.topic-digest-item:first-of-type { border-top: none; padding-top: var(--space-1); }
 .topic-digest-source { font: 600 0.9375rem/1.35 var(--serif); text-decoration: none; }
 .topic-digest-source:hover { color: var(--bronze-ink); }
 .topic-digest-text {
-  font: 400 1rem/1.6 var(--serif); color: var(--ink); margin: 0.3rem 0 0;
+  font: 400 1rem/1.6 var(--serif); color: var(--ink); margin: var(--space-2) 0 0;
 }
 @media (max-width: 900px) {
   .subject-grid { grid-template-columns: 1fr; }
@@ -1415,6 +1451,34 @@ footer a { color: var(--on-navy); text-decoration-color: var(--bronze-bright); }
 footer a:hover { color: var(--bronze-bright); }
 /* Same navy-band rule as the header: ledger bronze vanishes against navy. */
 footer :focus-visible { outline-color: var(--bronze-bright); }
+
+/* ---- section rhythm on entry and report pages --------------------------- */
+/* An entry page is a stack of sections, each a bronze kicker over a hairline
+   list. The kicker's own margin is the boundary, so it has to be plainly
+   larger than the breath either side of a hairline — about three rows' worth
+   of silence, or the eye reads one long list instead of five sections. */
+
+#subject-sections .kicker { margin-top: var(--section-gap); }
+/* The money flows open a donor or party page with a chart, not a kicker —
+   but only where the map sits above them. With no map (topics, anyone the
+   money data does not hold) the first block is the top of the column and
+   sets its shoulder against the Quick facts card, not below it. */
+#subject-map:not([hidden]) ~ #subject-sections > .chart:first-child { margin-top: var(--section-gap); }
+#subject-map[hidden] ~ #subject-sections > .kicker:first-child,
+#subject-map[hidden] ~ #subject-sections > :first-child > .kicker:first-child { margin-top: 0; }
+
+/* A second list inside one section (the firms a donor retains, a minister's
+   recent meetings, a party's associated entities, the two voting columns)
+   takes the middle step: clearly a break, clearly not a new section.
+   app.js still writes `style="margin-top:1.1rem"` on those kickers — shorter
+   than the gap between two rows, which is what made them read as rows. */
+#subject-sections .kicker[style] { margin-top: var(--sub-gap) !important; }
+#subject-sections .votes-col-kicker { margin-top: var(--sub-gap); }
+
+#report-positions:not(:empty), #report-moments:not(:empty) { margin-top: var(--section-gap); }
+
+/* Stacked, the Quick facts column is a section of its own. */
+@media (max-width: 900px) { .subject-grid { row-gap: var(--section-gap); } }
 
 /* ---- forced colors / high contrast -------------------------------------- */
 
