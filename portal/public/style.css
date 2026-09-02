@@ -1479,6 +1479,9 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
    app.js still writes `style="margin-top:1.1rem"` on those kickers — shorter
    than the gap between two rows, which is what made them read as rows. */
 #subject-sections .kicker-sub { margin-top: var(--sub-gap); }
+/* The map's hint is a caption for the plate above it, not a lead-in to the
+   ask row below, so it keeps a row's breath before whatever follows. */
+#subject-map-hint { margin-bottom: var(--space-5); }
 #subject-sections .votes-col-kicker { margin-top: var(--sub-gap); }
 
 #report-positions:not(:empty), #report-moments:not(:empty) { margin-top: var(--section-gap); }
