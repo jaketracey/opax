@@ -20,7 +20,9 @@ resolves every distinct `donor_name` in `donations` (AEC) and `ext_donations`
 Three tiers, recorded per alias in `method`:
 
   exact    the alias differs from the canonical name only by case, punctuation,
-           whitespace, "&" vs "and" or an apostrophe            (confidence 1.0)
+           whitespace, "&" vs "and" or an apostrophe; a person-shaped name also
+           has honorifics and post-nominals dropped and "Surname, Given" turned
+           around ("Turpie, Duncan" = "Mr Duncan Turpie")       (confidence 1.0)
   rule     the alias also needed a legal-form suffix dropped (Pty Ltd, Limited,
            Inc, Corporation, Group, Holdings, leading "The"), an abbreviation
            expanded (Assn, Aust, Dept) or a trailing branch / state suffix removed
@@ -32,7 +34,7 @@ Three tiers, recorded per alias in `method`:
            curated entity with no aliases pins a name so the rule tier cannot
            merge it into a look-alike.                               (confidence 1.0)
 
-Individuals only ever merge on the exact tier. Government departments merge
+Individuals only ever merge on the exact tier (the person-normalised one). Government departments merge
 ("Dept of Finance" / "Dept Finance"). Union branches roll up to the parent union
 with `branch` kept on the alias so a donor page can list "given as: Vic Branch,
 SA Branch". Ambiguous look-alikes stay separate with a note.
@@ -194,7 +196,11 @@ COMPANY_RX = re.compile(
     r"\bestates?\b|\bagencies\b|\bagency\b|\bstudios?\b|\bfoods?\b|\bmeats?\b|\bseafoods?\b",
     re.I,
 )
-HONORIFIC_RX = re.compile(r"^(mr|mrs|ms|miss|dr|prof|professor|hon|the hon|sir|dame|lady|rev|fr|cr|hon\.)\b\.?\s+", re.I)
+HONORIFIC_RX = re.compile(r"^(mr|mrs|ms|miss|dr|prof|professor|hon|the hon|the rt hon|rt hon|sir|dame|lord|lady|rev|fr|cr|hon\.)\b\.?\s+", re.I)
+# Honours individuals append to a filing ("Wall OAM, Pamela", "Harold Mitchell AC"). Whole
+# tokens, trailing only, and only on person-shaped names.
+POSTNOMINALS = {"am", "oam", "ao", "ac", "ak", "kcmg", "cmg", "gcmg", "mbe", "obe", "cbe", "kbe", "dbe", "gbe",
+                "qc", "kc", "sc", "psm", "apm", "rfd", "mp", "mhr", "mlc", "mla"}
 SURNAME_FIRST_RX = re.compile(r"^[A-Za-z'’`\-\. ]{2,40},\s*[A-Za-z'’`\-\. ]{1,60}$")
 INITIALS_RX = re.compile(r"^(?:[A-Z]\.?\s*){1,3}[A-Z][a-z'’\-]+$|^[A-Z][a-z'’\-]+\s+(?:[A-Z]\.?\s*){1,3}$")
 
@@ -260,11 +266,84 @@ def looks_like_person(name: str) -> bool:
     return True
 
 
+def _strip_honorifics(s: str) -> str:
+    for _ in range(3):
+        t = HONORIFIC_RX.sub("", s)
+        if t == s:
+            break
+        s = t
+    return s
+
+
+def _drop_postnominals(toks: list[str]) -> list[str]:
+    while len(toks) > 1 and toks[-1] in POSTNOMINALS:
+        toks.pop()
+    return toks
+
+
+def person_parts(name: str) -> tuple[list[str], list[str]]:
+    """(given tokens, surname tokens) of a person-shaped name, normalised, with
+    honorifics and post-nominals off: 'Wall OAM, Pamela' -> (['pamela'], ['wall']),
+    'Mr Duncan Turpie' -> (['duncan'], ['turpie'])."""
+    s = _strip_honorifics((name or "").strip())
+    if "," in s:
+        sur, given = s.split(",", 1)
+        sur_t = _drop_postnominals(norm_exact(sur).split())
+        giv_t = _drop_postnominals(norm_exact(_strip_honorifics(given.strip())).split())
+        return giv_t, sur_t
+    toks = _drop_postnominals(norm_exact(s).split())
+    return toks[:-1], toks[-1:]
+
+
+def norm_person(name: str) -> str:
+    """Exact-tier key for a person: honorifics and post-nominals off and
+    'Surname, Given' turned around, so 'Turpie, Duncan', 'Mr Duncan Turpie' and
+    'Duncan Turpie' share one key. Never a surname plus an initial: 'Turpie, D'
+    keys as 'd turpie' and stays apart."""
+    giv, sur = person_parts(name)
+    return " ".join(giv + sur) or norm_exact(name)
+
+
+def strong_person(name: str) -> bool:
+    """A person-shaped filing that carries a person SIGNAL: a title, 'Surname,
+    Given' order, or an honour. 'Lady Fairfax' and 'White, Sam' are strong;
+    'U-Cover' and 'Ord Minnett' merely person-shaped."""
+    s = (name or "").strip()
+    if not looks_like_person(s):
+        return False
+    toks = norm_exact(s).split()
+    return bool(HONORIFIC_RX.match(s) or SURNAME_FIRST_RX.match(s) or (toks and toks[-1] in POSTNOMINALS))
+
+
+def pretty_person(name: str) -> str:
+    """Display form of a person-shaped filing: given name first, titles and
+    honours off, the filing's own capitalisation kept ('Wall OAM, Pamela' ->
+    'Pamela Wall'). Only a filing with a person signal is reshaped; a merely
+    person-shaped name ('Clubs NSW', 'ASX Group') keeps the organisation form."""
+    if not strong_person(name):
+        return pretty(name)
+    raw = re.sub(r"\s+", " ", (name or "").strip())
+    s = _strip_honorifics(raw)
+    if " " not in s.strip() and "," not in s:
+        s = raw  # a title plus one word ("Lady Fairfax"): the title is the only given name we have
+    if "," in s:
+        sur, given = (part.strip() for part in s.split(",", 1))
+        s = f"{_strip_honorifics(given)} {sur}".strip()
+    words = s.split(" ")
+    while len(words) > 1 and re.sub(r"[^a-z]", "", words[-1].lower()) in POSTNOMINALS:
+        words.pop()
+    # ALL-CAPS filings ("SMITH, JOHN") title-case a word at a time so a mixed
+    # filing's own capitals ("McDonald", "O'Brien") survive.
+    words = [w[:1] + w[1:].lower() if (len(w) > 1 and w.isupper()) else w for w in words]
+    out = " ".join(words)
+    return out or pretty(name)
+
+
 def norm_rule(name: str) -> str:
     """Rule tier key: branch tail off, abbreviations expanded, stopwords and
-    trailing legal-form/generic suffixes dropped. Persons get norm_exact."""
+    trailing legal-form/generic suffixes dropped. Persons get norm_person."""
     if looks_like_person(name):
-        return norm_exact(name)
+        return norm_person(name)
     stem, _ = strip_branch(name)
     toks = norm_exact(stem).split()
     toks = [ABBREV.get(t, t) for t in toks]
@@ -457,10 +536,10 @@ def resolve(names: dict[str, RawName], curated: list[dict]) -> tuple[dict[str, E
                 raise SystemExit(f"donor_aliases.json: {a['name']!r} claimed by both {by_exact[ne]} and {ent.entity_id}")
             by_exact[ne] = ent.entity_id
             branch_of[ne] = a["branch"]
-            if not looks_like_person(a["name"]):
-                nr = norm_rule(a["name"])
-                # first claim wins at the rule level; an exact claim elsewhere overrides it per name
-                by_rule.setdefault(nr, ent.entity_id)
+            # The rule-level claim: an organisation alias claims its legal-suffix/branch group, a
+            # person alias its person-normalised group ("Pam Wall" also takes "Mrs Pam Wall OAM").
+            # First claim wins at the rule level; an exact claim elsewhere overrides it per name.
+            by_rule.setdefault(norm_rule(a["name"]), ent.entity_id)
 
     groups: dict[str, list[RawName]] = defaultdict(list)
     assigned: dict[str, tuple[str, str | None]] = {}  # raw -> (entity_id, branch)
@@ -470,27 +549,48 @@ def resolve(names: dict[str, RawName], curated: list[dict]) -> tuple[dict[str, E
             assigned[raw] = (by_exact[ne], branch_of.get(ne) or strip_branch(raw)[1])
             stats["curated_exact"] += 1
             continue
-        if not looks_like_person(raw):
-            nr = norm_rule(raw)
-            if nr in by_rule:
-                assigned[raw] = (by_rule[nr], strip_branch(raw)[1])
-                stats["curated_rule"] += 1
-                continue
-        groups[norm_rule(raw)].append(n)
+        person = looks_like_person(raw)
+        nr = norm_rule(raw)
+        # A person-shaped filing only takes a curated claim made by a person entity, and an
+        # organisation only an organisation's: "Lady Fairfax" must not fall into Fairfax.
+        if nr in by_rule and (entities[by_rule[nr]].kind == "individual") == person:
+            assigned[raw] = (by_rule[nr], strip_branch(raw)[1])
+            stats["curated_rule"] += 1
+            continue
+        groups[nr].append(n)
 
     # Automatic entities: one per rule key; canonical = highest-dollar spelling.
-    for key, members in groups.items():
+    # Turning "Surname, Given" around and dropping titles lets a person's key
+    # collide with an organisation's ("DR Joyce" / "Joyce Corporation Ltd" both
+    # key as "joyce"). Where a group holds a filing with a real person signal, the
+    # organisation-shaped filings are kept apart under "<id>-co". A merely
+    # person-shaped name ("U-Cover") carries no signal, so "U-Cover" and
+    # "U-Cover Pty Ltd" still merge as before. A curated id folds everything in.
+    def make_entity(eid: str, members: list[RawName]) -> Entity:
         members.sort(key=lambda m: (-m.total, -m.count, m.raw))
         head = members[0]
+        if eid in entities:
+            return entities[eid]
+        person = looks_like_person(head.raw)
+        kind = guess_kind(head.raw, head.donor_type)
+        if person and kind in ("company", "other"):
+            kind = "individual"
+        ent = entities[eid] = Entity(eid, pretty_person(head.raw) if person else pretty(head.raw), kind, "exact")
+        return ent
+
+    split_groups: list[tuple[str, list[RawName]]] = []
+    for key, members in groups.items():
         eid = slug(key)
-        if eid in entities:  # a curated id happens to equal this key: fold the group into it
-            ent = entities[eid]
-        else:
-            person = looks_like_person(head.raw)
-            kind = guess_kind(head.raw, head.donor_type)
-            if person and kind in ("company", "other"):
-                kind = "individual"
-            ent = entities[eid] = Entity(eid, pretty(head.raw), kind, "exact")
+        if eid not in entities and any(strong_person(m.raw) for m in members):
+            orgs = [m for m in members if not looks_like_person(m.raw)]
+            if orgs:
+                members = [m for m in members if looks_like_person(m.raw)]
+                split_groups.append((f"{eid}-co", orgs))
+                stats["person_org_split"] += 1
+        split_groups.append((eid, members))
+    for eid, members in split_groups:
+        ent = make_entity(eid, members)
+        head = members[0]
         head_exact = norm_exact(strip_branch(ent.canonical)[0])
         for m in members:
             stem, branch = strip_branch(m.raw)
