@@ -178,6 +178,13 @@ function json(data: unknown, status = 200): Response {
 const CACHE_ORIGIN = 'https://cache.opax.internal'
 const ASK_CACHE_TTL = 7 * 24 * 3600
 const SEARCH_CACHE_TTL = 600
+/**
+ * The retrieved window outlives the page responses built from it. A reader
+ * working through nine pages would otherwise hit a fresh multi-second /find
+ * the moment the ten minutes ran out, mid-paging. Correctness is not at stake:
+ * the key carries CACHE_EPOCH, so a corpus change retires the window anyway.
+ */
+const SEARCH_WINDOW_CACHE_TTL = 3600
 const RESOURCE_CACHE_TTL = 3600
 const FOLLOWUPS_CACHE_TTL = 24 * 3600
 const STATS_CACHE_TTL = 300
@@ -340,7 +347,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     if (limited) return limited
     win = await searchWindow(env, { q, mode, kind, topK, url })
     if (!win) return json({ error: 'find failed' }, 502)
-    cacheStore(ctx, windowKey, json(win), SEARCH_CACHE_TTL)
+    cacheStore(ctx, windowKey, json(win), SEARCH_WINDOW_CACHE_TTL)
   }
 
   const ordered =
