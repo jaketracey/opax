@@ -531,12 +531,23 @@ export function mountThenVsNow (container) {
     return slot
   }
 
-  /** One era's ask; mirrors app.js runAsk's one silent retry on a blank answer. */
-  async function askEra (question, speaker, topic, era, signal) {
+  /**
+   * One era's ask (mirror of app.js askRecord). Streams when it can: `on.delta`
+   * fires with each fragment of answer text and `on.retry` when the Worker
+   * withdraws attempt one; the result is the final {answer, citations,
+   * sources}. If the stream fails before any text has shown, the synchronous
+   * call answers instead, with runAsk's one silent retry on a blank answer.
+   */
+  async function askEra (question, speaker, topic, era, signal, on) {
     const body = JSON.stringify({
       question, kind: 'speech', speaker, topic,
       from: String(era[0]), to: String(era[1]),
     })
+    try {
+      return await readAskStream(body, signal, on)
+    } catch (err) {
+      if (err.name === 'AbortError' || err.shown) throw err
+    }
     const once = async () => {
       const res = await fetch(ASK_URL, {
         method: 'POST',
@@ -551,6 +562,109 @@ export function mountThenVsNow (container) {
     let data = await once()
     if (!(data.answer || '').trim()) data = await once()
     return data
+  }
+
+  /** Read one streamed ask (mirror of app.js readAskStream): SSE events
+   * status / delta / retry / done / error; resolves with the done payload.
+   * An error carries `shown: true` once answer text has reached the handlers. */
+  async function readAskStream (body, signal, on) {
+    const res = await fetch(`${ASK_URL}?stream=1`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', accept: 'text/event-stream' },
+      body,
+      signal,
+    })
+    if (!(res.headers.get('content-type') || '').includes('text/event-stream')) {
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`)
+      return data
+    }
+    let shown = false
+    let final = null
+    const fail = (message) => Object.assign(new Error(message), { shown })
+    const dispatch = (block) => {
+      let event = 'message'
+      const data = []
+      for (const line of block.split('\n')) {
+        if (line.startsWith('event:')) event = line.slice(6).trim()
+        else if (line.startsWith('data:')) data.push(line.slice(5).replace(/^ /, ''))
+      }
+      if (!data.length) return
+      let payload
+      try { payload = JSON.parse(data.join('\n')) } catch { return }
+      if (event === 'delta') {
+        if (typeof payload.text === 'string' && payload.text) {
+          shown = true
+          on.delta?.(payload.text)
+        }
+      } else if (event === 'retry') {
+        shown = false
+        on.retry?.(payload)
+      } else if (event === 'done') {
+        final = payload
+      } else if (event === 'error') {
+        throw fail(payload.error || 'The answer stream failed.')
+      }
+    }
+    const reader = res.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+    try {
+      for (;;) {
+        const { value, done } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        let at
+        while ((at = buffer.indexOf('\n\n')) >= 0) {
+          const block = buffer.slice(0, at)
+          buffer = buffer.slice(at + 2)
+          if (block.trim()) dispatch(block)
+        }
+      }
+      buffer += decoder.decode()
+      if (buffer.trim()) dispatch(buffer)
+    } catch (err) {
+      if (err.name !== 'AbortError' && err.shown === undefined) err.shown = shown
+      throw err
+    }
+    if (!final) throw fail('The answer stream ended early.')
+    return final
+  }
+
+  /** Progressive rendering (mirror of app.js streamRenderer): the whole text
+   * re-parses every ~120ms; blocks new since the last paint get .stream-in;
+   * an unclosed ** shows plain and a marker-only last line is held back. */
+  function streamRenderer (containerEl, alive) {
+    let text = ''
+    let timer = 0
+    let painted = 0
+    let blocks = 0
+    const safe = (t) => {
+      if ((t.match(/\*\*/g) || []).length % 2) {
+        const at = t.lastIndexOf('**')
+        t = t.slice(0, at) + t.slice(at + 2)
+      }
+      return t.replace(/\n[ \t]*[#*\-+>|]{1,3}[ \t]*$/, '')
+    }
+    const paint = () => {
+      timer = 0
+      if (!alive()) return
+      containerEl.replaceChildren()
+      renderAnswer(containerEl, safe(text))
+      const kids = containerEl.children
+      for (let i = blocks; i < kids.length; i++) kids[i].classList.add('stream-in')
+      blocks = kids.length
+      painted = Date.now()
+    }
+    const stop = () => { if (timer) { clearTimeout(timer); timer = 0 } }
+    return {
+      push (fragment) {
+        text += fragment
+        if (!timer) timer = setTimeout(paint, Math.max(0, 120 - (Date.now() - painted)))
+      },
+      reset () { stop(); text = ''; blocks = 0; containerEl.replaceChildren() },
+      stop,
+    }
   }
 
   // The platform's canned refusals; with zero sources they mean the era's
@@ -666,12 +780,40 @@ export function mountThenVsNow (container) {
           if (wombat) wombat.setLabel(late)
           else slot.textContent = late
         }, 5000)
+        // The era's answer streams into the panel as it is written; the
+        // wait slot leaves on the first words and comes back on a retry.
+        const live = streamRenderer(panel.bodyEl, () => compareAbort === aborter)
+        let streamed = false
         try {
-          const data = await askEra(question, speaker, topic, era, aborter.signal)
+          const data = await askEra(question, speaker, topic, era, aborter.signal, {
+            delta (text) {
+              if (compareAbort !== aborter) return
+              if (!streamed) {
+                streamed = true
+                clearInterval(waitTimer)
+                wombat = null
+                panel.bodyEl.replaceChildren()
+              }
+              live.push(text)
+            },
+            retry () {
+              if (compareAbort !== aborter) return
+              streamed = false
+              live.reset()
+              const again = setWaiting(panel, `Reading the ${eraLabel} record again.`)
+              loadWombat().then((mod) => {
+                if (!mod || compareAbort !== aborter || !again.isConnected) return
+                again.textContent = ''
+                wombat = mod.mountWombat(again, { label: `Reading the ${eraLabel} record again.` })
+              })
+            },
+          })
+          live.stop()
           if (compareAbort !== aborter) return
           clearInterval(waitTimer)
           renderResult(panel, data, { speaker, phrase })
         } catch (err) {
+          live.stop()
           if (compareAbort !== aborter) return // superseded: the new run owns the DOM
           clearInterval(waitTimer)
           if (err.name === 'AbortError') {

@@ -178,6 +178,161 @@ async function api(path, options) {
   return data;
 }
 
+/* --- streamed asks -----------------------------------------------------------
+   POST /api/ask?stream=1 answers as Server-Sent Events (docs/STREAMING.md):
+     event: status  {phase, words}                the model is still reading
+     event: delta   {text}                        answer text to append
+     event: retry   {reason}                      attempt one is withdrawn
+     event: done    {answer, citations, sources}  the synchronous payload
+     event: error   {error}
+   askRecord() reads that stream and resolves with the done payload, so the
+   code that runs after an answer is the same whichever path produced it. */
+
+/**
+ * Read one streamed ask. Resolves with the `done` payload. A thrown error
+ * carries `shown: true` once answer text has reached the handlers, so the
+ * caller knows a synchronous fallback would be replacing visible words.
+ */
+async function readAskStream(body, signal, on) {
+  const res = await fetch("/api/ask?stream=1", {
+    method: "POST",
+    headers: { "content-type": "application/json", accept: "text/event-stream" },
+    body,
+    signal,
+  });
+  if (!(res.headers.get("content-type") || "").includes("text/event-stream")) {
+    // Not a stream (an error, or something between us answered whole): the
+    // body is the synchronous payload.
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+    return data;
+  }
+  let shown = false;
+  let final = null;
+  const fail = (message) => Object.assign(new Error(message), { shown });
+  const dispatch = (block) => {
+    let event = "message";
+    const data = [];
+    for (const line of block.split("\n")) {
+      if (line.startsWith("event:")) event = line.slice(6).trim();
+      else if (line.startsWith("data:")) data.push(line.slice(5).replace(/^ /, ""));
+    }
+    if (!data.length) return;
+    let payload;
+    try { payload = JSON.parse(data.join("\n")); } catch { return; }
+    if (event === "delta") {
+      if (typeof payload.text === "string" && payload.text) {
+        shown = true;
+        on.delta?.(payload.text);
+      }
+    } else if (event === "retry") {
+      shown = false;
+      on.retry?.(payload);
+    } else if (event === "status") {
+      on.status?.(payload);
+    } else if (event === "done") {
+      final = payload;
+    } else if (event === "error") {
+      throw fail(payload.error || "The answer stream failed.");
+    }
+  };
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  try {
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let at;
+      while ((at = buffer.indexOf("\n\n")) >= 0) {
+        const block = buffer.slice(0, at);
+        buffer = buffer.slice(at + 2);
+        if (block.trim()) dispatch(block);
+      }
+    }
+    buffer += decoder.decode();
+    if (buffer.trim()) dispatch(buffer);
+  } catch (err) {
+    if (err.name !== "AbortError" && err.shown === undefined) err.shown = shown;
+    throw err;
+  }
+  if (!final) throw fail("The answer stream ended early.");
+  return final;
+}
+
+/**
+ * Ask the record. Streams when it can (the handlers fire as text lands) and
+ * resolves with the final {answer, citations, sources}. If the stream fails
+ * before any text has been shown, the synchronous call answers instead, with
+ * its one silent retry on a blank answer (a reasoning burn). The streamed
+ * path retries inside the Worker, so its payload is taken as it comes.
+ */
+async function askRecord(body, signal, on = {}) {
+  try {
+    return await readAskStream(body, signal, on);
+  } catch (err) {
+    if (err.name === "AbortError" || err.shown) throw err;
+  }
+  const once = () => api("/api/ask", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body,
+    signal,
+  });
+  let data = await once();
+  if (!(data.answer || "").trim()) data = await once();
+  return data;
+}
+
+/**
+ * The tail of a half-arrived answer can mislead the parser: an unclosed **
+ * shows as literal asterisks, and a lone marker on the last line ("#", "*",
+ * "|") is a heading, bullet or table row still on its way. Show the bold
+ * text plain until its partner arrives and hold the marker-only line back.
+ */
+function streamSafeText(text) {
+  let t = text;
+  if ((t.match(/\*\*/g) || []).length % 2) {
+    const at = t.lastIndexOf("**");
+    t = t.slice(0, at) + t.slice(at + 2);
+  }
+  return t.replace(/\n[ \t]*[#*\-+>|]{1,3}[ \t]*$/, "");
+}
+
+/**
+ * Progressive rendering for a streamed answer. Fragments accumulate and the
+ * whole text re-parses through renderAnswer at most every 120ms, so headings,
+ * lists and tables take shape as they land. Blocks that were not there at
+ * the previous paint fade in (.stream-in; the stylesheet drops the motion
+ * under prefers-reduced-motion). `alive` says whether this render still owns
+ * the container: a superseded question must never paint late.
+ */
+function streamRenderer(container, alive) {
+  let text = "";
+  let timer = 0;
+  let painted = 0; // when the last paint happened
+  let blocks = 0;  // top-level blocks at the last paint
+  const paint = () => {
+    timer = 0;
+    if (alive && !alive()) return;
+    renderAnswer(container, streamSafeText(text));
+    const kids = container.children;
+    for (let i = blocks; i < kids.length; i++) kids[i].classList.add("stream-in");
+    blocks = kids.length;
+    painted = Date.now();
+  };
+  const stop = () => { if (timer) { clearTimeout(timer); timer = 0; } };
+  return {
+    push(fragment) {
+      text += fragment;
+      if (!timer) timer = setTimeout(paint, Math.max(0, 120 - (Date.now() - painted)));
+    },
+    reset() { stop(); text = ""; blocks = 0; container.replaceChildren(); },
+    stop,
+  };
+}
+
 function setStatus(el, message, isError = false) {
   el.textContent = message || "";
   el.classList.toggle("error", isError);
@@ -2860,6 +3015,20 @@ function hideLoader(slotId) {
   if (slot) slot.hidden = true;
 }
 
+/** Show the ask result once: a gentle rise, and the page glides to meet it. */
+function revealAskResult() {
+  const result = $("ask-result");
+  if (!result.hidden) return;
+  result.hidden = false;
+  result.classList.remove("ask-reveal");
+  void result.offsetWidth;
+  result.classList.add("ask-reveal");
+  result.scrollIntoView({
+    behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
+    block: "start",
+  });
+}
+
 async function runAsk(question) {
   if (askAbort) askAbort.abort();
   const myAbort = new AbortController();
@@ -2914,21 +3083,36 @@ async function runAsk(question) {
       for (const [k, v] of Object.entries(f)) if (v) body[k] = v;
       return body;
     })());
-    let data = await api("/api/ask", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: askBody,
-      signal: myAbort.signal,
+    // The answer streams into the page as it is written; the wombat leaves
+    // on the first words. Sources, stamp and rail wait for the final payload.
+    const live = streamRenderer($("ask-answer"), () => askAbort === myAbort);
+    let streamed = false;
+    const data = await askRecord(askBody, myAbort.signal, {
+      delta(text) {
+        if (askAbort !== myAbort) return;
+        if (!streamed) {
+          streamed = true;
+          hideWombat();
+          // The result block still holds the previous answer and its
+          // trimmings; the first paint is a timer tick away.
+          $("ask-answer").replaceChildren();
+          $("ask-stamp").textContent = "";
+          $("ask-sources").hidden = true;
+          $("ask-result").querySelector(".action-row").hidden = true;
+          revealAskResult();
+        }
+        live.push(text);
+      },
+      retry() {
+        if (askAbort !== myAbort) return;
+        // Attempt one is being withdrawn: back to the wombat, a clean page.
+        streamed = false;
+        live.reset();
+        $("ask-result").hidden = true;
+        showWombat("Reading the record again.");
+      },
     });
-    if (!(data.answer || "").trim()) {
-      // Reasoning burn: one silent retry before conceding an empty answer.
-      data = await api("/api/ask", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: askBody,
-        signal: myAbort.signal,
-      });
-    }
+    live.stop();
     if (askAbort !== myAbort) return; // superseded by a newer question
     // Trim before every use: a whitespace-only answer is truthy and would
     // otherwise slip past the "(no answer)" fallback and render nothing.
@@ -2950,16 +3134,8 @@ async function runAsk(question) {
     hideWombat();
     setStatus($("ask-status"), `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
-    const result = $("ask-result");
-    result.hidden = false;
-    // The answer arrives with a gentle rise; the page glides to meet it.
-    result.classList.remove("ask-reveal");
-    void result.offsetWidth;
-    result.classList.add("ask-reveal");
-    result.scrollIntoView({
-      behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
-      block: "start",
-    });
+    revealAskResult();
+    $("ask-result").querySelector(".action-row").hidden = false;
     if (answerText) {
       renderAnswer($("ask-answer"), answerText);
     } else {
@@ -2994,8 +3170,11 @@ async function runAsk(question) {
       setStatus($("ask-status"),
         `${err.message || err}. The record is still there; try again.`, true);
       // A failed ask leaves the page empty; the suggested starts return.
-      if (suggestions.length) $("ask-chips").hidden = false;
-      setFrontPageHidden(false);
+      // (A stream that broke after its first words leaves them standing.)
+      if ($("ask-result").hidden) {
+        if (suggestions.length) $("ask-chips").hidden = false;
+        setFrontPageHidden(false);
+      }
     }
   } finally {
     if (askAbort === myAbort) {
@@ -3318,22 +3497,41 @@ async function sendChat(question, carry) {
   }, 5000);
   try {
     const chatBody = JSON.stringify({ question: q, kind: chatKind, context });
-    let data = await api("/api/ask", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: chatBody,
-      signal: myAbort.signal,
+    // The answer streams into a provisional turn beneath the loader's slot;
+    // the finished thread re-renders from chatThread as before.
+    let liveWrap = null;
+    let live = null;
+    let streamed = false;
+    const data = await askRecord(chatBody, myAbort.signal, {
+      delta(text) {
+        if (chatAbort !== myAbort || !slot.isConnected) return;
+        if (!live) {
+          liveWrap = document.createElement("div");
+          liveWrap.className = "chat-turn chat-turn-answer";
+          const body = document.createElement("div");
+          body.className = "answer";
+          liveWrap.appendChild(body);
+          slot.insertAdjacentElement("afterend", liveWrap);
+          live = streamRenderer(body, () => chatAbort === myAbort);
+        }
+        if (!streamed) {
+          streamed = true;
+          slot.hidden = true;
+          liveWrap.hidden = false;
+          liveWrap.scrollIntoView({ block: "start" });
+        }
+        live.push(text);
+      },
+      retry() {
+        if (chatAbort !== myAbort) return;
+        streamed = false;
+        live?.reset();
+        if (liveWrap) liveWrap.hidden = true;
+        slot.hidden = false;
+        trundler?.setLabel("Reading the record again.");
+      },
     });
-    // Reasoning models occasionally burn the whole budget thinking and
-    // return nothing; one silent retry recovers almost all of these.
-    if (!(data.answer || "").trim()) {
-      data = await api("/api/ask", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: chatBody,
-        signal: myAbort.signal,
-      });
-    }
+    live?.stop();
     if (chatAbort !== myAbort) return;
     chatThread.push({
       role: "answer",
@@ -3348,11 +3546,15 @@ async function sendChat(question, carry) {
     setStatus($("chat-status"), "Answer ready.");
     $("chat-status").classList.add("visually-hidden");
     requestChatFollowups();
-    const answers = $("chat-thread").querySelectorAll(".chat-turn-answer");
-    answers[answers.length - 1]?.scrollIntoView({ block: "start" });
+    if (!streamed) {
+      // A streamed answer was scrolled to on its first words; the reader may
+      // be partway down it by now.
+      const answers = $("chat-thread").querySelectorAll(".chat-turn-answer");
+      answers[answers.length - 1]?.scrollIntoView({ block: "start" });
+    }
   } catch (err) {
     if (chatAbort !== myAbort) return;
-    renderChatThread(); // clears the wombat slot
+    renderChatThread(); // clears the wombat slot and any half-streamed turn
     const p = document.createElement("p");
     p.className = "chat-error";
     p.textContent = err.name === "AbortError"
@@ -3608,13 +3810,30 @@ async function runSearchAnswer(q, f, mySeq) {
       : `What has parliament said about ${q}?`;
     const body = { question, kind: f.kind || "speech" };
     for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) body[k] = f[k];
-    const data = await api("/api/ask", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(body),
-      signal: abort.signal,
+    // The answer streams into the rail; the loader leaves on the first words.
+    const mine = () => mySeq === searchSeq && searchAnswerAbort === abort;
+    const live = streamRenderer($("search-answer-body"), mine);
+    let streamed = false;
+    const data = await askRecord(JSON.stringify(body), abort.signal, {
+      delta(text) {
+        if (!mine()) return;
+        if (!streamed) {
+          streamed = true;
+          clearTimeout(searchAnswerStill);
+          hideLoader("search-answer-wombat");
+          setStatus($("search-answer-status"), "");
+        }
+        live.push(text);
+      },
+      retry() {
+        if (!mine()) return;
+        streamed = false;
+        live.reset();
+        showLoader("search-answer-wombat", "");
+      },
     });
-    if (mySeq !== searchSeq || searchAnswerAbort !== abort) return;
+    live.stop();
+    if (!mine()) return;
     const answer = (data.answer || "").trim();
     if (!answer) { clearTimeout(searchAnswerStill); hideLoader("search-answer-wombat"); box.hidden = true; return; }
     clearTimeout(searchAnswerStill);

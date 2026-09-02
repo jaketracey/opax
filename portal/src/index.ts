@@ -249,22 +249,44 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
   return json({ query: q, mode, kind, count: results.length, results })
 }
 
-async function apiAsk(request: Request, env: Env): Promise<Response> {
-  const { question, kind, speaker, party, state, topic, from, to, context } = ((await request
-    .json()
-    .catch(() => ({}))) ?? {}) as {
-    question?: string
-    kind?: string
-    speaker?: string
-    party?: string
-    state?: string
-    topic?: string
-    from?: string
-    to?: string
-    context?: { author?: string; text?: string }[]
-  }
-  if (!question?.trim()) return json({ error: 'question is required' }, 400)
+interface AskInput {
+  question?: string
+  kind?: string
+  speaker?: string
+  party?: string
+  state?: string
+  topic?: string
+  from?: string
+  to?: string
+  context?: { author?: string; text?: string }[]
+}
 
+type AskAnswer = {
+  answer?: string
+  citations?: Record<string, unknown>
+  retrieval_results?: { resources?: Record<string, FindResource> }
+}
+
+// The platform's canned refusal and our custom prompt's. Shared by the
+// synchronous retry check and the streaming gate that holds such text back.
+const REFUSAL_PREFIXES = [
+  'not enough data',
+  'the record retrieved for this question does not discuss',
+]
+
+const isRefusal = (a: AskAnswer): boolean => {
+  const t = (a.answer ?? '').trim().toLowerCase()
+  return !t || REFUSAL_PREFIXES.some((p) => t.startsWith(p))
+}
+
+// A refusal or empty answer over a healthy retrieval (5+ resources) is a
+// generation stumble, not a corpus verdict: worth one silent retry.
+const healthyRetrieval = (a: AskAnswer): boolean =>
+  Object.keys(a.retrieval_results?.resources ?? {}).length >= 5
+
+/** The platform /ask body for a portal question: filters, context turns, prompt. */
+function buildAskBody(input: AskInput): Record<string, unknown> {
+  const { question, kind, speaker, party, state, topic, from, to, context } = input
   const body: Record<string, unknown> = {
     query: question,
     citations: true, // NEVER combine with answer_json_schema — platform bug
@@ -330,30 +352,11 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
         'Only if NO passage mentions the subject at all, reply exactly: The record retrieved for this question does not discuss it.',
     }
   }
+  return body
+}
 
-  type AskAnswer = {
-    answer?: string
-    citations?: Record<string, unknown>
-    retrieval_results?: { resources?: Record<string, FindResource> }
-  }
-  const askOnce = async (): Promise<AskAnswer | Response> => {
-    const res = await kbFetch(env, '/ask', { body, headers: { 'x-synchronous': 'true' } })
-    if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
-    return (await res.json()) as AskAnswer
-  }
-  const isRefusal = (a: AskAnswer): boolean => {
-    const t = (a.answer ?? '').trim().toLowerCase()
-    return !t || t.startsWith('not enough data') || t.startsWith('the record retrieved for this question does not discuss')
-  }
-  let answer = await askOnce()
-  if (answer instanceof Response) return answer
-  // A refusal or empty answer over a healthy retrieval (5+ resources) is a
-  // generation stumble, not a corpus verdict: one silent retry, like the UI.
-  if (isRefusal(answer) && Object.keys(answer.retrieval_results?.resources ?? {}).length >= 5) {
-    const again = await askOnce()
-    if (!(again instanceof Response) && !isRefusal(again)) answer = again
-  }
-
+/** The portal's answer payload: the same shape from the sync and streamed paths. */
+function askPayload(answer: AskAnswer): { answer: string; citations: Record<string, unknown>; sources: unknown[] } {
   // Citation keys are ARAG paragraph ids ("<rid>/f/<field>/..."); the leading
   // segment is the resource id. Platform-format knowledge stays HERE — the
   // frontend just reads the `cited` flag.
@@ -399,10 +402,221 @@ async function apiAsk(request: Request, env: Env): Promise<Response> {
       }
     })
 
-  return json({
+  return {
     answer: answer.answer ?? '',
     citations: answer.citations ?? {},
     sources,
+  }
+}
+
+async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const input = ((await request.json().catch(() => ({}))) ?? {}) as AskInput
+  if (!input.question?.trim()) return json({ error: 'question is required' }, 400)
+  const body = buildAskBody(input)
+
+  const url = new URL(request.url)
+  const wantStream =
+    url.searchParams.get('stream') === '1' ||
+    (request.headers.get('accept') ?? '').includes('text/event-stream')
+  if (wantStream) return apiAskStream(body, env, ctx)
+
+  const askOnce = async (): Promise<AskAnswer | Response> => {
+    const res = await kbFetch(env, '/ask', { body, headers: { 'x-synchronous': 'true' } })
+    if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
+    return (await res.json()) as AskAnswer
+  }
+  let answer = await askOnce()
+  if (answer instanceof Response) return answer
+  if (isRefusal(answer) && healthyRetrieval(answer)) {
+    const again = await askOnce()
+    if (!(again instanceof Response) && !isRefusal(again)) answer = again
+  }
+  return json(askPayload(answer))
+}
+
+// --- streamed asks -----------------------------------------------------------
+// Without x-synchronous the platform answers as NDJSON, one {"item": {...}}
+// per line (probed live 2026-09-02, see docs/STREAMING.md): `reasoning`
+// tokens interleaved with EMPTY `answer` placeholders while the model thinks,
+// then `answer` text chunks (~6 chars each), and only after the last word a
+// single `retrieval` item carrying the full results, then `status`,
+// `augmented_context`, `citations`, `metadata`, `consumption`. Nothing at
+// all arrives until retrieval + rerank are done (~3-4s); visible text starts
+// once reasoning ends (4-12s in); the tail lands ~1.5s after the last word.
+//
+// We re-emit that as Server-Sent Events the browser can render progressively:
+//   event: status  {phase:'reading', words}      the model is still thinking
+//   event: delta   {text}                        answer text to append
+//   event: retry   {reason:'refusal'|'empty'}    attempt one stumbled; text resets
+//   event: done    {answer, citations, sources}  the synchronous payload, verbatim
+//   event: error   {error}
+// Refusal-looking text is held back until it can't be a refusal, so a retry
+// never shows the reader a refusal that is about to be withdrawn.
+
+class RefusalGate {
+  private held = ''
+  private open = false
+  /** Returns the text safe to show now ('' while it could still be a refusal). */
+  push(text: string): string {
+    if (this.open) return text
+    this.held += text
+    const probe = this.held.trimStart().toLowerCase()
+    if (REFUSAL_PREFIXES.some((p) => p.startsWith(probe) || probe.startsWith(p))) return ''
+    this.open = true
+    const out = this.held
+    this.held = ''
+    return out
+  }
+}
+
+type SseSend = (event: string, data: unknown) => Promise<void>
+
+/** One streamed platform call; deltas go out as they arrive. */
+async function streamAskOnce(
+  env: Env,
+  body: Record<string, unknown>,
+  send: SseSend,
+  signal: AbortSignal,
+): Promise<AskAnswer> {
+  const res = await fetch(`${ragBase(env)}/ask`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      accept: 'application/x-ndjson',
+      'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}`,
+    },
+    body: JSON.stringify(body),
+    signal,
+  })
+  if (!res.ok || !res.body) throw new Error(`ask failed (${res.status})`)
+
+  let answer = ''
+  let citations: Record<string, unknown> = {}
+  let resources: Record<string, FindResource> | undefined
+  let failure: string | null = null
+  let words = 0
+  let lastStatusAt = 0
+  const gate = new RefusalGate()
+
+  const handle = async (line: string): Promise<void> => {
+    let item: Record<string, unknown> | undefined
+    try {
+      item = (JSON.parse(line) as { item?: Record<string, unknown> }).item
+    } catch {
+      return // a torn line is the platform's problem, not a reason to drop the answer
+    }
+    if (!item) return
+    switch (item.type) {
+      case 'answer': {
+        const text = typeof item.text === 'string' ? item.text : ''
+        if (!text) return // reasoning-phase placeholder
+        answer += text
+        const out = gate.push(text)
+        if (out) await send('delta', { text: out })
+        return
+      }
+      case 'reasoning': {
+        const text = typeof item.text === 'string' ? item.text : ''
+        if (/^\s/.test(text)) words++
+        // A quiet phase that can run ten seconds: a heartbeat every 2s
+        // (throttled so a role=status label isn't chattering at readers).
+        const now = Date.now()
+        if (now - lastStatusAt >= 2000) {
+          lastStatusAt = now
+          await send('status', { phase: 'reading', words })
+        }
+        return
+      }
+      case 'retrieval':
+        resources = (item.results as { resources?: Record<string, FindResource> } | undefined)?.resources
+        return
+      case 'citations':
+        citations = (item.citations as Record<string, unknown> | undefined) ?? {}
+        return
+      case 'status':
+        // "0" success; "-1" error; "-2"/"-3" no context / no retrieval data
+        // (the latter two still carry the platform's own refusal text).
+        if (String(item.code) === '-1') failure = String(item.status ?? 'error')
+        return
+      case 'error':
+        failure = String(item.error ?? 'error')
+        return
+      default:
+        return
+    }
+  }
+
+  // Line-split as bytes arrive: the retrieval item alone is ~80KB and can
+  // straddle chunks; nothing else needs holding.
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  for (;;) {
+    const { value, done } = await reader.read()
+    if (done) break
+    buffer += decoder.decode(value, { stream: true })
+    let nl: number
+    while ((nl = buffer.indexOf('\n')) >= 0) {
+      const line = buffer.slice(0, nl).trim()
+      buffer = buffer.slice(nl + 1)
+      if (line) await handle(line)
+    }
+  }
+  buffer += decoder.decode()
+  if (buffer.trim()) await handle(buffer.trim())
+
+  if (failure && !answer.trim()) throw new Error(`ask failed (${failure})`)
+  return { answer, citations, retrieval_results: { resources } }
+}
+
+function apiAskStream(body: Record<string, unknown>, env: Env, ctx: ExecutionContext): Response {
+  const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
+  const writer = writable.getWriter()
+  const encoder = new TextEncoder()
+  const upstream = new AbortController()
+  let clientGone = false
+  const send: SseSend = async (event, data) => {
+    if (clientGone) return
+    try {
+      await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+    } catch {
+      // The reader left (a newer question aborted this one): stop paying
+      // the platform for words nobody will see.
+      clientGone = true
+      upstream.abort()
+    }
+  }
+
+  ctx.waitUntil(
+    (async () => {
+      try {
+        let result = await streamAskOnce(env, body, send, upstream.signal)
+        // An empty answer is a reasoning burn whatever the retrieval; a
+        // refusal is only retried over a healthy one (the sync rule).
+        if (isRefusal(result) && (healthyRetrieval(result) || !(result.answer ?? '').trim())) {
+          await send('retry', { reason: (result.answer ?? '').trim() ? 'refusal' : 'empty' })
+          const again = await streamAskOnce(env, body, send, upstream.signal)
+          if (!isRefusal(again)) result = again
+        }
+        await send('done', askPayload(result))
+      } catch (err) {
+        if (!clientGone) await send('error', { error: err instanceof Error ? err.message : String(err) })
+      } finally {
+        try {
+          await writer.close()
+        } catch {
+          /* already gone */
+        }
+      }
+    })(),
+  )
+
+  return new Response(readable, {
+    headers: {
+      'content-type': 'text/event-stream; charset=utf-8',
+      'cache-control': 'no-cache, no-transform',
+      'x-accel-buffering': 'no',
+    },
   })
 }
 
@@ -1050,14 +1264,14 @@ async function apiMatrix(env: Env): Promise<Response> {
 // ---------------------------------------------------------------------------
 
 export default {
-  async fetch(request, env): Promise<Response> {
+  async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
     try {
       if (url.pathname === '/api/search' && request.method === 'GET') {
         return await apiSearch(url, env)
       }
       if (url.pathname === '/api/ask' && request.method === 'POST') {
-        return await apiAsk(request, env)
+        return await apiAsk(request, env, ctx)
       }
       if (url.pathname === '/api/followups' && request.method === 'POST') {
         return await apiFollowups(request, env)
