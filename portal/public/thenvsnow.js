@@ -11,6 +11,9 @@
  *   const tvn = mountThenVsNow(container)   // renders into container
  *   tvn.destroy()                           // removes DOM + aborts asks
  *
+ * Options: { displayTitle } lets the host strip the speaker and date a corpus
+ * title repeats; without it a source row shows the raw title.
+ *
  * Data sources (same-origin):
  *   POST /api/ask       {question, kind, speaker, topic, from, to}
  *   GET  /speakers.json [name, speech_count] rows, exported with the sync's
@@ -371,11 +374,11 @@ function renderAnswer (containerEl, text) {
 }
 
 /** A dated source row: date first, then the doc link, party chip, snippet. */
-function sourceRow (s) {
+function sourceRow (s, label) {
   const li = el('li')
   const line = el('div')
   line.appendChild(el('span', 'tvn-src-date', s.date ? fmtDate(s.date) : 'Undated'))
-  const a = el('a', null, s.title || s.slug)
+  const a = el('a', null, label || s.title || s.slug)
   a.href = `#/doc/${s.slug}`
   line.appendChild(a)
   const meta = el('span', 'tvn-src-meta')
@@ -398,8 +401,12 @@ function sourceRow (s) {
 // mountThenVsNow
 // ---------------------------------------------------------------------------
 
-export function mountThenVsNow (container) {
+export function mountThenVsNow (container, opts = {}) {
   injectStyles()
+
+  // The host hands us the site's own title helper, so a source here reads the
+  // same as it does in search; standalone the raw title stands.
+  const srcTitle = opts.displayTitle || ((s) => s.title || s.slug || '')
 
   let compareAbort = null
   let waitTimer = 0
@@ -698,7 +705,7 @@ export function mountThenVsNow (container) {
     if (shown.length) {
       panel.bodyEl.appendChild(el('p', 'tvn-kicker tvn-srcs-kicker', 'From the record'))
       const ol = el('ol', 'tvn-srcs')
-      for (const s of shown) ol.appendChild(sourceRow(s))
+      for (const s of shown) ol.appendChild(sourceRow(s, srcTitle(s)))
       panel.bodyEl.appendChild(ol)
     }
   }

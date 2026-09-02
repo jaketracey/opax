@@ -49,6 +49,50 @@ function fmtDate(iso) {
   return `${d} ${MONTHS[m - 1]} ${y}`;
 }
 
+// --- resource titles --------------------------------------------------------
+// Corpus titles carry the speaker and the date inside the string itself
+// ("J.A.W. Gardner — Childcare Sector — 2020-06-04"), and every list that shows
+// a title shows a meta line with the same speaker and the same date underneath
+// it. Read straight, the heading says both facts twice and buries the subject
+// in the middle. These two take the ends off so the heading is the subject.
+//
+// Only the record's OWN speaker and date come off, never a leading segment that
+// merely looks like a name: the corpus holds titles whose first segment IS the
+// subject, and guessing there would eat it.
+
+/** Trim, collapse whitespace, casefold: for comparing, never for rendering. */
+const titleKey = (s) => String(s ?? "").replace(/\s+/g, " ").trim().toLowerCase();
+
+/** How a date may be written at the end of a title: as ISO, or as we render it. */
+function titleDateForms(value) {
+  const iso = String(value ?? "").slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso ? [titleKey(iso)] : [];
+  return [iso, titleKey(fmtDate(iso))];
+}
+
+/**
+ * The subject a title carries, or "" when it holds nothing but the speaker and
+ * the date. Splitting keeps the separators, so a subject with an em dash of its
+ * own ("Budget — the reply") comes back exactly as the record wrote it.
+ */
+function titleSubject(rec) {
+  const parts = String(rec?.title ?? "").trim().split(/(\s+—\s+)/);
+  if (rec?.speaker && titleKey(parts[0]) === titleKey(rec.speaker)) parts.splice(0, 2);
+  const dates = titleDateForms(rec?.date ?? rec?.metadata?.date);
+  if (parts.length && dates.includes(titleKey(parts[parts.length - 1]))) parts.splice(-2);
+  return parts.join("").trim();
+}
+
+/**
+ * A resource title as a reader should see it. A title that is only a speaker
+ * and a date has no subject to fall back on, so it stands whole: the name is
+ * all the reader has. Exports and citations never come through here; they
+ * quote the record's own title verbatim.
+ */
+function displayTitle(rec) {
+  return titleSubject(rec) || String(rec?.title || rec?.slug || "");
+}
+
 function fmtMoney(n) {
   if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
   if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
@@ -1638,7 +1682,7 @@ function sourceItem(s, num) {
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = "link source-title";
-  btn.textContent = s.title || s.slug;
+  btn.textContent = displayTitle(s);
   btn.addEventListener("click", () => { goRoute(`/doc/${s.slug}`); });
   if (num) {
     const numEl = document.createElement("span");
@@ -1677,7 +1721,7 @@ function quoteCardHTML(s, i, n) {
   // Quote marks only around a real passage; with no snippet the title stands in.
   const body = full
     ? `“${esc(full.slice(0, 260))}${full.length > 260 ? "…" : ""}”`
-    : esc(s.title || s.slug);
+    : esc(displayTitle(s));
   return `<span class="kicker">From the record · ${i + 1} of ${n}</span>` +
     `<blockquote>${body}</blockquote>` +
     (meta ? `<span class="quote-meta"><span class="quote-portrait"></span><span>${meta}</span></span>` : "");
@@ -2331,7 +2375,7 @@ async function subjectMentions(name, container, heading) {
     const data = await api(`/api/search?${new URLSearchParams({ q: `"${name}"`, top_k: "6" })}`);
     if (!data.results?.length) return;
     const items = data.results.slice(0, 5).map((r) => `
-      <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(r.title)}</a>
+      <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(displayTitle(r))}</a>
         <span class="result-meta">${metaHTML(r)}</span>
         <p class="snippet">${esc((r.snippet || "").slice(0, 220))}</p></li>`).join("");
     container.insertAdjacentHTML("beforeend",
@@ -3084,13 +3128,10 @@ async function openSubject(kind, name, manageFocus) {
     // On the person's own page the name and party are known, so each row
     // leads with the date and gives the debate title; when the title is only
     // "Name — date" the passage itself carries the row.
-    const reName = new RegExp(`^${name.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+—\\s+`, "i");
-    const debateOf = (r) => String(r.title || "").replace(reName, "")
-      .replace(/\s+—\s+\d{4}-\d{2}-\d{2}\s*$/, "").replace(/^\d{4}-\d{2}-\d{2}\s*$/, "").trim();
     const multiHouse = chambers.length > 1;
     sections.insertAdjacentHTML("beforeend",
       `<p class="kicker">Latest indexed speeches</p><ul class="speech-rows" role="list">${newest.map((r) => {
-        const debate = debateOf(r);
+        const debate = titleSubject(r);
         const snip = String(r.snippet || "").trim();
         const where = multiHouse && r.state ? ` <span class="speech-where">${esc(STATE_NAMES[r.state] || r.state)}</span>` : "";
         // With a debate title the passage sits beneath it; without one the
@@ -3221,8 +3262,7 @@ async function openTopicPage(slug, manageFocus) {
       newestHTML =
         `<p class="kicker">Newest in the index with this label</p>
          <ul class="subject-list" role="list">${data.recent.map((r) => `
-           <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(
-               r.speaker && r.title.startsWith(`${r.speaker} — `) ? r.title.slice(r.speaker.length + 3) : r.title)}</a>
+           <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(displayTitle(r))}</a>
              <span class="result-meta">${metaHTML(r, { linkSpeaker: true })}</span></li>`).join("")}</ul>
          <p class="fineprint">The newest labelled speeches to enter the index, not the newest
          speeches on the subject. <a href="${esc(searchTopic)}">Search all of them</a></p>`;
@@ -3941,7 +3981,10 @@ async function openGame(which) {
   try {
     if (!explore[which]) {
       const mod = await import(game.module);
-      explore[which] = mod[game.mount]($(game.body));
+      // The modules stay standalone (they carry their own fallbacks), but a
+      // speech reads the same in here as it does in search because the shell
+      // hands them its own title helper rather than each keeping a copy.
+      explore[which] = mod[game.mount]($(game.body), { displayTitle });
     }
   } catch (err) {
     $(game.body).innerHTML =
@@ -4301,7 +4344,7 @@ async function renderFrontAdded() {
     const items = (data.items || []).slice(0, 6);
     if (!items.length) return;
     const half = Math.ceil(items.length / 2);
-    const li = (i) => `<li><a href="/doc/${esc(i.slug)}" class="source-title doc-title">${esc(i.title)}</a>
+    const li = (i) => `<li><a href="/doc/${esc(i.slug)}" class="source-title doc-title">${esc(displayTitle(i))}</a>
       <span class="result-meta">indexed ${esc(relTime(i.indexed))}</span></li>`;
     $("front-added").innerHTML =
       `<ul class="subject-list" role="list">${items.slice(0, half).map(li).join("")}</ul>` +
@@ -5464,7 +5507,7 @@ function renderResults(results) {
       const pct = Math.round((r.score || 0) * 100);
       li.innerHTML = `
         <div>
-          <button type="button" class="link result-title">${esc(r.title)}</button><button
+          <button type="button" class="link result-title">${esc(displayTitle(r))}</button><button
             type="button" class="scorebar" data-tip="relevance" data-tip-pct="${pct}"
             aria-label="Relevance ${pct}%"><i style="width:${pct}%"></i></button>
         </div>
@@ -5927,13 +5970,13 @@ async function openDocPage(slug, manageFocus) {
     if (currentDocSlug !== slug) return; // user navigated away while fetching
     currentDoc = doc;
     setStatus($("doc-status"), "");
-    // The headline is the speaker; raw titles ("Name — 2000-03-07") repeat
-    // what the byline says, so they only stand in when no speaker is attached.
-    $("doc-title").textContent = doc.speaker || doc.title;
+    // The headline is the speaker; the title repeats what the byline says, so
+    // it only stands in when no speaker is attached, and then as its subject.
+    $("doc-title").textContent = doc.speaker || displayTitle(doc);
     // The trail names the page the same way, shortened for the strip.
     setCrumbs([{ label: "Search", href: "/search" }, {
       label: (doc.kind || slug.split("-")[0]) === "division"
-        ? "Division" : crumbLabel(doc.speaker || doc.title, 48),
+        ? "Division" : crumbLabel(doc.speaker || displayTitle(doc), 48),
     }]);
     // Headshot floats beside the headline; the name is already in the
     // headline, so the image is decorative (alt "").
@@ -5947,7 +5990,12 @@ async function openDocPage(slug, manageFocus) {
         }
       });
     }
-    const topic = doc.metadata?.topic || doc.metadata?.debate;
+    // The debate this speech sat in. Most of the corpus carries no debate
+    // field, and there the title's own subject is the only thing that names
+    // what was being discussed, so it stands in rather than leaving a blank.
+    // Only under a speaker headline: without one the headline is already it.
+    const topic = doc.metadata?.topic || doc.metadata?.debate ||
+      (doc.speaker ? titleSubject(doc) : "");
     $("doc-topic").textContent = topic ? String(topic) : "";
     $("doc-topic").hidden = !topic;
     // One byline, each fact once: party · seat · chamber · date · source.
@@ -6033,8 +6081,9 @@ $("doc-copylink").addEventListener("click", () => {
 });
 $("doc-similar").addEventListener("click", () => {
   if (!currentDoc) return;
-  const topic = (currentDoc.title || "").split("—")[1]?.trim() || currentDoc.title;
-  goRoute(searchHash(topic, {}));
+  // Search the subject, not the speaker and not the date: those would find
+  // this speaker's other days rather than other speeches on this debate.
+  goRoute(searchHash(titleSubject(currentDoc) || currentDoc.title, {}));
 });
 $("doc-more").addEventListener("click", () => {
   if (!currentDoc?.speaker) return;

@@ -8,6 +8,9 @@
  *   const tm = mountTimeMachine(container)  // renders into container
  *   tm.destroy()                            // removes DOM + listeners
  *
+ * Options: { displayTitle } lets the host strip the speaker and date a corpus
+ * title repeats; without it a card shows the raw title.
+ *
  * Data sources (all same-origin):
  *   GET /api/search?q=&from=&to=&top_k=   live headline probes for the year
  *   GET /reports/index.json               the six tracked topic reports
@@ -690,8 +693,12 @@ function sparklineSVG(report, year) {
 // mountTimeMachine
 // ---------------------------------------------------------------------------
 
-export function mountTimeMachine(container) {
+export function mountTimeMachine(container, opts = {}) {
   injectStyles()
+
+  // The host hands us the site's own title helper so a card reads the same as
+  // a search result; standalone (the test harness) the raw title stands.
+  const cardTitle = opts.displayTitle || ((r) => r.title || r.slug || '')
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
 
@@ -885,7 +892,7 @@ export function mountTimeMachine(container) {
     const chip = el('span', 'tm-chip')
     chip.textContent = topicLabel
     const title = el('a', 'tm-card-title', { href: `#/doc/${r.slug}` })
-    title.textContent = r.title || 'Untitled speech'
+    title.textContent = cardTitle(r) || 'Untitled speech'
     const meta = el('div', 'tm-card-meta')
     if (r.speaker) {
       const slot = el('span', 'tm-portrait')
