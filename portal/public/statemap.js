@@ -82,6 +82,10 @@ const CSS = `
   font-family: var(--sans, system-ui, sans-serif); color: var(--ink, #23271F); }
 /* The plate keeps the map's own aspect inside whatever box it is given, so the
    HTML labels (placed in percentages of the plate) sit exactly on their shapes. */
+/* The plate is transformed, which makes it a stacking context: the tip inside
+   it cannot out-rank the federal caption beside it however high its z-index
+   goes. So the plate itself lifts while a tip is open, and drops back after. */
+.sm-root[data-tip] .sm-plate { z-index: 3; }
 .sm-plate { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
   width: min(100cqw, calc(100cqh * ${RATIO})); height: min(100cqh, calc(100cqw / ${RATIO})); }
 .sm-plate svg { display: block; width: 100%; height: 100%; overflow: visible; }
@@ -238,6 +242,7 @@ export function mountStateMap(container, opts = {}) {
       }
     }
     tip.hidden = false
+    root.dataset.tip = ''
     place(state)
   }
 
@@ -245,6 +250,7 @@ export function mountStateMap(container, opts = {}) {
     if (active) shapes.get(active)?.removeAttribute('data-active')
     active = null
     tip.hidden = true
+    delete root.dataset.tip
   }
 
   for (const state of STATES) {

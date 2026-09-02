@@ -331,7 +331,7 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
     toggle.title = 'Ring each party in bronze by its share of the selected industry\'s debate'
     el('span', 'mm-words-glyph', toggle).setAttribute('aria-hidden', 'true')
     const name = el('span', '', toggle)
-    name.textContent = 'words halo'
+    name.textContent = 'Words halo'
     toggle.addEventListener('click', () => {
       haloOn = !haloOn
       toggle.setAttribute('aria-pressed', String(haloOn))

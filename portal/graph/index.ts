@@ -576,7 +576,9 @@ export async function mountMoneyMap(
       const dot = el('span', 'mm-dot', chip)
       dot.style.background = clusterColour(group).colour
       const name = el('span', '', chip)
-      name.textContent = `${group} · ${graph.groupStyles.get(group)?.count ?? 0}`
+      // The keys are lower case because they are data; the legend is a list of
+      // names a reader reads, so it takes sentence case like every other label.
+      name.textContent = `${group.charAt(0).toUpperCase()}${group.slice(1)} · ${graph.groupStyles.get(group)?.count ?? 0}`
       chip.addEventListener('click', () => applyIsolate(activeGroup === group ? null : group))
       chips.set(group, chip)
     }

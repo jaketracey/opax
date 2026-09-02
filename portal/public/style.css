@@ -1283,8 +1283,11 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 .action-btn.action-primary .btn-icon { color: var(--bronze-bright); }
 /* The gold call to action: reserved for the one thing on a page worth
    opening next. Bronze fill, ink on top so it stays legible. */
+/* White on the gold, label and icon together. Dark ink on the lighter bronze
+   only reached 3.69 to 1; white on this half step toward bronze-ink reaches
+   4.71, so the button reads as gold and still passes AA at its weight. */
 .action-btn.action-gold {
-  background: var(--bronze); border-color: var(--bronze); color: #23271F;
+  background: #966C17; border-color: #966C17; color: #FFF;
   font-weight: 700;
 }
 .action-btn.action-gold:hover { background: var(--bronze-ink); border-color: var(--bronze-ink); color: #FFF; }
