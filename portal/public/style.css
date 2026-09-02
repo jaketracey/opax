@@ -858,11 +858,20 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   margin: var(--space-2) 0 0; color: var(--ink-soft); font-size: 0.9375rem; max-width: 88ch;
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
 }
+/* The relevance meter. It is a button because the reader has to be able to ask
+   what it means, by pointer or by keyboard; it opens the same paper card the
+   expense categories use. The pseudo-element gives a 4px rule a finger's worth
+   of target without taking any more of the line. The fill carries the rounding
+   itself, since clipping it to the track would clip that target away. */
 .scorebar {
+  position: relative; appearance: none; -webkit-appearance: none;
   display: inline-block; vertical-align: middle; width: 48px; height: 4px;
-  border-radius: 2px; background: var(--paper-sunken); overflow: hidden; margin-left: 0.5rem;
+  margin-left: 0.5rem; padding: 0; border: 0;
+  border-radius: 2px; background: var(--paper-sunken); cursor: help;
 }
-.scorebar > i { display: block; height: 100%; background: var(--bronze); }
+.scorebar::before { content: ""; position: absolute; inset: -10px -6px; }
+.scorebar > i { display: block; height: 100%; border-radius: inherit; background: var(--bronze); }
+.scorebar:hover > i, .scorebar[aria-describedby] > i { background: var(--bronze-ink); }
 
 /* Pager. The band keeps its height on a one-page result (the controls go
    invisible, not away) so the footer does not jump between pages.

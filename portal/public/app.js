@@ -2361,6 +2361,38 @@ let termTipTrigger = null;
 let termTipTimer = 0;
 let termTipsWired = false;
 
+// Any element carrying one of these opens the card. `data-term` names a
+// category in expense-categories.json; `data-tip` names a kind of trigger that
+// describes itself from its own data attributes and needs no fetch.
+const TERM_TIP_TRIGGER = "[data-term], [data-tip]";
+
+const EXPENSE_TIP_ACTION = { href: "/expenses", text: "What the categories mean" };
+
+/** The card's content for a trigger, as { name, text, note, action }, or null
+ *  when nothing describes it (a category whose definitions have not landed
+ *  yet, or a kind of trigger this build does not know). */
+function termTipDef(trigger) {
+  if (trigger.dataset.term) {
+    const def = expenseDefs?.byName?.[trigger.dataset.term];
+    return def ? { ...def, action: EXPENSE_TIP_ACTION } : null;
+  }
+  if (trigger.dataset.tip === "relevance") return relevanceTipDef(trigger.dataset.tipPct);
+  return null;
+}
+
+/** The gold bar beside a search result. It is the retrieval engine's own score
+ *  for the passage, and a reader who has never seen one reads it as a verdict,
+ *  so the card says what it is and what it is not. */
+function relevanceTipDef(pct) {
+  const n = Number(pct);
+  if (!Number.isFinite(n)) return null;
+  return {
+    name: `Relevance ${n}%`,
+    text: "How strongly this passage matched your search, as scored by the retrieval engine.",
+    note: "That is match strength, not truth or importance. The words of the record are the evidence.",
+  };
+}
+
 function termTip() {
   if (termTipEl) return termTipEl;
   const tip = document.createElement("div");
@@ -2370,7 +2402,7 @@ function termTip() {
   tip.setAttribute("role", "tooltip");
   tip.innerHTML = '<b class="term-tip-name"></b><p class="term-tip-text"></p>' +
     '<p class="term-tip-note"></p>' +
-    '<a class="term-tip-action" href="/expenses">What the categories mean</a>';
+    '<a class="term-tip-action"></a>';
   tip.addEventListener("pointerenter", cancelTermTipHide);
   tip.addEventListener("pointerleave", scheduleTermTipHide);
   document.body.append(tip);
@@ -2379,7 +2411,7 @@ function termTip() {
 }
 
 function showTermTip(trigger) {
-  const def = expenseDefs?.byName?.[trigger.dataset.term];
+  const def = termTipDef(trigger);
   if (!def) return;
   cancelTermTipHide();
   const tip = termTip();
@@ -2388,6 +2420,9 @@ function showTermTip(trigger) {
   const note = tip.querySelector(".term-tip-note");
   note.textContent = def.note || "";
   note.hidden = !def.note;
+  const action = tip.querySelector(".term-tip-action");
+  if (def.action) { action.href = def.action.href; action.textContent = def.action.text; }
+  action.hidden = !def.action;
   if (termTipTrigger && termTipTrigger !== trigger) termTipTrigger.removeAttribute("aria-describedby");
   termTipTrigger = trigger;
   trigger.setAttribute("aria-describedby", "term-tip");
@@ -2432,34 +2467,54 @@ function cancelTermTipHide() { clearTimeout(termTipTimer); }
 
 const termTipTarget = (e, sel) => (e.target instanceof Element ? e.target.closest(sel) : null);
 
+const termTipIsOpenFor = (trigger) => trigger === termTipTrigger && !termTipEl?.hidden;
+
+/** Whether the card was already up when the press that is now becoming a click
+ *  began. A trigger is a button, so pressing it focuses it, and focus opens the
+ *  card: without this, the click that follows would read its own gesture's
+ *  handiwork as "already open" and shut it again. On touch, where nothing
+ *  hovers first, that made a tap show nothing at all. */
+let termTipOpenAtPress = false;
+
 /** Hover, focus and tap all open the popover; Escape, blur, a pointer that
  *  leaves both trigger and card, and any route change close it. */
 function initTermTips() {
   if (termTipsWired) return;
   termTipsWired = true;
   document.addEventListener("pointerover", (e) => {
-    const trigger = termTipTarget(e, "[data-term]");
+    const trigger = termTipTarget(e, TERM_TIP_TRIGGER);
     if (trigger) { if (e.pointerType !== "touch") showTermTip(trigger); return; }
     if (!termTipTarget(e, ".term-tip")) scheduleTermTipHide();
   });
+  // Both run before the browser moves focus, so they see the state the reader
+  // meant to act on.
+  document.addEventListener("pointerdown", (e) => {
+    const trigger = termTipTarget(e, TERM_TIP_TRIGGER);
+    if (trigger) termTipOpenAtPress = termTipIsOpenFor(trigger);
+  }, true);
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const trigger = termTipTarget(e, TERM_TIP_TRIGGER);
+    if (trigger) termTipOpenAtPress = termTipIsOpenFor(trigger);
+  }, true);
   document.addEventListener("click", (e) => {
-    const trigger = termTipTarget(e, "[data-term]");
+    const trigger = termTipTarget(e, TERM_TIP_TRIGGER);
     if (trigger) {
-      if (trigger === termTipTrigger && !termTipEl?.hidden) hideTermTip(false);
+      if (termTipOpenAtPress) hideTermTip(false);
       else showTermTip(trigger);
       return;
     }
     if (!termTipTarget(e, ".term-tip")) hideTermTip(false);
   });
   document.addEventListener("focusin", (e) => {
-    const trigger = termTipTarget(e, "[data-term]");
+    const trigger = termTipTarget(e, TERM_TIP_TRIGGER);
     if (trigger) { showTermTip(trigger); return; }
     if (!termTipTarget(e, ".term-tip")) hideTermTip(false);
   });
   document.addEventListener("focusout", (e) => {
-    if (!termTipTarget(e, "[data-term], .term-tip")) return;
+    if (!termTipTarget(e, `${TERM_TIP_TRIGGER}, .term-tip`)) return;
     const to = e.relatedTarget instanceof Element ? e.relatedTarget : null;
-    if (to && (to.closest(".term-tip") || to.closest("[data-term]") === termTipTrigger)) return;
+    if (to && (to.closest(".term-tip") || to.closest(TERM_TIP_TRIGGER) === termTipTrigger)) return;
     hideTermTip(false);
   });
   document.addEventListener("keydown", (e) => {
@@ -5199,20 +5254,26 @@ function activeFilterSummary(f) {
 // Sorting is the Worker's job now. It orders every retrieved match before it
 // slices the page, so "newest first" means newest of the whole result set and
 // not merely newest of the twenty in hand.
+// The gold bar is a button, not decoration: hovering, focusing or tapping it
+// opens the shared definition card (see initTermTips) with the score in words.
+// Its own label carries the number, so the row says it once.
 function renderResults(results) {
+  initTermTips();
+  // A new page of results throws away the row the open card was parented to.
+  hideTermTip(false);
   $("search-results").replaceChildren(
     ...results.map((r) => {
       const li = document.createElement("li");
       const pct = Math.round((r.score || 0) * 100);
       li.innerHTML = `
         <div>
-          <button type="button" class="link result-title">${esc(r.title)}</button><span
-            class="scorebar" aria-hidden="true"><i style="width:${pct}%"></i></span><span
-            class="visually-hidden">Relevance ${pct}%.</span>
+          <button type="button" class="link result-title">${esc(r.title)}</button><button
+            type="button" class="scorebar" data-tip="relevance" data-tip-pct="${pct}"
+            aria-label="Relevance ${pct}%"><i style="width:${pct}%"></i></button>
         </div>
         <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true, portrait: true })}</span>
         <p class="snippet">${highlightHTML(r.snippet, $("search-input").value)}</p>`;
-      li.querySelector("button").addEventListener("click", () => {
+      li.querySelector(".result-title").addEventListener("click", () => {
         goRoute(`/doc/${r.slug}`);
       });
       return li;
