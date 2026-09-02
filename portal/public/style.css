@@ -868,7 +868,7 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .filter-chips:empty { display: none; }
 /* Except on ask, where the row keeps its line: a chip can arrive from a shared
    link as the page loads, and the answer below must not jump when it does. */
-#ask-filter-chips:empty { display: flex; min-height: 30px; }
+#ask-filter-chips.is-reserved:empty { display: flex; min-height: 30px; }
 .fchip {
   display: inline-flex; align-items: center; gap: 0.3rem; min-height: 30px;
   background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;

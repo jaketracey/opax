@@ -5303,7 +5303,12 @@ function askChipFilters() {
 }
 
 function renderAskFilterChips() {
-  renderFilterChipsInto($("ask-filter-chips"), askChipFilters(), clearAskFilter);
+  const row = $("ask-filter-chips");
+  renderFilterChipsInto(row, askChipFilters(), clearAskFilter);
+  // The row holds its line only once a question is in play, so a chip arriving
+  // beside an answer cannot shove it down. On the front page, where nobody has
+  // set a filter yet, reserving it would just be dead air above the box.
+  row.classList.toggle("is-reserved", askInPlay());
 }
 
 const ASK_FILTER_RESETS = {
