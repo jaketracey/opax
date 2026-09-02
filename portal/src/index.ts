@@ -356,6 +356,7 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
         'Question: {question}\n\n' +
         'Instructions: Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
         'Ignore passages that are off-topic. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
+        'Begin with the answer itself: do not explain how the passages are numbered, ordered or provided. ' +
         'Only if NO passage mentions the subject at all, reply exactly: The record retrieved for this question does not discuss it.',
     }
   }
