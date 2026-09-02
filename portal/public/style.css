@@ -650,7 +650,8 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
 /* The reader's side is the only filled shape; answers sit on the paper like
    the ask page's, so the record keeps its own register in the conversation. */
 
-.chat-thread { max-width: 46rem; margin-top: 1.2rem; }
+.chat-thread { max-width: 46rem; margin-top: 0; display: flow-root; }
+.chat-thread > :first-child { margin-top: 0; }
 .chat-turn-user { display: flex; justify-content: flex-end; margin: 1.6rem 0 1rem; }
 .chat-turn-user p {
   margin: 0; max-width: 32rem;
@@ -748,7 +749,7 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .chat-next-btn .next-arrow { flex: 0 0 auto; color: var(--ink-faint); }
 .chat-next-btn:hover .next-arrow { color: var(--bronze-ink); }
 .chat-error { color: var(--ink-soft); font-size: 0.9375rem; margin: 0.6rem 0; }
-.chat-hint { color: var(--ink-faint); font-size: 0.9375rem; margin: 2rem 0 0.5rem; }
+.chat-hint { color: var(--ink-faint); font-size: 0.9375rem; margin: 0 0 0.5rem; }
 .chat-composer {
   position: sticky; bottom: 0; z-index: 3;
   display: flex; gap: 0.6rem; max-width: 46rem;
