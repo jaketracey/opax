@@ -5291,9 +5291,12 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {
     }
   });
   const first = pairs[0]?.[0] ?? "", last = pairs[pairs.length - 1]?.[0] ?? "";
-  const srTable = `<table class="visually-hidden"><caption>${esc(heading)}</caption>
+  // The hiding wrapper is a div, not the table: a table's caption box sits
+  // outside the table's own clipped box, so a visually-hidden table still
+  // paints its caption over whatever follows it.
+  const srTable = `<div class="visually-hidden"><table><caption>${esc(heading)}</caption>
     <thead><tr><th scope="col">Year</th><th scope="col">Value</th></tr></thead>
-    <tbody>${pairs.map(([k, v]) => `<tr><td>${linkTo ? `<a href="${esc(linkTo(k))}">${esc(String(k))}</a>` : esc(String(k))}</td><td>${esc(fmt(v))}</td></tr>`).join("")}</tbody></table>`;
+    <tbody>${pairs.map(([k, v]) => `<tr><td>${linkTo ? `<a href="${esc(linkTo(k))}">${esc(String(k))}</a>` : esc(String(k))}</td><td>${esc(fmt(v))}</td></tr>`).join("")}</tbody></table></div>`;
   return `<figure class="chart">
     <figcaption>${esc(heading)}</figcaption>
     <svg viewBox="0 0 ${W} ${H}" aria-hidden="true">
