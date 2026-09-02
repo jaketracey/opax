@@ -3403,6 +3403,11 @@ for (const dialog of document.querySelectorAll(".game-dialog")) {
     if (parseHash().segs[0] === "explore") setCrumbs([{ label: "Explore" }]);
   });
   dialog.addEventListener("click", (e) => {
+    // Only the dialog itself is the backdrop; a click on anything inside it
+    // is never a dismissal. Without this guard a keyboard-activated button
+    // (Enter, or the quiz's 1/2/3 shortcuts calling click()) reports
+    // coordinates of 0,0 and reads as a click outside the box.
+    if (e.target !== dialog) return;
     const r = dialog.getBoundingClientRect();
     const inside = e.clientX >= r.left && e.clientX <= r.right &&
                    e.clientY >= r.top && e.clientY <= r.bottom;
