@@ -2042,7 +2042,7 @@ async function subjectMentions(name, container, heading) {
     const data = await api(`/api/search?${new URLSearchParams({ q: `"${name}"`, top_k: "6" })}`);
     if (!data.results?.length) return;
     const items = data.results.slice(0, 5).map((r) => `
-      <li><a href="#/doc/${esc(r.slug)}" class="source-title">${esc(r.title)}</a>
+      <li><a href="#/doc/${esc(r.slug)}" class="source-title doc-title">${esc(r.title)}</a>
         <span class="result-meta">${metaHTML(r)}</span>
         <p class="snippet">${esc((r.snippet || "").slice(0, 220))}</p></li>`).join("");
     container.insertAdjacentHTML("beforeend",
@@ -2680,7 +2680,7 @@ async function openTopicPage(slug, manageFocus) {
       newestHTML =
         `<p class="kicker">Newest in the index with this label</p>
          <ul class="subject-list" role="list">${data.recent.map((r) => `
-           <li><a href="#/doc/${esc(r.slug)}" class="source-title">${esc(
+           <li><a href="#/doc/${esc(r.slug)}" class="source-title doc-title">${esc(
                r.speaker && r.title.startsWith(`${r.speaker} — `) ? r.title.slice(r.speaker.length + 3) : r.title)}</a>
              <span class="result-meta">${metaHTML(r, { linkSpeaker: true })}</span></li>`).join("")}</ul>
          <p class="fineprint">The newest labelled speeches to enter the index, not the newest
@@ -3713,7 +3713,7 @@ async function renderFrontAdded() {
     const items = (data.items || []).slice(0, 6);
     if (!items.length) return;
     const half = Math.ceil(items.length / 2);
-    const li = (i) => `<li><a href="#/doc/${esc(i.slug)}" class="source-title">${esc(i.title)}</a>
+    const li = (i) => `<li><a href="#/doc/${esc(i.slug)}" class="source-title doc-title">${esc(i.title)}</a>
       <span class="result-meta">indexed ${esc(relTime(i.indexed))}</span></li>`;
     $("front-added").innerHTML =
       `<ul class="subject-list" role="list">${items.slice(0, half).map(li).join("")}</ul>` +

@@ -603,6 +603,12 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 button.link.source-title { font: 600 1rem/1.35 var(--serif); }
 .source-title, button.link.source-title, a.source-title { text-decoration: none; }
 .source-title:hover, button.link.source-title:hover, a.source-title:hover { color: var(--bronze-ink); }
+/* Document titles in list rows: some ingested titles run to a paragraph
+   (every bill in a cognate debate), so a row shows three lines at most. The
+   full title is still the link's text and waits on the document page. */
+a.doc-title {
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
 .source-meta, .result-meta { display: block; color: var(--ink-faint); font-size: 0.8125rem; margin-top: var(--space-1); }
 .flash { background: var(--bronze-wash); }
 @media (prefers-reduced-motion: no-preference) {
