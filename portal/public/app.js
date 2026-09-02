@@ -1950,34 +1950,47 @@ async function renderPersonVotes(name, personId, sections) {
   const side = (field) => recs
     .flatMap((r) => (Array.isArray(r[field]) ? r[field] : []).map((d) => ({ ...d, jur: d.jur || r.jurisdiction })))
     .sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 6);
+  const billRow = (d) => `
+        <li><a class="source-title" href="${esc(searchHash(`"${d.name}"`, {}))}">${esc(d.name)}</a>
+          <span class="result-meta">${[d.stage ? esc(d.stage) : "", esc(String(d.date || "").slice(0, 4)), jurChip(d.jur)].filter(Boolean).join(" · ")}</span></li>`;
   const col = (label, rows) => rows.length ? `
     <div>
-      <span class="ency-votes-label">${esc(label)}</span>
-      <ul class="ency-votes-list" role="list">${rows.map((d) => `
-        <li><span class="ency-bill">${esc(d.name)}</span>
-          <span class="ency-year">${d.stage ? `${esc(d.stage)} · ` : ""}${esc(String(d.date || "").slice(0, 4))} ${jurChip(d.jur)}</span></li>`).join("")}
-      </ul>
+      <p class="kicker votes-col-kicker">${esc(label)}</p>
+      <ul class="subject-list" role="list">${rows.map(billRow).join("")}</ul>
     </div>` : "";
   const forRows = side("for");
   const againstRows = side("against");
   const total = sum("divisions_total");
-  const span = years.length ? ` between ${esc(String(Math.min(...years)))} and ${esc(String(Math.max(...years)))}` : "";
-  const where = jurs.length ? ` in the ${esc(jurs.map(jurName).join(" and "))} parliament${jurs.length > 1 ? "s" : ""}` : "";
+  const ayes = sum("ayes");
+  const noes = sum("noes");
+  const ayePct = ayes + noes ? Math.round((ayes / (ayes + noes)) * 100) : 0;
+  const span = years.length ? `${esc(String(Math.min(...years)))} to ${esc(String(Math.max(...years)))}` : "";
+  const where = jurs.length ? `${esc(jurs.map(jurName).join(" and "))} parliament${jurs.length > 1 ? "s" : ""}` : "";
   const federal = recs.some((r) => r.jurisdiction === "federal");
+  const tvfy = federal
+    ? actionBtn("external", `https://theyvoteforyou.org.au/search?query=${encodeURIComponent(name)}`, "Full record on They Vote For You", { external: true })
+    : "";
   slot.innerHTML = `
     <p class="kicker">Voting record</p>
-    <p style="margin:0.2rem 0 0.6rem">${esc(name)} is on the record in <b>${esc(total.toLocaleString())}</b>
-      division${total === 1 ? "" : "s"}${span}${where}: <b>${esc(sum("ayes").toLocaleString())}</b> ayes and
-      <b>${esc(sum("noes").toLocaleString())}</b> noes.</p>
+    <div class="tiles tiles-compact votes-tiles">
+      <div class="tile"><b>${esc(total.toLocaleString())}</b><span>recorded division${total === 1 ? "" : "s"}</span></div>
+      <div class="tile"><b>${esc(ayes.toLocaleString())}</b><span>ayes</span></div>
+      <div class="tile"><b>${esc(noes.toLocaleString())}</b><span>noes</span></div>
+    </div>
+    ${ayes + noes ? `<div class="votes-split" role="img" aria-label="${esc(ayePct)} percent ayes, ${esc(100 - ayePct)} percent noes"><i style="width:${ayePct}%"></i></div>
+    <p class="fineprint votes-lede">${esc(ayePct)}% ayes${where ? ` in the ${where}` : ""}${span ? `, ${span}` : ""}. Only formal divisions are counted; most questions are decided on the voices and leave no per-member record.</p>` : ""}
     ${forRows.length || againstRows.length
-      ? `<div class="ency-votes" style="grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:0.6rem 1.6rem">${col("Voted for", forRows)}${col("Voted against", againstRows)}</div>`
-      : `<p class="status" style="margin-top:0.2rem">None of their recorded divisions was a vote on a bill itself.</p>`}
-    <p class="fineprint">Only divisions (formal recorded votes) are counted. Most questions are decided on the voices and
-      leave no per-member record, so a bill missing here was not necessarily unvoted on. "Voted for" and "Voted against"
-      list divisions on the bill itself, a second or third reading or agreeing to the bill; amendments, gag motions and
-      other procedural votes are left out because an aye there says nothing about the bill. Sources: They Vote For You
-      (federal divisions, OpenAustralia Foundation, ODbL) and the NSW, Victorian and Queensland Hansard for state divisions.
-      ${federal ? `<a href="https://theyvoteforyou.org.au/search?query=${encodeURIComponent(name)}" rel="noopener" target="_blank">Their full record on They Vote For You ↗</a>` : ""}</p>`;
+      ? `<div class="votes-cols">${col("Voted for", forRows)}${col("Voted against", againstRows)}</div>`
+      : `<p class="status" style="margin-top:0.6rem">None of their recorded divisions was a vote on a bill itself.</p>`}
+    <details class="chat-sources votes-method">
+      <summary>How votes are counted</summary>
+      <p class="fineprint">"Voted for" and "Voted against" list divisions on the bill itself: a second or third reading, or agreeing
+        to the bill. Amendments, gag motions and other procedural votes are left out because an aye there says nothing about
+        the bill. A bill missing here was not necessarily unvoted on. Sources: They Vote For You (federal divisions,
+        OpenAustralia Foundation, ODbL) and the NSW, Victorian and Queensland Hansard for state divisions. Each bill name
+        searches the record for what was said about it.</p>
+    </details>
+    ${tvfy ? `<p class="action-row">${tvfy}</p>` : ""}`;
 }
 
 async function openSubject(kind, name, manageFocus) {
@@ -2108,6 +2121,8 @@ async function openSubject(kind, name, manageFocus) {
     const topic = $("subject-ask-topic").value.trim();
     if (topic) location.hash = askHash(`What did ${name} say about ${topic}?`);
   });
+  // The structured record first; the speeches follow it.
+  renderPersonVotes(name, photoMap?.[name.trim().toLowerCase()] ?? null, sections);
   if (speeches.length) {
     const newest = [...speeches].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 8);
     sections.insertAdjacentHTML("beforeend",
@@ -2122,7 +2137,6 @@ async function openSubject(kind, name, manageFocus) {
   }
   renderPersonInterests(name, null, sections);
   renderPersonDiary(name, sections, chambers);
-  renderPersonVotes(name, photoMap?.[name.trim().toLowerCase()] ?? null, sections);
   await subjectNews(name, sections);
   await renderPersonExpenses(name, photoMap?.[name.trim().toLowerCase()], sections);
   if (party) {

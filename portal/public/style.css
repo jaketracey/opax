@@ -1036,6 +1036,16 @@ a.ency-name { font-size: 1.125rem; text-decoration: none; }
 a.ency-name:hover, a.ency-name:focus-visible {
   text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px;
 }
+/* Person page voting record */
+.votes-tiles { margin-top: 0.4rem; }
+.votes-split { height: 6px; max-width: 520px; margin: 0.9rem 0 0; border-radius: 3px; background: var(--paper-sunken); overflow: hidden; }
+.votes-split i { display: block; height: 100%; background: var(--bronze); }
+.votes-lede { margin: 0.4rem 0 0; }
+.votes-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 0 2.2rem; }
+.votes-col-kicker { margin: 1.1rem 0 0.2rem; }
+.votes-cols .subject-list li { padding: 0.5rem 0; }
+.votes-method { margin-top: 0.6rem; }
+.votes-method .fineprint { margin: 0.2rem 0 0.4rem; }
 .ency-votes { display: grid; gap: 0.6rem; border-top: 1px solid var(--line); padding-top: 0.65rem; }
 .ency-votes-label {
   display: block; margin-bottom: 0.25rem; color: var(--ink-faint);
