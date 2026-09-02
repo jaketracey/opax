@@ -1652,6 +1652,7 @@ function renderMoneyPanel(ind) {
     byParty.set(party, (byParty.get(party) || 0) + (e.total || 0));
   }
   const partyRows = [...byParty.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6);
+  const receipts = donors.reduce((a, n) => a + (n.count || 0), 0);
   const donorRows = donors.sort((a, b) => (b.total || 0) - (a.total || 0)).slice(0, 8)
     .map((n) => [n.label, n.total || 0]);
   box.hidden = false;
@@ -1660,16 +1661,19 @@ function renderMoneyPanel(ind) {
     <div class="tiles">
       ${tile(fmtMoney(total), `disclosed by ${industryLabel(ind)} donors`)}
       ${tile(String(donors.length), "major donors disclosed")}
+      ${tile(receipts.toLocaleString(), `disclosed donation${receipts === 1 ? "" : "s"}`)}
       ${tile(`${years[0]}–${years[1]}`, "years covered")}
     </div>
-    ${barList(donorRows, { fmt: fmtMoney, heading: "Largest donors", linkTo: (nm) => subjectHash("donor", nm) })}
-    ${barList(partyRows, { fmt: fmtMoney, heading: "Where it went", linkTo: (nm) => subjectHash("party", nm), partyDots: true })}
+    <div class="money-charts">
+      ${barList(donorRows, { fmt: fmtMoney, heading: "Largest donors", linkTo: (nm) => subjectHash("donor", nm) })}
+      ${barList(partyRows, { fmt: fmtMoney, heading: "Where it went", linkTo: (nm) => subjectHash("party", nm), partyDots: true })}
+    </div>
     <p class="fineprint">${esc(AEC_NOTE)}
       <a href="#/money">Explore on the money map</a> ·
       <a href="/graph/money.json">Download the data</a></p>`;
   // Blocks rise in sequence (kicker, each figure, each chart, the note); fresh
   // nodes on every render, so a second question replays it. Motion is CSS-side.
-  box.querySelectorAll(":scope > :not(.tiles), :scope > .tiles > .tile").forEach((el, i) => {
+  box.querySelectorAll(":scope > :not(.tiles, .money-charts), :scope > .tiles > .tile, :scope > .money-charts > .chart").forEach((el, i) => {
     el.classList.add("rise-in");
     el.style.setProperty("--i", i);
   });

@@ -627,8 +627,14 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
    they rise one after another; reduced-motion readers get the finished panel. */
 #ask-money { margin-top: 2rem; }
 #ask-money > .kicker { margin-top: 0; }
-#ask-money .tiles { max-width: 920px; margin: 1.5rem 0 0.4rem; }
-#ask-money .chart { margin-top: 1.6rem; }
+/* The money answer is a data spread, not prose: it runs the full column and
+   the charts stretch with it, two abreast where there is room. */
+#ask-money .tiles { margin: 1.5rem 0 0.4rem; }
+#ask-money .chart { margin-top: 1.6rem; max-width: none; }
+@media (min-width: 1000px) {
+  #ask-money .money-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; align-items: start; }
+  #ask-money .money-charts .chart { margin-top: 0; }
+}
 #ask-money > .fineprint { margin: 1.5rem 0 0; }
 /* With the figures on the page, the answer opens under its own hairline. */
 #ask-money:not([hidden]) ~ #ask-result { margin-top: 2.5rem; border-top: 1px solid var(--line); }
