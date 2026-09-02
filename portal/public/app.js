@@ -5704,7 +5704,7 @@ function giveUpSearchAnswer() {
 }
 
 
-// --- search answer (the record's answer beside the results) -----------------
+// --- search answer (the summary beside the results) -------------------------
 
 let searchAnswerAbort = null;
 let searchAnswerStill = null;
