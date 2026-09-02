@@ -1,9 +1,9 @@
 {
  "slug": "media",
  "title": "Media Ownership",
- "blurb": "Concentration, regulation and the platforms: parliament on the press.",
- "generated_at": "2026-09-01T07:39:04+00:00",
- "corpus_resources": 70556,
+ "blurb": "Concentration, regulation and the platforms \u2014 parliament on the press.",
+ "generated_at": "2026-09-02T03:24:41+00:00",
+ "corpus_resources": 536153,
  "stats": {
   "speech_count": 119509,
   "unique_speakers": 2883,
@@ -313,189 +313,244 @@
  },
  "brief": {
   "question": "What does the parliamentary record show about media ownership?",
-  "answer": "The parliamentary record shows that Australia\u2019s commercial media were already extraordinarily concentrated before the 2002 ownership changes were attempted, and that this concentration was the central fact driving the debate. Labor MPs repeatedly cited figures showing News Ltd controlled roughly two-thirds of capital city and national newspaper circulation, three-quarters of Sunday newspapers, about half of suburban newspapers and a quarter of regional newspapers, with a quarter stake in pay TV operator Foxtel. PBL was said to control three metropolitan and one regional television licence reaching more than half the potential audience, a quarter of Foxtel, a third of Sky News, sixty-five magazines and about forty per cent of the top-thirty magazine circulation. A later speaker put News Ltd\u2019s share at 49 per cent of regional newspapers, 67 per cent of national and metropolitan dailies and 76 per cent of Sunday papers, while the International Federation of Journalists was quoted saying News Corp controlled nearly 70 per cent of metropolitan newspapers by circulation. Opposition speakers argued that further concentration would reduce Australia\u2019s roughly six major commercial media players to as few as three, and that this threatened democracy because most Australians still got news from television, radio and newspapers rather than from the internet or pay TV.\n\nThe debate shifted over time from a government proposal to abolish cross-media and foreign ownership rules almost entirely, to a narrower but still controversial plan. The original 2002 bill, introduced by Senator Alston, proposed removing all existing cross-media and foreign ownership restrictions and replacing them with Australian Broadcasting Authority \u201ceditorial separation\u201d certificates allowing mergers if newsrooms were supposedly kept independent. After opposition inside the Coalition and in the Senate, the government amended the bill to allow ownership of only two of the three media types in regional markets, and later in all markets. Labor and crossbench speakers treated this as a tacit admission that cross-media regulation was still needed. The Senate then passed the bill with an amendment by Senator Harradine, supported by Labor and minor party senators, that specifically prohibited one proprietor owning both a newspaper and a television station in the same market. The government rejected that amendment, the bill was laid aside, and the same legislation was reintroduced as Bill [No. 2]\u2014which speakers said was designed to create a double dissolution trigger.\n\nThe sharpest disagreement was over whether ownership determines media content and influence. Government supporters argued that ownership \u201cper se is irrelevant,\u201d that new technologies provided a plethora of sources, and that editorial separation certificates plus general competition and foreign investment laws were enough to protect diversity. Opponents\u2014including Labor, the Australian Press Council, the Communications Law Centre, the journalists\u2019 union and small regional broadcasters\u2014said this was a \u201cfig leaf\u201d and that \u201che who pays the piper calls the tune.\u201d They warned that the ABA certificate system would be ineffective in guaranteeing diversity but would create a dangerous mechanism for future governments to interfere with or intimidate media organisations. The Australian Press Council was quoted as telling the minister that the editorial separation regime was a severe threat to press freedom. Speakers also pointed to the government\u2019s own earlier backbench warnings against media concentration from ministers who later stayed silent, calling this hypocrisy.\n\nWhat was promised was greater diversity, competition and access to capital through modernised ownership rules and increased foreign investment. What was reported to have happened was the opposite: the bill was widely described as serving the interests of Rupert Murdoch and Kerry Packer, the two dominant proprietors, by letting them buy newspapers, television and radio in the same market. When the Senate delivered a bill that kept the newspaper-television ban but still removed radio from cross-media limits and eliminated foreign ownership restrictions, the government abandoned it. Opponents said this revealed the real agenda: because the amended bill stopped PBL buying Fairfax and News Ltd buying a television network, the major proprietors preferred no change at all, and the government rejected three-quarters of its own reform package rather than lose that core prize."
+  "answer": "The parliamentary record shows Australian Labor Party members consistently argued that cross-media ownership rules, introduced in 1987\u201388 under Paul Keating, were essential to protect democracy and were under sustained attack by the Howard government. Speakers cited concentration statistics to justify retaining the rules: News Ltd controlled around two-thirds of capital city and national newspapers, three-quarters of Sunday newspapers and nearly half the suburban newspaper market, while Publishing and Broadcasting Ltd controlled the Nine network, three metropolitan and one regional television licence reaching more than half the potential audience, 65 magazines, and online operations including ninemsn. One speaker reported that 80 per cent of Australians opposed further concentration of media ownership, and that 88 per cent of Australians used free-to-air television, 76 per cent radio and 76 per cent newspapers as news sources, compared with only 10 per cent for pay TV and 11 per cent for the internet.\n\nThe debate shifted from the Broadcasting Services Amendment (Media Ownership) Bill 2002 to a further bill in 2006, but Labor's core critique remained the same: the government wanted to let one proprietor own newspapers, television and radio in the same market. In 2002, Senator Alston argued that \"ownership of media per se is irrelevant\" and that a \"plethora of sources\" made old rules redundant. By 2006, Senator Coonan was reported to have flagged allowing newspaper proprietors to own television, radio, monopoly pay TV and internet interests. Labor speakers quoted earlier statements by government frontbenchers\u2014including the member for Hinkler in 1995 and the member for Bradfield in 1997\u2014warning against media concentration, and accused those members of hypocrisy for supporting the later bills. Labor also suggested that rather than relaxing cross-media rules, the government should relax foreign ownership restrictions to bring in new competitors.\n\nThe sharpest disagreement was over whether ownership actually controls media content. Government spokesmen claimed that separate editorial processes could protect diversity and that ownership was not the key issue. Labor responded with the maxim \"he who pays the piper calls the tune,\" arguing that proprietors ultimately determine what is published or broadcast, and that an editorial separation test administered by the Australian Broadcasting Authority\u2014whose chairman, Professor David Flint, had argued that journalist independence outweighs ownership\u2014was inadequate. Speakers also accused the government of acting on behalf of Rupert Murdoch and Kerry Packer, with one Labor member calling the 2006 bill part of a \"dirty\" deal between Prime Minister Howard and Packer to destroy the cross-media laws, and describing the result as the most concentrated media ownership in Australian history.\n\nThe government's public promise was that the changes would preserve local news and separate editorial voices: the Prime Minister's answer to a question on notice said exemptions from cross-media rules would be granted if companies maintained existing levels of locally produced news and current affairs and put in place separate editorial processes. Opposition speakers dismissed this as nonsense, noting that the bill allowed a proprietor to own a dominant newspaper, television station and radio stations in the same market, and warning of scenarios where PBL could buy Fairfax or News Corp could take over a free-to-air network. Labor claimed the real outcome would be three huge conglomerates based around the commercial television networks, reduced newsroom independence and fewer journalists willing to criticise their employers, with one speaker warning that the legislation would hand media owners influence over future elections."
  },
  "key_stats": [
   {
-   "value": "0",
-   "label": "Prime Minister's answer",
-   "detail": "Prime Minister Howard's answer to the honourable member's question on media ownership interests.",
-   "slug": "speech-77718",
-   "source_title": "John Howard \u2014 2002-06-17"
+   "value": "64.2%",
+   "label": "Murdoch titles' metropolitan circulation share",
+   "detail": "Murdoch-owned titles account for 64.2% of metropolitan circulation, cited in a 2017 debate on the two-out-of-three rule.",
+   "slug": "speech-349886",
+   "source_title": "Brian Mitchell \u2014 2017-06-21"
+  },
+  {
+   "value": "75 per cent",
+   "label": "Reach rule threshold",
+   "detail": "Labor supported repealing the 75 per cent reach rule but opposed removing the two-out-of-three cross-media ownership rule.",
+   "slug": "speech-339331",
+   "source_title": "Stephen Jones \u2014 2016-11-30"
   }
  ],
  "positions": [
   {
    "party": "Labor",
-   "position": "Opposes further concentration of media ownership, arguing it is harmful to democracy and that the government's proposed amendments to allow greater media concentration are a serious concern.",
-   "slug": "speech-84415",
-   "source_title": "Lindsay Tanner \u2014 2002-09-25",
-   "speaker": "Lindsay Tanner",
-   "date": "2002-09-25"
+   "position": "Opposes further concentration of power in television and newspapers, arguing democracy works best with a strong and diverse media. Supports an independent view on diversity of voices in one of the most concentrated media markets in the world, and opposed removing the two-out-of-three cross-media ownership rule warning it would increase media concentration.",
+   "slug": "speech-771696",
+   "source_title": "Stephen Conroy \u2014 Committees \u2014 2006-03-29",
+   "speaker": "Stephen Conroy",
+   "date": "2006-03-29"
+  },
+  {
+   "party": "Australian Democrats",
+   "position": "Supports a 'two out of three' rule for media mergers in metropolitan and regional areas as an additional safeguard against undue media concentration.",
+   "slug": "speech-775655",
+   "source_title": "Lyn Allison \u2014 Broadcasting Services Amendment (Media Ownership) Bill 2006; Broadcasting Legislation Amendment (Digital Television) Bill 2006; Communications Legislation Amendment (Enforcement Powers) Bill 2006; Television Licence Fees Amendment Bill 2006 \u2014 2006-10-11",
+   "speaker": "Lyn Allison",
+   "date": "2006-10-11"
   },
   {
    "party": "Liberal",
-   "position": "Recognises the value of Australia's free and independent press built by entrepreneurial publishers, and upholds it to the greatest extent consistent with the law.",
-   "slug": "speech-38169",
-   "source_title": "Ross Cameron \u2014 2000-03-09",
-   "speaker": "Ross Cameron",
-   "date": "2000-03-09"
+   "position": "Argues that traditional media platforms are being pressured and that some regulation currently restraining them should be freed up to enable these platforms to adapt to change.",
+   "slug": "speech-775574",
+   "source_title": "Michael Ronaldson \u2014 Broadcasting Services Amendment (Media Ownership) Bill 2006; Broadcasting Legislation Amendment (Digital Television) Bill 2006 \u2014 2006-10-10",
+   "speaker": "Michael Ronaldson",
+   "date": "2006-10-10"
+  },
+  {
+   "party": "Nationals",
+   "position": "Acknowledged a discussion paper on media reform was released, indicating engagement with media ownership reform proposals.",
+   "slug": "speech-150514",
+   "source_title": "Peter McGauran \u2014 2006-05-30",
+   "speaker": "Peter McGauran",
+   "date": "2006-05-30"
   },
   {
    "party": "Independent",
-   "position": "Objects to the government's motion to reject Senate amendments to the Media Ownership Bill 2002, and expresses concern about media concentration in rural areas where newsrooms are closing.",
-   "slug": "speech-99868",
-   "source_title": "Peter Andren \u2014 2003-06-26",
-   "speaker": "Peter Andren",
-   "date": "2003-06-26"
+   "position": "The media wields enormous influence and that power must be wielded responsibly, noting misuse of that power during the last federal election.",
+   "slug": "speech-803129",
+   "source_title": "Nick Xenophon \u2014 Evidence Amendment (Journalists\u2019 Privilege) Bill 2010 \u2014 2010-11-15",
+   "speaker": "Nick Xenophon",
+   "date": "2010-11-15"
   }
  ],
  "key_moments": [
   {
-   "slug": "speech-29532",
-   "title": "Peter Slipper \u2014 1999-08-26",
-   "speaker": "Peter Slipper",
-   "party": "Liberal",
-   "state": "federal",
-   "date": "1999-08-26"
-  },
-  {
-   "slug": "speech-108742",
-   "title": "John Murphy \u2014 2003-12-01",
-   "speaker": "John Murphy",
-   "party": "Labor",
-   "state": "federal",
-   "date": "2003-12-01"
-  },
-  {
-   "slug": "speech-84415",
-   "title": "Lindsay Tanner \u2014 2002-09-25",
-   "speaker": "Lindsay Tanner",
-   "party": "Labor",
-   "state": "federal",
-   "date": "2002-09-25"
-  },
-  {
-   "slug": "speech-73928",
-   "title": "Peter McGauran \u2014 2002-03-19",
-   "speaker": "Peter McGauran",
+   "slug": "speech-796612",
+   "title": "John Faulkner \u2014 Social Security and Other Legislation Amendment (Income Support for Students) Bill 2009 \u2014 2009-10-28",
+   "speaker": "John Faulkner",
    "party": null,
    "state": "federal",
-   "date": "2002-03-19"
+   "date": "2009-10-28"
   },
   {
-   "slug": "speech-99868",
-   "title": "Peter Andren \u2014 2003-06-26",
-   "speaker": "Peter Andren",
-   "party": "Independent",
+   "slug": "speech-99683",
+   "title": "John Murphy \u2014 2003-06-26",
+   "speaker": "John Murphy",
+   "party": "Labor",
    "state": "federal",
    "date": "2003-06-26"
   },
   {
-   "slug": "speech-85245",
-   "title": "Warren Snowdon \u2014 2002-10-16",
-   "speaker": "Warren Snowdon",
-   "party": "Labor",
+   "slug": "speech-775352",
+   "title": "Stephen Conroy \u2014 Questions without Notice: Take Note of Answers \u2014 2006-09-14",
+   "speaker": "Stephen Conroy",
+   "party": null,
    "state": "federal",
-   "date": "2002-10-16"
+   "date": "2006-09-14"
+  },
+  {
+   "slug": "speech-29765",
+   "title": "Larry Anthony \u2014 1999-08-30",
+   "speaker": "Larry Anthony",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "1999-08-30"
+  },
+  {
+   "slug": "speech-339516",
+   "title": "Paul Fletcher \u2014 2016-11-30",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-30"
+  },
+  {
+   "slug": "division-federal-representatives-293",
+   "title": "House of Representatives division, 18 October 2006: Broadcasting Services Amendment (Media Ownership) Bill 2006 - Second Reading - Agree with the bill's main idea (part 1 of 2)",
+   "speaker": "Alan Cadman",
+   "party": null,
+   "state": "federal",
+   "date": null
   }
  ],
  "sections": [
   {
    "question": "What have MPs said about media ownership concentration in Australia?",
-   "answer": "Based on the provided context, many MPs spoke about media ownership concentration in Australia. Opposition MPs, particularly from the Labor Party, argued that further concentration of media ownership is a grave threat to democracy, reduces diversity of opinion, and serves the interests of media proprietors rather than the public. They said Australia already has one of the most concentrated media industries in the world, and that the Broadcasting Services Amendment (Media Ownership) Bill 2002 would make this worse by allowing one proprietor to own newspapers, television stations, and radio stations in the same market.\n\nSeveral MPs quoted past statements from government members who had previously warned against media concentration, accusing them of hypocrisy for now supporting the bill. They also said concentrated ownership could lead to fewer journalists, less independent reporting, and greater influence by media moguls over politics and public opinion.\n\nSome government-supporting MPs spoke in favour of the bill, arguing that existing laws were outdated, that media needed to compete globally, and that safeguards like editorial separation and minimum media group tests would protect diversity. One ministerial answer acknowledged that the bill does allow further concentration of media ownership, but said this was justified by the government's election commitment to reform media ownership laws.",
+   "answer": "MPs\u2014mainly from the opposition and crossbench\u2014have strongly criticized media ownership concentration in Australia, saying it threatens democracy and the public interest. They argued that further concentration would reduce media diversity, stifle competition, and give too much power to major proprietors like Rupert Murdoch and James Packer. They also noted that Australia has one of the most concentrated media landscapes in the Western world, with News Limited and Fairfax dominating the news industry. Some MPs accused government frontbenchers of hypocrisy, saying those MPs had opposed concentration when they were backbenchers but later supported or remained silent on bills that would allow greater concentration. They also highlighted specific risks, such as allowing one company to own television, radio, and newspapers in the same market, and called for retaining cross-media ownership rules to protect democracy.",
    "sources": [
     {
-     "slug": "speech-108717",
-     "title": "Paul Neville \u2014 2003-12-01",
+     "slug": "speech-775655",
+     "title": "Lyn Allison \u2014 Broadcasting Services Amendment (Media Ownership) Bill 2006; Broadcasting Legislation Amendment (Digital Television) Bill 2006; Communications Legislation Amendment (Enforcement Powers) Bill 2006; Television Licence Fees Amendment Bill 2006 \u2014 2006-10-11",
      "speaker": null,
-     "party": "Nationals",
+     "party": "Australian Democrats",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-85634",
-     "title": "John Murphy \u2014 2002-10-21",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-80462",
-     "title": "Peter McGauran \u2014 2002-08-19",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-72991",
-     "title": "John Murphy \u2014 2002-03-12",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-83901",
-     "title": "Peter McGauran \u2014 2002-09-23",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-99868",
-     "title": "Peter Andren \u2014 2003-06-26",
-     "speaker": null,
-     "party": "Independent",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-108502",
-     "title": "Michael Organ \u2014 2003-11-27",
+     "slug": "speech-817245",
+     "title": "Scott Ludlam \u2014 Bills \u2014 2012-06-28",
      "speaker": null,
      "party": "Greens",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-73928",
-     "title": "Peter McGauran \u2014 2002-03-19",
+     "slug": "speech-126115",
+     "title": "John Murphy \u2014 2005-02-17",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-74174",
+     "title": "John Murphy \u2014 2002-03-20",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-112757",
+     "title": "John Murphy \u2014 2004-03-10",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-130623",
+     "title": "John Murphy \u2014 2005-05-31",
      "speaker": null,
      "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-84433",
-     "title": "John Murphy \u2014 2002-09-25",
+     "slug": "speech-125477",
+     "title": "John Murphy \u2014 2005-02-14",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-84417",
-     "title": "Craig Emerson \u2014 2002-09-25",
+     "slug": "speech-775352",
+     "title": "Stephen Conroy \u2014 Questions without Notice: Take Note of Answers \u2014 2006-09-14",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-271304",
+     "title": "John Murphy \u2014 2013-03-19",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-100762",
-     "title": "John Murphy \u2014 2003-08-12",
+     "slug": "speech-157110",
+     "title": "John Murphy \u2014 2006-09-11",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-84981",
-     "title": "Ann Corcoran \u2014 2002-10-15",
+     "slug": "speech-151949",
+     "title": "John Murphy \u2014 2006-06-14",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-240365",
+     "title": "John Murphy \u2014 2011-08-16",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-156949",
+     "title": "John Murphy \u2014 2006-09-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-775574",
+     "title": "Michael Ronaldson \u2014 Broadcasting Services Amendment (Media Ownership) Bill 2006; Broadcasting Legislation Amendment (Digital Television) Bill 2006 \u2014 2006-10-10",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-339358",
+     "title": "Adam Bandt \u2014 2016-11-30",
+     "speaker": null,
+     "party": "Greens",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-151777",
+     "title": "John Murphy \u2014 2006-06-14",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -510,56 +565,8 @@
      "date": null
     },
     {
-     "slug": "speech-108501",
-     "title": "Brendan O'Connor \u2014 2003-11-27",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-39404",
-     "title": "John Murphy \u2014 2000-04-03",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-84980",
-     "title": "Chris Pyne \u2014 2002-10-15",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-108738",
-     "title": "Bob Katter \u2014 2003-12-01",
-     "speaker": null,
-     "party": "Independent",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-74174",
-     "title": "John Murphy \u2014 2002-03-20",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-108719",
-     "title": "Kelvin Thomson \u2014 2003-12-01",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-84603",
-     "title": "Catherine King \u2014 2002-09-26",
+     "slug": "speech-270735",
+     "title": "John Murphy \u2014 2013-03-14",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -569,165 +576,125 @@
   },
   {
    "question": "What was said about the news media bargaining code and tech platforms?",
-   "answer": "Not enough data to answer this.",
+   "answer": "Based on the provided context, the news media bargaining code was described as a world-first mandatory code to address bargaining power imbalances between major digital platforms\u2014such as Google and Facebook\u2014and Australian news media businesses. It was established to ensure digital platforms pay Australian news media for using their content, especially public interest journalism. The code's framework includes good-faith bargaining, compulsory arbitration, notification of algorithm changes, non-differentiation, allowing commercial deals outside the code, and standard offers. It also uses a negotiate-arbitrate model, with the Treasurer able to designate platforms based on ACCC advice, and includes provisions for small and regional publishers. The need for the code was based on ACCC findings that digital platforms had substantial bargaining power over news businesses. There was bipartisan support in principle, but also criticism of government delays and concerns about impacts on small businesses, media diversity, and uncertainty about designations. Recent commercial deals between Google and companies like Seven, Nine, News Corp, and Junkee Media were cited as evidence the code was encouraging commercial negotiations.",
    "sources": [
     {
-     "slug": "speech-9878",
-     "title": "Bronwyn Bishop \u2014 1998-06-02",
+     "slug": "speech-402484",
+     "title": "Kevin Hogan \u2014 2021-02-17",
+     "speaker": null,
+     "party": "Nationals",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-402482",
+     "title": "Katrina Allen \u2014 2021-02-17",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-100761",
-     "title": "Peter McGauran \u2014 2003-08-12",
+     "slug": "speech-402494",
+     "title": "Matt Keogh \u2014 2021-02-17",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-402486",
+     "title": "Dave Sharma \u2014 2021-02-17",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-402481",
+     "title": "Michelle Rowland \u2014 2021-02-17",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-1029357",
+     "title": "Payman \u2014 Environment and Communications Legislation Committee - Environment and Communications Legislation Committee 25/02/2025 Estimates INFRASTRUCTURE, TRANSPORT, REGIONAL DEVELOPMENT, COMMUNICATIONS AND THE ARTS PORTFOLIO Australian Communications and Media Authority \u2014 2025-02-25",
      "speaker": null,
      "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-109267",
-     "title": "Daryl Williams \u2014 2003-12-03",
+     "slug": "speech-402488",
+     "title": "Craig Kelly \u2014 2021-02-17",
      "speaker": null,
-     "party": null,
+     "party": "Independent",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-83901",
-     "title": "Peter McGauran \u2014 2002-09-23",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-99673",
-     "title": "John Murphy \u2014 2003-06-26",
+     "slug": "speech-402504",
+     "title": "Michelle Rowland \u2014 2021-02-17",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-85160",
-     "title": "Robert McClelland \u2014 2002-10-16",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-74174",
-     "title": "John Murphy \u2014 2002-03-20",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-108737",
-     "title": "Lindsay Tanner \u2014 2003-12-01",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-83887",
-     "title": "Peter McGauran \u2014 2002-09-23",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-93566",
-     "title": "Robert McClelland \u2014 2003-03-25",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-91444",
-     "title": "Steven Ciobo \u2014 2003-02-13",
+     "slug": "speech-402495",
+     "title": "Paul Fletcher \u2014 2021-02-17",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-57786",
-     "title": "Daryl Williams \u2014 2001-03-01",
+     "slug": "speech-403195",
+     "title": "Paul Fletcher \u2014 2021-02-23",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-112038",
-     "title": "Daryl Williams \u2014 2004-03-03",
+     "slug": "speech-402485",
+     "title": "Matt Thistlethwaite \u2014 2021-02-17",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-402659",
+     "title": "Paul Fletcher \u2014 2021-02-18",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-84597",
-     "title": "Frank Mossfield \u2014 2002-09-26",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-72601",
-     "title": "John Murphy \u2014 2002-03-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-108721",
-     "title": "Daryl Williams \u2014 2003-12-01",
+     "slug": "speech-402505",
+     "title": "Paul Fletcher \u2014 2021-02-17",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-107934",
-     "title": "Michelle O'Byrne \u2014 2003-11-25",
+     "slug": "speech-402487",
+     "title": "Tim Watts \u2014 2021-02-17",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-40665",
-     "title": "Stephen Smith \u2014 2000-04-12",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-99865",
-     "title": "Peter Slipper \u2014 2003-06-26",
+     "slug": "speech-400585",
+     "title": "Josh Frydenberg \u2014 2020-12-09",
      "speaker": null,
      "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-80592",
-     "title": "Peter McGauran \u2014 2002-08-19",
-     "speaker": null,
-     "party": null,
      "state": "federal",
      "date": null
     }

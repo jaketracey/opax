@@ -2,8 +2,8 @@
  "slug": "climate",
  "title": "Climate & Energy",
  "blurb": "The climate debate on the record: targets, coal, renewables and carbon pricing.",
- "generated_at": "2026-09-01T07:35:01+00:00",
- "corpus_resources": 70556,
+ "generated_at": "2026-09-02T03:20:01+00:00",
+ "corpus_resources": 536153,
  "stats": {
   "speech_count": 93216,
   "unique_speakers": 2469,
@@ -314,579 +314,638 @@
  },
  "brief": {
   "question": "What does the parliamentary record show about climate & energy?",
-  "answer": "The strongest finding in the record is a stark partisan divide over whether the Howard government\u2019s climate and energy record was one of achievement or broken promise. Government speakers claimed a \u201cAAA record\u201d built on a $1 billion greenhouse response, the world\u2019s only dedicated Australian Greenhouse Office, a $400 million Greenhouse Gas Abatement Program, and a Mandatory Renewable Energy Target (MRET) requiring an extra 9,500 gigawatt hours of renewable electricity by 2010\u2014described as equivalent to two Snowy Mountains schemes. They also claimed current measures would cut emissions by about 60 million tonnes a year in the 2008-12 Kyoto period, equal to removing all passenger cars from Australian roads. The government refused to ratify the Kyoto protocol, arguing that even full compliance would cut global greenhouse concentrations by less than one per cent, that major emitters including developing countries were excluded, and that long-term costs outweighed short-term benefits\u2014citing premiers of Queensland and Western Australia who said their resource states would be disadvantaged.\n\nOpposition speakers consistently challenged those claims, arguing the government was doing the minimum and breaking its own commitments. Labor called for ratification and a five per cent MRET rather than the two per cent target, citing Origin Energy research that a five per cent target would cut emissions by one per cent with negligible electricity cost increases. They pointed to actual electricity demand growth of 3.8 per cent a year from 1996 to 2000, far above the 2.1 per cent assumption used to set the MRET, meaning renewables would struggle to maintain their existing market share. Labor also reported that the Australian Greenhouse Office had been cut by $30 million, or 45 per cent, between 2001-03, and that the $400 million Greenhouse Gas Abatement Program had delivered less than $129 million, with the Bureau of Transport and Regional Economics projecting transport emissions would reach 47 per cent above 1990 levels by 2010 and 68 per cent above by 2020.\n\nThe debate shifted noticeably between 2000 and 2003. In 2000, Labor reserved its final position on the Renewable Energy (Electricity) Bill, complained it was rushed, questioned whether a technology-neutral subsidy would simply favour biomass, and noted the government\u2019s own cost estimate of around"
+  "answer": "Based only on the provided parliamentary record, the following picture emerges:\n\n- **Strongest findings:** The debate repeatedly cites scientific evidence that climate change is real and accelerating. This includes the Climate Commission\u2019s finding that global temperatures are rising more quickly than ever, with the last decade the hottest on record; Australia\u2019s number of hot days more than doubling in 50 years; sea levels rising 20 cm since the 1800s and projected to rise another 20 cm by 2050; and the Great Barrier Reef suffering nine major bleaching incidents in 31 years after none before. The IPCC\u2019s fourth report concluded with \u201cvery high degree of confidence\u201d that climate change is occurring, is caused by greenhouse-gas build-up, and that human activity is largely responsible. The IPCC\u2019s fifth report, released on 27 September, is invoked as well.\n\n- **How the debate has shifted over time:** Parliament first considered the issue in 1994, and for roughly 20 years it was the subject of repeated scrutiny\u201435 or 36 parliamentary inquiries, extensive committee hearings, green and white papers, and thousands of submissions. A price on carbon went from a proposal to the centre of the Clean Energy Bill 2011 and related bills. The record notes that at one point a price on carbon had been opposition policy until almost two years before the debate, and that the Howard government itself contributed much of the policy work. By the time of the speeches, the debate had shifted to the Clean Energy Package, which aimed to deliver a 12 per cent reduction in emissions by 2020 on 2005 levels (a 30 per cent per-capita reduction), and to establishing an emissions reduction fund.\n\n- **Sharpest points of disagreement:** The sharpest disagreements are over:\n  - Whether climate change is human-induced or simply cyclical or caused by natural factors such as Earth\u2019s orbit\u2014one senator accepted \u201creal, present, constant and worldwide\u201d evidence of climate change but doubted human causes.\n  - Whether opponents are genuinely scrutinising legislation or simply delaying it: the opposition moved to refer bills to committees, which supporters called \u201can attempt by the opposition senators to delay consideration,\u201d while opponents claimed the bills needed more scrutiny.\n  - Partisan accusations of inaction: the government side accused the opposition of having done nothing for 11\u00bd years and of \u201chypocritically\u201d claiming concern for working families, while the opposition accused Labor of using outdated parliamentary tactics and pointing to its own environmental record under the Howard government.\n  - The best policy response: supporters argued a carbon price was the most effective way to address climate change, while the coalition\u2019s \u201cDirect Action\u201d policy was described as far from the most effective means of reducing emissions."
  },
  "key_stats": [
   {
-   "value": "108%",
-   "label": "Greenhouse gas emissions target",
-   "detail": "The Government is committed to limiting Australia's greenhouse gas emissions to 108% of 1990 emission levels.",
-   "slug": "speech-80428",
-   "source_title": "David Kemp \u2014 2002-08-19"
+   "value": "66 per cent",
+   "label": "Coal exploration record high",
+   "detail": "ABS data released the day before showed coal exploration in Australia reached a record high of 66 per cent.",
+   "slug": "speech-243294",
+   "source_title": "Greg Combet \u2014 2011-09-15"
+  },
+  {
+   "value": "4.4\u00b0C",
+   "label": "Projected warming this century",
+   "detail": "Government accused of reckless climate targets risking Australia warming by 4.4\u00b0C this century, citing Bureau of Meteorology evidence.",
+   "slug": "speech-398246",
+   "source_title": "Adam Bandt \u2014 2020-11-09"
+  },
+  {
+   "value": "$1 billion",
+   "label": "Grid Reliability Fund",
+   "detail": "Government cited support for a $1 billion Grid Reliability Fund in its technology-neutral energy policy.",
+   "slug": "speech-388228",
+   "source_title": "Angus Taylor \u2014 2020-02-13"
+  },
+  {
+   "value": "459 million tonnes",
+   "label": "Kyoto target overachievement",
+   "detail": "Government met Kyoto targets by 459 million tonnes.",
+   "slug": "speech-414399",
+   "source_title": "Angus Taylor \u2014 2021-10-26"
+  },
+  {
+   "value": "35%",
+   "label": "Emissions reduction by 2030",
+   "detail": "Government on track for a 35% reduction by 2030.",
+   "slug": "speech-414399",
+   "source_title": "Angus Taylor \u2014 2021-10-26"
+  },
+  {
+   "value": "60,000",
+   "label": "People's Climate March attendees",
+   "detail": "The People's Climate March in Melbourne had 60,000 attendees.",
+   "slug": "speech-324579",
+   "source_title": "Joanne Ryan \u2014 2015-11-30"
   }
  ],
  "positions": [
   {
-   "party": "Liberal",
-   "position": "The Liberal Party supports government measures to tackle the greenhouse effect, including the Renewable Energy (Electricity) Bill 2000 and the Mandatory Renewable Energy Target scheme, and is committed to working towards limiting Australia's greenhouse gas emissions to 108% of 1990 levels while stressing the need for a global response to climate change that includes participation by all nations.",
-   "slug": "speech-45854",
-   "source_title": "Mal Washer \u2014 2000-06-29",
-   "speaker": "Mal Washer",
-   "date": "2000-06-29"
+   "party": "Labor",
+   "position": "Supports establishing a carbon price (Clean Energy Bill 2011) as significant reform vital for the environment, and announced targets of 50% renewables by 2030 and zero net carbon pollution by 2050.",
+   "slug": "speech-811498",
+   "source_title": "Louise Pratt \u2014 Bills \u2014 2011-10-31",
+   "speaker": "Louise Pratt",
+   "date": "2011-10-31"
   },
   {
-   "party": "Labor",
-   "position": "The Labor Party takes the greenhouse response seriously, supports Australia signing up to and ratifying the Kyoto protocol, and criticises the government's greenhouse policy as being in disarray and its approach to renewable energy as inadequate.",
-   "slug": "speech-45852",
-   "source_title": "Martyn Evans \u2014 2000-06-29",
-   "speaker": "Martyn Evans",
-   "date": "2000-06-29"
+   "party": "Greens",
+   "position": "Opposed a Labor-Liberal clean energy target including coal, arguing it would create a valley of death for renewables; also proposed emission reduction targets of 20% below 1990 levels by 2020 and 80% by 2050, ratifying Kyoto, and increasing the renewable energy target.",
+   "slug": "speech-352262",
+   "source_title": "Adam Bandt \u2014 2017-09-04",
+   "speaker": "Adam Bandt",
+   "date": "2017-09-04"
+  },
+  {
+   "party": "Liberal",
+   "position": "Argued for a technology-neutral energy policy without a carbon tax, relying on coal and gas alongside renewables, citing support for gas, coal, a Grid Reliability Fund, record renewables and pumped hydro.",
+   "slug": "speech-388228",
+   "source_title": "Angus Taylor \u2014 2020-02-13",
+   "speaker": "Angus Taylor",
+   "date": "2020-02-13"
+  },
+  {
+   "party": "Nationals",
+   "position": "Argued the government has not abandoned the resources industry given record coal and gas prices and employment, has met Kyoto and Paris targets, leads in rooftop solar per capita, and supports technology-driven emissions reduction.",
+   "slug": "speech-413933",
+   "source_title": "Damian Drum \u2014 2021-10-21",
+   "speaker": "Damian Drum",
+   "date": "2021-10-21"
+  },
+  {
+   "party": "Independent",
+   "position": "Argued climate change policy must meet criteria of social cost, reliability and affordability, shifting away from coal, banning new thermal coal mines (including Adani's), ending fossil fuel subsidies, and banning fracking.",
+   "slug": "speech-375886",
+   "source_title": "Kerryn Phelps \u2014 2019-02-19",
+   "speaker": "Kerryn Phelps",
+   "date": "2019-02-19"
+  },
+  {
+   "party": "Australian Democrats",
+   "position": "The minister defended the government's ten-year climate record, citing the 1997 establishment of the national greenhouse office, while insisting scientific debate on anthropogenic CO2 remained, and rejected carbon pricing.",
+   "slug": "speech-779306",
+   "source_title": "Lyn Allison \u2014 Questions without Notice \u2014 2007-03-26",
+   "speaker": "Lyn Allison",
+   "date": "2007-03-26"
   }
  ],
  "key_moments": [
   {
-   "slug": "speech-106341",
-   "title": "Michael Johnson \u2014 2003-10-16",
-   "speaker": "Michael Johnson",
-   "party": "Liberal",
+   "slug": "speech-796612",
+   "title": "John Faulkner \u2014 Social Security and Other Legislation Amendment (Income Support for Students) Bill 2009 \u2014 2009-10-28",
+   "speaker": "John Faulkner",
+   "party": null,
    "state": "federal",
-   "date": "2003-10-16"
+   "date": "2009-10-28"
   },
   {
-   "slug": "speech-107269",
-   "title": "Kevin Andrews \u2014 2003-11-06",
-   "speaker": "Kevin Andrews",
-   "party": "Liberal",
+   "slug": "speech-787134",
+   "title": "David Johnston \u2014 National Greenhouse and Energy Reporting Amendment Bill 2008 \u2014 2008-09-02",
+   "speaker": "David Johnston",
+   "party": null,
    "state": "federal",
-   "date": "2003-11-06"
+   "date": "2008-09-02"
   },
   {
-   "slug": "speech-75790",
-   "title": "Peter Slipper \u2014 2002-05-29",
-   "speaker": "Peter Slipper",
-   "party": "Liberal",
+   "slug": "speech-807696",
+   "title": "Nick Sherry \u2014 Bills \u2014 2011-06-20",
+   "speaker": "Nick Sherry",
+   "party": null,
    "state": "federal",
-   "date": "2002-05-29"
+   "date": "2011-06-20"
   },
   {
-   "slug": "speech-68984",
-   "title": "John Howard \u2014 2001-09-17",
-   "speaker": "John Howard",
-   "party": "Liberal",
+   "slug": "speech-29765",
+   "title": "Larry Anthony \u2014 1999-08-30",
+   "speaker": "Larry Anthony",
+   "party": "Nationals",
    "state": "federal",
-   "date": "2001-09-17"
+   "date": "1999-08-30"
   },
   {
-   "slug": "speech-66146",
-   "title": "Michael Lee \u2014 2001-08-08",
-   "speaker": "Michael Lee",
-   "party": "Labor",
+   "slug": "speech-811102",
+   "title": "Joe Ludwig \u2014 Motions \u2014 2011-10-12",
+   "speaker": "Joe Ludwig",
+   "party": null,
    "state": "federal",
-   "date": "2001-08-08"
+   "date": "2011-10-12"
   },
   {
-   "slug": "speech-60741",
-   "title": "Joe Hockey \u2014 2001-04-05",
-   "speaker": "Joe Hockey",
-   "party": "Liberal",
+   "slug": "speech-777252",
+   "title": "Kim Carr \u2014 Avoiding Dangerous Climate Change (Kyoto Protocol Ratification) Bill 2006 [No. 2] \u2014 2006-11-30",
+   "speaker": "Kim Carr",
+   "party": null,
    "state": "federal",
-   "date": "2001-04-05"
+   "date": "2006-11-30"
   }
  ],
  "sections": [
   {
    "question": "What positions have MPs taken on climate change action and emissions targets?",
-   "answer": "",
+   "answer": "Based on the context, MPs took a variety of positions on climate change action and emissions targets:\n\n- Some MPs supported the Climate Change Bill 2022 and related bills, which legislated Australia\u2019s emissions targets of a **43% reduction by 2030** and **net zero by 2050**, and embedded those targets across agencies such as the Clean Energy Finance Corporation, ARENA, Export Finance Australia, Infrastructure Australia, and the CSIRO.\n- One MP supported the bill as a first step but argued the 43% target was **insufficient**, calling for at least a **60\u201375% reduction by 2030** and opposing new coal and gas projects, while still committing to support the bill and press for more ambitious action.\n- Another MP argued the previous government failed on climate and committed to action on emissions targets, along with other reforms.\n- Some MPs criticised weak emissions targets, rising carbon pollution, and cuts to renewable energy, and pledged stronger action to reduce pollution and increase renewables.\n- One speaker argued the government was failing due to a \u201csmall minority of denialist MPs,\u201d noted that over 90% of Australians want action, and called for meaningful emissions reduction targets.\n- An MP argued that bushfires made climate action urgent, citing \u201cseven years of climate policy drift\u201d and rising emissions, and called for clear, bipartisan action.\n- A minister stated that climate change is real, that the government has a **zero net emissions target by 2050**, and that a concrete plan is needed that prioritises growth, jobs, and protecting the environment without blowing up the economy.\n- Another minister said the government had legislated targets, including **net zero by 2050**, and described the Safeguard Mechanism as a key way for emitting industries to reduce emissions, adding that projects would only proceed if they meet environmental, social, and economic requirements.\n- Some MPs highlighted government achievements, such as reduced emissions, investment in renewables, and a 2030 target to cut emissions by 50%, described as \u201cnation-leading.\u201d",
    "sources": [
     {
-     "slug": "speech-96505",
-     "title": "David Kemp \u2014 2003-05-29",
+     "slug": "speech-421348",
+     "title": "Monique Ryan \u2014 2022-08-03",
      "speaker": null,
-     "party": "Liberal",
+     "party": "Independent",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-107457",
-     "title": "David Kemp \u2014 2003-11-06",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-52667",
-     "title": "Alexander Downer \u2014 2000-11-08",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-107774",
-     "title": "David Kemp \u2014 2003-11-24",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-70114",
-     "title": "Warren Truss \u2014 2001-09-24",
-     "speaker": null,
-     "party": "Nationals",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-80428",
-     "title": "David Kemp \u2014 2002-08-19",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-45852",
-     "title": "Martyn Evans \u2014 2000-06-29",
+     "slug": "speech-355554",
+     "title": "Matt Thistlethwaite \u2014 2017-10-19",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-88646",
-     "title": "Kelvin Thomson \u2014 2002-12-09",
+     "slug": "speech-421210",
+     "title": "Ged Kearney \u2014 2022-08-03",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-72584",
-     "title": "Kelvin Thomson \u2014 2002-03-11",
+     "slug": "speech-204216",
+     "title": "Michael Danby \u2014 2009-06-15",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-88058",
-     "title": "David Kemp \u2014 2002-12-04",
+     "slug": "speech-826929",
+     "title": "Adam Bandt \u2014 Questions without Notice \u2014 2023-02-06",
      "speaker": null,
-     "party": "Liberal",
+     "party": "Greens",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-90214",
-     "title": "John Murphy \u2014 2003-02-04",
+     "slug": "division-federal-representatives-7435",
+     "title": "House of Representatives division, 18 October 2021: Motions - Climate Change - Stop Leader of the Opposition from speaking",
      "speaker": null,
      "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-80756",
-     "title": "Kirsten Livermore \u2014 2002-08-20",
+     "slug": "speech-399485",
+     "title": "Julian Hill \u2014 2020-12-01",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-107773",
-     "title": "Kelvin Thomson \u2014 2003-11-24",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-45864",
-     "title": "Harry Jenkins \u2014 2000-06-29",
+     "slug": "speech-206706",
+     "title": "Peter Garrett \u2014 2009-08-11",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-60311",
-     "title": "Bruce Billson \u2014 2001-04-03",
+     "slug": "speech-886840",
+     "title": "D\u2019Ambrosio \u2014 Ministers statements: climate change \u2014 2022-08-04",
      "speaker": null,
-     "party": "Liberal",
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-1184800",
+     "title": "Melinda Pavey \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2022-08-11",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-388106",
+     "title": "Clare O'Neil \u2014 2020-02-12",
+     "speaker": null,
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-104922",
-     "title": "David Kemp \u2014 2003-10-07",
+     "slug": "speech-1154291",
+     "title": "Mark Latham \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2021-11-24",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-846691",
+     "title": "Jan Barham \u2014 Climate Change Bill 2015 \u2014 2015-10-22",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "division-federal-representatives-6174",
+     "title": "House of Representatives division, 6 February 2020: Motions - Minister for Energy and Emissions Reduction - Put the question (part 1 of 2)",
      "speaker": null,
      "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-84132",
-     "title": "David Kemp \u2014 2002-09-24",
+     "slug": "speech-420384",
+     "title": "Tania Lawrence \u2014 2022-07-28",
      "speaker": null,
-     "party": "Liberal",
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-53328",
-     "title": "Alexander Downer \u2014 2000-11-27",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-104921",
-     "title": "Martyn Evans \u2014 2003-10-07",
+     "slug": "speech-1154292",
+     "title": "Cate Faehrmann \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2021-11-24",
      "speaker": null,
      "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-1184799",
+     "title": "Julia Finn \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2022-08-11",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-402975",
+     "title": "Julian Leeser \u2014 2021-02-22",
+     "speaker": null,
+     "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-380",
-     "title": "John Howard \u2014 1998-03-02",
+     "slug": "speech-1041067",
+     "title": "Matt Kean \u2014 Climate Change \u2014 2019-09-24",
      "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-1184802",
+     "title": "Felicity Wilson \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2022-08-11",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
      "date": null
     }
    ]
   },
   {
    "question": "What has been said in parliament about coal mining and the transition to renewable energy?",
-   "answer": "Based on the parliamentary debate in the context, several views were expressed about coal mining and the transition to renewable energy:\n\n- Many speakers acknowledged the coal industry\u2019s importance to Australia, particularly for exports, jobs, and electricity generation. For example, it was described as Australia\u2019s largest commodity export, a key source of low-cost electricity, and vital to regions like the Hunter and electorates such as Charlton, Paterson, and McMillan.\n- Some speakers defended coal and opposed rapid moves away from it, arguing that the Kyoto protocol would harm the coal industry and that \u201cclean coal\u201d technology and coal seam methane should be considered, though others called clean coal a \u201ctransparent fraud\u201d that would not reduce carbon dioxide emissions.\n- Several speakers supported the transition to renewable energy and criticized the government\u2019s renewable energy target as too low. They argued for increasing the mandatory renewable energy target from two per cent to five per cent, and some mentioned Greenpeace\u2019s call for 10 per cent.\n- The debate also included discussion of the Renewable Energy (Electricity) Amendment Bill 2002, which aimed to improve the administration of the existing renewable energy legislation. Some speakers said the bill did not go far enough and that Australia should ratify the Kyoto protocol and invest more in renewable energy, while others supported the government\u2019s approach, including not ratifying Kyoto and instead focusing on greenhouse gas abatement programs.\n- There was also reference to the history of the Joint Coal Board, coalmining safety, miners\u2019 deaths, and the need to protect workers\u2019 entitlements and communities, as well as the transfer of coal industry responsibilities from the Commonwealth to New South Wales.\n\nOverall, the context shows a divided parliament: one side emphasized the economic importance of coal and cautious, technology-based approaches to emissions; the other side argued for stronger and faster action on renewable energy and greenhouse gas reductions.",
+   "answer": "Based only on the provided context, parliamentarians said a range of things about coal mining and the transition to renewable energy:\n\n- Some members, particularly from The Greens, argued strongly for a transition away from coal to renewable energy. They called for no new coal mines, phasing out coal mining and coal power, and setting targets such as 100% renewable energy. They cited climate change, coral bleaching, extreme weather, and the need to protect future generations.\n- Justin Field called on Parliament to develop a transition plan for the Hunter Valley, including a public inquiry to work with coal communities, workers, unions, and businesses. He said the shift from coalmining, coal power, and coal export should be managed toward a more diverse economy.\n- Jeremy Buckingham argued for the \u201cMining Amendment (Climate Protection\u2014No New Coal Mines) Bill 2016\u201d to stop new coalmines, and also referenced a vision for NSW with 100% renewable energy and coal phased out.\n- Other speakers moved bills to ban new coal mines and phase out thermal coal exports by 2030, or to ban coal mining in Victoria and raise renewable energy targets.\n- In contrast, Minister Don Harwin strongly opposed the no-new-coal-mines bill, saying it would cost tens of thousands of jobs, hurt regional economies, deprive the state of affordable and reliable energy, and reduce coal royalties. He emphasised coal\u2019s economic importance, including export earnings and jobs.\n\nSo the context shows a parliamentary debate: some members advocated urgent action to phase out coal and build renewable energy, while others defended coal mining for economic and employment reasons.",
    "sources": [
     {
-     "slug": "speech-92547",
-     "title": "David Kemp \u2014 2003-03-06",
+     "slug": "speech-852750",
+     "title": "Jeremy Buckingham \u2014 Coal Industry \u2014 2015-11-12",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-793878",
+     "title": "Alan Ferguson \u2014 Matters of Public Importance \u2014 2009-06-23",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-814005",
+     "title": "Jacinta Collins \u2014 Bills \u2014 2012-02-29",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-800905",
+     "title": "Bob Brown \u2014 Matters of Public Interest \u2014 2010-06-16",
+     "speaker": null,
+     "party": "Greens",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-875569",
+     "title": "Justin Field \u2014 Mining Amendment (Climate Protection\u2014No New Coal Mines) Bill 2016 \u2014 2017-03-30",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-984336",
+     "title": "Justin Field \u2014 Coalmining and Climate Change \u2014 2019-05-28",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-828735",
+     "title": "Larissa Waters \u2014 Motions \u2014 2023-03-21",
+     "speaker": null,
+     "party": "Greens",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-414002",
+     "title": "Adam Paul Bandt \u2014 2021-10-25",
+     "speaker": null,
+     "party": "Greens",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-341919",
+     "title": "Josh Frydenberg \u2014 2017-02-16",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-88660",
-     "title": "Martyn Evans \u2014 2002-12-09",
+     "slug": "speech-840301",
+     "title": "Jeremy Buckingham \u2014 Jobs for NSW Bill 2015 \u2014 2015-09-15",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-887882",
+     "title": "Jeremy Buckingham \u2014 Environmental Utopia \u2014 2017-11-23",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-432279",
+     "title": "Peter Walsh \u2014 Mineral Resources (Sustainable Development) Amendment (Financial Assurance) Bill 2025 - Second reading \u2014 2025-12-03",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-876362",
+     "title": "Gabrielle De Vietri \u2014 Energy and Resources Legislation Amendment (Transition Away from Coal) Bill 2023 - Introduction \u2014 2023-06-21",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-875572",
+     "title": "Jeremy Buckingham \u2014 Mining Amendment (Climate Protection\u2014No New Coal Mines) Bill 2016 \u2014 2017-03-30",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-885690",
+     "title": "Read \u2014 Energy policy \u2014 2022-08-18",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-884147",
+     "title": "Jenny Leong \u2014 Environmental Planning and Assessment Amendment (Sydney Drinking Water Catchment) Bill 2017 \u2014 2017-10-10",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-877931",
+     "title": "Jeremy Buckingham \u2014 Renewable Energy \u2014 2017-05-10",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-874665",
+     "title": "Don Harwin \u2014 Mining Amendment (Climate Protection\u2014No New Coal Mines) Bill 2016 \u2014 2017-03-09",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-250580",
+     "title": "Greg Combet \u2014 2012-02-27",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-80759",
-     "title": "Antony Windsor \u2014 2002-08-20",
+     "slug": "speech-876361",
+     "title": "Ellen Sandell \u2014 Energy and Resources Legislation Amendment (Transition Away from Coal) Bill 2023 - Introduction \u2014 2023-06-21",
      "speaker": null,
-     "party": "Independent",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-88659",
-     "title": "Julie Bishop \u2014 2002-12-09",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-89258",
-     "title": "John Murphy \u2014 2002-12-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-60693",
-     "title": "Kelly Hoare \u2014 2001-04-04",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-89259",
-     "title": "Kirsten Livermore \u2014 2002-12-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-78033",
-     "title": "Joel Fitzgibbon \u2014 2002-06-19",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-25888",
-     "title": "Kim Beazley \u2014 1999-06-22",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-60699",
-     "title": "Bernie Ripoll \u2014 2001-04-04",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-88651",
-     "title": "Joel Fitzgibbon \u2014 2002-12-09",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-2715",
-     "title": "John Howard \u2014 1998-03-23",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-60688",
-     "title": "Andrew Thomson \u2014 2001-04-04",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-60690",
-     "title": "Colin Hollis \u2014 2001-04-04",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-73049",
-     "title": "Robert Baldwin \u2014 2002-03-13",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-89253",
-     "title": "Jill Hall \u2014 2002-12-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-108205",
-     "title": "Antony Windsor \u2014 2003-11-26",
-     "speaker": null,
-     "party": "Independent",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-29968",
-     "title": "Peter Reith \u2014 1999-08-31",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-2699",
-     "title": "John Howard \u2014 1998-03-23",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-60704",
-     "title": "Warren Entsch \u2014 2001-04-04",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
+     "party": null,
+     "state": "vic",
      "date": null
     }
    ]
   },
   {
    "question": "How have MPs discussed carbon pricing and its repeal?",
-   "answer": "Not enough data to answer this.",
+   "answer": "MPs have discussed carbon pricing and its repeal from multiple viewpoints:\n\n- **Support for carbon pricing**: Some MPs argued it was a major economic and environmental reform, the culmination of decades of debate and many parliamentary inquiries, and a policy long supported by both major parties, including figures like John Howard. They said delaying action was no longer acceptable and that pricing carbon was the right policy for Australia\u2019s future.\n\n- **Opposition and calls for repeal**: Other MPs claimed the carbon tax would harm jobs and industries, cited examples like Alcoa shelving a major expansion, argued Australia\u2019s carbon price was much higher than international prices, and described the tax as a broken promise. They committed to repealing it and claimed repeal delivered household savings of around $500 per year.\n\n- **Criticism of the other side\u2019s claims**: Supporters of carbon pricing accused opponents of making false or exaggerated claims, such as predicting depression, the death of the coal industry, or a \u201cwrecking ball\u201d through the economy.\n\n- **Procedural and political tactics**: There was discussion of attempts to schedule or amend parliamentary sittings to delay repeal, and references to MPs crossing the floor on carbon pricing and related bills. Some MPs criticised inconsistent positions, while others defended the policy as necessary despite political risk.\n\n- **Aftermath of repeal**: Some MPs argued that repealing carbon pricing created policy uncertainty and contributed to an energy crisis, while others pointed to lower electricity prices and savings for households following repeal.\n\nOverall, the debates centred on whether the carbon price was necessary and effective or harmful and costly, with repeated arguments about jobs, household bills, environmental need, and political broken promises.",
    "sources": [
     {
-     "slug": "speech-22798",
-     "title": "Bruce Baird \u2014 1999-03-31",
+     "slug": "speech-812052",
+     "title": "Stephen Parry \u2014 Bills \u2014 2011-11-08",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-26223",
-     "title": "Ian Causley \u2014 1999-06-23",
+     "slug": "speech-260914",
+     "title": "Greg Combet \u2014 2012-08-16",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-256422",
+     "title": "Julia Gillard \u2014 2012-05-29",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-237391",
+     "title": "Julia Gillard \u2014 2011-06-15",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-826530",
+     "title": "Ursula Stephens \u2014 Bills \u2014 2013-12-10",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-313170",
+     "title": "Peter Hendy \u2014 2015-06-16",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-817465",
+     "title": "George Brandis \u2014 Questions without Notice \u2014 2012-08-15",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-336530",
+     "title": "Graham Perrett \u2014 2016-10-20",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-250087",
+     "title": "George Christensen \u2014 2012-02-15",
      "speaker": null,
      "party": "Nationals",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-47922",
-     "title": "Kim Beazley \u2014 2000-08-31",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-20726",
-     "title": "Peter Reith \u2014 1999-03-11",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-19292",
-     "title": "Peter Reith \u2014 1999-02-17",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-44811",
-     "title": "Bob Charles \u2014 2000-06-22",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-60688",
-     "title": "Andrew Thomson \u2014 2001-04-04",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-45864",
-     "title": "Harry Jenkins \u2014 2000-06-29",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-92377",
-     "title": "Ian Macfarlane \u2014 2003-03-05",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-74054",
-     "title": "Ian Macfarlane \u2014 2002-03-20",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-46148",
-     "title": "Peter Andren \u2014 2000-08-14",
+     "slug": "division-federal-representatives-2604-p2",
+     "title": "House of Representatives division, 30 May 2012: Motions \u2014 Carbon Pricing (part 2 of 2)",
      "speaker": null,
      "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-41142",
-     "title": "Joe Hockey \u2014 2000-05-09",
+     "slug": "speech-826053",
+     "title": "Mitch Fifield \u2014 Business \u2014 2013-12-03",
      "speaker": null,
-     "party": "Liberal",
+     "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-20687",
-     "title": "Lou Lieberman \u2014 1999-03-11",
+     "slug": "speech-811992",
+     "title": "Penny Wong \u2014 Bills \u2014 2011-11-03",
      "speaker": null,
-     "party": "Liberal",
+     "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-40303",
-     "title": "John Howard \u2014 2000-04-10",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-57334",
-     "title": "Gary Hardgrave \u2014 2001-02-28",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-54399",
-     "title": "Bob Horne \u2014 2000-11-30",
+     "slug": "speech-317862",
+     "title": "Anthony Albanese \u2014 2015-09-09",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-51935",
-     "title": "Peter Costello \u2014 2000-11-02",
+     "slug": "speech-342940",
+     "title": "Joel Fitzgibbon \u2014 2017-03-01",
      "speaker": null,
-     "party": "Liberal",
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-25737",
-     "title": "David Kemp \u2014 1999-06-21",
+     "slug": "speech-259115",
+     "title": "Julia Gillard \u2014 2012-06-25",
      "speaker": null,
-     "party": "Liberal",
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-26219",
-     "title": "Ian Macfarlane \u2014 1999-06-23",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-35435",
-     "title": "John Moore \u2014 1999-12-06",
+     "slug": "speech-804925",
+     "title": "Eric Abetz \u2014 Questions without Notice \u2014 2011-02-28",
      "speaker": null,
      "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-319227",
+     "title": "Greg Hunt \u2014 2015-09-16",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-811102",
+     "title": "Joe Ludwig \u2014 Motions \u2014 2011-10-12",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-242711",
+     "title": "Greg Combet \u2014 2011-09-13",
+     "speaker": null,
+     "party": "Labor",
      "state": "federal",
      "date": null
     }

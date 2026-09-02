@@ -1,6 +1,6 @@
 {
-  "version": "2026-09-01",
-  "expected_resources": 522277,
+  "version": "2026-09-02",
+  "expected_resources": 536153,
   "collected_speeches": 518685,
   "sources": [
     { "name": "Federal Hansard: House of Representatives (zenodo)", "docs": 283020, "coverage": "1998–2022" },

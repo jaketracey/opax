@@ -2,8 +2,8 @@
  "slug": "housing",
  "title": "Housing",
  "blurb": "Decades of affordability promises, negative gearing fights and supply debates.",
- "generated_at": "2026-09-01T08:03:27+00:00",
- "corpus_resources": 78163,
+ "generated_at": "2026-09-02T03:21:36+00:00",
+ "corpus_resources": 536153,
  "stats": {
   "speech_count": 210854,
   "unique_speakers": 3502,
@@ -325,174 +325,267 @@
  },
  "brief": {
   "question": "What does the parliamentary record show about housing?",
-  "answer": ""
+  "answer": "The parliamentary record shows that housing has repeatedly been framed as a crisis, and that the most efficient solution named in the record \u2014 public housing \u2014 has been shrinking rather than growing. A senator pointing to the 2003-04 Housing Assistance Act annual report said total dwellings nationally were declining across public housing, community housing, crisis accommodation and Indigenous rental housing, even though public housing funding was described as a far more efficient way to deliver housing outcomes. More recently, the government cited the National Housing Finance and Investment Corporation\u2019s State of the nation\u2019s housing 2022-23 report as confirming that Labor\u2019s proposed $10 billion Housing Australia Future Fund would double the number of new social housing dwellings added to stock each year for at least five years from 2024 compared with the period from 2006 to 2021. That fund, and the need to pass it, is the central federal policy promise in the record.\n\nOver time, the debate has shifted from defending past delivery to promising future delivery, and from aggregate spending to net additions and transparency. A minister defending the Labor government\u2019s record cited the $6 billion social housing investment delivering about 21,000 homes, plus $4.5 billion in the National Rental Affordability Scheme to build 50,000 affordable rental homes. The same government cited stimulus results: housing finance rose 3.6 per cent in April and was 13.5 per cent higher over the year, construction loans reached their highest level since January 2002, and first home buyers made up 28 per cent of new loans. In Victoria, the Andrews Labor government pointed to the $5.3 billion Big Housing Build, 7,600 homes completed or underway, a $1 billion regional fund for 1,300 homes, and 130 tenancy law reforms. But the later Victorian Public Accounts and Estimates Committee report shifted the debate to a lack of transparency, noting the government had not released its actual housing stock data and that the housing register grew from 64,304 to 67,985 in 12 months, with more than 100,000 people estimated to be waiting.\n\nThe sharpest disagreements are over numbers and who is responsible for decline. When a minister claimed a \u201cproud record,\u201d an opposition senator asked how that squared with only 10,671 dwellings allocated under the National Rental Affordability Scheme over four years against a target of 50,000 by June 2016; the government response gave different figures at different times \u2014 11,300 built by December 2012 with 28,000 in the pipeline, and later 3,500 complete out of 50,000 total. In South Australia, opposition speakers said the previous Liberal treasurer cut public housing from 63,000 to fewer than 50,000 homes in eight years, including almost 3,000 properties disappearing in one year, and accused the minister of hiding documents. In New South Wales, Liberal MP Alister Henskens cited 61,057 record housing approvals and 83.5 per cent of national domestic spending growth, while Labor MPs Michael Daley and Anoulack Chanthivong countered that unemployment had risen by 46,900 since 2011 and youth unemployment exceeded 20 per cent in several regions.\n\nPromises versus reported outcomes are a recurring theme. The National Rental Affordability Scheme\u2019s promised 50,000 dwellings by June 2016 was never evidenced as delivered in the record; the government instead pointed to pipelines and partial completions. The Victorian government\u2019s Big Housing Build promise of 12,000 homes was revised under committee questioning to a minister\u2019s \u201cguess\u201d of 8,200 extra homes, which the opposition said was unverifiable because the government refused to release the underlying data. The PAEC report also found no funds had actually been allocated for the promised redevelopment of housing towers, leaving communities without answers on timing, ownership or apartment sizes. A speaker critical of federal policy said claimed infrastructure spending was a sham, with only $24.3 billion funded and Commonwealth infrastructure grants projected to fall from 0.4 per cent to 0.2 per cent of GDP. Across jurisdictions, the pattern is consistent: governments claim substantial investment, while opponents point to declining stock, unmet targets, hidden data and unallocated funds."
  },
- "key_stats": [],
- "positions": [],
+ "key_stats": [
+  {
+   "value": "over $2 billion annually",
+   "label": "Cost of negative gearing",
+   "detail": "Cited as a factor in housing affordability, costing over $2 billion annually.",
+   "slug": "speech-777863",
+   "source_title": "Andrew Bartlett \u2014 Documents \u2014 2007-02-06"
+  },
+  {
+   "value": "nearly 120,000 Australians",
+   "label": "Australians affected by homelessness",
+   "detail": "Homelessness crisis affecting nearly 120,000 Australians, including a growing number.",
+   "slug": "speech-372109",
+   "source_title": "Mike Freelander \u2014 2018-10-25"
+  },
+  {
+   "value": "over $1 million",
+   "label": "Sydney's median house price",
+   "detail": "Cited Sydney's median house price of over $1 million as evidence of the housing affordability issue.",
+   "slug": "speech-363620",
+   "source_title": "Craig Kelly \u2014 2018-05-29"
+  },
+  {
+   "value": "over $900,000",
+   "label": "Melbourne's median house price",
+   "detail": "Cited Melbourne's median house price of over $900,000.",
+   "slug": "speech-363620",
+   "source_title": "Craig Kelly \u2014 2018-05-29"
+  },
+  {
+   "value": "806,000 people",
+   "label": "Net migration over three years",
+   "detail": "Blamed the previous Labor government's net migration of 806,000 people over three years.",
+   "slug": "speech-363620",
+   "source_title": "Craig Kelly \u2014 2018-05-29"
+  }
+ ],
+ "positions": [
+  {
+   "party": "Labor",
+   "position": "Labor argues that the government's housing affordability bills fail to address core problems of negative gearing and the 50% capital gains tax discount, which primarily benefit high-income earners and inflate house prices. Labor supports reforming negative gearing and capital gains tax as essential steps to improve housing affordability.",
+   "slug": "speech-360911",
+   "source_title": "Matt Thistlethwaite \u2014 2018-03-01",
+   "speaker": "Matt Thistlethwaite",
+   "date": "2018-03-01"
+  },
+  {
+   "party": "Liberal",
+   "position": "Liberal speakers argue that Labor's proposed tightening of negative gearing and capital gains tax discounts would reduce housing supply, raise rents, and lower property prices, threatening housing market stability. They maintain that housing affordability is driven by supply and demand, not negative gearing, and support maintaining the 50% capital gains tax discount and existing negative gearing arrangements.",
+   "slug": "speech-366220",
+   "source_title": "Ian Goodenough \u2014 2018-06-27",
+   "speaker": "Ian Goodenough",
+   "date": "2018-06-27"
+  },
+  {
+   "party": "Australian Democrats",
+   "position": "The Australian Democrats called for renewed public debate on tax reform, highlighting negative gearing (costing over $2 billion annually) as a factor in housing affordability problems.",
+   "slug": "speech-777863",
+   "source_title": "Andrew Bartlett \u2014 Documents \u2014 2007-02-06",
+   "speaker": "Andrew Bartlett",
+   "date": "2007-02-06"
+  },
+  {
+   "party": "Greens",
+   "position": "The Greens raised questions about negative gearing and its impact on housing affordability, including whether suspending negative gearing caused rent increases.",
+   "slug": "speech-813259",
+   "source_title": "Christine Milne \u2014 Questions on Notice \u2014 2012-02-09",
+   "speaker": "Christine Milne",
+   "date": "2012-02-09"
+  }
+ ],
  "key_moments": [
   {
-   "slug": "speech-107269",
-   "title": "Kevin Andrews \u2014 2003-11-06",
-   "speaker": "Kevin Andrews",
-   "party": "Liberal",
-   "state": "federal",
-   "date": "2003-11-06"
+   "slug": "speech-855499",
+   "title": "Katie Hall \u2014 Consumer and Planning Legislation Amendment (Housing Statement Reform) Bill 2024 - Second reading \u2014 2025-02-04",
+   "speaker": "Katie Hall",
+   "party": null,
+   "state": "vic",
+   "date": "2025-02-04"
   },
   {
-   "slug": "speech-29532",
-   "title": "Peter Slipper \u2014 1999-08-26",
-   "speaker": "Peter Slipper",
-   "party": "Liberal",
-   "state": "federal",
-   "date": "1999-08-26"
+   "slug": "speech-855495",
+   "title": "Matthew Guy \u2014 Consumer and Planning Legislation Amendment (Housing Statement Reform) Bill 2024 - Second reading \u2014 2025-02-04",
+   "speaker": "Matthew Guy",
+   "party": null,
+   "state": "vic",
+   "date": "2025-02-04"
   },
   {
-   "slug": "speech-66146",
-   "title": "Michael Lee \u2014 2001-08-08",
-   "speaker": "Michael Lee",
-   "party": "Labor",
-   "state": "federal",
-   "date": "2001-08-08"
+   "slug": "speech-886203",
+   "title": "Anthony Roberts \u2014 Electricity Supply Amendment (Emergency Management) Bill 2017 \u2014 2017-11-15",
+   "speaker": "Anthony Roberts",
+   "party": null,
+   "state": "nsw",
+   "date": "2017-11-15"
   },
   {
-   "slug": "speech-68984",
-   "title": "John Howard \u2014 2001-09-17",
-   "speaker": "John Howard",
-   "party": "Liberal",
-   "state": "federal",
-   "date": "2001-09-17"
+   "slug": "speech-855496",
+   "title": "Kat Theophanous \u2014 Consumer and Planning Legislation Amendment (Housing Statement Reform) Bill 2024 - Second reading \u2014 2025-02-04",
+   "speaker": "Kat Theophanous",
+   "party": null,
+   "state": "vic",
+   "date": "2025-02-04"
   },
   {
-   "slug": "speech-112842",
-   "title": "Harry Quick \u2014 2004-03-10",
-   "speaker": "Harry Quick",
-   "party": "Labor",
-   "state": "federal",
-   "date": "2004-03-10"
+   "slug": "speech-855491",
+   "title": "Tim McCurdy \u2014 Consumer and Planning Legislation Amendment (Housing Statement Reform) Bill 2024 - Second reading \u2014 2025-02-04",
+   "speaker": "Tim McCurdy",
+   "party": null,
+   "state": "vic",
+   "date": "2025-02-04"
   },
   {
-   "slug": "speech-76079",
-   "title": "Jenny Macklin \u2014 2002-05-30",
-   "speaker": "Jenny Macklin",
-   "party": "Labor",
-   "state": "federal",
-   "date": "2002-05-30"
+   "slug": "speech-855503",
+   "title": "Gabrielle De Vietri \u2014 Consumer and Planning Legislation Amendment (Housing Statement Reform) Bill 2024 - Second reading \u2014 2025-02-04",
+   "speaker": "Gabrielle De Vietri",
+   "party": null,
+   "state": "vic",
+   "date": "2025-02-04"
   }
  ],
  "sections": [
   {
    "question": "What have MPs said about housing affordability and home ownership?",
-   "answer": "MPs made opposing statements on housing affordability and home ownership.\n\nGovernment-aligned MPs argued that housing affordability was not in crisis, saying home ownership has \u201cnever been as achievable\u201d and pointing to low interest rates (6.55 per cent in June 2002) compared with 17 per cent under Labor, the First Home Owners Grant, job creation, low inflation, and a Productivity Commission inquiry. They said the rise in house prices benefited 70 per cent of households, that household debt was manageable because assets outweighed debts, and that the Commonwealth contributed more to housing agreements than the states.\n\nOpposition-aligned MPs argued there was a serious housing affordability crisis, noting house prices had risen sharply\u2014for example, a typical Melbourne house jumped from four years to seven years of average full-time earnings\u2014and that housing affordability had fallen to record lows. They said low- and middle-income families and young people were being locked out of home ownership, that the government was ignoring public housing and urban policy, and that more government action, including programs to help families save for deposits and urban renewal, was needed.",
+   "answer": "Based on the provided context, MPs made a wide range of statements about housing affordability and home ownership, including:\n\n- **Declining home ownership:** Several MPs cited falling home ownership rates, including a drop from 68\u201370% (1971\u20132001) to below 50% by 2017, a 60-year low, and a decline for 25\u201334 year-olds from 60% to under 40% in 30 years. One speaker noted home ownership fell from 74% in 1981 to 64% today.\n\n- **Causes:** MPs blamed investor activity, negative gearing and capital gains tax concessions, lack of land supply, property taxes/stamp duty, low wages, casualisation, government policy failures, and government interference limiting land supply. One speaker described investor behavior as containing elements of a Ponzi scheme.\n\n- **Calls for reform:** Proposals included reviewing or abolishing negative gearing, changing capital gains tax, reducing stamp duty, releasing more land, building social housing, expanding first home buyer schemes, allowing superannuation use for home ownership, introducing owner-occupier deductibility, and having the Reserve Bank consider housing affordability in its duties.\n\n- **Criticism of government:** Some MPs accused the government of inadequate measures, failing renters and younger generations, and not delivering a comprehensive plan. They also criticised measures like the foreign resident capital gains withholding changes and early super access as insufficient or ineffective.\n\n- **Defense of government/economic management:** Other MPs argued Australia had high home ownership (around 70%) and that housing affordability was stronger under the coalition's economic management than under Labor in the 1980s. One speaker said the best ways to improve affordability were low unemployment, rising real wages, low interest rates, an efficient construction sector, adequate land release, and minimising land transfer taxes.\n\n- **Bipartisanship:** Several MPs called for housing to be treated as too important to play politics with and urged evidence-based, cooperative policy development, including through parliamentary inquiries.",
    "sources": [
     {
-     "slug": "speech-86188",
-     "title": "Brendan O'Connor \u2014 2002-10-23",
+     "slug": "speech-788159",
+     "title": "Cory Bernardi \u2014 First Home Saver Accounts (Further Provisions) Amendment Bill 2008; First Home Saver Account Providers Supervisory Levy Imposition Bill 2008 \u2014 2008-09-24",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-384985",
+     "title": "Jim Chalmers \u2014 2019-11-27",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-83973",
-     "title": "Mark Latham \u2014 2002-09-24",
+     "slug": "speech-883452",
+     "title": "Jess Wilson \u2014 Governor\u2019s speech - Address-in-reply \u2014 2023-02-07",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-349055",
+     "title": "Julian Hill \u2014 2017-06-15",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-104170",
-     "title": "John Howard \u2014 2003-09-17",
+     "slug": "speech-838995",
+     "title": "Lister \u2014 Help To Buy (Commonwealth Powers) Bill \u2014 2024-06-11",
+     "speaker": null,
+     "party": null,
+     "state": "qld",
+     "date": null
+    },
+    {
+     "slug": "speech-776676",
+     "title": "Chris Evans \u2014 Questions without Notice: Take Note of Answers \u2014 2006-11-08",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-775069",
+     "title": "Kim Carr \u2014 Questions without Notice: Take Note of Answers \u2014 2006-09-12",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-778659",
+     "title": "Cory Bernardi \u2014 Matters of Public Interest \u2014 2007-02-28",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-106049",
-     "title": "Larry Anthony \u2014 2003-10-15",
-     "speaker": null,
-     "party": "Nationals",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-17875",
-     "title": "John Howard \u2014 1999-02-09",
+     "slug": "speech-343359",
+     "title": "John Alexander \u2014 2017-03-20",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-86197",
-     "title": "Christopher Pearce \u2014 2002-10-23",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-86187",
-     "title": "Brendan O'Connor \u2014 2002-10-23",
+     "slug": "speech-400267",
+     "title": "Anne Stanley \u2014 2020-12-07",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-103509",
-     "title": "Joe Hockey \u2014 2003-09-11",
+     "slug": "speech-352779",
+     "title": "John Alexander \u2014 2017-09-05",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-77103",
-     "title": "Peter Slipper \u2014 2002-06-05",
+     "slug": "speech-321051",
+     "title": "John Alexander \u2014 2015-10-19",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-17071",
-     "title": "Anthony Albanese \u2014 1998-12-09",
+     "slug": "speech-349058",
+     "title": "Milton Dick \u2014 2017-06-15",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-11802",
-     "title": "Frank Mossfield \u2014 1998-06-24",
+     "slug": "speech-340553",
+     "title": "Mike Freelander \u2014 2017-02-08",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-86185",
-     "title": "Andrew Southcott \u2014 2002-10-23",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-83764",
-     "title": "Mark Latham \u2014 2002-09-23",
+     "slug": "speech-342991",
+     "title": "Susan Templeman \u2014 2017-03-02",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-100085",
-     "title": "Christopher Pearce \u2014 2003-08-11",
+     "slug": "speech-360912",
+     "title": "Milton Dick \u2014 2018-03-01",
      "speaker": null,
-     "party": "Liberal",
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-773946",
+     "title": "Kim Carr \u2014 Housing and Accommodation Affordability \u2014 2006-08-10",
+     "speaker": null,
+     "party": null,
      "state": "federal",
      "date": null
     },
@@ -505,34 +598,18 @@
      "date": null
     },
     {
-     "slug": "speech-117097",
-     "title": "Daryl Melham \u2014 2004-05-31",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-104169",
-     "title": "John Howard \u2014 2003-09-17",
+     "slug": "speech-339312",
+     "title": "John Alexander \u2014 2016-11-29",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-100086",
-     "title": "Alan Griffin \u2014 2003-08-11",
+     "slug": "speech-312774",
+     "title": "Craig Kelly \u2014 2015-06-15",
      "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-83765",
-     "title": "John Anderson \u2014 2002-09-23",
-     "speaker": null,
-     "party": "Nationals",
+     "party": "Liberal",
      "state": "federal",
      "date": null
     }
@@ -540,165 +617,165 @@
   },
   {
    "question": "What positions have been taken on negative gearing and property tax concessions?",
-   "answer": "According to the context:\n\n- The government/Coalition side opposed abolishing negative gearing. It said: \u201cWe on this side of the House will not be abolishing negative gearing, because we believe that if you make a loss on an investment you should be able to set that loss against income, as you can under the normal principles of taxation law.\u201d\n- The opposition/Labor Party was inconsistent on negative gearing. It first indicated abolishing negative gearing was \u201cone option that could be contemplated,\u201d then later ruled out ending negative gearing. The member for Werriwa said on *Lateline* that negative gearing was \u201cpart of Labor's policy review\u201d and that \u201cany smart policy maker would be looking at it,\u201d but the next day Labor said it was not reviewing negative gearing.\n- On property tax concessions, the government said there is no GST on an established home, and that first home buyers buying an established home pay no GST and get a $7,000 grant. The government also introduced the First Home Owners Scheme and announced a Productivity Commission inquiry into housing market factors, including land release and taxation treatment.\n- The government criticised state Labor governments for imposing stamp duty, saying stamp duty on an average home had risen from $6,000 to $16,000 in Melbourne and Sydney.\n- Certain Labor figures were described as supporting property tax measures such as a capital gains tax on the family home and a \u201c30 per cent betterment tax,\u201d while also proposing alternatives like a progressive expenditure tax and regional GSTs.",
+   "answer": "Based only on the provided context, several positions have been taken:\n\n- **Defending negative gearing and opposing broad changes:** Some speakers described negative gearing as standard income tax practice, not a special concession, and said it is used by many middle-income Australians such as nurses, teachers, police officers, and \u201cmums and dads.\u201d They criticised Labor\u2019s proposal to restrict negative gearing to new properties and cut the capital gains tax discount, arguing it would hurt these investors, increase the deficit, and risk damaging the housing market.\n\n- **Arguing for reform of negative gearing and capital gains tax concessions:** Other speakers said negative gearing and the capital gains tax discount are regressive tax concessions that mostly benefit high-income earners, make housing less affordable, and should be reformed. Labor\u2019s position was to allow negative gearing only on newly built properties, cut the capital gains tax discount by 50%, and take other housing measures, while accusing the government of protecting concessions for wealthy investors over first-home buyers.\n\n- **A Greens position:** The Greens argued that the housing system is broken due to tax discounts such as negative gearing and the 50% capital gains discount, costing $176 billion, and that they were the only party fighting to fix it.\n\n- **Targeted government reforms:** Some speakers supported targeted housing tax integrity measures, such as removing travel expense deductions for investors, limiting depreciation claims to original purchasers, and imposing a vacancy charge on foreign-owned empty properties. Labor opposed that bill, saying it failed to address negative gearing and would worsen housing affordability.\n\n- **Criticism of inconsistent positions:** The context also shows accusations that opposition leaders changed their position over time\u2014first saying negative gearing changes were \u201cnot on our radar,\u201d and later claiming a policy had been developed for 18 months.\n\n- **Other views referenced:** Senator Kovacic was quoted as saying tax changes such as capping the number of properties that can be negatively geared should be considered, and the Murray inquiry reportedly found that reducing negative gearing and capital gains tax concessions would lead to a more efficient allocation of funding in the economy.",
    "sources": [
     {
-     "slug": "speech-102648",
-     "title": "Peter Costello \u2014 2003-09-08",
+     "slug": "speech-355282",
+     "title": "Ted O'Brien \u2014 2017-10-18",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-16585",
-     "title": "Warren Truss \u2014 1998-12-08",
-     "speaker": null,
-     "party": "Nationals",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-3358",
-     "title": "Larry Anthony \u2014 1998-03-25",
-     "speaker": null,
-     "party": "Nationals",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-2717",
-     "title": "Peter Costello \u2014 1998-03-23",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-110164",
-     "title": "Peter Costello \u2014 2004-02-12",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-71822",
-     "title": "Duncan Kerr \u2014 2002-02-18",
+     "slug": "speech-372904",
+     "title": "Sharon Claydon \u2014 2018-11-27",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-34694",
-     "title": "John Moore \u2014 1999-11-24",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-28515",
-     "title": "Peter Costello \u2014 1999-08-11",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-100516",
-     "title": "Peter Costello \u2014 2003-08-12",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-108806",
-     "title": "Peter Costello \u2014 2003-12-02",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-104173",
-     "title": "John Howard \u2014 2003-09-17",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-516",
-     "title": "Bob Charles \u2014 1998-03-03",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-67700",
-     "title": "Daryl Williams \u2014 2001-08-23",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-22590",
-     "title": "John Howard \u2014 1999-03-31",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-104207",
-     "title": "Joe Hockey \u2014 2003-09-17",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-104774",
-     "title": "Peter Costello \u2014 2003-10-07",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-52397",
-     "title": "Peter Costello \u2014 2000-11-06",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-108228",
-     "title": "Robert McClelland \u2014 2003-11-26",
+     "slug": "speech-827701",
+     "title": "Matt Thistlethwaite \u2014 Bills \u2014 2023-02-15",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-14038",
-     "title": "Kelvin Thomson \u2014 1998-11-11",
+     "slug": "speech-338859",
+     "title": "Scott Morrison \u2014 2016-11-28",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-348561",
+     "title": "Matt Thistlethwaite \u2014 2017-06-13",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-22594",
-     "title": "Peter Costello \u2014 1999-03-31",
+     "slug": "speech-336083",
+     "title": "Tim Watts \u2014 2016-10-19",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-830156",
+     "title": "Peter Dutton \u2014 Questions without Notice \u2014 2024-02-06",
      "speaker": null,
      "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-858940",
+     "title": "Ellen Sandell \u2014 Housing \u2014 2024-10-16",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-329632",
+     "title": "Scott Morrison \u2014 2016-03-01",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-329868",
+     "title": "Scott Morrison \u2014 2016-03-02",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-349056",
+     "title": "Julian Hill \u2014 2017-06-15",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-330663",
+     "title": "Malcolm Turnbull \u2014 2016-03-16",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-328591",
+     "title": "Chris Bowen \u2014 2016-02-23",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-340546",
+     "title": "Adam Bandt \u2014 2017-02-08",
+     "speaker": null,
+     "party": "Greens",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-328824",
+     "title": "Kelly O'Dwyer \u2014 2016-02-24",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-328663",
+     "title": "Malcolm Turnbull \u2014 2016-02-23",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-358436",
+     "title": "Malcolm Turnbull \u2014 2018-02-07",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-330200",
+     "title": "Malcolm Turnbull \u2014 2016-03-03",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-329074",
+     "title": "Sharon Claydon \u2014 2016-02-25",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-354663",
+     "title": "Chris Bowen \u2014 2017-10-16",
+     "speaker": null,
+     "party": "Labor",
      "state": "federal",
      "date": null
     }
@@ -706,166 +783,166 @@
   },
   {
    "question": "What has parliament said about social and public housing supply?",
-   "answer": "Based on the provided context, Parliament discussed several concerns and positions about social and public housing supply:\n\n- There is a \"national housing crisis\" and a \"very serious shortage of low-cost rental housing\" in both public and private sectors.\n- Public housing waiting lists are growing rapidly, with examples such as Victorian waiting lists jumping from 30,076 to 53,379 between 1987 and 1997, and some people waiting many years.\n- Funds for public housing have declined in real terms, with the federal contribution cut and the Howard government reducing public housing expenditure while transferring funds to rental assistance.\n- Additions to public housing stock are small\u2014\"barely 5,000 dwellings per year\"\u2014compared to private sector additions, and much public housing stock is aged and needs maintenance.\n- Some speakers called for a national housing strategy and restoration of commitment to public housing through the Commonwealth-State Housing Agreement.\n- In response, the Treasurer said the Commonwealth provides money under the housing agreement for the supply of public housing, argued that combined public housing and rent assistance outlays increased in real terms by $232 million since 1997-98, and noted that the full GST revenue goes to the states, giving them capacity to address housing needs.\n- The Commonwealth also stated it does not administer public housing waiting lists or maintenance; responsibility is a matter for State and Territory governments.\n- Parliament also considered specific new housing supply developments, including Defence Housing Authority projects to construct 50 dwellings in Stirling, ACT, and 72 family houses in Adamstown, Newcastle.",
+   "answer": "Parliamentary speakers and committee estimates said that social and public housing supply is a major problem and that more supply is needed. Specific points included:\n\n- Social housing demand far exceeds supply, with long waiting lists\u2014for example, around 190,000 households on the public housing waitlist, more than 100,000 people waiting in New South Wales, and priority applicants waiting up to 10 years or more.\n- There is a maintenance backlog and aging stock, with one speaker calling the State a \"slum lord\" due to more than $300 million in maintenance backlog.\n- Governments were criticised for selling public housing stock, including high-value properties such as Millers Point, rather than building new housing.\n- Some government measures were described as increasing supply, such as selling high-value public housing properties to fund new construction, maintenance contracts, a $1 billion National Housing Infrastructure Facility, a housing bond aggregator, and a $32 billion Homes for Australia plan.\n- Others argued those measures are too small and do not match the scale of demand, with claims that planned delivery would support at most 55,000 households over 25 years while waitlists are at record highs.\n- Several speakers said supply is the key driver of improving housing affordability and reducing rental stress, and that investment in social and affordable housing is urgent and necessary.\n\nOverall, parliament heard that social and public housing supply is insufficient, waiting lists are very high, and there is disagreement over whether current government plans are enough to fix the shortage.",
    "sources": [
     {
-     "slug": "speech-113018",
-     "title": "Mark Latham \u2014 2004-03-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-105968",
-     "title": "John Howard \u2014 2003-10-15",
+     "slug": "speech-323828",
+     "title": "Scott Morrison \u2014 2015-11-24",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-55286",
-     "title": "Peter Slipper \u2014 2000-12-06",
+     "slug": "speech-423666",
+     "title": "Sonia Hornery \u2014 Social Housing \u2014 2020-02-04",
      "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
+     "party": null,
+     "state": "nsw",
      "date": null
     },
     {
-     "slug": "speech-70642",
-     "title": "Judi Moylan \u2014 2001-09-26",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-86163",
-     "title": "Peter Costello \u2014 2002-10-23",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-14299",
-     "title": "John Murphy \u2014 1998-11-12",
+     "slug": "speech-829340",
+     "title": "Louise Miller-Frost \u2014 Questions without Notice \u2014 2023-03-28",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-59773",
-     "title": "Annette Ellis \u2014 2001-03-29",
+     "slug": "speech-827701",
+     "title": "Matt Thistlethwaite \u2014 Bills \u2014 2023-02-15",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-108939",
-     "title": "Peter Slipper \u2014 2003-12-02",
+     "slug": "speech-867659",
+     "title": "Ray Williams \u2014 Housing Legislation Amendment Bill 2016 \u2014 2016-10-19",
      "speaker": null,
-     "party": "Independent",
-     "state": "federal",
+     "party": null,
+     "state": "nsw",
      "date": null
     },
     {
-     "slug": "speech-11484",
-     "title": "Kelvin Thomson \u2014 1998-06-23",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-20565",
-     "title": "Anna Burke \u2014 1999-03-10",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-117769",
-     "title": "Bernie Ripoll \u2014 2004-06-02",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-23502",
-     "title": "Warren Truss \u2014 1999-05-12",
+     "slug": "speech-977655",
+     "title": "Wilkinson \u2014 Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Department of the Treasury \u2014 2025-12-04",
      "speaker": null,
      "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-45813",
-     "title": "Peter Slipper \u2014 2000-06-29",
+     "slug": "speech-881912",
+     "title": "Jamie Parker \u2014 Sydney Public Reserves (Public Safety) Bill 2017 \u2014 2017-08-09",
      "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
+     "party": null,
+     "state": "nsw",
      "date": null
     },
     {
-     "slug": "speech-25898",
-     "title": "Simon Crean \u2014 1999-06-22",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-95419",
-     "title": "Sharon Grierson \u2014 2003-05-15",
+     "slug": "speech-407114",
+     "title": "Peta Murphy \u2014 2021-05-26",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-23500",
-     "title": "Warren Truss \u2014 1999-05-12",
+     "slug": "speech-831177",
+     "title": "Select Committee on Social, Public and Affordable Housing \u2014 2015-05-26",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-372109",
+     "title": "Mike Freelander \u2014 2018-10-25",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-905087",
+     "title": "Barbara Pocock \u2014 Economics Legislation Committee - Economics Legislation Committee 12/02/2026 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2026-02-12",
      "speaker": null,
      "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-21949",
-     "title": "Anthony Albanese \u2014 1999-03-25",
+     "slug": "speech-790911",
+     "title": "Nick Sherry \u2014 Appropriation (Nation Building and Jobs) Bill (No. 1) 2008-2009; Appropriation (Nation Building and Jobs) Bill (No. 2) 2008-2009; Household Stimulus Package Bill 2009; Tax Bonus for Working Australians Bill 2009; Tax Bonus for Working Australians (Consequential Amendments) Bill 2009; Commonwealth Inscribed Stock Amendment Bill 2009 \u2014 2009-02-05",
      "speaker": null,
-     "party": "Labor",
+     "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-15770",
-     "title": "Kim Beazley \u2014 1998-12-02",
+     "slug": "speech-908143",
+     "title": "Flavel \u2014 Community Affairs Legislation Committee - Community Affairs Legislation Committee 12/02/2026 Estimates SOCIAL SERVICES PORTFOLIO Department of Social Services \u2014 2026-02-12",
      "speaker": null,
-     "party": "Labor",
+     "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-12160",
-     "title": "Bronwyn Bishop \u2014 1998-06-29",
+     "slug": "speech-978446",
+     "title": "Rimmer \u2014 Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2025-12-04",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-360728",
+     "title": "Michael Sukkar \u2014 2018-02-28",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-20996",
-     "title": "Warren Truss \u2014 1999-03-22",
+     "slug": "speech-422783",
+     "title": "Max Chandler-Mather \u2014 Questions without Notice \u2014 2025-02-10",
      "speaker": null,
-     "party": "Nationals",
+     "party": "Greens",
      "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-828720",
+     "title": "Josh Burns \u2014 Constituency Statements \u2014 2023-03-21",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-809322",
+     "title": "Glenn Sterle \u2014 Questions without Notice \u2014 2011-08-22",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-829577",
+     "title": "Pauline Hanson \u2014 Questions without Notice \u2014 2023-03-29",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-875515",
+     "title": "Wayne Farnham \u2014 Big Housing Build \u2014 2023-08-02",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
      "date": null
     }
    ]

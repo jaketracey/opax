@@ -2,8 +2,8 @@
  "slug": "indigenous",
  "title": "First Nations",
  "blurb": "Reconciliation, the Voice, Closing the Gap and native title, in parliament's own words.",
- "generated_at": "2026-09-01T08:04:42+00:00",
- "corpus_resources": 78163,
+ "generated_at": "2026-09-02T03:22:41+00:00",
+ "corpus_resources": 536153,
  "stats": {
   "speech_count": 51381,
   "unique_speakers": 2641,
@@ -150,131 +150,220 @@
  },
  "brief": {
   "question": "What does the parliamentary record show about first nations?",
-  "answer": "The parliamentary record shows first nations were most prominently addressed through the proposed constitutional preamble of 1999, which Prime Minister Howard framed as a historic and uniting statement about indigenous Australians. He said the reference honouring Aboriginal and Torres Strait Islanders as \"the nation's first people\" for their \"deep kinship with their lands\" was more important than his beloved word \"mateship,\" which he dropped to reach agreement with the Australian Democrats. Government MPs praised the wording as \"absolutely perfect\" and \"superb,\" and Howard argued that passing up the chance to say something \"generous, positive, relevant and uniting\" about indigenous people would be a dereliction of duty. The sharpest disagreement, however, was over accuracy, inclusion and process: critics said Torres Strait Islanders were not the \"first people,\" that the term should be \"first peoples\" given indigenous diversity, and that \"kinship with their lands\" was both a grammatical and anthropological nonsense. Gatjil Djerrkura, the government-appointed chair of ATSIC, said the changes negotiated with the Democrats \"served to weaken rather than strengthen the recognition of Australia's first nations\" and were \"clearly a lost opportunity.\"\n\nOver time the debate shifted from the omissions of Federation toward formal symbolic recognition, but the record shows the shift was contested at every step. Speakers marking the centenary of parliament acknowledged that at Federation indigenous people and women were not at the table, and that the early Commonwealth was built on the White Australia policy. By 1999, the proposed preamble was an attempt to repair that legacy, yet it was attacked for being a backroom deal. One opposition member called it a \"sleazy, grubby deal\" and said the process was flawed because indigenous people were not genuinely consulted; another noted that the Council for Aboriginal Reconciliation's own draft used the phrase \"original owners and custodians of traditional lands and waters,\" which was stronger than the government's \"kinship\" wording. The record also shows that a constitutional convention had earlier agreed on the word \"custodianship,\" but the Prime Minister objected to it, and that word did not survive.\n\nThe sharpest point of disagreement was whether the preamble should be a unifying people's document or a precise legal and historical statement. Supporters insisted the indigenous reference was noble, generous and appropriate, and that it could unite Australians across political views. Opponents said it was historically inaccurate, linguistically wrong and politically captured, warning it would be \"doomed\" and would repeat the Federation-era pattern of indigenous people being excluded from decisions about them. One critic said the Prime Minister would be remembered as the leader \"who failed to apologise\" and \"failed in relation to our indigenous Australians\" if he did not change course. What was promised was"
+  "answer": "The most decision-relevant finding in the record is the over-incarceration of First Nations people. One speaker cited that First Nations people make up 1 per cent of Victorians but 12.7 per cent of adult prisoners, and argued that 2013 and 2018 bail law changes\u2014driven by politics rather than evidence\u2014caused record incarceration, especially of non-violent Indigenous women. To address this, he announced amendments requiring regular parliamentary reporting on the impacts of bail reform and inserting guiding principles against discrimination. This is a concrete example of the record connecting systemic disadvantage to specific legislative choices, rather than treating it as inevitable.\n\nThe record also shows a strong push for constitutional recognition and a First Nations Voice. A Labor speaker said the Constitution is inadequate while First Australians are not recognised, recalling the 1967 referendum and the 2017 Uluru Statement from the Heart: \u201cWe seek constitutional reforms to empower our people and take a rightful place in our own country.\u201d He accepted the Statement in full, supported a Voice to parliament, and rejected the claim that it would be a \u201cthird chamber,\u201d describing it instead as a structure for consultation on legislation affecting First Nations people. He criticised then Prime Minister Turnbull for dismissing the call and running a scare campaign, and contrasted the Howard government\u2019s failure to offer an apology with Kevin Rudd\u2019s apology at the first opportunity, calling that apology his proudest moment but \u201cjust a first step.\u201d\n\nSharp disagreements remain over treaty, truth-telling, and Commonwealth action. The same speaker criticised Liberal and One Nation MPs for hosting a Parliamentary Friends for Constitutional Monarchy meeting that denies colonisation\u2019s true history. He also argued that the Aboriginal Land Rights (Northern Territory) Amendment (Economic Empowerment) Bill 2021 should go through a parliamentary committee process to ensure genuine self-determination and consultation, noting concerns about the government\u2019s record on treaty and truth. On climate, he criticised the Morrison government\u2019s climate record and cited Pakistan\u2019s 10 Billion Tree Tsunami policy as an effective example, while constituents suggested a green COVID-19 recovery and First Nations-led sustainability initiatives. The record also includes Victoria\u2019s historic treaty negotiations involving the Yoorrook Justice Commission, First Peoples\u2019 Assembly, and Treaty Authority, with one speaker invoking the phrase \u201cjustice delayed is justice denied\u201d and pointing to New Zealand\u2019s recognition and treaty process as vital, not tokenistic.\n\nOn promises versus reported outcomes, Labor in the record committed to a consultative process to design a Voice, constitutional change, a makarrata commission, and closing the gap. But the parliamentary record also reports that Commonwealth reform stalled \u201cdespite the inaction of the government.\u201d Achievements that did occur include South Australia becoming the first jurisdiction to pass a bill enshrining a First Nations Voice, and Victoria beginning treaty negotiations. A Closing the Gap target aims to increase First Nations Year 12 attainment to 96 per cent by 2031, with recent NAPLAN results showing encouraging improvement in writing for First Nations students in Years 7 and 9. Overall, the record shows movement from failed apologies and dismissed constitutional proposals toward Voice and treaty mechanisms, while still documenting high incarceration, climate vulnerability, and unfinished promises."
  },
  "key_stats": [
   {
-   "value": "16th report",
-   "label": "Committee's 16th report",
-   "detail": "Warren Snowdon presented the committee's 16th report, incorporating a dissenting report, entitled CERD and the Native Title Amendment Act.",
-   "slug": "speech-45519",
-   "source_title": "Warren Snowdon \u2014 2000-06-28"
+   "value": "27%",
+   "label": "First Nations adults in prison",
+   "detail": "Anthony Albanese noted First Nations adults make up 27% of the prison population.",
+   "slug": "speech-387892",
+   "source_title": "Anthony Albanese \u2014 2020-02-12"
   },
   {
-   "value": "2 years",
-   "label": "Extension of committee operation",
-   "detail": "Philip Ruddock presented a bill to extend for 2 years the operation of the Parliamentary Joint Committee on Native Title and the Aboriginal and Torres Strait Islander Land Fund.",
-   "slug": "speech-110714",
-   "source_title": "Philip Ruddock \u2014 2004-02-17"
-  },
-  {
-   "value": "1998 amendments",
-   "label": "Year of Native Title Act amendments",
-   "detail": "Daryl Williams stated the government's 1998 amendments to the Native Title Act provide a mechanism for dealing with native title.",
-   "slug": "speech-40264",
-   "source_title": "Daryl Williams \u2014 2000-04-10"
+   "value": "over 90%",
+   "label": "Support for 1967 referendum",
+   "detail": "Graham Perrett noted the 1967 referendum passed with over 90% support.",
+   "slug": "speech-406956",
+   "source_title": "Graham Perrett \u2014 2021-05-26"
   }
  ],
  "positions": [
   {
-   "party": "Liberal",
-   "position": "The Liberal government supports its native title legislation and amendments, viewing the 1998 amendments as providing a fair, effective and efficient mechanism for dealing with native title, and supports extending the Parliamentary Joint Committee on Native Title.",
-   "slug": "speech-40264",
-   "source_title": "Daryl Williams \u2014 2000-04-10",
-   "speaker": "Daryl Williams",
-   "date": "2000-04-10"
+   "party": "Independent",
+   "position": "Zali Steggall argued the Closing the Gap implementation plan lacks ambition, particularly on Indigenous incarceration, and called for raising the criminal responsibility age from 10 to 14.",
+   "slug": "speech-411320",
+   "source_title": "Zali Steggall \u2014 2021-08-11",
+   "speaker": "Zali Steggall",
+   "date": "2021-08-11"
   },
   {
    "party": "Labor",
-   "position": "Labor has raised concerns about the government's native title and Indigenous affairs policies, including questioning the government's approach to Aboriginal reconciliation and criticising the Aboriginal and Torres Strait Islander Commission Amendment Bill 2004 as 'Howard's Revenge.'",
-   "slug": "speech-117437",
-   "source_title": "Carmen Lawrence \u2014 2004-06-01",
-   "speaker": "Carmen Lawrence",
-   "date": "2004-06-01"
+   "position": "Anthony Albanese argued for constitutionally enshrining an Indigenous Voice to Parliament, truth-telling, and treaty-making, noting that only two of seven Closing the Gap targets are on track and that First Nations adults make up 27% of the prison population.",
+   "slug": "speech-387892",
+   "source_title": "Anthony Albanese \u2014 2020-02-12",
+   "speaker": "Anthony Albanese",
+   "date": "2020-02-12"
   },
   {
-   "party": "Greens",
-   "position": "The Greens expressed dismay at the Prime Minister's comments about his government's relationship with Aboriginal people, particularly his claim that people no longer asked him for an apology.",
-   "slug": "speech-104076",
-   "source_title": "Michael Organ \u2014 2003-09-16",
-   "speaker": "Michael Organ",
-   "date": "2003-09-16"
+   "party": "Australian Democrats",
+   "position": "Andrew Bartlett spoke on the Apology to Australia's Indigenous Peoples, noting the importance of the final clauses of the motion moved by the government.",
+   "slug": "speech-783427",
+   "source_title": "Andrew Bartlett \u2014 Apology to Australia\u2019S Indigenous Peoples \u2014 2008-02-13",
+   "speaker": "Andrew Bartlett",
+   "date": "2008-02-13"
   }
  ],
  "key_moments": [
   {
-   "slug": "speech-29532",
-   "title": "Peter Slipper \u2014 1999-08-26",
-   "speaker": "Peter Slipper",
-   "party": "Liberal",
+   "slug": "speech-796612",
+   "title": "John Faulkner \u2014 Social Security and Other Legislation Amendment (Income Support for Students) Bill 2009 \u2014 2009-10-28",
+   "speaker": "John Faulkner",
+   "party": null,
    "state": "federal",
-   "date": "1999-08-26"
+   "date": "2009-10-28"
   },
   {
-   "slug": "speech-36296",
-   "title": "Philip Ruddock \u2014 1999-12-09",
-   "speaker": "Philip Ruddock",
-   "party": "Liberal",
+   "slug": "speech-773457",
+   "title": "Andrew Murray \u2014 Adjournment \u2014 2006-06-21",
+   "speaker": "Andrew Murray",
+   "party": "Australian Democrats",
    "state": "federal",
-   "date": "1999-12-09"
+   "date": "2006-06-21"
   },
   {
-   "slug": "speech-54408",
-   "title": "John Anderson \u2014 2000-11-30",
-   "speaker": "John Anderson",
+   "slug": "division-federal-senate-8065",
+   "title": "Senate division, 29 March 2023: Safeguard Mechanism (Crediting) Amendment Bill 2023 - Second Reading - Pepper Inquiry and First Nations",
+   "speaker": "Andrew Bragg",
+   "party": null,
+   "state": "federal",
+   "date": null
+  },
+  {
+   "slug": "speech-29765",
+   "title": "Larry Anthony \u2014 1999-08-30",
+   "speaker": "Larry Anthony",
    "party": "Nationals",
    "state": "federal",
-   "date": "2000-11-30"
+   "date": "1999-08-30"
   },
   {
-   "slug": "speech-118659",
-   "title": "Ian Macfarlane \u2014 2004-06-17",
-   "speaker": "Ian Macfarlane",
-   "party": "Liberal",
+   "slug": "speech-829435",
+   "title": "Sue Lines \u2014 Bills \u2014 2023-03-28",
+   "speaker": "Sue Lines",
+   "party": null,
    "state": "federal",
-   "date": "2004-06-17"
+   "date": "2023-03-28"
   },
   {
-   "slug": "speech-29422",
-   "title": "Daryl Melham \u2014 1999-08-26",
-   "speaker": "Daryl Melham",
-   "party": "Labor",
+   "slug": "speech-829392",
+   "title": "Nick McKim \u2014 Bills \u2014 2023-03-28",
+   "speaker": "Nick McKim",
+   "party": "Greens",
    "state": "federal",
-   "date": "1999-08-26"
-  },
-  {
-   "slug": "speech-112842",
-   "title": "Harry Quick \u2014 2004-03-10",
-   "speaker": "Harry Quick",
-   "party": "Labor",
-   "state": "federal",
-   "date": "2004-03-10"
+   "date": "2023-03-28"
   }
  ],
  "sections": [
   {
    "question": "What have MPs said about reconciliation and recognition of First Nations peoples?",
-   "answer": "MPs expressed a range of views about reconciliation and the recognition of First Nations peoples.\n\nMany MPs strongly supported reconciliation and called for recognition of Aboriginal and Torres Strait Islander peoples as the original owners and custodians of the land. Some supported symbolic recognition such as Reconciliation Place, and several urged the Government to apologise for past injustices, including the removal of Indigenous children, with one formal motion proposed that the House \u201cexpresses its sorrow and apologises unreservedly\u201d for the hurt and suffering caused by past government policies.\n\nOther MPs emphasised the importance of \u201cpractical reconciliation,\u201d focusing on improving Indigenous health, housing, education and employment. Government MPs defended their record, citing increased funding and a commitment to working constructively with Indigenous communities.\n\nThere was also criticism. Some MPs said the proposed constitutional preamble was historically inaccurate, arguing that the wording should refer to \u201cpeoples\u201d rather than \u201cpeople,\u201d and that the phrase \u201cdeep kinship with their lands\u201d was inappropriate. They also criticised the process as not inclusive of Indigenous voices.\n\nOne MP questioned the term \u201creconciliation\u201d itself, saying it implied there was a conflict, while another praised the preamble\u2019s wording as \u201cabsolutely perfect.\u201d Overall, no single view was held by all MPs.",
+   "answer": "MPs have spoken extensively in support of reconciliation and the recognition of First Nations peoples. Key points they made include:\n\n- Constitutional recognition of Aboriginal and Torres Strait Islander peoples is a crucial step toward genuine and lasting reconciliation. Several MPs said the Constitution is inadequate while First Australians are not recognised in it.\n- The Uluru Statement from the Heart is a historic document, and Labor committed to supporting a First Nations Voice to Parliament enshrined in the Constitution, as well as truth-telling and agreement-making through a Makarrata Commission.\n- The 1967 referendum and the national apology were important moments, but MPs stressed that more action is needed\u2014not just symbolism\u2014to close the gaps in health, education, employment, and justice.\n- Some MPs described reconciliation as requiring partnership, listening to First Nations people, and giving them real control over decisions affecting their lives.\n- MPs also acknowledged traditional owners and elders, and some raised symbolic actions such as flying the Aboriginal and Torres Strait Islander flags permanently, including on the Sydney Harbour Bridge and in the parliament chamber.\n- There was criticism that acknowledgement alone is not enough, and that governments have too often failed to deliver on promises, including a treaty promised at Barunga 30 years earlier.\n- Some MPs spoke in favour of treaty progress, such as Victoria's Statewide Treaty Bill 2025, as part of reconciliation and self-determination.\n- MPs also called for bipartisan support for constitutional recognition, noting that recognition should be a unifying moment for the nation.",
    "sources": [
     {
-     "slug": "speech-28438",
-     "title": "Daryl Melham \u2014 1999-08-11",
+     "slug": "speech-367372",
+     "title": "Rebekha Sharkie \u2014 2018-08-16",
+     "speaker": null,
+     "party": "Centre Alliance",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-422797",
+     "title": "Graham Perrett \u2014 Parliamentary Representation \u2014 2025-02-10",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-54105",
-     "title": "Andrew Theophanous \u2014 2000-11-29",
+     "slug": "speech-375081",
+     "title": "Bill Shorten \u2014 2019-02-14",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-383534",
+     "title": "Josh Burns \u2014 2019-10-21",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-829041",
+     "title": "David Van \u2014 Bills \u2014 2023-03-23",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-822241",
+     "title": "Lin Thorp \u2014 Bills \u2014 2013-03-12",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-373929",
+     "title": "Sharon Claydon \u2014 2018-12-04",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-769255",
+     "title": "Dylan Wight \u2014 Statewide Treaty Bill 2025 - Second reading \u2014 2025-10-15",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-821927",
+     "title": "George Brandis \u2014 Bills \u2014 2013-02-26",
      "speaker": null,
      "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-41998",
-     "title": "Kim Beazley \u2014 2000-05-29",
+     "slug": "speech-798024",
+     "title": "Ian Macdonald \u2014 Questions without Notice \u2014 2010-02-03",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-334333",
+     "title": "Malcolm Turnbull \u2014 2016-10-10",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-28447",
+     "title": "Warren Snowdon \u2014 1999-08-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-267273",
+     "title": "Kevin Andrews \u2014 2012-11-27",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-783392",
+     "title": "Chris Evans \u2014 Apology to Australia\u2019S Indigenous Peoples \u2014 2008-02-13",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-374253",
+     "title": "Anthony Albanese \u2014 2018-12-05",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -289,294 +378,166 @@
      "date": null
     },
     {
-     "slug": "speech-38180",
-     "title": "Snowdon \u2014 2000-03-09",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-28447",
-     "title": "Warren Snowdon \u2014 1999-08-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-59130",
-     "title": "Andrew Theophanous \u2014 2001-03-26",
+     "slug": "speech-987940",
+     "title": "David Harris \u2014 National Reconciliation Week \u2014 2019-05-30",
      "speaker": null,
      "party": null,
-     "state": "federal",
+     "state": "nsw",
      "date": null
     },
     {
-     "slug": "speech-59131",
-     "title": "Philip Ruddock \u2014 2001-03-26",
+     "slug": "speech-367377",
+     "title": "Rebekha Sharkie \u2014 2018-08-16",
      "speaker": null,
-     "party": "Liberal",
+     "party": "Centre Alliance",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-28754",
-     "title": "Sharman Stone \u2014 1999-08-12",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-40243",
-     "title": "Philip Ruddock \u2014 2000-04-10",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-98041",
-     "title": "Mark Latham \u2014 2003-06-17",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-28436",
-     "title": "Robert McClelland \u2014 1999-08-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-57305",
-     "title": "Andrew Theophanous \u2014 2001-02-27",
+     "slug": "speech-875452",
+     "title": "Sarah Connolly \u2014 Voice to Parliament \u2014 2023-08-02",
      "speaker": null,
      "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-64954",
-     "title": "Danna Vale \u2014 2001-06-27",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-61024",
-     "title": "Sharman Stone \u2014 2001-05-22",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-117543",
-     "title": "Bob Katter \u2014 2004-06-02",
-     "speaker": null,
-     "party": "Independent",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-64953",
-     "title": "Christine Gallus \u2014 2001-06-27",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-48213",
-     "title": "Philip Ruddock \u2014 2000-09-04",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-55760",
-     "title": "Anna Burke \u2014 2000-12-07",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-42731",
-     "title": "Kelly Hoare \u2014 2000-06-01",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
+     "state": "vic",
      "date": null
     }
    ]
   },
   {
    "question": "What was said in parliament about the Voice to Parliament referendum?",
-   "answer": "Not enough data to answer this.",
+   "answer": "In parliament, the Voice to Parliament referendum was discussed with a range of views and arguments.\n\nSupporters argued that the Voice would provide constitutional recognition for Aboriginal and Torres Strait Islander peoples and act as an advisory body to give advice on matters affecting them, potentially improving outcomes in health, education, housing, and welfare. Some noted that it would not make laws, impose taxes, or control funding, and that it would not affect parliamentary primacy. Several speakers called for a \"yes\" vote, with some confirming they had already voted yes. Some referenced the 1967 referendum's 90.77% Yes vote as evidence Australians could support change again, while others mentioned the Uluru Statement from the Heart and William Cooper's 1937 petition. A common theme among supporters was the call for a respectful, intellectual debate without demonising those who oppose the Voice.\n\nCritics and opponents raised different concerns. One speaker opposed enshrining a Voice in the Constitution, while another criticised the Prime Minister's proposed wording as a flawed model lacking bipartisanship and transparency, accusing the Prime Minister of prioritising wedge politics. Another argued the amendment was radical, not modest, potentially creating an implied constitutional obligation to consult with justiciability concerns. One speaker opposed the Voice, claiming it would lead to demands making 97% of Australians second-class citizens, and cited FOI documents to assert the National Indigenous Australians Agency had discussed demands such as reduced tax rates, Aboriginal ownership of beaches, and racially exclusive parliamentary seats.\n\nThere were also procedural and process-related remarks. Some speakers insisted the referendum deserved equal government funding for both the \"yes\" and \"no\" campaigns, and advocated for a pamphlet to be distributed to households so Australians could be fully informed. One speaker noted that debates in the chamber were being viewed as a reflection on the upcoming referendum, and stressed the importance of conducting the debate with dignity, collegiality, and respect. Another speaker criticised a motion as a \"vicious attack\" on peak organisations and grassroots organisations. Additionally, one speaker questioned a $300,000 departmental expenditure on monitoring mental health needs during the referendum, seeking an update on its status and methodology.",
    "sources": [
     {
-     "slug": "speech-4899",
-     "title": "John Howard \u2014 1998-04-02",
+     "slug": "speech-827855",
+     "title": "Angus Taylor \u2014 Bills \u2014 2023-03-06",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-4900",
-     "title": "Kim Beazley \u2014 1998-04-02",
+     "slug": "speech-829682",
+     "title": "Tracey Roberts \u2014 Constituency Statements \u2014 2023-03-30",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-21351",
-     "title": "Robert McClelland \u2014 1999-03-23",
+     "slug": "speech-873092",
+     "title": "Steve McGhie \u2014 Voice to Parliament \u2014 2023-10-04",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-420791",
+     "title": "Josh Burns \u2014 2022-08-01",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-12519",
-     "title": "Elizabeth Grace \u2014 1998-06-30",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-29383",
-     "title": "Paul Neville \u2014 1999-08-25",
-     "speaker": null,
-     "party": "Nationals",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-27859",
-     "title": "Tony Abbott \u2014 1999-08-09",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-81294",
-     "title": "Paul Neville \u2014 2002-08-26",
-     "speaker": null,
-     "party": "Nationals",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-45990",
-     "title": "Ross Cameron \u2014 2000-08-14",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-93174",
-     "title": "Simon Crean \u2014 2003-03-20",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-29378",
-     "title": "John Murphy \u2014 1999-08-25",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-31039",
-     "title": "Laurie Brereton \u2014 1999-09-22",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-27882",
-     "title": "Bob Charles \u2014 1999-08-09",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-100774",
-     "title": "Michael Organ \u2014 2003-08-12",
+     "slug": "speech-829551",
+     "title": "Pauline Hanson \u2014 Statements by Senators \u2014 2023-03-29",
      "speaker": null,
      "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-97730",
-     "title": "Peter King \u2014 2003-06-16",
+     "slug": "speech-827913",
+     "title": "Keith Wolahan \u2014 Bills \u2014 2023-03-06",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-39665",
-     "title": "John Howard \u2014 2000-04-04",
+     "slug": "speech-391839",
+     "title": "Linda Burney \u2014 2020-06-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-829589",
+     "title": "Richard Colbeck \u2014 Committees \u2014 2023-03-29",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-29720",
-     "title": "Nicola Roxon \u2014 1999-08-30",
+     "slug": "speech-874204",
+     "title": "Emma Vulin \u2014 Voice to Parliament \u2014 2023-08-17",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-872942",
+     "title": "Jacinta Allan \u2014 Ministers statements: Voice to Parliament \u2014 2023-10-05",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-420676",
+     "title": "Anthony Albanese \u2014 2022-08-01",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-27721",
-     "title": "Bob Charles \u2014 1999-08-09",
+     "slug": "speech-829164",
+     "title": "Zoe McKenzie \u2014 Statements by Members \u2014 2023-03-27",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-74210",
-     "title": "Harry Jenkins \u2014 2002-03-20",
+     "slug": "speech-829205",
+     "title": "Luke Gosling \u2014 Adjournment \u2014 2023-03-27",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-27870",
-     "title": "Michael Danby \u2014 1999-08-09",
+     "slug": "speech-829522",
+     "title": "Keith Wolahan \u2014 Adjournment \u2014 2023-03-29",
      "speaker": null,
-     "party": "Labor",
+     "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-72262",
-     "title": "Janice Crosio \u2014 2002-02-20",
+     "slug": "speech-880635",
+     "title": "Nick Staikos \u2014 Voice to Parliament \u2014 2023-03-21",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-972204",
+     "title": "Liddle \u2014 Community Affairs Legislation Committee - Community Affairs Legislation Committee 03/12/2025 Estimates; and HEALTH, DISABILITY AND AGEING PORTFOLIO National Health and Medical Research Council \u2014 2025-12-03",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-406956",
+     "title": "Graham Perrett \u2014 2021-05-26",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -586,165 +547,117 @@
   },
   {
    "question": "How has parliament discussed Closing the Gap outcomes?",
-   "answer": "Based only on the provided context, parliament discussed Indigenous health and life-expectancy outcomes\u2014which relate to Closing the Gap\u2014by:\n\n- Noting a 2000 committee report that recommended **annual reporting to parliament** on Indigenous health, so that legislators could not ignore the facts.\n- Citing statistics showing **diabetes is eight times higher, respiratory conditions four times higher, and circulatory conditions three times higher** for Aboriginal Australians, and that **Indigenous life expectancy is still 20 years less** than for non-Indigenous Australians.\n- Comparing Australia\u2019s gap to comparable countries: the life-expectancy gap there is only **five to seven years**, whereas Australia\u2019s is worse.\n- Arguing that parliament needs to **discuss how to improve the way Indigenous communities deal with these problems**, in partnership with them, listening to their views and acting on their suggestions.\n- Highlighting the need to address not only health but also **proper housing, access to employment, and a sense of belonging and grievance for past acts**.\n- A parliamentary question also raised that **Australia\u2019s performance in closing the life expectancy gap was the worst in the Western world**, citing much smaller gaps in New Zealand, Canada, and the United States.",
+   "answer": "Parliament has discussed Closing the Gap outcomes through annual Prime Minister\u2019s reports to parliament, parliamentary debate, and speeches from both government and opposition members. These discussions have covered progress against the Closing the Gap targets\u2014such as early childhood education, child mortality, reading and numeracy, year 12 attainment, employment, and life expectancy\u2014with acknowledgments that some targets are on track while others are lagging or off track. Parliament has also debated issues affecting those outcomes, including remote housing, health services, justice targets, incarceration, and the proposal for an Aboriginal and Torres Strait Islander Voice to Parliament as a way to improve decision-making. Additionally, parliamentary committees and estimates processes have examined implementation plans, the National Agreement on Closing the Gap, and related economic partnerships.",
    "sources": [
     {
-     "slug": "speech-19606",
-     "title": "Kelvin Thomson \u2014 1999-02-18",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-21743",
-     "title": "Mark Latham \u2014 1999-03-24",
+     "slug": "speech-909331",
+     "title": "Doherty \u2014 Finance and Public Administration Legislation Committee - Finance and Public Administration Legislation Committee 07/10/2025 Estimates PRIME MINISTER AND CABINET PORTFOLIO Department of the Prime Minister and Cabinet \u2014 2025-10-07",
      "speaker": null,
      "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-97170",
-     "title": "Trish Worth \u2014 2003-06-04",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-100837",
-     "title": "Simon Crean \u2014 2003-08-13",
+     "slug": "speech-305008",
+     "title": "Sharon Claydon \u2014 2015-02-11",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-111721",
-     "title": "Harry Jenkins \u2014 2004-03-02",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-63342",
-     "title": "Michael Wooldridge \u2014 2001-06-19",
+     "slug": "speech-401836",
+     "title": "Gavin Pearce \u2014 2021-02-15",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-16369",
-     "title": "Michael Wooldridge \u2014 1998-12-07",
+     "slug": "speech-901830",
+     "title": "McCarthy \u2014 Community Affairs Legislation Committee - Community Affairs Legislation Committee 11/02/2026 Estimates HEALTH, DISABILITY AND AGEING PORTFOLIO Aged Care Quality and Safety Commission \u2014 2026-02-11",
      "speaker": null,
-     "party": "Liberal",
+     "party": null,
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-34968",
-     "title": "Duncan Kerr \u2014 1999-11-25",
+     "slug": "speech-944442",
+     "title": "Guivarra \u2014 Finance and Public Administration Legislation Committee - Finance and Public Administration Legislation Committee 01/12/2025 Estimates PRIME MINISTER AND CABINET PORTFOLIO National Indigenous Australians Agency \u2014 2025-12-01",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-359624",
+     "title": "Warren Snowdon \u2014 2018-02-14",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-51906",
-     "title": "Michael Lee \u2014 2000-11-02",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-4565",
-     "title": "Simon Crean \u2014 1998-04-01",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-33481",
-     "title": "Kim Wilkie \u2014 1999-10-18",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-35303",
-     "title": "Alexander Downer \u2014 1999-12-06",
+     "slug": "speech-401738",
+     "title": "Ken Wyatt \u2014 2021-02-04",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-105974",
-     "title": "Bob McMullan \u2014 2003-10-15",
+     "slug": "speech-828249",
+     "title": "Louise Pratt \u2014 Documents \u2014 2023-03-08",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-109250",
-     "title": "Jann McFarlane \u2014 2003-12-03",
+     "slug": "speech-270213",
+     "title": "Sharon Bird \u2014 2013-03-12",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-100118",
-     "title": "Simon Crean \u2014 2003-08-11",
+     "slug": "speech-831285",
+     "title": "Linda Burney \u2014 National Reconciliation Week \u2014 2015-05-27",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-424024",
+     "title": "Blyth \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 09/02/2026 Estimates ATTORNEY-GENERAL'S PORTFOLIO Attorney-General's Department \u2014 2026-02-09",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-828319",
+     "title": "Karen Grogan \u2014 Adjournment \u2014 2023-03-08",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-33477",
-     "title": "Andrew Thomson \u2014 1999-10-18",
+     "slug": "speech-826829",
+     "title": "Deborah O'Neill \u2014 Motions \u2014 2013-12-12",
      "speaker": null,
-     "party": "Liberal",
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-37994",
-     "title": "Peter Slipper \u2014 2000-03-09",
+     "slug": "speech-826960",
+     "title": "Kate Thwaites \u2014 Private Members' Business \u2014 2023-02-06",
      "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-100775",
-     "title": "John Howard \u2014 2003-08-12",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-32534",
-     "title": "Alexander Downer \u2014 1999-10-12",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-77805",
-     "title": "Alexander Downer \u2014 2002-06-18",
-     "speaker": null,
-     "party": "Liberal",
+     "party": "Labor",
      "state": "federal",
      "date": null
     }
