@@ -35,6 +35,9 @@ as `OPAX research (opax.com.au; contact jake.tracey@noice.work)` and rate-limits
 | **QLD** ECQ Electronic Disclosure System | `POST https://disclosures.ecq.qld.gov.au/Map/ExportCsv` with the page's anti-forgery token and empty filters (the "Download CSV" button on the Donor Location Map) | one CSV, whole register (~2.3 MB) | **CC BY 4.0** (data.qld.gov.au dataset "Electronic Disclosure System - State and Local Election Funding and Donations") | 2012-13 onwards; real-time since 2017 (gifts published within 7 business days) | continuous | **pulled in full: 23,618 gifts, $85.0m** |
 | **VIC** VEC Disclosures portal | Power Pages entity list `pit_donation` on `https://disclosures.vec.vic.gov.au/public-donations/` via `/_services/entity-grid-data.json` (page size 5000) | JSON grid | Crown copyright (State of Victoria); no explicit open licence on the portal; published under Electoral Act 2002 s 217 | scheme began 25 Nov 2018; rows in the public grid date from 2020-21 | continuous (21-day disclosure) | **pulled in full: 4,237 donations, $11.4m** |
 | **WA** WAEC Online Disclosure System | Power Pages entity list `waec_disclosure` on `https://disclosures.elections.wa.gov.au/public-dashboard/` | JSON grid; dates render m/d/yyyy | **Full Crown copyright, no open licence** (WAEC copyright notice) | real-time gifts since 1 Jul 2024; earlier years are PDF annual returns | continuous (7-day disclosure) | **pulled in full: 7,875 disclosures, $16.2m** (public exposure is a licence gate) |
+| **TAS** TEC | two registers read together: the monthly + seven-day disclosure report tables on `https://www.tec.tas.gov.au/disclosure-and-funding/registers-and-reports/donations/` (static HTML fragments the page pulls in with its own `includeHTML()`), and the Power Pages entity list `vec_publisheddonation` on `https://disclosures.tec.tas.gov.au/public-donations/` | HTML tables + JSON grid | **CC BY 4.0** (TEC copyright page) | scheme commenced **1 Jul 2025**; nothing earlier exists | monthly, or 7-day in a campaign period | **pulled in full: 264 donations, $1.53m** |
+| **ACT** Elections ACT "Gift returns" | one HTML page per financial year under `https://www.elections.act.gov.au/funding-disclosures-and-registers/gift-returns/`, a table per recipient (`From \| Date reported \| Date gift received \| Amount \| Type \| Description`) | HTML tables | **No open licence** (ACT Electoral Commission copyright) | 2012-13 to 2026-27 | quarterly; 7-day in an election year | **pulled in full: 8,207 gifts, $7.64m** (public exposure is a licence gate) |
+| **NT** NTEC published returns | annual returns (2014-15 on; separate "annual returns - gifts" pages from 2020-21) and Legislative Assembly election returns under `https://ntec.nt.gov.au/financial-disclosure/`. The site returns HTTP 403 to non-browser clients (Cloudflare managed challenge, confirmed from both OPAX hosts 2026-09-02), so pages are read from Internet Archive raw captures (`web.archive.org/web/<ts>id_/<url>`) | HTML tables | **No open licence** (NT Government copyright) | FY 2014-15 to 2024-25 | annual + per election | **pulled in full: 2,266 rows, $29.1m** (public exposure is a licence gate) |
 | **NSW** Electoral Commission "Funding and disclosure online" | `https://efadisclosures.elections.nsw.gov.au/` (Salesforce Visualforce app `FDCLiteDisclosures`; has a `getDownloadURL` remoting action) | interactive search only; no published bulk file (the "downloadable resources" anchor on the disclosures page is empty; data.nsw.gov.au has only annual-report PDFs) | site terms: **"You are not allowed to use any software (like bots, scraper tools etc.) to access, monitor or copy the portal or its contents"**; robots.txt Content-Signal `ai-train=no` | 2018-19 onwards online | half-yearly + pre-election real time | **not pulled (terms).** Path: the Commission emails copies on request (`fdc@elections.nsw.gov.au`, stated on the View Disclosures page) -- ask for a CSV extract |
 | **SA** ECSA | `https://www.ecsa.sa.gov.au/parties-and-candidates/disclosure-returns-%E2%80%93-state-elections` | ~18 PDF returns per election (party + associated-entity returns, edocman downloads); `disclosures.ecsa.sa.gov.au` no longer resolves | not stated (SA Government default CC BY) | 2022 state election returns; **SA banned political donations from 1 Jul 2025** | per election | **not pulled (PDF only, scheme ended).** Low value; skip |
 | Federal AEC | already in `donations` (199,233 rows, 1998-99 to 2025-26) | | | | | receipts out of scope here; debts, benefits and return totals are §1.5 |
@@ -45,6 +48,109 @@ recipient_type (party|candidate|committee|other), recipient_party (canonical buc
 amount, date_made, date_received, financial_year (AEC-style), disclosure_type, election,
 is_political_donation (QLD flag), status, version (WA Original/Amended), industry,
 industry_source, source_url, ingested_at`. Loads replace per `source`.
+
+QLD, VIC, WA are `parli.ingest.money_state_donations`; TAS, ACT, NT are
+`parli.ingest.money_small_jurisdictions` (same DDL, same columns, same writer).
+
+#### Licence verdicts, TAS / ACT / NT (checked 2026-09-02)
+
+The rule is the one WA set: data may stay in `parli.db` for internal analysis
+whatever the licence says, but nothing is served from `portal/public/` unless the
+commission has actually granted reuse. `scripts/export_state_money.py` enforces
+it -- a gated jurisdiction refuses to export at all without `--gated`, and a
+`--gated` copy must never be written under `portal/public/`.
+
+**Tasmania -- OPEN, exposed.** <https://www.tec.tas.gov.au/info/Copyright.html>:
+
+> Unless otherwise noted, the TEC has applied the Creative Commons Attribution
+> 4.0 International Licence to all material on this website with the exception
+> of: TEC logos, and content supplied by a third party.
+
+Required attribution is `© Tasmanian Electoral Commission`, carried in the
+`meta.licence` of `money.tas.json`. One caveat worth recording: the
+`disclosures.tec.tas.gov.au` portal is a separate subdomain that carries **no
+licence statement of its own** (its Legal / Accessibility / Sitemap footer links
+are dead and its Privacy page is a collection notice only). We read the
+site-wide TEC licence as reaching it. Only 11 of the 264 rows come from that
+subdomain; the other 253 come from `www.tec.tas.gov.au`, squarely inside the
+quoted grant.
+
+**ACT -- RESTRICTED, gated.**
+<https://www.elections.act.gov.au/about-the-commission/copyright> permits use
+only "for your personal use, educational use or for non-commercial use within
+your organisation", "in unaltered form only", and then:
+
+> Except as permitted above you must not copy, adapt, publish, distribute or
+> commercialise any material contained on this site without the permission of
+> the ACT Electoral Commission.
+
+Publishing on opax.com.au is exactly the "publish / distribute" case that needs
+written permission. "Creative Commons" does not appear on the page. The 8,207
+rows stay loaded for internal analysis; **no `money.act.json` in the repo.**
+
+**NT -- RESTRICTED, gated.** NTEC has no copyright page of its own; its footer
+points at <https://nt.gov.au/page/copyright-disclaimer-and-privacy>:
+
+> No part of this website may be reproduced or reused for any purpose
+> whatsoever, apart from: fair dealing for the purposes of private study,
+> research, criticism or review, as permitted under the Act or where expressly
+> provided under a Creative Commons licence.
+
+Creative Commons applies only where an item is expressly marked, and the
+financial-disclosure pages carry no such marking -- only "© 2026 NT Electoral
+Commission". Because ntec.nt.gov.au 403s non-browser clients, both the returns
+and these statements were read from Internet Archive captures
+(`https://web.archive.org/web/20260901id_/https://ntec.nt.gov.au/financial-disclosure/`).
+The 2,266 rows stay loaded; **no `money.nt.json` in the repo.**
+
+To pull a research copy of a gated jurisdiction:
+
+```
+ssh desktop python3 - act --gated < scripts/export_state_money.py > /tmp/money.act.json
+ssh desktop python3 - nt  --gated < scripts/export_state_money.py > /tmp/money.nt.json
+```
+
+#### What each small jurisdiction actually publishes
+
+**Tasmania.** The Electoral Disclosure and Funding Act 2023 commenced **1 July
+2025**, so this is a genuinely short series -- there is no pre-2025 Tasmanian
+donation record to miss. Reportable political donations are $1,000 or more
+(single or aggregated in a financial year), disclosed monthly outside an
+election period and within 7 days during one. The TEC publishes them in two
+places and the portal alone is a small slice: 11 rows are in the TEC Disclosures
+portal, which launched 3 July 2026 ("From 3 July, all new electoral participant
+registrations and reportable political donation disclosures will be published to
+TEC Disclosures"), while the pre-portal record -- and the seven-day reports for
+the July 2025 House of Assembly election and the May 2026 Legislative Council
+elections -- live as report tables on the main site. Reading only the portal
+gives 11 rows; reading both gives **264**. The two are de-duplicated on
+(date, amount, donor, recipient), portal row winning; 3 rows overlapped.
+
+*Not read:* the election campaign returns report
+(`registers-and-reports/returns/`), which publishes each participant's return as
+a PDF form plus an XLSX detail workbook. Those itemise the same reportable
+donations already in the seven-day reports for the campaign period, so parsing
+them would double-count; what they add is electoral **expenditure**, which
+`ext_donations` does not model.
+
+**ACT.** Gift returns run 2012-13 to 2026-27, one HTML page per financial year,
+a table per recipient. Rows are individual gifts making up a $1,000+ aggregate,
+so many single rows are small (the CFMEU's 333 ACT rows average about $390).
+Recipient names print people as "Surname, Given", which the shared
+`classify_donor_type()` calls 'other'; `money_small_jurisdictions.finish()`
+re-labels those as individuals.
+
+**NT.** Every NT row is **undated** -- the annual-return gift tables give a
+financial year and no gift date, so `date_made`/`date_received` are NULL for all
+2,266 rows and `financial_year` is the only time key. Two further NT quirks:
+
+* Election returns republish gifts that are already in the annual returns (307
+  of 879 election rows repeat a non-election row donor-for-dollar), so the
+  export drops election-tagged rows entirely (`drop_election_rows`).
+* 209 rows carry the literal recipient `Political Parties` -- a section heading
+  in the 2014-15 donor-side returns that the table parser read as a recipient.
+  They have no `recipient_party`, so the export already excludes them; worth
+  fixing if NT is ever ungated.
 
 ### 1.2 IPEA parliamentarian expenditure -> `ext_expenses`
 
@@ -312,12 +418,23 @@ Files (`portal/public/graph/`, static, committed):
 |---|---:|---:|---:|---:|---:|---|
 | `money.qld.json` | ~98 KB | 22,703 gifts to parties (of 23,618) | 250 | 10 | 369 | Mineralogy $3.78m; Duncan Turpie $1.33m; United Voice QLD $829k; J.J. Richards & Sons $794k; CEPU Electrical Division QLD/NT $781k; CPSU PSU Group $768k; United Workers Union $745k; AWU QLD $643k; AMWU $497k; Pharmacy Guild QLD $430k |
 | `money.vic.json` | ~82 KB | 3,416 donations to parties (of 4,237) | 250 | 11 | 291 | Jason McClintock $110k; Malik Zaveer $70k; Darren Natale $55k; Lucas Moon $48k; Peter Walsh $48k; Louise Staley $47k; Tim Read $42k; Matt Fregon $40k; Richard Welch $38k; Victorian Automotive Chamber of Commerce $24k |
+| `money.tas.json` | ~55 KB | 220 gifts to parties (of 264) | 168 | 5 | 173 | NEX Building Group $44.7k; Electrical Trades Union Victoria $40k; Plumbing and Pipe Trades Employees Union Federal Office $30k; Pharmacy Guild of Australia Tas Branch $26.2k; SDA Tasmanian Branch $23.2k; Google Australia $22k; Health Services Union Tas Branch $19.9k; Encompass Health Holdings $16.5k; AWU Tasmanian Branch $15.7k; Hospitality Tasmania $14.8k |
 | `money.wa.json` | not generated for the portal | | | | | **WA is excluded from public exposure**: WAEC asserts full Crown copyright with no open licence. `export_state_money.py wa --gated` produces a research copy outside `portal/public`. |
+| `money.act.json` | not generated for the portal | | | | | **ACT is excluded**: no open licence, permission required to publish or distribute (section 1.1). `export_state_money.py act --gated` for a research copy. |
+| `money.nt.json` | not generated for the portal | | | | | **NT is excluded**: no open licence, all-rights-reserved NT Government statement (section 1.1). `export_state_money.py nt --gated` for a research copy. |
 
 Rules on top of the federal export: gifts to candidates, committees and third parties
 are out (no `recipient_party`); the other/NULL-industry floor is per jurisdiction (QLD
-$100k, VIC $10k, WA $50k; the federal $5m would empty a state file); VIC `loan` rows and WA
-`compulsory party levy` rows are dropped as not-gifts. QLD keeps every gift and reports the
+$100k, VIC $10k, WA $50k, TAS $1k, ACT/NT $10k; the federal $5m would empty a state file,
+and TAS's whole register is only $1.5m); VIC and TAS `loan` rows and WA
+`compulsory party levy` rows are dropped as not-gifts; NT `receipt` rows (pre-2020-21
+annual returns list receipts of any kind, including public funding) and NT election-return
+rows (which repeat the annual returns) are dropped.
+
+Tasmania's file is small on purpose -- 220 usable rows over two financial years -- because
+the scheme itself only started on 1 July 2025. The map and ledger carry that in
+`meta.threshold` and the front-page caption says it in words, so a thin map reads as a
+young disclosure regime rather than a broken export. QLD keeps every gift and reports the
 `is_political_donation` split in `meta.political_donation_flag` (the flag only exists from
 2022-23: 2,449 flagged political donations, 5,123 gifts the Act does not class as political
 donations, 15,131 unflagged older rows). VIC's top disclosed donors are mostly individuals
@@ -326,7 +443,7 @@ tags its levy); they are shown as disclosed.
 
 Where it appears:
 
-- `#/money` gets a Jurisdiction switch (Federal, Queensland, Victoria) above the map; the
+- `#/money` gets a Jurisdiction switch (Federal, Queensland, Victoria, Tasmania) above the map; the
   choice deep-links as `#/money?jur=qld` and defaults to Federal. Switching destroys and
   remounts the 3D map on the matching file; the ask and search triggers on the cards are
   unchanged. `/map?jur=qld` does the same on the full-screen page. The map hint reads
@@ -342,6 +459,19 @@ Where it appears:
 - **Money & Words and Words per dollar stay federal.** They pair AEC industry totals with
   the speech index; adding state files would require a per-jurisdiction words series and
   would invite the sum the fineprint forbids. Left as-is on purpose.
+
+- The **state map** on the front page (`statemap.js`, `MONEY_FILES`) offers "State donations"
+  in a state's popover. Tasmania has no parliament in the corpus, so its shape stays dimmed
+  and its popover offers the donations link *without* a "Search this parliament" link -- the
+  one behavioural change to `show()`. The ACT and the NT have no shape on that map at all
+  and are gated anyway, so neither is listed there or in the caption under it.
+- **Still hardcoded, not wired:** the "Disclosures" / "Disclosed to" commission filters on
+  the Parties and Donors directories (`app.js`, `buildPartiesDirectory` and
+  `buildDonorsDirectory`) load `federal`, `qld`, `vic` by name -- a `Promise.all`
+  destructure, a `files` array, a `sourceShort` map and two `options` arrays each. Tasmania
+  will not appear in those two directories until that is made data-driven off
+  `MONEY_JURISDICTIONS`. Donor *entry* pages (`renderDonorStateMoney`) already iterate
+  `MONEY_JURISDICTIONS`, so Tasmania shows up there with no change.
 
 Fineprint everywhere (map panel, ledger, donor section, CSV header) names the commission
 as source, states the disclosure-threshold floor ("totals are a floor, not a ceiling") and
@@ -390,13 +520,14 @@ once, then `PYTHONPATH=. .venv/bin/python -m parli.ingest.<module>`. Writers def
 
 | Refresh | Command | Cadence |
 |---|---|---|
-| State donations | `money_state_donations` (all three; `--source qld` etc.) | weekly |
+| State donations | `money_state_donations` (QLD/VIC/WA; `--source qld` etc.) | weekly |
+| Small-jurisdiction donations | `money_small_jurisdictions` (TAS/ACT/NT; `--source tas` etc.) | weekly for TAS (7-day disclosures), annually for ACT/NT |
 | IPEA | `money_ipea --since 2026q03` | quarterly, mid Aug/Nov/Feb/May |
 | NSW diaries | `money_diaries --jurisdiction nsw --years 2026` | quarterly |
 | QLD diaries | `money_diaries --jurisdiction qld` (current govt; `--period 2020-2024` for former) | monthly |
 | Lobbyists | `money_lobbyists` (all six, ~25 min; `--jurisdiction qld` alone for the contact log) | monthly |
 | Classification | `money_classify --report` after any donation load | with donations |
-| State money maps | `ssh desktop python3 - qld < scripts/export_state_money.py > portal/public/graph/money.qld.json` (and `vic`); then from `portal/`: `node graph/smoke-test.mjs` | after a state donation load |
+| State money maps | `ssh desktop python3 - qld < scripts/export_state_money.py > portal/public/graph/money.qld.json` (and `vic`, `tas`); then from `portal/`: `node graph/smoke-test.mjs`. WA/ACT/NT refuse without `--gated` and must not land under `portal/public/` | after a state donation load |
 | AEC extras | on desktop: `PYTHONPATH=. .venv/bin/python -m parli.ingest.money_aec_extras --refresh --db ~/.cache/autoresearch/parli.db` (~10 s; `--table debts` etc. for one), then `ssh desktop python3 - < scripts/export_aec_extras.py > portal/public/graph/aec-extras.json` | yearly, after the AEC's early-February release of annual returns; the bundle is one fetch |
 
 Run-time 2026-09-02 (laptop, polite delays): donations ~5 min, IPEA ~35 min (37 CSV

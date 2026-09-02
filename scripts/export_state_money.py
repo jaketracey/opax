@@ -120,6 +120,95 @@ JURISDICTIONS = {
         "drop_disclosure_types": ("compulsory party levy",),
         "gated": True,
     },
+    # The three small jurisdictions (parli.ingest.money_small_jurisdictions;
+    # docs/DATA-MONEY.md section 1.1). Tasmania is CC BY; the ACT and the NT are
+    # licence gates exactly like WA.
+    "tas": {
+        "label": "Tasmania",
+        "commission": "Tasmanian Electoral Commission",
+        "sourceShort": "TEC disclosures",
+        "source": (
+            "Tasmanian Electoral Commission: the monthly and seven-day reportable political donation "
+            "reports on tec.tas.gov.au (1 July 2025 to 2 July 2026 and continuing) together with the "
+            "TEC Disclosures portal (disclosures lodged from 3 July 2026), via parli.db "
+            "`ext_donations` (source tas_tec)"
+        ),
+        "source_url": "https://www.tec.tas.gov.au/disclosure-and-funding/registers-and-reports/",
+        "licence": (
+            "CC BY 4.0 (tec.tas.gov.au/info/Copyright.html: \"Unless otherwise noted, the TEC has "
+            "applied the Creative Commons Attribution 4.0 International Licence to all material on "
+            "this website with the exception of: TEC logos, and content supplied by a third party.\") "
+            "Attribute '© Tasmanian Electoral Commission'. The disclosures.tec.tas.gov.au subdomain "
+            "carries no licence statement of its own; the site-wide TEC licence is read as reaching it."
+        ),
+        "threshold": (
+            "Reportable political donations of $1,000 or more (single or aggregated within a financial year) "
+            "under the Electoral Disclosure and Funding Act 2023, which commenced 1 July 2025: disclosed "
+            "monthly outside an election period and within 7 days during one. Smaller donations are not "
+            "reported, and nothing before 1 July 2025 is in scope, so this is a very short series."
+        ),
+        "other_floor": 1_000,
+        # A reportable loan is repayable, not a gift (same call as VIC).
+        "drop_disclosure_types": ("loan",),
+        "gated": False,
+    },
+    "act": {
+        "label": "Australian Capital Territory",
+        "commission": "ACT Electoral Commission",
+        "sourceShort": "Elections ACT gift returns",
+        "source": (
+            "ACT Electoral Commission (Elections ACT), returns of gifts received of $1,000 or more, "
+            "one page per financial year, via parli.db `ext_donations` (source act_eact)"
+        ),
+        "source_url": "https://www.elections.act.gov.au/funding-disclosures-and-registers/gift-returns",
+        "licence": (
+            "No open licence. elections.act.gov.au/about-the-commission/copyright permits use \"for your "
+            "personal use, educational use or for non-commercial use within your organisation\", \"in "
+            "unaltered form only\", and adds: \"Except as permitted above you must not copy, adapt, publish, "
+            "distribute or commercialise any material contained on this site without the permission of the "
+            "ACT Electoral Commission.\" Publishing on opax.com.au is exactly that case: "
+            "NOT cleared for public exposure"
+        ),
+        "threshold": (
+            "Gifts of $1,000 or more (aggregated per donor within the financial year) received by party "
+            "groupings and non-party candidate groupings must be returned; smaller gifts are not reported. "
+            "Quarterly returns, 7-day returns in an election year."
+        ),
+        "other_floor": 10_000,
+        "drop_disclosure_types": (),
+        "gated": True,
+    },
+    "nt": {
+        "label": "Northern Territory",
+        "commission": "Northern Territory Electoral Commission",
+        "sourceShort": "NTEC annual gift returns",
+        "source": (
+            "Northern Territory Electoral Commission, published annual returns (gifts received over the "
+            "threshold) read from Internet Archive captures of ntec.nt.gov.au, via parli.db `ext_donations` "
+            "(source nt_ntec)"
+        ),
+        "source_url": "https://ntec.nt.gov.au/financial-disclosure/published-annual-returns",
+        "licence": (
+            "No open licence. NTEC's footer points at the NT Government statement "
+            "(nt.gov.au/page/copyright-disclaimer-and-privacy): \"No part of this website may be reproduced "
+            "or reused for any purpose whatsoever, apart from: fair dealing for the purposes of private "
+            "study, research, criticism or review, as permitted under the Act or where expressly provided "
+            "under a Creative Commons licence.\" The financial-disclosure pages carry no Creative Commons "
+            "marking, only '© 2026 NT Electoral Commission': NOT cleared for public exposure"
+        ),
+        "threshold": (
+            "Gifts of $1,500 or more (aggregated per donor) must be itemised in annual returns; smaller gifts "
+            "are not reported. Itemised gift returns exist from 2020-21; earlier annual returns list receipts "
+            "of $1,500 or more of any kind and are not used here."
+        ),
+        "other_floor": 10_000,
+        # 'receipt' = pre-2020-21 annual-return receipts of any kind (public funding,
+        # membership, transfers); election-return rows repeat gifts already in the
+        # annual returns and are dropped below (drop_election_rows).
+        "drop_disclosure_types": ("receipt", "loan"),
+        "drop_election_rows": True,
+        "gated": True,
+    },
 }
 
 # --- mirror of export_money_graph.py (keep in step) --------------------------
@@ -231,7 +320,7 @@ def main() -> None:
     rows = db.execute(
         """
         SELECT donor_name, recipient_party AS party, amount, financial_year,
-               industry, donor_type, disclosure_type, is_political_donation
+               industry, donor_type, disclosure_type, is_political_donation, election
         FROM ext_donations
         WHERE jurisdiction = ?
           AND recipient_party IS NOT NULL AND recipient_party != ''
@@ -249,6 +338,15 @@ def main() -> None:
                 dropped_types[r["disclosure_type"]] += 1
             else:
                 kept.append(r)
+        rows = kept
+
+    # NT publishes an election return and an annual return covering the same
+    # gifts, so the election-tagged copies are dropped (measured 2026-09-02:
+    # 307 of 879 NT election rows repeat a non-election row donor-for-dollar).
+    dropped_election = 0
+    if cfg.get("drop_election_rows"):
+        kept = [r for r in rows if not r["election"]]
+        dropped_election = len(rows) - len(kept)
         rows = kept
 
     fys = sorted({r["financial_year"] for r in rows if r["financial_year"]})
@@ -388,6 +486,10 @@ def main() -> None:
     ]
     for t in cfg["drop_disclosure_types"]:
         exclusions.append(f"disclosure_type='{t}' rows ({dropped_types.get(t, 0)} rows)")
+    if cfg.get("drop_election_rows"):
+        exclusions.append(
+            "gifts tagged to an election return, which repeat the same gifts in the "
+            f"annual returns ({dropped_election} rows)")
 
     coverage = (
         f"financial years {fys[0]} to {fys[-1]}" if fys else "no dated rows"
@@ -418,6 +520,7 @@ def main() -> None:
             "rows_excluded_public_funding": excluded["public_funding"],
             "rows_excluded_party_internal": excluded["party_internal"],
             "rows_dropped_by_disclosure_type": dict(dropped_types),
+            "rows_dropped_election_duplicates": dropped_election or None,
             "political_donation_flag": flag_counts if jur == "qld" else None,
             "donors_skipped_other_floor": skipped_other,
             "donor_nodes": len(picked),
