@@ -25,6 +25,7 @@
   --bronze-ink:  #8A5A12;
   --bronze:      #A0761B;
   --bronze-wash: rgba(160, 118, 27, 0.16);
+  --bronze-rule: rgba(160, 118, 27, 0.55);  /* link underlines: present, not heavy */
 
   --danger: #A4262C;
   --chart-mark: var(--bronze);
@@ -113,9 +114,10 @@ a.visually-hidden:focus-visible {
 
 a, button.link {
   color: var(--ink); text-decoration: underline;
-  text-decoration-color: var(--bronze-ink); text-underline-offset: 3px;
+  text-decoration-color: var(--bronze-rule); text-underline-offset: 3px;
   text-decoration-thickness: 1.5px;
 }
+a:hover { text-decoration-color: var(--bronze-ink); }
 a:hover { color: var(--bronze-ink); }
 /* Link-styled buttons hold their ink on hover — the affordance is the
    underline firming up, not a colour swap. */
