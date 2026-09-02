@@ -58,8 +58,10 @@ Embed notes for subject pages:
   routes are emitted with a leading `/`.
 - Interactions in full chrome: click a node (info card), click a flow line
   (edge card with a year-scoped search trigger), find-in-map (prefix-fuzzy),
-  and a year-range scrub that filters flows by [firstYear, lastYear] overlap
-  without moving the camera.
+  and a year-range scrub that re-sums every node, flow and card from the
+  file's per-year cells (`byYear`, see `scripts/export_money_graph.py`)
+  without moving the camera; a file without cells falls back to hiding
+  flows whose lifetime span misses the window.
 - Test bed: `/map.html?focus=party:Labor&chrome=mini`.
 
 ## Semantic zoom
@@ -162,6 +164,12 @@ rules — public funding, internal party transfers etc.):
 ```sh
 ssh desktop python3 - < ../scripts/export_money_graph.py > public/graph/money.json
 ```
+
+Every node and edge carries `byYear` (`{year: [dollars, donations]}`, keyed by
+the first year of the financial year, so 2024 is 2024-25) and, where rows had
+no year at all, an `undated` cell. `total`, `count`, `firstYear` and `lastYear`
+are the cells summed, and the scrub's `windowFigures` re-sums them for any
+window; the smoke test checks that they agree.
 
 State commission files share the shape and load through the same
 `mountMoneyMap(container, dataUrl)`; the portal switches between them

@@ -34,6 +34,14 @@ export { buildDegrees, formatMoney, radiusFor, shortLabel } from './map-types.ts
 export { CLUSTER_COLOURS, clusterColour } from './palette.ts'
 export { webglAvailable }
 
+/**
+ * One year's slice of a node or flow: [dollars, donations]. `byYear` keys it
+ * by the first year of the financial year (2023 for 2023-24; election returns
+ * by their polling year); `undated` is the remainder with no year at all.
+ * The cells sum to `total` and `count`, so a year window re-sums the lot.
+ */
+export type YearCell = [dollars: number, count: number]
+
 /** One node of the exported money.json graph. */
 export type MoneyNode = {
   id: string
@@ -46,6 +54,8 @@ export type MoneyNode = {
   count: number
   firstYear: number | null
   lastYear: number | null
+  byYear?: Record<string, YearCell>
+  undated?: YearCell
 }
 
 export type MoneyEdge = {
@@ -55,6 +65,8 @@ export type MoneyEdge = {
   count: number
   firstYear: number | null
   lastYear: number | null
+  byYear?: Record<string, YearCell>
+  undated?: YearCell
 }
 
 export type MoneyGraph = {
@@ -103,6 +115,63 @@ function yearSpan(first: number | null, last: number | null): string {
   return first === last ? `${first}` : `${first}–${last}`
 }
 
+const toMapNode = (n: MoneyNode): MapNode => ({
+  id: n.id,
+  label: n.label,
+  group: n.group,
+  weight: n.total / WEIGHT_SCALE,
+  kind: n.kind,
+  industry: n.industry,
+  total: n.total,
+  count: n.count,
+  firstYear: n.firstYear,
+  lastYear: n.lastYear,
+  ...(n.colour ? { colour: n.colour } : {}),
+})
+
+const toMapEdge = (e: MoneyEdge): MapEdge => ({
+  source: e.source,
+  target: e.target,
+  label: formatMoney(e.total),
+  weight: e.total / WEIGHT_SCALE,
+  total: e.total,
+  count: e.count,
+  firstYear: e.firstYear,
+  lastYear: e.lastYear,
+})
+
+type YearFigures = {
+  total: number
+  count: number
+  firstYear: number | null
+  lastYear: number | null
+  byYear?: Record<string, YearCell>
+  undated?: YearCell
+}
+
+/**
+ * A node's or flow's figures inside a year window: its per-year cells in
+ * [lo, hi] re-summed, plus the undated remainder, which no window hides. The
+ * span narrows to the years that actually carry something. An older export
+ * without cells keeps its lifetime figures untouched. Pure, for the smoke test.
+ */
+export function windowFigures<T extends YearFigures>(x: T, lo: number, hi: number): T {
+  if (!x.byYear) return x
+  let total = x.undated?.[0] ?? 0
+  let count = x.undated?.[1] ?? 0
+  let firstYear: number | null = null
+  let lastYear: number | null = null
+  for (const [key, [dollars, n]] of Object.entries(x.byYear)) {
+    const year = Number(key)
+    if (year < lo || year > hi) continue
+    total += dollars
+    count += n
+    if (firstYear === null || year < firstYear) firstYear = year
+    if (lastYear === null || year > lastYear) lastYear = year
+  }
+  return { ...x, total, count, firstYear, lastYear }
+}
+
 /**
  * The exported graph -> the engine's shape. Pure, so the smoke test can run
  * it (and the force sim on its output) in Node.
@@ -132,31 +201,8 @@ export function buildGraph(raw: MoneyGraph): {
     })
   }
 
-  const nodes: MapNode[] = raw.nodes.map((n) => ({
-    id: n.id,
-    label: n.label,
-    group: n.group,
-    weight: n.total / WEIGHT_SCALE,
-    kind: n.kind,
-    industry: n.industry,
-    total: n.total,
-    count: n.count,
-    firstYear: n.firstYear,
-    lastYear: n.lastYear,
-    ...(n.colour ? { colour: n.colour } : {}),
-  }))
-
-  const edges: MapEdge[] = raw.edges.map((e) => ({
-    source: e.source,
-    target: e.target,
-    label: formatMoney(e.total),
-    weight: e.total / WEIGHT_SCALE,
-    total: e.total,
-    count: e.count,
-    firstYear: e.firstYear,
-    lastYear: e.lastYear,
-  }))
-
+  const nodes = raw.nodes.map(toMapNode)
+  const edges = raw.edges.map(toMapEdge)
   return { nodes, edges, groupStyles, degrees: buildDegrees(edges) }
 }
 
@@ -400,6 +446,16 @@ export async function mountMoneyMap(
   let yearLo = yearMin
   let yearHi = yearMax
 
+  /**
+   * The year window's reading of the file. Everything the reader can see -
+   * the scene, the cards, the words block - comes from here, so a scrub
+   * step re-sums every figure instead of only hiding whole flows. With the
+   * thumbs at the ends it is the file itself; `span` names the window
+   * otherwise, for copy that has to say which years a figure covers.
+   */
+  type WindowView = { nodes: Map<string, MoneyNode>; edges: MoneyEdge[]; span: string | null }
+  let view: WindowView = { nodes: byId, edges: raw.edges, span: null }
+
   // --- DOM scaffolding -------------------------------------------------
   const canvas = el('canvas', 'mm-canvas', container)
   canvas.tabIndex = 0
@@ -479,26 +535,39 @@ export async function mountMoneyMap(
 
   let fitSig = ''
   const pushData = ({ keepFocus = false } = {}) => {
-    // Time scrub: an edge is in the window when its span overlaps [lo, hi];
-    // a donor stays visible only while at least one of its flows does.
-    // Parties always anchor the centre. Undated flows never disappear.
+    // Time scrub: every node and flow is re-summed from its per-year cells
+    // for [lo, hi], so the scene, the cards and the words block all read the
+    // same years the scrub shows. A flow with nothing in the window drops
+    // out; a donor stays visible only while at least one of its flows does.
+    // Parties always anchor the centre. Undated flows never disappear, and an
+    // older file without cells falls back to the lifetime span overlapping
+    // the window.
     const scrubbed = yearLo > yearMin || yearHi < yearMax
-    const inWindow = (e: MapEdge) =>
+    const inWindow = (e: MoneyEdge) =>
       !scrubbed ||
-      ((e.firstYear ?? yearMin) <= yearHi && (e.lastYear ?? yearMax) >= yearLo)
-    const windowEdges = graph.edges.filter(inWindow)
+      (e.byYear
+        ? e.total > 0
+        : (e.firstYear ?? yearMin) <= yearHi && (e.lastYear ?? yearMax) >= yearLo)
+    const windowNodes = scrubbed ? raw.nodes.map((n) => windowFigures(n, yearLo, yearHi)) : raw.nodes
+    const windowEdges = (scrubbed ? raw.edges.map((e) => windowFigures(e, yearLo, yearHi)) : raw.edges)
+      .filter(inWindow)
+    view = {
+      nodes: scrubbed ? new Map(windowNodes.map((n) => [n.id, n])) : byId,
+      edges: windowEdges,
+      span: scrubbed ? yearSpan(yearLo, yearHi) : null,
+    }
     const activeDonors = new Set(windowEdges.map((e) => e.source))
-    const visibleNodes = graph.nodes.filter((n) => {
+    const visibleNodes = windowNodes.filter((n) => {
       if (n.group === 'parties') return true
       if (activeGroup !== null && n.group !== activeGroup) return false
       return !scrubbed || activeDonors.has(n.id)
     })
     const visibleIds = new Set(visibleNodes.map((n) => n.id))
-    const visibleEdges = windowEdges.filter(
-      (e) => visibleIds.has(e.source) && visibleIds.has(e.target),
-    )
+    const visibleEdges = windowEdges
+      .filter((e) => visibleIds.has(e.source) && visibleIds.has(e.target))
+      .map(toMapEdge)
     const data: EngineData = {
-      nodes: visibleNodes,
+      nodes: visibleNodes.map(toMapNode),
       edges: visibleEdges,
       groupStyles: graph.groupStyles,
       degrees: buildDegrees(visibleEdges),
@@ -519,8 +588,26 @@ export async function mountMoneyMap(
       engine.setInsets(measureInsets())
       engine.fit(!firstFit)
     }
-    if (selectedId && !visibleIds.has(selectedId)) setSelection(null)
-    if (selectedEdge && !visibleEdges.includes(selectedEdge)) setEdgeSelection(null)
+    // The open card follows the window: re-drawn in place with the figures
+    // the scene now shows, or closed when its subject left the window. The
+    // engine's flow objects are rebuilt each push, so a held flow is found
+    // again by its ends; a folded cluster's flow is the engine's own and is
+    // released, as before.
+    if (selectedId) {
+      if (visibleIds.has(selectedId)) refreshCard()
+      else setSelection(null)
+    } else if (selectedEdge) {
+      const held = selectedEdge
+      const again = held.hub
+        ? undefined
+        : visibleEdges.find((e) => e.source === held.source && e.target === held.target)
+      if (again) {
+        selectedEdge = again
+        refreshCard()
+      } else {
+        setEdgeSelection(null)
+      }
+    }
     // The layout re-settles around whatever survived the window, so the node
     // the reader is holding can drift out of frame - on an entry page's small
     // map, that is the whole subject walking off. Hold it, without refitting:
@@ -645,10 +732,13 @@ export async function mountMoneyMap(
     // twenty-odd rows of an open card rather than after them. Everything here
     // is absolutely positioned, so nothing moves on screen.
     container.insertBefore(scrub, card)
+    // The thumbs read by the first year of each financial year, as the
+    // returns are filed and as every card's span reads.
+    scrub.title = 'Financial years, by the year each begins: 2024 is 2024–25'
     const label = el('div', 'mm-scrub-label', scrub)
     if (!compactScrub) {
       const caption = el('span', '', label)
-      caption.textContent = 'YEARS'
+      caption.textContent = 'FINANCIAL YEARS'
     }
     const years = el('span', 'mm-scrub-years', label)
     // Compact: both thumbs on one rail, with the window drawn between them.
@@ -739,9 +829,9 @@ export async function mountMoneyMap(
   /** The industry that gave a party the most, for its ask-trigger. */
   const topIndustryOf = (partyId: string): string | null => {
     const sums = new Map<string, number>()
-    for (const e of raw.edges) {
+    for (const e of view.edges) {
       if (e.target !== partyId) continue
-      const donor = byId.get(e.source)
+      const donor = view.nodes.get(e.source)
       if (!donor || donor.industry === 'other') continue
       const industry = donor.industry.replace(/_/g, ' ')
       sums.set(industry, (sums.get(industry) ?? 0) + e.total)
@@ -778,19 +868,24 @@ export async function mountMoneyMap(
     total.textContent = formatMoney(node.total)
     const sub = el('div', 'mm-card-sub', card)
     const span = yearSpan(node.firstYear, node.lastYear)
-    sub.textContent = node.kind === 'party'
-      ? `received across ${node.count.toLocaleString()} receipts · ${span}`
-      : `given across ${node.count.toLocaleString()} donations · ${span}`
+    // Inside a year window the figures are the window's, and the span is
+    // the years within it that carry anything; a subject with nothing there
+    // says so rather than showing an empty zero.
+    sub.textContent = node.count === 0 && view.span
+      ? `nothing disclosed in ${view.span}`
+      : node.kind === 'party'
+        ? `received across ${node.count.toLocaleString()} receipts · ${span}`
+        : `given across ${node.count.toLocaleString()} donations · ${span}`
 
     const listTitle = el('div', 'mm-legend-title', card)
     const list = el('ul', 'mm-rows', card)
     if (node.kind === 'donor') {
       listTitle.textContent = 'Where it went'
-      const out = raw.edges
+      const out = view.edges
         .filter((e) => e.source === node.id)
         .sort((a, b) => b.total - a.total)
       for (const edge of out) {
-        const party = byId.get(edge.target)
+        const party = view.nodes.get(edge.target)
         if (!party) continue
         row(
           list,
@@ -814,12 +909,12 @@ export async function mountMoneyMap(
       trigger(card, webSearch(node.label), 'Search the web ↗', true, true)
     } else {
       listTitle.textContent = 'Top donors shown on the map'
-      const incoming = raw.edges
+      const incoming = view.edges
         .filter((e) => e.target === node.id)
         .sort((a, b) => b.total - a.total)
         .slice(0, 15)
       for (const edge of incoming) {
-        const donor = byId.get(edge.source)
+        const donor = view.nodes.get(edge.source)
         if (!donor) continue
         row(
           list,
@@ -853,7 +948,7 @@ export async function mountMoneyMap(
    * source is `hub:<group>`, so the detail comes from the raw edges here.
    */
   const renderHubFlowCard = (edge: MapEdge, group: string) => {
-    const party = byId.get(edge.target)
+    const party = view.nodes.get(edge.target)
     if (!party) return
     card.innerHTML = ''
     const close = el('button', 'mm-card-close', card)
@@ -881,12 +976,12 @@ export async function mountMoneyMap(
     const listTitle = el('div', 'mm-legend-title', card)
     listTitle.textContent = 'Largest donors in this flow'
     const list = el('ul', 'mm-rows', card)
-    const flows = raw.edges
-      .filter((e) => e.target === party.id && byId.get(e.source)?.group === group)
+    const flows = view.edges
+      .filter((e) => e.target === party.id && view.nodes.get(e.source)?.group === group)
       .sort((a, b) => b.total - a.total)
       .slice(0, 12)
     for (const flow of flows) {
-      const donor = byId.get(flow.source)
+      const donor = view.nodes.get(flow.source)
       if (!donor) continue
       row(list, style.colour, donor.label, flow.total, yearSpan(flow.firstYear, flow.lastYear),
         () => setSelection(donor.id, { user: true }))
@@ -908,8 +1003,8 @@ export async function mountMoneyMap(
       renderHubFlowCard(edge, edge.hub)
       return
     }
-    const donor = byId.get(edge.source)
-    const party = byId.get(edge.target)
+    const donor = view.nodes.get(edge.source)
+    const party = view.nodes.get(edge.target)
     if (!donor || !party) return
     card.innerHTML = ''
     const close = el('button', 'mm-card-close', card)
@@ -1012,6 +1107,26 @@ export async function mountMoneyMap(
   }
 
   /**
+   * Re-draw the open card from the current window, in place: the figures the
+   * scene now shows, the reader's scroll position kept, and no focus change,
+   * since a scrub step lands mid-drag on a thumb. A held flow is re-lit too,
+   * as the engine keys emphasis by the flow's label and the label just moved.
+   */
+  const refreshCard = () => {
+    const scrollTop = card.scrollTop
+    if (selectedId) {
+      const node = view.nodes.get(selectedId)
+      if (!node) return
+      renderCard(node)
+      words.select(node, card, view)
+    } else if (selectedEdge) {
+      engine.setEmphasis({ selectedId: null, pathEdges: [selectedEdge], pathFrom: null })
+      renderEdgeCard(selectedEdge)
+    }
+    card.scrollTop = scrollTop
+  }
+
+  /**
    * Select a node. `user: true` marks a reader-initiated selection (a click,
    * Enter, the find box, a card row) - only those reach opts.onSelect; the
    * focus seed, handle.select and filter-driven clears stay silent.
@@ -1019,7 +1134,7 @@ export async function mountMoneyMap(
   function setSelection(id: string | null, { user = false } = {}) {
     selectedId = id
     selectedEdge = null
-    const node = id ? byId.get(id) ?? null : null
+    const node = id ? view.nodes.get(id) ?? null : null
     engine.setEmphasis({ selectedId: id, pathEdges: null, pathFrom: null })
     if (node) {
       renderCard(node)
@@ -1037,7 +1152,7 @@ export async function mountMoneyMap(
       card.innerHTML = ''
       engine.setInsets(chromeInsets())
     }
-    words.select(node, card)
+    words.select(node, card, view)
     if (user) opts.onSelect?.(node)
   }
 

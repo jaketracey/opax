@@ -431,6 +431,12 @@ and TAS's whole register is only $1.5m); VIC and TAS `loan` rows and WA
 annual returns list receipts of any kind, including public funding) and NT election-return
 rows (which repeat the annual returns) are dropped.
 
+Since 2026-09-02 every node and edge in these files and in `money.json` also carries
+`byYear` (`{year: [dollars, donations]}`, keyed by the first year of the financial year)
+plus an `undated` cell for rows with no year, so the portal's year scrub re-sums totals,
+counts and spans for the window instead of only hiding flows whose lifetime span misses
+it. The federal file has 20 undated rows ($92.7k); QLD 20; VIC and TAS none.
+
 Tasmania's file is small on purpose -- 220 usable rows over two financial years -- because
 the scheme itself only started on 1 July 2025. The map and ledger carry that in
 `meta.threshold` and the front-page caption says it in words, so a thin map reads as a

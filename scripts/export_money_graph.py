@@ -7,7 +7,8 @@ Run on the box that holds the database (read-only; never locks the file):
 
 Produces a JSON graph of donor -> party flows:
   nodes: the ~11 canonical parties + the top N donors by lifetime total
-  edges: donor->party aggregates (total dollars, donation count, year span)
+  edges: donor->party aggregates (total dollars, donation count, year span,
+         and the per-year cells behind them)
 
 Methodology / exclusion rules (all documented in the output's `meta` block):
 
@@ -52,6 +53,11 @@ name, and by-election events ("Wentworth by-election") carry no digits at all.
 the named by-elections, so those rows contribute to firstYear/lastYear instead
 of silently dropping out. Rows still without a year are counted in
 meta.rows_without_year.
+
+Every node and edge also carries `byYear`: {year: [dollars, count]} keyed by
+that same first year, plus an `undated` cell for the rows without one, so the
+portal's year scrub can re-sum totals, counts and spans for any window
+instead of only testing whether a lifetime span overlaps it.
 """
 
 import json
@@ -164,6 +170,34 @@ def year_of(fy: str | None) -> int | None:
     return BY_ELECTION_YEAR.get(fy.strip().lower())
 
 
+def year_cells() -> dict:
+    """The per-year tally every aggregate carries: {year: [dollars, count]}
+    for the rows with a year, plus the undated remainder."""
+    return {"byYear": defaultdict(lambda: [0.0, 0]), "undated": [0.0, 0]}
+
+
+def tally(agg: dict, year: int | None, amount: float) -> None:
+    """Add one row to an aggregate's total, count and per-year cell."""
+    agg["total"] += amount
+    agg["count"] += 1
+    cell = agg["byYear"][year] if year else agg["undated"]
+    cell[0] += amount
+    cell[1] += 1
+
+
+def year_fields(agg: dict) -> dict:
+    """firstYear/lastYear and the per-year map behind them (meta.by_year)."""
+    years = sorted(agg["byYear"])
+    out = {
+        "firstYear": years[0] if years else None,
+        "lastYear": years[-1] if years else None,
+        "byYear": {str(y): [round(agg["byYear"][y][0]), agg["byYear"][y][1]] for y in years},
+    }
+    if agg["undated"][1]:
+        out["undated"] = [round(agg["undated"][0]), agg["undated"][1]]
+    return out
+
+
 def load_canonical(db) -> tuple[dict, dict]:
     """(alias_raw -> entity_id, entity_id -> {name, kind}) from the resolver tables.
 
@@ -235,25 +269,18 @@ def main() -> None:
                 "names": defaultdict(float),
                 "total": 0.0,
                 "count": 0,
-                "years": [],
+                **year_cells(),
                 "industries": defaultdict(float),
-                "parties": defaultdict(lambda: {"total": 0.0, "count": 0, "years": []}),
+                "parties": defaultdict(lambda: {"total": 0.0, "count": 0, **year_cells()}),
             }
         amt = float(r["amount"])
         d["names"][name] += amt
-        d["total"] += amt
-        d["count"] += 1
         y = year_of(r["financial_year"])
-        if y:
-            d["years"].append(y)
-        else:
+        if not y:
             rows_without_year += 1
+        tally(d, y, amt)
         d["industries"][r["industry"] or "other"] += amt
-        p = d["parties"][r["party"]]
-        p["total"] += amt
-        p["count"] += 1
-        if y:
-            p["years"].append(y)
+        tally(d["parties"][r["party"]], y, amt)
 
     # Rank donors; rule 5 for industry-less donors.
     def dominant_industry(d: dict) -> str:
@@ -285,17 +312,12 @@ def main() -> None:
             break
 
     # Party aggregates over the FULL cleaned row set (not just top donors).
-    party_totals = defaultdict(lambda: {"total": 0.0, "count": 0, "years": []})
+    party_totals = defaultdict(lambda: {"total": 0.0, "count": 0, **year_cells()})
     for r in rows:
         name = (r["donor_name"] or "").strip()
         if PUBLIC_FUNDING_RE.search(name):
             continue  # public funding inflates party totals misleadingly
-        pt = party_totals[r["party"]]
-        pt["total"] += float(r["amount"])
-        pt["count"] += 1
-        y = year_of(r["financial_year"])
-        if y:
-            pt["years"].append(y)
+        tally(party_totals[r["party"]], year_of(r["financial_year"]), float(r["amount"]))
 
     nodes = []
     edges = []
@@ -309,8 +331,7 @@ def main() -> None:
             "colour": PARTY_COLOURS.get(party, "#8A8F98"),
             "total": round(pt["total"]),
             "count": pt["count"],
-            "firstYear": min(pt["years"]) if pt["years"] else None,
-            "lastYear": max(pt["years"]) if pt["years"] else None,
+            **year_fields(pt),
         })
 
     for d in picked:
@@ -337,8 +358,7 @@ def main() -> None:
             "group": CLUSTER_OF.get(ind, FALLBACK_CLUSTER),
             "total": round(d["total"]),
             "count": d["count"],
-            "firstYear": min(d["years"]) if d["years"] else None,
-            "lastYear": max(d["years"]) if d["years"] else None,
+            **year_fields(d),
             "aliases": others,
         })
         for party, p in sorted(d["parties"].items(), key=lambda kv: -kv[1]["total"]):
@@ -347,8 +367,7 @@ def main() -> None:
                 "target": f"party:{party}",
                 "total": round(p["total"]),
                 "count": p["count"],
-                "firstYear": min(p["years"]) if p["years"] else None,
-                "lastYear": max(p["years"]) if p["years"] else None,
+                **year_fields(p),
             })
 
     out = {
@@ -372,6 +391,12 @@ def main() -> None:
                 "financial_year is the AEC event name on election returns; the first 4-digit "
                 "year is used, and named by-elections fall back to their polling year "
                 "(Braddon/Wentworth 2018, Eden-Monaro 2020, Fadden 2023)."
+            ),
+            "by_year": (
+                "byYear maps the first year of each financial year (2023 for 2023-24; "
+                "election returns by polling year) to [dollars, donations] for that node "
+                "or flow; undated holds the rows with no year. The cells sum to total and "
+                "count up to rounding, so a year window can re-sum every figure."
             ),
             "exclusions": [
                 "rows without a canonical party recipient (receipts of unions/associated entities)",

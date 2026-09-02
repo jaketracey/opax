@@ -17,7 +17,7 @@
 // once, lazily; if it fails the map keeps working exactly as before.
 // ---------------------------------------------------------------------------
 
-import type { MoneyGraph, MoneyNode } from './index.ts'
+import type { MoneyEdge, MoneyGraph, MoneyNode } from './index.ts'
 import type { KnowledgeMapEngine } from './map3d-engine.ts'
 import { formatMoney } from './map-types.ts'
 
@@ -226,12 +226,20 @@ export type WordsLayerContext = {
   routeBase: string
 }
 
+/**
+ * The map's year window as the words block sees it: the flows re-summed for
+ * the window (the dollars beside each debate), and the window's name when
+ * the thumbs are off the ends, so the caption can say which years the
+ * dollars cover. The speech shares themselves are not windowed.
+ */
+export type WordsView = { edges: MoneyEdge[]; span: string | null }
+
 export type WordsLayer = {
   /**
    * A node was selected (or the selection cleared). With a node and its
    * freshly rendered card, the words block joins the card; the halo follows.
    */
-  select(node: MoneyNode | null, card: HTMLElement): void
+  select(node: MoneyNode | null, card: HTMLElement, view: WordsView): void
   /** A flow was selected (or cleared) - the halo reads the donor's industry. */
   selectEdge(edge: { source: string; target: string } | null): void
   /** The legend isolated an industry cluster (or released it). */
@@ -399,13 +407,14 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
   }
 
   /** "What they talk about": the debates the party's funders' industries map onto. */
-  const renderPartyBlock = (host: HTMLElement, party: MoneyNode, m: Matrix) => {
+  const renderPartyBlock = (host: HTMLElement, party: MoneyNode, m: Matrix, view: WordsView) => {
     const name = party.label
     if (!m.parties.includes(name)) return
     // Join: flows into this party -> donor industries -> topics, with the
-    // dollars from each topic's industries kept beside the share.
+    // dollars from each topic's industries kept beside the share. The flows
+    // are the window's, so the dollars follow the scrub; the shares do not.
     const money = new Map<string, number>()
-    for (const e of raw.edges) {
+    for (const e of view.edges) {
       if (e.target !== party.id) continue
       const donor = byId.get(e.source)
       const slug = donor ? INDUSTRY_TOPIC[donor.industry] : undefined
@@ -432,8 +441,8 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
       a.href = topicUrl(row.slug)
       a.title = `${name}: ${row.count.toLocaleString('en-AU')} of ` +
         `${(m.totals[row.slug] ?? 0).toLocaleString('en-AU')} labelled ${topicPhrase(row.slug)} ` +
-        `speeches so far; ${formatMoney(row.dollars)} disclosed from the matching donors. ` +
-        'Opens the topic page.'
+        `speeches so far; ${formatMoney(row.dollars)} disclosed from the matching donors` +
+        `${view.span ? ` in ${view.span}` : ''}. Opens the topic page.`
       const label = el('span', 'mm-words-name', a)
       label.textContent = TOPIC_NAMES[row.slug] ?? row.slug
       const track = el('span', 'mm-words-track', a)
@@ -448,12 +457,16 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
       dollars.textContent = formatMoney(row.dollars)
     }
     const fine = el('p', 'mm-words-fine', host)
-    fine.textContent = `${name}'s share of each debate's labelled speeches so far, beside what ` +
-      'it received from donors in the matching industry. Shown together for comparison, ' +
-      'not as cause.'
+    fine.textContent = view.span
+      ? `${name}'s share of each debate's labelled speeches so far, across all years, beside ` +
+        `what it received from donors in the matching industry in ${view.span}. Shown ` +
+        'together for comparison, not as cause.'
+      : `${name}'s share of each debate's labelled speeches so far, beside what ` +
+        'it received from donors in the matching industry. Shown together for comparison, ' +
+        'not as cause.'
   }
 
-  const renderInto = (card: HTMLElement, node: MoneyNode) => {
+  const renderInto = (card: HTMLElement, node: MoneyNode, view: WordsView) => {
     // The block lands between the flows list and the card's triggers, so the
     // card reads money, then words, then what to ask next.
     const host = document.createElement('div')
@@ -466,16 +479,16 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
       // A later selection has already replaced the card's contents.
       if (!host.isConnected) return
       if (node.kind === 'donor') renderDonorBlock(host, node, m)
-      else renderPartyBlock(host, node, m)
+      else renderPartyBlock(host, node, m, view)
       host.hidden = host.childElementCount === 0
     })
   }
 
   return {
-    select(node, card) {
+    select(node, card, view) {
       selected = node
       selectedEdgeDonor = null
-      if (node) renderInto(card, node)
+      if (node) renderInto(card, node, view)
       if (haloOn) withMatrix(applyHalo)
     },
     selectEdge(edge) {
