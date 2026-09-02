@@ -1641,7 +1641,7 @@ function ensureSpeakersDatalist() {
     document.body.appendChild(dl);
   });
 }
-for (const id of ["a-speaker", "f-speaker", "guided-speaker"]) {
+for (const id of ["a-speaker", "f-speaker"]) {
   $(id)?.addEventListener("focus", ensureSpeakersDatalist, { once: true });
 }
 
@@ -3911,7 +3911,7 @@ async function runSearch() {
   const q = $("search-input").value.trim();
   // Canonicalize the speaker box before currentFilters() reads it, writing the
   // resolved name back so the user sees what was actually filtered. Covers
-  // every entry path (submit, URL params, the guided card's requestSubmit).
+  // every entry path (submit, URL params).
   const fSpeaker = $("f-speaker");
   if (fSpeaker?.value.trim()) {
     const canon = await resolveSpeaker(fSpeaker.value);
@@ -3971,31 +3971,6 @@ $("search-form").addEventListener("submit", (e) => {
 });
 
 $("search-sort").addEventListener("change", () => renderResults(lastSearch.results));
-
-$("guided-go").addEventListener("click", () => {
-  const speaker = $("guided-speaker").value.trim();
-  const topic = $("guided-topic").value.trim();
-  if (!speaker && !topic) return;
-  $("f-speaker").value = speaker;
-  $("search-input").value = topic;
-  $("search-form").requestSubmit();
-});
-// The guided card is prose, not a <form>, so Enter and Go's disabled state
-// (both blanks empty) are wired by hand.
-function updateGuidedGo() {
-  $("guided-go").disabled =
-    !$("guided-speaker").value.trim() && !$("guided-topic").value.trim();
-}
-for (const id of ["guided-speaker", "guided-topic"]) {
-  $(id).addEventListener("input", updateGuidedGo);
-  $(id).addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      $("guided-go").click();
-    }
-  });
-}
-updateGuidedGo();
 
 $("search-copylink").addEventListener("click", (e) => {
   // Swap only the label span so the "Copied" feedback keeps the icon.
