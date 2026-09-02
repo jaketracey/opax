@@ -158,7 +158,7 @@ financial year and no gift date, so `date_made`/`date_received` are NULL for all
 |---|---|
 | Endpoint | data.gov.au CKAN: `package_search?q=organization:ipea`; each quarter is a dataset with `YYYYqNN_dataextract[_transactional].csv` plus repayments / certifications / office-costs-by-state / adjustments CSVs (only the transaction file is loaded) |
 | Format | CSV, ~25-46K rows / 6-13 MB per quarter; columns incl. `UniqueId, ReportingPeriodId, FullNameWithTitle, Surname, FirstName, Party, StateOrTerritory, Electorate, Role, UserFirstName/UserSurname (traveller), HighLevelCategory, MajorSubCategory, MinorSubCategory, FromDate, ToDate, NumberNights, NightlyRate, Description, From/ToLocation, Amount, TripSequence, LegNumber, ReasonForTravel, PublishableNotes` |
-| Licence | **CC BY** (`license_id: cc-by` on all 37 datasets) |
+| Licence | **CC BY 3.0 AU** (`license_id: cc-by`, `license_title: Creative Commons Attribution 3.0 Australia` on the data.gov.au datasets; the CC BY 4.0 notice on ipea.gov.au covers the website, not the data) |
 | Coverage | 37 quarters, 2017Q02 (1 Apr 2017) to 2026Q02 (30 Jun 2026); the 2024 quarters tag their resources `.CSV` (leading dot), which the discovery filter now tolerates |
 | Cadence | quarterly, ~5-6 weeks after quarter end (2026Q02 published 2026-08-10) |
 | Pulled | **1,229,512 rows, $1,352.1m**; 708 distinct parliamentarians; `person_id` linked for 1,217,845 rows (99.1%) via `members` first+last name |

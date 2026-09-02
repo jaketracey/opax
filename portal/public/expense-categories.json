@@ -1,392 +1,393 @@
 {
-  "meta": {
-    "source": "Independent Parliamentary Expenses Authority, explanatory notes for parliamentarian expenditure",
-    "source_url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure",
-    "licence": "CC BY 4.0",
-    "licence_note": "The category names are the Independent Parliamentary Expenses Authority's own and are reproduced unchanged. The definitions here are written by OPAX from IPEA's explanatory notes and guidance, the Parliamentary Business Resources Act 2017, and the Department of Finance's Ministerial and Parliamentary Services pages, each cited above. IPEA material is licensed CC BY 4.0 with the attribution Independent Parliamentary Expenses Authority © Commonwealth of Australia. The expenditure figures on OPAX come from IPEA's quarterly reports published on data.gov.au, also CC BY.",
-    "updated": "2026-09-02"
+ "meta": {
+  "source": "Independent Parliamentary Expenses Authority, explanatory notes for parliamentarian expenditure",
+  "source_url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure",
+  "licence": "CC BY 3.0 AU",
+  "licence_note": "The category names are the Independent Parliamentary Expenses Authority's own and are reproduced unchanged. The definitions here are written by OPAX from IPEA's explanatory notes and guidance, the Parliamentary Business Resources Act 2017, and the Department of Finance's Ministerial and Parliamentary Services pages, each cited above. IPEA material is licensed CC BY 3.0 AU with the attribution Independent Parliamentary Expenses Authority © Commonwealth of Australia. The expenditure figures on OPAX come from IPEA's quarterly reports published on data.gov.au, also CC BY. The quarterly expenditure datasets on data.gov.au carry Creative Commons Attribution 3.0 Australia; the 4.0 licence on ipea.gov.au covers the website's own material, not the datasets.",
+  "updated": "2026-09-02",
+  "licence_url": "http://creativecommons.org/licenses/by/3.0/au/"
+ },
+ "groups": [
+  {
+   "id": "office",
+   "title": "The office and what goes out of it",
+   "blurb": "Electorate, ministerial and office holder offices, and the annual budget a parliamentarian draws on for printing, stationery, publications and communications. The budget for 2026-27 is $142,170.27 for a senator, and $177,627.12 plus $1.325 for each enrolled voter for a member of the House of Representatives."
   },
-  "groups": [
-    {
-      "id": "office",
-      "title": "The office and what goes out of it",
-      "blurb": "Electorate, ministerial and office holder offices, and the annual budget a parliamentarian draws on for printing, stationery, publications and communications. The budget for 2026-27 is $142,170.27 for a senator, and $177,627.12 plus $1.325 for each enrolled voter for a member of the House of Representatives."
-    },
-    {
-      "id": "staff",
-      "title": "Staff travel",
-      "blurb": "IPEA reports the travel costs of a parliamentarian's own employed staff against that parliamentarian. Staff salaries are not in these reports at all."
-    },
-    {
-      "id": "fares",
-      "title": "Flights and other scheduled transport",
-      "blurb": "Scheduled commercial transport, split between the parliamentarian's own fares and fares for family members travelling to accompany or join them."
-    },
-    {
-      "id": "cars",
-      "title": "Cars, taxis and parking",
-      "blurb": "IPEA groups all of these under a heading it also calls other car costs."
-    },
-    {
-      "id": "allowances",
-      "title": "Allowances paid at a set rate",
-      "blurb": "These are allowances, not reimbursements of receipts. The rates are set by the Remuneration Tribunal and paid on a per night or per kilometre basis."
-    },
-    {
-      "id": "purpose",
-      "title": "Travel purposes, not expense types",
-      "blurb": "IPEA records why a trip happened against unscheduled transport, charter and international travel lines. These labels answer what the travel was for, not what was bought. The first four are the kinds of parliamentary business set out in the Parliamentary Business Resources Act 2017, which has applied since 1 January 2018; several of the others are purposes from the arrangements that preceded it."
-    },
-    {
-      "id": "opax",
-      "title": "Labels OPAX adds",
-      "blurb": "Two labels in the bar list are not IPEA's."
-    }
-  ],
-  "categories": [
-    {
-      "name": "Office Facilities",
-      "group": "office",
-      "text": "Costs of a parliamentarian's electorate, ministerial or office holder offices: furniture, equipment and storage, security, lease, power, cleaning, parking, PO boxes, repairs and maintenance, fixed line telephone systems, and privately leased satellite electorate offices for eligible members.",
-      "note": "IPEA aggregates these lines, and parliamentarians are not asked to certify the amounts because they may have limited knowledge or control over costs of this kind. That is why so much money arrives in so few lines.",
-      "source": "IPEA, Explanatory notes and Background on expenditure reporting",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Printing and Communications",
-      "group": "office",
-      "text": "Printing, production, distribution and communications, for both printed and electronic material, claimed against the parliamentarian's annual budget for office expenses.",
-      "note": "The budget is capped and cannot be used for material that solicits a vote for another person, seeks subscriptions, donations or party memberships, or gives instructions on how to complete a ballot paper.",
-      "source": "IPEA, Explanatory notes and Annual budget for office expenses",
-      "url": "https://www.ipea.gov.au/office-expenses/office-expenses-budget/annual-budget-office-expenses"
-    },
-    {
-      "name": "Additional Printing and Communications",
-      "group": "office",
-      "text": "Printing and communications reported under a separate additional heading, inside the same office administration group as the main printing and communications line.",
-      "note": "IPEA publishes no separate explanation for this label, so treat it as part of the same spending rather than a distinct kind of expense.",
-      "source": "IPEA, Explanatory notes (office administration); label not separately defined by IPEA",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Office Consumables and Services",
-      "group": "office",
-      "text": "Office stationery and supplies, including photocopier, printer and facsimile consumables, nationhood material, software and cloud based services, courier and freight, mobile office signage, data products and media monitoring services.",
-      "note": "Claimed against the same capped annual office expenses budget as printing and communications.",
-      "source": "IPEA, Explanatory notes (office administration)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Publications",
-      "group": "office",
-      "text": "Purchase of, or subscription for, printed and electronic publications for the office, and the associated service and administrative fees.",
-      "note": "This is what the office buys or subscribes to, not material the parliamentarian produces. Newsletters and the like sit under printing and communications.",
-      "source": "IPEA, Explanatory notes (office administration)",
-      "url": "https://www.ipea.gov.au/office-expenses/office-expenses-budget/publications-and-media-monitoring"
-    },
-    {
-      "name": "Specified Public Resources",
-      "group": "office",
-      "text": "Public resources the responsible Minister has determined the Commonwealth must provide, under subsection 33(2) of the Parliamentary Business Resources Act 2017.",
-      "note": "The label names a legal basis rather than a kind of purchase, so what it covers depends on the determination in force at the time.",
-      "source": "IPEA, Explanatory notes; Parliamentary Business Resources Act 2017 s 33",
-      "url": "https://www.legislation.gov.au/C2017A00037/latest/text"
-    },
-    {
-      "name": "Telecommunications - Usage",
-      "group": "office",
-      "text": "Office telephone and facsimile usage.",
-      "note": "",
-      "source": "IPEA, Explanatory notes (telecommunications)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Telecommunications - Residential - Official",
-      "group": "office",
-      "text": "Internet and telephone services at a parliamentarian's private residence provided as part of their remuneration, including installation, maintenance, rental, transfer, and call and data charges.",
-      "note": "This is a home connection paid for as part of the job, not office phone usage.",
-      "source": "IPEA, Explanatory notes (telecommunications)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Telephonic Services",
-      "group": "office",
-      "text": "Telephone services charged against the annual office expenses budget, which IPEA reports inside office administrative costs.",
-      "note": "IPEA publishes no separate explanation for this label. It sits alongside the additional telecommunications and ICT procured through the Department of Parliamentary Services.",
-      "source": "IPEA, Explanatory notes (office administration); label not separately defined by IPEA",
-      "url": "https://www.ipea.gov.au/office-expenses/office-management/ict-equipment-and-telecommunications"
-    },
-    {
-      "name": "Employee Costs",
-      "group": "staff",
-      "text": "Domestic and international travel expenses for the parliamentarian's employed staff, where the travel can be attributed to an individual employee.",
-      "note": "This is travel, not salary; staff pay does not appear in IPEA's expenditure reports at all. IPEA publishes it as an aggregate rather than naming employees, and in later reporting periods the same spending is labelled Domestic Travel and International Travel.",
-      "source": "IPEA, Explanatory notes (employee travel)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Domestic Travel",
-      "group": "staff",
-      "text": "Travel within Australia by the parliamentarian's employed staff, including travel allowance, motor vehicle allowance, scheduled fares, taxis, ride share, hire cars, tolls and parking.",
-      "note": "This is staff travel, not the parliamentarian's own, and it arrives as one aggregated total per reporting period rather than trip by trip, so a large figure here covers a whole office. Earlier reporting periods label the same spending Employee Costs.",
-      "source": "IPEA, Explanatory notes (employee travel)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "International Travel",
-      "group": "staff",
-      "text": "Overseas travel by the parliamentarian's employed staff, generally scheduled fares, meal and incidental allowances, passport costs and travel equipment allowances.",
-      "note": "IPEA aggregates these costs per trip rather than naming employees. Staff accommodation and meals overseas often cannot be attributed to an individual employee, so IPEA reports those with the parliamentarian's own international expenses instead.",
-      "source": "IPEA, Explanatory notes (employee travel)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Fares",
-      "group": "fares",
-      "text": "The parliamentarian's own domestic scheduled commercial transport: aircraft, bus, train or ferry.",
-      "note": "Where a trip has several legs, IPEA may report the cost of the whole trip against the first leg, so one line can cover more than one flight.",
-      "source": "IPEA, Explanatory notes (scheduled commercial transport)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Domestic Scheduled Fares",
-      "group": "fares",
-      "text": "Scheduled fares within Australia for a parliamentarian's spouse, nominee, dependent children or designated persons travelling to accompany or join them.",
-      "note": "Despite the plain name, IPEA reports this inside family travel, so it is not the parliamentarian's own fare. Theirs is under Fares.",
-      "source": "IPEA, Explanatory notes (family travel)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Scheduled Commercial Transport",
-      "group": "fares",
-      "text": "Scheduled fares for a parliamentarian's family member or nominee travelling to accompany or join them, the later label for the same family travel line.",
-      "note": "IPEA renamed this reporting category Family or nominee travel with effect from 1 July 2026.",
-      "source": "IPEA, Explanatory notes (family travel)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Special Charter",
-      "group": "fares",
-      "text": "Charter travel in special cases, such as where scheduled services were unavailable, approved by the Special Minister of State under the arrangements in force before 1 January 2018.",
-      "note": "One of the purposes IPEA recorded against charter transport before the Parliamentary Business Resources Act 2017 commenced.",
-      "source": "IPEA, Categories (unscheduled transport, pre-2018 note)",
-      "url": "https://www.ipea.gov.au/categories"
-    },
-    {
-      "name": "Cancelled Transport",
-      "group": "fares",
-      "text": "The cost of unscheduled transport that was booked and then cancelled.",
-      "note": "IPEA includes cancelled official travel arrangements in the transport figures, so a trip that never happened can still carry a cost.",
-      "source": "IPEA, Explanatory notes (unscheduled commercial transport)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "COMCAR",
-      "group": "cars",
-      "text": "Use of COMCAR, the Australian Government's car with driver service, run by the Department of Finance for parliamentarians, the Governor-General, the federal judiciary and international guests of government.",
-      "note": "Parliament House shuttle costs are left out because they are not attributed to individual parliamentarians, and COMCAR may not be used where a private-plated vehicle could reasonably be used instead.",
-      "source": "IPEA, Explanatory notes (other car costs); Department of Finance, COMCAR",
-      "url": "https://maps.finance.gov.au/comcar"
-    },
-    {
-      "name": "Private-Plated Vehicle",
-      "group": "cars",
-      "text": "A Commonwealth leased vehicle provided to a parliamentarian as part of their remuneration, together with its lease, insurance, maintenance and fuel.",
-      "note": "It is remuneration rather than a reimbursed expense. A parliamentarian may take an additional electorate allowance instead, currently $19,500 a year, and the vehicle must not be used for commercial purposes.",
-      "source": "IPEA, Explanatory notes (other car costs); Department of Finance, Private-plated vehicles",
-      "url": "https://maps.finance.gov.au/offices-resources-and-budgets/other-work-expenses-and-resources/private-plated-vehicles-parliamentarians"
-    },
-    {
-      "name": "Cabcharge",
-      "group": "cars",
-      "text": "Taxi fares paid with the Cabcharge card issued to a parliamentarian or to one of their staff.",
-      "note": "Cabcharge adds a service fee and a government levy may also apply; IPEA includes both in the reported cost of the trip.",
-      "source": "IPEA, Explanatory notes; IPEA, Cabcharge guidelines",
-      "url": "https://www.ipea.gov.au/travel/cabcharge"
-    },
-    {
-      "name": "Cabcharge / Other Car Costs",
-      "group": "cars",
-      "text": "Taxi and incidental transport costs for a parliamentarian's family member or nominee travelling to accompany or join them.",
-      "note": "IPEA reports this inside family travel, where taxi and incidental transport costs are grouped together, so it is family transport rather than the parliamentarian's own.",
-      "source": "IPEA, Explanatory notes (family travel)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Other Car Costs",
-      "group": "cars",
-      "text": "Car costs that do not fall under COMCAR, a private-plated vehicle, Cabcharge or parking.",
-      "note": "IPEA also uses other car costs as the name of the whole group these categories sit in, so the same words appear at two levels of the report.",
-      "source": "IPEA, Explanatory notes (other car costs)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Parking",
-      "group": "cars",
-      "text": "Car parking costs, reported by IPEA within other car costs.",
-      "note": "",
-      "source": "IPEA, Explanatory notes (other car costs)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Travel Allowance",
-      "group": "allowances",
-      "text": "An allowance for accommodation, meals and incidental expenses, paid for each night a parliamentarian stays somewhere in Australia that is not their home base.",
-      "note": "It is a set nightly rate fixed by the Remuneration Tribunal, not a reimbursement of receipts, and it is still paid at a lower non-commercial rate when the parliamentarian stays with family or friends.",
-      "source": "IPEA, Travel allowances; IPEA, Explanatory notes",
-      "url": "https://www.ipea.gov.au/travel/parliamentarian-travel/travel-allowances"
-    },
-    {
-      "name": "Parliamentary Travelling Allowance",
-      "group": "allowances",
-      "text": "A nightly allowance for a night spent away from home base, reported under IPEA's earlier travelling allowance heading.",
-      "note": "IPEA does not separately define this label. It carries the same substance as travel allowance under the naming used in earlier reporting periods.",
-      "source": "IPEA, Travel allowances (substance); label not separately defined by IPEA",
-      "url": "https://www.ipea.gov.au/travel/parliamentarian-travel/travel-allowances"
-    },
-    {
-      "name": "Canberra Daily Allowance",
-      "group": "allowances",
-      "text": "A daily allowance paid to eligible parliamentarians for time in Canberra, abolished on 23 February 2019.",
-      "note": "IPEA reports it inside travel allowance, so only a few historical lines still carry the name.",
-      "source": "IPEA, Categories (travel allowance note)",
-      "url": "https://www.ipea.gov.au/categories"
-    },
-    {
-      "name": "Daily Expense Allowance",
-      "group": "allowances",
-      "text": "A daily allowance for expenses, reported by IPEA under its travelling allowance heading.",
-      "note": "IPEA does not separately define this label and it appears on only a handful of lines.",
-      "source": "IPEA, Categories (travelling allowance); label not separately defined by IPEA",
-      "url": "https://www.ipea.gov.au/categories"
-    },
-    {
-      "name": "Private Vehicle Allowance",
-      "group": "allowances",
-      "text": "An allowance paid when a parliamentarian uses their own vehicle, rather than a private-plated vehicle, to travel between their home base and Canberra, for all or part of the journey.",
-      "note": "It covers fuel and other running costs at a set rate rather than reimbursing actual costs, and a Commonwealth provided private-plated vehicle does not count as a private vehicle.",
-      "source": "IPEA, Travel allowances (private vehicle allowance)",
-      "url": "https://www.ipea.gov.au/travel/parliamentarian-travel/travel-allowances"
-    },
-    {
-      "name": "Cancelled Accommodation",
-      "group": "allowances",
-      "text": "The cost of accommodation booked for official travel and then cancelled.",
-      "note": "IPEA includes cancelled official travel arrangements inside the travel allowance figures.",
-      "source": "IPEA, Explanatory notes and Categories (travel allowance)",
-      "url": "https://www.ipea.gov.au/categories"
-    },
-    {
-      "name": "Parliamentary Duties",
-      "group": "purpose",
-      "text": "Travel whose purpose was the parliamentarian's parliamentary duties, meaning activities that relate directly to their role as a member and that the Minister has determined to be parliamentary duties.",
-      "note": "This is a purpose, not an expense type. It is one of the four kinds of parliamentary business under the Parliamentary Business Resources Act 2017 and is recorded against unscheduled transport such as taxis, hire cars and charters.",
-      "source": "Parliamentary Business Resources Act 2017 s 6; IPEA, Explanatory notes",
-      "url": "https://www.legislation.gov.au/C2017A00037/latest/text"
-    },
-    {
-      "name": "Electorate Duties",
-      "group": "purpose",
-      "text": "Travel whose purpose was the parliamentarian's electorate duties, meaning activities that support or serve their constituents and that the Minister has determined to be electorate duties.",
-      "note": "A purpose rather than an expense type, recorded against unscheduled transport. Travel allowance for electorate duties outside the parliamentarian's own electorate is capped at ten nights a financial year.",
-      "source": "Parliamentary Business Resources Act 2017 s 6; IPEA, Travel allowances",
-      "url": "https://www.legislation.gov.au/C2017A00037/latest/text"
-    },
-    {
-      "name": "Party Political Duties",
-      "group": "purpose",
-      "text": "Travel whose purpose was the parliamentarian's party political duties, being the activities the Minister has determined to be party political duties.",
-      "note": "A purpose rather than an expense type. Travel allowance for party political duties away from Canberra is capped at ten nights a financial year.",
-      "source": "Parliamentary Business Resources Act 2017 s 6; IPEA, Travel allowances",
-      "url": "https://www.legislation.gov.au/C2017A00037/latest/text"
-    },
-    {
-      "name": "Official Duties",
-      "group": "purpose",
-      "text": "Travel whose purpose was the official duties of a parliamentarian who is an office holder or a Minister of State, meaning activities relating to that role.",
-      "note": "A purpose rather than an expense type, and available only to office holders and ministers.",
-      "source": "Parliamentary Business Resources Act 2017 s 6; IPEA, Explanatory notes",
-      "url": "https://www.legislation.gov.au/C2017A00037/latest/text"
-    },
-    {
-      "name": "Electorate",
-      "group": "purpose",
-      "text": "Charter and unscheduled travel within a parliamentarian's own electorate, under the rules in force before 1 January 2018.",
-      "note": "Then available to members of the House of Representatives representing large electorates, and to senators travelling in and for the service of their state or territory.",
-      "source": "IPEA, Categories (unscheduled transport, pre-2018 note)",
-      "url": "https://www.ipea.gov.au/categories"
-    },
-    {
-      "name": "Office Holder",
-      "group": "purpose",
-      "text": "Charter and unscheduled travel on official business by a relevant office holder, under the rules in force before 1 January 2018.",
-      "note": "A purpose recorded against charter transport, not a kind of expense.",
-      "source": "IPEA, Categories (unscheduled transport, pre-2018 note)",
-      "url": "https://www.ipea.gov.au/categories"
-    },
-    {
-      "name": "Leader of a Minority Party",
-      "group": "purpose",
-      "text": "Charter and unscheduled travel on official business by the leader of a minority party, under the rules in force before 1 January 2018.",
-      "note": "A purpose recorded against charter transport, not a kind of expense.",
-      "source": "IPEA, Categories (unscheduled transport, pre-2018 note)",
-      "url": "https://www.ipea.gov.au/categories"
-    },
-    {
-      "name": "Representing a Minister",
-      "group": "purpose",
-      "text": "Travel by a parliamentarian standing in for a minister.",
-      "note": "It appears both as one of the purposes for international travel and, before 1 January 2018, as a purpose for charter travel on official business.",
-      "source": "IPEA, Explanatory notes (international travel) and Categories",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Ministerial Visits",
-      "group": "purpose",
-      "text": "International travel for a ministerial visit by the Prime Minister or another minister of the government.",
-      "note": "One of the six purposes IPEA lists for parliamentarians' international travel, so the line records why the trip happened rather than what was bought.",
-      "source": "IPEA, Explanatory notes (international travel)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Official Visits",
-      "group": "purpose",
-      "text": "International travel for an official visit by a presiding officer, or by a parliamentarian representing a presiding officer.",
-      "note": "One of the six purposes IPEA lists for parliamentarians' international travel.",
-      "source": "IPEA, Explanatory notes (international travel)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Representing Australia",
-      "group": "purpose",
-      "text": "International travel by a parliamentarian representing the government or Australia.",
-      "note": "One of the six purposes IPEA lists for parliamentarians' international travel.",
-      "source": "IPEA, Explanatory notes (international travel)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Parliamentary Delegations",
-      "group": "purpose",
-      "text": "International travel on a parliamentary delegation approved by the presiding officers.",
-      "note": "Inter-Parliamentary Union and Commonwealth Parliamentary Association delegations are excluded from this category.",
-      "source": "IPEA, Explanatory notes (international travel)",
-      "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
-    },
-    {
-      "name": "Other",
-      "group": "opax",
-      "text": "Not an IPEA category. OPAX charts a parliamentarian's twelve largest categories and rolls everything else into this one line.",
-      "note": "The number in brackets is how many categories are inside it. Every one of them is defined on this page.",
-      "source": "OPAX",
-      "url": ""
-    },
-    {
-      "name": "Uncategorised",
-      "group": "opax",
-      "text": "Not an IPEA category. OPAX uses it for the rare published line that carries no category at all.",
-      "note": "",
-      "source": "OPAX",
-      "url": ""
-    }
-  ]
+  {
+   "id": "staff",
+   "title": "Staff travel",
+   "blurb": "IPEA reports the travel costs of a parliamentarian's own employed staff against that parliamentarian. Staff salaries are not in these reports at all."
+  },
+  {
+   "id": "fares",
+   "title": "Flights and other scheduled transport",
+   "blurb": "Scheduled commercial transport, split between the parliamentarian's own fares and fares for family members travelling to accompany or join them."
+  },
+  {
+   "id": "cars",
+   "title": "Cars, taxis and parking",
+   "blurb": "IPEA groups all of these under a heading it also calls other car costs."
+  },
+  {
+   "id": "allowances",
+   "title": "Allowances paid at a set rate",
+   "blurb": "These are allowances, not reimbursements of receipts. The rates are set by the Remuneration Tribunal and paid on a per night or per kilometre basis."
+  },
+  {
+   "id": "purpose",
+   "title": "Travel purposes, not expense types",
+   "blurb": "IPEA records why a trip happened against unscheduled transport, charter and international travel lines. These labels answer what the travel was for, not what was bought. The first four are the kinds of parliamentary business set out in the Parliamentary Business Resources Act 2017, which has applied since 1 January 2018; several of the others are purposes from the arrangements that preceded it."
+  },
+  {
+   "id": "opax",
+   "title": "Labels OPAX adds",
+   "blurb": "Two labels in the bar list are not IPEA's."
+  }
+ ],
+ "categories": [
+  {
+   "name": "Office Facilities",
+   "group": "office",
+   "text": "Costs of a parliamentarian's electorate, ministerial or office holder offices: furniture, equipment and storage, security, lease, power, cleaning, parking, PO boxes, repairs and maintenance, fixed line telephone systems, and privately leased satellite electorate offices for eligible members.",
+   "note": "IPEA aggregates these lines, and parliamentarians are not asked to certify the amounts because they may have limited knowledge or control over costs of this kind. That is why so much money arrives in so few lines.",
+   "source": "IPEA, Explanatory notes and Background on expenditure reporting",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Printing and Communications",
+   "group": "office",
+   "text": "Printing, production, distribution and communications, for both printed and electronic material, claimed against the parliamentarian's annual budget for office expenses.",
+   "note": "The budget is capped and cannot be used for material that solicits a vote for another person, seeks subscriptions, donations or party memberships, or gives instructions on how to complete a ballot paper.",
+   "source": "IPEA, Explanatory notes and Annual budget for office expenses",
+   "url": "https://www.ipea.gov.au/office-expenses/office-expenses-budget/annual-budget-office-expenses"
+  },
+  {
+   "name": "Additional Printing and Communications",
+   "group": "office",
+   "text": "The separate postage entitlement for an office holder, on top of the printing and communications budget every senator and member receives. Every line under it is a postage or distribution charge.",
+   "note": "Not a top-up of the standard budget. Bulk mail-outs are excluded from it.",
+   "source": "Department of Finance, Handbook for Opposition Office Holders (June 2012), section 3.4",
+   "url": "https://web.archive.org/web/20130428170247id_/http://maps.finance.gov.au/entitlements_handbooks/docs/Handbook_Opposition_Office_Holders.pdf"
+  },
+  {
+   "name": "Office Consumables and Services",
+   "group": "office",
+   "text": "Office stationery and supplies, including photocopier, printer and facsimile consumables, nationhood material, software and cloud based services, courier and freight, mobile office signage, data products and media monitoring services.",
+   "note": "Claimed against the same capped annual office expenses budget as printing and communications.",
+   "source": "IPEA, Explanatory notes (office administration)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Publications",
+   "group": "office",
+   "text": "Purchase of, or subscription for, printed and electronic publications for the office, and the associated service and administrative fees.",
+   "note": "This is what the office buys or subscribes to, not material the parliamentarian produces. Newsletters and the like sit under printing and communications.",
+   "source": "IPEA, Explanatory notes (office administration)",
+   "url": "https://www.ipea.gov.au/office-expenses/office-expenses-budget/publications-and-media-monitoring"
+  },
+  {
+   "name": "Specified Public Resources",
+   "group": "office",
+   "text": "Public resources the responsible Minister has determined the Commonwealth must provide, under subsection 33(2) of the Parliamentary Business Resources Act 2017.",
+   "note": "The label names a legal basis rather than a kind of purchase, so what it covers depends on the determination in force at the time.",
+   "source": "IPEA, Explanatory notes; Parliamentary Business Resources Act 2017 s 33",
+   "url": "https://www.legislation.gov.au/C2017A00037/latest/text"
+  },
+  {
+   "name": "Telecommunications - Usage",
+   "group": "office",
+   "text": "Office telephone and facsimile usage.",
+   "note": "",
+   "source": "IPEA, Explanatory notes (telecommunications)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Telecommunications - Residential - Official",
+   "group": "office",
+   "text": "Internet and telephone services at a parliamentarian's private residence provided as part of their remuneration, including installation, maintenance, rental, transfer, and call and data charges.",
+   "note": "This is a home connection paid for as part of the job, not office phone usage.",
+   "source": "IPEA, Explanatory notes (telecommunications)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Telephonic Services",
+   "group": "office",
+   "text": "Telephone services charged against the annual office expenses budget, which IPEA reports inside office administrative costs.",
+   "note": "IPEA publishes no separate explanation for this label. It sits alongside the additional telecommunications and ICT procured through the Department of Parliamentary Services.",
+   "source": "IPEA, Explanatory notes (office administration); label not separately defined by IPEA",
+   "url": "https://www.ipea.gov.au/office-expenses/office-management/ict-equipment-and-telecommunications"
+  },
+  {
+   "name": "Employee Costs",
+   "group": "staff",
+   "text": "Domestic and international travel expenses for the parliamentarian's employed staff, where the travel can be attributed to an individual employee.",
+   "note": "This is travel, not salary; staff pay does not appear in IPEA's expenditure reports at all. IPEA publishes it as an aggregate rather than naming employees, and in later reporting periods the same spending is labelled Domestic Travel and International Travel.",
+   "source": "IPEA, Explanatory notes (employee travel)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Domestic Travel",
+   "group": "staff",
+   "text": "Travel within Australia by the parliamentarian's employed staff, including travel allowance, motor vehicle allowance, scheduled fares, taxis, ride share, hire cars, tolls and parking.",
+   "note": "This is staff travel, not the parliamentarian's own, and it arrives as one aggregated total per reporting period rather than trip by trip, so a large figure here covers a whole office. Earlier reporting periods label the same spending Employee Costs.",
+   "source": "IPEA, Explanatory notes (employee travel)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "International Travel",
+   "group": "staff",
+   "text": "Overseas travel by the parliamentarian's employed staff, generally scheduled fares, meal and incidental allowances, passport costs and travel equipment allowances.",
+   "note": "IPEA aggregates these costs per trip rather than naming employees. Staff accommodation and meals overseas often cannot be attributed to an individual employee, so IPEA reports those with the parliamentarian's own international expenses instead.",
+   "source": "IPEA, Explanatory notes (employee travel)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Fares",
+   "group": "fares",
+   "text": "The parliamentarian's own domestic scheduled commercial transport: aircraft, bus, train or ferry.",
+   "note": "Where a trip has several legs, IPEA may report the cost of the whole trip against the first leg, so one line can cover more than one flight.",
+   "source": "IPEA, Explanatory notes (scheduled commercial transport)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Domestic Scheduled Fares",
+   "group": "fares",
+   "text": "Scheduled fares within Australia for a parliamentarian's spouse, nominee, dependent children or designated persons travelling to accompany or join them.",
+   "note": "Despite the plain name, IPEA reports this inside family travel, so it is not the parliamentarian's own fare. Theirs is under Fares.",
+   "source": "IPEA, Explanatory notes (family travel)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Scheduled Commercial Transport",
+   "group": "fares",
+   "text": "Scheduled fares for a parliamentarian's family member or nominee travelling to accompany or join them, the later label for the same family travel line.",
+   "note": "IPEA renamed this reporting category Family or nominee travel with effect from 1 July 2026.",
+   "source": "IPEA, Explanatory notes (family travel)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Special Charter",
+   "group": "fares",
+   "text": "Charter travel in special cases, such as where scheduled services were unavailable, approved by the Special Minister of State under the arrangements in force before 1 January 2018.",
+   "note": "One of the purposes IPEA recorded against charter transport before the Parliamentary Business Resources Act 2017 commenced.",
+   "source": "IPEA, Categories (unscheduled transport, pre-2018 note)",
+   "url": "https://www.ipea.gov.au/categories"
+  },
+  {
+   "name": "Cancelled Transport",
+   "group": "fares",
+   "text": "The cost of unscheduled transport that was booked and then cancelled.",
+   "note": "IPEA includes cancelled official travel arrangements in the transport figures, so a trip that never happened can still carry a cost.",
+   "source": "IPEA, Explanatory notes (unscheduled commercial transport)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "COMCAR",
+   "group": "cars",
+   "text": "Use of COMCAR, the Australian Government's car with driver service, run by the Department of Finance for parliamentarians, the Governor-General, the federal judiciary and international guests of government.",
+   "note": "Parliament House shuttle costs are left out because they are not attributed to individual parliamentarians, and COMCAR may not be used where a private-plated vehicle could reasonably be used instead.",
+   "source": "IPEA, Explanatory notes (other car costs); Department of Finance, COMCAR",
+   "url": "https://maps.finance.gov.au/comcar"
+  },
+  {
+   "name": "Private-Plated Vehicle",
+   "group": "cars",
+   "text": "A Commonwealth leased vehicle provided to a parliamentarian as part of their remuneration, together with its lease, insurance, maintenance and fuel.",
+   "note": "It is remuneration rather than a reimbursed expense. A parliamentarian may take an additional electorate allowance instead, currently $19,500 a year, and the vehicle must not be used for commercial purposes.",
+   "source": "IPEA, Explanatory notes (other car costs); Department of Finance, Private-plated vehicles",
+   "url": "https://maps.finance.gov.au/offices-resources-and-budgets/other-work-expenses-and-resources/private-plated-vehicles-parliamentarians"
+  },
+  {
+   "name": "Cabcharge",
+   "group": "cars",
+   "text": "Taxi fares paid with the Cabcharge card issued to a parliamentarian or to one of their staff.",
+   "note": "Cabcharge adds a service fee and a government levy may also apply; IPEA includes both in the reported cost of the trip.",
+   "source": "IPEA, Explanatory notes; IPEA, Cabcharge guidelines",
+   "url": "https://www.ipea.gov.au/travel/cabcharge"
+  },
+  {
+   "name": "Cabcharge / Other Car Costs",
+   "group": "cars",
+   "text": "Taxi and incidental transport costs for a parliamentarian's family member or nominee travelling to accompany or join them.",
+   "note": "IPEA reports this inside family travel, where taxi and incidental transport costs are grouped together, so it is family transport rather than the parliamentarian's own.",
+   "source": "IPEA, Explanatory notes (family travel)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Other Car Costs",
+   "group": "cars",
+   "text": "Car costs that do not fall under COMCAR, a private-plated vehicle, Cabcharge or parking.",
+   "note": "IPEA also uses other car costs as the name of the whole group these categories sit in, so the same words appear at two levels of the report.",
+   "source": "IPEA, Explanatory notes (other car costs)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Parking",
+   "group": "cars",
+   "text": "Car parking costs, reported by IPEA within other car costs.",
+   "note": "",
+   "source": "IPEA, Explanatory notes (other car costs)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Travel Allowance",
+   "group": "allowances",
+   "text": "An allowance for accommodation, meals and incidental expenses, paid for each night a parliamentarian stays somewhere in Australia that is not their home base.",
+   "note": "It is a set nightly rate fixed by the Remuneration Tribunal, not a reimbursement of receipts, and it is still paid at a lower non-commercial rate when the parliamentarian stays with family or friends.",
+   "source": "IPEA, Travel allowances; IPEA, Explanatory notes",
+   "url": "https://www.ipea.gov.au/travel/parliamentarian-travel/travel-allowances"
+  },
+  {
+   "name": "Parliamentary Travelling Allowance",
+   "group": "allowances",
+   "text": "A nightly allowance for a night spent away from home base, reported under IPEA's earlier travelling allowance heading.",
+   "note": "IPEA does not separately define this label. It carries the same substance as travel allowance under the naming used in earlier reporting periods.",
+   "source": "IPEA, Travel allowances (substance); label not separately defined by IPEA",
+   "url": "https://www.ipea.gov.au/travel/parliamentarian-travel/travel-allowances"
+  },
+  {
+   "name": "Canberra Daily Allowance",
+   "group": "allowances",
+   "text": "A daily allowance paid to eligible parliamentarians for time in Canberra, abolished on 23 February 2019.",
+   "note": "IPEA reports it inside travel allowance, so only a few historical lines still carry the name.",
+   "source": "IPEA, Categories (travel allowance note)",
+   "url": "https://www.ipea.gov.au/categories"
+  },
+  {
+   "name": "Daily Expense Allowance",
+   "group": "allowances",
+   "text": "The predecessor of the Canberra daily allowance, paid for each day a parliamentarian attended in Canberra rather than for each night away from home.",
+   "note": "A pre-2018 label. The Remuneration Tribunal set it at $67 a day in 2007.",
+   "source": "Remuneration Tribunal, Determination 2007/15, clause 2.14",
+   "url": "https://www.remtribunal.gov.au/sites/default/files/2021-01/2007-15%20Determination%20Members%20of%20Parliament%20-%20Travelling%20Allowance%20%28as%20made%29.pdf"
+  },
+  {
+   "name": "Private Vehicle Allowance",
+   "group": "allowances",
+   "text": "An allowance paid when a parliamentarian uses their own vehicle, rather than a private-plated vehicle, to travel between their home base and Canberra, for all or part of the journey.",
+   "note": "It covers fuel and other running costs at a set rate rather than reimbursing actual costs, and a Commonwealth provided private-plated vehicle does not count as a private vehicle.",
+   "source": "IPEA, Travel allowances (private vehicle allowance)",
+   "url": "https://www.ipea.gov.au/travel/parliamentarian-travel/travel-allowances"
+  },
+  {
+   "name": "Cancelled Accommodation",
+   "group": "allowances",
+   "text": "The cost of accommodation booked for official travel and then cancelled.",
+   "note": "IPEA includes cancelled official travel arrangements inside the travel allowance figures.",
+   "source": "IPEA, Explanatory notes and Categories (travel allowance)",
+   "url": "https://www.ipea.gov.au/categories"
+  },
+  {
+   "name": "Parliamentary Duties",
+   "group": "purpose",
+   "text": "Travel whose purpose was the parliamentarian's parliamentary duties, meaning activities that relate directly to their role as a member and that the Minister has determined to be parliamentary duties.",
+   "note": "This is a purpose, not an expense type. It is one of the four kinds of parliamentary business under the Parliamentary Business Resources Act 2017 and is recorded against unscheduled transport such as taxis, hire cars and charters.",
+   "source": "Parliamentary Business Resources Act 2017 s 6; IPEA, Explanatory notes",
+   "url": "https://www.legislation.gov.au/C2017A00037/latest/text"
+  },
+  {
+   "name": "Electorate Duties",
+   "group": "purpose",
+   "text": "Travel whose purpose was the parliamentarian's electorate duties, meaning activities that support or serve their constituents and that the Minister has determined to be electorate duties.",
+   "note": "A purpose rather than an expense type, recorded against unscheduled transport. Travel allowance for electorate duties outside the parliamentarian's own electorate is capped at ten nights a financial year.",
+   "source": "Parliamentary Business Resources Act 2017 s 6; IPEA, Travel allowances",
+   "url": "https://www.legislation.gov.au/C2017A00037/latest/text"
+  },
+  {
+   "name": "Party Political Duties",
+   "group": "purpose",
+   "text": "Travel whose purpose was the parliamentarian's party political duties, being the activities the Minister has determined to be party political duties.",
+   "note": "A purpose rather than an expense type. Travel allowance for party political duties away from Canberra is capped at ten nights a financial year.",
+   "source": "Parliamentary Business Resources Act 2017 s 6; IPEA, Travel allowances",
+   "url": "https://www.legislation.gov.au/C2017A00037/latest/text"
+  },
+  {
+   "name": "Official Duties",
+   "group": "purpose",
+   "text": "Travel whose purpose was the official duties of a parliamentarian who is an office holder or a Minister of State, meaning activities relating to that role.",
+   "note": "A purpose rather than an expense type, and available only to office holders and ministers.",
+   "source": "Parliamentary Business Resources Act 2017 s 6; IPEA, Explanatory notes",
+   "url": "https://www.legislation.gov.au/C2017A00037/latest/text"
+  },
+  {
+   "name": "Electorate",
+   "group": "purpose",
+   "text": "Charter and unscheduled travel within a parliamentarian's own electorate, under the rules in force before 1 January 2018.",
+   "note": "Then available to members of the House of Representatives representing large electorates, and to senators travelling in and for the service of their state or territory.",
+   "source": "IPEA, Categories (unscheduled transport, pre-2018 note)",
+   "url": "https://www.ipea.gov.au/categories"
+  },
+  {
+   "name": "Office Holder",
+   "group": "purpose",
+   "text": "Charter and unscheduled travel on official business by a relevant office holder, under the rules in force before 1 January 2018.",
+   "note": "A purpose recorded against charter transport, not a kind of expense.",
+   "source": "IPEA, Categories (unscheduled transport, pre-2018 note)",
+   "url": "https://www.ipea.gov.au/categories"
+  },
+  {
+   "name": "Leader of a Minority Party",
+   "group": "purpose",
+   "text": "Charter and unscheduled travel on official business by the leader of a minority party, under the rules in force before 1 January 2018.",
+   "note": "A purpose recorded against charter transport, not a kind of expense.",
+   "source": "IPEA, Categories (unscheduled transport, pre-2018 note)",
+   "url": "https://www.ipea.gov.au/categories"
+  },
+  {
+   "name": "Representing a Minister",
+   "group": "purpose",
+   "text": "Travel by a parliamentarian standing in for a minister.",
+   "note": "It appears both as one of the purposes for international travel and, before 1 January 2018, as a purpose for charter travel on official business.",
+   "source": "IPEA, Explanatory notes (international travel) and Categories",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Ministerial Visits",
+   "group": "purpose",
+   "text": "International travel for a ministerial visit by the Prime Minister or another minister of the government.",
+   "note": "One of the six purposes IPEA lists for parliamentarians' international travel, so the line records why the trip happened rather than what was bought.",
+   "source": "IPEA, Explanatory notes (international travel)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Official Visits",
+   "group": "purpose",
+   "text": "International travel for an official visit by a presiding officer, or by a parliamentarian representing a presiding officer.",
+   "note": "One of the six purposes IPEA lists for parliamentarians' international travel.",
+   "source": "IPEA, Explanatory notes (international travel)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Representing Australia",
+   "group": "purpose",
+   "text": "International travel by a parliamentarian representing the government or Australia.",
+   "note": "One of the six purposes IPEA lists for parliamentarians' international travel.",
+   "source": "IPEA, Explanatory notes (international travel)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Parliamentary Delegations",
+   "group": "purpose",
+   "text": "International travel on a parliamentary delegation approved by the presiding officers.",
+   "note": "Inter-Parliamentary Union and Commonwealth Parliamentary Association delegations are excluded from this category.",
+   "source": "IPEA, Explanatory notes (international travel)",
+   "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure"
+  },
+  {
+   "name": "Other",
+   "group": "opax",
+   "text": "Not an IPEA category. OPAX charts a parliamentarian's twelve largest categories and rolls everything else into this one line.",
+   "note": "The number in brackets is how many categories are inside it. Every one of them is defined on this page.",
+   "source": "OPAX",
+   "url": ""
+  },
+  {
+   "name": "Uncategorised",
+   "group": "opax",
+   "text": "Not an IPEA category. OPAX uses it for the rare published line that carries no category at all.",
+   "note": "",
+   "source": "OPAX",
+   "url": ""
+  }
+ ]
 }
