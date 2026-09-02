@@ -2697,6 +2697,27 @@ function hideWombat() {
   $("ask-wombat").hidden = true;
 }
 
+// The same menagerie for any other waiting slot (search results, the
+// answer rail). One mount per slot, kept across shows; a hidden slot that
+// finishes loading late stays hidden.
+const loaders = new Map();
+async function showLoader(slotId, label) {
+  const slot = $(slotId);
+  if (!slot) return;
+  slot.hidden = false;
+  const have = loaders.get(slotId);
+  if (have) { have.setLabel(label); return; }
+  try {
+    const mod = await import("/wombat.js");
+    if (loaders.get(slotId)) return;
+    loaders.set(slotId, mod.mountWombat(slot, { label }));
+  } catch { /* the status text still carries the state */ }
+}
+function hideLoader(slotId) {
+  const slot = $(slotId);
+  if (slot) slot.hidden = true;
+}
+
 async function runAsk(question) {
   if (askAbort) askAbort.abort();
   const myAbort = new AbortController();
@@ -3375,6 +3396,8 @@ async function runSearchAnswer(q, f, mySeq) {
   $("search-answer-fold").open = false;
   $("search-answer-more").textContent = "";
   setStatus($("search-answer-status"), "Reading the record…");
+  $("search-answer-status").classList.add("visually-hidden"); // announced; the loader shows it
+  showLoader("search-answer-wombat", "");
   try {
     // A search query is rarely a question ("gambling"); the model refuses bare
     // keywords. Phrase it, folding in the speaker when one is filtered.
@@ -3392,7 +3415,8 @@ async function runSearchAnswer(q, f, mySeq) {
     });
     if (mySeq !== searchSeq || searchAnswerAbort !== abort) return;
     const answer = (data.answer || "").trim();
-    if (!answer) { box.hidden = true; return; }
+    if (!answer) { hideLoader("search-answer-wombat"); box.hidden = true; return; }
+    hideLoader("search-answer-wombat");
     setStatus($("search-answer-status"), "");
     renderAnswer($("search-answer-body"), answer);
     const cited = (data.sources || []).filter((x) => x.cited).slice(0, 3);
@@ -3426,6 +3450,8 @@ async function runSearch() {
   const btn = $("search-form").querySelector('button[type="submit"]');
   btn.disabled = true;
   setStatus($("search-status"), "Searching the record…");
+  $("search-status").classList.add("visually-hidden"); // announced; the loader shows it
+  showLoader("search-wombat", "Searching the record.");
   $("results-bar").hidden = true;
   $("search-results").replaceChildren();
   try {
@@ -3440,8 +3466,12 @@ async function runSearch() {
       if (f.mode === "keyword") hints.push("Try hybrid mode. It also matches by meaning.");
       const active = activeFilterSummary(f);
       if (active) hints.push(`Filters active: ${active}. Try removing one.`);
+      hideLoader("search-wombat");
+      $("search-status").classList.remove("visually-hidden");
       setStatus($("search-status"), hints.join(" ") || "No results from the record.");
     } else {
+      hideLoader("search-wombat");
+      $("search-status").classList.remove("visually-hidden");
       setStatus($("search-status"), "");
       const active = activeFilterSummary(f);
       $("results-count").textContent =
