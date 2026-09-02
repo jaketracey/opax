@@ -24,6 +24,7 @@ import {
 } from './map-types.ts'
 import { type EngineData, KnowledgeMapEngine, webglAvailable } from './map3d-engine.ts'
 import { ACCENT, CLUSTER_COLOURS, clusterColour, SURFACE } from './palette.ts'
+import { mountWordsLayer } from './words.ts'
 
 // Re-exported so a Node smoke test can exercise the pure layout/data layer
 // without a DOM or a WebGL context.
@@ -396,7 +397,10 @@ export async function mountMoneyMap(
 
   const hint = full ? el('p', 'mm-hint', container) : null
   if (hint) {
-    hint.textContent = `Drag to orbit · scroll to zoom · click a node or a flow · AEC returns ${
+    // State files name their commission in meta.sourceShort; the federal
+    // export predates the field and stays "AEC returns".
+    const sourceShort = typeof raw.meta?.sourceShort === 'string' ? raw.meta.sourceShort : 'AEC returns'
+    hint.textContent = `Drag to orbit · scroll to zoom · click a node or a flow · ${sourceShort} ${
       raw.meta?.coverage ?? '1998–2026'
     }`
   }
@@ -419,6 +423,7 @@ export async function mountMoneyMap(
     },
   )
   engine.onEdgePick = (edge) => setEdgeSelection(edge)
+  const words = mountWordsLayer({ engine, raw, legend, routeBase })
 
   const aspectBucket = () => {
     const rect = container.getBoundingClientRect()
@@ -503,6 +508,7 @@ export async function mountMoneyMap(
           else c.removeAttribute('data-dimmed')
         }
         pushData()
+        words.isolate(activeGroup)
       })
       chips.set(group, chip)
     }
@@ -625,11 +631,15 @@ export async function mountMoneyMap(
   }
 
   /** A question-trigger or profile link on a card. */
-  const trigger = (parent: HTMLElement, href: string, label: string, quiet = false) => {
+  const trigger = (parent: HTMLElement, href: string, label: string, quiet = false, external = false) => {
     const a = el('a', quiet ? 'mm-ask mm-ask-quiet' : 'mm-ask', parent)
     a.href = href
     a.textContent = label
+    if (external) { a.target = '_blank'; a.rel = 'noopener' }
   }
+  // Off-site lookup for a person, company or party, in a new tab.
+  const webSearch = (name: string) =>
+    `https://www.google.com/search?q=${encodeURIComponent(`${name} Australia`)}`
 
   const subjectUrl = (kind: 'donor' | 'party', label: string) =>
     `${routeBase}#/subject/${kind}/${encodeURIComponent(label)}`
@@ -709,6 +719,7 @@ export async function mountMoneyMap(
         `${routeBase}#/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`,
         `What was said about ${shortName(node.label)}?`, true)
       trigger(card, subjectUrl('donor', node.label), 'Full profile', true)
+      trigger(card, webSearch(node.label), 'Search the web ↗', true, true)
     } else {
       listTitle.textContent = 'Top donors shown on the map'
       const incoming = raw.edges
@@ -736,6 +747,7 @@ export async function mountMoneyMap(
           `Ask what ${node.label} said about ${industry}`)
       }
       trigger(card, subjectUrl('party', node.label), 'Full profile', true)
+      trigger(card, webSearch(node.label), 'Search the web ↗', true, true)
     }
   }
 
@@ -818,6 +830,7 @@ export async function mountMoneyMap(
       card.innerHTML = ''
       engine.setInsets({ left: 0, right: 0, bottom: 0 })
     }
+    words.select(node, card)
     if (user) opts.onSelect?.(node)
   }
 
@@ -842,6 +855,7 @@ export async function mountMoneyMap(
       card.innerHTML = ''
       engine.setInsets({ left: 0, right: 0, bottom: 0 })
     }
+    words.selectEdge(edge)
   }
 
   const onKeyDown = (event: KeyboardEvent) => {

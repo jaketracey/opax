@@ -144,13 +144,18 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .logo:hover .logo-star { fill: var(--on-navy); }
 /* Quick search: one input, suggestions across speakers/topics/donors/reports. */
 .mast-search { position: relative; flex: 0 1 300px; margin-left: auto; }
-.mast-search input {
-  width: 100%; min-height: 40px; padding: 0 0.9rem;
+.mast-search input[type="text"] {
+  width: 100%; min-height: 40px; padding: 0 0.9rem 0 2.3rem;
   background: rgba(255, 255, 255, 0.09); border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 4px; color: var(--on-navy); font: 400 0.875rem/1.4 var(--sans);
+  border-radius: 999px; color: var(--on-navy); font: 400 0.875rem/1.4 var(--sans);
 }
-.mast-search input::placeholder { color: var(--on-navy-soft); }
-.mast-search input:focus { background: var(--paper-raised); color: var(--ink); }
+.mast-search input[type="text"]::placeholder { color: var(--on-navy-soft); }
+.mast-search input[type="text"]:focus { background: var(--paper-raised); color: var(--ink); }
+.mast-search-icon {
+  position: absolute; left: 0.85rem; top: 50%; width: 17px; height: 17px;
+  transform: translateY(-50%); color: var(--on-navy-soft); pointer-events: none;
+}
+.mast-search:focus-within .mast-search-icon { color: var(--ink-faint); }
 .mast-sugg {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 40;
   width: min(380px, 90vw); background: var(--paper); border: 1px solid var(--line); border-top: none;

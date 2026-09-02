@@ -68,3 +68,38 @@ console.log(
   `smoke test OK — ${graph.nodes.length} nodes, ${graph.edges.length} edges, ` +
     `${centres.size} clusters, layout radius ${spread.toFixed(0)}`,
 )
+
+// State files (scripts/export_state_money.py) share the node/edge shape but
+// are smaller and carry a jurisdiction block; they must build on the same
+// engine and never be merged with the federal file.
+for (const jur of ['qld', 'vic']) {
+  const state = JSON.parse(
+    await readFile(new URL(`../public/graph/money.${jur}.json`, import.meta.url)),
+  )
+  assert.equal(state.meta.jurisdiction, jur, `${jur}: meta.jurisdiction`)
+  for (const key of ['jurisdictionLabel', 'commission', 'sourceShort', 'licence', 'coverage', 'threshold', 'not_summed']) {
+    assert.ok(typeof state.meta[key] === 'string' && state.meta[key], `${jur}: meta.${key}`)
+  }
+  assert.ok(state.meta.donor_nodes >= 50, `${jur}: holds 50+ donors`)
+  assert.ok(state.meta.party_nodes >= 3, `${jur}: holds the main parties`)
+  assert.equal(state.nodes.length, state.meta.donor_nodes + state.meta.party_nodes)
+  assert.equal(state.edges.length, state.meta.edge_count)
+  const stateGraph = buildGraph(state)
+  const stateIds = new Set(stateGraph.nodes.map((n) => n.id))
+  assert.equal(stateIds.size, stateGraph.nodes.length, `${jur}: node ids unique`)
+  for (const edge of stateGraph.edges) {
+    assert.ok(stateIds.has(edge.source) && stateIds.has(edge.target), `${jur}: edge endpoints exist`)
+  }
+  for (const node of stateGraph.nodes) {
+    assert.ok(stateGraph.groupStyles.has(node.group), `${jur}: group styled: ${node.group}`)
+  }
+  const stateCounts = new Map()
+  for (const node of stateGraph.nodes) stateCounts.set(node.group, (stateCounts.get(node.group) ?? 0) + 1)
+  const stateCentres = clusterCentres3D(
+    new Map([...stateCounts.entries()].sort((a, b) => b[1] - a[1])), 1.5, 'parties')
+  assert.ok(stateCentres.get('parties'), `${jur}: parties central`)
+  console.log(
+    `smoke test OK, ${jur}: ${stateGraph.nodes.length} nodes, ${stateGraph.edges.length} edges, ` +
+      `${stateCentres.size} clusters (${state.meta.sourceShort}, ${state.meta.coverage})`,
+  )
+}

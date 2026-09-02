@@ -91,7 +91,29 @@ export type EngineEmphasis = {
   pathFrom: string | null
 }
 
+/**
+ * A second reading laid over the scene, 0..1 per mark: a bronze ring around
+ * a node whose reach and intensity follow the value, and an edge whose hue
+ * leans towards the accent by its value. The words layer feeds it a party's
+ * share of a debate; the engine only knows intensities.
+ */
+export type WordsOverlay = {
+  /** Node id -> intensity. */
+  rings: Map<string, number>
+  /** `${source}|${target}` -> intensity. */
+  edgeTint: Map<string, number>
+}
+
 type Fade = { current: number; target: number }
+
+type HaloVisual = {
+  mesh: THREE.Mesh
+  material: THREE.MeshBasicMaterial
+  /** 0..1 presence - eases in and out like every other mark. */
+  presence: Fade
+  /** The value itself, eased so a re-targeted ring glides rather than snaps. */
+  value: Fade
+}
 
 type NodeVisual = {
   node: MapNode
@@ -270,6 +292,11 @@ export class KnowledgeMapEngine {
   private coneGeo = new THREE.ConeGeometry(1, 1, 10)
   private ringGeo = new THREE.RingGeometry(1.18, 1.32, 48)
   private territoryGeo = new THREE.SphereGeometry(1, 28, 18)
+  /** Thinner than the selection ring: an engraved line, not a badge. */
+  private haloGeo = new THREE.RingGeometry(1, 1.045, 64)
+  private haloGroup = new THREE.Group()
+  private halos = new Map<string, HaloVisual>()
+  private overlay: WordsOverlay | null = null
 
   private selectionRing: THREE.Mesh
   private selectionRingMaterial: THREE.MeshBasicMaterial
@@ -390,6 +417,7 @@ export class KnowledgeMapEngine {
     this.scene.add(this.territoryGroup)
     this.scene.add(this.edgeGroup)
     this.scene.add(this.nodeGroup)
+    this.scene.add(this.haloGroup)
 
     // Light-mode-first lighting: a bright hemisphere for the airy paper feel
     // and a soft key so the spheres read as satin objects, not flat dots. All
@@ -486,11 +514,72 @@ export class KnowledgeMapEngine {
       const colour = focusVisual ? focusVisual.colour : this.palette.accent
       visual.material.color.copy(colour)
       visual.coneMaterial.color.copy(colour)
-      return
+    } else {
+      const colour = visual.from.colour
+      visual.material.color.copy(colour)
+      visual.coneMaterial.color.copy(colour)
     }
-    const colour = visual.from.colour
-    visual.material.color.copy(colour)
-    visual.coneMaterial.color.copy(colour)
+    const tint = this.edgeTintOf(visual)
+    if (tint > 0) {
+      visual.material.color.lerp(this.palette.accent, tint)
+      visual.coneMaterial.color.lerp(this.palette.accent, tint)
+    }
+  }
+
+  private edgeTintOf(visual: EdgeVisual): number {
+    const tint = this.overlay?.edgeTint.get(`${visual.edge.source}|${visual.edge.target}`) ?? 0
+    return Math.max(0, Math.min(1, tint))
+  }
+
+  // -------------------------------------------------------------------
+  // The words overlay - halos and edge tint.
+  // -------------------------------------------------------------------
+
+  /**
+   * Lay the words reading over the scene, or clear it with null. Rings ease
+   * in and out (instantly under reduced motion) and survive a data rebuild;
+   * a ring for a node the scene does not hold simply waits for it.
+   */
+  setWordsOverlay(overlay: WordsOverlay | null) {
+    this.overlay = overlay
+    this.syncHalos()
+    this.updateEmphasisSets()
+  }
+
+  private syncHalos() {
+    const rings = this.overlay?.rings
+    for (const [id, halo] of this.halos) {
+      const value = rings?.get(id) ?? 0
+      halo.presence.target = value > 0 ? 1 : 0
+      if (value > 0) halo.value.target = value
+    }
+    if (!rings) return
+    for (const [id, value] of rings) {
+      if (value <= 0 || this.halos.has(id) || !this.nodeVisuals.has(id)) continue
+      const material = new THREE.MeshBasicMaterial({
+        color: this.palette.accent,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+      })
+      const mesh = new THREE.Mesh(this.haloGeo, material)
+      mesh.raycast = () => undefined
+      mesh.visible = false
+      this.haloGroup.add(mesh)
+      this.halos.set(id, {
+        mesh,
+        material,
+        presence: { current: 0, target: 1 },
+        value: { current: value, target: value },
+      })
+    }
+  }
+
+  private clearHalos() {
+    for (const halo of this.halos.values()) halo.material.dispose()
+    this.haloGroup.clear()
+    this.halos.clear()
   }
 
   // -------------------------------------------------------------------
@@ -693,11 +782,13 @@ export class KnowledgeMapEngine {
     // Seed the territory volumes now rather than waiting for the first
     // rendered frame - captions must never paint at a stale origin.
     this.updateTerritories()
+    this.syncHalos()
     this.updateEmphasisSets()
     this.renderDirty = true
   }
 
   private clearScene() {
+    this.clearHalos()
     for (const visual of this.nodeVisuals.values()) {
       visual.material.dispose()
       visual.shellMaterial.dispose()
@@ -825,7 +916,10 @@ export class KnowledgeMapEngine {
         (focus !== null && !touchesFocus && !this.pathEdgeKeys)
       const emphasised = onPath || touchesFocus
       visual.emphasised = emphasised
-      visual.opacity.target = dimmed ? 0.06 : emphasised ? 0.92 : visual.crossing ? 0.16 : 0.4
+      // A tinted edge that nothing else is quietening comes forward with its
+      // value, so the bronze reads even on the faint cross-cluster flows.
+      const resting = Math.max(visual.crossing ? 0.16 : 0.4, 0.16 + 0.6 * this.edgeTintOf(visual))
+      visual.opacity.target = dimmed ? 0.06 : emphasised ? 0.92 : resting
       this.applyEdgeColour(visual)
     }
     this.updatePopup()
@@ -1651,6 +1745,10 @@ export class KnowledgeMapEngine {
       step(visual.lift)
     }
     for (const visual of this.edgeVisuals) step(visual.opacity)
+    for (const halo of this.halos.values()) {
+      step(halo.presence)
+      step(halo.value)
+    }
     return active
   }
 
@@ -1872,6 +1970,22 @@ export class KnowledgeMapEngine {
       this.traceRingMaterial,
       this.emphasis.pathFrom !== this.emphasis.selectedId ? this.emphasis.pathFrom : null,
     )
+    // Halos sit outside the selection ring; reach grows a little with the
+    // value, intensity carries it. A dimmed node's halo recedes with it.
+    for (const [id, halo] of this.halos) {
+      const visual = this.nodeVisuals.get(id)
+      const presence = halo.presence.current
+      if (!visual || presence < 0.01) {
+        halo.mesh.visible = false
+        continue
+      }
+      const value = Math.max(0, Math.min(1, halo.value.current))
+      halo.mesh.visible = true
+      halo.mesh.position.copy(visual.mesh.position)
+      halo.mesh.scale.setScalar(visual.r * visual.scale.current * (1.42 + 0.5 * value))
+      halo.mesh.quaternion.copy(this.camera.quaternion)
+      halo.material.opacity = presence * (0.18 + 0.72 * value) * visual.opacity.current
+    }
   }
 
   // -------------------------------------------------------------------
@@ -2069,6 +2183,7 @@ export class KnowledgeMapEngine {
     this.tubeGeo.dispose()
     this.coneGeo.dispose()
     this.ringGeo.dispose()
+    this.haloGeo.dispose()
     this.territoryGeo.dispose()
     this.selectionRingMaterial.dispose()
     this.traceRingMaterial.dispose()
