@@ -765,6 +765,10 @@ function route() {
 function resetAsk() {
   if (askAbort) { askAbort.abort(); askAbort = null; }
   clearInterval(askTimer);
+  // The abandoned ask's finally no longer sees itself as current, so the
+  // button is restored here.
+  const askBtn = $("ask-form").querySelector('button[type="submit"]');
+  if (askBtn) { askBtn.disabled = false; askBtn.classList.remove("btn-loading"); askBtn.textContent = "Ask the record"; }
   hideWombat();
   $("ask-input").value = "";
   setStatus($("ask-status"), "");
@@ -1838,7 +1842,7 @@ async function mountSubjectMap(nodeId) {
     const { mountMoneyMap } = await import("/money-map.js");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
-    subjectMapHandle = await mountMoneyMap(el, "/graph/money.json", {
+    const handle = await mountMoneyMap(el, "/graph/money.json", {
       focus: nodeId,
       chrome: "mini",
       askUrl: (industry) => askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
@@ -1847,6 +1851,8 @@ async function mountSubjectMap(nodeId) {
         location.hash = subjectHash(node.kind === "party" ? "party" : "donor", node.label);
       },
     });
+    if (currentSubjectKey !== key) { handle.destroy?.(); return; } // navigated away while mounting
+    subjectMapHandle = handle;
     subjectMapHandle.select?.(nodeId);
   } catch {
     el.innerHTML = `<p class="status" style="padding:1rem">The map could not load here. <a href="/map">Open the full map</a>.</p>`;
@@ -2930,7 +2936,7 @@ async function mountFrontMap() {
       },
     });
     frontMapHandle = handle;
-    frontMapObserver = new IntersectionObserver(([entry]) => handle.setPaused?.(!entry.isIntersecting));
+    frontMapObserver = new IntersectionObserver((entries) => handle.setPaused?.(!entries[entries.length - 1].isIntersecting));
     frontMapObserver.observe(root);
     renderFrontMapChips(mod, data);
   } catch {
