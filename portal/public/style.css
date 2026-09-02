@@ -48,11 +48,20 @@
 
   --serif: "Merriweather", Georgia, "Times New Roman", serif;
   --sans:  "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* The masthead stays put while the page scrolls; anything scrolled into
+     view has to clear it. These are per-breakpoint estimates (the band's
+     padding + mark + bronze rule); app.js writes the measured height over
+     them once the band has rendered. */
+  --header-h: 107px;
 }
+@media (max-width: 1099px) { :root { --header-h: 93px; } }
+@media (max-width: 860px)  { :root { --header-h: 61px; } }
 
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+html { scroll-padding-top: calc(var(--header-h) + 0.5rem); }
 
 body {
   margin: 0;
@@ -76,7 +85,7 @@ body {
 a.visually-hidden:focus-visible {
   position: fixed; top: 0.5rem; left: 0.5rem; width: auto; height: auto;
   clip-path: none; background: var(--paper-raised); color: var(--ink);
-  padding: 0.5rem 0.9rem; z-index: 10; border: 1px solid var(--line-strong);
+  padding: 0.5rem 0.9rem; z-index: 60; border: 1px solid var(--line-strong); /* over the sticky band */
 }
 
 /* ---- signature rules ---------------------------------------------------- */
@@ -119,7 +128,11 @@ button.link {
 /* ---- masthead ----------------------------------------------------------- */
 
 header {
-  position: relative; /* megamenu panels anchor to the band */
+  /* Pinned to the top of the viewport as the page scrolls (a direct child of
+     the body, so sticky needs no body offset and nothing jumps on load). The
+     megamenus and the quick-search list are positioned inside it, so they
+     ride along and stay over the page. */
+  position: sticky; top: 0; z-index: 50;
   background: var(--navy);
   border-bottom: 3px solid var(--bronze);
   padding: 0.9rem 0 0.7rem;
@@ -279,17 +292,44 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .drawer-link.active, .drawer-sub.active { border-left-color: var(--bronze); color: var(--ink); }
 .drawer-kicker { margin: 1.1rem 0 0.2rem; padding-top: 0.9rem; border-top: 1px solid var(--line); }
 
+/* ---- breadcrumb ----------------------------------------------------------- */
+/* One slim strip of paper hung directly under the band, on every page but the
+   home page: where you are, in the machinery face, with hairline bronze
+   chevrons between the steps. One line always; on a narrow screen the current
+   page shortens to an ellipsis before its ancestors do, and past that the
+   strip scrolls sideways. */
+.crumbs {
+  background: var(--paper); border-bottom: 1px solid var(--line);
+  font: 400 0.8125rem/1.3 var(--sans);
+}
+.crumbs-list {
+  display: flex; align-items: center; gap: 0.45rem; min-height: 40px;
+  list-style: none; margin: 0 auto; padding-top: 0; padding-bottom: 0;
+  white-space: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.crumbs-list::-webkit-scrollbar { display: none; }
+.crumbs-list li { display: flex; align-items: center; gap: 0.45rem; flex: 0 0 auto; }
+.crumbs-list li.crumb-here { flex: 0 1 auto; min-width: 0; }
+.crumb-sep { width: 6px; height: 10px; flex: 0 0 auto; color: var(--bronze); }
+.crumb-label { display: block; padding: 0.55rem 0; }
+.crumbs-list a.crumb-label { color: var(--ink-soft); text-decoration: none; }
+.crumbs-list a.crumb-label:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+.crumbs-list a.crumb-label:focus-visible { outline-offset: -2px; }
+.crumb-here .crumb-label { color: var(--ink); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+
 /* ---- hero --------------------------------------------------------------- */
 
 main { flex: 1; padding: 2.75rem 0 3rem; }
 @media (max-width: 860px) {
   main { padding-top: 0; }
+  /* Inner pages: air between the breadcrumb strip and the page's own kicker
+     (the home page's headline carries its own margin). */
+  main.compact { padding-top: 1.1rem; }
   /* Narrow screens: the query takes its own line; the submit and the filter
      icon share the next one instead of the icon orphaning onto a third. */
   .query-line > input, .ask-row > input { flex-basis: 100%; }
   .query-line button.secondary, .ask-row button.primary { flex: 1 1 auto; }
-  /* The map opens the money page; give it air below the band. */
-  #panel-money { padding-top: 1rem; }
 }
 main:focus { outline: none; }
 
@@ -733,7 +773,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .search-results-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem 2.5rem; align-items: start; margin-top: 1.25rem; }
 @media (min-width: 1100px) {
   .search-results-grid { grid-template-columns: minmax(0, 1fr) 380px; }
-  .search-answer { position: sticky; top: 1rem; }
+  .search-answer { position: sticky; top: calc(var(--header-h) + 1rem); }
 }
 .search-answer {
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
@@ -863,7 +903,7 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .report-lead { display: grid; grid-template-columns: 1fr; gap: 1.5rem 2.5rem; align-items: start; }
 @media (min-width: 1100px) {
   .report-lead { grid-template-columns: minmax(0, 1fr) 340px; }
-  #report-figures { position: sticky; top: 1rem; }
+  #report-figures { position: sticky; top: calc(var(--header-h) + 1rem); }
   #report-figures .tiles { flex-direction: column; }
   #report-figures .tile { max-width: none; }
 }
@@ -930,19 +970,6 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
   white-space: pre-wrap; word-break: break-word; background: var(--paper-sunken);
   border-radius: 4px; padding: 0.6rem 0.8rem; margin: 0.2rem 0; font-size: 0.8125rem;
 }
-
-/* Quiet back links: no underline, so the hover affordance is the same
-   bronze the other underline-less links (titles, headlines) firm into. */
-/* Back reads in the kicker register (like the DONOR label above the title),
-   sitting flush at the top of the page. */
-.backline { margin: 0; }
-#report-back, #doc-back, #subject-back {
-  text-decoration: none;
-  font: 700 0.6875rem/1.3 var(--sans); color: var(--bronze-ink);
-  text-transform: uppercase; letter-spacing: 0.08em;
-  display: inline-flex; align-items: center; gap: 0.15rem; min-height: 44px;
-}
-#report-back:hover, #doc-back:hover, #subject-back:hover { color: var(--ink); text-decoration: none; }
 
 .game-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -1206,7 +1233,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 }
 .infobox {
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
-  border-top: 3px solid var(--bronze); padding: 1rem 1.2rem; position: sticky; top: 1rem;
+  border-top: 3px solid var(--bronze); padding: 1rem 1.2rem; position: sticky; top: calc(var(--header-h) + 1rem);
 }
 .infobox dl { margin: 0.4rem 0 0; display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1rem; }
 .infobox dt { color: var(--ink-faint); font-size: 0.8125rem; }

@@ -672,8 +672,57 @@ async function mountMoney(jurParam, industry) {
   }
 }
 
+// --- breadcrumb -------------------------------------------------------------
+// The strip under the masthead. The router sets it on every route change;
+// pages whose name arrives later (a document's speaker, a report's title)
+// call it again once they know, guarded by their own stale-fetch checks.
+// `items` is the trail after Home: [{ label, href? }], the last being the
+// page itself (plain text, aria-current). Ancestors without an href are
+// plain text too: a step in the hierarchy with no page of its own.
+
+const CRUMB_SEP =
+  '<svg class="crumb-sep" viewBox="0 0 6 10" aria-hidden="true"><path d="M1 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+function setCrumbs(items) {
+  const bar = $("crumbs");
+  if (!bar) return;
+  if (!items?.length) { bar.hidden = true; return; } // the home page needs none
+  const trail = [{ label: "Home", href: "#/" }, ...items];
+  const list = bar.querySelector("ol");
+  list.replaceChildren(...trail.map((it, i) => {
+    const li = document.createElement("li");
+    const here = i === trail.length - 1;
+    if (i > 0) li.insertAdjacentHTML("afterbegin", CRUMB_SEP);
+    const el = document.createElement(!here && it.href ? "a" : "span");
+    el.className = "crumb-label";
+    el.textContent = String(it.label || "");
+    if (el.tagName === "A") el.href = it.href;
+    if (here) { li.className = "crumb-here"; li.setAttribute("aria-current", "page"); }
+    li.appendChild(el);
+    return li;
+  }));
+  bar.hidden = false;
+  list.scrollLeft = 0;
+}
+
+/** A label short enough for the strip: the current page, not its full title. */
+function crumbLabel(s, max = 60) {
+  const t = String(s || "").replace(/\s+/g, " ").trim();
+  return t.length > max ? `${t.slice(0, max - 1).trimEnd()}…` : t;
+}
+
+// The band is sticky, so scroll targets and sticky asides offset by its real
+// height: measured once it has rendered, and again whenever it reflows
+// (breakpoints, font load). style.css carries per-breakpoint estimates so
+// the first paint is right too.
+{
+  const band = document.querySelector("header");
+  const measure = () => document.documentElement.style.setProperty("--header-h", `${band.offsetHeight}px`);
+  if (band && "ResizeObserver" in window) new ResizeObserver(measure).observe(band);
+  if (band) measure();
+}
+
 let firstRoute = true;
-let routeCount = 0; // in-app navigations — Back inside the app is only safe past the first
 
 function rawFragment() {
   // location.hash is percent-DECODED in Firefox; parse from href so encoded
@@ -696,55 +745,91 @@ function route() {
   const view = segs[0] || "ask";
   const manageFocus = !firstRoute;
   firstRoute = false;
-  routeCount++;
 
   if (view !== "subject") { destroySubjectMap(); currentSubjectKey = null; }
   if (view === "subject" && segs[1] === "topic") {
     showPanel("subject");
     document.title = TITLES.subject;
-    if (segs[2]) openTopicPage(decodeURIComponent(segs[2]), manageFocus);
-    else openTopicsIndex(manageFocus);
+    if (segs[2]) {
+      const slug = decodeURIComponent(segs[2]);
+      setCrumbs([{ label: "Topics", href: "#/subject/topic" }, { label: TOPICS[slug] || slug }]);
+      openTopicPage(slug, manageFocus);
+    } else {
+      setCrumbs([{ label: "Topics" }]);
+      openTopicsIndex(manageFocus);
+    }
   } else if (view === "subject" && segs[1] && segs[2]) {
     showPanel("subject");
     document.title = TITLES.subject;
-    openSubject(segs[1], decodeURIComponent(segs[2]), manageFocus);
+    const name = decodeURIComponent(segs[2]);
+    // No index page yet for people, parties or donors, so the group is a
+    // plain step; the money map is the nearest thing for donors and parties.
+    const group = { person: "Parliamentarians", party: "Parties", donor: "Donors" }[segs[1]] || "Encyclopedia";
+    setCrumbs([{ label: group }, { label: name }]);
+    openSubject(segs[1], name, manageFocus);
   } else if (view === "doc" && segs[1]) {
     showPanel("doc");
     document.title = TITLES.doc;
+    // Provisional until the document loads and names its speaker.
+    setCrumbs([{ label: "Search", href: "#/search" },
+      { label: segs[1].split("-")[0] === "division" ? "Division" : "Document" }]);
     openDocPage(segs[1], manageFocus);
   } else if (view === "chat") {
     showPanel("chat");
     document.title = TITLES.chat;
+    setCrumbs([lastAsk.question ? { label: "Ask", href: askHash(lastAsk.question) } : { label: "Ask" },
+      { label: "Keep asking" }]);
     initChat(manageFocus);
   } else if (view === "search") {
     showPanel("search");
     document.title = TITLES.search;
+    setCrumbs([{ label: "Search" }]);
     applySearchParams(params);
   } else if (view === "reports") {
     showPanel("reports");
     document.title = TITLES.reports;
-    if (segs[1]) openReport(segs[1], segs[3] ? Number(segs[3]) : null, manageFocus);
-    else loadReportsList(manageFocus);
+    if (segs[1]) {
+      // The index (when loaded) has the title; the slug stands in until the
+      // report itself arrives and openReport sets the real one.
+      const known = reportsIndex?.find((r) => r.slug === segs[1]);
+      setCrumbs([{ label: "Reports", href: "#/reports" },
+        { label: known?.title || segs[1].replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase()) }]);
+      openReport(segs[1], segs[3] ? Number(segs[3]) : null, manageFocus);
+    } else {
+      setCrumbs([{ label: "Reports" }]);
+      loadReportsList(manageFocus);
+    }
   } else if (view === "money") {
     showPanel("money");
     document.title = TITLES.money;
+    setCrumbs([{ label: "Money map" }]);
     mountMoney(params.get("jur"), params.get("industry"));
   } else if (view === "explore") {
     showPanel("explore");
     document.title = TITLES.explore;
+    // A game already open (e.g. reload with its dialog up) keeps its own crumb.
+    const open = Object.entries(GAMES).find(([, g]) => $(g.dialog)?.open);
+    setCrumbs(open ? [{ label: "Explore", href: "#/explore" }, { label: open[1].name }] : [{ label: "Explore" }]);
   } else if (view === "about") {
     showPanel("about");
     document.title = TITLES.about;
+    setCrumbs([{ label: "About" }]);
   } else if (view === "methods") {
     showPanel("methods");
     document.title = TITLES.methods;
+    setCrumbs([{ label: "About", href: "#/about" }, { label: "Methods & how to cite" }]);
   } else if (view === "stats") {
     showPanel("stats");
     document.title = TITLES.stats;
+    setCrumbs([{ label: "About", href: "#/about" }, { label: "Corpus stats" }]);
   } else {
     showPanel("ask");
     document.title = TITLES.ask;
     const q = params.get("q");
+    // Home shows no trail; a question is a page of its own; anything else
+    // that landed here is a route the app does not know.
+    if (view !== "ask" && view !== "") setCrumbs([{ label: "Not found" }]);
+    else setCrumbs(q ? [{ label: "Ask" }] : null);
     if (view === "ask" && q && q !== lastAsk.question) {
       $("ask-input").value = q;
       if ($("ask-wide")) $("ask-wide").checked = params.get("kind") === "all";
@@ -753,8 +838,8 @@ function route() {
       renderFrontPage();
     }
   }
-  // A view change can hide the element that held focus (e.g. the doc page's
-  // Back button); catch the drop so keyboard users keep a place in the page.
+  // A view change can hide the element that held focus (e.g. a button on the
+  // page just left); catch the drop so keyboard users keep a place in the page.
   if (manageFocus && document.activeElement === document.body) {
     document.querySelector("main").focus();
   }
@@ -2249,6 +2334,10 @@ async function openSubject(kind, name, manageFocus) {
     const donors = moneyData.nodes.filter((n) => n.kind === node.kind);
     const rank = donors.sort((a, b) => (b.total || 0) - (a.total || 0)).findIndex((n) => n.id === node.id) + 1;
     const isParty = node.kind === "party";
+    // The money data's spelling of the name is the entry's; the trail follows it.
+    if (node.label && node.label !== name) {
+      setCrumbs([{ label: isParty ? "Parties" : "Donors" }, { label: node.label }]);
+    }
     const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id);
     const counter = new Map();
     for (const e of flows) {
@@ -2580,12 +2669,6 @@ async function openTopicsIndex(manageFocus) {
     debate, just one the pass has not reached.</p>`;
 }
 
-$("subject-back").addEventListener("click", () => {
-  if (routeCount > 1) history.back();
-  else location.hash = "#/";
-});
-
-
 // --- explore (time machine + quiz) ------------------------------------------
 // Both are standalone lazy modules with a mount/destroy contract; the page
 // only owns the toggle. Modules are mounted once and kept alive per session.
@@ -2593,18 +2676,21 @@ $("subject-back").addEventListener("click", () => {
 const explore = { tm: null, quiz: null, ledger: null, matrix: null, wd: null, tvn: null };
 
 const GAMES = {
-  tm: { dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
-  quiz: { dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
-  ledger: { dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js", mount: "mountLedger" },
-  matrix: { dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
-  wd: { dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
-  tvn: { dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js", mount: "mountThenVsNow" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js", mount: "mountLedger" },
+  matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
+  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js", mount: "mountThenVsNow" },
 };
 
 async function openGame(which) {
   const game = GAMES[which];
   if (!game) return;
   $(game.dialog).showModal();
+  // The module is a page in its own right while it is up; the trail says so
+  // and returns to plain Explore when it closes (see the close listener below).
+  setCrumbs([{ label: "Explore", href: "#/explore" }, { label: game.name }]);
   try {
     if (!explore[which]) {
       const mod = await import(game.module);
@@ -2627,6 +2713,11 @@ for (const btn of document.querySelectorAll(".game-close")) {
 }
 // A click on the backdrop (outside the dialog's box) closes the game.
 for (const dialog of document.querySelectorAll(".game-dialog")) {
+  // Closed by any route (button, backdrop, Esc): the trail is Explore's again,
+  // unless the page underneath has already moved on.
+  dialog.addEventListener("close", () => {
+    if (parseHash().segs[0] === "explore") setCrumbs([{ label: "Explore" }]);
+  });
   dialog.addEventListener("click", (e) => {
     const r = dialog.getBoundingClientRect();
     const inside = e.clientX >= r.left && e.clientX <= r.right &&
@@ -3264,6 +3355,7 @@ $("ask-form").addEventListener("submit", (e) => {
   const q = $("ask-input").value.trim();
   if (!q) return;
   history.replaceState(null, "", askHash(q, askKind()));
+  setCrumbs([{ label: "Ask" }]); // replaceState fires no hashchange, so the router will not
   runAsk(q);
 });
 
@@ -3307,6 +3399,7 @@ function renderChips() {
     b.addEventListener("click", () => {
       $("ask-input").value = q;
       history.replaceState(null, "", askHash(q));
+      setCrumbs([{ label: "Ask" }]);
       runAsk(q);
     });
     row.appendChild(b);
@@ -4060,6 +4153,11 @@ async function openDocPage(slug, manageFocus) {
     // The headline is the speaker; raw titles ("Name — 2000-03-07") repeat
     // what the byline says, so they only stand in when no speaker is attached.
     $("doc-title").textContent = doc.speaker || doc.title;
+    // The trail names the page the same way, shortened for the strip.
+    setCrumbs([{ label: "Search", href: "#/search" }, {
+      label: (doc.kind || slug.split("-")[0]) === "division"
+        ? "Division" : crumbLabel(doc.speaker || doc.title, 48),
+    }]);
     // Headshot floats beside the headline; the name is already in the
     // headline, so the image is decorative (alt "").
     if (doc.speaker) {
@@ -4139,13 +4237,6 @@ async function openDocPage(slug, manageFocus) {
   }
 }
 
-$("doc-back").addEventListener("click", () => {
-  // history.length counts cross-origin entries too: a visitor arriving on a
-  // shared citation link would be sent back OFF the site. Only go back if
-  // this app has navigated at least once; otherwise go home.
-  if (routeCount > 1) history.back();
-  else location.hash = "#/";
-});
 // Toolbar buttons: labels live in the markup; wrap them with the house icons.
 for (const [id, icon] of [
   ["doc-profile", "map"], ["doc-cite", "cite"], ["doc-more", "speeches"],
@@ -4493,6 +4584,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   if (currentReportSlug === slug) {
     $("reports-list").hidden = true;
     $("report-view").hidden = false;
+    setCrumbs([{ label: "Reports", href: "#/reports" }, { label: $("report-title").textContent.trim() }]);
     if (sectionNum) $(`report-s-${sectionNum}`)?.scrollIntoView();
     else if (manageFocus) $("report-title").focus();
     return;
@@ -4513,6 +4605,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   const view = $("report-view");
   view.hidden = false;
   $("report-title").innerHTML = `${reportGlyph(slug, "report-glyph")}${esc(report.title)}`;
+  setCrumbs([{ label: "Reports", href: "#/reports" }, { label: report.title }]);
   $("report-blurb").textContent = report.blurb;
   $("report-meta").textContent =
     `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record · corpus v${corpusVersion()}`;
@@ -4592,8 +4685,6 @@ async function openReport(slug, sectionNum, manageFocus) {
     $("report-title").focus();
   }
 }
-
-$("report-back").addEventListener("click", () => { location.hash = "#/reports"; });
 
 // --- boot -------------------------------------------------------------------
 

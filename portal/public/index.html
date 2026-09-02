@@ -85,6 +85,11 @@
   </div>
 </header>
 
+<!-- Where you are: filled by the router on every route change; hidden on the home page. -->
+<nav id="crumbs" class="crumbs" aria-label="Breadcrumb" hidden>
+  <ol class="wrap crumbs-list"></ol>
+</nav>
+
 <dialog class="nav-drawer" id="nav-drawer" aria-label="Menu">
   <div class="drawer-head">
     <p class="kicker">OPAX</p>
@@ -443,7 +448,6 @@
       <div id="reports-list" class="report-cards"></div>
       <div id="reports-status" class="status" role="status"></div>
       <article id="report-view" hidden>
-        <p class="backline"><button id="report-back" class="link"><span aria-hidden="true">&lt; </span>All reports</button></p>
         <h2 id="report-title" tabindex="-1"></h2>
         <p id="report-blurb" class="report-blurb"></p>
         <p id="report-meta" class="report-meta"></p>
@@ -461,7 +465,6 @@
 
     <!-- ============================== DOC ============================== -->
     <section id="panel-doc" class="panel" hidden aria-label="Document from the record">
-      <p class="backline"><button id="doc-back" class="link"><span aria-hidden="true">&lt; </span>Back</button></p>
       <div class="doc-head">
         <p class="kicker">From the record</p>
         <h2 id="doc-title" tabindex="-1"></h2>
@@ -629,7 +632,6 @@
 
     <!-- ============================ SUBJECT ============================ -->
     <section id="panel-subject" class="panel" hidden aria-label="Subject entry">
-      <p class="backline"><button id="subject-back" class="link"><span aria-hidden="true">&lt; </span>Back</button></p>
       <div id="subject-body"><!-- entry injected --></div>
     </section>
 
