@@ -2002,6 +2002,7 @@ async function mountSubjectMap(nodeId) {
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       focus: nodeId,
       chrome: "mini",
+      scrub: true, // the year window, so a reader can watch the donors change
       askUrl: (industry) => askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
       onSelect: (node) => {
         if (!node || node.id === nodeId) return;

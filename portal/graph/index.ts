@@ -75,6 +75,13 @@ export type MoneyMapOptions = {
   focus?: string
   /** 'full' (default): legend, find, time scrub, zoom, hint. 'mini': bare scene + cards. */
   chrome?: 'full' | 'mini'
+  /**
+   * The year scrub, on its own. Defaults to `chrome === 'full'`; set it true
+   * to give mini chrome the two thumbs - one compact row docked bottom left,
+   * top left on a phone - without the rest of the full chrome, or false to
+   * drop the scrub from the full map.
+   */
+  scrub?: boolean
 }
 
 export type MoneyMapHandle = {
@@ -283,6 +290,31 @@ const CSS = `
   font-weight: 700; letter-spacing: 0.06em; color: #8a8578; margin-bottom: 2px; }
 .mm-scrub-years { font-variant-numeric: tabular-nums; color: #33322e; }
 .mm-scrub input[type='range'] { width: 100%; margin: 2px 0; accent-color: ${ACCENT}; }
+/* The same control on a small plate: one row, the window years as its label,
+   the two thumbs sharing a single engraved rail. */
+.mm-scrub-mini { width: auto; max-width: calc(100% - 24px); padding: 5px 10px;
+  display: flex; align-items: center; gap: 9px; }
+.mm-scrub-mini .mm-scrub-label { display: block; margin: 0; flex: none; }
+.mm-scrub-mini .mm-scrub-years { font-size: 11px; font-weight: 700; letter-spacing: 0.02em; }
+.mm-scrub-rail { position: relative; flex: none; width: 116px; height: 16px; }
+.mm-scrub-track { position: absolute; left: 7px; right: 7px; top: 50%; height: 2px;
+  margin-top: -1px; background: #d9d4c6; border-radius: 1px; }
+.mm-scrub-fill { position: absolute; top: 0; bottom: 0; background: ${ACCENT}; border-radius: 1px; }
+/* Only the thumbs take the pointer, so the two stacked inputs do not mask
+   each other and a drag that starts off a thumb still reaches the canvas. */
+.mm-scrub-mini input[type='range'] { position: absolute; left: 0; top: 0; width: 100%;
+  height: 16px; margin: 0; background: none; pointer-events: none;
+  -webkit-appearance: none; appearance: none; }
+.mm-scrub-mini input[type='range']:focus-visible { outline: 2px solid ${ACCENT};
+  outline-offset: 1px; border-radius: 8px; }
+.mm-scrub-mini input[type='range']::-webkit-slider-runnable-track { height: 16px; background: none; }
+.mm-scrub-mini input[type='range']::-moz-range-track { height: 16px; background: none; }
+.mm-scrub-mini input[type='range']::-webkit-slider-thumb { -webkit-appearance: none;
+  pointer-events: auto; width: 12px; height: 12px; margin-top: 2px; border-radius: 50%;
+  border: 1px solid #8a6a10; background: ${SURFACE}; box-sizing: border-box; cursor: ew-resize; }
+.mm-scrub-mini input[type='range']::-moz-range-thumb { pointer-events: auto;
+  width: 12px; height: 12px; border-radius: 50%; border: 1px solid #8a6a10;
+  background: ${SURFACE}; box-sizing: border-box; cursor: ew-resize; }
 .mm-fallback { display: flex; align-items: center; justify-content: center;
   height: 100%; padding: 24px; text-align: center; color: #57544a; }
 @media (prefers-reduced-motion: reduce) {
@@ -297,6 +329,9 @@ const CSS = `
     max-height: 55%; }
   .mm-root[data-mm-chrome='full'] .mm-card { top: auto; max-height: 55%; }
   .mm-hint, .mm-find, .mm-scrub { display: none; }
+  /* The compact scrub is small enough to keep on a phone; it moves to the
+     top left, which mini chrome leaves empty, clear of the card's sheet. */
+  .mm-scrub-mini { display: flex; top: 8px; left: 8px; bottom: auto; }
 }
 `
 
@@ -443,7 +478,7 @@ export async function mountMoneyMap(
   }
 
   let fitSig = ''
-  const pushData = () => {
+  const pushData = ({ keepFocus = false } = {}) => {
     // Time scrub: an edge is in the window when its span overlaps [lo, hi];
     // a donor stays visible only while at least one of its flows does.
     // Parties always anchor the centre. Undated flows never disappear.
@@ -486,6 +521,15 @@ export async function mountMoneyMap(
     }
     if (selectedId && !visibleIds.has(selectedId)) setSelection(null)
     if (selectedEdge && !visibleEdges.includes(selectedEdge)) setEdgeSelection(null)
+    // The layout re-settles around whatever survived the window, so the node
+    // the reader is holding can drift out of frame - on an entry page's small
+    // map, that is the whole subject walking off. Hold it, without refitting:
+    // focusOn is a nudge that does nothing while the node is comfortably in
+    // view, so a scrub that barely moves anything moves the camera not at all.
+    if (keepFocus && selectedId && visibleIds.has(selectedId)) {
+      engine.setInsets(measureInsets())
+      engine.focusOn(selectedId, null)
+    }
   }
 
   let lastBucket = aspectBucket()
@@ -588,14 +632,33 @@ export async function mountMoneyMap(
   }
 
   // --- Time scrub -------------------------------------------------------
-  const scrub = full && yearMax > yearMin ? el('div', 'mm-scrub', container) : null
+  // One control in two dresses. Full chrome gets the labelled plate bottom
+  // left; mini chrome (an entry page's small map) gets the same two thumbs
+  // on a single compact row, so a reader can watch a party's donors change
+  // year to year there too. Both run the identical window logic below.
+  const compactScrub = !full
+  const scrub = (opts.scrub ?? full) && yearMax > yearMin
+    ? el('div', compactScrub ? 'mm-scrub mm-scrub-mini' : 'mm-scrub', container)
+    : null
   if (scrub) {
+    // Ahead of the card in the DOM, so Tab reaches the thumbs before the
+    // twenty-odd rows of an open card rather than after them. Everything here
+    // is absolutely positioned, so nothing moves on screen.
+    container.insertBefore(scrub, card)
     const label = el('div', 'mm-scrub-label', scrub)
-    const caption = el('span', '', label)
-    caption.textContent = 'YEARS'
+    if (!compactScrub) {
+      const caption = el('span', '', label)
+      caption.textContent = 'YEARS'
+    }
     const years = el('span', 'mm-scrub-years', label)
-    const lo = el('input', '', scrub)
-    const hi = el('input', '', scrub)
+    // Compact: both thumbs on one rail, with the window drawn between them.
+    // Full: one range under the other, on the browser's own tracks.
+    const rail = compactScrub ? el('div', 'mm-scrub-rail', scrub) : scrub
+    const fill = compactScrub
+      ? el('div', 'mm-scrub-fill', el('div', 'mm-scrub-track', rail))
+      : null
+    const lo = el('input', '', rail)
+    const hi = el('input', '', rail)
     for (const [input, name] of [[lo, 'from'], [hi, 'to']] as const) {
       input.type = 'range'
       input.min = String(yearMin)
@@ -606,6 +669,11 @@ export async function mountMoneyMap(
     hi.value = String(yearMax)
     const showYears = () => {
       years.textContent = yearLo === yearHi ? `${yearLo}` : `${yearLo} – ${yearHi}`
+      if (fill) {
+        const span = yearMax - yearMin
+        fill.style.left = `${((yearLo - yearMin) / span) * 100}%`
+        fill.style.right = `${((yearMax - yearHi) / span) * 100}%`
+      }
     }
     showYears()
     let pending = 0
@@ -619,7 +687,7 @@ export async function mountMoneyMap(
       if (pending) return
       pending = requestAnimationFrame(() => {
         pending = 0
-        pushData()
+        pushData({ keepFocus: true })
       })
     }
     lo.addEventListener('input', applyScrub)
@@ -920,7 +988,13 @@ export async function mountMoneyMap(
     cover(zoom, 'right')
     if (legend && legendAsRow) cover(legend, 'top')
     cover(find, 'top')
-    cover(scrub, 'bottom')
+    // The scrub is normally the bottom-left plate, but the compact one moves
+    // to the top on narrow screens; ask the layout which edge it took.
+    if (scrub) {
+      const rect = scrub.getBoundingClientRect()
+      const onTop = rect.top + rect.height / 2 < host.top + host.height / 2
+      cover(scrub, onTop ? 'top' : 'bottom')
+    }
     cover(hint, 'bottom')
     return insets
   }
