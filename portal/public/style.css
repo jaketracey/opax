@@ -506,6 +506,13 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
 }
 .chat-turn-answer { margin: 0 0 0.6rem; }
 .chat-turn-answer .answer { font-size: 1.0625rem; }
+.result-meta { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 0.35rem; }
+.result-meta .meta-portrait img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; vertical-align: middle;
+  border: 1.5px solid var(--paper-raised); box-shadow: 0 0 0 1px var(--line); }
+.result-meta .meta-portrait:empty { display: none; }
+.result-meta a, .result-meta a.meta-party { text-decoration: none; color: inherit; }
+.result-meta a:hover { color: var(--bronze-ink); }
+mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; border-radius: 2px; }
 .chat-sources { margin: 0.2rem 0 0; }
 .chat-sources > summary {
   cursor: pointer; list-style: none; display: inline-flex; align-items: center;

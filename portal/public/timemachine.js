@@ -428,13 +428,20 @@ const CSS = `
 /* Headline cards */
 .tm-cards { display: grid; gap: 0.7rem; }
 .tm-card {
-  display: block; text-decoration: none; color: inherit;
+  display: block; color: inherit;
   background: var(--paper-raised, #fff);
   border: 1px solid var(--line, #DFDCD2); border-radius: 8px;
   padding: 0.8rem 0.95rem;
 }
 .tm-card:hover { border-color: var(--bronze, #A0761B); }
-.tm-card:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+.tm-card a:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+.tm-card-title { display: block; text-decoration: none; }
+.tm-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; }
+.tm-portrait img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; vertical-align: middle;
+  border: 1.5px solid var(--paper-raised, #fff); box-shadow: 0 0 0 1px var(--line, #DFDCD2); }
+.tm-portrait:empty { display: none; }
+.tm-meta-link { color: inherit; text-decoration: none; }
+.tm-meta-link:hover { color: var(--bronze-ink, #8A5A12); }
 .tm-chip {
   display: inline-block; font-size: 0.68rem; font-weight: 700;
   letter-spacing: 0.12em; text-transform: uppercase;
@@ -445,7 +452,7 @@ const CSS = `
   font-family: Merriweather, Georgia, serif; font-weight: 700; font-size: 0.98rem;
   color: var(--navy, #142A43); line-height: 1.35; margin: 0 0 0.25rem;
 }
-.tm-card:hover .tm-card-title { text-decoration: underline; }
+.tm-card-title:hover { text-decoration: underline; }
 .tm-card-meta { font-size: 0.75rem; color: var(--ink-faint, #6F7468); margin-bottom: 0.35rem; }
 .tm-card-snippet {
   font-family: Merriweather, Georgia, serif; font-size: 0.85rem;
@@ -858,14 +865,45 @@ export function mountTimeMachine(container) {
     footerEl.append(icon, p)
   }
 
+  let photoMapPromise = null
+  function fillPortrait (meta) {
+    photoMapPromise ??= fetch('/photos/people.json').then((r) => r.json()).catch(() => null)
+    photoMapPromise.then((map) => {
+      const slot = meta.querySelector('.tm-portrait[data-speaker]')
+      if (!slot) return
+      const id = map && map[String(slot.dataset.speaker).trim().toLowerCase()]
+      if (!id) { slot.remove(); return }
+      const img = el('img', null, { src: `/photos/${id}.webp`, alt: '', width: '24', height: '24', loading: 'lazy' })
+      slot.appendChild(img)
+    })
+  }
+
   function makeCard(topicLabel, r) {
-    const card = el('a', 'tm-card', { href: `#/doc/${r.slug}` })
+    // A container, not one big link: the title opens the speech, the speaker
+    // and party open their own pages (links cannot nest inside a link).
+    const card = el('article', 'tm-card')
     const chip = el('span', 'tm-chip')
     chip.textContent = topicLabel
-    const title = el('div', 'tm-card-title')
+    const title = el('a', 'tm-card-title', { href: `#/doc/${r.slug}` })
     title.textContent = r.title || 'Untitled speech'
     const meta = el('div', 'tm-card-meta')
-    meta.textContent = [r.speaker, r.party, r.state, fmtDate(r.date)].filter(Boolean).join(' · ')
+    if (r.speaker) {
+      const slot = el('span', 'tm-portrait')
+      slot.dataset.speaker = r.speaker
+      meta.appendChild(slot)
+      const who = el('a', 'tm-meta-link', { href: `#/subject/person/${encodeURIComponent(r.speaker)}` })
+      who.textContent = r.speaker
+      meta.appendChild(who)
+    }
+    if (r.party) {
+      meta.appendChild(document.createTextNode(' · '))
+      const party = el('a', 'tm-meta-link', { href: `#/subject/party/${encodeURIComponent(r.party)}` })
+      party.textContent = r.party
+      meta.appendChild(party)
+    }
+    const tail = [r.state, fmtDate(r.date)].filter(Boolean).join(' · ')
+    if (tail) meta.appendChild(document.createTextNode((r.speaker || r.party ? ' · ' : '') + tail))
+    fillPortrait(meta)
     card.append(chip, title, meta)
     // A real passage only — frontier-year records sometimes index as title
     // stubs, and quoting "Jane Doe — 2005-02-14" back at the reader is silly.

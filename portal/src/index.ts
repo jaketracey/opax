@@ -126,6 +126,12 @@ async function kbFetch(
   })
 }
 
+/** Snap a snippet window start back to the nearest preceding space. */
+function lower_bound(text: string, at: number): number {
+  const sp = text.lastIndexOf(' ', at)
+  return sp > 0 ? sp + 1 : at
+}
+
 /** Squash mixed-scale /find scores into 0..1 for the UI's relevance bar. */
 function calibrate(score: number, scoreType: string): number {
   if (scoreType === 'VECTOR' || scoreType === 'BOTH' || score <= 1) {
@@ -158,6 +164,10 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
   const topK = Math.min(Number(url.searchParams.get('top_k') ?? 20) || 20, 50)
   const mode = url.searchParams.get('mode') ?? 'hybrid'
   const kind = url.searchParams.get('kind') ?? 'speech'
+  const phrases = [...q.matchAll(/"([^"]{2,})"/g)].map((m) => m[1].toLowerCase().trim())
+  const queryTerms = phrases.length
+    ? phrases
+    : q.toLowerCase().split(/[^\p{L}\p{N}']+/u).filter((w) => w.length >= 3)
 
   const body: Record<string, unknown> = {
     query: q,
@@ -192,17 +202,34 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
     const meta = resource.extra?.metadata ?? {}
     // Compare paragraphs on the CALIBRATED scale — raw BM25 (unbounded) would
     // always beat raw semantic (0-1), hijacking snippet choice and ranking.
+    // The snippet, though, should be the passage that actually says what the
+    // reader searched for: a quoted phrase, else the most query words. Among
+    // hits, the higher calibrated score wins; with no hit, the best paragraph.
     let bestText = ''
     let bestScore = 0
+    let bestHits = -1
+    let hitAt = -1
     for (const field of Object.values(resource.fields ?? {})) {
       for (const para of Object.values(field.paragraphs ?? {})) {
         const cal = calibrate(para.score, para.score_type)
-        if (cal >= bestScore) {
+        const lower = para.text.toLowerCase()
+        let hits = 0
+        let at = -1
+        for (const t of queryTerms) {
+          const i = lower.indexOf(t)
+          if (i >= 0) { hits++; if (at < 0 || i < at) at = i }
+        }
+        if (hits > bestHits || (hits === bestHits && cal >= bestScore)) {
+          bestHits = hits
           bestScore = cal
           bestText = para.text
+          hitAt = at
         }
       }
     }
+    // Window the snippet around the first hit so the relevant sentence shows.
+    const start = hitAt > 220 ? Math.max(0, lower_bound(bestText, hitAt - 200)) : 0
+    const windowed = (start > 0 ? '…' : '') + bestText.slice(start, start + 600)
     return {
       kind: m?.[1] ?? 'unknown',
       id: m ? Number(m[2]) : null,
@@ -214,7 +241,7 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
       state: label(resource, 'state'),
       date: (meta.date as string) ?? null,
       url: resource.origin?.url || null, // official record, for exports/citations
-      snippet: bestText.slice(0, 600),
+      snippet: windowed,
       score: Math.round(bestScore * 1000) / 1000, // already calibrated above
     }
   })

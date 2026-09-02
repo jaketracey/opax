@@ -129,9 +129,17 @@ const CHAMBER_NAMES = {
   assembly: "Legislative Assembly", council: "Legislative Council",
 };
 
-function metaHTML(item, { linkSpeaker = false } = {}) {
+function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = false } = {}) {
   const bits = [];
-  if (item.party) bits.push(partyChipHTML(item.party));
+  // The portrait slot sits outside the dot-separated run, so a speaker with
+  // no photo leaves no stray separator. Filled by decorateMetaPortraits.
+  const slot = portrait && item.speaker
+    ? `<span class="meta-portrait" data-speaker="${esc(item.speaker)}"></span>` : "";
+  if (item.party) {
+    bits.push(linkParty
+      ? `<a class="meta-party" href="${esc(subjectHash("party", item.party))}">${partyChipHTML(item.party)}</a>`
+      : partyChipHTML(item.party));
+  }
   if (item.speaker) {
     bits.push(linkSpeaker
       ? `<a href="${esc(subjectHash("person", item.speaker))}">${esc(item.speaker)}</a>`
@@ -139,7 +147,28 @@ function metaHTML(item, { linkSpeaker = false } = {}) {
   }
   if (item.state) bits.push(esc(STATE_NAMES[item.state] || item.state));
   if (item.date) bits.push(esc(fmtDate(item.date)));
-  return bits.join(" · ");
+  return slot + bits.join(" · ");
+}
+
+/** Swap .meta-portrait slots for the speaker's headshot once the map is in. */
+function decorateMetaPortraits(root) {
+  loadPhotoMap().then(() => {
+    for (const slot of root.querySelectorAll(".meta-portrait[data-speaker]")) {
+      const url = photoUrlFor(slot.dataset.speaker);
+      if (url) slot.innerHTML = `<img src="${esc(url)}" alt="" width="24" height="24" loading="lazy">`;
+      else slot.remove();
+    }
+  });
+}
+
+/** Escaped snippet with the search terms marked. Quoted phrases win; else words of 3+ chars. */
+function highlightHTML(text, query) {
+  const phrases = [...String(query || "").matchAll(/"([^"]{2,})"/g)].map((m) => m[1].trim());
+  const terms = (phrases.length ? phrases : String(query || "").split(/[^\p{L}\p{N}']+/u).filter((w) => w.length >= 3))
+    .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  if (!terms.length) return esc(text);
+  const re = new RegExp(`(${terms.join("|")})`, "giu");
+  return String(text).split(re).map((part, i) => (i % 2 ? `<mark class="hit">${esc(part)}</mark>` : esc(part))).join("");
 }
 
 async function api(path, options) {
@@ -3309,14 +3338,15 @@ function renderResults(results) {
             class="scorebar" aria-hidden="true"><i style="width:${pct}%"></i></span><span
             class="visually-hidden">Relevance ${pct}%.</span>
         </div>
-        <span class="result-meta">${metaHTML(r)}</span>
-        <p class="snippet">${esc(r.snippet)}</p>`;
+        <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true, portrait: true })}</span>
+        <p class="snippet">${highlightHTML(r.snippet, $("search-input").value)}</p>`;
       li.querySelector("button").addEventListener("click", () => {
         location.hash = `#/doc/${r.slug}`;
       });
       return li;
     }),
   );
+  decorateMetaPortraits($("search-results"));
 }
 
 
