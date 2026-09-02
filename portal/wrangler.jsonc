@@ -28,6 +28,28 @@
   //   npx wrangler secret put ARAG_KB_TOKEN
   "vars": {
     "ARAG_ZONE": "aws-ap-southeast-2-1",
-    "ARAG_KB_ID": "d33c0a87-98cb-4169-b0d2-ff9b75573fb7"
-  }
+    "ARAG_KB_ID": "d33c0a87-98cb-4169-b0d2-ff9b75573fb7",
+    // Folded into every response-cache key (/api/ask 7 days, /api/search,
+    // /api/resource, /api/followups). Bump it whenever the corpus changes
+    // (a load completes, a re-sync, an enrichment pass lands) so cached
+    // answers built on the old record are never served again. Any string;
+    // the convention is the date of the corpus change. See docs/STREAMING.md
+    // "Caching" and the MIGRATION-ARAG.md invariants.
+    "CACHE_EPOCH": "2026-09-02"
+  },
+
+  // Workers Rate Limiting bindings (wrangler >= 4.36 top-level `ratelimits`;
+  // the older `unsafe.bindings` + type:"ratelimit" form is the same binding).
+  // Counters are per Cloudflare location and keyed by the Worker on the
+  // client IP (CF-Connecting-IP). Cache HITs never call limit(), so a hot
+  // question replayed from cache costs no quota. `period` must be 10 or 60;
+  // `namespace_id` is any integer unique within the account.
+  "ratelimits": [
+    // Paid generative calls: one /api/ask MISS per token.
+    { "name": "ASK_LIMITER", "namespace_id": "1001", "simple": { "limit": 20, "period": 60 } },
+    // Follow-up chips ride on the fast model but are still a model call.
+    { "name": "FOLLOWUPS_LIMITER", "namespace_id": "1002", "simple": { "limit": 20, "period": 60 } },
+    // /find is cheap but not free; 120/min is far above human use.
+    { "name": "SEARCH_LIMITER", "namespace_id": "1003", "simple": { "limit": 120, "period": 60 } }
+  ]
 }

@@ -122,3 +122,125 @@ Existing AbortControllers cancel the stream: the signal is on the fetch, so
 
 Model text still reaches the DOM only through `textContent` (`renderAnswer`
 and `appendInline`); no `innerHTML` is on the streaming path.
+
+## Caching
+
+Every `/api/ask` miss is a paid generative call that takes 15-40 s, and the
+same questions come back all day: twelve home-page chips, the topic pages'
+"What has parliament said about X?", the money map's industry asks, the
+harness, the report generator. The Worker therefore keeps finished answers
+in `caches.default` and replays them — including down the SSE path, so
+`readAskStream` in `app.js` needs no change and never learns the difference.
+
+`X-OPAX-Cache: HIT | MISS | BYPASS` is on every cached endpoint.
+
+| endpoint | TTL | key |
+| --- | --- | --- |
+| `POST /api/ask` | 7 days | SHA-256 of the canonical ask input (below) |
+| `GET /api/search` | 10 min | SHA-256 of epoch + the query string, `nocache` dropped, params sorted |
+| `GET /api/resource/<slug>` | 1 hour | epoch + slug |
+| `POST /api/followups` | 24 hours | SHA-256 of epoch + question + answer + the cleaned passages |
+| `GET /api/stats`, `/api/recent` | 5 min | the route |
+| `GET /api/news` | 15 min | the route |
+| `GET /api/topics`, `/api/topic/*` &c. | as before | the route (`cachedJson`) |
+
+### The ask key
+
+`askCacheInput()` canonicalises exactly what `buildAskBody` and
+`filterExpression` act on, then hashes it with `CACHE_EPOCH`:
+
+- `question` — trimmed, whitespace-collapsed, lower-cased
+- `kind` — as the filter sees it (missing means `speech`; `all` means no clause)
+- `speaker` — through `canonicalSpeaker()`, so "john howard" and "John Howard"
+  are one entry (the filter is the same; only the provenance turn's casing
+  differs, which the model does not care about)
+- `party`, `state` — trimmed, case kept (they are exact label matches)
+- `topic` — only when it is one of the 21 slugs, mirroring `filterExpression`
+- `from`, `to` — only when they are four digits
+- `filtered` — whether ANY filter field was non-empty, because that alone
+  swaps in the custom prompt and the guidance turn even for a value the
+  filter expression then discards
+- `epoch` — `CACHE_EPOCH` from `portal/wrangler.jsonc` vars
+
+Two rules keep the cache honest:
+
+- **Chat turns are never cached.** A body with a non-empty `context` gets no
+  key at all: the answer depends on the conversation.
+- **Only an answer worth a week is stored.** Not an `isRefusal()` ("Not
+  enough data to answer this.", "The record retrieved…"), not empty, and it
+  must cite at least one source. A thin-record refusal is re-asked every
+  time, so the day the corpus grows the reader gets the new answer. Verified:
+  the harness's teleportation-booth question is `MISS` on both of two asks.
+
+`?nocache=1` (or `x-opax-nocache: 1`) skips the **read** and still **writes** —
+what the harness wants when it is measuring the live model, and what makes a
+`BYPASS` run leave the cache warm behind it.
+
+### Replaying a cached answer as a stream
+
+A `HIT` on `/api/ask?stream=1` goes to `replayCachedAsk()`, which writes the
+same SSE contract from the stored payload: one `status` (`phase: "cached"`,
+with `cached_at`), the answer in ~300-character pieces cut on word
+boundaries with a 30 ms pause between them so `streamRenderer` still paints
+progressively, then the stored payload verbatim as `done`. The pieces
+concatenate to `done.answer` byte for byte — that is the contract
+`readAskStream` relies on, and the reason the chunker snaps to spaces rather
+than re-wrapping. The whole replay lands in about 0.3 s.
+
+A `MISS` on either path writes on the way out, under `ctx.waitUntil`: the
+streamed path caches the `done` payload (the same bytes the reader got), and
+it does so even when the reader left early — the answer was paid for either
+way.
+
+`caches.default` is **per Cloudflare location**. A question warmed in Sydney
+is a miss in Frankfurt. Accepted: the readers are Australian, and
+`scripts/warm_cache.py` is run from Australia.
+
+Measured against `wrangler dev`, 2026-09-02:
+
+| | MISS | HIT |
+| --- | --- | --- |
+| `/api/ask` synchronous | 26.2 s | 0.05 s |
+| `/api/ask?stream=1` | 25.6 s (230 deltas) | 0.32 s (6 deltas) |
+| `/api/search` | 11.0 s | 0.003 s |
+| `/api/resource/<slug>` | 0.22 s | 0.003 s |
+| `/api/followups` | 6.8 s | 0.002 s |
+
+The two ask paths share one cache: a streamed miss makes the synchronous
+call a hit and the other way round (verified — same answer hash both ways).
+
+### Warming it
+
+`python3 scripts/warm_cache.py` asks each recurring question once,
+synchronously, one a second, and prints question / cache status / seconds /
+cited count. `--dry-run` lists them, `--limit N` takes the first N,
+`--source chips,topics,…` narrows it. 75 distinct questions across five
+sources (home chips, the 24 harness questions with their filters, the 21
+topic pages, the report generator's questions, the money map's industry
+asks); a fully cold run is 75 model calls, roughly $0.60. Re-running is
+free: anything already warm answers `HIT`. Run it from Australia, after a
+deploy or a `CACHE_EPOCH` bump.
+
+### Rate limits
+
+Cloudflare's Rate Limiting binding (`ratelimits` in `portal/wrangler.jsonc`;
+needs Wrangler ≥ 4.36), keyed on `CF-Connecting-IP`:
+
+| binding | endpoint | limit |
+| --- | --- | --- |
+| `ASK_LIMITER` | `/api/ask` | 20 / 60 s |
+| `FOLLOWUPS_LIMITER` | `/api/followups` | 20 / 60 s |
+| `SEARCH_LIMITER` | `/api/search` | 120 / 60 s |
+
+`limit()` is called **after** the cache read, so a hit costs no quota — the
+hot questions stay free no matter how often they are asked. Over the limit
+is `429` with `{"error": …}` and `Retry-After: 60`. The limiter **fails
+open**: a binding outage, or a build without it, logs a warning and lets the
+request through. Losing the site to a limiter fault would be the worse
+failure. Miniflare implements the binding locally, so `wrangler dev`
+enforces the real thing.
+
+`CACHE_EPOCH` is the kill switch for all of it. Bump it in
+`portal/wrangler.jsonc` and deploy, and every cached answer, search, resource
+and follow-up is orphaned at once (the old entries simply age out). Bump it
+whenever the corpus changes — see the invariant in `MIGRATION-ARAG.md`.

@@ -159,12 +159,106 @@ function json(data: unknown, status = 200): Response {
 }
 
 // ---------------------------------------------------------------------------
+// Response cache and rate limits (docs/STREAMING.md "Caching")
+// ---------------------------------------------------------------------------
+// Every /api/ask MISS is a paid generative call (15-40 s); the same questions
+// come back all day (home chips, topic-page asks, the harness, the reports).
+// Finished answers therefore live in caches.default under a synthetic URL
+// keyed by a SHA-256 of the canonical ask input plus CACHE_EPOCH (wrangler
+// vars; bumped whenever the corpus changes, so a stale record is never
+// replayed). caches.default is PER COLO: a question warmed in Sydney is a
+// MISS in Frankfurt. That is accepted — the traffic is Australian — and the
+// warm script (scripts/warm_cache.py) runs from Australia.
+//
+// Only answers worth keeping are stored: not a refusal, non-empty, at least
+// one cited source. Chat turns (`context`) are never cached — the answer
+// depends on the conversation. `?nocache=1` or `x-opax-nocache: 1` skips the
+// read (the harness measures the live model) but still writes.
+
+const CACHE_ORIGIN = 'https://cache.opax.internal'
+const ASK_CACHE_TTL = 7 * 24 * 3600
+const SEARCH_CACHE_TTL = 600
+const RESOURCE_CACHE_TTL = 3600
+const FOLLOWUPS_CACHE_TTL = 24 * 3600
+const STATS_CACHE_TTL = 300
+const RECENT_CACHE_TTL = 300
+
+type CacheStatus = 'HIT' | 'MISS' | 'BYPASS'
+
+async function sha256Hex(text: string): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('')
+}
+
+/** A cache key that can never collide with a real route. */
+const cacheRequest = (kind: string, id: string): Request => new Request(`${CACHE_ORIGIN}/${kind}/${id}`)
+
+/** The caller wants the live upstream answer (reads skipped, writes kept). */
+function cacheBypass(request: Request, url: URL): boolean {
+  return url.searchParams.get('nocache') === '1' || request.headers.get('x-opax-nocache') === '1'
+}
+
+/**
+ * Stamp the cache verdict on a response. A cache.match() result carries
+ * immutable headers, so the body is re-wrapped; `browserCache: false` strips
+ * the storage max-age for POST answers, which no browser should hold.
+ */
+function withCacheStatus(res: Response, status: CacheStatus, browserCache = true): Response {
+  const out = new Response(res.body, res)
+  out.headers.set('x-opax-cache', status)
+  if (!browserCache) out.headers.delete('cache-control')
+  return out
+}
+
+/** Store `res` for `maxAge` seconds off the request path (the clone is taken first). */
+function cacheStore(ctx: ExecutionContext, key: Request, res: Response, maxAge: number): void {
+  res.headers.set('cache-control', `public, max-age=${maxAge}`)
+  res.headers.set('x-opax-cached-at', new Date().toISOString())
+  ctx.waitUntil(caches.default.put(key, res.clone()))
+}
+
+/**
+ * The Rate Limiting binding, keyed on the client IP. HITs never reach here,
+ * so a hot question replayed from cache costs no quota. Fail OPEN: a limiter
+ * outage (or a build without the binding) must not take the site down.
+ */
+async function rateLimited(limiter: RateLimit | undefined, request: Request): Promise<Response | null> {
+  if (!limiter) return null
+  try {
+    const key = request.headers.get('cf-connecting-ip') ?? 'unknown'
+    const { success } = await limiter.limit({ key })
+    if (success) return null
+  } catch (err) {
+    console.log(JSON.stringify({ level: 'warn', message: `rate limiter failed open: ${String(err)}` }))
+    return null
+  }
+  const res = json({ error: 'Too many requests. Try again in a moment.' }, 429)
+  res.headers.set('retry-after', '60')
+  return res
+}
+
+// ---------------------------------------------------------------------------
 // Routes
 // ---------------------------------------------------------------------------
 
-async function apiSearch(url: URL, env: Env): Promise<Response> {
+async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const q = url.searchParams.get('q')?.trim()
   if (!q) return json({ error: 'q is required' }, 400)
+  // Keyed on the whole query string (order-normalised) plus the epoch.
+  const params = [...url.searchParams.entries()]
+    .filter(([k]) => k !== 'nocache')
+    .sort(([a], [b]) => a.localeCompare(b))
+  const cacheKey = cacheRequest(
+    'search',
+    await sha256Hex(`${env.CACHE_EPOCH}\n${new URLSearchParams(params).toString()}`),
+  )
+  const bypass = cacheBypass(request, url)
+  if (!bypass) {
+    const hit = await caches.default.match(cacheKey)
+    if (hit) return withCacheStatus(hit, 'HIT')
+  }
+  const limited = await rateLimited(env.SEARCH_LIMITER, request)
+  if (limited) return limited
   const topK = Math.min(Number(url.searchParams.get('top_k') ?? 20) || 20, 50)
   const mode = url.searchParams.get('mode') ?? 'hybrid'
   const kind = url.searchParams.get('kind') ?? 'speech'
@@ -253,7 +347,9 @@ async function apiSearch(url: URL, env: Env): Promise<Response> {
     }
   })
   results.sort((a, b) => b.score - a.score)
-  return json({ query: q, mode, kind, count: results.length, results })
+  const out = json({ query: q, mode, kind, count: results.length, results })
+  cacheStore(ctx, cacheKey, out, SEARCH_CACHE_TTL)
+  return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
 }
 
 interface AskInput {
@@ -417,16 +513,133 @@ function askPayload(answer: AskAnswer): { answer: string; citations: Record<stri
   }
 }
 
+type AskPayload = ReturnType<typeof askPayload>
+
+/**
+ * The canonical form of an ask, or null when it must not be cached (chat
+ * history present). Mirrors what buildAskBody/filterExpression actually act
+ * on: the question case-folded and whitespace-collapsed, kind as the filter
+ * sees it ('all' and empty both mean no kind clause), the speaker as
+ * canonicalSpeaker() sends it, topic only when the filter honours it, years
+ * only when they are years. Anything else the client sends is noise here.
+ */
+function askCacheInput(input: AskInput, epoch: string): string | null {
+  if (Array.isArray(input.context) && input.context.length > 0) return null
+  const str = (s: string | undefined): string => (s ?? '').trim().replace(/\s+/g, ' ')
+  const yr = (s: string | undefined): string => (/^\d{4}$/.test(str(s)) ? str(s) : '')
+  const kind = input.kind ?? 'speech'
+  const topic = str(input.topic)
+  return JSON.stringify({
+    epoch,
+    question: str(input.question).toLowerCase(),
+    kind: kind && kind !== 'all' ? kind : 'all',
+    speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
+    party: str(input.party),
+    state: str(input.state),
+    topic: TOPIC_SLUGS.has(topic) ? topic : '',
+    from: yr(input.from),
+    to: yr(input.to),
+    // buildAskBody swaps in the custom prompt and the guidance turn on ANY
+    // non-empty filter value, including ones filterExpression then discards
+    // (an unknown topic, a "from" that is not a year). Two asks that differ
+    // only there get different prompts, so the flag has to be in the key.
+    filtered: [input.speaker, input.party, input.state, input.topic, input.from, input.to].some(
+      (v) => (v ?? '').trim().length > 0,
+    ),
+  })
+}
+
+/** Worth keeping for a week: a real answer with at least one cited source. */
+const cacheableAnswer = (p: AskPayload): boolean =>
+  !isRefusal({ answer: p.answer }) && p.sources.some((s) => (s as { cited?: boolean }).cited === true)
+
+/** Cut on word boundaries into pieces of about `size` characters; pieces concatenate to the input exactly. */
+function chunkText(text: string, size: number): string[] {
+  const out: string[] = []
+  let i = 0
+  while (i < text.length) {
+    let end = Math.min(text.length, i + size)
+    if (end < text.length) {
+      const sp = text.lastIndexOf(' ', end)
+      if (sp > i + size / 2) end = sp + 1
+    }
+    out.push(text.slice(i, end))
+    i = end
+  }
+  return out
+}
+
+const SSE_HEADERS = {
+  'content-type': 'text/event-stream; charset=utf-8',
+  'cache-control': 'no-cache, no-transform',
+  'x-accel-buffering': 'no',
+}
+
+/**
+ * Replay a cached answer as the stream contract the client already speaks
+ * (docs/STREAMING.md): one `status`, the answer in a few `delta` pieces with
+ * tiny pauses so the progressive renderer paints, then the stored payload
+ * verbatim as `done`. The whole replay lands in well under a second.
+ */
+function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
+  const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
+  const writer = writable.getWriter()
+  const encoder = new TextEncoder()
+  const cachedAt = hit.headers.get('x-opax-cached-at')
+  ctx.waitUntil(
+    (async () => {
+      const send = (event: string, data: unknown): Promise<void> =>
+        writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+      try {
+        const payload = (await hit.json()) as AskPayload
+        await send('status', { phase: 'cached', cached_at: cachedAt })
+        for (const piece of chunkText(payload.answer, 300)) {
+          await send('delta', { text: piece })
+          await new Promise((r) => setTimeout(r, 30))
+        }
+        await send('done', payload)
+      } catch {
+        // The reader left mid-replay; nothing upstream to stop.
+      } finally {
+        try {
+          await writer.close()
+        } catch {
+          /* already gone */
+        }
+      }
+    })(),
+  )
+  return new Response(readable, {
+    headers: { ...SSE_HEADERS, 'x-opax-cache': 'HIT', ...(cachedAt ? { 'x-opax-cached-at': cachedAt } : {}) },
+  })
+}
+
 async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const input = ((await request.json().catch(() => ({}))) ?? {}) as AskInput
   if (!input.question?.trim()) return json({ error: 'question is required' }, 400)
-  const body = buildAskBody(input)
 
   const url = new URL(request.url)
   const wantStream =
     url.searchParams.get('stream') === '1' ||
     (request.headers.get('accept') ?? '').includes('text/event-stream')
-  if (wantStream) return apiAskStream(body, env, ctx)
+
+  // Cache first: a HIT costs neither a model call nor rate-limit quota.
+  const keyText = askCacheInput(input, env.CACHE_EPOCH)
+  const cacheKey = keyText ? cacheRequest('ask', await sha256Hex(keyText)) : null
+  const bypass = cacheBypass(request, url)
+  if (cacheKey && !bypass) {
+    const hit = await caches.default.match(cacheKey)
+    if (hit) return wantStream ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
+  }
+  const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
+  const limited = await rateLimited(env.ASK_LIMITER, request)
+  if (limited) return limited
+
+  const body = buildAskBody(input)
+  const store = (payload: AskPayload): void => {
+    if (cacheKey && cacheableAnswer(payload)) cacheStore(ctx, cacheKey, json(payload), ASK_CACHE_TTL)
+  }
+  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status })
 
   const askOnce = async (): Promise<AskAnswer | Response> => {
     const res = await kbFetch(env, '/ask', { body, headers: { 'x-synchronous': 'true' } })
@@ -439,7 +652,9 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     const again = await askOnce()
     if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
-  return json(askPayload(answer))
+  const payload = askPayload(answer)
+  store(payload)
+  return withCacheStatus(json(payload), status, false)
 }
 
 // --- streamed asks -----------------------------------------------------------
@@ -577,7 +792,12 @@ async function streamAskOnce(
   return { answer, citations, retrieval_results: { resources } }
 }
 
-function apiAskStream(body: Record<string, unknown>, env: Env, ctx: ExecutionContext): Response {
+function apiAskStream(
+  body: Record<string, unknown>,
+  env: Env,
+  ctx: ExecutionContext,
+  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus },
+): Response {
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
   const writer = writable.getWriter()
   const encoder = new TextEncoder()
@@ -606,7 +826,11 @@ function apiAskStream(body: Record<string, unknown>, env: Env, ctx: ExecutionCon
           const again = await streamAskOnce(env, body, send, upstream.signal)
           if (!isRefusal(again)) result = again
         }
-        await send('done', askPayload(result))
+        const payload = askPayload(result)
+        await send('done', payload)
+        // Cached from the `done` payload — the same bytes the reader got —
+        // even when the reader left early (the answer was paid for).
+        opts.onDone?.(payload)
       } catch (err) {
         if (!clientGone) await send('error', { error: err instanceof Error ? err.message : String(err) })
       } finally {
@@ -619,13 +843,7 @@ function apiAskStream(body: Record<string, unknown>, env: Env, ctx: ExecutionCon
     })(),
   )
 
-  return new Response(readable, {
-    headers: {
-      'content-type': 'text/event-stream; charset=utf-8',
-      'cache-control': 'no-cache, no-transform',
-      'x-accel-buffering': 'no',
-    },
-  })
+  return new Response(readable, { headers: { ...SSE_HEADERS, 'x-opax-cache': opts.cacheStatus } })
 }
 
 // --- follow-up questions (the chat's "Ask next" chips) ----------------------
@@ -788,7 +1006,7 @@ function parseFollowUpLines(answerText: string): { question: string; evidence: s
   return out
 }
 
-async function apiFollowups(request: Request, env: Env): Promise<Response> {
+async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const { question, answer, passages } = ((await request.json().catch(() => ({}))) ?? {}) as {
     question?: string
     answer?: string
@@ -805,6 +1023,25 @@ async function apiFollowups(request: Request, env: Env): Promise<Response> {
     .slice(0, 12)
   const context = passageContext(clean)
   if (context.length < FOLLOWUP_MIN_CONTEXT) return json({ questions: [] })
+
+  // The input is the whole story (question, answer, passages): the same
+  // answer asks for the same follow-ups. Cached a day; an ask HIT replays
+  // the same answer, so its follow-ups are a HIT here too.
+  const url = new URL(request.url)
+  const cacheKey = cacheRequest(
+    'followups',
+    await sha256Hex(
+      JSON.stringify({ epoch: env.CACHE_EPOCH, question: question.trim().toLowerCase(), answer: answer.trim(), passages: clean }),
+    ),
+  )
+  const bypass = cacheBypass(request, url)
+  if (!bypass) {
+    const hit = await caches.default.match(cacheKey)
+    if (hit) return withCacheStatus(hit, 'HIT', false)
+  }
+  const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
+  if (limited) return limited
+  const cacheStatus: CacheStatus = bypass ? 'BYPASS' : 'MISS'
 
   const asked = FOLLOWUP_WANT * 2
   const prompt = [
@@ -853,17 +1090,33 @@ async function apiFollowups(request: Request, env: Env): Promise<Response> {
       body: { query: prompt, top_k: 5, max_tokens: 4096, generative_model: 'gemini-2.5-flash-lite' },
       headers: { 'x-synchronous': 'true' },
     })
-    if (!res.ok) return json({ questions: [] })
+    if (!res.ok) return withCacheStatus(json({ questions: [] }), cacheStatus, false)
     const data = (await res.json()) as { answer?: string }
     const candidates = parseFollowUpLines(data.answer ?? '')
-    return json({ questions: selectFollowUps(candidates, question, clean, context) })
+    const questions = selectFollowUps(candidates, question, clean, context)
+    const out = json({ questions })
+    // An empty list may be a model stumble — never pin that for a day.
+    if (questions.length > 0) cacheStore(ctx, cacheKey, out, FOLLOWUPS_CACHE_TTL)
+    return withCacheStatus(out, cacheStatus, false)
   } catch {
-    return json({ questions: [] })
+    return withCacheStatus(json({ questions: [] }), cacheStatus, false)
   }
 }
 
-async function apiResource(slug: string, env: Env): Promise<Response> {
+/**
+ * One document, cached an hour: summaries and topic labels arrive over time
+ * from the enrichment passes, and an hour is the balance between a page
+ * that costs a KB call and a page that lags the pass. 404s are not cached
+ * (the doc may land in the next sync).
+ */
+async function apiResource(request: Request, url: URL, slug: string, env: Env, ctx: ExecutionContext): Promise<Response> {
   if (!isPublicSlug(slug)) return json({ error: 'bad slug' }, 400)
+  const cacheKey = cacheRequest('resource', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
+  const bypass = cacheBypass(request, url)
+  if (!bypass) {
+    const hit = await caches.default.match(cacheKey)
+    if (hit) return withCacheStatus(hit, 'HIT')
+  }
   const res = await kbFetch(
     env,
     `/slug/${slug}?show=basic&show=origin&show=extra&show=values&show=extracted&extracted=text`,
@@ -902,7 +1155,7 @@ async function apiResource(slug: string, env: Env): Promise<Response> {
   // Machine summary written by the enrichment pass (ask-task, destination
   // "summary"): lands as the text field "da-summary-t-body". Optional.
   const brief = texts['da-summary-t-body']?.value?.body?.trim() || null
-  return json({
+  const out = json({
     slug,
     title: r.title ?? slug,
     speaker: DIVISION_SLUG_RE.test(slug) ? null : (r.origin?.collaborators?.[0] ?? null), // voters are not a speaker
@@ -913,12 +1166,17 @@ async function apiResource(slug: string, env: Env): Promise<Response> {
     summary: brief,
     text: bodyText,
   })
+  cacheStore(ctx, cacheKey, out, RESOURCE_CACHE_TTL)
+  return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
 }
 
+/** KB counters for the front-page meter, cached 5 minutes. */
 async function apiStats(env: Env): Promise<Response> {
-  const res = await kbFetch(env, '/counters')
-  if (!res.ok) return json({ error: `counters failed (${res.status})` }, 502)
-  return json(await res.json())
+  return cachedJson('/api/stats', async () => {
+    const res = await kbFetch(env, '/counters')
+    if (!res.ok) return json({ error: `counters failed (${res.status})` }, 502)
+    return json(await res.json())
+  }, STATS_CACHE_TTL)
 }
 
 /**
@@ -935,7 +1193,7 @@ async function apiNews(): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request('https://opax.com.au/api/news')
   const cached = await cache.match(cacheKey)
-  if (cached) return cached
+  if (cached) return withCacheStatus(cached, 'HIT')
 
   // Order matters: CDATA first, numeric refs, then named — so a literal
   // "&amp;#39;" decodes to "&#39;" and no further.
@@ -1050,7 +1308,7 @@ async function apiNews(): Promise<Response> {
     res.headers.set('cache-control', 'public, max-age=900')
     await cache.put(cacheKey, res.clone())
   }
-  return res
+  return withCacheStatus(res, 'MISS')
 }
 
 
@@ -1064,12 +1322,18 @@ async function apiRecent(env: Env): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request('https://opax.com.au/api/recent')
   const cached = await cache.match(cacheKey)
-  if (cached) return cached
+  if (cached) return withCacheStatus(cached, 'HIT')
   const res = await kbFetch(
     env,
     '/catalog?page_number=0&page_size=14&sort_field=created&sort_order=desc',
   )
-  if (!res.ok) return json({ items: [], upstream: res.status, body: (await res.text()).slice(0, 200) })
+  if (!res.ok) {
+    // Not cached: an upstream stumble must not pin an empty rail for 5 minutes.
+    return withCacheStatus(
+      json({ items: [], upstream: res.status, body: (await res.text()).slice(0, 200) }),
+      'MISS',
+    )
+  }
   const data = (await res.json()) as {
     resources?: Record<string, { slug?: string; title?: string; created?: string }>
   }
@@ -1078,9 +1342,9 @@ async function apiRecent(env: Env): Promise<Response> {
     .map((r) => ({ slug: r.slug, title: r.title ?? r.slug, indexed: r.created ?? null }))
     .slice(0, 12)
   const out = json({ items })
-  out.headers.set('cache-control', 'public, max-age=300')
+  out.headers.set('cache-control', `public, max-age=${RECENT_CACHE_TTL}`)
   await cache.put(cacheKey, out.clone())
-  return out
+  return withCacheStatus(out, 'MISS')
 }
 
 // --- topic pages ------------------------------------------------------------
@@ -1104,6 +1368,7 @@ interface CatalogPage {
   fulltext?: { total?: number; facets?: Record<string, Record<string, number>> }
 }
 
+/** Whole-route cache for the GET aggregates (no per-request input). X-OPAX-Cache says HIT or MISS. */
 async function cachedJson(
   cachePath: string,
   build: () => Promise<Response>,
@@ -1112,13 +1377,13 @@ async function cachedJson(
   const cache = caches.default
   const cacheKey = new Request(`https://opax.com.au${cachePath}`)
   const cached = await cache.match(cacheKey)
-  if (cached) return cached
+  if (cached) return withCacheStatus(cached, 'HIT')
   const out = await build()
   if (out.ok) {
     out.headers.set('cache-control', `public, max-age=${maxAge}`)
     await cache.put(cacheKey, out.clone())
   }
-  return out
+  return withCacheStatus(out, 'MISS')
 }
 
 /** All 21 topics with live counts, plus how many speeches carry any topic label. */
@@ -1985,18 +2250,18 @@ export default {
     const url = new URL(request.url)
     try {
       if (url.pathname === '/api/search' && request.method === 'GET') {
-        return await apiSearch(url, env)
+        return await apiSearch(request, url, env, ctx)
       }
       if (url.pathname === '/api/ask' && request.method === 'POST') {
         return await apiAsk(request, env, ctx)
       }
       if (url.pathname === '/api/followups' && request.method === 'POST') {
-        return await apiFollowups(request, env)
+        return await apiFollowups(request, env, ctx)
       }
       // Speech/legal/news ids and composite division ids; apiResource validates the shape.
       const resourceMatch = url.pathname.match(/^\/api\/resource\/([a-z][a-z0-9-]*)$/)
       if (resourceMatch && request.method === 'GET') {
-        return await apiResource(resourceMatch[1], env)
+        return await apiResource(request, url, resourceMatch[1], env, ctx)
       }
       if (url.pathname === '/api/stats' && request.method === 'GET') {
         return await apiStats(env)

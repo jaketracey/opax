@@ -103,6 +103,10 @@ All corpus steps run on the WSL box (`desktop`), which holds `parli.db`.
    backpressure honoured automatically; `--retry-failed` mops up.
 6. Portal deploy: `cd portal && npx wrangler secret put ARAG_KB_TOKEN && npx wrangler deploy`,
    then point opax.com.au DNS at the Worker.
+7. Whenever step 5 (or an enrichment pass) finishes: bump `CACHE_EPOCH`,
+   redeploy, and run `python3 scripts/warm_cache.py` from Australia. See the
+   `CACHE_EPOCH` invariant below — a stale epoch serves week-old answers
+   built on the smaller corpus.
 
 ## Costs — the two open sign-offs
 
@@ -247,6 +251,28 @@ member rows, 35K speeches) — don't trust members-derived facts for those.
   the public permalinks academics cite (`/#/doc/speech-123`, `/api/resource/...`).
   Any re-sync, re-import or schema change MUST preserve parli.db primary keys —
   a renumbered corpus breaks every footnote that ever cited us.
+
+- **A corpus change is not finished until `CACHE_EPOCH` is bumped.** The
+  Worker holds finished `/ask` answers for 7 days (and searches, resource
+  pages and follow-ups for less) in `caches.default`, keyed on the ask plus
+  `CACHE_EPOCH` in `portal/wrangler.jsonc` vars. Those answers were written
+  against the corpus as it stood. Grow it — a load segment completes, a
+  re-sync lands, a labeller or summaries pass finishes — and the cache will
+  keep serving the thinner answer for up to a week unless the epoch moves.
+  The completion ritual, every time:
+
+  1. Bump `CACHE_EPOCH` in `portal/wrangler.jsonc` (convention: the date of
+     the corpus change; any changed string works).
+  2. `cd portal && npx wrangler deploy`.
+  3. `python3 scripts/warm_cache.py` **from Australia** — `caches.default` is
+     per Cloudflare location, so a warm from elsewhere warms the wrong data
+     centre. 75 questions, ~$0.60 cold, free for anything already warm.
+  4. Spot-check one topic page and one home chip: `X-OPAX-Cache: HIT` and a
+     sub-second answer.
+
+  Skipping step 1 is the failure that looks like nothing is wrong: the site
+  answers fast and confidently out of a corpus that no longer exists. See
+  `docs/STREAMING.md` "Caching" for the key fields and the TTL table.
 
 ## Enrichment sample (2026-09-01 evening — COMPLETE, verified)
 
