@@ -2093,6 +2093,7 @@ async function openSubject(kind, name, manageFocus) {
     actionBtn("external", `https://theyvoteforyou.org.au/search?query=${q}`, "Voting record", { external: true }),
     actionBtn("external", `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliamentary profile", { external: true }),
     actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
+    actionBtn("external", webSearchUrl(name), "Search the web", { external: true }),
   ]);
   sections.insertAdjacentHTML("beforeend", `
     <form class="query-line" id="subject-ask-form" style="margin:0 0 0.4rem">
