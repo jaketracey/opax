@@ -2125,10 +2125,26 @@ async function openSubject(kind, name, manageFocus) {
   renderPersonVotes(name, photoMap?.[name.trim().toLowerCase()] ?? null, sections);
   if (speeches.length) {
     const newest = [...speeches].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 8);
+    // On the person's own page the name and party are known, so each row
+    // leads with the date and gives the debate title; when the title is only
+    // "Name — date" the passage itself carries the row.
+    const reName = new RegExp(`^${name.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+—\\s+`, "i");
+    const debateOf = (r) => String(r.title || "").replace(reName, "")
+      .replace(/\s+—\s+\d{4}-\d{2}-\d{2}\s*$/, "").replace(/^\d{4}-\d{2}-\d{2}\s*$/, "").trim();
+    const multiHouse = chambers.length > 1;
     sections.insertAdjacentHTML("beforeend",
-      `<p class="kicker">Latest indexed speeches</p><ul class="subject-list" role="list">${newest.map((r) => `
-        <li><a href="#/doc/${esc(r.slug)}" class="source-title">${esc(r.title)}</a>
-          <span class="result-meta">${metaHTML(r)}</span></li>`).join("")}</ul>
+      `<p class="kicker">Latest indexed speeches</p><ul class="speech-rows" role="list">${newest.map((r) => {
+        const debate = debateOf(r);
+        const snip = String(r.snippet || "").trim();
+        const where = multiHouse && r.state ? ` <span class="speech-where">${esc(STATE_NAMES[r.state] || r.state)}</span>` : "";
+        // With a debate title the passage sits beneath it; without one the
+        // passage itself is the row and the link.
+        const body = debate
+          ? `<a class="speech-debate" href="#/doc/${esc(r.slug)}">${esc(debate)}</a>${where}${snip ? `<p class="speech-snip">${esc(snip)}</p>` : ""}`
+          : `<a class="speech-passage" href="#/doc/${esc(r.slug)}">${esc(snip || "Speech")}</a>${where}`;
+        return `<li><time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "")}</time>
+          <div>${body}</div></li>`;
+      }).join("")}</ul>
       <p class="fineprint">The corpus is still indexing: this is what has been loaded so far, not their full record.</p>`);
   } else {
     sections.insertAdjacentHTML("beforeend",
@@ -2183,6 +2199,7 @@ function topicMoneyHTML(ind) {
 }
 
 async function openTopicPage(slug, manageFocus) {
+  let newestHTML = ""; // built with the counts, rendered last on the page
   const key = `topic:${slug}`;
   if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
   currentSubjectKey = key;
@@ -2242,14 +2259,14 @@ async function openTopicPage(slug, manageFocus) {
          Some speeches carry no party label, so the bars can sum below the total.</p>`);
     }
     if (data.recent?.length) {
-      sections.insertAdjacentHTML("beforeend",
+      newestHTML =
         `<p class="kicker">Newest in the index with this label</p>
          <ul class="subject-list" role="list">${data.recent.map((r) => `
            <li><a href="#/doc/${esc(r.slug)}" class="source-title">${esc(
                r.speaker && r.title.startsWith(`${r.speaker} — `) ? r.title.slice(r.speaker.length + 3) : r.title)}</a>
              <span class="result-meta">${metaHTML(r, { linkSpeaker: true })}</span></li>`).join("")}</ul>
          <p class="fineprint">The newest labelled speeches to enter the index, not the newest
-         speeches on the subject. <a href="${esc(searchTopic)}">Search all of them</a></p>`);
+         speeches on the subject. <a href="${esc(searchTopic)}">Search all of them</a></p>`;
     } else if (count !== null) {
       sections.insertAdjacentHTML("beforeend",
         `<p class="status">The labelling pass has not reached this debate yet.
@@ -2293,6 +2310,7 @@ async function openTopicPage(slug, manageFocus) {
         </div>`);
     }
   }
+  if (newestHTML && currentSubjectKey === key) sections.insertAdjacentHTML("beforeend", newestHTML);
 }
 
 async function openTopicsIndex(manageFocus) {

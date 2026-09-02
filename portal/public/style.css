@@ -1036,6 +1036,27 @@ a.ency-name { font-size: 1.125rem; text-decoration: none; }
 a.ency-name:hover, a.ency-name:focus-visible {
   text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px;
 }
+/* Person page speech rows: date-led, debate title, passage clamp */
+.speech-rows { list-style: none; margin: 0; padding: 0; }
+.speech-rows li {
+  display: grid; grid-template-columns: 6.75rem minmax(0, 1fr); gap: 0.15rem 1.1rem;
+  padding: 0.75rem 0; border-top: 1px solid var(--line);
+}
+.speech-rows li:first-child { border-top: none; padding-top: 0.2rem; }
+.speech-rows time { font: 500 0.8125rem/1.5 var(--sans); color: var(--ink-faint); font-variant-numeric: tabular-nums; padding-top: 0.2rem; }
+.speech-debate { font: 600 1rem/1.35 var(--serif); color: var(--ink); text-decoration: none; }
+.speech-passage {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  font: 400 0.9375rem/1.5 var(--serif); color: var(--ink); text-decoration: none;
+}
+.speech-passage:hover { color: var(--bronze-ink); }
+.speech-debate:hover { color: var(--bronze-ink); }
+.speech-where { font: 600 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-left: 0.4rem; }
+.speech-snip {
+  margin: 0.2rem 0 0; font-size: 0.9rem; line-height: 1.5; color: var(--ink-soft);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+@media (max-width: 600px) { .speech-rows li { grid-template-columns: 1fr; gap: 0.1rem; } }
 /* Person page voting record */
 .votes-tiles { margin-top: 0.4rem; }
 .votes-split { height: 6px; max-width: 520px; margin: 0.9rem 0 0; border-radius: 3px; background: var(--paper-sunken); overflow: hidden; }
