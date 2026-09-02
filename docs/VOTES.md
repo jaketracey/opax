@@ -382,3 +382,159 @@ and leave no per-member record, so "no recorded vote" ≠ "did not vote".
    small, later.
 5. `export_votes.py` over `ext_votes` (steps 1–3 above) → `votes/` tree → profile pages.
 6. **GATE 3** probe → **GATE 1/2** decision → bulk push → "Votes" scope in the Workbench.
+
+---
+
+## Phase 5 — shipped 2026-09-02 (votes agent): refresh, person pages, KB ingestion
+
+User decision: "ship it all" (GATE 1/2 approved), with the five-document probe kept as the
+first push. Everything below ran from the `arag-migration` worktree; nothing was committed by
+the agent.
+
+### Federal refresh — `parli/ingest/tvfy_refresh.py`
+
+Stdlib-only, runs under the system python3 on `desktop` (`cd /tmp/arag_mig && nohup python3
+-m parli.ingest.tvfy_refresh > logs/tvfy_refresh.log 2>&1 &`; progress: `tail -3
+/tmp/arag_mig/logs/tvfy_refresh.log`; resume after any interruption with the same command,
+or `--detail-only` once the list phase is complete). Two phases:
+
+- **List**: month windows 2006-01 → today for both houses, any window returning the
+  endpoint's 100-row cap is halved recursively (August 2026 alone had 93 Senate divisions);
+  `INSERT OR IGNORE` into the legacy `divisions` table with `state='federal'`, NULL `number`
+  / `possible_turnout` / `rebellions` back-filled from the list (the Senate rows never had a
+  `number`, so their TVFY URLs were unbuildable). Months that ended more than 45 days ago are
+  remembered in `~/.cache/autoresearch/tvfy/refresh_state.json`; recent months are always
+  re-listed. The whole list pass took **~8 minutes / ~500 requests** and found **6,921
+  divisions missing** (audit predicted 6,924; the 3 extra were March 2026 rows already there).
+- **Detail**: `divisions/{id}.json` for every federal division not in `division_votes_fetched`,
+  newest first (so the person-page export benefits immediately), 1 req/s → **~2 h**. Per
+  division: `INSERT OR IGNORE` votes; members the `members` table has never seen are added
+  (never updated; `party_canonical` via the same alias map as `arag_sync.py`); the detail's
+  `bills[]` (ParlInfo `official_id` + URL) goes into the new additive **`division_bills`**
+  table; NULL `summary` is filled. Transient failures are not marked fetched (re-run
+  retries), a 404 is. Raw JSON is cached under `~/.cache/autoresearch/tvfy/{list,division}/`
+  (the TVFY-outage fallback the risks section asked for).
+
+Key: `TVFY_API_KEY` from the environment / `.env`; **still falls back to the key checked into
+`fetch_division_votes.py:24`** because no key is in any `.env` — rotate it and add it to
+`.env` (the script logs which source it used).
+
+After the detail phase completes, map the whole federal table into `ext_`:
+`ssh desktop 'cd /tmp/arag_mig && python3 -m parli.ingest.votes_state federal --since 2006-01-01 --days 100000 --out /tmp/votes_federal_all.json --load'`
+(the `--load` path writes to the same parli.db; it replaces the federal chamber-days in
+`ext_divisions` / `ext_votes`). Then re-run the export and the KB push (both skip what is done).
+
+### Person pages — `scripts/export_votes.py` + `renderPersonVotes()` in `portal/public/app.js`
+
+`votes.json` now covers **every** voter, not only the 200 portrait people: federal members
+keyed by TVFY `person_id` (unchanged shape, the slider keeps working), state members keyed
+`{jurisdiction}:{slug}` of the normalised name (`nsw:penny-sharpe`), plus a **`_names`**
+index (lowercased name → keys; a name that voted in two parliaments lists both, e.g.
+`darren cheeseman` → federal `10117` + `vic:darren-cheeseman`). Entries carry `jurisdiction`
+and `house`; `for` / `against` hold up to **6** bills each with `jur` per entry; the unused
+`summary` text was dropped (the slider reads only `name` + `date`). First run: **960 people
+(620 federal, 133 NSW, 122 VIC, 85 QLD)**, 1.2 MB raw / **79 KB gzipped**.
+
+Polarity additions: TVFY names before 2010 and from 2026 are Hansard-style (`X Bill 2025 —
+Second Reading`, or `Bills — X Bill 2026; Second Reading`) with no "what the vote meant"
+tail, so a bare second/third-reading stage now counts as the bill question **unless the
+stored motion text contains omit/amendment/substitute** (a second-reading amendment). State
+divisions qualify only on a recognisable standardised question (`That this bill be now read a
+second/third time`, `That the bill be agreed to`, `That the motion, as amended, be agreed
+to` with a bill in `bill_ref`); VIC `divided_on` amendment(s) is excluded. Only 8 of the 124
+state sample divisions qualify, because NSW question recovery is sparse (22/82) — the
+known rough edge from Phase 3.
+
+`renderPersonVotes(name, personId, sections)` (one function, one call inserted before
+`await subjectNews(name, sections)` in the person branch of `openSubject`): appends a
+`#subject-votes` placeholder synchronously so the section order is stable, lazy-loads
+`photos/people.json` + `votes.json`, resolves records via the portrait id **and** `_names`,
+merges multi-jurisdiction records, and renders the "Voting record" kicker, a one-sentence
+count line, two hairline columns (`.ency-votes*` classes reused from the slider; bill name,
+stage, year, bronze jurisdiction chip), and the fineprint on divisions vs voices and the
+They Vote For You / Hansard sources with a TVFY link for federal members. Guarded with
+`currentSubjectKey`; `esc()` on every interpolation; no new CSS.
+
+### KB ingestion — `parli/ingest/votes_ingest.py` (`kind=division`)
+
+Sources: `--from-ext` (ext_ tables, any jurisdiction), `--from-legacy` (the federal legacy
+tables as the refresh lands them, same mapping as `votes_state.run_federal` plus
+`division_bills`), `--from-json`. Body from `votes_state.division_document()` →
+`texts.body` PLAIN, `origin.source_id` = source, `origin.url`, `origin.created` =
+division date, `origin.collaborators` = every voter, classifications kind / source / state /
+chamber / decade / result, `extra.metadata` = counts + per-side name arrays. State file
+`~/.cache/autoresearch/votes_ingest_state.json`; 409 = done; `--full` lifts the 100-doc cap.
+
+**Platform finding (GATE 3a): `origin.collaborators` is capped at 100 items** — the
+140-voter House division was rejected with `422 List should have at most 100 items`. The
+fix, `division_documents()`: a division with more than 100 named voters is pushed as
+**parts** — ayes (with pairs) in part 1, noes in part 2, a side above 100 split into
+near-equal alphabetical chunks — slugs `division-{id}`, `division-{id}-p2`, …, titles
+suffixed `(part k of n)`, each part's body naming only its own voters ("Noes 46: listed in
+another part of this record"), `extra.metadata.part / parts / part_slugs`. Every voter is a
+collaborator on exactly one resource per division and no name is indexed twice. The 143-division
+sample becomes 149 resources; federal House divisions (120–150 voters) will roughly double
+their resource count.
+
+**Probe (GATE 3) results, 2026-09-02 10:25–10:28 AEST.** First push 4/5: NSW LA (90
+voters), QLD (87), VIC LA (79), Senate (62) accepted in 0.5–0.7 s each; the 140-voter House
+division rejected with the 422 above. Second push after the split fix 6/6 (a 95-voter part
+and its 8-voter `-p2`; the four repeats came back 409 in 0.16 s and count as done). **GET
+/slug** on every probe resource returns the title, the full collaborator list (90/90 on the
+NSW one) and the classifications, i.e. storage is verified. **The collaborator-filtered
+/find could not be verified in-session**: every division sat at `metadata.status = PENDING`
+because the speech bulk load (`arag_sync`, 425,697 speeches pushed) was still running and the
+KB had **69,354 resources queued for processing**; divisions join that queue. No 429 /
+backpressure was seen on any division push. The retrieval-pollution measurement (3c) is
+therefore still open; the post-refresh chain job below records a first reading in
+`logs/votes_verify.log`, and `python3 -m parli.ingest.votes_ingest --from-ext --jurisdiction
+nsw --verify-only --no-poll` re-runs it any time (each report line carries
+`find_filtered`, `unfiltered_top10_divisions`).
+
+Queue observation: PENDING grew from 69,354 (10:29) to 77,279 (10:38), **+1,500 per
+minute net** while the speech load keeps pushing at ~10/s, i.e. the platform processes
+slower than the bulk load submits; divisions will become searchable only after the speech
+load finishes and the queue drains (hours, not minutes). Check with
+`python3 -m parli.ingest.votes_ingest --from-ext --jurisdiction nsw --verify-only --no-poll`.
+
+Decision taken: with storage verified, the platform cap handled, and the Worker defaulting
+`kind` to `speech` (divisions never enter default retrieval), the bulk push went ahead
+without waiting for the queue.
+
+**Pushed so far.** 149 resources from the 143-division ext_ sample (0 failures, 6 workers,
+10.5 resources/s, latency p50 0.51 s / p95 0.73 s / max 1.4 s). Federal legacy push
+(`--from-legacy --full`, everything with votes at 10:30: 3,651 old + the newest refreshed
+divisions): **5,233 resources, 0 failures, 711 s (7.4/s with 6 workers), latency p50 0.50 s
+/ p95 0.66 s / max 65.8 s, 24 pushes over 10 s** — those long tails are the client absorbing
+`429 try_after` backpressure inside `parli.arag._request`; no push failed on it. The House
+divisions split into parts roughly double the resource count. **KB total after these runs:
+5,382 division resources, 0 failed** (`~/.cache/autoresearch/votes_ingest_state.json`).
+
+Probe verification lines (both probe runs, `logs/votes_probe*.log`): every stored resource
+`get_slug: ok` with `collaborators_stored` equal to the voter count (90, 87, 79, 62, 95, 8);
+`find_filtered: missing` on all (PENDING); `unfiltered_top10_divisions: 0` on all (trivially,
+since nothing is indexed yet). The 140-voter slug reports `get_slug: 404` because that
+resource was never created (the 422).
+
+**Chained follow-up on `desktop`** (`/tmp/arag_mig/votes_after_refresh.sh`, log
+`logs/votes_after_refresh.log`): waits for the refresh process to exit, re-runs
+`tvfy_refresh --detail-only` (retries any transient failures), loads the whole federal
+table into `ext_divisions` / `ext_votes` (`votes_ingest --from-legacy --load-ext-only`, a
+chamber-day replace like `votes_state --load`), pushes the remaining divisions
+(`--from-legacy --full`; the state file skips what is already in), writes a fresh
+`/tmp/votes.json` on `desktop` (copy it over `portal/public/votes.json`: `scp
+desktop:/tmp/votes.json portal/public/votes.json`), then runs the NSW verification pass.
+Expected finish ≈ 2.5 h after 10:17 AEST.
+
+### Worker / UI wiring still to do (lead)
+
+- `portal/src/index.ts`: `/api/search` and `/api/ask` default `kind` to `speech`; divisions
+  are reachable with `kind=all` (and `kind=division`) today. Add a **"Divisions"** option to
+  the `#search-kind` Corpus select (`portal/public/index.html`) and let the doc page render
+  `extra.metadata.ayes` / `noes` as a table for `division-*` slugs (`SLUG_RE` in the Worker
+  currently accepts only `speech|legal|news`).
+- Person page speaker searches (`speaker: name`) stay on `kind=speech`; a "Votes" tab or a
+  `kind=division` speaker search is the natural next step now that divisions carry the same
+  collaborator strings.
+- Retrieval pollution check (GATE 3c) numbers are in the probe results below; if divisions
+  crowd out speeches under `kind=all`, keep the default at `speech` (as now).
