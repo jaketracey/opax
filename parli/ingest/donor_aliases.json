@@ -1,0 +1,2950 @@
+{
+  "_readme": [
+    "Hand-curated donor entities for parli.ingest.donor_entities.",
+    "",
+    "Every entry is one real-world donor. `aliases` lists OTHER spellings that",
+    "belong to it; each alias also claims its whole rule-normalised group, so one",
+    "spelling per distinct legal-suffix/branch variant is enough (listing",
+    "'Westpac Banking Corporation' also captures 'WESTPAC BANKING CORP').",
+    "",
+    "An entry with no aliases is a PIN: it stops the automatic rule tier from",
+    "folding that name into a look-alike (National Australia Bank vs National",
+    "Union of Workers, Insurance Australia Group vs Insurance Council of",
+    "Australia, Endeavour Group vs Endeavour Energy).",
+    "",
+    "Rules applied here:",
+    "  - union branches roll UP to the parent union; the branch is kept on the",
+    "    alias row so a donor page can say 'also disclosed as: NSW Branch'",
+    "  - individuals are never merged except on an exact normalised match, so no",
+    "    person appears in this file",
+    "  - a company and its distinctly-branded operating businesses stay apart",
+    "    (Wilson Parking / Wilson Security); only spellings, typos, branches and",
+    "    renames of the SAME business merge",
+    "  - successor unions and demergers stay apart with a note, because merging",
+    "    them would silently rewrite historical totals",
+    "  - anything genuinely ambiguous stays separate and says why in `notes`"
+  ],
+  "entities": [
+    {
+      "canonical": "Westpac Banking Corporation",
+      "kind": "company",
+      "aliases": [
+        "Westpac Bank",
+        "Westpac",
+        "Westpac Business Banking",
+        "Westpac Baking Corporation",
+        "Westpac - Bundaberg",
+        "Westpac - Interest on Investments",
+        "Westpac Banking Corporation Via Ray White Real Estate",
+        "Westpac Banking Corporation Via Civium Commercial",
+        "Westpac Merchant Dept",
+        "Westpac Institutional Bank",
+        "St George Bank",
+        "Westpac Banking Corporation Via Civium Property Group",
+        "Westpac Banking Corporation OLP",
+        "Westpac Banking Corporation - Interest",
+        "Westpac Quicksuper",
+        "Westpac Banking Coporation",
+        "Westpac Bank - Unclaimed Monies Department",
+        "Westpac Regional Banking",
+        "Westpac Corporate Finance"
+      ],
+      "notes": "Seven spellings on the federal map before curation. St George has been a Westpac division since 2008; 'via <agent>' rows are the same bank paying through a managing agent."
+    },
+    {
+      "canonical": "Commonwealth Bank of Australia",
+      "kind": "company",
+      "aliases": [
+        "Commonwealth Bank",
+        "CBA",
+        "Commonwealth Bank OF Australia (CBA)",
+        "Commonwealth Bank - Institutional Banking",
+        "Commonwealth Bank - Institutional Banking & Markets",
+        "Comonwealth Bank of Australia",
+        "Commonwealth Bank Financial Markets",
+        "Commonwealth Bank of Australia (loan)",
+        "Commonweralth Bank of Australia",
+        "CBA Financial Markets",
+        "CBA - Haymarket Branch",
+        "CBA Bank - Settlement",
+        "CBA Financial Markets Operations",
+        "CBA Financial Markets Operation",
+        "Commonwealth Bank Corporation",
+        "Commonwealth Bank of Australi",
+        "Commonwealth Bank - Spring Hill Branch",
+        "Commonwealth Bank (Interest Cash Man)",
+        "Commonwealth Bank (Interest)",
+        "Commonwealth Bank of Aust - dividend",
+        "Commonwealth Bank Investment Funds",
+        "Commonwealth Bank of Aus",
+        "Commonwealth Bank Share Register",
+        "Commonwealth Bank Share Registry"
+      ],
+      "notes": "Distinct from the Commonwealth of Australia and its departments, which cluster on the same first word but are government."
+    },
+    {
+      "canonical": "National Australia Bank",
+      "kind": "company",
+      "aliases": [
+        "National Australia Bank (NAB)",
+        "NAB",
+        "National Bank of Australia",
+        "National Australia Bank (Loan)",
+        "National Australia Bank - Margin Lending",
+        "National Australia Bank - term deposit redemp.",
+        "National Bank Card Services",
+        "NAB Card Services",
+        "National Bank",
+        "National Australia Bank Limit",
+        "National Australia Bank Mastercard",
+        "National Australia Bank - Interest Received"
+      ],
+      "notes": "NOT the National Union of Workers and NOT the National Party; the automatic tier is pinned off all three by this entry."
+    },
+    {
+      "canonical": "NAB Foundation",
+      "kind": "association",
+      "aliases": [],
+      "notes": "The bank's philanthropic arm files separately; kept apart from National Australia Bank so corporate and charitable giving are not summed."
+    },
+    {
+      "canonical": "Australia and New Zealand Banking Group Limited",
+      "kind": "company",
+      "aliases": [
+        "ANZ Banking Group Ltd",
+        "ANZ",
+        "ANZ Banking Group Ltd (Aust)",
+        "Australia and New Zealand Banking Group Ltd",
+        "Australia and New Zealand Banking Group Limited - Hotel Loan",
+        "Australia & New Zealand Banking Group Limited (ANZ)",
+        "Australian and New Zealand Banking Group Limited"
+      ],
+      "notes": "'Accenture Australia and New Zealand' and 'ANZ Tech Pro Pty Ltd' are unrelated and stay separate."
+    },
+    {
+      "canonical": "Macquarie Group Limited",
+      "kind": "company",
+      "aliases": [
+        "Macquarie Bank",
+        "Macquarie Private Wealth",
+        "Macquarie Financial Services",
+        "Macquarie Investment Services (Investment Sales)",
+        "Macquarie Group Services Australia Pty Ltd",
+        "Macquarie Prvate Wealth",
+        "Macquarie Private Portfolio Management",
+        "Macquarie Bank (Bfs Group)",
+        "Macquarie Finance",
+        "Macquarie Group Services Austr Pty",
+        "Macquarie Group Services",
+        "Macquarie Group Services Australia Pty Ltd (Syd)",
+        "Macquarie Group Services Australia Pty Ltd (Cba)",
+        "Macquarie Finance Services"
+      ],
+      "notes": "Divisions of one bank. The Macquarie IFP / Winton funds are managed products and stay separate."
+    },
+    {
+      "canonical": "Macquarie Technology Group Ltd",
+      "kind": "company",
+      "aliases": [
+        "Macquarie Technology Operations Pty Ltd",
+        "Macquarie Telecom Group"
+      ],
+      "notes": "Formerly Macquarie Telecom. No relationship to Macquarie Group Limited despite the shared name; pinned so the two never merge."
+    },
+    {
+      "canonical": "Morgans Financial Limited",
+      "kind": "company",
+      "aliases": [
+        "Morgans",
+        "ABN Amro Morgans Limited"
+      ],
+      "notes": "Morgans Financial traded as ABN AMRO Morgans until 2010. The unrelated ABN AMRO Australia service companies stay separate."
+    },
+    {
+      "canonical": "Morgan Stanley Australia Limited",
+      "kind": "company",
+      "aliases": [
+        "Morgan Stanley Wealth Management",
+        "Morgan Stanley Wealth Management Australia Pty Ltd"
+      ],
+      "notes": "Not Morgans Financial, a different firm."
+    },
+    {
+      "canonical": "Deutsche Bank AG",
+      "kind": "company",
+      "aliases": [
+        "Deutsche Bank",
+        "Deutsche Group Services Pty Ltd",
+        "Deutsche Funds Management Limited",
+        "Deutsche Bank Australia",
+        "Deutsche Bank - Australia & New Zealand"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Bendigo and Adelaide Bank Limited",
+      "kind": "company",
+      "aliases": [
+        "Bendigo Bank",
+        "Bendigo & Adelaide Bank Limited",
+        "Bendigo and Adelaide Bank Gro"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Members Equity Bank",
+      "kind": "company",
+      "aliases": [
+        "Members Equity Bank P/L",
+        "Members Equity Bank Limited (A)",
+        "Members Equity Bank - TD interest",
+        "ME Bank"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Suncorp Group Limited",
+      "kind": "company",
+      "aliases": [
+        "Suncorp",
+        "Suncorp Bank",
+        "Suncorp-Metway Limited",
+        "Suncorp Property Trust",
+        "Suncorp B/C - Aami Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Bank of Queensland",
+      "kind": "company",
+      "aliases": [
+        "Bank of Qld",
+        "Bank of Queensland - Treasury"
+      ],
+      "notes": "Pinned so the shared word 'Bank' cannot pull it into NAB or CBA."
+    },
+    {
+      "canonical": "Cardtronics Australia Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Cardtronics",
+        "Cardtronics Australasia Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Shop, Distributive and Allied Employees Association",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "SDA NSW Branch",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Shop, Distributive & Allied Employees Association",
+          "branch": null
+        },
+        {
+          "name": "Shop Distributive and Allied Employees Association (SDA)",
+          "branch": null
+        },
+        {
+          "name": "SDA Newcastle Branch",
+          "branch": "Newcastle Branch"
+        },
+        {
+          "name": "Sda-Nsw",
+          "branch": "NSW"
+        },
+        {
+          "name": "SDA SA Branch (State Body)",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "SDA NSW Deductions Account",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Shop Distributive Association SA Branch",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "SDA NSW Deductions Office",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "SDA NSW Deductions",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "S.D.A.E Qld",
+          "branch": "Queensland"
+        },
+        {
+          "name": "SDA State",
+          "branch": null
+        },
+        {
+          "name": "SDA NSW - Shop, Distributive Allied Employees' Ass",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "SDA Shop, Distributive Allied Employees' Asso. NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Shop Distributive & Allied Employees' Association South Australian Branch (State Registration)",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "Shop Distributive and Allied Employees Association - National Br",
+          "branch": "National Branch"
+        },
+        {
+          "name": "Shop Distributive & Allied Emp. Ass. (SA Branch)",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "SDA National",
+          "branch": "National"
+        },
+        {
+          "name": "Shop Distributors & Allied Employees Assoc",
+          "branch": null
+        },
+        {
+          "name": "SDA Queensland",
+          "branch": "Queensland"
+        },
+        {
+          "name": "SDA SA Brach (State Body)",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "The Shop, Distributive and Allied Employees Association of WA",
+          "branch": "WA Branch"
+        },
+        {
+          "name": "Shop Distributive & Allied Employees Association Nat Branch",
+          "branch": "National Branch"
+        },
+        {
+          "name": "Shop Distributive and Allied Employees Association SA Branch (State Registration)",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "Shop Distributive & Allied Employees Association SA Branch (State Registered)",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "SDA NSW - SHOP, DISTRIBUTIVE ALLIED EMPLOYEES' ASS NSWBranch",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Shop Distributive & Allied Employees Union WA Branch",
+          "branch": "WA Branch"
+        },
+        {
+          "name": "Shop Distributive & Allied Employees Assoc South Australian Branch (State registered)",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "SDA SA Branch (State Registration)",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "SDA NSW - Shop, Distributive Allied Employees' Association",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "SDA Employees Association",
+          "branch": null
+        },
+        {
+          "name": "SDA SA Branch (Federal Body)",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "SDA Western Australia",
+          "branch": "WA Branch"
+        },
+        {
+          "name": "SDA NSW Branch Account",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "SDA Federal",
+          "branch": "Federal"
+        },
+        {
+          "name": "SDA - Shop Ass & Warehouse Newcastle & Northn NSW",
+          "branch": "Newcastle & Northern NSW"
+        },
+        {
+          "name": "SDAE",
+          "branch": null
+        },
+        {
+          "name": "SDA WA",
+          "branch": "WA Branch"
+        },
+        {
+          "name": "Shop Distributive and Allied Emp Ass. SA Branch (NT members)",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "SDA Newcastle & Northern Branch",
+          "branch": "Newcastle & Northern Branch"
+        },
+        {
+          "name": "SDA Newcastle & Northn NSW",
+          "branch": "Newcastle & Northern NSW"
+        },
+        {
+          "name": "Shop Distributors & Allied Employees Union",
+          "branch": null
+        },
+        {
+          "name": "SDA Tasmania",
+          "branch": "Tasmania"
+        },
+        {
+          "name": "SDAE Association WLD Branch",
+          "branch": "Queensland Branch"
+        },
+        {
+          "name": "SDA SA/NT",
+          "branch": "SA/NT Branch"
+        },
+        {
+          "name": "Shop Distributive and Allied Employees Association, Newcastle and Northern Branch",
+          "branch": "Newcastle & Northern Branch"
+        },
+        {
+          "name": "SDA Newcastle & Northern",
+          "branch": "Newcastle & Northern Branch"
+        },
+        {
+          "name": "Shop, Distributive and Allied Employees Associatio",
+          "branch": null
+        },
+        {
+          "name": "Shop, Distributive & Allied Emp Union of WA",
+          "branch": "WA Branch"
+        },
+        {
+          "name": "Shop Distributive and Allied Employee's Associoation",
+          "branch": null
+        },
+        {
+          "name": "SDA",
+          "branch": null
+        },
+        "Shop, Distributive & Allied Employees Association National",
+        "Shop Distributive & Allied Employees",
+        "Shop Distributive & Allied Employees' Association South Australian Branch (Federal Registration)",
+        "Shop Distributive & Allied Employees Association SA Branch (Federal Registration)",
+        "Shop Distributive and Allied Employees Association of Western Australia",
+        "Shop, Distributive & Allied Em",
+        "Shop, Distributive &amp; Allied Employees&#39; Association",
+        "Shop, Distributive and Allied Employers Association of WA"
+      ],
+      "notes": "Six branch spellings appeared as separate donors on the federal map. All branches roll up; the branch is kept on each alias row."
+    },
+    {
+      "canonical": "Construction, Forestry, Maritime, Mining and Energy Union",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "CFMEU",
+          "branch": null
+        },
+        {
+          "name": "CFMEU Mining & Energy - NAF",
+          "branch": "Mining & Energy Division"
+        },
+        {
+          "name": "Construction, Forestry, Maritime, Mining & Energy Union (CFMMEU) National Office",
+          "branch": "National Office"
+        },
+        {
+          "name": "CFMEU Mining & Energy Division",
+          "branch": "Mining & Energy Division"
+        },
+        {
+          "name": "CFMEU Construction & General Division Vic Branch",
+          "branch": "Construction & General, Vic Branch"
+        },
+        {
+          "name": "CFMEU Mining & Energy",
+          "branch": "Mining & Energy Division"
+        },
+        {
+          "name": "CFMEU Sydney - National Office",
+          "branch": "National Office"
+        },
+        {
+          "name": "Construction, Forestry, Maritime Employees Union",
+          "branch": null
+        },
+        {
+          "name": "Construction, Forestry & Mining Employees Union",
+          "branch": null
+        },
+        {
+          "name": "CFMEU FFTS Vic Branch",
+          "branch": "FFPD, Vic Branch"
+        },
+        {
+          "name": "CFMEU Construction & Gen Division Vic Branch",
+          "branch": "Construction & General, Vic Branch"
+        },
+        {
+          "name": "CFMEU Construction & General National Office",
+          "branch": "Construction & General, National Office"
+        },
+        {
+          "name": "CFMEU - Construction",
+          "branch": "Construction & General Division"
+        },
+        {
+          "name": "Cfmmeu",
+          "branch": null
+        },
+        {
+          "name": "CFMEU Construction & General Division NSW Divisional Branch",
+          "branch": "Construction & General, NSW Branch"
+        },
+        {
+          "name": "CFMEU Mining",
+          "branch": "Mining & Energy Division"
+        },
+        {
+          "name": "Construction Forestry Mining and Energy Union Construction and General Division Queensland Northern Territory Divisional Branch",
+          "branch": "Construction & General, QLD/NT Branch"
+        },
+        {
+          "name": "CFMEU CONSTRUCTION &amp; GENERAL DIVISION NSW BRANCH",
+          "branch": "Construction & General, NSW Branch"
+        },
+        {
+          "name": "CFMEU (VIC) Construction and General Division",
+          "branch": "Construction & General, Vic Branch"
+        },
+        {
+          "name": "CFMEU (Construction & General Div)",
+          "branch": "Construction & General Division"
+        },
+        {
+          "name": "CFMEU Victoria-Tasmania - Construction & General",
+          "branch": "Construction & General, Vic/Tas Branch"
+        },
+        {
+          "name": "CFMEU Mining & Energy Division - NSW Energy",
+          "branch": "Mining & Energy, NSW Energy"
+        },
+        {
+          "name": "CFMMEU Construction & General Div. NSW Div. Branch",
+          "branch": "Construction & General, NSW Branch"
+        },
+        {
+          "name": "Construction, Forestry, Maritime, Mining & Energy Union (CFMMEU) Manufacturing Division",
+          "branch": "Manufacturing Division"
+        },
+        {
+          "name": "CFMEU Construction & General Division NSW Divisional",
+          "branch": "Construction & General, NSW Branch"
+        },
+        {
+          "name": "Construction, Forestry and Maritime Employees Union - Construction & General New South Wales Divisional Branch",
+          "branch": "Construction & General, NSW Branch"
+        },
+        {
+          "name": "CFMEU Const & Gen Vic & Tas Branch",
+          "branch": "Construction & General, Vic/Tas Branch"
+        },
+        {
+          "name": "CFMEU (NSW Branch) Construction & General Div",
+          "branch": "Construction & General, NSW Branch"
+        },
+        {
+          "name": "CFMEU (NSW Energy District)",
+          "branch": "NSW Energy District"
+        },
+        {
+          "name": "Cfmeu-Ffpd",
+          "branch": "FFPD"
+        },
+        {
+          "name": "Construction, Forestry, Maritime, Mining & Energy Union (CFMMEU) Mining and Energy Division",
+          "branch": "Mining & Energy Division"
+        },
+        {
+          "name": "CFMEU C&G ACT Branch",
+          "branch": "Construction & General, ACT Branch"
+        },
+        {
+          "name": "Cfmeu (NSW)",
+          "branch": "NSW"
+        },
+        {
+          "name": "CFMEU (QLD) Mining and Energy Division",
+          "branch": "Mining & Energy, QLD"
+        },
+        {
+          "name": "CFMEU National",
+          "branch": "National"
+        },
+        {
+          "name": "CFMEU Qld",
+          "branch": "Queensland"
+        },
+        {
+          "name": "Cfmeu (ACT)",
+          "branch": "ACT"
+        },
+        {
+          "name": "Construction Forestry Mining and Energy Union Construction and G",
+          "branch": "Construction & General Division"
+        },
+        {
+          "name": "CFMEU Mining & Energy Division Queensland District Branch",
+          "branch": "Mining & Energy, QLD District"
+        },
+        {
+          "name": "Construction Forestry Mining and Energy Union Mining & Energy Division",
+          "branch": "Mining & Energy Division"
+        },
+        {
+          "name": "CFMEU Forestry & Furnishing Products Div - VIC Furnishing Branch",
+          "branch": "FFPD, Vic Furnishing Branch"
+        },
+        {
+          "name": "CFMEU (NSW) Mining and Energy Division",
+          "branch": "Mining & Energy, NSW"
+        },
+        {
+          "name": "CFMEU (NSW) Construction and General Division",
+          "branch": "Construction & General, NSW Branch"
+        },
+        {
+          "name": "CFMEU Northern Mining & NSW Energy District Branch",
+          "branch": "Northern Mining & NSW Energy District"
+        },
+        {
+          "name": "CFMEU Manufacturing Division",
+          "branch": "Manufacturing Division"
+        },
+        {
+          "name": "Cfmeu - WA",
+          "branch": "WA"
+        },
+        {
+          "name": "CFMEU Construction & Gen Vic",
+          "branch": "Construction & General, Vic Branch"
+        },
+        {
+          "name": "CFMMEU Construction & General Division NSW Divisional Branch",
+          "branch": "Construction & General, NSW Branch"
+        },
+        {
+          "name": "CFMEU Mining &amp; Energy",
+          "branch": "Mining & Energy Division"
+        },
+        {
+          "name": "CFMEU PPW Maryvale Sub Branch",
+          "branch": "PPW Maryvale Sub Branch"
+        },
+        {
+          "name": "CFMEU Forestry & Furnishing Products Div - SA Divisional Branch",
+          "branch": "FFPD, SA Branch"
+        },
+        {
+          "name": "CFMEU - FFPD Division",
+          "branch": "FFPD"
+        },
+        {
+          "name": "CFMEU W E & T Fund",
+          "branch": null
+        },
+        {
+          "name": "CFMEU FFPD - Victorian No 2 Branch",
+          "branch": "FFPD, Vic No 2 Branch"
+        },
+        {
+          "name": "CFMEU PPW Melbourne Sub Branch",
+          "branch": "PPW Melbourne Sub Branch"
+        },
+        {
+          "name": "Construction Forestry, Mining & Energy Union National Office",
+          "branch": "National Office"
+        },
+        {
+          "name": "CFMEU Northen Mining & NSW Energy",
+          "branch": "Northern Mining & NSW Energy District"
+        },
+        {
+          "name": "CFMEU F&Fd",
+          "branch": "FFPD"
+        },
+        {
+          "name": "Construction Forestry Maritime Mining And Energy Union-The Construction And General Division Australian Capital Territory Divisional Branch",
+          "branch": "Construction & General, ACT Branch"
+        },
+        {
+          "name": "CFMEU Sydney Office",
+          "branch": "NSW"
+        },
+        {
+          "name": "Construction, Forestry, Maritime, Mining &amp; Energy Union (CFMMEU)",
+          "branch": null
+        },
+        {
+          "name": "CFMEU NSW Federal Union",
+          "branch": "NSW"
+        },
+        {
+          "name": "CFMEU Construction & General Division W.A. Divisional Branch",
+          "branch": "Construction & General, WA Branch"
+        },
+        {
+          "name": "CFMEU National Construction Division",
+          "branch": "Construction & General Division"
+        },
+        {
+          "name": "Construction Forestry Mining and Energy Industrial Union of Employees Queensland",
+          "branch": "Queensland"
+        },
+        {
+          "name": "CFMEU F&Fpd",
+          "branch": "FFPD"
+        },
+        {
+          "name": "CFMEU Nat Office",
+          "branch": "National Office"
+        },
+        {
+          "name": "Construction Forestry, Mining Energy Union- Victoria-Tasmania- Construction & General",
+          "branch": "Construction & General, Vic/Tas Branch"
+        },
+        {
+          "name": "Construction Forestry Mining & Energy Union(New South Wales Branch) Construction & General Division",
+          "branch": "Construction & General, NSW Branch"
+        },
+        {
+          "name": "Cfmeu-National C &G",
+          "branch": "Construction & General, National"
+        },
+        {
+          "name": "CFMEU Northen Mining & Energy District Branch",
+          "branch": "Northern Mining District"
+        },
+        {
+          "name": "CFMEU - Forestry Division",
+          "branch": "Forestry Division"
+        },
+        {
+          "name": "CFMEU (NSW) OPDU Division",
+          "branch": "OPDU Division, NSW"
+        },
+        {
+          "name": "CFMEU Victoria",
+          "branch": "Victoria"
+        },
+        {
+          "name": "CFMEU Distress, Mortality and Building Fund",
+          "branch": null
+        },
+        {
+          "name": "CFMEU Mining & Energy Division Northern District",
+          "branch": "Mining & Energy, Northern District"
+        },
+        "Construction Forestry Maritime Mining and Energy Union - MUA Division National Office",
+        "Construction, Forestry, Maritime, Mining & Energy Union (CFMMEU) Maritime Union of Australia Division",
+        "Construction Forestry Maritime Mining and Energy Union The Construction and General Division ACT Bra"
+      ],
+      "notes": "CFMEU and CFMMEU are the same union before and after the 2018 maritime amalgamation. Divisions and branches roll up. Coles, Colonial, City Motor Auction and the Chamber of Minerals & Energy share the first letters only and stay separate."
+    },
+    {
+      "canonical": "Mining and Energy Union",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Mining And Energy Union Queensland District Branch",
+          "branch": "QLD District Branch"
+        },
+        {
+          "name": "MEU",
+          "branch": null
+        },
+        "Mining And Energy Union Northern Mining And NSW Energy District Branch",
+        "The Mining and Energy Union, Western Australia District Branch",
+        "Mining and Energy Union South Western District Branch"
+      ],
+      "notes": "The CFMEU Mining and Energy Division demerged into a standalone union in 2023. Kept separate from the CFMEU so historical division totals are not rewritten onto the successor."
+    },
+    {
+      "canonical": "Communications, Electrical and Plumbing Union of Australia",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "CEPU Electrical Division NSW",
+          "branch": "Electrical Division, NSW"
+        },
+        {
+          "name": "CEPU Electrical Division NSW Branch",
+          "branch": "Electrical Division, NSW Branch"
+        },
+        {
+          "name": "CEPU Electrical Divison NSW",
+          "branch": "Electrical Division, NSW"
+        },
+        {
+          "name": "CEPU Plumbing Division",
+          "branch": "Plumbing Division"
+        },
+        {
+          "name": "Communications Electrical Electronic Energy Information Postal And Allied Services Union OF Australia Electrical Division NSW Branch",
+          "branch": "Electrical Division, NSW Branch"
+        },
+        {
+          "name": "CEPU (Plumbing Division) Training & Education Centre",
+          "branch": "Plumbing Division"
+        },
+        {
+          "name": "CEPU Elect. Div. NSW",
+          "branch": "Electrical Division, NSW"
+        },
+        {
+          "name": "CEPU ETU Qld Branch",
+          "branch": "Electrical Division, QLD Branch"
+        },
+        {
+          "name": "Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division",
+          "branch": "Electrical Division"
+        },
+        {
+          "name": "CEPU (National Office)",
+          "branch": "National Office"
+        },
+        {
+          "name": "Communications, Electrical & Plumbing Union of Australia (CEPU)",
+          "branch": null
+        },
+        {
+          "name": "Communications Electrical & Plumbing Union",
+          "branch": null
+        },
+        {
+          "name": "Communications, Electrical & Plumbing Union of Australia (CEPU) Electrical Division - VIC Branch",
+          "branch": "Electrical Division, Vic Branch"
+        },
+        {
+          "name": "Communications Electrical Electronic Energy Information Postal Plumbing and Allied Services Union of Australia Electrical Division Queensland & Northern Territory Divisional Branch",
+          "branch": "Electrical Division, QLD/NT Branch"
+        },
+        {
+          "name": "CEPU (Plumbing Division) Training &amp; Education Centre",
+          "branch": "Plumbing Division"
+        },
+        {
+          "name": "Communications, Electrical and Plumbing Union of Australia: Electrical Division Victorian Branch",
+          "branch": "Electrical Division, Vic Branch"
+        },
+        {
+          "name": "CEPU Distress, Mortality and Building Fund",
+          "branch": null
+        },
+        {
+          "name": "Communications, Electrical, Electronic, Energy, Information, Postal, Plumbing and Allied Services Union of Australia (CEPU) SA Branch",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "Communications Eletrical & Plumbing Union of Australia",
+          "branch": null
+        },
+        {
+          "name": "CEPU QLD/NT Distress Mortality and Building fund",
+          "branch": "QLD/NT"
+        },
+        {
+          "name": "Communication, Electrical, Plumbing Union",
+          "branch": null
+        },
+        {
+          "name": "CEPU Electrical Division QLD & NT Divisional Branch",
+          "branch": "Electrical Division, QLD/NT Branch"
+        },
+        {
+          "name": "CEPU QLD/NT DMB Fund",
+          "branch": "QLD/NT"
+        },
+        {
+          "name": "CEPU (Plumbing Division) Education & Training Centre Limited",
+          "branch": "Plumbing Division"
+        },
+        {
+          "name": "CEPU DMB Fund",
+          "branch": null
+        },
+        {
+          "name": "CEPU NSW Electrical Division",
+          "branch": "Electrical Division, NSW"
+        },
+        {
+          "name": "CEPU - Plumbing Division VIC",
+          "branch": "Plumbing Division, Vic"
+        },
+        {
+          "name": "CEPU - Communications Division",
+          "branch": "Communications Division"
+        },
+        {
+          "name": "CEPU NSW Postal and Telecommunications",
+          "branch": "Postal & Telecommunications, NSW"
+        },
+        {
+          "name": "CEPU Electrical",
+          "branch": "Electrical Division"
+        },
+        {
+          "name": "CEPU VIC Postal and Telecommunications",
+          "branch": "Postal & Telecommunications, Vic"
+        },
+        {
+          "name": "CEPU Plumbing, Victoria Branch",
+          "branch": "Plumbing Division, Vic Branch"
+        },
+        {
+          "name": "CEPU VIC Electrical Division",
+          "branch": "Electrical Division, Vic"
+        },
+        {
+          "name": "CEPU Vic Plumbing Union",
+          "branch": "Plumbing Division, Vic"
+        },
+        {
+          "name": "CEPU Plumbiing Division National Office",
+          "branch": "Plumbing Division, National Office"
+        },
+        {
+          "name": "CEPU Electrical Trades Division",
+          "branch": "Electrical Division"
+        },
+        {
+          "name": "CEPU VIC Plumbers Division",
+          "branch": "Plumbing Division, Vic"
+        },
+        {
+          "name": "Cepu Postal & Telecommunications",
+          "branch": "Postal & Telecommunications"
+        },
+        {
+          "name": "CEPU Electrical Energy and Services Division, NSW Divisional Branch",
+          "branch": "Electrical Division, NSW Branch"
+        },
+        {
+          "name": "CEPU Electrical Div./ETU of Aust National Council",
+          "branch": "Electrical Division, National Council"
+        },
+        {
+          "name": "CEPU Training & Education",
+          "branch": null
+        },
+        {
+          "name": "CEPU - Postal & Telecommunications Branch",
+          "branch": "Postal & Telecommunications"
+        },
+        {
+          "name": "CEPU NSW Technical and Services",
+          "branch": "NSW"
+        },
+        {
+          "name": "CEPU Engineering and Electrical Division WA",
+          "branch": "Electrical Division, WA"
+        },
+        {
+          "name": "Communications, Electrical & Plumbing Union of Australia (CEPU) - Electrical Division Queensland & NT Branch",
+          "branch": "Electrical Division, QLD/NT Branch"
+        },
+        {
+          "name": "CEPU",
+          "branch": null
+        },
+        "Communications Electrical & Plumbing Union Communications Division",
+        "Communications Electrical Plumbing Union NSW P & T Branch",
+        "Communications Electrical Plumbing Union, Communications Divisio"
+      ],
+      "notes": "The Electrical Trades Union files under its own name as well and is kept as a separate entity: it has its own registration and its own donor page."
+    },
+    {
+      "canonical": "Electrical Trades Union of Australia",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Electrical Trades Union",
+          "branch": null
+        },
+        {
+          "name": "ETU Victorian Branch Trust",
+          "branch": "Victorian Branch"
+        },
+        {
+          "name": "Electrical Trades Union of Employees Queensland ETU Division",
+          "branch": "Queensland"
+        },
+        {
+          "name": "ETU - Electrical Trades Union NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Electrical Trades Union of Australia - Victorian Branch",
+          "branch": "Victorian Branch"
+        },
+        {
+          "name": "ETU National Office",
+          "branch": "National Office"
+        },
+        {
+          "name": "Etu Victoria",
+          "branch": "Victorian Branch"
+        },
+        {
+          "name": "Electrical Trades Union of Australia NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "E.T.U QLD Fighting Fund",
+          "branch": "Queensland"
+        },
+        {
+          "name": "ETU of Australia Queensland Branch",
+          "branch": "Queensland Branch"
+        },
+        {
+          "name": "ETU of Aust NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Electrical Trades Union-Southern States Branch",
+          "branch": "Southern States Branch"
+        },
+        {
+          "name": "Electrical Trades Union of Australia National Council",
+          "branch": "National Council"
+        },
+        {
+          "name": "Electrical Trade Union (Victoria)",
+          "branch": "Victorian Branch"
+        },
+        {
+          "name": "ETU",
+          "branch": null
+        },
+        "Electrical Trades Union (ETU)",
+        "Electrical Trades Union of Australia (CEPU)"
+      ],
+      "notes": "Constitutionally the CEPU Electrical Division, but it registers, files and campaigns under its own name; kept separate from the CEPU with this note rather than silently folded in."
+    },
+    {
+      "canonical": "The Australian Workers' Union",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Australian Workers Union",
+          "branch": null
+        },
+        {
+          "name": "Australian Workers Union National",
+          "branch": "National"
+        },
+        {
+          "name": "Australian Workers' Union (AWU) National Office",
+          "branch": "National Office"
+        },
+        {
+          "name": "The Australian Workers' Union - Greater NSW Branch",
+          "branch": "Greater NSW Branch"
+        },
+        {
+          "name": "Australian Workers&#39; Union (AWU)",
+          "branch": null
+        },
+        {
+          "name": "The Australian Workers Union - Newcastle & Northern Regions Br",
+          "branch": "Newcastle & Northern Branch"
+        },
+        {
+          "name": "Australian Workers Union (Adelaide)",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "AWU Queensland Branch",
+          "branch": "Queensland Branch"
+        },
+        {
+          "name": "AWU Granville Office",
+          "branch": "Granville Office"
+        },
+        {
+          "name": "AWU Greater NSW Branch",
+          "branch": "Greater NSW Branch"
+        },
+        {
+          "name": "AWU Port Kembla office",
+          "branch": "Port Kembla"
+        },
+        {
+          "name": "AWU Western Australia",
+          "branch": "WA Branch"
+        },
+        {
+          "name": "AWU Newcastle Branch",
+          "branch": "Newcastle Branch"
+        },
+        {
+          "name": "AWU The Australian Workers' Union NSW Branch",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "AWU Port Kembla Branch",
+          "branch": "Port Kembla Branch"
+        },
+        {
+          "name": "AWU Newcastle Office",
+          "branch": "Newcastle Branch"
+        },
+        {
+          "name": "AWU Taps Branch",
+          "branch": "TAPS Branch"
+        },
+        {
+          "name": "AWU - Port Kembla, South Coast & Southern Highlands Branch",
+          "branch": "Port Kembla, South Coast & Southern Highlands Branch"
+        },
+        {
+          "name": "AWU PT Kembla Branch",
+          "branch": "Port Kembla Branch"
+        },
+        {
+          "name": "AWU Greater NSW",
+          "branch": "Greater NSW Branch"
+        },
+        {
+          "name": "AWU",
+          "branch": null
+        },
+        "Australian Workers&#39; Union Vic Branch",
+        "Australian Workers Union (Ncle Cent. Coast and Nthn Region)",
+        "Australian Workers Union (Port Kembla)",
+        "Australian Workers Union - Whyalla Branch",
+        "The Australian Workers Union Nation Office"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "National Union of Workers",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "National Union of Workers - Victorian Branch",
+          "branch": "Victorian Branch"
+        },
+        {
+          "name": "National Union of Workers - General Branch",
+          "branch": "General Branch"
+        },
+        {
+          "name": "National Union of Workers (NUW) General Branch",
+          "branch": "General Branch"
+        },
+        {
+          "name": "National Union of Workers Industrial Union of Employees, Queensland",
+          "branch": "Queensland"
+        },
+        {
+          "name": "NUW Victorian Branch",
+          "branch": "Victorian Branch"
+        },
+        {
+          "name": "Nuw National Union of Workers NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "NUW - General Branch",
+          "branch": "General Branch"
+        },
+        {
+          "name": "NUW National",
+          "branch": "National"
+        },
+        {
+          "name": "NUW - National Offivce",
+          "branch": "National Office"
+        },
+        {
+          "name": "NUW",
+          "branch": null
+        },
+        "National Union of Workers (NUW)",
+        "National Union of Workers General B",
+        "National Union of Workers, Manufacturing Branch"
+      ],
+      "notes": "NOT the National Australia Bank. The NUW merged into the United Workers Union in 2019; the successor is a separate entity here so pre-merger totals stay with the NUW."
+    },
+    {
+      "canonical": "United Workers Union",
+      "kind": "union",
+      "aliases": [
+        "United Workers Unon"
+      ],
+      "notes": "Formed in 2019 from United Voice and the National Union of Workers. Both predecessors are kept separate so a donation made in, say, 2010 is not attributed to a union that did not exist."
+    },
+    {
+      "canonical": "United Voice",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "United Voice Legal",
+          "branch": null
+        },
+        {
+          "name": "United Voice (formerly Liquor, Hospitality & Misc Workers Union)",
+          "branch": null
+        },
+        {
+          "name": "United Voice NSW Branch (Lhmu NSW)",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "United Voice National",
+          "branch": "National"
+        },
+        {
+          "name": "United Voice Victoria",
+          "branch": "Victorian Branch"
+        },
+        {
+          "name": "United Voice, South Aust Branch",
+          "branch": "SA Branch"
+        },
+        "United Voice NSW Liquor Division",
+        "United Voice - Vic",
+        "United Voice NSW",
+        "United Voice NSW â€“ Liquor & Hospitality Div.",
+        "United Voice NSW – Liquor & Hospitality Div.",
+        "United Voice NT",
+        "United Voice SA",
+        "United Voice QLD"
+      ],
+      "notes": "Renamed from the Liquor, Hospitality and Miscellaneous Union in 2011 and merged into the United Workers Union in 2019; both neighbours stay separate. 'United Super' (the Cbus trustee), 'United Services Union', 'United Firefighters Union' and 'United Petroleum' are unrelated."
+    },
+    {
+      "canonical": "Transport Workers Union of Australia",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Transport Workers Union",
+          "branch": null
+        },
+        {
+          "name": "Transport Workers Union of NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Transport Workers Union OF New South Wales",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "TWU - Transport Workers Union NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "TWU NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Transport Workers Union of Australia (TWU)",
+          "branch": null
+        },
+        {
+          "name": "Transport Workers Union of Australia - Federal Council",
+          "branch": "Federal Council"
+        },
+        {
+          "name": "TWU National Office",
+          "branch": "National Office"
+        },
+        {
+          "name": "TWU VIC",
+          "branch": "Victorian Branch"
+        },
+        {
+          "name": "TWU Transport Workers Union of NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "TWU of Australia - Federal Council",
+          "branch": "Federal Council"
+        },
+        {
+          "name": "TWU WA",
+          "branch": "WA Branch"
+        },
+        {
+          "name": "TWU QLD",
+          "branch": "Queensland Branch"
+        },
+        {
+          "name": "TWU of Australia National Council",
+          "branch": "National Council"
+        },
+        {
+          "name": "Transport Workers Union of Australia NSW QLD VIC Tas Interim Governance Branch",
+          "branch": "Interim Governance Branch"
+        },
+        {
+          "name": "TWU of Australia NSW QLD Interim Governance Branch",
+          "branch": "Interim Governance Branch"
+        },
+        {
+          "name": "TWU SA",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "TWU of Australia",
+          "branch": null
+        },
+        {
+          "name": "TWU",
+          "branch": null
+        },
+        "Transport Workers Union of Australia NSW",
+        "Transport Workers Union of WA",
+        "Transport Workers Union of Australia WA",
+        "Transport Workers' Union of Australia Federdal Office",
+        "Transport Workers Union of Australian Queensland Branch",
+        "Transport Workers Union of Australia Victorian/Tasmanian Branch"
+      ],
+      "notes": "The International Transport Workers Federation is a separate global body and stays apart."
+    },
+    {
+      "canonical": "TWU Superannuation Fund",
+      "kind": "company",
+      "aliases": [
+        "TWU Super",
+        "TWU Super Fund",
+        "TWU Superfund",
+        "Transport Workers Union Super",
+        "TWU Nominees Pty Ltd",
+        "Transport Workers Union Super Fund"
+      ],
+      "notes": "The union's super fund is a separate legal entity with its own trustee; not merged into the Transport Workers Union."
+    },
+    {
+      "canonical": "Australian Services Union",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Australian Services Union (ASU)",
+          "branch": null
+        },
+        {
+          "name": "Australian Services Union (ASU) National Office - Melbourne",
+          "branch": "National Office"
+        },
+        {
+          "name": "Australian Services Union OF NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Austn Services Union - Services",
+          "branch": null
+        },
+        {
+          "name": "Australian Services Union (Private Sector Branch)",
+          "branch": "Private Sector Branch"
+        },
+        {
+          "name": "Austn Services Union C & A",
+          "branch": "Clerical & Administrative Branch"
+        },
+        {
+          "name": "Australian Services Union - Qld Services Branch",
+          "branch": "QLD Services Branch"
+        },
+        {
+          "name": "Australian Services Union (C & A Branch)",
+          "branch": "Clerical & Administrative Branch"
+        },
+        {
+          "name": "Austn Services Union QLD Services",
+          "branch": "QLD Services Branch"
+        },
+        {
+          "name": "Australian Services Union, Vic Authorities & Services Branch",
+          "branch": "Vic Authorities & Services Branch"
+        },
+        {
+          "name": "Australian Municipal, Administrative, Clerical and Services Union",
+          "branch": null
+        },
+        {
+          "name": "Australian Municipal Administrative Clerical and Services Union Queensland (Services and Northern Administrative) Branch",
+          "branch": "QLD Services & Northern Administrative Branch"
+        },
+        {
+          "name": "Australian Municipal Administrative Clerical Services Union Queensland Together Branch",
+          "branch": "QLD Together Branch"
+        },
+        {
+          "name": "Australian Municipal, Administrative, Clerical And Services Union, New South Wales And ACT (Services) Branch",
+          "branch": "NSW & ACT Services Branch"
+        },
+        {
+          "name": "ASU",
+          "branch": null
+        }
+      ],
+      "notes": "The ASU's registered name is the Australian Municipal, Administrative, Clerical and Services Union. 'The Services Union' and 'United Services Union' are separate registered unions."
+    },
+    {
+      "canonical": "Together Queensland, Industrial Union of Employees",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Together Branch of The ASU",
+          "branch": "Together Branch"
+        },
+        {
+          "name": "Together Branch of the Australian Services Union",
+          "branch": "Together Branch"
+        },
+        {
+          "name": "Together Union",
+          "branch": null
+        },
+        {
+          "name": "Togethe Queensland Industrial Union of Employees",
+          "branch": null
+        }
+      ],
+      "notes": "Queensland public sector union, affiliated to the ASU but separately registered."
+    },
+    {
+      "canonical": "Health Services Union",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Health Services Union (HSU)",
+          "branch": null
+        },
+        {
+          "name": "Health Services Union NSW (State Union)",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Health Services Union of Australia",
+          "branch": null
+        },
+        {
+          "name": "Health Services Union (HSUA 1)",
+          "branch": "HSUA 1"
+        },
+        {
+          "name": "Health Service Union Ltd",
+          "branch": null
+        },
+        {
+          "name": "Health Services Union of WA (State Union)",
+          "branch": "WA Branch"
+        },
+        {
+          "name": "Health Services Union (HSUA 2)",
+          "branch": "HSUA 2"
+        },
+        {
+          "name": "Health Services Union Victoria No. 2 Branch",
+          "branch": "Victoria No 2 Branch"
+        },
+        {
+          "name": "HSU - Health Services Union- NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "HSU NSW Branch",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "HSU - HEALTH SERVICES UNION- NSW for 00055361",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "HSU Direct Debit",
+          "branch": null
+        },
+        {
+          "name": "HSU NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Health Workers Union (HWU)",
+          "branch": "Victoria No 1 Branch"
+        },
+        {
+          "name": "HSU",
+          "branch": null
+        }
+      ],
+      "notes": "'Health & Community Services Union', 'NSW Health Services' and the health insurance associations are different bodies and stay separate."
+    },
+    {
+      "canonical": "Australian Manufacturing Workers' Union",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Australian Manufacturing Workers Union",
+          "branch": null
+        },
+        {
+          "name": "Australian Manufacturing Workers Union (AMWU) National Office - Melbourne",
+          "branch": "National Office"
+        },
+        {
+          "name": "Australian Manufacturing Workers Union (AMWU)",
+          "branch": null
+        },
+        {
+          "name": "Aust Manufacturing Workers Union",
+          "branch": null
+        },
+        {
+          "name": "Australian Manufacturing Workers Union Metals Division",
+          "branch": "Metals Division"
+        },
+        {
+          "name": "AMWU",
+          "branch": null
+        },
+        {
+          "name": "AMWU Metals Division Vic",
+          "branch": "Metals Division, Vic"
+        },
+        {
+          "name": "AMWU - Australian Manufacturing Workers Union-NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "AMWU Metals Division",
+          "branch": "Metals Division"
+        },
+        {
+          "name": "AMWU Printing Division",
+          "branch": "Printing Division"
+        },
+        {
+          "name": "AMWU National",
+          "branch": "National"
+        },
+        {
+          "name": "AMWU Vehicle Division",
+          "branch": "Vehicle Division"
+        },
+        {
+          "name": "AMWU - Brisbane",
+          "branch": "Queensland Branch"
+        },
+        {
+          "name": "AMWU - WA",
+          "branch": "WA Branch"
+        },
+        {
+          "name": "AMWU - NSW",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "AMWU( Manuf &amp; food)",
+          "branch": "Manufacturing & Food Division"
+        },
+        {
+          "name": "Automotive Food Metals Engineering Printing & Kindred Industries Union",
+          "branch": null
+        },
+        {
+          "name": "Automotive Food Metals Engineering Printing &amp; Kindred Industries Union",
+          "branch": null
+        },
+        {
+          "name": "Automotive Food Metals Engineering Printing & Kindred Industries",
+          "branch": null
+        },
+        "Australian Manufacturing Workers' Union (AMWU) National Office Sydney",
+        "Australian Manufacturing Workers Union (Automotive, Food, Metals",
+        "Australian Manufacturing Workers Union (Automotive, Food, Metals, Enfineering, Printing & Kindred Industries Union), Queensland Branch",
+        "Australian Manufacturing Workers Unions",
+        "Australian Manufacturing Workers Queensland Branch",
+        "Australian Manufacturing Workers Union (Automotive, Food, Metals, Engineering, Printing & Kindred Industries Union), Queensland Branch"
+      ],
+      "notes": "The AMWU's registered name is the Automotive, Food, Metals, Engineering, Printing and Kindred Industries Union; the two names are one union."
+    },
+    {
+      "canonical": "Australian Nursing and Midwifery Federation",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Australian Nursing and Midwifery Federation (ANMF)",
+          "branch": null
+        },
+        {
+          "name": "Australian Nursing Federation",
+          "branch": null
+        },
+        {
+          "name": "Australian Nursing Federation, Industrial Union of Workers Perth",
+          "branch": "WA Branch"
+        },
+        {
+          "name": "Australian Nursing and Midwifery Federation (ANMF) (Federal Office - Melbourne)",
+          "branch": "Federal Office"
+        },
+        {
+          "name": "The Australian Nursing Federation, Industrial Union of Wokers Perth",
+          "branch": "WA Branch"
+        },
+        {
+          "name": "ANMF NSW Branch",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "ANMF (SA Branch) State Registered Union",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "ANMF SA Branch (state registered)",
+          "branch": "SA Branch"
+        },
+        {
+          "name": "ANMF",
+          "branch": null
+        }
+      ],
+      "notes": "Renamed from the Australian Nursing Federation in 2013. The NSW Nurses and Midwives' Association is a separately registered state union and stays apart."
+    },
+    {
+      "canonical": "New South Wales Nurses and Midwives' Association",
+      "kind": "union",
+      "aliases": [
+        "New South Wales Nurses and Midwives' Association (NSWNMA)",
+        "New South Wales Nurses and Midwives' Association (NSWNMA) (Head Office)",
+        "New South Wales Nurses and Midwives&#39; Association (NSWNMA)",
+        "New South Wales Nurses' Association",
+        "NSW Nurses and Midwives&#39; Assoc",
+        "NSW Nurses Association",
+        "NSW Nurses and Midwives' Association",
+        "NSWNMA"
+      ],
+      "notes": "State-registered union; the ANMF NSW Branch rows are filed under the federal body and stay there."
+    },
+    {
+      "canonical": "Finance Sector Union of Australia",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Finance Sector Union",
+          "branch": null
+        },
+        {
+          "name": "Financia Sector Union of Australia National Office",
+          "branch": "National Office"
+        },
+        {
+          "name": "Finance Scetor Union of Australia",
+          "branch": null
+        },
+        {
+          "name": "Finance Sector Union (FSU)",
+          "branch": null
+        },
+        {
+          "name": "Fsu NSW Branch",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Fsu OF Australia Nsw/Act Branch",
+          "branch": "NSW/ACT Branch"
+        },
+        {
+          "name": "FSU",
+          "branch": null
+        },
+        "Finance Sector Union of Aust QLD Industrial Union of Employees",
+        "Finance Sector Union of Australia, Qld Branch, Industrial Union",
+        "Finance Sector Union of Australia, Qld Branch, Industrial Union of Employees",
+        "Finance Sector Union of Australia - Col/State Br",
+        "Finance Sector Union NSW Commonwealth Bank"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Maritime Union of Australia",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Maritime Union of Australia - Sydney Branch",
+          "branch": "Sydney Branch"
+        },
+        {
+          "name": "Maritime Union Queensland Branch",
+          "branch": "Queensland Branch"
+        },
+        {
+          "name": "Maritime Union of Australia Queensland",
+          "branch": "Queensland Branch"
+        },
+        {
+          "name": "MUA",
+          "branch": null
+        },
+        "Maritime Union of Australia (HO)",
+        "Maritime Unions of Australia",
+        "Maritime Union of WA",
+        "Maritime Union of Australia (NNSW & SNSW)",
+        "Maritime Union of Australia (Central NSW Branch)"
+      ],
+      "notes": "The Maritime Mining Power Credit Union is a bank, not the union, and stays separate."
+    },
+    {
+      "canonical": "Australasian Meat Industry Employees Union",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Amieu",
+          "branch": null
+        },
+        {
+          "name": "Australasian Meat Industry Employees Union (AMIEU) Federal Office",
+          "branch": "Federal Office"
+        },
+        {
+          "name": "A M I E U",
+          "branch": null
+        },
+        {
+          "name": "AMIEU Newcastle & Northern Branch",
+          "branch": "Newcastle & Northern Branch"
+        },
+        {
+          "name": "Amieu Newcastle & Nthern Branch",
+          "branch": "Newcastle & Northern Branch"
+        },
+        {
+          "name": "Australasian Meat Industry Employees Union - Federal Council",
+          "branch": "Federal Council"
+        },
+        {
+          "name": "Australasian Meat Industry Employees Union (AIMWU) (Federal Office)",
+          "branch": "Federal Office"
+        },
+        {
+          "name": "Australiasian Meat Industry Employees Union (AMIEU) Federal Office",
+          "branch": "Federal Office"
+        },
+        "Australasian Meat Industry Employees Union - Nctle & Northern",
+        "Australasian Meat Industry Employees&#39; Union Queensland Branch",
+        "Australasian Meat Industry Union of Employees Qld",
+        "Australasian Meat Industry Employees Union-Newcastle & Northern"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Australian Rail, Tram and Bus Industry Union",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Australian Rail Tram & Bus Industry Union (Queensland Branch)",
+          "branch": "Queensland Branch"
+        },
+        {
+          "name": "RTBU National Office",
+          "branch": "National Office"
+        },
+        {
+          "name": "Rail, Tram and Bus Union",
+          "branch": null
+        },
+        {
+          "name": "Rail, Tram and Bus Union (RTBU)",
+          "branch": null
+        },
+        {
+          "name": "Rtbu Rail, Tram & Bus Union (NSW Branch)",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Rail, Bus & Tram Union QLD Branch",
+          "branch": "Queensland Branch"
+        },
+        {
+          "name": "Australian Rail, Tram and Bus Union",
+          "branch": null
+        },
+        {
+          "name": "Australian Rail Tram and Bus Industry Union of Employees West Australian Branch",
+          "branch": "WA Branch"
+        },
+        {
+          "name": "Rail, Bus & Tram Union QLD Branc",
+          "branch": "Queensland Branch"
+        },
+        {
+          "name": "Australian Rail Tram &amp; Bus Industry Union (Queensland Branch)",
+          "branch": "Queensland Branch"
+        },
+        {
+          "name": "RTBU",
+          "branch": null
+        },
+        "Australian Rail Tram And Bus Industry Union National",
+        "Australian Rail, Tram and Bus Industry Union (Rail",
+        "The Rail, Tram and Bus Industry Union National Office",
+        "Australian Rail Tram and Bus Industry"
+      ],
+      "notes": "Rail Corporation of NSW is a state operator, not the union."
+    },
+    {
+      "canonical": "Liquor, Hospitality and Miscellaneous Union",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Liquor, Hospitality & Miscellaneous Union - National Office",
+          "branch": "National Office"
+        },
+        {
+          "name": "Australian Liquor, Hospitality & Miscellaneous Workers Union QLD",
+          "branch": "Queensland Branch"
+        },
+        {
+          "name": "Liquor Hospitality & Miscellaneous Workers Union",
+          "branch": null
+        },
+        {
+          "name": "Australian Liquor, Hospitality & Misc. Workers Union",
+          "branch": null
+        },
+        {
+          "name": "LHMU",
+          "branch": null
+        },
+        {
+          "name": "LHMU - Liq Hosp & Misc Workers NSW Branch",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "LHMU - National Council and State Branches",
+          "branch": "National Council"
+        },
+        {
+          "name": "LHMU-LIQ HOSP &MISC WORKERS NSW BRANCH(UniteVoice)",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Lhmwu",
+          "branch": null
+        },
+        {
+          "name": "Liquor Hospitality & Miscellaneous Workers",
+          "branch": null
+        }
+      ],
+      "notes": "Renamed United Voice in 2011; kept separate from United Voice so the pre-2011 and post-2011 names each keep their own history."
+    },
+    {
+      "canonical": "Independent Education Union of Australia",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Independent Education Union of Australia (IEU)",
+          "branch": null
+        },
+        {
+          "name": "Independent Education Union of Australia (IEU) VIC/TAS Branch - Hobart",
+          "branch": "Vic/Tas Branch"
+        },
+        {
+          "name": "Independent Education Union - VIC/TAS Branch",
+          "branch": "Vic/Tas Branch"
+        }
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Queensland Teachers' Union",
+      "kind": "union",
+      "aliases": [
+        {
+          "name": "Queensland Teachers Union",
+          "branch": null
+        },
+        {
+          "name": "Queensland Teachers Union (QTU)",
+          "branch": null
+        },
+        {
+          "name": "Queensland Teachers Union of Employees",
+          "branch": null
+        },
+        {
+          "name": "QTU",
+          "branch": null
+        }
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Queensland Nurses and Midwives' Union",
+      "kind": "union",
+      "aliases": [
+        "Queensland Nurses and Midwives Union",
+        "Queensland Nurses Union of Employees",
+        "Queensland Nurses' Union",
+        "Queensland Nurses and Midwives' Union( QNMU)",
+        "QNMU"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "State School Teachers' Union of Western Australia",
+      "kind": "union",
+      "aliases": [
+        "State School Teachers Union Of Western Australia",
+        "State School Teachers Union of Western Australi",
+        "State School Teachers Union OF Western Australia (Sstuwa)",
+        "State School Teachers Union",
+        "SSTUWA"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Unions NSW",
+      "kind": "union",
+      "aliases": [],
+      "notes": "Pinned so it cannot absorb Unions ACT or the other state labour councils, which are separate bodies."
+    },
+    {
+      "canonical": "Perth Trades Hall",
+      "kind": "union",
+      "aliases": [
+        "Perth Trades Hall Inc",
+        "Perth Trades Hall Incorporated T/A Labor Business Roundtable",
+        "Perth Trades Hall TA Labor Business Roundtable",
+        "Perth Trades Hall T/A Labor Business Round Table",
+        "Perth Trades Hall T/A Labor Business Roundtable"
+      ],
+      "notes": "The Labor Business Roundtable is Perth Trades Hall's trading name, not a party unit."
+    },
+    {
+      "canonical": "Australian Hotels Association",
+      "kind": "association",
+      "aliases": [
+        {
+          "name": "Australian Hotels Association (NSW)",
+          "branch": "NSW Branch"
+        },
+        {
+          "name": "Australian Hotels & Hospitality Association Inc.",
+          "branch": null
+        },
+        {
+          "name": "Australian Hotel & Hospitality Association",
+          "branch": null
+        },
+        {
+          "name": "Australian Hotels Association – Tasmanian Hospitality Association",
+          "branch": "Tasmania"
+        },
+        {
+          "name": "Aust. Hotel & Hospitality Assocn.",
+          "branch": null
+        },
+        {
+          "name": "Australian Hotel & Hospitality",
+          "branch": null
+        },
+        {
+          "name": "AHA",
+          "branch": null
+        },
+        "Australian Hotels Association of South Australia",
+        "Australian Hotels Association and Tourism Accommodation Australia",
+        "Australia Hotels Association",
+        "Australian Hotels Association Gosford",
+        "Australian Hotels Association Inc. Gaming"
+      ],
+      "notes": "The Queensland Hotels Association is a separately incorporated body and stays apart."
+    },
+    {
+      "canonical": "Queensland Hotels Association",
+      "kind": "association",
+      "aliases": [
+        "Queensland Hotels Association Union of Employers",
+        "QHA"
+      ],
+      "notes": "Separate from the Australian Hotels Association."
+    },
+    {
+      "canonical": "The Pharmacy Guild of Australia",
+      "kind": "association",
+      "aliases": [
+        {
+          "name": "Pharmacy Guild",
+          "branch": null
+        },
+        {
+          "name": "The Pharmacy Guild of Australia Victoria",
+          "branch": "Victoria Branch"
+        },
+        "Pharmacy Guild Aus VIC",
+        "Pharmacy Guild of Australia National Secretariat",
+        "Pharmacy Guild of Australia VIC",
+        "National Pharmacy Guild of Australia"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Minerals Council of Australia",
+      "kind": "association",
+      "aliases": [
+        {
+          "name": "Minerals Council of Australia ACT",
+          "branch": "ACT"
+        }
+      ],
+      "notes": "The NSW Minerals Council and the Chamber of Minerals and Energy of WA are separate state bodies."
+    },
+    {
+      "canonical": "Insurance Australia Group",
+      "kind": "company",
+      "aliases": [
+        "Insurance Australia Group Ltd (IAG)",
+        "IAG",
+        "Insurance Australia Group (IAG)"
+      ],
+      "notes": "An insurer. NOT the Insurance Council of Australia, which is the industry's peak lobby; both appear on the map and must stay apart."
+    },
+    {
+      "canonical": "Insurance Council of Australia Limited",
+      "kind": "association",
+      "aliases": [],
+      "notes": "Peak body, pinned off Insurance Australia Group."
+    },
+    {
+      "canonical": "Registered Clubs Association of NSW",
+      "kind": "association",
+      "aliases": [
+        "Registered Clubs Association of NSW (t/as ClubsNSW)",
+        "ClubsNSW",
+        "Registered Clubs Assn OF NSW T/A Clubs NSW",
+        "The Registered Clubs Association of NSW (Clubs NSW), 61 724 302",
+        "The Registered Clubs Association of NSW (Clubs NSW), 61 724 302 100",
+        "Registered Clubs Association"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Master Builders Australia Ltd",
+      "kind": "association",
+      "aliases": [],
+      "notes": "The national body. State Master Builders Associations file separately and stay separate."
+    },
+    {
+      "canonical": "Taxi Council of Queensland",
+      "kind": "association",
+      "aliases": [
+        "Taxi Council of Queensland Incorporated",
+        "TAXI Council of QLD Inc"
+      ],
+      "notes": "The NSW Taxi Council is a different body."
+    },
+    {
+      "canonical": "Victorian Automobile Chamber of Commerce",
+      "kind": "association",
+      "aliases": [
+        "VACC",
+        "Victorian Automotive Chamber of Commerce"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "National Automotive Leasing and Salary Packaging Association",
+      "kind": "association",
+      "aliases": [
+        "National Automative Leasing & Salary Packaging Assoc.",
+        "NALSPA"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Firearm Dealers Association Queensland",
+      "kind": "association",
+      "aliases": [
+        "Firearm Dealers Association - Q'ld. Inc.",
+        "Firearms Dealers Association Qld Inc."
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Royal Automobile Club of Victoria (RACV) Limited",
+      "kind": "association",
+      "aliases": [
+        "RACV",
+        "Royal Automobile Club of Victoria"
+      ],
+      "notes": "Each state's royal automobile club is a separate mutual; only the Victorian one's spellings merge here."
+    },
+    {
+      "canonical": "The 500 Club",
+      "kind": "association",
+      "aliases": [],
+      "notes": "WA Liberal fundraising club. The 500 Club of New South Wales is a different body."
+    },
+    {
+      "canonical": "Wesfarmers Limited",
+      "kind": "company",
+      "aliases": [
+        "Wesfarmers Insurance"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Coles Group Limited",
+      "kind": "company",
+      "aliases": [
+        "Coles Myer Ltd",
+        "Coles Supermarket/Pick n Pay",
+        "Coles Supermarkets/Pick n Pay",
+        "Coles Myer Logistics",
+        "Coles Logistics",
+        "Coles Myer Finance Limited",
+        "Coles Supermarkets Australia Pty Ltd"
+      ],
+      "notes": "Coles Myer became Coles Group in 2007. Not the CFMEU, which shares only the first letters."
+    },
+    {
+      "canonical": "Woodside Energy",
+      "kind": "company",
+      "aliases": [
+        "Woodside",
+        "Woodside Petroleum Ltd",
+        "Woodside Energy Group Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Glencore Australia Holdings Pty Limited",
+      "kind": "company",
+      "aliases": [
+        "Glencore",
+        "Glencore Coal Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "BHP Group Limited",
+      "kind": "company",
+      "aliases": [
+        "BHP Billiton Limited",
+        "BHP",
+        "BHP Billiton"
+      ],
+      "notes": "BHP Mitsui Coal and BHP Iron Ore are separate joint-venture companies and stay apart."
+    },
+    {
+      "canonical": "Rio Tinto Limited",
+      "kind": "company",
+      "aliases": [
+        "Rio Tinto Services Ltd",
+        "Rio Tinto"
+      ],
+      "notes": "Rio Tinto Coal Australia is a distinct operating company and stays apart."
+    },
+    {
+      "canonical": "Peabody Energy Australia Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Peabody Energy Australia Coal Pty Ltd",
+        "Peabody Pty Ltd",
+        "Peabody Energy Austrlia Pty Ltd",
+        "Peabody Energy Australia PCI (C&M Management) Pty Ltd",
+        "Peabody Energy Aust Wambo",
+        "Peabody Energy Australia PCI (C&M Manage"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Whitehaven Coal Limited",
+      "kind": "company",
+      "aliases": [
+        "Whitehaven Coal Mining Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Adani Mining Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Adani Mining Pty Ltd (T/A Bravus Mining and Resources)",
+        "Bravus Mining and Resources"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Yancoal Australia Limited",
+      "kind": "company",
+      "aliases": [
+        "Yancoal"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Illawarra Coal Holdings Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Illawarra Coal Holdings Pty Ltd (South32)",
+        "Illawarra Coal Holdings Pty Ltd (South 32)"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Anglo American Metallurgical Coal Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Anglo Coal Pty Ltd",
+        "Anglo American"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Thiess Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Thiess Contractors Pty Ltd",
+        "Thiess Environmental Services Pty Ltd (ACT/NSW Bra",
+        "Thiess Pty Ltd Corporate",
+        "Thiess Services Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Leighton Holdings",
+      "kind": "company",
+      "aliases": [
+        "Leighton Contractors Pty Limited",
+        "Leighton Holdings Limited"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Westfield Corporation Limited",
+      "kind": "company",
+      "aliases": [
+        "Westfield Capital Corporation Limited",
+        "Westfield Design & Construction Pty Ltd",
+        "Westfield Trust",
+        "Westfield Holdings Limited",
+        "Westfield Capital Management",
+        "Westfield Retail Trust"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Meriton Apartments Pty Limited",
+      "kind": "company",
+      "aliases": [
+        "Meriton Properties Pty Ltd",
+        "Meriton Property Services",
+        "Meriton Group",
+        "Meriton Property Service Pty Ltd",
+        "Meriton Property Service P/L"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Mirvac Group",
+      "kind": "company",
+      "aliases": [
+        "Mirvac Projects Pty Ltd",
+        "Mirvac Queensland Pty Limited",
+        "Mirvac Limited",
+        "Mirvac Group - Head Office",
+        "Mirvac Qld Limited",
+        "Mirvac Fini WA Pty Ltd",
+        "MIRVAC Homes (NSW) Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Lendlease Corporation Limited",
+      "kind": "company",
+      "aliases": [
+        "Lend Lease Corporation Ltd and its Subsidiaries",
+        "Lend Lease Corporation Ltd",
+        "Lend Lease Management Services Ltd",
+        "Lend Lease Building Pty Ltd",
+        "Lend Lease",
+        "Lendlease (Australia) Pty Limited",
+        "Lendlease Group Services",
+        "Lendlease Management Services Ltd",
+        "Lendlease IMT (LLITST ST) Pty Ltd",
+        "Lendlease Building Pty Limited"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Multiplex Constructions Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Multiplex",
+        "Multiplex Developments (QLD) Pty Ltd",
+        "Multiplex Constructions (Qld) Pty Ltd",
+        "Multiplex Constructions (SA) Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Transurban Holdings Limited",
+      "kind": "company",
+      "aliases": [
+        "Transurban City Link Limited",
+        "Transurban Infrastructure Developments Limited",
+        "Transurban Group"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Transfield Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Transfield Services Limited",
+        "Transfield Corporate Pty Limited",
+        "Transfield Services (Australia) Pty Limited",
+        "Transfield Corporate Pty Limited/Transfield Holdings Pty Ltd",
+        "Transfield Holdings Pty Limited/ Transfield Corporate P/L",
+        "Transfield Group Entities",
+        "Transfield Services (Australia) P/L"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Tenix Pty Limited",
+      "kind": "company",
+      "aliases": [
+        "Tenix Corporate Pty Limited",
+        "Tenix Defence Systems Pty Ltd",
+        "Tenix Holdings International Pty Ltd",
+        "Tenix Infrastructure Pty Limited"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Austal Limited",
+      "kind": "company",
+      "aliases": [
+        "Austal Ships Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "BlueScope Steel Limited",
+      "kind": "company",
+      "aliases": [
+        "BlueScope",
+        "BlueScope Steel (AIS) Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Philip Morris Limited",
+      "kind": "company",
+      "aliases": [
+        "Phillip Morris Limited",
+        "Philip Morris (Australia) Ltd",
+        "Philip Morris Corporate Services Inc"
+      ],
+      "notes": "'Phillip' with two Ls is a filing typo, not a different company."
+    },
+    {
+      "canonical": "British American Tobacco Australia Limited",
+      "kind": "company",
+      "aliases": [
+        "British American Tobacco Australasia Ltd (formally called Rothma",
+        "British American Tobacco Australasia Ltd (formally",
+        "British American Tobacco"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Lion Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Lion Nathan Limited",
+        "Lion Nathan Australia Pty Ltd",
+        "Lion-Beer, Spirits & Wine Pty Ltd",
+        "Lion Nathan National Foods"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Tabcorp Holdings Limited",
+      "kind": "company",
+      "aliases": [
+        "TABCORP Participants Pty Ltd & VICRACING Pty Ltd",
+        "Tabcorp",
+        "Tabcorp Star City",
+        "TABCORP Participants Pty Ltd &amp; VICRACING Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "The Star Entertainment Group Limited",
+      "kind": "company",
+      "aliases": [
+        "The Star Entertainment Qld Limited",
+        "Star Entertainment Group",
+        "The Star Group"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Crown Resorts Limited",
+      "kind": "company",
+      "aliases": [
+        "Crown Limited",
+        "Crown Events & Conferences",
+        "Crown Entertainment",
+        "Crown Casino"
+      ],
+      "notes": "Crown Constructions and Crown Group Construction are unrelated builders and stay separate."
+    },
+    {
+      "canonical": "The Lottery Corporation",
+      "kind": "company",
+      "aliases": [],
+      "notes": "Pinned off the state lottery commissions, which are government bodies."
+    },
+    {
+      "canonical": "Ramsay Health Care Limited",
+      "kind": "company",
+      "aliases": [
+        "Ramsay Health Care Aust Pty Ltd",
+        "Ramsey Health Care Aust Pty Ltd",
+        "Ramsey Health Care Aust P/L",
+        "Ramsay Health Care Investments Pty Ltd",
+        "Ramsay Health Care Aust P/L",
+        "Ramsay Health Care / Joondalup Health Campus"
+      ],
+      "notes": "'Ramsey' is a filing typo. Paul Ramsay Holdings, the founder's private company, is a separate donor."
+    },
+    {
+      "canonical": "Paul Ramsay Holdings Pty Limited",
+      "kind": "company",
+      "aliases": [],
+      "notes": "The founder's private holding company; kept apart from both Ramsay Health Care and the Paul Ramsay Foundation."
+    },
+    {
+      "canonical": "Pfizer Australia Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Pfizer Pty Ltd",
+        "Pfizer"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Novartis Pharmaceuticals Australia Pty Limited",
+      "kind": "company",
+      "aliases": [
+        "Novartis Group",
+        "Novartis"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Merck Sharp & Dohme (Australia) Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "MSD"
+      ],
+      "notes": "'MSD' is the company's trading name. The initials also matched an unrelated couple's names, which stay separate because individuals never fuzzy-merge."
+    },
+    {
+      "canonical": "Bupa Australia",
+      "kind": "company",
+      "aliases": [
+        "BUPA Australia",
+        "Bupa",
+        "Bupa Australia & New Zealand",
+        "BUPA Australia Healthcare"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Chevron Australia Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Chevron Australia Ptd Ltd",
+        "Chevron"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Allianz Australia Limited",
+      "kind": "company",
+      "aliases": [
+        "Allianz Australia Insurance Limited",
+        "Allianz Insurance",
+        "Allianz",
+        "Allianz Australia Workers Compensation (Victoria)",
+        "Allianz Aust Workers Comp VIC",
+        "Allianz Partners",
+        "Allianz Workers Compensation NSW Ltd",
+        "Allianz Aust Workers Comp (VIC)",
+        "Allianz Australia Workers' Compensation (NSW) Ltd",
+        "Allianz Aust Ins Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Chubb Insurance Company of Australia",
+      "kind": "company",
+      "aliases": [
+        "Chubb Insurance",
+        "Chubb Insurance Co of Australia Ltd",
+        "Chubb Insurance Australia Limited"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Employers Mutual Limited",
+      "kind": "company",
+      "aliases": [
+        "Employers Mutual Management Pty Ltd",
+        "Employers Mutual SA Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Manildra Group",
+      "kind": "company",
+      "aliases": [
+        "Manildra Group of Companies",
+        "Manildra Flour Mills Pty Ltd",
+        "The Manildra Group (10607)",
+        "Manildra Group of Companies, 80 000 217 523"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Inghams Enterprises Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Ingham Enterprises Pty Ltd",
+        "Inghams Group Limited"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Maurice Blackburn Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Maurice Blackburn Lawyers",
+        "Maurice Blackburn Commercial Lawyers"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "PricewaterhouseCoopers",
+      "kind": "company",
+      "aliases": [
+        "PricewaterhouseCoopers Services",
+        "PwC",
+        "PwC Australia"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "IKON Communications",
+      "kind": "company",
+      "aliases": [
+        "Ikon Communication Pty Ltd",
+        "Ikon"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Hawker Britton Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Hawker Britton (NSW) Pty Ltd",
+        "Hawker Britton"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Govstrat Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Govstrat QLD Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "SAS Consulting Group Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "SAS Group (T/A SAS Consulting Group Pty Ltd)"
+      ],
+      "notes": "SMS Consulting Group is a different firm and stays separate."
+    },
+    {
+      "canonical": "Sarina Russo Group",
+      "kind": "company",
+      "aliases": [
+        "Sarina Russo Job Access (Australia) Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Cryptoloc Technology Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Cryptoloc"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Visa AP (Australia) Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "VISA Worldwide Pte.Limited",
+        "Visa Australia"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Australia Post",
+      "kind": "company",
+      "aliases": [
+        "Australia Post Shared Services",
+        "Australian Postal Corporation"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Telstra Corporation Limited",
+      "kind": "company",
+      "aliases": [
+        "Telstra",
+        "Telstra Corpration Limited",
+        "Telstra Corporation Ltd - dividend",
+        "Telstra Strategic Marketing",
+        "Telstra Business & Govt"
+      ],
+      "notes": "Telstra Super is a separate trustee company."
+    },
+    {
+      "canonical": "Australian Gypsum Industries",
+      "kind": "company",
+      "aliases": [
+        "Aust Gypsum Industries"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Wilson Parking Australia 1992 Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Wilson Parking"
+      ],
+      "notes": "Wilson Security is a sibling business under the same group but a distinct operator with its own contracts; both appear separately on the map."
+    },
+    {
+      "canonical": "Wilson Security Pty Ltd",
+      "kind": "company",
+      "aliases": [],
+      "notes": "Pinned off Wilson Parking."
+    },
+    {
+      "canonical": "Endeavour Group",
+      "kind": "company",
+      "aliases": [],
+      "notes": "Drinks and hotels, demerged from Woolworths. NOT Endeavour Energy (a NSW electricity network) or Endeavour Mutual Bank; all three are pinned apart."
+    },
+    {
+      "canonical": "Endeavour Energy",
+      "kind": "company",
+      "aliases": [
+        "Endeavour Energy Endeavour",
+        "Endeavour Energy Endeavour Energy"
+      ],
+      "notes": "NSW electricity distributor, unrelated to Endeavour Group."
+    },
+    {
+      "canonical": "Russell Investments",
+      "kind": "company",
+      "aliases": [],
+      "notes": "Pinned off Russell Mineral Equipment and Russell Pty Ltd, which are unrelated."
+    },
+    {
+      "canonical": "Shadforths Limited",
+      "kind": "company",
+      "aliases": [],
+      "notes": "A stockbroker. Shadforth's Civil is an unrelated civil contractor and stays separate."
+    },
+    {
+      "canonical": "Packer Leather Pty Ltd",
+      "kind": "company",
+      "aliases": [],
+      "notes": "A Brisbane tannery, pinned off Packer & Co and any Packer family vehicle."
+    },
+    {
+      "canonical": "Incolink",
+      "kind": "company",
+      "aliases": [
+        "Incolink - Redundancy Payment Central Fund Ltd",
+        "Redundancy Payment Central Fund Ltd"
+      ],
+      "notes": "The Incolink Foundation is a separate charity."
+    },
+    {
+      "canonical": "Protect Severance Scheme",
+      "kind": "company",
+      "aliases": [
+        "Protect",
+        "Protect Severance Scheme No.2 Pty Ltd",
+        "Protect Severance Scheme No.1 Pty Ltd",
+        "Protect Services Pty Ltd"
+      ],
+      "notes": "Electrical industry severance scheme; the numbered companies are one scheme."
+    },
+    {
+      "canonical": "Building Employees Redundancy Trust",
+      "kind": "company",
+      "aliases": [
+        "BERT Training Fund",
+        "BERT Welfare Limited",
+        "BERT Fund No. 2",
+        "B.E.R.T. Fund No. 2",
+        "BERT",
+        "B.E.R.T Fund",
+        "B.E.R.T Fund Bert Fund",
+        "BERT Welfare Fund",
+        "BERT Welafre Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Cbus",
+      "kind": "company",
+      "aliases": [
+        "United Super Pty Ltd",
+        "United Super Pty Ltd T/a CBUS",
+        "United Super Pty Ltd ATF Cbus",
+        "United Super Pty Ltd ATF Cbus Superannuation",
+        "United Super P/L ATF Cbus Superannuation",
+        "United Super Pty Ltd - Cbus",
+        "Cbus Australian Super Fund",
+        "CBUS Super T/A United Super Pty Ltd",
+        "CBUS Superannuation",
+        "Cbus Super",
+        "CBUS Fund United Super Pty Ltd",
+        "Cbus Super South Australia"
+      ],
+      "notes": "United Super Pty Ltd is the trustee of Cbus; the two names are one fund. Cbus Property is a separate operating company."
+    },
+    {
+      "canonical": "Climate 200 Pty Limited",
+      "kind": "company",
+      "aliases": [
+        "Climate 200 Pty Limited - Donation",
+        "Climate 200"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Pratt Holdings Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Pratt Industries",
+        "Pratt Holdings P/L",
+        "Visy Industries"
+      ],
+      "notes": "The Pratt Foundation is the family's philanthropic arm and stays separate."
+    },
+    {
+      "canonical": "Altum Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Altum Pty Ltd (Associated Entity)",
+        "Altum Pty Ltd ATF The Altum Property Unit Trust",
+        "Altum Property Trust",
+        "Altum ATF The HQ Trust (Associated Entity)",
+        "Altum Pty Ltd as Trustee for the Altum Property Unit Trust",
+        "Altum Property Unit Trust",
+        "Altum Pty Ltd ATF The HQ Trust (Associated Entity)",
+        "Altum P/L ATF The Headquarters Trust",
+        "Altum Pty Ltd ATF The Property Unit Trust"
+      ],
+      "notes": "One company and the trusts it acts for, filed ten ways."
+    },
+    {
+      "canonical": "Furama Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Furama Pty Ltd ATF Pearson Street Unit Trust"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Oryxium Investments Limited",
+      "kind": "company",
+      "aliases": [
+        "Oryxium Pty Limited"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Keldoulis Investments Pty Limited",
+      "kind": "company",
+      "aliases": [
+        "Keldoulis Investments - Donation",
+        "Keldoulis Investments - in-kind"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Doogary Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Doogary P/L ATF NPA Vic Settlement",
+        "Doogary Pty Ltd ATF NPA Vic Settlement"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Springfield Land Corporation",
+      "kind": "company",
+      "aliases": [
+        "Springfield Land Corporation ATF Springfield Development Trust"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Sentinel Property Group",
+      "kind": "company",
+      "aliases": [
+        "Sentinel Property Trust",
+        "Sentinel Group"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "NIOA Nominees Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "NIOA Nominees Pty Ltd T/F BILL NIOA Family Trust",
+        "Nioa Nominees Pty Ltd ATF Bill Nioa Family Trust",
+        "Nioa Nominees",
+        "NIOA"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Mowburn Nominees",
+      "kind": "company",
+      "aliases": [
+        "Mowburn Nominees P/L"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Kingold Group",
+      "kind": "company",
+      "aliases": [
+        "Kingold Group Companies Ltd",
+        "Australia Kingold Investment Development Co P/L",
+        "Australia Kingold Investment Development CO. Pty Ltd",
+        "Kingold Media",
+        "Kingold Investment Group"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Hong Kong Kingson Investment Co., Ltd.",
+      "kind": "company",
+      "aliases": [
+        "Hong Kong Kingson Investment Ltd (red"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Mallen's Colac Hotel Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Malens Colac Hotel Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Epic Pharmacy Services Pty Ltd",
+      "kind": "company",
+      "aliases": [
+        "Epic Pharmacy Management Pty Ltd"
+      ],
+      "notes": null
+    },
+    {
+      "canonical": "Csr Limited",
+      "kind": "company",
+      "aliases": [
+        "CSR Limited"
+      ],
+      "notes": "CSR Viridian is a separate subsidiary that filed in its own name."
+    },
+    {
+      "canonical": "Gulf Coast Aviation Pty Ltd",
+      "kind": "company",
+      "aliases": [],
+      "notes": "Pinned off Gulf Coast Pty Ltd and Gulf Coast Agricultural Company, which file separately."
+    },
+    {
+      "canonical": "Chifley Financial Services",
+      "kind": "company",
+      "aliases": [
+        "Chifley Services Pty Ltd",
+        "Chifley Services P/L",
+        "Chifley Financial Svc",
+        "Chifley Fiancial Services Ltd",
+        "Chifley Financial Servcies",
+        "Chifley Trading Trust"
+      ],
+      "notes": "The Chifley Research Centre is Labor's think tank and is a separate body."
+    },
+    {
+      "canonical": "Australian Energy Producers",
+      "kind": "association",
+      "aliases": [
+        "Australian Petroleum Production & Exploration Association",
+        "APPEA"
+      ],
+      "notes": "Renamed from APPEA in 2023. Pinned off the many unrelated 'Energy ...' companies."
+    },
+    {
+      "canonical": "Energy Australia",
+      "kind": "company",
+      "aliases": [
+        "EnergyAustralia"
+      ],
+      "notes": "Retailer; pinned off Energy Super and the Energy Industries Superannuation Scheme."
+    }
+  ]
+}
