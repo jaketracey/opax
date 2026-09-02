@@ -1522,6 +1522,11 @@ function votesFor(name) {
   return (pid && votesData?.[pid]) || null;
 }
 
+/** Off-site lookup for a person, company or party: a web search in a new tab. */
+function webSearchUrl(name) {
+  return `https://www.google.com/search?q=${encodeURIComponent(`${name} Australia`)}`;
+}
+
 function subjectHash(kind, label) {
   return `#/subject/${kind}/${encodeURIComponent(label)}`;
 }
@@ -1997,7 +2002,8 @@ async function openSubject(kind, name, manageFocus) {
       box.innerHTML = infoboxHTML(
         [["Type", kind === "party" ? "Political party" : "Organisation"]], "",
         [actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for them", { primary: true }),
-         actionBtn("map", "#/money", "Open the money map")]);
+         actionBtn("map", "#/money", "Open the money map"),
+         actionBtn("external", webSearchUrl(name), "Search the web", { external: true })]);
       if (kind === "donor") renderDonorStateMoney(name, sections);
       subjectMentions(name, sections, "In parliament");
       return;
@@ -2034,6 +2040,7 @@ async function openSubject(kind, name, manageFocus) {
         `Ask what parliament said about ${isParty ? "them" : (["individual", "other", ""].includes(String(node.industry || "").toLowerCase()) ? "this donor" : "this industry")}`, { primary: true }),
       actionBtn("search", searchHash(`"${node.label}"`, {}), "Search mentions in the record"),
       actionBtn("download", "/graph/money.json", "Download the data"),
+      actionBtn("external", webSearchUrl(node.label), "Search the web", { external: true }),
     ]);
     sections.insertAdjacentHTML("beforeend", barList(flowRows, {
       fmt: fmtMoney,
