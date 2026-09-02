@@ -3382,6 +3382,7 @@ function renderResults(results) {
 // --- search answer (the record's answer beside the results) -----------------
 
 let searchAnswerAbort = null;
+let searchAnswerStill = null;
 
 async function runSearchAnswer(q, f, mySeq) {
   const box = $("search-answer");
@@ -3398,6 +3399,12 @@ async function runSearchAnswer(q, f, mySeq) {
   setStatus($("search-answer-status"), "Reading the record…");
   $("search-answer-status").classList.add("visually-hidden"); // announced; the loader shows it
   showLoader("search-answer-wombat", "");
+  // Silent for the first ten seconds; then a small word so a long wait reads
+  // as patience, not a stall.
+  clearTimeout(searchAnswerStill);
+  searchAnswerStill = setTimeout(() => {
+    if (searchAnswerAbort === abort) loaders.get("search-answer-wombat")?.setLabel("Still reading…");
+  }, 10000);
   try {
     // A search query is rarely a question ("gambling"); the model refuses bare
     // keywords. Phrase it, folding in the speaker when one is filtered.
@@ -3415,7 +3422,8 @@ async function runSearchAnswer(q, f, mySeq) {
     });
     if (mySeq !== searchSeq || searchAnswerAbort !== abort) return;
     const answer = (data.answer || "").trim();
-    if (!answer) { hideLoader("search-answer-wombat"); box.hidden = true; return; }
+    if (!answer) { clearTimeout(searchAnswerStill); hideLoader("search-answer-wombat"); box.hidden = true; return; }
+    clearTimeout(searchAnswerStill);
     hideLoader("search-answer-wombat");
     setStatus($("search-answer-status"), "");
     renderAnswer($("search-answer-body"), answer);

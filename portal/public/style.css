@@ -519,6 +519,7 @@ details summary { cursor: pointer; color: var(--ink-soft); font-size: 0.9375rem;
 .result-meta a:hover { color: var(--bronze-ink); }
 mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; border-radius: 2px; }
 .rail-wombat .wb-label:empty { display: none; }
+.rail-wombat .wb-label { font-size: 0.8125rem; color: var(--ink-faint); text-align: center; }
 .rail-wombat { padding: 0.4rem 0 0.8rem; }
 #search-wombat { padding: 1.2rem 0 0.4rem; }
 .chat-sources { margin: 0.2rem 0 0; }
