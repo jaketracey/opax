@@ -170,22 +170,33 @@ another clean path, `#prerender` is in the DOM but has no `offsetParent`, and
 
 ## Internal links
 
-Stage one of the path change is the router, not the markup: the delegated
-click listener understands both forms, so every `href="#/..."` still in
-`index.html` and in `app.js` navigates to a clean path. The bundled explore
-modules (`money-map.js`, `statemap.js`, `quiz.js` and the rest, built from
-corpuskit) write `#/...` and `/#/...` hrefs of their own and are handled the
-same way, which is why the listener accepts both.
+Every link the app writes is a path. The route builders — `askHash`,
+`moneyHash`, `subjectHash`, `directoryHash`, `searchHash` — return the
+root-relative path of a route (`/ask?q=…`), and the `href="#/…"` literals in
+`index.html` and in `app.js`'s markup strings were converted with them. They
+kept their names through the move: renaming would have churned a hundred call
+sites for nothing.
 
-What that leaves is cosmetic and crawl-related: hovering such a link shows a
-hash in the status bar, "copy link address" copies a hash, and a crawler that
-does not run JavaScript follows only the prerender block's four path links.
-Converting the `href` strings themselves is the second stage. Two rules make
-it safe:
+Two readers of those values had to move with them:
 
-1. Convert through the helpers (`searchHash`, `askHash`, `subjectHash`,
-   `moneyHash`, `directoryHash`) rather than by hand.
-2. Fix the readers, not the helpers, where a return value is compared or
-   parsed: `searchApplied` in the search form's submit handler strips
-   `#/search?` off `searchHash()` to get the params key, and `openReport()`
-   guards a stale fetch by testing the current route's prefix.
+- `searchApplied`, the guard that stops the search re-running for a URL state
+  it has already applied, used to strip `#/search?` off `searchHash()`. It
+  takes everything after the `?` now, which is form-agnostic.
+- `openReport()`'s stale-fetch guard compared `location.hash`; it compares
+  `hereRoute()`.
+
+The nav's `data-panel` highlighting never read an href (it matches on the
+dataset), and `siteUrl()` normalises whatever it is handed, so neither needed
+changing.
+
+Two things still emit the old form, and both work because the delegated click
+listener accepts it:
+
+- The bundled explore modules built from corpuskit (`money-map.js`,
+  `statemap.js`, `quiz.js`, `newsrail.js` and the rest) write `#/…` hrefs, and
+  `money-map.js` prefixes a route base so its card links read `/#/…` on any
+  page but the root. They navigate correctly; only the hover text and "copy
+  link address" still show a hash. Fixing it properly means rebuilding those
+  bundles from corpuskit, not editing build output here.
+- Anything that assigns `location.hash`. The `hashchange` handler folds such
+  an assignment to the path form before rendering, so it never survives.

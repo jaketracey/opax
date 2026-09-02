@@ -384,9 +384,14 @@ function siteUrl(target) {
   return `${SITE_ORIGIN}${pathFor(target)}`;
 }
 
+// The route builders — askHash, moneyHash, subjectHash, directoryHash,
+// searchHash — return the ROOT-RELATIVE PATH of a route ("/ask?q=…"), which is
+// what an href, a pushState and a permalink all want. They kept their names
+// through the move off the hash router: renaming them would have churned a
+// hundred call sites for nothing.
 function askHash(q, kind) {
   const scope = kind && kind !== "speech" ? `&kind=${encodeURIComponent(kind)}` : "";
-  return `#/ask?q=${encodeURIComponent(q)}${scope}`;
+  return `/ask?q=${encodeURIComponent(q)}${scope}`;
 }
 
 function askKind() {
@@ -447,7 +452,7 @@ function askFilterSummary(f) {
 }
 
 function opaxUrl(slug) {
-  return siteUrl(`#/doc/${slug}`);
+  return siteUrl(`/doc/${slug}`);
 }
 
 function bibtexFor(s) {
@@ -594,7 +599,7 @@ function moneyHash(jur, industry) {
   if (jur && jur !== "federal") p.set("jur", jur);
   if (industry) p.set("industry", industry);
   const q = p.toString();
-  return q ? `#/money?${q}` : "#/money";
+  return q ? `/money?${q}` : "/money";
 }
 
 function renderMoneySwitch(jur) {
@@ -629,7 +634,7 @@ function moneyFineprintHTML(jur, meta) {
 let moneyMapHandle = null;
 let moneyMapJur = null;     // jurisdiction the mounted map shows
 let moneyMapLoading = null; // jurisdiction of the mount in flight
-let moneyMapIsolate = null; // industry cluster the route asked to isolate (#/money?industry=)
+let moneyMapIsolate = null; // industry cluster the route asked to isolate (/money?industry=)
 
 async function mountMoney(jurParam, industry) {
   const jur = MONEY_JURISDICTIONS[jurParam] ? jurParam : "federal";
@@ -695,7 +700,7 @@ function setCrumbs(items) {
   const bar = $("crumbs");
   if (!bar) return;
   if (!items?.length) { bar.hidden = true; return; } // the home page needs none
-  const trail = [{ label: "Home", href: "#/" }, ...items];
+  const trail = [{ label: "Home", href: "/" }, ...items];
   const list = bar.querySelector("ol");
   list.replaceChildren(...trail.map((it, i) => {
     const li = document.createElement("li");
@@ -793,7 +798,7 @@ function route() {
     document.title = TITLES.subject;
     if (segs[2]) {
       const slug = decodeURIComponent(segs[2]);
-      setCrumbs([{ label: "Topics", href: "#/subject/topic" }, { label: TOPICS[slug] || slug }]);
+      setCrumbs([{ label: "Topics", href: "/subject/topic" }, { label: TOPICS[slug] || slug }]);
       openTopicPage(slug, manageFocus);
     } else {
       setCrumbs([{ label: "Topics" }]);
@@ -803,9 +808,9 @@ function route() {
     showPanel("subject");
     document.title = TITLES.subject;
     const name = decodeURIComponent(segs[2]);
-    // The group step leads to that kind's index (#/subject/person etc.).
+    // The group step leads to that kind's index (/subject/person etc.).
     const group = DIRECTORY_KINDS[segs[1]];
-    setCrumbs([group ? { label: group, href: `#/subject/${segs[1]}` } : { label: "Encyclopedia" }, { label: name }]);
+    setCrumbs([group ? { label: group, href: `/subject/${segs[1]}` } : { label: "Encyclopedia" }, { label: name }]);
     openSubject(segs[1], name, manageFocus);
   } else if (view === "subject" && DIRECTORY_KINDS[segs[1]]) {
     showPanel("subject");
@@ -816,7 +821,7 @@ function route() {
     showPanel("doc");
     document.title = TITLES.doc;
     // Provisional until the document loads and names its speaker.
-    setCrumbs([{ label: "Search", href: "#/search" },
+    setCrumbs([{ label: "Search", href: "/search" },
       { label: segs[1].split("-")[0] === "division" ? "Division" : "Document" }]);
     openDocPage(segs[1], manageFocus);
   } else if (view === "chat") {
@@ -837,7 +842,7 @@ function route() {
       // The index (when loaded) has the title; the slug stands in until the
       // report itself arrives and openReport sets the real one.
       const known = reportsIndex?.find((r) => r.slug === segs[1]);
-      setCrumbs([{ label: "Reports", href: "#/reports" },
+      setCrumbs([{ label: "Reports", href: "/reports" },
         { label: known?.title || segs[1].replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase()) }]);
       openReport(segs[1], segs[3] ? Number(segs[3]) : null, manageFocus);
     } else {
@@ -854,7 +859,7 @@ function route() {
     document.title = TITLES.explore;
     // A game already open (e.g. reload with its dialog up) keeps its own crumb.
     const open = Object.entries(GAMES).find(([, g]) => $(g.dialog)?.open);
-    setCrumbs(open ? [{ label: "Explore", href: "#/explore" }, { label: open[1].name }] : [{ label: "Explore" }]);
+    setCrumbs(open ? [{ label: "Explore", href: "/explore" }, { label: open[1].name }] : [{ label: "Explore" }]);
   } else if (view === "about") {
     showPanel("about");
     document.title = TITLES.about;
@@ -862,15 +867,15 @@ function route() {
   } else if (view === "methods") {
     showPanel("methods");
     document.title = TITLES.methods;
-    setCrumbs([{ label: "About", href: "#/about" }, { label: "Methods & how to cite" }]);
+    setCrumbs([{ label: "About", href: "/about" }, { label: "Methods & how to cite" }]);
   } else if (view === "stats") {
     showPanel("stats");
     document.title = TITLES.stats;
-    setCrumbs([{ label: "About", href: "#/about" }, { label: "Corpus stats" }]);
+    setCrumbs([{ label: "About", href: "/about" }, { label: "Corpus stats" }]);
   } else if (view === "expenses") {
     showPanel("expenses");
     document.title = TITLES.expenses;
-    setCrumbs([{ label: "About", href: "#/about" }, { label: "Expense categories" }]);
+    setCrumbs([{ label: "About", href: "/about" }, { label: "Expense categories" }]);
     renderExpenseGlossary();
   } else {
     showPanel("ask");
@@ -992,7 +997,7 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
         out.push({ label: name, type: "Speaker", href: subjectHash("person", name) });
       }
       for (const [slug, disp] of Object.entries(TOPICS).filter(([, d]) => d.toLowerCase().includes(ql)).slice(0, 3)) {
-        out.push({ label: disp, type: "Topic", href: `#/subject/topic/${slug}` });
+        out.push({ label: disp, type: "Topic", href: `/subject/topic/${slug}` });
       }
       for (const n of (moneyData?.nodes || []).filter((n) => n.label.toLowerCase().includes(ql)).slice(0, 3)) {
         out.push({
@@ -1002,7 +1007,7 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
         });
       }
       for (const r of (reportsIndex || []).filter((r) => (r.title || "").toLowerCase().includes(ql)).slice(0, 2)) {
-        out.push({ label: `${r.title} report`, type: "Report", href: `#/reports/${r.slug}` });
+        out.push({ label: `${r.title} report`, type: "Report", href: `/reports/${r.slug}` });
       }
     } catch { /* the plain-search row stands alone */ }
     if (my !== seq) return;
@@ -1148,7 +1153,7 @@ function reportGlyph(slug, cls) {
 
 function reportsMenuHTML(list) {
   return list.map((r) => `
-    <a class="mm-link" href="#/reports/${esc(r.slug)}">${reportGlyph(r.slug, "mm-glyph")}
+    <a class="mm-link" href="/reports/${esc(r.slug)}">${reportGlyph(r.slug, "mm-glyph")}
       <span class="mm-title">${esc(r.title)}</span>
       <span class="mm-blurb">${esc(r.blurb)}</span>
     </a>`).join("");
@@ -1755,7 +1760,7 @@ function renderMoneyPanel(ind) {
       ${barList(partyRows, { fmt: fmtMoney, heading: "Where it went", linkTo: (nm) => subjectHash("party", nm), partyDots: true })}
     </div>
     <p class="fineprint">${esc(AEC_NOTE)}
-      <a href="#/money">Explore on the money map</a> ·
+      <a href="/money">Explore on the money map</a> ·
       <a href="/graph/money.json">Download the data</a></p>`;
   // Blocks rise in sequence (kicker, each figure, each chart, the note); fresh
   // nodes on every render, so a second question replays it. Motion is CSS-side.
@@ -1938,7 +1943,7 @@ function webSearchUrl(name) {
 }
 
 function subjectHash(kind, label) {
-  return `#/subject/${kind}/${encodeURIComponent(label)}`;
+  return `/subject/${kind}/${encodeURIComponent(label)}`;
 }
 
 // Declared interests on person pages: the registers of members' interests
@@ -2036,7 +2041,7 @@ function findMoneyNode(kind, name) {
     const c = normName(n.label);
     if (c === nn) return n;
     // A donor answers to every spelling the money data records for it, so a
-    // #/subject/donor/Westpac%20Bank link still opens Westpac Banking
+    // /subject/donor/Westpac%20Bank link still opens Westpac Banking
     // Corporation after the seven Westpac spellings became one entity.
     if (!byAlias && n.aliases && n.aliases.some((a) => normName(a) === nn)) byAlias = n;
     if (!best && nn && (c.startsWith(nn) || nn.startsWith(c))) best = n;
@@ -2055,7 +2060,7 @@ function subjectSkeleton(kindLabel, name, tagHTML) {
       <div class="subject-main" id="subject-main">
         <div class="subject-map" id="subject-map" hidden></div>
         <p class="fineprint" id="subject-map-hint" hidden>Drag to spin · click any bubble to jump to it ·
-          <a href="#/money">open the full map</a></p>
+          <a href="/money">open the full map</a></p>
         <div id="subject-sections"></div>
       </div>
       <aside class="infobox" id="subject-infobox"></aside>
@@ -2140,7 +2145,7 @@ async function subjectMentions(name, container, heading) {
     const data = await api(`/api/search?${new URLSearchParams({ q: `"${name}"`, top_k: "6" })}`);
     if (!data.results?.length) return;
     const items = data.results.slice(0, 5).map((r) => `
-      <li><a href="#/doc/${esc(r.slug)}" class="source-title doc-title">${esc(r.title)}</a>
+      <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(r.title)}</a>
         <span class="result-meta">${metaHTML(r)}</span>
         <p class="snippet">${esc((r.snippet || "").slice(0, 220))}</p></li>`).join("");
     container.insertAdjacentHTML("beforeend",
@@ -2252,7 +2257,7 @@ async function renderPersonExpenses(name, personId, sections) {
     }) : ""}
     ${items ? `<figure class="chart"><figcaption>Five largest line items</figcaption>
       <ul class="subject-list" role="list" style="margin:0">${items}</ul></figure>` : ""}
-    <p class="fineprint">${esc(IPEA_NOTE)} <a href="#/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗</a>` : ""}</p>`);
+    <p class="fineprint">${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗</a>` : ""}</p>`);
   $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Claimed expenses</dt><dd><b>${esc(fmtMoney(e.total))}</b></dd>`);
 }
@@ -2263,7 +2268,7 @@ async function renderPersonExpenses(name, personId, sections) {
 // cover. /expense-categories.json carries one definition per category, kept out
 // of expenses.json because that is a per-person export regenerated from the DB
 // by scripts/export_expenses.py and this is editorial copy. The same file feeds
-// the row popovers and the #/expenses glossary.
+// the row popovers and the /expenses glossary.
 
 let expenseDefs = null;         // { meta, groups, byName, categories }
 let expenseDefsPromise = null;
@@ -2307,7 +2312,7 @@ function termTip() {
   tip.setAttribute("role", "tooltip");
   tip.innerHTML = '<b class="term-tip-name"></b><p class="term-tip-text"></p>' +
     '<p class="term-tip-note"></p>' +
-    '<a class="term-tip-action" href="#/expenses">What the categories mean</a>';
+    '<a class="term-tip-action" href="/expenses">What the categories mean</a>';
   tip.addEventListener("pointerenter", cancelTermTipHide);
   tip.addEventListener("pointerleave", scheduleTermTipHide);
   document.body.append(tip);
@@ -2410,7 +2415,7 @@ function initTermTips() {
   window.addEventListener("hashchange", () => hideTermTip(false));
 }
 
-/** #/expenses: every category IPEA publishes, grouped, each with its source. */
+/** /expenses: every category IPEA publishes, grouped, each with its source. */
 let expenseGlossaryDone = false;
 async function renderExpenseGlossary() {
   const body = $("expenses-defs");
@@ -2690,7 +2695,7 @@ async function openSubject(kind, name, manageFocus) {
       replaceRoute(subjectHash(kind, node.label));
       currentSubjectKey = `${kind}:${node.label}`;
       key = currentSubjectKey;
-      setCrumbs([{ label: kind === "party" ? "Parties" : "Donors", href: `#/subject/${kind}` }, { label: node.label }]);
+      setCrumbs([{ label: kind === "party" ? "Parties" : "Donors", href: `/subject/${kind}` }, { label: node.label }]);
     }
     const sections = $("subject-sections");
     const box = $("subject-infobox");
@@ -2702,7 +2707,7 @@ async function openSubject(kind, name, manageFocus) {
         [["Type", kind === "party" ? "Political party" : "Organisation"],
          kind === "donor" && fitsInfoRow(fits, "by_entity", name)], "",
         [actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for them", { primary: true }),
-         actionBtn("map", "#/money", "Open the money map"),
+         actionBtn("map", "/money", "Open the money map"),
          actionBtn("external", webSearchUrl(name), "Search the web", { external: true })]);
       if (kind === "donor") renderDonorStateMoney(name, sections);
       subjectMentions(name, sections, "In parliament");
@@ -2713,7 +2718,7 @@ async function openSubject(kind, name, manageFocus) {
     const isParty = node.kind === "party";
     // The money data's spelling of the name is the entry's; the trail follows it.
     if (node.label && node.label !== name) {
-      setCrumbs([{ label: isParty ? "Parties" : "Donors", href: `#/subject/${node.kind}` }, { label: node.label }]);
+      setCrumbs([{ label: isParty ? "Parties" : "Donors", href: `/subject/${node.kind}` }, { label: node.label }]);
     }
     const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id);
     const counter = new Map();
@@ -2839,8 +2844,8 @@ async function openSubject(kind, name, manageFocus) {
         // With a debate title the passage sits beneath it; without one the
         // passage itself is the row and the link.
         const body = debate
-          ? `<a class="speech-debate" href="#/doc/${esc(r.slug)}">${esc(debate)}</a>${where}${snip ? `<p class="speech-snip">${esc(snip)}</p>` : ""}`
-          : `<a class="speech-passage" href="#/doc/${esc(r.slug)}">${esc(snip || "Speech")}</a>${where}`;
+          ? `<a class="speech-debate" href="/doc/${esc(r.slug)}">${esc(debate)}</a>${where}${snip ? `<p class="speech-snip">${esc(snip)}</p>` : ""}`
+          : `<a class="speech-passage" href="/doc/${esc(r.slug)}">${esc(snip || "Speech")}</a>${where}`;
         return `<li><time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "")}</time>
           <div>${body}</div></li>`;
       }).join("")}</ul>
@@ -2894,7 +2899,7 @@ function topicMoneyHTML(ind) {
       interests disclosed <b>${esc(fmtMoney(total))}</b> in donations to political parties.</p>
     ${barList(donorRows, { fmt: fmtMoney, heading: `Largest ${industryLabel(ind)} donors`,
       linkTo: (nm) => subjectHash("donor", nm) })}
-    <p class="fineprint">${esc(AEC_NOTE)} <a href="#/money">Explore on the money map</a></p>`;
+    <p class="fineprint">${esc(AEC_NOTE)} <a href="/money">Explore on the money map</a></p>`;
 }
 
 async function openTopicPage(slug, manageFocus) {
@@ -2908,7 +2913,7 @@ async function openTopicPage(slug, manageFocus) {
   if (!name) {
     body.innerHTML = `<p class="kicker">Topic</p>
       <p class="status">No topic called “${esc(slug)}” in the taxonomy.
-      <a href="#/subject/topic">All topics</a></p>`;
+      <a href="/subject/topic">All topics</a></p>`;
     return;
   }
   body.innerHTML = subjectSkeleton("Topic", name, `<span id="subject-loader" class="subject-loader"></span>`);
@@ -2941,11 +2946,11 @@ async function openTopicPage(slug, manageFocus) {
     ["Type", "Topic"],
     count !== null && ["Labelled so far", `<b>${esc(count.toLocaleString())}</b> speeches`],
     share && ["Of labelled speeches", esc(share)],
-    report && ["Standing report", `<a href="#/reports/${esc(report.slug)}">${esc(report.title)}</a>`],
+    report && ["Standing report", `<a href="/reports/${esc(report.slug)}">${esc(report.title)}</a>`],
   ], "", [
     actionBtn("ask", askHash(`What has parliament said about ${phrase}?`), "Ask what parliament said", { primary: true }),
     actionBtn("search", searchTopic, "Search this topic"),
-    ...(report ? [actionBtn("speeches", `#/reports/${report.slug}`, `Read the ${report.title} report`)] : []),
+    ...(report ? [actionBtn("speeches", `/reports/${report.slug}`, `Read the ${report.title} report`)] : []),
   ]);
 
   if (data) {
@@ -2964,7 +2969,7 @@ async function openTopicPage(slug, manageFocus) {
       newestHTML =
         `<p class="kicker">Newest in the index with this label</p>
          <ul class="subject-list" role="list">${data.recent.map((r) => `
-           <li><a href="#/doc/${esc(r.slug)}" class="source-title doc-title">${esc(
+           <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(
                r.speaker && r.title.startsWith(`${r.speaker} — `) ? r.title.slice(r.speaker.length + 3) : r.title)}</a>
              <span class="result-meta">${metaHTML(r, { linkSpeaker: true })}</span></li>`).join("")}</ul>
          <p class="fineprint">The newest labelled speeches to enter the index, not the newest
@@ -3004,7 +3009,7 @@ async function openTopicPage(slug, manageFocus) {
           <p class="kicker">The latest, in brief</p>
           ${briefed.map((d) => `
             <div class="topic-digest-item">
-              <a class="topic-digest-source" href="#/doc/${esc(d.slug)}">${partyDotHTML(d.party)}${esc(d.speaker || String(d.title || "").replace(/\s+—\s+\d{4}-\d{2}-\d{2}\s*$/, ""))}${d.date ? `, ${esc(fmtDate(d.date))}` : ""}</a>
+              <a class="topic-digest-source" href="/doc/${esc(d.slug)}">${partyDotHTML(d.party)}${esc(d.speaker || String(d.title || "").replace(/\s+—\s+\d{4}-\d{2}-\d{2}\s*$/, ""))}${d.date ? `, ${esc(fmtDate(d.date))}` : ""}</a>
               <p class="topic-digest-text">${inlineHTML(d.summary)}</p>
             </div>`).join("")}
           <p class="fineprint">Machine summaries of the newest speeches to enter the index
@@ -3096,7 +3101,7 @@ function directoryHash(kind, state) {
   const p = new URLSearchParams();
   for (const [k, v] of Object.entries(state)) if (v) p.set(k, v);
   const q = p.toString();
-  return `#/subject/${kind}${q ? `?${q}` : ""}`;
+  return `/subject/${kind}${q ? `?${q}` : ""}`;
 }
 
 /** A year span for a row: "1998–2019", or the one year. */
@@ -3680,7 +3685,7 @@ async function openGame(which) {
   $(game.dialog).showModal();
   // The module is a page in its own right while it is up; the trail says so
   // and returns to plain Explore when it closes (see the close listener below).
-  setCrumbs([{ label: "Explore", href: "#/explore" }, { label: game.name }]);
+  setCrumbs([{ label: "Explore", href: "/explore" }, { label: game.name }]);
   try {
     if (!explore[which]) {
       const mod = await import(game.module);
@@ -3784,7 +3789,7 @@ function renderFrontNumbers() {
   holder.innerHTML = tiles.map(([v, l]) => tile(v, l)).join("");
   if (corpusManifest) {
     $("front-numbers-note").innerHTML =
-      `Live from the search index and corpus manifest v${esc(corpusVersion())}. <a href="#/stats">Full corpus breakdown</a>`;
+      `Live from the search index and corpus manifest v${esc(corpusVersion())}. <a href="/stats">Full corpus breakdown</a>`;
   }
 }
 
@@ -3860,9 +3865,9 @@ async function renderFrontTopic() {
         ${chips.map((q) => `<a class="chip" href="${esc(askHash(q))}">${esc(q)}</a>`).join("")}
       </nav>` : ""}
       <p class="fineprint" style="margin-top:0.9rem">The topic rotates daily.
-      <a href="#/reports/${esc(today.slug)}">Read the full ${esc(report.title)} report</a> ·
+      <a href="/reports/${esc(today.slug)}">Read the full ${esc(report.title)} report</a> ·
       ${mwTopic ? `<a href="${esc(subjectHash("topic", mwTopic))}">Follow the topic live</a> · ` : ""}
-      <a href="#/reports">All reports</a></p>`;
+      <a href="/reports">All reports</a></p>`;
     $("mod-mw").hidden = false;
 
     // Encyclopedia rail: the loudest voices across every report, today's
@@ -3871,7 +3876,7 @@ async function renderFrontTopic() {
 
     // Reports row (index already in hand).
     $("front-reports").innerHTML = reportsIndex.map((r) => `
-      <a class="report-card" href="#/reports/${esc(r.slug)}">
+      <a class="report-card" href="/reports/${esc(r.slug)}">
         ${reportGlyph(r.slug, "card-glyph")}<span class="card-title">${esc(r.title)}</span>
         <span class="card-blurb">${esc(r.blurb)}</span>
         <span class="card-meta">Updated ${esc(fmtDate(r.updated || ""))}</span></a>`).join("");
@@ -3994,7 +3999,7 @@ async function renderFrontAdded() {
     const items = (data.items || []).slice(0, 6);
     if (!items.length) return;
     const half = Math.ceil(items.length / 2);
-    const li = (i) => `<li><a href="#/doc/${esc(i.slug)}" class="source-title doc-title">${esc(i.title)}</a>
+    const li = (i) => `<li><a href="/doc/${esc(i.slug)}" class="source-title doc-title">${esc(i.title)}</a>
       <span class="result-meta">indexed ${esc(relTime(i.indexed))}</span></li>`;
     $("front-added").innerHTML =
       `<ul class="subject-list" role="list">${items.slice(0, half).map(li).join("")}</ul>` +
@@ -4060,7 +4065,7 @@ async function mountStateMap() {
       moneyHref: (jur) => moneyHash(jur),
     });
   } catch {
-    root.innerHTML = `<p class="status">The map could not load here. <a href="#/search">Search the record</a>.</p>`;
+    root.innerHTML = `<p class="status">The map could not load here. <a href="/search">Search the record</a>.</p>`;
   }
 }
 
@@ -4084,7 +4089,7 @@ async function mountFrontMap() {
     frontMapObserver.observe(root);
     renderFrontMapChips(mod, data);
   } catch {
-    root.innerHTML = `<p class="status">The map could not load here. <a href="#/money">Open the money map</a>.</p>`;
+    root.innerHTML = `<p class="status">The map could not load here. <a href="/money">Open the money map</a>.</p>`;
   } finally {
     frontMapLoading = false;
   }
@@ -4814,7 +4819,7 @@ function searchHash(q, f) {
   for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
   if (f.kind && f.kind !== "speech") p.set("kind", f.kind);
   if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
-  return `#/search?${p.toString()}`;
+  return `/search?${p.toString()}`;
 }
 
 // Search filters popover: same behavior as the ask page's options button.
@@ -5138,7 +5143,7 @@ $("search-form").addEventListener("submit", (e) => {
   const q = $("search-input").value.trim();
   const f = currentFilters();
   if (!q && !f.speaker) return;
-  searchApplied = searchHash(q, f).replace(/^#\/search\?/, "");
+  searchApplied = searchHash(q, f).split("?")[1] || "";
   replaceRoute(searchHash(q, f));
   runSearch();
 });
@@ -5208,7 +5213,7 @@ async function openDocPage(slug, manageFocus) {
     // what the byline says, so they only stand in when no speaker is attached.
     $("doc-title").textContent = doc.speaker || doc.title;
     // The trail names the page the same way, shortened for the strip.
-    setCrumbs([{ label: "Search", href: "#/search" }, {
+    setCrumbs([{ label: "Search", href: "/search" }, {
       label: (doc.kind || slug.split("-")[0]) === "division"
         ? "Division" : crumbLabel(doc.speaker || doc.title, 48),
     }]);
@@ -5574,7 +5579,7 @@ function renderReportBrief(report) {
   };
   const docLink = (slug, title) => {
     const a = document.createElement("a");
-    a.href = `#/doc/${slug}`;
+    a.href = `/doc/${slug}`;
     a.textContent = title || slug;
     return a;
   };
@@ -5650,7 +5655,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   if (currentReportSlug === slug) {
     $("reports-list").hidden = true;
     $("report-view").hidden = false;
-    setCrumbs([{ label: "Reports", href: "#/reports" }, { label: $("report-title").textContent.trim() }]);
+    setCrumbs([{ label: "Reports", href: "/reports" }, { label: $("report-title").textContent.trim() }]);
     if (sectionNum) $(`report-s-${sectionNum}`)?.scrollIntoView();
     else if (manageFocus) $("report-title").focus();
     return;
@@ -5671,7 +5676,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   const view = $("report-view");
   view.hidden = false;
   $("report-title").innerHTML = `${reportGlyph(slug, "report-glyph")}${esc(report.title)}`;
-  setCrumbs([{ label: "Reports", href: "#/reports" }, { label: report.title }]);
+  setCrumbs([{ label: "Reports", href: "/reports" }, { label: report.title }]);
   $("report-blurb").textContent = report.blurb;
   $("report-meta").textContent =
     `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record · corpus v${corpusVersion()}`;
@@ -5726,7 +5731,7 @@ async function openReport(slug, sectionNum, manageFocus) {
         linkBtn.className = "action-btn";
         linkBtn.innerHTML = `${iconSvg("link")}<span>Copy link to this section</span>`;
         linkBtn.addEventListener("click", (e) =>
-          copyText(siteUrl(`#/reports/${slug}/s/${i + 1}`), e.currentTarget.querySelector("span")));
+          copyText(siteUrl(`/reports/${slug}/s/${i + 1}`), e.currentTarget.querySelector("span")));
         const askBtn = document.createElement("button");
         askBtn.type = "button";
         askBtn.className = "action-btn";
