@@ -427,8 +427,12 @@ function loadMoneyFile(jur) {
   return moneyFiles[jur];
 }
 
-function moneyHash(jur) {
-  return jur === "federal" ? "#/money" : `#/money?jur=${encodeURIComponent(jur)}`;
+function moneyHash(jur, industry) {
+  const p = new URLSearchParams();
+  if (jur && jur !== "federal") p.set("jur", jur);
+  if (industry) p.set("industry", industry);
+  const q = p.toString();
+  return q ? `#/money?${q}` : "#/money";
 }
 
 function renderMoneySwitch(jur) {
@@ -462,11 +466,21 @@ function moneyFineprintHTML(jur, meta) {
 let moneyMapHandle = null;
 let moneyMapJur = null;     // jurisdiction the mounted map shows
 let moneyMapLoading = null; // jurisdiction of the mount in flight
+let moneyMapIsolate = null; // industry cluster the route asked to isolate (#/money?industry=)
 
-async function mountMoney(jurParam) {
+async function mountMoney(jurParam, industry) {
   const jur = MONEY_JURISDICTIONS[jurParam] ? jurParam : "federal";
   renderMoneySwitch(jur);
-  if ((moneyMapHandle && moneyMapJur === jur) || moneyMapLoading === jur) return;
+  const isolate = industry || null;
+  if (moneyMapHandle && moneyMapJur === jur) {
+    // A legend choice made on the page is left alone; only the route's own
+    // parameter coming or going moves the map.
+    if (isolate !== moneyMapIsolate) moneyMapHandle.isolate?.(isolate);
+    moneyMapIsolate = isolate;
+    return;
+  }
+  moneyMapIsolate = isolate;
+  if (moneyMapLoading === jur) return;
   moneyMapLoading = jur;
   if (moneyMapHandle) { moneyMapHandle.destroy(); moneyMapHandle = null; moneyMapJur = null; }
   const root = $("money-map-root");
@@ -485,6 +499,7 @@ async function mountMoney(jurParam) {
     if (moneyMapLoading !== jur) { handle.destroy(); return; }
     moneyMapHandle = handle;
     moneyMapJur = jur;
+    if (moneyMapIsolate) handle.isolate?.(moneyMapIsolate);
   } catch (err) {
     if (moneyMapLoading !== jur) return;
     root.textContent = "";
@@ -558,7 +573,7 @@ function route() {
   } else if (view === "money") {
     showPanel("money");
     document.title = TITLES.money;
-    mountMoney(params.get("jur"));
+    mountMoney(params.get("jur"), params.get("industry"));
   } else if (view === "explore") {
     showPanel("explore");
     document.title = TITLES.explore;
@@ -2694,10 +2709,102 @@ async function renderFrontAdded() {
 function renderFrontPage() {
   setFrontPageHidden(false);
   renderFrontNumbers();
+  resetFrontMap();
   if (frontRendered) return;
   frontRendered = true;
   renderFrontNews();
-  onIdle(() => { renderFrontTopic(); renderFrontAdded(); });
+  onIdle(() => { mountFrontMaps(); renderFrontTopic(); renderFrontAdded(); });
+}
+
+// --- the home maps ----------------------------------------------------------
+// Two plates above the modules. Left, the record by state: Australia engraved
+// (statemap.js), each parliament in the corpus labelled with its speech count
+// from the manifest, a click searching that parliament's record. Right, where
+// the money goes: the money map in its mini chrome, framed on the whole graph -
+// the parties at the centre, the top donors ringed by industry, drifting until
+// touched. Clicking a donor or party opens its encyclopedia entry; the industry
+// chips beneath (the keyboard path to the same territory) open the full map
+// with that cluster isolated. Both mount once, lazily; the 3D map is paused
+// whenever it cannot be seen: scrolled past, hidden behind an ask, or behind
+// another panel.
+
+let stateMapHandle = null;
+let frontMapHandle = null;
+let frontMapLoading = false;
+let frontMapObserver = null;
+
+function mountFrontMaps() {
+  mountStateMap();
+  mountFrontMap();
+}
+
+async function mountStateMap() {
+  const root = $("front-statemap");
+  if (!root || stateMapHandle) return;
+  try {
+    const [mod, manifest] = await Promise.all([
+      import("/statemap.js"),
+      corpusManifest ? Promise.resolve(corpusManifest) : fetch("/corpus.json").then((r) => r.json()),
+    ]);
+    root.textContent = "";
+    stateMapHandle = mod.mountStateMap(root, {
+      manifest,
+      searchHref: (code) => searchHash("", { state: code }),
+      moneyHref: (jur) => moneyHash(jur),
+    });
+  } catch {
+    root.innerHTML = `<p class="status">The map could not load here. <a href="#/search">Search the record</a>.</p>`;
+  }
+}
+
+async function mountFrontMap() {
+  const root = $("front-map-root");
+  if (!root || frontMapHandle || frontMapLoading) return;
+  frontMapLoading = true;
+  try {
+    const [mod, data] = await Promise.all([import("/money-map.js"), loadMoneyData()]);
+    if (!data) throw new Error("money data unavailable");
+    root.textContent = "";
+    const handle = await mod.mountMoneyMap(root, "/graph/money.json", {
+      chrome: "mini",
+      askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`),
+      onSelect: (node) => {
+        if (node) location.hash = subjectHash(node.kind === "party" ? "party" : "donor", node.label);
+      },
+    });
+    frontMapHandle = handle;
+    frontMapObserver = new IntersectionObserver(([entry]) => handle.setPaused?.(!entry.isIntersecting));
+    frontMapObserver.observe(root);
+    renderFrontMapChips(mod, data);
+  } catch {
+    root.innerHTML = `<p class="status">The map could not load here. <a href="#/money">Open the money map</a>.</p>`;
+  } finally {
+    frontMapLoading = false;
+  }
+}
+
+/** One chip per industry cluster, in the map's own colours and legend order. */
+function renderFrontMapChips(mod, data) {
+  const nav = $("front-map-chips");
+  if (!nav || !mod.CLUSTER_COLOURS) return;
+  const counts = new Map();
+  for (const n of data.nodes || []) {
+    if (n.kind === "donor") counts.set(n.group, (counts.get(n.group) || 0) + 1);
+  }
+  const groups = [...mod.CLUSTER_COLOURS.keys()].filter((g) => g !== "parties" && counts.has(g));
+  if (!groups.length) return;
+  nav.innerHTML = groups.map((g) => `<a class="map-chip" href="${esc(moneyHash("federal", g))}">
+      <span class="map-dot" style="background:${esc(mod.clusterColour(g).colour)}"></span>
+      <span>${esc(g[0].toUpperCase() + g.slice(1))}</span>
+      <span class="map-chip-n">${counts.get(g)}</span></a>`).join("");
+  nav.hidden = false;
+}
+
+/** Back on the home page: whatever was clicked last, the whole territory is in view again. */
+function resetFrontMap() {
+  if (!frontMapHandle) return;
+  frontMapHandle.select(null);
+  frontMapHandle.fit?.(false);
 }
 
 
@@ -2954,7 +3061,7 @@ function renderChips() {
 }
 
 function setFrontPageHidden(hidden) {
-  for (const id of ["front-page", "front-rule"]) {
+  for (const id of ["front-map", "front-page"]) {
     const el = $(id);
     if (el) el.hidden = hidden;
   }
@@ -3373,6 +3480,15 @@ function applySearchParams(params) {
     $("search-kind").value = params.get("kind") || "speech";
     $("search-mode").value = params.get("mode") || "hybrid";
     runSearch();
+  } else if (params.has("state")) {
+    // A parliament alone (the home page's state map): preset the filter and
+    // say so; there is no query to run until the reader types one.
+    const state = params.get("state") || "";
+    $("f-state").value = state;
+    const name = STATE_NAMES[state] || state;
+    setStatus($("search-status"), name
+      ? `Filtered to the ${name} parliament. Type a question or a phrase to search its record.`
+      : "");
   }
 }
 

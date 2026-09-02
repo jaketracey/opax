@@ -299,7 +299,7 @@ main { flex: 1; padding: 2.75rem 0 3rem; }
 main:focus { outline: none; }
 
 .hero-intro h1 {
-  margin: 1.4rem 0 1.6rem;
+  margin: 1.6rem 0 2rem;
   font: 400 clamp(1.9rem, 4.5vw, 2.75rem)/1.25 var(--serif);
   letter-spacing: 0.005em;
 }
@@ -979,13 +979,62 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 
 /* ---- front page grid ---------------------------------------------------- */
 
-.front-grid { display: grid; grid-template-columns: 1fr; gap: 2rem 2rem; margin-top: 1.4rem; }
-#front-rule { margin-top: 2rem; }
-.front-main, .front-rail { display: grid; gap: 2rem; align-content: start; min-width: 0; }
+/* Rhythm: 3.5rem between the home page's sections (chips, map, modules),
+   3rem between modules, 0.9rem from a kicker to its content; 2.5rem on phones. */
+.front-grid { display: grid; grid-template-columns: 1fr; gap: 3rem 3rem; margin-top: 3.5rem; }
+.front-main, .front-rail { display: grid; gap: 3rem; align-content: start; min-width: 0; }
 .front-mod { min-width: 0; }
-.front-mod > h2 { margin: 0 0 0.7rem; }
+.front-mod > h2 { margin: 0 0 0.9rem; }
 @media (min-width: 1100px) {
   .front-grid { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
+}
+@media (max-width: 700px) {
+  .front-grid { gap: 2.5rem; margin-top: 2.5rem; }
+  .front-main, .front-rail { gap: 2.5rem; }
+}
+
+/* ---- home maps ---------------------------------------------------------- */
+/* Two plates side by side above the modules, a hairline between them: the
+   record by state (Australia engraved, statemap.js) at 5/12 and the money map's
+   mini chrome at 7/12, equal heights. Stacked on phones, state map first. */
+.front-map { margin-top: 3.5rem; }
+.front-map-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: start; }
+.front-map-half { min-width: 0; }
+.front-map-half:first-child { padding-right: 2rem; }
+.front-map-half + .front-map-half { border-left: 1px solid var(--line); padding-left: 2rem; }
+.front-map-half > h2 { margin: 0 0 0.9rem; }
+.front-map-half > .fineprint { margin-top: 0.9rem; }
+.front-map-root { position: relative; height: 380px; overflow: hidden; }
+.front-map-root > .status { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; }
+/* The 3D bundle's own labels take Public Sans here. */
+.front-map-root.mm-root, .front-map-root .rp-map3d-label, .front-map-root .rp-map3d-territory,
+.front-map-root .rp-map3d-edge-label, .front-map-root .rp-map3d-popup { font-family: var(--sans); }
+.map-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.9rem 0 0; }
+.map-chip {
+  display: inline-flex; align-items: center; gap: 0.45rem; min-height: 30px;
+  background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;
+  font: 600 0.75rem/1.2 var(--sans); color: var(--ink-soft); text-decoration: none;
+  padding: 0.25rem 0.7rem 0.25rem 0.55rem;
+}
+.map-chip:hover { background: var(--bronze-wash); color: var(--ink); }
+.map-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.map-chip-n { color: var(--ink-faint); font-weight: 400; font-variant-numeric: tabular-nums; }
+@media (max-width: 700px) {
+  .front-map { margin-top: 2.5rem; }
+  .front-map-grid { grid-template-columns: 1fr; }
+  .front-map-half:first-child { padding-right: 0; }
+  .front-map-half + .front-map-half {
+    border-left: 0; padding-left: 0;
+    border-top: 1px solid var(--line); margin-top: 2rem; padding-top: 2rem;
+  }
+  .front-map-root { height: 260px; }
+  /* One scrolling row bleeding to the screen edges; the page itself never scrolls sideways. */
+  .map-chips {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+    margin: 1rem calc(-1 * clamp(1.25rem, 4vw, 4.5rem)) 0; padding: 0 clamp(1.25rem, 4vw, 4.5rem);
+  }
+  .map-chips::-webkit-scrollbar { display: none; }
+  .map-chip { flex: none; }
 }
 .split-list { display: grid; grid-template-columns: 1fr; gap: 0 2.5rem; }
 @media (min-width: 1100px) { .split-list { grid-template-columns: 1fr 1fr; } }

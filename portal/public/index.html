@@ -221,7 +221,28 @@
         </details>
       </div>
 
-      <hr class="ledger-rule" id="front-rule">
+      <section class="front-map" id="front-map" aria-label="Two maps of the record">
+        <div class="front-map-grid">
+          <section class="front-map-half" aria-labelledby="h-map-states">
+            <h2 class="kicker" id="h-map-states">The record by state</h2>
+            <div id="front-statemap" class="front-map-root"><p class="status">Loading the map…</p></div>
+            <p class="fineprint">Five parliaments so far: the Commonwealth, New South Wales, Victoria,
+            South Australia and Queensland, each labelled with the speeches indexed from it. Click a
+            state to search its parliament's record; Western Australia, the Northern Territory and
+            Tasmania are not yet in the corpus. State donations:
+            <a href="#/money?jur=qld">Queensland</a> · <a href="#/money?jur=vic">Victoria</a>.</p>
+          </section>
+          <section class="front-map-half" aria-labelledby="h-map-money">
+            <h2 class="kicker" id="h-map-money">Where the money goes</h2>
+            <div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div>
+            <nav class="map-chips" id="front-map-chips" aria-label="Industries on the money map" hidden></nav>
+            <p class="fineprint">The 250 largest donors in 28 years of AEC returns, ringed by industry
+            around the parties they gave to. Drag to orbit; click a donor or party to open its entry;
+            pick an industry to see that cluster alone on the full map.
+            <a href="#/money">Open the money map</a></p>
+          </section>
+        </div>
+      </section>
       <div class="front-grid" id="front-page">
         <div class="front-main">
         <section class="front-mod" aria-labelledby="h-news" id="mod-news">

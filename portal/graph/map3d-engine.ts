@@ -357,6 +357,7 @@ export class KnowledgeMapEngine {
   private lastFrame = performance.now()
   private frameCount = 0
   private renderDirty = true
+  private paused = false
   private resizeObserver: ResizeObserver
   private disposed = false
   private width = 1
@@ -1758,7 +1759,7 @@ export class KnowledgeMapEngine {
   }
 
   private frame = (now: number) => {
-    if (this.disposed) return
+    if (this.disposed || this.paused) return
     this.frameHandle = requestAnimationFrame(this.frame)
     const dt = Math.min(64, now - this.lastFrame)
     this.lastFrame = now
@@ -2171,8 +2172,26 @@ export class KnowledgeMapEngine {
   }
 
   // -------------------------------------------------------------------
-  // Teardown.
+  // Pause / teardown.
   // -------------------------------------------------------------------
+
+  /**
+   * Stop the frame loop while nobody can see the canvas (scrolled away, or a
+   * display:none ancestor) - an idle spin off screen is wasted work. Resuming
+   * restarts the clock so the first frame back carries no jump.
+   */
+  setPaused(paused: boolean) {
+    if (this.disposed || this.paused === paused) return
+    this.paused = paused
+    if (paused) {
+      if (this.frameHandle !== null) cancelAnimationFrame(this.frameHandle)
+      this.frameHandle = null
+    } else {
+      this.lastFrame = performance.now()
+      this.renderDirty = true
+      this.frameHandle = requestAnimationFrame(this.frame)
+    }
+  }
 
   dispose() {
     this.disposed = true

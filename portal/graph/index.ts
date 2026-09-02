@@ -30,6 +30,8 @@ import { mountWordsLayer } from './words.ts'
 // without a DOM or a WebGL context.
 export { clusterCentres3D, ForceSim3D } from './force3d.ts'
 export { buildDegrees, formatMoney, radiusFor, shortLabel } from './map-types.ts'
+// The cluster palette, so a host can draw its own industry chips in the map's colours.
+export { CLUSTER_COLOURS, clusterColour } from './palette.ts'
 export { webglAvailable }
 
 /** One node of the exported money.json graph. */
@@ -77,6 +79,12 @@ export type MoneyMapOptions = {
 
 export type MoneyMapHandle = {
   select(id: string | null): void
+  /** Isolate one industry cluster (null shows everything); the legend follows. Silent. */
+  isolate(group: string | null): void
+  /** Frame the whole visible graph. */
+  fit(animate?: boolean): void
+  /** Stop/restart rendering - for an embed that is off screen or display:none. */
+  setPaused(paused: boolean): void
   destroy(): void
 }
 
@@ -329,7 +337,8 @@ export async function mountMoneyMap(
     const fallback = el('div', 'mm-fallback', container)
     fallback.textContent = 'The 3D money map needs WebGL, which this browser does not offer. ' +
       'The underlying data is available as JSON at ' + dataUrl
-    return { select: () => undefined, destroy: () => fallback.remove() }
+    const noop = () => undefined
+    return { select: noop, isolate: noop, fit: noop, setPaused: noop, destroy: () => fallback.remove() }
   }
 
   const graph = buildGraph(raw)
@@ -478,6 +487,11 @@ export async function mountMoneyMap(
 
   let lastBucket = aspectBucket()
   const resizeObserver = new ResizeObserver(() => {
+    // A hidden host (display:none while an ask runs, or behind another panel)
+    // measures 0x0; that is not a new aspect, and re-laying out for it would
+    // scatter the graph twice per round trip. Keep the layout for its return.
+    const rect = container.getBoundingClientRect()
+    if (rect.width < 1 || rect.height < 1) return
     const bucket = aspectBucket()
     if (bucket !== lastBucket) {
       lastBucket = bucket
@@ -488,6 +502,16 @@ export async function mountMoneyMap(
 
   // --- Legend / filter -------------------------------------------------
   const chips = new Map<string, HTMLButtonElement>()
+  const applyIsolate = (group: string | null) => {
+    activeGroup = group !== null && group !== 'parties' && graph.groupStyles.has(group) ? group : null
+    for (const [g, c] of chips) {
+      c.setAttribute('aria-pressed', String(g === activeGroup))
+      if (activeGroup !== null && g !== activeGroup) c.setAttribute('data-dimmed', '')
+      else c.removeAttribute('data-dimmed')
+    }
+    pushData()
+    words.isolate(activeGroup)
+  }
   if (legend) {
     const legendGroups = [...CLUSTER_COLOURS.keys()].filter(
       (group) => group !== 'parties' && graph.groupStyles.has(group),
@@ -500,16 +524,7 @@ export async function mountMoneyMap(
       dot.style.background = clusterColour(group).colour
       const name = el('span', '', chip)
       name.textContent = `${group} · ${graph.groupStyles.get(group)?.count ?? 0}`
-      chip.addEventListener('click', () => {
-        activeGroup = activeGroup === group ? null : group
-        for (const [g, c] of chips) {
-          c.setAttribute('aria-pressed', String(g === activeGroup))
-          if (activeGroup !== null && g !== activeGroup) c.setAttribute('data-dimmed', '')
-          else c.removeAttribute('data-dimmed')
-        }
-        pushData()
-        words.isolate(activeGroup)
-      })
+      chip.addEventListener('click', () => applyIsolate(activeGroup === group ? null : group))
       chips.set(group, chip)
     }
   }
@@ -876,6 +891,9 @@ export async function mountMoneyMap(
 
   return {
     select: (id) => setSelection(id),
+    isolate: (group) => applyIsolate(group),
+    fit: (animate = true) => engine.fit(animate),
+    setPaused: (paused) => engine.setPaused(paused),
     destroy: () => {
       container.removeEventListener('keydown', onKeyDown)
       resizeObserver.disconnect()
