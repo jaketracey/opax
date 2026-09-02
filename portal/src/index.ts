@@ -1143,6 +1143,30 @@ async function apiTopics(env: Env): Promise<Response> {
 }
 
 /**
+ * Every party label in the record with its speech count, for the Parties
+ * index. A speech carries at most one party label, so the facet counts are
+ * whole speeches and `labelled` (the bare labelset filter's total) is their
+ * honest denominator. Cached 10 minutes like /api/topics.
+ */
+async function apiParties(env: Env): Promise<Response> {
+  return cachedJson('/api/parties', async () => {
+    const [facetedRes, anyRes] = await Promise.all([
+      kbFetch(env, `/catalog?faceted=${PARTY_FACET}&page_size=0`),
+      kbFetch(env, `/catalog?filters=${PARTY_FACET}&page_size=0`),
+    ])
+    if (!facetedRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
+    const faceted = (await facetedRes.json()) as CatalogPage
+    const any = (await anyRes.json()) as CatalogPage
+    const facet = faceted.fulltext?.facets?.[PARTY_FACET] ?? {}
+    const parties = Object.entries(facet)
+      .map(([path, count]) => ({ label: path.slice(`${PARTY_FACET}/`.length), count }))
+      .filter((p) => p.label && p.count > 0)
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+    return json({ labelled: any.fulltext?.total ?? 0, parties })
+  })
+}
+
+/**
  * One topic: total labelled so far (the filtered call's own total), per-party
  * split (facet within the topic filter — one request covers both, cheaper than
  * a faceted call per party), and the newest labelled speeches to enter the
@@ -1297,6 +1321,9 @@ export default {
       }
       if (url.pathname === '/api/topics' && request.method === 'GET') {
         return await apiTopics(env)
+      }
+      if (url.pathname === '/api/parties' && request.method === 'GET') {
+        return await apiParties(env)
       }
       const topicMatch = url.pathname.match(/^\/api\/topic\/([a-z][a-z-]*)$/)
       if (topicMatch && request.method === 'GET') {
