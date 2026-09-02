@@ -497,10 +497,15 @@
            arriving at a short last page does not lift the footer. -->
       <nav id="search-pager" class="pager" aria-label="Result pages" hidden>
         <button type="button" class="pager-btn" id="pager-prev">
-          <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg><span>Previous</span></button>
-        <span class="pager-where" id="pager-where"></span>
+          <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg><span class="pager-btn-label">Previous</span></button>
+        <!-- app.js fills this: how many numbers there are, and which runs of
+             pages are elided, depends on how many pages the result has. -->
+        <div class="pager-pages" id="pager-pages"></div>
         <button type="button" class="pager-btn" id="pager-next">
-          <span>Next</span><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4l6 6-6 6"/></svg></button>
+          <span class="pager-btn-label">Next</span><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4l6 6-6 6"/></svg></button>
+        <!-- The numbers carry this on screen; spoken, it is what changes when
+             the reader turns the page. -->
+        <span class="visually-hidden" id="pager-where" role="status"></span>
       </nav>
       </div>
       <aside class="search-answer" id="search-answer" hidden aria-label="Answer from the record">

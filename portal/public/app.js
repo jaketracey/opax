@@ -5241,6 +5241,65 @@ function resultsCountLine(s) {
     : `Showing ${from} to ${to} of ${n} matches in the record.`;
 }
 
+// How many numbered slots the pager offers. Odd, so the page you are on sits in
+// the middle of its window, and fixed, so the row keeps its width from page to
+// page instead of growing and shrinking under the pointer.
+const PAGER_SLOTS = 7;
+
+/**
+ * The numbers to show: the first page, the last page, and a run around the one
+ * you are on, with 0 standing for an elided run. Once the result has PAGER_SLOTS
+ * pages or more the answer is always exactly that many entries, and an ellipsis
+ * only ever replaces two pages or more, so no page is ever hidden behind one.
+ */
+function pagerSlots(page, pageCount) {
+  const run = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
+  if (pageCount <= PAGER_SLOTS) return run(1, pageCount);
+  const near = PAGER_SLOTS - 2; // what fits beside one ellipsis and the far end
+  if (page <= near - 1) return [...run(1, near), 0, pageCount];
+  if (page > pageCount - near + 1) return [1, 0, ...run(pageCount - near + 1, pageCount)];
+  const half = Math.floor((PAGER_SLOTS - 4) / 2);
+  return [1, 0, ...run(page - half, page + half), 0, pageCount];
+}
+
+/** The numbered buttons between Previous and Next. */
+function renderPagerNumbers(s) {
+  const box = $("pager-pages");
+  if (!box) return;
+  // Rebuilding drops whatever the keyboard was on, so if the reader paged from
+  // here, hand focus to the number they landed on rather than to the document.
+  const held = box.contains(document.activeElement);
+  const frag = document.createDocumentFragment();
+  for (const n of pagerSlots(s.page, s.pageCount)) {
+    if (!n) {
+      // The elided run is not a control and has nothing to say that the numbers
+      // either side do not: heard, it would only be "horizontal ellipsis".
+      const gap = document.createElement("span");
+      gap.className = "pager-gap";
+      gap.setAttribute("aria-hidden", "true");
+      gap.textContent = "…";
+      frag.append(gap);
+      continue;
+    }
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "pager-btn pager-num";
+    b.dataset.page = String(n);
+    // A bare digit is no name to hear, and the total is what tells the reader
+    // how far a jump is: the same words Previous and Next use.
+    b.setAttribute("aria-label", `Page ${n} of ${s.pageCount}`);
+    b.textContent = String(n);
+    // Marked, not disabled: the page you are on stays in the tab order, and
+    // clicking it is already a no-op in goToSearchPage.
+    if (n === s.page) b.setAttribute("aria-current", "page");
+    frag.append(b);
+  }
+  box.replaceChildren(frag);
+  // preventScroll because the search flow scrolls to the top of the results
+  // straight after this, and two scrolls read as a flinch.
+  if (held) box.querySelector('[aria-current="page"]')?.focus({ preventScroll: true });
+}
+
 function renderPager() {
   const nav = $("search-pager");
   const s = lastSearch;
@@ -5257,6 +5316,9 @@ function renderPager() {
     prev.disabled ? "Previous page (you are on the first page)" : `Previous page, page ${s.page - 1} of ${s.pageCount}`);
   next.setAttribute("aria-label",
     next.disabled ? "Next page (you are on the last page)" : `Next page, page ${s.page + 1} of ${s.pageCount}`);
+  renderPagerNumbers(s);
+  // The numbers say where you are on screen. This says it again for a reader
+  // who hears the page turn instead of seeing it.
   $("pager-where").textContent = s.pageCount > 1 ? `Page ${s.page} of ${s.pageCount}` : "";
 }
 
@@ -5286,6 +5348,11 @@ function goToSearchPage(n) {
 
 $("pager-prev")?.addEventListener("click", () => goToSearchPage(lastSearch.page - 1));
 $("pager-next")?.addEventListener("click", () => goToSearchPage(lastSearch.page + 1));
+// Delegated: the numbered buttons are rebuilt on every page, the container is not.
+$("pager-pages")?.addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-page]");
+  if (btn) goToSearchPage(Number(btn.dataset.page));
+});
 
 // --- empty record ------------------------------------------------------------
 // A blank record is a finding in itself, so it gets the page's own register
