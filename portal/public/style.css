@@ -116,6 +116,11 @@ a.visually-hidden:focus-visible {
 }
 .kicker { margin: 1.6rem 0 0.5rem; }
 .fineprint { color: var(--ink-faint); font-size: 0.8125rem; line-height: 1.5; max-width: 68ch; }
+/* The money map's source note sits under a full-width map, so it runs the
+   same width and puts its two ways out on a row of their own. */
+#money-fineprint { max-width: none; }
+.money-note-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.9rem; }
+.money-note-actions .action-btn { display: inline-flex; }
 
 a, button.link {
   color: var(--ink); text-decoration: underline;

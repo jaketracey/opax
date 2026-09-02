@@ -619,8 +619,9 @@ function moneyFineprintHTML(jur, meta) {
     parts.push(AEC_NOTE, "Public electoral funding and internal party transfers are excluded.", STATE_NOT_SUMMED);
   }
   const full = jur === "federal" ? "/map" : `/map?jur=${encodeURIComponent(jur)}`;
-  return `${parts.filter(Boolean).map((s) => esc(s)).join(" ")}
-      <a href="${esc(cfg.file)}">Download the data</a> · <a href="${esc(full)}">Full-screen map</a>`;
+  // The note runs the width of the map; its two ways out are buttons, not prose.
+  return `<span class="money-note-text">${parts.filter(Boolean).map((s) => esc(s)).join(" ")}</span>
+      <span class="money-note-actions">${actionBtn("download", cfg.file, "Download the data")}${actionBtn("map", full, "Full-screen map")}</span>`;
 }
 
 let moneyMapHandle = null;
