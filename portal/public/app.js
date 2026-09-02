@@ -1550,6 +1550,12 @@ function renderMoneyPanel(ind) {
     <p class="fineprint">${esc(AEC_NOTE)}
       <a href="#/money">Explore on the money map</a> ·
       <a href="/graph/money.json">Download the data</a></p>`;
+  // Blocks rise in sequence (kicker, each figure, each chart, the note); fresh
+  // nodes on every render, so a second question replays it. Motion is CSS-side.
+  box.querySelectorAll(":scope > :not(.tiles), :scope > .tiles > .tile").forEach((el, i) => {
+    el.classList.add("rise-in");
+    el.style.setProperty("--i", i);
+  });
 }
 
 /** "What did John Howard say about pokies?" → filter retrieval to the speaker. */
