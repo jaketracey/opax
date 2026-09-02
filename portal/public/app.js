@@ -2235,6 +2235,68 @@ async function renderPersonDiary(name, container, chambers) {
       exactly, otherwise to the record.${m.latest_pdf ? ` <a href="${esc(safeUrl(m.latest_pdf) || "#")}" rel="noopener" target="_blank">Latest diary (PDF) ↗</a>` : ""}</p>`;
 }
 
+// --- debts and other funding on party pages -----------------------------------
+// scripts/export_aec_extras.py reads the ext_aec_* tables (the AEC Transparency
+// Register's debts, discretionary benefits and return totals) into one static
+// file, /graph/aec-extras.json. Fetched by the first party page that needs it.
+let aecExtrasPromise = null;
+function loadAecExtras() {
+  aecExtrasPromise ??= fetch("/graph/aec-extras.json")
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return aecExtrasPromise;
+}
+
+/** Party page "Debts and other funding": the creditors on the party's own
+ *  latest annual return, its discretionary benefits and the associated
+ *  entities whose returns name it. Silent for a party the register lacks. */
+async function renderPartyDebts(label, sections) {
+  const key = currentSubjectKey;
+  const slot = document.createElement("div");
+  slot.id = "subject-party-debts";
+  sections.appendChild(slot);
+  const extras = await loadAecExtras();
+  if (currentSubjectKey !== key) return;
+  const p = extras?.parties?.[label];
+  const d = p?.debts, b = p?.benefits, ents = p?.associated_entities || [];
+  if (!d && !b && !ents.length) { slot.remove(); return; }
+  const endOf = (fy) => String(Number(String(fy).slice(0, 4)) + 1); // "2024-25" -> "2025"
+  let html = `<p class="kicker">Debts and other funding</p>`;
+  if (d) {
+    const lenders = (d.top || []).map((l) => [l.type === "Financial" ? `${l.name} (financial institution)` : l.name, l.amount || 0]);
+    html += `<div class="tiles">
+      ${tile(fmtMoney(d.total || 0), `owed at 30 June ${endOf(d.year)}`)}
+      ${tile(fmtMoney(d.financial_total || 0), "of it to banks and other financial institutions")}
+      ${tile(String(d.lenders || 0), d.lenders === 1 ? "creditor listed" : "creditors listed")}
+    </div>
+    ${lenders.length ? barList(lenders, { fmt: fmtMoney, heading: `Largest creditors, ${d.year}` }) : ""}
+    ${d.by_year?.length > 1 ? columnChart(d.by_year.map(([y, t]) => [y, t || 0]), {
+      fmt: fmtMoney, heading: "Owed at each 30 June",
+      note: "Year-end balances, not new borrowing; a year with no debt itemised shows nothing.",
+    }) : ""}`;
+  }
+  if (b) {
+    const top = (b.top || []).slice(0, 3).map((t) => `${t.name} ${fmtMoney(t.amount || 0)}`).join(", ");
+    html += `<p style="margin:0.6rem 0 0"><b>${esc(fmtMoney(b.total || 0))}</b> in discretionary benefits in ${esc(b.year)}${top ? `: ${esc(top)}` : ""}.
+      These are government payments other than public election funding, as listed on the return.</p>`;
+  }
+  if (ents.length) {
+    const shown = ents.slice(0, 6);
+    html += `<p class="kicker" style="margin-top:1.1rem">Associated entities</p>
+      <ul class="subject-list" role="list">${shown.map((e) => `
+      <li><a class="source-title" href="${esc(searchHash(`"${e.name}"`, {}))}">${esc(e.name)}</a>
+        <span class="result-meta">${esc([e.year, e.receipts != null ? `receipts ${fmtMoney(e.receipts)}` : "",
+          e.payments != null ? `payments ${fmtMoney(e.payments)}` : "", e.debts ? `debts ${fmtMoney(e.debts)}` : ""].filter(Boolean).join(" · "))}</span></li>`).join("")}</ul>
+      ${(p.associated_entities_total || 0) > shown.length ? `<p class="fineprint" style="margin-top:0.5rem">${p.associated_entities_total} entities have named ${esc(label)} on an associated-entity return; the ${shown.length} with the largest receipts on their latest return are shown, each with that return's year.</p>` : ""}`;
+  }
+  const reg = safeUrl(extras.meta?.register_url);
+  html += `<p class="fineprint">Debts are the balances the party's branches listed as owed at 30 June on their own AEC
+    annual returns, all branches summed: bank loans sit beside trade creditors and tax owed, and a balance is not new
+    borrowing. Creditors under the disclosure threshold are not itemised. Source: AEC Transparency Register, CC BY 4.0.${reg ? ` <a href="${esc(reg)}" rel="noopener" target="_blank">Open the register ↗</a>` : ""}</p>`;
+  slot.innerHTML = html;
+  if (d) $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
+    `<dt>Debts at 30 June ${esc(endOf(d.year))}</dt><dd><b>${esc(fmtMoney(d.total || 0))}</b></dd>`);
+}
+
 // --- voting record on person pages -------------------------------------------
 // Reads the static votes.json (scripts/export_votes.py): federal divisions via
 // TheyVoteForYou keyed by TVFY person id, state divisions from the Hansard
@@ -2382,6 +2444,7 @@ async function openSubject(kind, name, manageFocus) {
     sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
     if (!isParty) renderDonorStateMoney(node.label, sections);
+    if (isParty) renderPartyDebts(node.label, sections);
     renderDonorAccess(node.label, sections);
     await subjectMentions(node.label, sections, "In parliament");
     subjectNews(node.label, sections);
