@@ -2789,7 +2789,7 @@ async function renderFrontTopic() {
     // Reports row (index already in hand).
     $("front-reports").innerHTML = reportsIndex.map((r) => `
       <a class="report-card" href="#/reports/${esc(r.slug)}">
-        <span class="card-title">${esc(r.title)}</span>
+        ${reportGlyph(r.slug, "card-glyph")}<span class="card-title">${esc(r.title)}</span>
         <span class="card-blurb">${esc(r.blurb)}</span>
         <span class="card-meta">Updated ${esc(fmtDate(r.updated || ""))}</span></a>`).join("");
     $("mod-reports").hidden = false;

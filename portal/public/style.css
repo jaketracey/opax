@@ -782,6 +782,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   gap: 1rem; margin-top: 0.4rem;
 }
 .report-card {
+  display: grid; align-content: start; /* buttons centre their content; cards top-align like their neighbours */
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
   padding: 1.1rem 1.25rem; text-align: left; cursor: pointer; color: var(--ink); font: inherit;
 }
