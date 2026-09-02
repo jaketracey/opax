@@ -180,6 +180,8 @@ const CSS = `
 .rp-map3d-territory { position: absolute; top: 0; left: 0; white-space: nowrap;
   font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
   text-shadow: 0 0 4px ${SURFACE}; transition: opacity 160ms; }
+/* A folded cluster's caption is its only name on the map: a step larger. */
+.rp-map3d-territory[data-hub] { font-size: 11px; letter-spacing: 0.1em; }
 .rp-map3d-edge-label { position: absolute; top: 0; left: 0; white-space: nowrap;
   font-size: 10.5px; font-weight: 600; color: #57503c;
   background: rgba(250, 249, 246, 0.85); padding: 1px 5px; border-radius: 4px; }
@@ -409,9 +411,8 @@ export async function mountMoneyMap(
     // State files name their commission in meta.sourceShort; the federal
     // export predates the field and stays "AEC returns".
     const sourceShort = typeof raw.meta?.sourceShort === 'string' ? raw.meta.sourceShort : 'AEC returns'
-    hint.textContent = `Drag to orbit · scroll to zoom · click a node or a flow · ${sourceShort} ${
-      raw.meta?.coverage ?? '1998–2026'
-    }`
+    hint.textContent = `Drag to orbit · scroll to zoom · click a cluster to open it · ` +
+      `click a node or a flow · ${sourceShort} ${raw.meta?.coverage ?? '1998–2026'}`
   }
 
   // --- Engine ----------------------------------------------------------
@@ -770,7 +771,67 @@ export async function mountMoneyMap(
   const shortName = (label: string) =>
     label.replace(/\s+(Pty\.?\s*)?(Ltd|Limited|Incorporated|Inc)\.?$/i, '')
 
+  /**
+   * The card for an aggregated flow - a folded cluster's summed giving to
+   * one party. The engine synthesises these while the cluster is a hub; the
+   * source is `hub:<group>`, so the detail comes from the raw edges here.
+   */
+  const renderHubFlowCard = (edge: MapEdge, group: string) => {
+    const party = byId.get(edge.target)
+    if (!party) return
+    card.innerHTML = ''
+    const close = el('button', 'mm-card-close', card)
+    close.type = 'button'
+    close.textContent = '✕'
+    close.setAttribute('aria-label', 'Close details')
+    close.addEventListener('click', () => setEdgeSelection(null))
+
+    const style = clusterColour(group)
+    const groupName = group.charAt(0).toUpperCase() + group.slice(1)
+    const title = el('h2', '', card)
+    title.textContent = `${groupName} → ${party.label}`
+    const tag = el('span', 'mm-card-tag', card)
+    tag.style.color = style.ink
+    tag.textContent = 'industry flow'
+
+    const total = el('div', 'mm-card-total', card)
+    total.textContent = formatMoney(edge.total ?? 0)
+    const sub = el('div', 'mm-card-sub', card)
+    const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
+    const donors = edge.count ?? 0
+    sub.textContent = `from ${donors === 1 ? '1 donor' : `${donors.toLocaleString()} donors`} shown` +
+      `${span ? ` · ${span}` : ''}`
+
+    const listTitle = el('div', 'mm-legend-title', card)
+    listTitle.textContent = 'Largest donors in this flow'
+    const list = el('ul', 'mm-rows', card)
+    const flows = raw.edges
+      .filter((e) => e.target === party.id && byId.get(e.source)?.group === group)
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 12)
+    for (const flow of flows) {
+      const donor = byId.get(flow.source)
+      if (!donor) continue
+      row(list, style.colour, donor.label, flow.total, yearSpan(flow.firstYear, flow.lastYear),
+        () => setSelection(donor.id, { user: true }))
+    }
+    if (!['individuals', 'other'].includes(group)) {
+      trigger(card, askUrl(group), `What has parliament said about ${group}?`)
+    }
+    const open = el('button', 'mm-ask mm-ask-quiet', card)
+    open.type = 'button'
+    open.textContent = `Show only ${group} on the map`
+    open.addEventListener('click', () => {
+      setEdgeSelection(null)
+      applyIsolate(group)
+    })
+  }
+
   const renderEdgeCard = (edge: MapEdge) => {
+    if (edge.hub) {
+      renderHubFlowCard(edge, edge.hub)
+      return
+    }
     const donor = byId.get(edge.source)
     const party = byId.get(edge.target)
     if (!donor || !party) return

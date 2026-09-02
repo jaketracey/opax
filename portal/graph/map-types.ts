@@ -37,6 +37,13 @@ export type MapEdge = {
   count?: number
   firstYear?: number | null
   lastYear?: number | null
+  /**
+   * Set on an AGGREGATED flow the engine synthesises while an industry
+   * cluster is collapsed into a hub: the cluster's group. Its `source` is the
+   * hub id (`hub:<group>`), not a donor, and `count` is the number of donors
+   * folded into it.
+   */
+  hub?: string
 }
 
 export type MapLayout = 'grouped' | 'free'

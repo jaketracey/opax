@@ -65,6 +65,39 @@ const IDLE_SPIN = 0.05
 const PHI_MIN = 0.35
 const PHI_MAX = Math.PI - 0.55
 
+// ---------------------------------------------------------------------------
+// Semantic zoom. An industry cluster whose spread on screen falls below the
+// collapse threshold folds into one hub mark; it unfolds again once it would
+// be drawn wider than the expand threshold. The gap between the two is the
+// hysteresis that keeps a wheel notch near the boundary from flickering.
+// Thresholds are in CSS pixels of the cluster's radius, so the same rule
+// gives the 380px front-page embed an all-hubs view and the full page a mixed
+// one at its fitted distance (measured: the seven big clusters draw at 89 to
+// 114px there, the rest at 24 to 68px; on the embed nothing exceeds 67px).
+// ---------------------------------------------------------------------------
+
+const COLLAPSE_PX = 76
+const EXPAND_PX = 96
+/** The collapse/expand choreography - eased both ways, no overshoot. */
+const LOD_MS = 420
+/** The camera flight into a clicked hub. */
+const DIVE_MS = 560
+/** A cluster this small has nothing to fold: one dot stays a dot. */
+const HUB_MIN_MEMBERS = 2
+
+/** Hub mark radius from the donor count - area follows count, like the blobs. */
+function hubRadius(count: number): number {
+  return Math.min(88, 15 + 6.2 * Math.sqrt(count))
+}
+
+/** Cubic in-out: the collapse gathers speed and settles, without a bounce. */
+function easeInOut(t: number): number {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+}
+
+/** Screen-space label box, pooled per frame so placement allocates nothing. */
+type LabelBox = { x1: number; y1: number; x2: number; y2: number }
+
 type Palette3D = {
   cats: THREE.Color[]
   /** Text-safe ink per slot, for territory captions. */
@@ -115,13 +148,25 @@ type HaloVisual = {
   value: Fade
 }
 
-type NodeVisual = {
+/**
+ * What an edge needs of its endpoints: a rendered position, a radius and a
+ * hue. Nodes satisfy it directly; a collapsed cluster's hub satisfies it
+ * through a small anchor object, so aggregated flows run through the same
+ * tube code as individual ones.
+ */
+type EdgeAnchor = {
+  node: { id: string; group: string }
+  /** Where the mark is drawn this frame (a folding node drifts off its sim position). */
+  pos: THREE.Vector3
+  r: number
+  scale: Fade
+  colour: THREE.Color
+}
+
+type NodeVisual = EdgeAnchor & {
   node: MapNode
   sim: SimNode3D
-  r: number
   slot: number
-  /** The mark's resolved hue: the node's own override, or its cluster slot. */
-  colour: THREE.Color
   hollow: boolean
   unlinked: boolean
   mesh: THREE.Mesh
@@ -131,7 +176,6 @@ type NodeVisual = {
   shellMaterial: THREE.MeshBasicMaterial
   opacity: Fade
   shellOpacity: Fade
-  scale: Fade
   /** 0..1 - how far the node has come forward towards the camera on hover. */
   lift: Fade
   /** Edges on the node, for the hover card (a donor's parties, a party's donors). */
@@ -139,13 +183,17 @@ type NodeVisual = {
   /** Entrance stagger - the tick count before this node grows in. */
   bornAt: number
   label: HTMLDivElement
+  /** Measured label width in CSS px, for collision placement. */
+  labelW: number
+  /** The cluster the node belongs to, for its fold state; null for the centre. */
+  territory: TerritoryVisual | null
 }
 
 type EdgeVisual = {
   edge: MapEdge
   key: string
-  from: NodeVisual
-  to: NodeVisual
+  from: EdgeAnchor
+  to: EdgeAnchor
   mesh: THREE.Mesh
   material: THREE.MeshBasicMaterial
   cone: THREE.Mesh
@@ -157,16 +205,83 @@ type EdgeVisual = {
   opacity: Fade
   emphasised: boolean
   label: HTMLDivElement | null
+  labelW: number
+  /**
+   * The cluster whose fold this edge follows: an individual flow fades OUT as
+   * its cluster collapses, an aggregated one fades IN. Null: unaffected.
+   */
+  hub: HubVisual | null
+  aggregate: boolean
+}
+
+/**
+ * The single mark an industry cluster folds into when the camera is too far
+ * out to tell its donors apart: one sphere in the cluster's hue sized by the
+ * donor count, ringed by a hairline in its ink, with the cluster's flows to
+ * each party summed into one tube apiece.
+ */
+type HubVisual = {
+  id: string
+  group: string
+  /** Text-safe ink of the cluster's hue, for the caption and the ring. */
+  ink: string
+  count: number
+  total: number
+  /** Donor members, for the fold choreography. */
+  members: NodeVisual[]
+  anchor: EdgeAnchor
+  mesh: THREE.Mesh
+  material: THREE.MeshStandardMaterial
+  ring: THREE.Mesh
+  ringMaterial: THREE.MeshBasicMaterial
+  /** One aggregated flow per party the cluster gave to. */
+  flows: EdgeVisual[]
+  /** Level of detail, 0 = dots, 1 = hub. Tweened, not approached. */
+  lod: number
+  lodTarget: number
+  lodFrom: number
+  /** performance.now() the tween began; -1 before the first evaluation, which snaps. */
+  lodStarted: number
+  /** Set by a click-to-open dive so the automatic rule cannot refold it mid-flight. */
+  dived: boolean
+  /** Presence under emphasis: dims like a node when something else has focus. */
+  opacity: Fade
+  /** Entrance grow-in, and a lift on hover. */
+  scale: Fade
+  bornAt: number
 }
 
 type TerritoryVisual = {
   group: string
   style: GroupStyle
+  count: number
+  total: number
   mesh: THREE.Mesh
   material: THREE.MeshBasicMaterial
   caption: HTMLDivElement
+  captionFull: string
+  captionShort: string
+  /** Measured widths, CSS px: the open territory's caption and its larger folded variant. */
+  captionW: number
+  captionShortW: number
+  captionHubW: number
+  captionShortHubW: number
   centre: THREE.Vector3
+  /** Blob radius: the spread plus a margin, for the territory volume. */
   r: number
+  /** Furthest member (plus its radius) from the centroid - the cluster's real extent. */
+  spread: number
+  /** Null for the central group and for clusters too small to fold. */
+  hub: HubVisual | null
+}
+
+type ScreenDisc = {
+  ok: boolean
+  sx: number
+  sy: number
+  camDist: number
+  screenR: number
+  opacity: number
 }
 
 type View = {
@@ -198,6 +313,8 @@ type OrbitState = {
   lastX: number
   lastY: number
   moved: number
+  /** The hub the press landed on: released in place, it opens the cluster. */
+  hub: string | null
 }
 
 type PinchState = {
@@ -212,6 +329,16 @@ type PinchState = {
 /** Edge weight -> tube radius, log scaled like the 2D stroke width. */
 function edgeRadius(weight: number): number {
   return Math.max(0.6, Math.min(5, 0.55 + 1.2 * Math.log10(1 + Math.max(0, weight))))
+}
+
+/**
+ * Resting opacity of an aggregated hub -> party flow: heavier flows come
+ * forward. There are few of them, so they can carry more presence than the
+ * faint individual cross-cluster lines without turning into a thicket.
+ */
+function flowResting(weight: number): number {
+  const t = Math.max(0, Math.min(1, Math.log10(1 + Math.max(0, weight)) / 4))
+  return 0.2 + 0.28 * t
 }
 
 /** How far each edge in a parallel bundle bows sideways - ported from buildCurves. */
@@ -308,20 +435,37 @@ export class KnowledgeMapEngine {
   private popupName: HTMLDivElement
   private popupMeta: HTMLDivElement
   private popupCounts: HTMLDivElement
-  private placedLabelBoxes: { x1: number; y1: number; x2: number; y2: number }[] = []
+  private popupHint: HTMLDivElement
+  /** Label boxes placed this frame; the array and its boxes are reused frame to frame. */
+  private placedLabelBoxes: LabelBox[] = []
+  private boxPool: LabelBox[] = []
+  private discs: ScreenDisc[] = []
+  /** Text measurement for label placement - one 2D context, fonts resolved per build. */
+  private measureCtx: CanvasRenderingContext2D | null = null
+  private labelFont = ''
+  private captionFont = ''
+  private captionSpacing = 0
 
   private data: EngineData | null = null
   private sim: ForceSim3D | null = null
   private centres: Map<string, Centre3D> = new Map()
   private nodeVisuals = new Map<string, NodeVisual>()
   private edgeVisuals: EdgeVisual[] = []
+  /** Aggregated hub -> party flows, one list across every hub. */
+  private flowVisuals: EdgeVisual[] = []
   private territories: TerritoryVisual[] = []
+  /** Territories largest first - the order captions claim their space. */
+  private captionRank: TerritoryVisual[] = []
+  private hubs = new Map<string, HubVisual>()
+  private hubGroup = new THREE.Group()
   private paintRank: NodeVisual[] = []
   private worldCentre = new THREE.Vector3()
   private worldRadius = 320
 
   private emphasis: EngineEmphasis = { selectedId: null, pathEdges: null, pathFrom: null }
   private hoveredId: string | null = null
+  /** The hub under the pointer, by group. Exclusive with hoveredId. */
+  private hoveredHub: string | null = null
   private neighbourIds: Set<string> | null = null
   private pathNodeIds: Set<string> | null = null
   private pathEdgeKeys: Set<string> | null = null
@@ -404,10 +548,10 @@ export class KnowledgeMapEngine {
     this.popupMeta.className = 'rp-map3d-popup-meta'
     this.popupCounts = document.createElement('div')
     this.popupCounts.className = 'rp-map3d-popup-counts'
-    const popupHint = document.createElement('div')
-    popupHint.className = 'rp-map3d-popup-hint'
-    popupHint.textContent = 'Click for details'
-    this.popup.append(this.popupName, this.popupMeta, this.popupCounts, popupHint)
+    this.popupHint = document.createElement('div')
+    this.popupHint.className = 'rp-map3d-popup-hint'
+    this.popupHint.textContent = 'Click for details'
+    this.popup.append(this.popupName, this.popupMeta, this.popupCounts, this.popupHint)
     labelLayer.appendChild(this.popup)
 
     this.palette = buildPalette()
@@ -418,6 +562,7 @@ export class KnowledgeMapEngine {
     this.scene.add(this.territoryGroup)
     this.scene.add(this.edgeGroup)
     this.scene.add(this.nodeGroup)
+    this.scene.add(this.hubGroup)
     this.scene.add(this.haloGroup)
 
     // Light-mode-first lighting: a bright hemisphere for the airy paper feel
@@ -500,9 +645,26 @@ export class KnowledgeMapEngine {
     }
   }
 
+  /**
+   * What has the reader's attention: the selection, else the hovered node,
+   * else the hovered hub (by its synthetic id). Edges test their endpoints
+   * against it, so a hub's aggregated flows light up exactly as a node's do.
+   */
+  private focusKey(): string | null {
+    return this.emphasis.selectedId ?? this.hoveredId ??
+      (this.hoveredHub !== null ? this.hubs.get(this.hoveredHub)?.id ?? null : null)
+  }
+
+  private focusColour(focus: string): THREE.Color {
+    const node = this.nodeVisuals.get(focus)
+    if (node) return node.colour
+    for (const hub of this.hubs.values()) if (hub.id === focus) return hub.anchor.colour
+    return this.palette.accent
+  }
+
   private applyEdgeColour(visual: EdgeVisual) {
     const onPath = this.pathEdgeKeys?.has(visual.key) ?? false
-    const focus = this.emphasis.selectedId ?? this.hoveredId
+    const focus = this.focusKey()
     const touchesFocus = focus !== null &&
       (visual.edge.source === focus || visual.edge.target === focus)
     if (onPath) {
@@ -510,9 +672,8 @@ export class KnowledgeMapEngine {
       visual.coneMaterial.color.copy(this.palette.accent)
       return
     }
-    if (touchesFocus) {
-      const focusVisual = focus ? this.nodeVisuals.get(focus) : undefined
-      const colour = focusVisual ? focusVisual.colour : this.palette.accent
+    if (touchesFocus && focus !== null) {
+      const colour = this.focusColour(focus)
       visual.material.color.copy(colour)
       visual.coneMaterial.color.copy(colour)
     } else {
@@ -592,6 +753,18 @@ export class KnowledgeMapEngine {
     const previous = new Map<string, { x: number; y: number; z: number }>()
     for (const [id, visual] of this.nodeVisuals) {
       previous.set(id, { x: visual.sim.x, y: visual.sim.y, z: visual.sim.z })
+    }
+    // Fold state survives a rebuild (a scrub step, a filter) so every hub does
+    // not re-animate; a cluster new to the scene snaps to its resolved state.
+    const previousLod = new Map<string, Pick<HubVisual, 'lod' | 'lodTarget' | 'lodFrom' | 'lodStarted' | 'dived'>>()
+    for (const [group, hub] of this.hubs) {
+      previousLod.set(group, {
+        lod: hub.lod,
+        lodTarget: hub.lodTarget,
+        lodFrom: hub.lodFrom,
+        lodStarted: hub.lodStarted,
+        dived: hub.dived,
+      })
     }
     const firstBuild = this.nodeVisuals.size === 0
 
@@ -680,6 +853,7 @@ export class KnowledgeMapEngine {
       const visual: NodeVisual = {
         node,
         sim,
+        pos: new THREE.Vector3(sim.x, sim.y, sim.z),
         r: unlinked ? Math.max(3.5, r - 1.5) : r,
         slot,
         colour: node.colour ? new THREE.Color(node.colour) : this.catColour(slot).clone(),
@@ -699,6 +873,8 @@ export class KnowledgeMapEngine {
         degree,
         bornAt: firstBuild && !this.reduced ? performance.now() + Math.min(index * 9, 900) : 0,
         label,
+        labelW: 0,
+        territory: null,
       }
       this.applyNodeColour(visual)
       this.nodeVisuals.set(node.id, visual)
@@ -737,25 +913,40 @@ export class KnowledgeMapEngine {
         opacity: { current: 0, target: crossing ? 0.16 : 0.4 },
         emphasised: false,
         label: null,
+        labelW: 0,
+        hub: null,
+        aggregate: false,
       }
       this.applyEdgeColour(visual)
       this.edgeVisuals.push(visual)
     })
 
     // Territories only exist in the grouped layout, and only when there is
-    // more than one category to tell apart.
+    // more than one category to tell apart. Every non-central territory with
+    // enough members also gets its hub: the one mark it folds into when the
+    // camera is too far out to tell its donors apart.
     this.territories = []
     if (data.layout === 'grouped' && ordered.size > 1) {
+      const now = performance.now()
+      let hubIndex = 0
       for (const [group] of ordered) {
         const style = data.groupStyles.get(group)
         if (!style) continue
+        const members: NodeVisual[] = []
+        let total = 0
+        for (const visual of this.nodeVisuals.values()) {
+          if (visual.node.group !== group) continue
+          members.push(visual)
+          total += visual.node.total ?? 0
+        }
+        const count = members.length
         const material = new THREE.MeshBasicMaterial({
           transparent: true,
           opacity: 0.055,
           depthWrite: false,
         })
-        const cat = this.palette.cats[style.slot]
-        if (cat) material.color.copy(cat)
+        const cat = this.palette.cats[style.slot] ?? this.palette.accent
+        material.color.copy(cat)
         const mesh = new THREE.Mesh(this.territoryGeo, material)
         mesh.raycast = () => undefined
         mesh.renderOrder = -2
@@ -763,22 +954,176 @@ export class KnowledgeMapEngine {
         const caption = document.createElement('div')
         caption.className = 'rp-map3d-territory'
         caption.style.color = this.palette.inks[style.slot] ?? '#5A616B'
-        caption.textContent = `${group.toUpperCase()} · ${counts.get(group) ?? 0}`
+        const captionFull = `${group.toUpperCase()} · ${count}`
+        caption.textContent = captionFull
         caption.style.display = 'none'
         this.labelLayer.appendChild(caption)
-        this.territories.push({
+        const territory: TerritoryVisual = {
           group,
           style,
+          count,
+          total,
           mesh,
           material,
           caption,
+          captionFull,
+          captionShort: group.toUpperCase(),
+          captionW: 0,
+          captionShortW: 0,
+          captionHubW: 0,
+          captionShortHubW: 0,
           centre: new THREE.Vector3(),
           r: 0,
+          spread: 0,
+          hub: null,
+        }
+        for (const member of members) member.territory = territory
+        this.territories.push(territory)
+
+        if (group === data.centralGroup || count < HUB_MIN_MEMBERS) continue
+
+        const hubMaterial = new THREE.MeshStandardMaterial({
+          roughness: 0.42,
+          metalness: 0.04,
+          transparent: true,
+          opacity: 0,
         })
+        hubMaterial.color.copy(cat)
+        hubMaterial.emissive.copy(cat).multiplyScalar(0.16)
+        const hubMesh = new THREE.Mesh(this.sphereGeo, hubMaterial)
+        hubMesh.raycast = () => undefined
+        hubMesh.visible = false
+        // The hairline in the cluster's ink: an engraved ring, not a badge.
+        const ringMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(style.ink),
+          transparent: true,
+          opacity: 0,
+          depthWrite: false,
+          side: THREE.DoubleSide,
+        })
+        const ring = new THREE.Mesh(this.haloGeo, ringMaterial)
+        ring.raycast = () => undefined
+        ring.visible = false
+        this.hubGroup.add(hubMesh, ring)
+        const kept = previousLod.get(group)
+        const hub: HubVisual = {
+          id: `hub:${group}`,
+          group,
+          ink: style.ink,
+          count,
+          total,
+          members,
+          // The anchor shares the territory's centre vector, so the hub and
+          // its flows follow the centroid wherever the simulation takes it.
+          anchor: {
+            node: { id: `hub:${group}`, group },
+            pos: territory.centre,
+            r: hubRadius(count),
+            scale: { current: 1, target: 1 },
+            colour: cat.clone(),
+          },
+          mesh: hubMesh,
+          material: hubMaterial,
+          ring,
+          ringMaterial,
+          flows: [],
+          lod: kept?.lod ?? 0,
+          lodTarget: kept?.lodTarget ?? 0,
+          lodFrom: kept?.lodFrom ?? 0,
+          lodStarted: kept?.lodStarted ?? -1,
+          dived: kept?.dived ?? false,
+          opacity: { current: 1, target: 1 },
+          scale: { current: firstBuild && !this.reduced ? 0.001 : 1, target: 1 },
+          bornAt: firstBuild && !this.reduced ? now + 240 + Math.min(hubIndex * 45, 600) : 0,
+        }
+        hubIndex += 1
+        territory.hub = hub
+        this.hubs.set(group, hub)
+
+        // One aggregated flow per party the cluster gave to: dollars and
+        // weights summed, the donor count carried, the year span widened.
+        const perTarget = new Map<string, {
+          total: number
+          weight: number
+          donors: number
+          firstYear: number | null
+          lastYear: number | null
+        }>()
+        for (const edgeVisual of this.edgeVisuals) {
+          if (edgeVisual.from.node.group !== group || edgeVisual.to.node.group === group) continue
+          const edge = edgeVisual.edge
+          const agg = perTarget.get(edge.target) ?? {
+            total: 0, weight: 0, donors: 0, firstYear: null, lastYear: null,
+          }
+          agg.total += edge.total ?? 0
+          agg.weight += edge.weight
+          agg.donors += 1
+          if (edge.firstYear) {
+            agg.firstYear = agg.firstYear === null ? edge.firstYear : Math.min(agg.firstYear, edge.firstYear)
+          }
+          if (edge.lastYear) {
+            agg.lastYear = agg.lastYear === null ? edge.lastYear : Math.max(agg.lastYear, edge.lastYear)
+          }
+          perTarget.set(edge.target, agg)
+        }
+        for (const [targetId, agg] of perTarget) {
+          const to = this.nodeVisuals.get(targetId)
+          if (!to) continue
+          const synthetic: MapEdge = {
+            source: hub.id,
+            target: targetId,
+            label: formatMoney(agg.total),
+            weight: agg.weight,
+            total: agg.total,
+            count: agg.donors,
+            firstYear: agg.firstYear,
+            lastYear: agg.lastYear,
+            hub: group,
+          }
+          const flowMaterial = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false })
+          const flowMesh = new THREE.Mesh(this.tubeGeo, flowMaterial)
+          flowMesh.raycast = () => undefined
+          flowMesh.visible = false
+          const coneMaterial = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false })
+          const cone = new THREE.Mesh(this.coneGeo, coneMaterial)
+          cone.raycast = () => undefined
+          cone.visible = false
+          this.edgeGroup.add(flowMesh, cone)
+          const flow: EdgeVisual = {
+            edge: synthetic,
+            key: `${synthetic.source}|${synthetic.label}|${synthetic.target}`,
+            from: hub.anchor,
+            to,
+            mesh: flowMesh,
+            material: flowMaterial,
+            cone,
+            coneMaterial,
+            width: edgeRadius(agg.weight),
+            crossing: true,
+            lateral: 0,
+            opacity: { current: 0, target: flowResting(agg.weight) },
+            emphasised: false,
+            label: null,
+            labelW: 0,
+            hub,
+            aggregate: true,
+          }
+          this.applyEdgeColour(flow)
+          hub.flows.push(flow)
+          this.flowVisuals.push(flow)
+        }
+      }
+      // Individual flows follow their donor's cluster fold.
+      for (const edgeVisual of this.edgeVisuals) {
+        const from = this.nodeVisuals.get(edgeVisual.edge.source)
+        const to = this.nodeVisuals.get(edgeVisual.edge.target)
+        edgeVisual.hub = from?.territory?.hub ?? to?.territory?.hub ?? null
       }
     }
+    this.captionRank = [...this.territories].sort((a, b) => b.count - a.count)
 
     this.paintRank = [...this.nodeVisuals.values()].sort((a, b) => b.r - a.r)
+    this.measureLabels()
     this.updateWorldBounds()
     // Seed the territory volumes now rather than waiting for the first
     // rendered frame - captions must never paint at a stale origin.
@@ -786,6 +1131,53 @@ export class KnowledgeMapEngine {
     this.syncHalos()
     this.updateEmphasisSets()
     this.renderDirty = true
+  }
+
+  /**
+   * Label widths for collision placement, measured once per build with a 2D
+   * context set to the labels' computed fonts (the host may restyle them).
+   * A display:none element still resolves its font, so nothing is laid out.
+   */
+  private measureLabels() {
+    if (!this.measureCtx) {
+      this.measureCtx = document.createElement('canvas').getContext('2d')
+    }
+    const ctx = this.measureCtx
+    const fontOf = (element: HTMLElement | undefined): { font: string; spacing: number } => {
+      if (!element) return { font: '', spacing: 0 }
+      const cs = getComputedStyle(element)
+      const spacing = parseFloat(cs.letterSpacing)
+      return {
+        font: `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`,
+        spacing: Number.isFinite(spacing) ? spacing : 0,
+      }
+    }
+    const first = this.paintRank[0]
+    const label = fontOf(first?.label)
+    const probe = this.territories[0]?.caption
+    const caption = fontOf(probe)
+    // The folded variant is a step larger: resolve it through the attribute
+    // that styles it, so the two widths are both exact.
+    probe?.setAttribute('data-hub', '')
+    const hubCaption = fontOf(probe)
+    probe?.removeAttribute('data-hub')
+    this.labelFont = label.font
+    this.captionFont = caption.font
+    this.captionSpacing = caption.spacing
+    const measure = (text: string, font: string, spacing: number, fallback: number): number => {
+      if (!ctx || !font) return text.length * fallback
+      ctx.font = font
+      return ctx.measureText(text).width + spacing * text.length
+    }
+    for (const visual of this.paintRank) {
+      visual.labelW = measure(visual.label.textContent ?? '', this.labelFont, 0, 6.2)
+    }
+    for (const territory of this.territories) {
+      territory.captionW = measure(territory.captionFull, this.captionFont, this.captionSpacing, 7.4)
+      territory.captionShortW = measure(territory.captionShort, this.captionFont, this.captionSpacing, 7.4)
+      territory.captionHubW = measure(territory.captionFull, hubCaption.font, hubCaption.spacing, 8.2)
+      territory.captionShortHubW = measure(territory.captionShort, hubCaption.font, hubCaption.spacing, 8.2)
+    }
   }
 
   private clearScene() {
@@ -800,6 +1192,15 @@ export class KnowledgeMapEngine {
       visual.coneMaterial.dispose()
       visual.label?.remove()
     }
+    for (const visual of this.flowVisuals) {
+      visual.material.dispose()
+      visual.coneMaterial.dispose()
+      visual.label?.remove()
+    }
+    for (const hub of this.hubs.values()) {
+      hub.material.dispose()
+      hub.ringMaterial.dispose()
+    }
     for (const territory of this.territories) {
       territory.material.dispose()
       territory.caption.remove()
@@ -807,9 +1208,14 @@ export class KnowledgeMapEngine {
     this.nodeGroup.clear()
     this.edgeGroup.clear()
     this.territoryGroup.clear()
+    this.hubGroup.clear()
     this.nodeVisuals.clear()
     this.edgeVisuals = []
+    this.flowVisuals = []
     this.territories = []
+    this.captionRank = []
+    this.hubs.clear()
+    this.hoveredHub = null
   }
 
   private updateWorldBounds() {
@@ -845,22 +1251,36 @@ export class KnowledgeMapEngine {
     this.updateEmphasisSets()
   }
 
-  private setHovered(id: string | null) {
-    if (this.hoveredId === id) return
+  /** The pointer's hover target: a node, a hub, or nothing. The two are exclusive. */
+  private setHover(id: string | null, hub: string | null) {
+    if (this.hoveredId === id && this.hoveredHub === hub) return
     this.hoveredId = id
+    this.hoveredHub = hub
     this.updatePopup()
-    this.canvas.style.cursor = id ? 'pointer' : 'grab'
+    this.canvas.style.cursor = id !== null || hub !== null ? 'pointer' : 'grab'
     this.updateEmphasisSets()
+  }
+
+  private setHovered(id: string | null) {
+    this.setHover(id, null)
+  }
+
+  private setHoveredHub(group: string | null) {
+    this.setHover(null, group)
   }
 
   private updateEmphasisSets() {
     const { selectedId, pathEdges, pathFrom } = this.emphasis
-    const focus = selectedId ?? this.hoveredId
+    const focus = this.focusKey()
     if (focus) {
       const ids = new Set<string>([focus])
       for (const visual of this.edgeVisuals) {
         if (visual.edge.source === focus) ids.add(visual.edge.target)
         if (visual.edge.target === focus) ids.add(visual.edge.source)
+      }
+      // A hovered hub's neighbourhood is the parties it gave to.
+      for (const visual of this.flowVisuals) {
+        if (visual.edge.source === focus) ids.add(visual.edge.target)
       }
       this.neighbourIds = ids
     } else {
@@ -909,83 +1329,122 @@ export class KnowledgeMapEngine {
       visual.lift.target = isHovered && !isSelected ? 1 : 0
     }
 
-    for (const visual of this.edgeVisuals) {
-      const onPath = this.pathEdgeKeys?.has(visual.key) ?? false
+    const pathKeys = this.pathEdgeKeys
+    const emphasiseEdge = (visual: EdgeVisual) => {
+      const onPath = pathKeys?.has(visual.key) ?? false
       const touchesFocus = focus !== null &&
         (visual.edge.source === focus || visual.edge.target === focus)
-      const dimmed = (this.pathEdgeKeys && !onPath) ||
-        (focus !== null && !touchesFocus && !this.pathEdgeKeys)
+      const dimmed = (pathKeys && !onPath) ||
+        (focus !== null && !touchesFocus && !pathKeys)
       const emphasised = onPath || touchesFocus
       visual.emphasised = emphasised
       // A tinted edge that nothing else is quietening comes forward with its
       // value, so the bronze reads even on the faint cross-cluster flows.
-      const resting = Math.max(visual.crossing ? 0.16 : 0.4, 0.16 + 0.6 * this.edgeTintOf(visual))
+      const base = visual.aggregate
+        ? flowResting(visual.edge.weight)
+        : visual.crossing ? 0.16 : 0.4
+      const resting = Math.max(base, 0.16 + 0.6 * this.edgeTintOf(visual))
       visual.opacity.target = dimmed ? 0.06 : emphasised ? 0.92 : resting
       this.applyEdgeColour(visual)
+    }
+    for (const visual of this.edgeVisuals) emphasiseEdge(visual)
+    for (const visual of this.flowVisuals) emphasiseEdge(visual)
+
+    // A hub keeps its presence when nothing has focus, when it is the focus,
+    // or when one of its flows reaches the focused party; otherwise it recedes
+    // like any other mark outside the neighbourhood.
+    for (const hub of this.hubs.values()) {
+      let dimmed: boolean
+      if (pathKeys) {
+        let onPath = false
+        for (const flow of hub.flows) if (pathKeys.has(flow.key)) onPath = true
+        dimmed = !onPath
+      } else if (focus !== null && hub.id !== focus) {
+        let touches = false
+        for (const flow of hub.flows) if (flow.edge.target === focus) touches = true
+        dimmed = !touches
+      } else {
+        dimmed = false
+      }
+      hub.opacity.target = dimmed ? 0.3 : 1
+      hub.scale.target = hub.group === this.hoveredHub ? 1.1 : 1
     }
     this.updatePopup()
     this.renderDirty = true
   }
 
   /**
-   * Fill and show the hover card for the hovered node, or hide it. The card
-   * is for scouting - the info card already tells the selected node's story,
-   * so a hovered node that is also selected shows nothing.
+   * Fill and show the hover card for the hovered node or hub, or hide it. The
+   * card is for scouting - the info card already tells the selected node's
+   * story, so a hovered node that is also selected shows nothing.
    */
   private updatePopup() {
     const visual = this.hoveredId ? this.nodeVisuals.get(this.hoveredId) : undefined
-    if (!visual || visual.node.id === this.emphasis.selectedId) {
+    const hub = !visual && this.hoveredHub !== null ? this.hubs.get(this.hoveredHub) : undefined
+    if ((!visual && !hub) || (visual && visual.node.id === this.emphasis.selectedId)) {
       this.popup.style.display = 'none'
       return
     }
-    const node = visual.node
-    this.popupName.textContent = node.label
     this.popupMeta.replaceChildren()
     const dot = document.createElement('span')
     dot.className = 'rp-map3d-popup-dot'
-    dot.style.background = `#${visual.colour.getHexString()}`
     const category = document.createElement('span')
-    category.textContent = node.kind === 'party'
-      ? 'political party'
-      : (node.industry ?? node.group).replace(/_/g, ' ')
-    category.style.color = this.palette.inks[visual.slot] ?? '#5A616B'
+    if (hub) {
+      this.popupName.textContent = hub.group.charAt(0).toUpperCase() + hub.group.slice(1)
+      dot.style.background = `#${hub.anchor.colour.getHexString()}`
+      category.textContent = 'industry cluster'
+      category.style.color = hub.ink
+      const parties = hub.flows.length
+      this.popupCounts.textContent = `${formatMoney(hub.total)} · ${hub.count} donors · ${
+        parties === 1 ? '1 party' : `${parties} parties`
+      }`
+      this.popupHint.textContent = 'Click to open the cluster'
+    } else if (visual) {
+      const node = visual.node
+      this.popupName.textContent = node.label
+      dot.style.background = `#${visual.colour.getHexString()}`
+      category.textContent = node.kind === 'party'
+        ? 'political party'
+        : (node.industry ?? node.group).replace(/_/g, ' ')
+      category.style.color = this.palette.inks[visual.slot] ?? '#5A616B'
+      const links = visual.degree === 1 ? '1' : `${visual.degree}`
+      const who = node.kind === 'party'
+        ? (visual.degree === 1 ? '1 donor shown' : `${links} donors shown`)
+        : (visual.degree === 1 ? '1 party' : `${links} parties`)
+      this.popupCounts.textContent = node.total !== undefined
+        ? `${formatMoney(node.total)} · ${who}`
+        : who
+      this.popupHint.textContent = 'Click for details'
+    }
     this.popupMeta.append(dot, category)
-    const links = visual.degree === 1 ? '1' : `${visual.degree}`
-    const who = node.kind === 'party'
-      ? (visual.degree === 1 ? '1 donor shown' : `${links} donors shown`)
-      : (visual.degree === 1 ? '1 party' : `${links} parties`)
-    this.popupCounts.textContent = node.total !== undefined
-      ? `${formatMoney(node.total)} · ${who}`
-      : who
     // Kept as the layer's last child so it rides above every label.
     this.labelLayer.appendChild(this.popup)
     this.popup.style.display = 'block'
     this.positionPopup()
   }
 
-  /** Pin the card beside the hovered node, flipped inside the canvas edges. */
+  /** Pin the card beside the hovered mark, flipped inside the canvas edges. */
   private positionPopup() {
     if (this.popup.style.display === 'none') return
     const visual = this.hoveredId ? this.nodeVisuals.get(this.hoveredId) : undefined
-    if (!visual) {
+    const hub = !visual && this.hoveredHub !== null ? this.hubs.get(this.hoveredHub) : undefined
+    const anchor: EdgeAnchor | undefined = visual ?? hub?.anchor
+    if (!anchor) {
       this.popup.style.display = 'none'
       return
     }
-    this.labelVec.set(visual.sim.x, visual.sim.y, visual.sim.z).project(this.camera)
+    this.labelVec.copy(anchor.pos).project(this.camera)
     if (this.labelVec.z > 1 || this.labelVec.z < -1) {
       this.popup.style.display = 'none'
       return
     }
     const sx = (this.labelVec.x * 0.5 + 0.5) * this.width
     const sy = (-this.labelVec.y * 0.5 + 0.5) * this.height
-    const camDist = Math.hypot(
-      visual.sim.x - this.camera.position.x,
-      visual.sim.y - this.camera.position.y,
-      visual.sim.z - this.camera.position.z,
-    )
+    const camDist = anchor.pos.distanceTo(this.camera.position)
     const halfTan = Math.tan(THREE.MathUtils.degToRad(FOV / 2))
-    const screenR = ((visual.r * visual.scale.current * (this.height / 2)) /
-      (camDist * halfTan)) * (1 + visual.lift.current * 0.15)
+    const lift = visual ? visual.lift.current : 0
+    const screenR = ((anchor.r * anchor.scale.current * (this.height / 2)) /
+      (camDist * halfTan)) * (1 + lift * 0.15)
     const w = this.popup.offsetWidth
     const h = this.popup.offsetHeight
     let x = sx + screenR + 16
@@ -1021,6 +1480,15 @@ export class KnowledgeMapEngine {
     this.viewOwnedFlag = true
     this.focusOwnedFlag = false
     this.idleSpin = false
+  }
+
+  /**
+   * A dolly by the reader (wheel, pinch, the zoom buttons) or a fit hands
+   * every opened cluster back to the automatic rule. Orbiting does not: a
+   * reader turning a just-opened cluster around must not watch it refold.
+   */
+  private releaseDives() {
+    for (const hub of this.hubs.values()) hub.dived = false
   }
 
   /** The part of the canvas the floating panels leave free, in pixels. */
@@ -1075,6 +1543,7 @@ export class KnowledgeMapEngine {
     this.tween = null
     this.viewOwnedFlag = false
     this.focusOwnedFlag = false
+    this.releaseDives()
     if (this.nodeVisuals.size === 0) return
     this.updateWorldBounds()
     this.updateCamera()
@@ -1191,7 +1660,10 @@ export class KnowledgeMapEngine {
     const settled = projected.z < 1 &&
       sx > this.insets.left + marginX && sx < this.insets.left + box.w - marginX &&
       sy > marginY && sy < box.h - marginY
-    if (settled && this.insets.bottom <= 0) return null
+    // A node inside a folded cluster is "in view" only as a hub: the fold
+    // rule is about to open its cluster, and the camera should go with it.
+    const folded = visual.territory?.hub?.lodTarget === 1
+    if (settled && this.insets.bottom <= 0 && !folded) return null
 
     let dist = keepDist
     if (dist === null) {
@@ -1256,6 +1728,7 @@ export class KnowledgeMapEngine {
 
   zoomBy(factor: number) {
     this.claimView()
+    this.releaseDives()
     this.distGoal = Math.max(this.minDist(), Math.min(this.maxDist(), this.distGoal / factor))
   }
 
@@ -1351,7 +1824,21 @@ export class KnowledgeMapEngine {
    * are always current, so this path cannot go stale. Dimmed marks stay
    * clickable, exactly as in 2D.
    */
-  private raycastNode(x: number, y: number): NodeVisual | null {
+  /** The last pick's result - fields, not a returned object, so a hover test allocates nothing. */
+  private pickedNode: NodeVisual | null = null
+  private pickedHub: HubVisual | null = null
+
+  /**
+   * Picking is analytic - a ray/sphere test against the rendered positions -
+   * not a mesh raycast. Mesh matrixWorld is only current after a rendered
+   * frame, and a tab whose rAF is throttled (backgrounded, just restored,
+   * headless) has painted nothing yet: a mesh raycast there tests unit
+   * spheres at the origin and every pick silently misses. The positions and
+   * the view are always current, so this path cannot go stale. Dimmed marks
+   * stay clickable, exactly as in 2D. Folded dots give way to their hub.
+   * The winner lands in pickedNode / pickedHub (never both).
+   */
+  private pick(x: number, y: number) {
     // The camera may not have been placed yet this frame (or ever, in a
     // throttled tab) - derive it from the view before casting.
     this.updateCamera()
@@ -1362,29 +1849,54 @@ export class KnowledgeMapEngine {
     const origin = this.raycaster.ray.origin
     const dir = this.raycaster.ray.direction
     const toCentre = this.raycastVec
-    let best: NodeVisual | null = null
+    let bestNode: NodeVisual | null = null
+    let bestHub: HubVisual | null = null
     let bestAlong = Infinity
-    for (const visual of this.nodeVisuals.values()) {
-      toCentre.set(
-        visual.sim.x - origin.x,
-        visual.sim.y - origin.y,
-        visual.sim.z - origin.z,
-      )
+    const test = (pos: THREE.Vector3, r: number): number | null => {
+      toCentre.copy(pos).sub(origin)
       const along = toCentre.dot(dir)
-      if (along < 0) continue
-      // The resting radius, not the animated scale: mid-entrance nodes are
-      // visually small but should be pickable at full size.
-      const r = visual.r
+      if (along < 0) return null
       const missSq = toCentre.lengthSq() - along * along
-      if (missSq > r * r) continue
+      if (missSq > r * r) return null
       // Rank by where the ray ENTERS the sphere, so a small mark in front
       // beats the big one behind it - the same order a mesh raycast reports.
       const entry = along - Math.sqrt(r * r - missSq)
-      if (entry < this.camera.near || entry >= bestAlong) continue
-      best = visual
+      if (entry < this.camera.near || entry >= bestAlong) return null
+      return entry
+    }
+    for (const visual of this.nodeVisuals.values()) {
+      const hub = visual.territory?.hub
+      if (hub && hub.lod >= 0.5) continue
+      // The resting radius, not the animated scale: mid-entrance nodes are
+      // visually small but should be pickable at full size.
+      const entry = test(visual.pos, visual.r)
+      if (entry === null) continue
+      bestNode = visual
+      bestHub = null
       bestAlong = entry
     }
-    return best
+    for (const hub of this.hubs.values()) {
+      if (hub.lod < 0.5) continue
+      const entry = test(hub.anchor.pos, hub.anchor.r * hub.anchor.scale.current)
+      if (entry === null) continue
+      bestHub = hub
+      bestNode = null
+      bestAlong = entry
+    }
+    this.pickedNode = bestNode
+    this.pickedHub = bestHub
+  }
+
+  private raycastNode(x: number, y: number): NodeVisual | null {
+    this.pick(x, y)
+    return this.pickedNode
+  }
+
+  /** How much of an edge its cluster's fold leaves visible: 1 - lod for a donor's own flow, lod for a hub's. */
+  private edgeFold(visual: EdgeVisual): number {
+    const hub = visual.hub
+    if (!hub) return 1
+    return visual.aggregate ? hub.lod : 1 - hub.lod
   }
 
   private pickVecA = new THREE.Vector3()
@@ -1393,8 +1905,9 @@ export class KnowledgeMapEngine {
   /**
    * The edge nearest a click, tested in SCREEN space (point-to-segment
    * distance against the projected endpoints) so a thin tube is as easy to
-   * hit as it is to see. Same sim-position discipline as raycastNode - no
-   * dependence on rendered mesh state. Invisible edges never pick.
+   * hit as it is to see. Same position discipline as pick() - no dependence
+   * on rendered mesh state. Invisible edges never pick; aggregated flows
+   * pick like any other.
    */
   private pickEdge(x: number, y: number, threshold = 9): EdgeVisual | null {
     this.updateCamera()
@@ -1402,14 +1915,15 @@ export class KnowledgeMapEngine {
     let bestD = threshold
     const a = this.pickVecA
     const b = this.pickVecB
-    for (const visual of this.edgeVisuals) {
+    const consider = (visual: EdgeVisual) => {
       // Gate on the INTENDED opacity: `current` only animates while frames
       // run, so a throttled tab would report every edge invisible (the same
-      // trap raycastNode avoids by using sim positions).
-      if (Math.max(visual.opacity.current, visual.opacity.target) < 0.05) continue
-      a.set(visual.from.sim.x, visual.from.sim.y, visual.from.sim.z).project(this.camera)
-      b.set(visual.to.sim.x, visual.to.sim.y, visual.to.sim.z).project(this.camera)
-      if ((a.z > 1 && b.z > 1) || (a.z < -1 && b.z < -1)) continue
+      // trap pick() avoids by using positions).
+      if (Math.max(visual.opacity.current, visual.opacity.target) < 0.05) return
+      if (this.edgeFold(visual) < 0.5) return
+      a.copy(visual.from.pos).project(this.camera)
+      b.copy(visual.to.pos).project(this.camera)
+      if ((a.z > 1 && b.z > 1) || (a.z < -1 && b.z < -1)) return
       const ax = (a.x * 0.5 + 0.5) * this.width
       const ay = (-a.y * 0.5 + 0.5) * this.height
       const bx = (b.x * 0.5 + 0.5) * this.width
@@ -1424,6 +1938,8 @@ export class KnowledgeMapEngine {
         best = visual
       }
     }
+    for (const visual of this.edgeVisuals) consider(visual)
+    for (const visual of this.flowVisuals) consider(visual)
     return best
   }
 
@@ -1439,6 +1955,7 @@ export class KnowledgeMapEngine {
       const [a, b] = [...this.pointers.entries()]
       if (a && b) {
         this.claimView()
+        this.releaseDives()
         this.pinch = {
           a: a[0],
           b: b[0],
@@ -1455,7 +1972,12 @@ export class KnowledgeMapEngine {
     // lift depart before the gesture starts.
     this.setHovered(null)
 
-    const hit = event.button === 0 ? this.raycastNode(point.x, point.y) : null
+    if (event.button === 0) this.pick(point.x, point.y)
+    else {
+      this.pickedNode = null
+      this.pickedHub = null
+    }
+    const hit = this.pickedNode
     if (hit && this.sim) {
       // Drag the node on a camera-facing plane through it, so the motion
       // follows the pointer exactly at any orbit angle.
@@ -1478,11 +2000,14 @@ export class KnowledgeMapEngine {
       this.sim.reheat()
       return
     }
+    // A press on a hub orbits if it travels and opens the cluster if it
+    // does not - hubs are landmarks to grab the view by as much as targets.
     this.orbit = {
       mode: event.button === 2 || event.button === 1 || event.shiftKey ? 'pan' : 'orbit',
       lastX: point.x,
       lastY: point.y,
       moved: 0,
+      hub: this.pickedHub ? this.pickedHub.group : null,
     }
     this.canvas.style.cursor = 'grabbing'
   }
@@ -1610,15 +2135,31 @@ export class KnowledgeMapEngine {
         this.gestured = false
         return
       }
+      if (orbit.hub !== null) {
+        this.diveInto(orbit.hub)
+        return
+      }
       const hit = this.raycastNode(point.x, point.y)
       if (hit) {
         this.onSelect(hit.node.id)
+      } else if (this.pickedHub) {
+        this.diveInto(this.pickedHub.group)
       } else {
         // A miss can still land on an edge - the flow between two nodes is a
         // selectable fact of its own.
         const edge = this.onEdgePick ? this.pickEdge(point.x, point.y) : null
-        if (edge) this.onEdgePick?.(edge.edge)
-        else this.onSelect(null)
+        if (edge) {
+          this.onEdgePick?.(edge.edge)
+        } else if (
+          this.emphasis.selectedId === null && this.emphasis.pathEdges === null &&
+          this.view.dist < this.fitDist * 0.9
+        ) {
+          // Nothing to clear and the view is inside a cluster: empty space
+          // is the way back out, and the clusters refold on the way.
+          this.fit(true)
+        } else {
+          this.onSelect(null)
+        }
       }
     }
     this.gestured = false
@@ -1632,6 +2173,7 @@ export class KnowledgeMapEngine {
   private onWheel = (event: WheelEvent) => {
     event.preventDefault()
     this.claimView()
+    this.releaseDives()
     const factor = event.deltaY < 0 ? 1.12 : 1 / 1.12
     this.distGoal = Math.max(this.minDist(), Math.min(this.maxDist(), this.distGoal / factor))
   }
@@ -1645,34 +2187,49 @@ export class KnowledgeMapEngine {
    * Orbiting with the arrows re-aims it, so the keyboard can reach anything
    * visible; the navigator rail and the find field cover the rest by name.
    */
-  private centremostNodeId(): string | null {
+  private centremost() {
     const box = this.freeBox()
-    let best: string | null = null
     let bestD = Infinity
     const v = this.labelVec
-    for (const visual of this.nodeVisuals.values()) {
-      v.set(visual.sim.x, visual.sim.y, visual.sim.z).project(this.camera)
-      if (v.z > 1 || v.z < -1) continue
+    this.pickedNode = null
+    this.pickedHub = null
+    const consider = (pos: THREE.Vector3): boolean => {
+      v.copy(pos).project(this.camera)
+      if (v.z > 1 || v.z < -1) return false
       const sx = (v.x * 0.5 + 0.5) * this.width
       const sy = (-v.y * 0.5 + 0.5) * this.height
-      if (sx < 0 || sx > this.width || sy < 0 || sy > this.height) continue
+      if (sx < 0 || sx > this.width || sy < 0 || sy > this.height) return false
       const d = Math.hypot(sx - box.cx, sy - box.cy)
-      if (d < bestD) {
-        bestD = d
-        best = visual.node.id
+      if (d >= bestD) return false
+      bestD = d
+      return true
+    }
+    for (const visual of this.nodeVisuals.values()) {
+      const hub = visual.territory?.hub
+      if (hub && hub.lod >= 0.5) continue
+      if (consider(visual.pos)) {
+        this.pickedNode = visual
+        this.pickedHub = null
       }
     }
-    return best
+    for (const hub of this.hubs.values()) {
+      if (hub.lod < 0.5) continue
+      if (consider(hub.anchor.pos)) {
+        this.pickedHub = hub
+        this.pickedNode = null
+      }
+    }
   }
 
-  /** Keyboard access: arrows orbit, plus and minus zoom, Enter selects. */
+  /** Keyboard access: arrows orbit, plus and minus zoom, Enter selects (or opens a hub). */
   private onKeyDown = (event: KeyboardEvent) => {
     const step = 0.15
     switch (event.key) {
       case 'Enter':
       case ' ': {
-        const id = this.centremostNodeId()
-        if (id) this.onSelect(id)
+        this.centremost()
+        if (this.pickedHub) this.diveInto(this.pickedHub.group)
+        else if (this.pickedNode) this.onSelect(this.pickedNode.node.id)
         break
       }
       case 'ArrowLeft':
@@ -1751,6 +2308,16 @@ export class KnowledgeMapEngine {
       step(visual.lift)
     }
     for (const visual of this.edgeVisuals) step(visual.opacity)
+    for (const visual of this.flowVisuals) step(visual.opacity)
+    for (const hub of this.hubs.values()) {
+      if (hub.bornAt > 0 && now < hub.bornAt) {
+        active = true
+      } else {
+        hub.bornAt = 0
+        step(hub.scale)
+      }
+      step(hub.opacity)
+    }
     for (const halo of this.halos.values()) {
       step(halo.presence)
       step(halo.value)
@@ -1795,12 +2362,19 @@ export class KnowledgeMapEngine {
     }
 
     if (this.stepFades(dt)) this.renderDirty = true
+    const lodActive = this.updateLod(now)
+    if (lodActive) this.renderDirty = true
 
-    if (this.hoverDirty && !this.drag && !this.orbit && !this.pinch) {
+    // A fold in flight changes what is under a still pointer, so the hover
+    // test reruns while one is active.
+    if ((this.hoverDirty || lodActive) && !this.drag && !this.orbit && !this.pinch) {
       this.hoverDirty = false
       if (this.hoverPos) {
-        const hit = this.raycastNode(this.hoverPos.x, this.hoverPos.y)
-        this.setHovered(hit ? hit.node.id : null)
+        this.pick(this.hoverPos.x, this.hoverPos.y)
+        this.setHover(
+          this.pickedNode ? this.pickedNode.node.id : null,
+          this.pickedHub ? this.pickedHub.group : null,
+        )
       }
     }
 
@@ -1808,13 +2382,14 @@ export class KnowledgeMapEngine {
 
     this.renderDirty = false
     this.updateCamera()
-    this.updateNodeMeshes()
-    this.updateEdgeMeshes()
     if (simWarm) this.updateTerritories()
+    this.updateNodeMeshes()
+    this.updateHubMeshes()
+    this.updateEdgeMeshes()
     this.updateRings()
     this.renderer.render(this.scene, this.camera)
     this.projectLabels()
-    if (simWarm || this.tween) this.renderDirty = true
+    if (simWarm || this.tween || lodActive) this.renderDirty = true
   }
 
   private updateCamera() {
@@ -1838,8 +2413,16 @@ export class KnowledgeMapEngine {
 
   private updateNodeMeshes() {
     for (const visual of this.nodeVisuals.values()) {
-      const scale = Math.max(0.001, visual.r * visual.scale.current)
-      visual.mesh.position.set(visual.sim.x, visual.sim.y, visual.sim.z)
+      const hub = visual.territory?.hub ?? null
+      const lod = hub ? hub.lod : 0
+      const pos = visual.pos
+      pos.set(visual.sim.x, visual.sim.y, visual.sim.z)
+      // The fold: each dot drifts to the centroid, thins and fades while the
+      // hub grows over it; unfolding runs the same path backwards.
+      if (hub && lod > 0) pos.lerp(hub.anchor.pos, lod)
+      const open = 1 - lod
+      const scale = Math.max(0.001, visual.r * visual.scale.current * (0.55 + 0.45 * open))
+      visual.mesh.position.copy(pos)
       if (visual.lift.current > 0.001) {
         // The lift runs along the view axis, so the node comes towards the
         // reader without sliding off its own edges on screen.
@@ -1850,10 +2433,45 @@ export class KnowledgeMapEngine {
         )
       }
       visual.mesh.scale.setScalar(scale)
-      visual.material.opacity = visual.opacity.current
-      visual.material.depthWrite = visual.opacity.current > 0.5
-      visual.shellMaterial.opacity = visual.shellOpacity.current
-      visual.shell.visible = visual.shellOpacity.current > 0.01
+      const opacity = visual.opacity.current * open * open
+      visual.mesh.visible = opacity > 0.005
+      visual.material.opacity = opacity
+      visual.material.depthWrite = opacity > 0.5
+      visual.shellMaterial.opacity = visual.shellOpacity.current * open
+      visual.shell.visible = visual.shellMaterial.opacity > 0.01
+    }
+  }
+
+  private updateHubMeshes() {
+    for (const territory of this.territories) {
+      const hub = territory.hub
+      if (!hub) continue
+      const lod = hub.lod
+      // The territory volume gives way to the hub as the cluster folds.
+      territory.material.opacity = 0.055 * (1 - lod)
+      territory.mesh.visible = lod < 0.98
+      const grow = 0.55 + 0.45 * lod
+      const scale = hub.scale.current * grow
+      hub.anchor.scale.current = scale
+      if (lod <= 0.001) {
+        hub.mesh.visible = false
+        hub.ring.visible = false
+        continue
+      }
+      const r = Math.max(0.001, hub.anchor.r * scale)
+      const opacity = hub.opacity.current * lod
+      hub.mesh.visible = opacity > 0.005
+      hub.mesh.position.copy(hub.anchor.pos)
+      hub.mesh.scale.setScalar(r)
+      hub.material.opacity = opacity
+      hub.material.depthWrite = opacity > 0.5
+      // The hairline sits just off the sphere, facing the camera, in the ink.
+      const ringT = Math.max(0, (lod - 0.25) / 0.75)
+      hub.ring.visible = ringT > 0.01
+      hub.ring.position.copy(hub.anchor.pos)
+      hub.ring.scale.setScalar(r * 1.24)
+      hub.ring.quaternion.copy(this.camera.quaternion)
+      hub.ringMaterial.opacity = 0.75 * hub.opacity.current * ringT
     }
   }
 
@@ -1864,61 +2482,68 @@ export class KnowledgeMapEngine {
   private edgeTmpQuat = new THREE.Quaternion()
 
   private updateEdgeMeshes() {
+    for (const visual of this.edgeVisuals) this.layoutEdge(visual)
+    for (const visual of this.flowVisuals) this.layoutEdge(visual)
+  }
+
+  private layoutEdge(visual: EdgeVisual) {
     const dir = this.edgeTmpDir
     const side = this.edgeTmpSide
     const mid = this.edgeTmpMid
-    for (const visual of this.edgeVisuals) {
-      const { from, to } = visual
-      dir.set(to.sim.x - from.sim.x, to.sim.y - from.sim.y, to.sim.z - from.sim.z)
-      const len = dir.length()
-      if (len < 1) {
-        visual.mesh.visible = false
-        visual.cone.visible = false
-        continue
-      }
-      dir.multiplyScalar(1 / len)
-      const rFrom = from.r * from.scale.current
-      const rTo = to.r * to.scale.current
-      const arrow = visual.emphasised ? Math.max(4.5, visual.width * 3.2) : 0
-      // The tube runs rim to rim, not midpoint out: a hub-leaf pair centred
-      // on the geometric midpoint leaves a floating gap at the small end.
-      const startOffset = rFrom + 1
-      const endOffset = rTo + arrow + 1
-      const span = Math.max(1, len - startOffset - endOffset)
+    const { from, to } = visual
+    // Endpoints are the RENDERED positions, so a flow follows its donor into
+    // the hub as the cluster folds instead of pointing at an empty spot.
+    const fold = this.edgeFold(visual)
+    const opacity = visual.opacity.current * fold
+    dir.copy(to.pos).sub(from.pos)
+    const len = dir.length()
+    if (len < 1 || opacity <= 0.01) {
+      visual.mesh.visible = false
+      visual.cone.visible = false
+      return
+    }
+    dir.multiplyScalar(1 / len)
+    const rFrom = from.r * from.scale.current
+    const rTo = to.r * to.scale.current
+    const arrow = visual.emphasised ? Math.max(4.5, visual.width * 3.2) : 0
+    // The tube runs rim to rim, not midpoint out: a hub-leaf pair centred
+    // on the geometric midpoint leaves a floating gap at the small end.
+    const startOffset = rFrom + 1
+    const endOffset = rTo + arrow + 1
+    const span = Math.max(1, len - startOffset - endOffset)
 
-      // A stable sideways direction for parallel relations to fan along.
-      side.set(dir.z, 0, -dir.x)
-      if (side.lengthSq() < 0.01) side.set(1, 0, 0)
-      side.normalize()
-      const bow = visual.lateral * Math.min(12, len * 0.1)
+    // A stable sideways direction for parallel relations to fan along.
+    side.set(dir.z, 0, -dir.x)
+    if (side.lengthSq() < 0.01) side.set(1, 0, 0)
+    side.normalize()
+    const bow = visual.lateral * Math.min(12, len * 0.1)
 
-      const along = startOffset + span / 2
-      mid.set(
-        from.sim.x + dir.x * along + side.x * bow,
-        from.sim.y + dir.y * along + side.y * bow,
-        from.sim.z + dir.z * along + side.z * bow,
+    const along = startOffset + span / 2
+    mid.set(
+      from.pos.x + dir.x * along + side.x * bow,
+      from.pos.y + dir.y * along + side.y * bow,
+      from.pos.z + dir.z * along + side.z * bow,
+    )
+    const width = visual.emphasised ? Math.max(visual.width, 1.5) : visual.width
+    visual.mesh.visible = true
+    visual.mesh.position.copy(mid)
+    visual.mesh.quaternion.copy(this.edgeTmpQuat.setFromUnitVectors(this.edgeUp, dir))
+    visual.mesh.scale.set(width, span, width)
+    visual.material.opacity = opacity
+
+    if (visual.emphasised) {
+      visual.cone.visible = true
+      visual.cone.position.set(
+        to.pos.x - dir.x * (rTo + arrow / 2 + 1),
+        to.pos.y - dir.y * (rTo + arrow / 2 + 1),
+        to.pos.z - dir.z * (rTo + arrow / 2 + 1),
       )
-      const width = visual.emphasised ? Math.max(visual.width, 1.5) : visual.width
-      visual.mesh.visible = visual.opacity.current > 0.01
-      visual.mesh.position.copy(mid)
-      visual.mesh.quaternion.copy(this.edgeTmpQuat.setFromUnitVectors(this.edgeUp, dir))
-      visual.mesh.scale.set(width, span, width)
-      visual.material.opacity = visual.opacity.current
-
-      if (visual.emphasised) {
-        visual.cone.visible = true
-        visual.cone.position.set(
-          to.sim.x - dir.x * (rTo + arrow / 2 + 1),
-          to.sim.y - dir.y * (rTo + arrow / 2 + 1),
-          to.sim.z - dir.z * (rTo + arrow / 2 + 1),
-        )
-        visual.cone.quaternion.copy(this.edgeTmpQuat)
-        const coneW = Math.max(2.2, width * 2.1)
-        visual.cone.scale.set(coneW, arrow, coneW)
-        visual.coneMaterial.opacity = Math.min(1, visual.opacity.current + 0.05)
-      } else {
-        visual.cone.visible = false
-      }
+      visual.cone.quaternion.copy(this.edgeTmpQuat)
+      const coneW = Math.max(2.2, width * 2.1)
+      visual.cone.scale.set(coneW, arrow, coneW)
+      visual.coneMaterial.opacity = Math.min(1, opacity + 0.05)
+    } else {
+      visual.cone.visible = false
     }
   }
 
@@ -1949,12 +2574,140 @@ export class KnowledgeMapEngine {
         const d = Math.hypot(visual.sim.x - x, visual.sim.y - y, visual.sim.z - z) + visual.r
         if (d > spread) spread = d
       }
+      // The hub's anchor shares this vector, so the hub moves with the centroid.
       territory.centre.set(x, y, z)
+      territory.spread = spread
       territory.r = spread + 22
       territory.mesh.visible = true
       territory.mesh.position.set(x, y, z)
       territory.mesh.scale.setScalar(territory.r)
     }
+  }
+
+  // -------------------------------------------------------------------
+  // Semantic zoom - the fold state of each cluster.
+  // -------------------------------------------------------------------
+
+  /**
+   * Retarget a hub's fold. The tween restarts from wherever the current
+   * value is, so a reversal mid-flight turns back smoothly instead of
+   * jumping to either end.
+   */
+  private setLod(hub: HubVisual, target: number, now: number) {
+    if (hub.lodTarget === target && hub.lodStarted >= 0) return
+    hub.lodTarget = target
+    hub.lodFrom = hub.lod
+    hub.lodStarted = now
+    this.renderDirty = true
+  }
+
+  /** The distance the camera is heading for, so a fold decision anticipates a wheel or a flight. */
+  private goalDist(): number {
+    return this.tween ? this.tween.to.dist : this.distGoal
+  }
+
+  /**
+   * Decide and advance every cluster's fold. A cluster folds once its spread
+   * would draw narrower than COLLAPSE_PX on screen and unfolds past
+   * EXPAND_PX; the gap is the hysteresis. Clusters holding the selection, a
+   * selected flow's donor, or a just-opened hub never fold. Returns true
+   * while any fold is mid-flight.
+   */
+  private updateLod(now: number): boolean {
+    if (this.hubs.size === 0) return false
+    // The camera may not have been placed since the last view change.
+    this.updateCamera()
+    const halfTan = Math.tan(THREE.MathUtils.degToRad(FOV / 2))
+    // Judged at the orbit distance the camera is heading for, not each
+    // cluster's own depth: the smoothed dolly lags the wheel, so the fold
+    // begins as the reader turns it, and clusters fold in size order rather
+    // than the far side of the ring folding while the near side stays open.
+    const dist = Math.max(1, this.goalDist())
+    const pinnedGroups = this.pinnedGroups()
+    let active = false
+    for (const territory of this.territories) {
+      const hub = territory.hub
+      if (!hub) continue
+      const pinned = pinnedGroups !== null && pinnedGroups.has(hub.group)
+      const px = (territory.spread * (this.height / 2)) / (dist * halfTan)
+      let want = hub.lodTarget
+      if (pinned) want = 0
+      else if (hub.lodTarget === 1 && px > EXPAND_PX) want = 0
+      else if (hub.lodTarget === 0 && px < COLLAPSE_PX && !hub.dived) want = 1
+      if (hub.lodStarted < 0) {
+        // First evaluation: land in the resolved state without a show.
+        hub.lodTarget = want
+        hub.lod = want
+        hub.lodFrom = want
+        hub.lodStarted = now
+        this.renderDirty = true
+        continue
+      }
+      if (want !== hub.lodTarget) this.setLod(hub, want, now)
+      if (hub.lod !== hub.lodTarget) {
+        if (this.reduced) {
+          hub.lod = hub.lodTarget
+        } else {
+          const t = Math.min(1, (now - hub.lodStarted) / LOD_MS)
+          hub.lod = hub.lodFrom + (hub.lodTarget - hub.lodFrom) * easeInOut(t)
+          if (t >= 1) hub.lod = hub.lodTarget
+        }
+        active = true
+      }
+    }
+    return active
+  }
+
+  /** Groups that must stay unfolded: those holding the selection or a selected flow's ends. */
+  private pinnedGroups(): Set<string> | null {
+    const { selectedId, pathEdges, pathFrom } = this.emphasis
+    if (selectedId === null && pathEdges === null && pathFrom === null) return null
+    const groups = new Set<string>()
+    const add = (id: string | null) => {
+      if (id === null) return
+      const visual = this.nodeVisuals.get(id)
+      if (visual) groups.add(visual.node.group)
+    }
+    add(selectedId)
+    add(pathFrom)
+    if (pathEdges) {
+      for (const edge of pathEdges) {
+        add(edge.source)
+        add(edge.target)
+      }
+    }
+    return groups
+  }
+
+  /**
+   * Open a folded cluster: fly the camera to frame it and unfold it on the
+   * way. The dive flag keeps the automatic rule from refolding it while the
+   * camera is still far out; the reader's next zoom or a fit releases it.
+   */
+  diveInto(group: string) {
+    const territory = this.territories.find((t) => t.group === group)
+    const hub = territory?.hub
+    if (!territory || !hub) return
+    this.updateCamera()
+    // Frame the cluster with room around it: the parties it feeds and its
+    // neighbours stay in view, so the reader keeps their bearings.
+    const { dist: fits } = this.frameFor(territory.spread * 1.55 + 40)
+    const dist = Math.max(this.minDist(), Math.min(this.maxDist(), fits))
+    const target = this.offsetTarget(territory.centre, dist)
+    this.moveView({ target, theta: this.view.theta, phi: this.view.phi, dist }, DIVE_MS)
+    hub.dived = true
+    this.setLod(hub, 0, performance.now())
+    this.viewOwnedFlag = true
+    this.focusOwnedFlag = true
+    this.idleSpin = false
+    this.setHoveredHub(null)
+  }
+
+  /** Every foldable cluster's fold state, by group - for the adapter's tests and chrome. */
+  get folded(): ReadonlyMap<string, boolean> {
+    const out = new Map<string, boolean>()
+    for (const [group, hub] of this.hubs) out.set(group, hub.lodTarget === 1)
+    return out
   }
 
   private updateRings() {
@@ -1965,7 +2718,7 @@ export class KnowledgeMapEngine {
         return
       }
       ring.visible = true
-      ring.position.set(visual.sim.x, visual.sim.y, visual.sim.z)
+      ring.position.copy(visual.pos)
       ring.scale.setScalar(visual.r * visual.scale.current)
       ring.quaternion.copy(this.camera.quaternion)
       material.opacity = 0.85
@@ -2000,53 +2753,214 @@ export class KnowledgeMapEngine {
   // -------------------------------------------------------------------
 
   private labelVec = new THREE.Vector3()
+  /** Scratch box for a placement test; a placement copies it into the pool. */
+  private probeBox: LabelBox = { x1: 0, y1: 0, x2: 0, y2: 0 }
 
+  /**
+   * Claim a screen rectangle for a label if nothing placed this frame
+   * overlaps it. Boxes come from a pool that persists across frames, so the
+   * whole pass allocates nothing once warm.
+   */
+  private placeBox(x1: number, y1: number, x2: number, y2: number, force = false): boolean {
+    const placed = this.placedLabelBoxes
+    if (!force) {
+      for (const p of placed) {
+        if (x1 < p.x2 && x2 > p.x1 && y1 < p.y2 && y2 > p.y1) return false
+      }
+    }
+    let box = this.boxPool[placed.length]
+    if (!box) {
+      box = { x1, y1, x2, y2 }
+      this.boxPool.push(box)
+    } else {
+      box.x1 = x1
+      box.y1 = y1
+      box.x2 = x2
+      box.y2 = y2
+    }
+    placed.push(box)
+    return true
+  }
+
+  private discCount = 0
+
+  /** Record a mark's screen disc in the pooled list; returns its index. */
+  private pushDisc(pos: THREE.Vector3, r: number, opacity: number, halfTan: number): ScreenDisc {
+    let disc = this.discs[this.discCount]
+    if (!disc) {
+      disc = { ok: false, sx: 0, sy: 0, camDist: 0, screenR: 0, opacity: 0 }
+      this.discs.push(disc)
+    }
+    this.discCount += 1
+    this.labelVec.copy(pos).project(this.camera)
+    disc.ok = this.labelVec.z <= 1 && this.labelVec.z >= -1
+    disc.sx = (this.labelVec.x * 0.5 + 0.5) * this.width
+    disc.sy = (-this.labelVec.y * 0.5 + 0.5) * this.height
+    disc.camDist = pos.distanceTo(this.camera.position)
+    disc.screenR = (r * (this.height / 2)) / (Math.max(1, disc.camDist) * halfTan)
+    disc.opacity = opacity
+    return disc
+  }
+
+  /**
+   * Labels, in three tiers so no two ever sit on top of each other:
+   *
+   *   1. cluster captions, largest cluster first - above the mark, else
+   *      below it, else the name without its count, else nothing;
+   *   2. the emphasised few (selection, hover, a selected flow's ends) -
+   *      always shown, and everything after them keeps clear of them;
+   *   3. the rest by size - a focused view names only the neighbourhood, a
+   *      free view names the biggest within a budget that grows as the
+   *      camera comes closer, each new name fading in rather than popping.
+   *
+   * Every label is also kept off the face of a nearer readable sphere (node
+   * or hub), so a name never reads as the caption of the wrong mark.
+   */
   private projectLabels() {
     const cam = this.camera
     const halfTan = Math.tan(THREE.MathUtils.degToRad(FOV / 2))
-    const focus = this.emphasis.selectedId ?? this.hoveredId
-    const placed: { x1: number; y1: number; x2: number; y2: number }[] = []
-    // The label budget grows as the camera comes closer, like the 2D zoom.
-    const budget = Math.max(
-      10,
-      Math.min(48, Math.round(24 * (this.fitDist / Math.max(1, this.view.dist)))),
-    )
-    let kept = 0
+    const focus = this.focusKey()
+    const { selectedId, pathFrom } = this.emphasis
+    this.placedLabelBoxes.length = 0
+    this.discCount = 0
 
-    // First pass: every node's screen disc, so a label can be tested against
-    // ALL nearer spheres - not just the ones that happen to have labels of
-    // their own. In the dense party blob a label anchored above a low sphere
+    // Every node's screen disc first, so a label can be tested against ALL
+    // nearer spheres - not just the ones that happen to have labels of their
+    // own. In the dense party blob a label anchored above a low sphere
     // otherwise lands on the FACE of the taller sphere behind its anchor and
     // reads as that sphere's caption ("Labor" printed across Liberal).
-    const discs = this.paintRank.map((visual) => {
-      this.labelVec.set(visual.sim.x, visual.sim.y, visual.sim.z).project(cam)
-      const ok = this.labelVec.z <= 1 && this.labelVec.z >= -1
+    for (const visual of this.paintRank) {
+      // A lifted (hovered) node is nearer the camera than its position says,
+      // so its apparent radius grows a touch beyond this figure.
+      this.pushDisc(
+        visual.pos,
+        visual.r * visual.scale.current * (1 + visual.lift.current * 0.15),
+        visual.material.opacity,
+        halfTan,
+      )
+    }
+    const nodeDiscs = this.discCount
+    for (const hub of this.hubs.values()) {
+      if (hub.lod > 0.5) {
+        this.pushDisc(hub.anchor.pos, hub.anchor.r * hub.anchor.scale.current, hub.material.opacity, halfTan)
+      }
+    }
+    const discs = this.discs
+    const discCount = this.discCount
+
+    // 1. Captions.
+    const captionH = 17
+    for (const territory of this.captionRank) {
+      const caption = territory.caption
+      const hub = territory.hub
+      const lod = hub ? hub.lod : 0
+      this.labelVec.copy(territory.centre).project(cam)
+      if (this.labelVec.z > 1 || this.labelVec.z < -1) {
+        caption.style.display = 'none'
+        continue
+      }
       const sx = (this.labelVec.x * 0.5 + 0.5) * this.width
       const sy = (-this.labelVec.y * 0.5 + 0.5) * this.height
-      const camDist = Math.hypot(
-        visual.sim.x - cam.position.x,
-        visual.sim.y - cam.position.y,
-        visual.sim.z - cam.position.z,
-      )
-      // A lifted (hovered) node is nearer the camera than its sim position
-      // says, so its apparent radius grows a touch beyond this figure.
-      const screenR = ((visual.r * visual.scale.current * (this.height / 2)) /
-        (camDist * halfTan)) * (1 + visual.lift.current * 0.15)
-      return { ok, sx, sy, camDist, screenR, opacity: visual.opacity.current }
-    })
+      if (sx < -60 || sx > this.width + 60 || sy < -40 || sy > this.height + 40) {
+        caption.style.display = 'none'
+        continue
+      }
+      const camDist = territory.centre.distanceTo(cam.position)
+      // The caption rides the territory's rim, then the hub's as it folds.
+      const worldR = hub
+        ? territory.r + (hub.anchor.r * hub.anchor.scale.current * 1.3 - territory.r) * lod
+        : territory.r
+      const screenR = (worldR * (this.height / 2)) / (Math.max(1, camDist) * halfTan)
+      const isHub = lod > 0.5
+      let text: string | null = null
+      let baseline = 0
+      const tryText = (t: string, w: number): boolean => {
+        const half = w / 2 + 4
+        if (this.placeBox(sx - half, sy - screenR - 5 - captionH, sx + half, sy - screenR - 5)) {
+          text = t
+          baseline = sy - screenR - 5
+          return true
+        }
+        if (this.placeBox(sx - half, sy + screenR + 5, sx + half, sy + screenR + 5 + captionH)) {
+          text = t
+          baseline = sy + screenR + 5 + captionH
+          return true
+        }
+        return false
+      }
+      if (
+        !tryText(territory.captionFull, isHub ? territory.captionHubW : territory.captionW) &&
+        !tryText(territory.captionShort, isHub ? territory.captionShortHubW : territory.captionShortW)
+      ) {
+        caption.style.display = 'none'
+        continue
+      }
+      if (caption.textContent !== text) caption.textContent = text
+      caption.style.display = 'block'
+      caption.style.transform = `translate(-50%, -100%) translate(${sx.toFixed(1)}px, ${
+        baseline.toFixed(1)
+      }px)`
+      // A folded cluster's caption is its name: it dims with the hub, never
+      // to the whisper an open territory's caption drops to under focus.
+      const opacity = isHub
+        ? 0.95 * (0.35 + 0.65 * (hub ? hub.opacity.current : 1))
+        : focus ? 0.3 : 0.9
+      caption.style.opacity = opacity.toFixed(2)
+      if (isHub) caption.setAttribute('data-hub', '')
+      else caption.removeAttribute('data-hub')
+    }
 
+    const isEmphasised = (id: string) =>
+      id === focus || id === this.hoveredId || id === pathFrom || (this.pathNodeIds?.has(id) ?? false)
+    const show = (visual: NodeVisual, sx: number, y: number, opacity: number) => {
+      const label = visual.label
+      label.style.display = 'block'
+      label.style.transform = `translate(-50%, -100%) translate(${sx.toFixed(1)}px, ${y.toFixed(1)}px)`
+      label.style.opacity = opacity.toFixed(2)
+    }
+
+    // 2. The emphasised few.
     for (let rank = 0; rank < this.paintRank.length; rank++) {
       const visual = this.paintRank[rank]
       const disc = discs[rank]
       if (!visual || !disc) continue
+      const id = visual.node.id
+      if (!isEmphasised(id)) continue
       const label = visual.label
-      const emphasised = visual.node.id === focus ||
-        visual.node.id === this.emphasis.pathFrom ||
-        (this.pathNodeIds?.has(visual.node.id) ?? false)
-      const inNeighbourhood = this.neighbourIds?.has(visual.node.id) ?? false
-      const hovered = visual.node.id === this.hoveredId
-      const wanted = emphasised || inNeighbourhood || hovered || kept < budget
-      if (!wanted || (visual.opacity.current < 0.2 && !hovered) || !disc.ok) {
+      if (!disc.ok) {
+        label.style.display = 'none'
+        continue
+      }
+      const { sx, sy, screenR } = disc
+      const half = visual.labelW * (id === selectedId ? 1.2 : 1.1) / 2 + 4
+      this.placeBox(sx - half, sy - screenR - 25, sx + half, sy - screenR - 3, true)
+      show(visual, sx, sy - screenR - 4, 1)
+      label.setAttribute('data-emphasised', '')
+      if (id === selectedId) label.setAttribute('data-selected', '')
+      else label.removeAttribute('data-selected')
+    }
+
+    // 3. The rest. The budget grows as the camera comes closer, like the 2D
+    // zoom; it is continuous so the last name in fades rather than pops.
+    const budget = Math.max(8, Math.min(48, 14 * (this.fitDist / Math.max(1, this.view.dist))))
+    let kept = 0
+    for (let rank = 0; rank < this.paintRank.length; rank++) {
+      const visual = this.paintRank[rank]
+      const disc = discs[rank]
+      if (!visual || !disc) continue
+      const id = visual.node.id
+      if (isEmphasised(id)) continue
+      const label = visual.label
+      label.removeAttribute('data-emphasised')
+      label.removeAttribute('data-selected')
+      const hub = visual.territory?.hub
+      const lod = hub ? hub.lod : 0
+      const inNeighbourhood = this.neighbourIds?.has(id) ?? false
+      if (
+        lod > 0.35 || !disc.ok || disc.opacity < 0.2 ||
+        (focus !== null && !inNeighbourhood) ||
+        (!inNeighbourhood && kept >= budget)
+      ) {
         label.style.display = 'none'
         continue
       }
@@ -2055,120 +2969,96 @@ export class KnowledgeMapEngine {
         label.style.display = 'none'
         continue
       }
-      const text = label.textContent ?? ''
-      const halfW = text.length * 6.2 * 0.5
-      const box = { x1: sx - halfW, x2: sx + halfW, y1: sy - screenR - 22, y2: sy - screenR - 4 }
-      if (!emphasised && !inNeighbourhood && !hovered) {
-        // The label box's centre must not sit on the face of a nearer,
-        // clearly-visible sphere of readable size - see the discs note.
-        const ax = sx
-        const ay = sy - screenR - 13
-        const covered = discs.some((p, j) =>
-          j !== rank && p.ok && p.opacity > 0.2 && p.screenR > 13 &&
-          p.camDist < camDist - 1 &&
-          Math.hypot(ax - p.sx, ay - p.sy) < p.screenR * 0.92
-        )
-        if (covered) {
-          label.style.display = 'none'
-          continue
+      // The label's anchor must not sit on the face of a nearer, clearly
+      // visible sphere of readable size - see the discs note.
+      const ax = sx
+      const ay = sy - screenR - 13
+      let covered = false
+      for (let j = 0; j < discCount; j++) {
+        if (j === rank) continue
+        const p = discs[j]
+        if (!p || !p.ok || p.opacity <= 0.2 || p.screenR <= 13 || p.camDist >= camDist - 1) continue
+        // A hub disc covers generously: a name over a hub reads as the hub's.
+        const reach = j >= nodeDiscs ? 1.15 : 0.92
+        if (Math.hypot(ax - p.sx, ay - p.sy) < p.screenR * reach) {
+          covered = true
+          break
         }
-        const hits = placed.some((p) =>
-          box.x1 < p.x2 && box.x2 > p.x1 && box.y1 < p.y2 && box.y2 > p.y1
-        )
-        if (hits) {
-          label.style.display = 'none'
-          continue
-        }
+      }
+      if (covered) {
+        label.style.display = 'none'
+        continue
+      }
+      const half = visual.labelW / 2 + 4
+      if (!this.placeBox(sx - half, sy - screenR - 23, sx + half, sy - screenR - 3)) {
+        label.style.display = 'none'
+        continue
+      }
+      let fadeIn = 1
+      if (!inNeighbourhood) {
+        fadeIn = Math.max(0, Math.min(1, budget - kept))
         kept += 1
       }
-      placed.push(box)
       // Distance fade matches the scene fog, so a label never floats at full
       // strength over a mark that has already melted into the paper.
       const fogT = Math.max(
         0,
         Math.min(1, (camDist - this.fog.near) / Math.max(1, this.fog.far - this.fog.near)),
       )
-      label.style.display = 'block'
-      label.style.transform = `translate(-50%, -100%) translate(${sx.toFixed(1)}px, ${
-        (sy - screenR - 4).toFixed(1)
-      }px)`
-      label.style.opacity = String(
-        Math.max(0.35, (1 - fogT * 0.5) * Math.min(1, visual.opacity.current + 0.1)),
-      )
-      if (emphasised) label.setAttribute('data-emphasised', '')
-      else label.removeAttribute('data-emphasised')
-      if (visual.node.id === this.emphasis.selectedId) label.setAttribute('data-selected', '')
-      else label.removeAttribute('data-selected')
+      const opacity = Math.max(0.35, (1 - fogT * 0.5) * Math.min(1, visual.opacity.current + 0.1)) *
+        fadeIn * (1 - lod / 0.35)
+      show(visual, sx, sy - screenR - 4, opacity)
     }
-    this.placedLabelBoxes = placed
     this.positionPopup()
-
-    // Territory captions above their volume, dimmed while something has focus.
-    for (const territory of this.territories) {
-      if (!territory.mesh.visible) continue
-      this.labelVec.copy(territory.centre)
-      this.labelVec.y += territory.r
-      this.labelVec.project(cam)
-      const visible = this.labelVec.z < 1 && this.labelVec.z > -1
-      if (!visible) {
-        territory.caption.style.display = 'none'
-        continue
-      }
-      const sx = (this.labelVec.x * 0.5 + 0.5) * this.width
-      const sy = (-this.labelVec.y * 0.5 + 0.5) * this.height
-      territory.caption.style.display = 'block'
-      territory.caption.style.transform = `translate(-50%, -100%) translate(${sx.toFixed(1)}px, ${
-        (sy - 6).toFixed(1)
-      }px)`
-      territory.caption.style.opacity = focus ? '0.3' : '0.9'
-    }
-
     this.projectEdgeLabels()
   }
 
   /** Relation labels ride emphasised edges only, like the 2D map's textPath. */
   private projectEdgeLabels() {
-    for (const visual of this.edgeVisuals) {
-      const show = visual.emphasised && Boolean(visual.edge.label) &&
-        this.view.dist < this.fitDist * 1.15
-      if (!show) {
-        if (visual.label) visual.label.style.display = 'none'
-        continue
-      }
-      if (!visual.label) {
-        const el = document.createElement('div')
-        el.className = 'rp-map3d-edge-label'
-        el.textContent = visual.edge.label
-        this.labelLayer.appendChild(el)
-        visual.label = el
-      }
-      this.labelVec.set(
-        (visual.from.sim.x + visual.to.sim.x) / 2,
-        (visual.from.sim.y + visual.to.sim.y) / 2,
-        (visual.from.sim.z + visual.to.sim.z) / 2,
-      ).project(this.camera)
-      if (this.labelVec.z > 1 || this.labelVec.z < -1) {
-        visual.label.style.display = 'none'
-        continue
-      }
-      const sx = (this.labelVec.x * 0.5 + 0.5) * this.width
-      const sy = (-this.labelVec.y * 0.5 + 0.5) * this.height
-      // Relation labels give way to node labels: an amount riding an edge
-      // that mushes into a donor's name reads as neither.
-      const halfW = visual.edge.label.length * 5.4 * 0.5
-      const box = { x1: sx - halfW, x2: sx + halfW, y1: sy - 21, y2: sy - 5 }
-      const hits = this.placedLabelBoxes.some((p) =>
-        box.x1 < p.x2 && box.x2 > p.x1 && box.y1 < p.y2 && box.y2 > p.y1
-      )
-      if (hits) {
-        visual.label.style.display = 'none'
-        continue
-      }
-      visual.label.style.display = 'block'
-      visual.label.style.transform = `translate(-50%, -140%) translate(${sx.toFixed(1)}px, ${
-        sy.toFixed(1)
-      }px)`
+    for (const visual of this.edgeVisuals) this.projectEdgeLabel(visual)
+    for (const visual of this.flowVisuals) this.projectEdgeLabel(visual)
+  }
+
+  private projectEdgeLabel(visual: EdgeVisual) {
+    const show = visual.emphasised && Boolean(visual.edge.label) &&
+      this.view.dist < this.fitDist * 1.15 && this.edgeFold(visual) > 0.5
+    if (!show) {
+      if (visual.label) visual.label.style.display = 'none'
+      return
     }
+    if (!visual.label) {
+      const el = document.createElement('div')
+      el.className = 'rp-map3d-edge-label'
+      el.textContent = visual.edge.label
+      this.labelLayer.appendChild(el)
+      visual.label = el
+      const cs = getComputedStyle(el)
+      const ctx = this.measureCtx
+      if (ctx) {
+        ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`
+        visual.labelW = ctx.measureText(visual.edge.label).width + 10
+      } else {
+        visual.labelW = visual.edge.label.length * 5.4 + 10
+      }
+    }
+    this.labelVec.copy(visual.from.pos).add(visual.to.pos).multiplyScalar(0.5).project(this.camera)
+    if (this.labelVec.z > 1 || this.labelVec.z < -1) {
+      visual.label.style.display = 'none'
+      return
+    }
+    const sx = (this.labelVec.x * 0.5 + 0.5) * this.width
+    const sy = (-this.labelVec.y * 0.5 + 0.5) * this.height
+    // Relation labels give way to node labels: an amount riding an edge
+    // that mushes into a donor's name reads as neither.
+    const half = visual.labelW / 2 + 3
+    if (!this.placeBox(sx - half, sy - 25, sx + half, sy - 3)) {
+      visual.label.style.display = 'none'
+      return
+    }
+    visual.label.style.display = 'block'
+    visual.label.style.transform = `translate(-50%, -140%) translate(${sx.toFixed(1)}px, ${
+      sy.toFixed(1)
+    }px)`
   }
 
   // -------------------------------------------------------------------

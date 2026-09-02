@@ -62,6 +62,44 @@ Embed notes for subject pages:
   without moving the camera.
 - Test bed: `/map.html?focus=party:Labor&chrome=mini`.
 
+## Semantic zoom
+
+Each industry cluster folds into a single hub mark when the camera is too far
+out to tell its donors apart, and unfolds again on the way in
+(`map3d-engine.ts`, "Semantic zoom"):
+
+- The rule is per cluster and in screen pixels: a cluster whose spread would
+  draw narrower than `COLLAPSE_PX` (58) folds; a folded one unfolds past
+  `EXPAND_PX` (80). The gap is the hysteresis, so a wheel notch at the
+  boundary never flickers. The decision uses the camera's GOAL distance, so
+  the fold starts as the wheel turns rather than after the dolly catches up.
+  The same rule gives the 380px front-page embed an all-hubs view and the
+  full page a mixed one at its fitted distance; the smallest clusters fold
+  first as the reader zooms out.
+- A hub is one sphere in the cluster's hue, radius from the donor count
+  (`hubRadius`), a hairline ring in the cluster's ink, and the cluster's
+  caption ("UNIONS · 49") moved onto it. Its flows to each party are summed
+  into one tube per party (`MapEdge.hub` marks them; `source` is
+  `hub:<group>`, `count` is the donor count). Party nodes never fold.
+- The fold is a 420ms cubic in-out tween (`LOD_MS`): dots drift to the
+  centroid, thin and fade as the hub grows in; unfolding is the reverse.
+  Reduced motion snaps. A rebuild (scrub, filter) carries fold state over.
+- Clicking (or pressing Enter on) a hub flies the camera to frame the cluster
+  (`diveInto`, 560ms) and unfolds it; the dive holds the cluster open until
+  the reader zooms or fits again. Clicking empty space with nothing selected
+  while zoomed in fits the whole map, and the clusters refold on the way.
+  Hovering a hub shows its name, total, donor and party counts. Hubs never
+  reach `onSelect`; only real nodes do.
+- A cluster holding the selection, or a selected flow's endpoints, never
+  folds.
+
+Labels never overlap: captions claim space first (largest cluster first,
+above the mark, else below, else the name without its count), then the
+emphasised few, then the rest by size within a zoom-dependent budget, each
+new name fading in. Widths are measured (`measureLabels`) with the labels'
+computed fonts, so a host that restyles them stays collision-free. With a
+focus, only the neighbourhood is named.
+
 ## The words layer
 
 `words.ts` puts the words beside the money. `INDUSTRY_TOPIC` mirrors the
