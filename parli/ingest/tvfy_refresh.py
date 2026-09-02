@@ -111,7 +111,15 @@ def api_key() -> str:
     raise SystemExit("TVFY_API_KEY is not set: export it or put it in .env (see .env.example)")
 
 
-KEY = api_key()
+_KEY: str | None = None
+
+
+def key() -> str:
+    """The API key, read on first use so importing the module never exits."""
+    global _KEY
+    if _KEY is None:
+        _KEY = api_key()
+    return _KEY
 _last_request = 0.0
 
 
@@ -123,7 +131,7 @@ def get(path: str, params: dict) -> object:
     """GET {API}/{path} with the key, paced to one request per second. Returns
     parsed JSON, None on 404, raises TvfyError after five failed attempts."""
     global _last_request
-    url = f"{API}/{path}?{urllib.parse.urlencode(dict(params, key=KEY))}"
+    url = f"{API}/{path}?{urllib.parse.urlencode(dict(params, key=key()))}"
     for attempt in range(5):
         wait = RATE_SECONDS - (time.time() - _last_request)
         if wait > 0:
@@ -376,7 +384,7 @@ def main() -> None:
     args = ap.parse_args()
 
     db = connect(Path(args.db).expanduser())
-    log(f"tvfy_refresh: db={args.db} key={'env/.env' if KEY != urllib.parse.unquote(LEGACY_KEY) else 'legacy (fetch_division_votes.py)'} "
+    log(f"tvfy_refresh: db={args.db} key=env/.env "
         f"cache={CACHE}")
     if not args.detail_only:
         phase_list(db, date.fromisoformat(args.since), args.relist)

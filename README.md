@@ -1,146 +1,114 @@
-# OPAX — Open Parliamentary Accountability eXchange
+# OPAX: Open Parliamentary Accountability eXchange
 
-**Exposing governance blind spots by cross-referencing what politicians say, how they vote, and who funds them.**
+**Ask what Australian politicians actually said, see how they voted, and follow who funds them.**
 
 [opax.com.au](https://opax.com.au)
 
 ---
 
-**1M+ speeches** | **300K+ votes** | **205K donations** | **16K contracts** | **5 parliaments**
+**518,685 speeches** from five parliaments | **13,867 recorded divisions** | **199,233 donations classified by industry** | **6 standing investigations**
 
 ---
 
-## What OPAX Does
+## What OPAX does
 
-OPAX is an open-source parliamentary transparency platform that connects the dots between political rhetoric, voting records, and money flows in Australian democracy.
+OPAX puts the parliamentary record in front of the reader and lets them question it. Every answer is written only from retrieved passages and cites them; if the record is thin, the answer says so.
 
-- **Disconnect scoring** — Measures the gap between what MPs say in parliament and how they actually vote. A politician who gives 200 speeches about climate action but votes against every reform gets a high disconnect score.
-- **Follow the money** — Cross-references 205,000+ political donations (classified across 27 industries at 99.9% coverage) with voting records to reveal which industries buy influence with which parties.
-- **Pay-to-play detection** — Links companies that donate to political parties with the government contracts they win, and finds speeches where MPs mentioned those companies. 19,000+ connections identified across 374 companies.
-- **Multi-parliament coverage** — Ingests data from the federal parliament plus four state parliaments (VIC, NSW, QLD, SA) and Senate committee hearings, covering over a million parliamentary speeches from 2,254 members.
+- **Ask the record.** Grounded, cited answers over Hansard from the Commonwealth, New South Wales, Victoria, South Australia and Queensland, plus Senate committee hearings and news coverage. Filter by speaker, party, state, topic or years. Answers stream in as they are written.
+- **Search.** Hybrid keyword and semantic search with the same filters, a per-search answer rail, and exports (CSV, BibTeX, RIS).
+- **Encyclopedia.** An entry for every parliamentarian, party, donor and topic: quick facts, portrait, voting record, declared interests, expenses, and the money map isolated on that entity.
+- **Money map.** A 3D map of the largest donors, ringed by industry around the parties they gave to, with the words layer showing who speaks on each industry's debates. Federal, Queensland and Victorian disclosures.
+- **Standing investigations.** Six reports (climate and energy, gambling, housing, immigration, First Nations, media ownership) regenerated from the knowledge box, pairing the money with the words.
+- **Explore.** Time machine, the record quiz, the ledger, who owns which debate, words per dollar, then versus now.
 
 ## Architecture
 
 ```
-Browser  -->  Next.js 16 (frontend)  -->  FastAPI (API)  -->  SQLite + Embeddings
-                                                          |
-                                                          +-->  Claude API (RAG)
+Browser (static SPA, hash router)
+   │
+   ▼
+Cloudflare Worker  portal/src/index.ts     /api/search  /api/ask (JSON or SSE)  /api/resource  /api/topic ...
+   │
+   ▼
+Progress Agentic RAG knowledge box         speeches, news, division records; topic labels and summaries from enrichment tasks
 ```
 
-## Tech Stack
+There is no live database behind the site. Structured data (donations, votes, expenses, interests, grants, contracts) stays relational in a SQLite corpus on the data box and reaches the site as static JSON exported by `scripts/export_*.py`.
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Next.js 16, React 19, Tailwind v4, Recharts, shadcn/ui |
-| Backend | FastAPI, SQLite (WAL mode, FTS5), sentence-transformers |
-| Search | Hybrid: semantic embeddings (all-MiniLM-L6-v2, 384-dim) + FTS5 keyword, fused via Reciprocal Rank Fusion |
-| RAG | Topic-aware context retrieval feeding Claude for evidence-based answers |
-| Analysis | Disconnect scoring, donor-vote correlation, contract-speech cross-referencing |
+`MIGRATION-ARAG.md` is the runbook: knowledge box identity, model pins, corpus inclusion rules, cost gates, platform quirks learned the hard way.
 
-## Data Sources
+## Repository layout
 
-| Source | Records | Coverage |
-|--------|---------|----------|
-| Federal Hansard (OpenAustralia) | 395K speeches | 1901-2026 |
-| Senate Committee Hearings | 150K+ speeches | 2025-2026 |
-| Victorian Parliament | 49K+ speeches | 2015-2026 |
-| NSW Parliament | 74K+ speeches | 2015-2026 |
-| SA Parliament | 56K+ speeches | 2020-2026 |
-| QLD Parliament | 14K speeches | 2024-2026 |
-| AEC Donations | 205K records | 27 industries classified |
-| TheyVoteForYou | 304K votes | 4,000 divisions |
-| AusTender Contracts | 16K contracts | $100K+ since 2013 |
-| Guardian Australia | 1,840 articles | 6 policy topics |
-| Historical Hansard (Wragge/Trove) | 250K+ speeches | 1901-1980 |
+| Path | What it is |
+|------|------------|
+| `portal/` | The site: Worker (`src/index.ts`), static front end (`public/`), 3D map engine (`graph/`, bundled to `public/money-map.js`) |
+| `parli/ingest/` | Fetchers and loaders for every source, and `arag_sync.py`, which pushes the corpus into the knowledge box |
+| `parli/arag.py` | Knowledge box client used by the sync, the enrichment scripts and the report generator |
+| `parli/schema.py`, `parli/db.py` | The SQLite corpus schema and connection helpers |
+| `scripts/` | Static JSON exports, report generation, the ask harness, enrichment and provisioning tools |
+| `docs/` | Data notes: `VOTES.md`, `DATA-MONEY.md`, `DATA-WORDS.md`, `DATA-INTERESTS.md`, `STREAMING.md` |
+| `*_DATA_SOURCES.md` | Source surveys and licensing notes |
 
-## Investigation Pages
-
-| Page | Description |
-|------|-------------|
-| `/gambling` | 25 years of speeches vs $65M in industry donations |
-| `/housing` | Every party promises affordability while home ownership falls |
-| `/climate` | 24,000+ speeches, $1.96B in fossil fuel donations |
-| `/pay-to-play` | Companies that donate to parties and win government contracts |
-| `/disconnect` | Rankings of MPs with the biggest say-vs-vote gap |
-| `/donor-influence` | How industry donations correlate with parliamentary votes |
-| `/donations` | Industry breakdown, treemap, sortable donor tables |
-| `/indigenous` | 25,000+ speeches on reconciliation and First Nations |
-| `/media` | Three companies control what Australians see |
-| `/compare` | Side-by-side MP comparison across all metrics |
-
-Plus 20 more pages covering education, defence, immigration, foreign policy, electorates, bills tracker, democracy scorecard, and state-specific investigations.
-
-## Analysis Engines
-
-### Disconnect Scoring
-```
-disconnect = speech_intensity * (1 - vote_alignment)
-```
-Measures hypocrisy per MP per topic. Score 0.0 = consistent, 1.0 = maximum disconnect.
-
-### Donor-Vote Correlation
-For each (party, industry) pair: sums donations, finds related divisions, computes favorable vote percentage, produces an influence score.
-
-### Pay-to-Play Detection
-Cross-references AusTender contracts with AEC donations and Hansard speeches. Identifies companies appearing in all three datasets — donating, winning contracts, and being mentioned in parliament.
-
-### Topic Insights
-Generates per-topic research: key statistics, impactful quotes, disconnect alerts, donor connections, and trend data.
-
-## Quick Start
+## Running the site locally
 
 ```bash
-# Install dependencies
-uv sync
-cd opax && npm install && cd ..
-
-# Initialize database
-uv run python -m parli.schema
-
-# Download Hansard data
-uv run download_hansard_fast.py --backfill-all --workers 10
-
-# Build embeddings
-uv run python -m parli.embeddings
-
-# Start backend
-uv run uvicorn parli.api:app --host 0.0.0.0 --port 8000
-
-# Start frontend (separate terminal)
-cd opax && npx next dev -p 3000 -H 0.0.0.0
+cd portal
+npm install
+printf 'ARAG_KB_TOKEN=...\n' > .dev.vars   # the knowledge box token; zone and KB id are in wrangler.jsonc
+npx wrangler dev                              # http://localhost:8787
 ```
 
-See [BOOTSTRAP.md](BOOTSTRAP.md) for detailed setup including data ingestion, state parliaments, and analysis engines.
+Deploy with `npx wrangler deploy` from `portal/`. The committed `public/money-map.js` must equal a fresh build:
 
-## API Keys Required
+```bash
+npx esbuild graph/index.ts --bundle --minify --format=esm --target=es2022 --outfile=public/money-map.js
+node graph/smoke-test.mjs
+```
 
-| Key | Purpose |
-|-----|---------|
-| `ANTHROPIC_API_KEY` | Claude API for RAG answering |
-| `TVFY_API_KEY` | TheyVoteForYou voting records |
-| `OPENAUSTRALIA_API_KEY` | Hansard downloads |
+## Data pipeline
 
-Store in `.env` at the project root. Never commit this file.
+The corpus lives in `~/.cache/autoresearch/parli.db` on the data box. Python tooling is managed with `uv`:
+
+```bash
+uv sync
+uv run python -m parli.ingest.arag_sync --tables speeches,news_articles --full   # push to the knowledge box
+uv run python scripts/generate_reports.py                                          # regenerate the six reports
+uv run python scripts/ask_harness.py                                               # 24 grounded questions against production
+```
+
+Environment variables are documented in `.env.example`. Never commit `.env` or `portal/.dev.vars`.
+
+## Data sources
+
+| Source | What we take |
+|--------|--------------|
+| Federal Hansard (House via Zenodo, Senate and recent House via OpenAustralia) | speeches since 1998 |
+| Senate committee hearings | transcripts |
+| NSW, Victorian, SA and Queensland parliaments | Hansard speeches |
+| TheyVoteForYou and state Hansard | recorded divisions, per-member voting records |
+| AEC, ECQ and VEC disclosures | donations, classified across 27 industries |
+| IPEA | parliamentary expenses |
+| Registers of interests, lobbyist registers, ministerial diaries | declared interests and access |
+| Guardian Australia and ABC | news coverage |
+
+Licensing and coverage per source are recorded in the `docs/` notes and the `*_DATA_SOURCES.md` surveys.
 
 ## Contributing
 
-OPAX is built on the belief that parliamentary transparency is a public good. Contributions are welcome:
+Work on a branch and open a pull request; `main` is deployed manually and always matches production. Useful places to start:
 
-1. **Data coverage** — Add ingestion scripts for new data sources (WA, TAS, NT, ACT parliaments; lobbyist registers; royal commission recommendations)
-2. **Analysis** — Build new analysis engines (sentiment analysis, network clustering, time-series anomaly detection)
-3. **Frontend** — Create new investigation pages or improve existing visualizations
-4. **Infrastructure** — Help with deployment, testing, or CI/CD
+1. **Data coverage:** ingestion for WA, Tasmania, the NT and the ACT parliaments.
+2. **The record:** harness questions in `scripts/ask_questions.json`, and prompt or retrieval improvements in `portal/src/index.ts`.
+3. **The site:** the static front end is plain HTML, CSS and JavaScript with no build step.
 
 ## Origins
 
-OPAX is built on [Karpathy's autoresearch framework](https://github.com/karpathy/autoresearch), pivoted from LLM pretraining experiments to a parliamentary transparency platform.
+OPAX grew out of an [autoresearch](https://github.com/karpathy/autoresearch) experiment, pivoted to parliamentary transparency. The first version ran as a FastAPI and Next.js stack on a single server; it was retired in September 2026 in favour of the Worker and knowledge box described above.
 
 ## License
 
-OPAX is licensed under the [GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0).
-
-This means you're free to use, modify, and distribute this software, but any modifications to the web service must also be made available as open source. This protects the public interest nature of parliamentary transparency work.
+OPAX is licensed under the [GNU Affero General Public License v3.0](LICENSE). You are free to use, modify and distribute it, but modifications to the web service must also be made available as open source.
 
 ---
 
-Built with data from [OpenAustralia](https://www.openaustralia.org.au/), [TheyVoteForYou](https://theyvoteforyou.org.au/), [AEC](https://www.aec.gov.au/), and [AusTender](https://www.tenders.gov.au/).
+Built with data from [OpenAustralia](https://www.openaustralia.org.au/), [TheyVoteForYou](https://theyvoteforyou.org.au/), the [AEC](https://www.aec.gov.au/), the state parliaments and electoral commissions, and the [Guardian](https://www.theguardian.com/au) and [ABC](https://www.abc.net.au/news).
