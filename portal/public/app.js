@@ -3792,9 +3792,11 @@ const NEWS_TOPIC_HINTS = [
   ["tax-budget", ["tax", "budget", "deficit", "surplus", "treasury", "inflation", "interest rate", "cost of living"]],
   ["welfare-social", ["welfare", "centrelink", "pension", "jobseeker", "disability", "poverty", "payment"]],
   ["justice-law", ["police", "court", "crime", "prison", "sentencing", "assault", "shooting", "murder", "bail", "domestic violence"]],
-  ["integrity-democracy", ["corruption", "integrity", "icac", "donation", "lobbying", "electoral", "election", "poll", "referendum"]],
+  ["integrity-democracy", ["corruption", "integrity", "icac", "donation", "lobbying", "electoral", "election", "poll", "referendum",
+    "one nation", "labor", "liberal", "greens", "nationals", "coalition", "populist", "voter", "byelection", "preselection", "preference"]],
   ["defence-security", ["defence", "military", "adf", "army", "navy", "war", "aukus", "submarine", "veteran", "security"]],
-  ["foreign-affairs", ["foreign", "china", "united states", "ukraine", "israel", "gaza", "pacific", "indonesia", "trade deal", "diplomat"]],
+  ["foreign-affairs", ["foreign", "china", "united states", "ukraine", "israel", "gaza", "pacific", "indonesia", "trade deal", "diplomat",
+    "nepal", "tibet", "india", "japan", "korea", "png", "papua new guinea", "new zealand", "britain", "europe", "russia", "iran", "consular", "embassy"]],
   ["indigenous-affairs", ["indigenous", "first nations", "aboriginal", "closing the gap", "native title", "uluru", "voice to parliament"]],
   ["unions-workplace", ["union", "worker", "wage", "workplace", "industrial", "strike", "employment", "jobs"]],
   ["media-communications", ["media", "broadcast", "abc", "news corp", "social media", "privacy", "tech giant", "internet", "telecommunications"]],
@@ -3811,7 +3813,11 @@ function newsTopicSlug(headline) {
   const h = ` ${String(headline || "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ")} `;
   let best = null, bestHits = 0;
   for (const [slug, words] of NEWS_TOPIC_HINTS) {
-    const hits = words.reduce((n, w) => n + (h.includes(` ${w}`) ? 1 : 0), 0);
+    // A place name counts double. "Australians safe in the Nepal flood" is a
+    // story about Australians abroad, not about Australian flood policy, and
+    // one incidental domestic word should not outrank the country it happened in.
+    const weight = slug === "foreign-affairs" ? 2 : 1;
+    const hits = words.reduce((n, w) => n + (h.includes(` ${w}`) ? weight : 0), 0);
     if (hits > bestHits) { bestHits = hits; best = slug; }
   }
   return bestHits > 0 ? best : null;
@@ -3827,12 +3833,14 @@ async function renderFrontNews() {
     holder.innerHTML = `<ol class="news-list" role="list">${items.map((i) => {
       // Ask and search the SUBJECT, not the headline: a labelled topic when the
       // headline names one, otherwise the two strongest words it left behind.
+      // A headline that matches no topic gets no pivots. The old fallback took
+      // two words off the article's keyword string, which asked the record
+      // about phrases like "populist one" and retrieved nothing.
       const slug = newsTopicSlug(i.title);
-      const subject = slug ? TOPICS[slug]
-        : String(i.topic || "").trim().split(/\s+/).slice(0, 2).join(" ");
+      const subject = slug ? TOPICS[slug] : "";
       const pivots = subject ? `<span class="news-pivots">
           <a class="action-btn action-small" href="${esc(askHash(`What has parliament said about ${subject.toLowerCase()}?`))}">What does the record say?</a>
-          <a class="action-btn action-small" href="${esc(slug ? searchHash(subject, { topic: slug }) : searchHash(subject, {}))}">Search the speeches</a>
+          <a class="action-btn action-small" href="${esc(searchHash(subject, { topic: slug }))}">Search the speeches</a>
         </span>` : "";
       const when = relTime(i.published);
       return `<li>

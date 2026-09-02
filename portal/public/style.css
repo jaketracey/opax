@@ -191,7 +191,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .logo { display: inline-flex; align-items: center; gap: 0.6rem; line-height: 0; text-decoration: none; }
 /* The mark: the continent in bronze, ringed by seven stars — federation's
    number — in the masthead's soft white. */
-/* Explicit box at the mark's own 176:132 ratio — `width: auto` lets some
+/* Explicit box at the mark's own 176:160 ratio — `width: auto` lets some
    engines fall back to a default that squashes the continent. */
 .logo-mark { height: 78px; width: 86px; }
 .logo-mark .logo-land { fill: var(--bronze-bright); }
@@ -238,7 +238,15 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 /* ---- primary nav (in the band) ------------------------------------------ */
 
 .masthead { display: flex; align-items: stretch; gap: clamp(1rem, 2.5vw, 2.75rem); }
-.masthead-id { display: flex; align-items: center; }
+/* The header's padding is top only, so the nav can sit on its bottom edge.
+   That leaves the mark hanging low: it centres in the padding box, which is
+   inset at the top and flush with the bronze rule at the bottom. Lifting it by
+   half the difference puts it on the header's true centre without moving the
+   nav or changing the header's height. */
+.masthead-id {
+  display: flex; align-items: center;
+  position: relative; top: calc((3px - 0.9rem) / 2);
+}
 /* The nav column is two rows: the site's full name over the links, with the
    links sitting on the header's bottom edge. */
 .masthead-nav {
@@ -1641,7 +1649,8 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   .nav-toggle { display: inline-flex; }
   .logo-mark { height: 46px; width: 51px; }
   .masthead, .masthead-id { display: flex; align-items: center; }
-  .masthead-id { margin: 0; max-width: none; }
+  /* The compact band pads evenly and hides the nav, so the mark needs no lift. */
+  .masthead-id { margin: 0; max-width: none; top: 0; }
 }
 
 /* ---- mobile ------------------------------------------------------------- */
