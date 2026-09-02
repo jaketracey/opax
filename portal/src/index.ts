@@ -241,27 +241,142 @@ async function rateLimited(limiter: RateLimit | undefined, request: Request): Pr
 // Routes
 // ---------------------------------------------------------------------------
 
+/**
+ * Paging, and why it looks like this. Probed against the live knowledge box
+ * (2026-09-02) before it was designed:
+ *
+ *  - `top_k` is hard-capped at 200: 500 comes back 422 "Input should be less
+ *    than or equal to 200". That is the deepest single retrieval available.
+ *  - The request's `page_number` is a no-op. Sending 0, 1 and 2 returned the
+ *    same 17 resources and the response echoed `page_number: 0` every time.
+ *  - `search_after` IS a working forward cursor, but the batch it returns comes
+ *    back with score_type BM25, not RERANKER: the reranker only runs over the
+ *    first batch. Ordering and scores past the cursor are on a different scale
+ *    from page one's, so paging into them would show the reader a relevance
+ *    ranking that is not one. We do not chain it.
+ *  - The response's `total` is the keyword index's paragraph OR-match count,
+ *    not a result count: 38,845 for "Uluru Statement", 57,022 for a nonsense
+ *    query, and 0 in semantic mode. It is never shown.
+ *
+ * So: one retrieval of the platform's maximum depth per query, deduped to
+ * documents (200 paragraphs → typically 150-200 distinct documents), cached
+ * whole, then sliced into pages here. `total` in our response is the size of
+ * that window, and `truncated` says the window was full so the record holds
+ * more. Both are true statements, which the platform's own `total` is not.
+ */
+const SEARCH_TOPK_MAX = 200 // /find rejects anything above this with a 422
+const SEARCH_WINDOW_TOPK = 200 // retrieval depth once a caller pages
+const SEARCH_PER_DEFAULT = 20
+const SEARCH_PER_MAX = 200 // one request can still take the whole window (export)
+
+interface SearchWindow {
+  total: number
+  truncated: boolean
+  results: SearchResult[]
+}
+
+interface SearchResult {
+  kind: string
+  id: number | null
+  slug: string
+  resource: string
+  title: string
+  speaker: string | null
+  party: string | null
+  state: string | null
+  date: string | null
+  url: string | null
+  snippet: string
+  score: number
+}
+
 async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const q = url.searchParams.get('q')?.trim()
   if (!q) return json({ error: 'q is required' }, 400)
-  // Keyed on the whole query string (order-normalised) plus the epoch.
-  const params = [...url.searchParams.entries()]
-    .filter(([k]) => k !== 'nocache')
-    .sort(([a], [b]) => a.localeCompare(b))
-  const cacheKey = cacheRequest(
-    'search',
-    await sha256Hex(`${env.CACHE_EPOCH}\n${new URLSearchParams(params).toString()}`),
+  const paging = url.searchParams.has('page') || url.searchParams.has('per')
+  const page = Math.max(1, Math.floor(Number(url.searchParams.get('page') ?? 1)) || 1)
+  const per = Math.min(
+    Math.max(1, Math.floor(Number(url.searchParams.get('per') ?? SEARCH_PER_DEFAULT)) || SEARCH_PER_DEFAULT),
+    SEARCH_PER_MAX,
+  )
+  const sort = url.searchParams.get('sort') === 'newest' ? 'newest' : 'relevance'
+  // Legacy callers (the person page, the time machine) pin their own depth and
+  // never page; a pager asks for the full window so the count it prints is real.
+  const topK = Math.min(
+    Number(url.searchParams.get('top_k') ?? (paging ? SEARCH_WINDOW_TOPK : 20)) ||
+      (paging ? SEARCH_WINDOW_TOPK : 20),
+    SEARCH_TOPK_MAX,
+  )
+  // Two keys. The page key carries page/per/sort so page 2 can never be served
+  // from page 1's entry; the window key drops them so paging and re-sorting
+  // inside one result set costs no upstream call and no rate-limit quota.
+  const keyParams = (drop: string[]) =>
+    new URLSearchParams(
+      [...url.searchParams.entries()]
+        .filter(([k]) => !drop.includes(k))
+        .sort(([a], [b]) => a.localeCompare(b)),
+    ).toString()
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${keyParams(['nocache'])}`))
+  const windowKey = cacheRequest(
+    'search-window',
+    await sha256Hex(`${env.CACHE_EPOCH}\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
-    const hit = await caches.default.match(cacheKey)
+    const hit = await caches.default.match(pageKey)
     if (hit) return withCacheStatus(hit, 'HIT')
   }
-  const limited = await rateLimited(env.SEARCH_LIMITER, request)
-  if (limited) return limited
-  const topK = Math.min(Number(url.searchParams.get('top_k') ?? 20) || 20, 50)
+
   const mode = url.searchParams.get('mode') ?? 'hybrid'
   const kind = url.searchParams.get('kind') ?? 'speech'
+
+  let win: SearchWindow | null = null
+  if (!bypass) {
+    const cached = await caches.default.match(windowKey)
+    if (cached) win = (await cached.json()) as SearchWindow
+  }
+  if (!win) {
+    const limited = await rateLimited(env.SEARCH_LIMITER, request)
+    if (limited) return limited
+    win = await searchWindow(env, { q, mode, kind, topK, url })
+    if (!win) return json({ error: 'find failed' }, 502)
+    cacheStore(ctx, windowKey, json(win), SEARCH_CACHE_TTL)
+  }
+
+  const ordered =
+    sort === 'newest'
+      ? [...win.results].sort(
+          (a, b) => String(b.date || '').localeCompare(String(a.date || '')) || b.score - a.score,
+        )
+      : win.results
+  const pageCount = Math.max(1, Math.ceil(ordered.length / per))
+  const clamped = Math.min(page, pageCount)
+  const rows = ordered.slice((clamped - 1) * per, clamped * per)
+  const out = json({
+    query: q,
+    mode,
+    kind,
+    sort,
+    page: clamped,
+    per_page: per,
+    page_count: pageCount,
+    // `total` is what retrieval reached, not what the record holds. When
+    // `truncated` is true the record holds more; the UI must say so.
+    total: ordered.length,
+    truncated: win.truncated,
+    count: rows.length,
+    results: rows,
+  })
+  cacheStore(ctx, pageKey, out, SEARCH_CACHE_TTL)
+  return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
+}
+
+/** One /find at `topK` depth, deduped to documents and ranked by score. */
+async function searchWindow(
+  env: Env,
+  opts: { q: string; mode: string; kind: string; topK: number; url: URL },
+): Promise<SearchWindow | null> {
+  const { q, mode, kind, topK, url } = opts
   const phrases = [...q.matchAll(/"([^"]{2,})"/g)].map((m) => m[1].toLowerCase().trim())
   const queryTerms = phrases.length
     ? phrases
@@ -289,8 +404,11 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   if (filters) body.filter_expression = filters
 
   const res = await kbFetch(env, '/find', { body })
-  if (!res.ok) return json({ error: `find failed (${res.status})` }, 502)
-  const found = (await res.json()) as { resources?: Record<string, FindResource> }
+  if (!res.ok) return null
+  const found = (await res.json()) as {
+    resources?: Record<string, FindResource>
+    best_matches?: unknown[]
+  }
 
   const results = Object.entries(found.resources ?? {})
     .filter(([, r]) => !(r.slug ?? '').startsWith('da-')) // enrichment output never surfaces as a result
@@ -347,9 +465,8 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     }
   })
   results.sort((a, b) => b.score - a.score)
-  const out = json({ query: q, mode, kind, count: results.length, results })
-  cacheStore(ctx, cacheKey, out, SEARCH_CACHE_TTL)
-  return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
+  // A full batch means retrieval hit its ceiling, not that the record is spent.
+  return { total: results.length, truncated: (found.best_matches?.length ?? 0) >= topK, results }
 }
 
 interface AskInput {
@@ -2400,6 +2517,15 @@ function validateSearchQuery(url: URL): Response | null {
   }
   const mode = url.searchParams.get('mode')
   if (mode && !MODES.has(mode)) return json({ error: 'unknown mode' }, 400)
+  // Paging: whole positive numbers only. `page` is clamped to the last page
+  // rather than rejected, so a stale &page=9 link still lands somewhere real.
+  for (const k of ['page', 'per', 'top_k']) {
+    const raw = url.searchParams.get(k)
+    if (raw === null) continue
+    if (!/^\d{1,4}$/.test(raw) || Number(raw) < 1) return json({ error: `${k} must be a whole number` }, 400)
+  }
+  const sort = url.searchParams.get('sort')
+  if (sort && sort !== 'relevance' && sort !== 'newest') return json({ error: 'unknown sort' }, 400)
   const err = validateFilters((k) => url.searchParams.get(k))
   return err ? json({ error: err }, 400) : null
 }
