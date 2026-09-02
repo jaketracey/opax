@@ -2199,7 +2199,7 @@ async function renderDonorAccess(label, container) {
       <p class="fineprint" style="margin-top:0.5rem"><b>${total.toLocaleString()}</b> disclosed meeting${total === 1 ? "" : "s"}${total > meetings.length ? `, newest ${meetings.length} shown` : ""}.</p>`;
   }
   if (firms.length) {
-    html += `<p class="kicker" style="margin-top:1.1rem">Registered lobbying client of</p>
+    html += `<p class="kicker kicker-sub">Registered lobbying client of</p>
       <ul class="subject-list" role="list">${firms.map((f) => `
       <li><span class="source-title">${esc(f.firm)}</span>${meta(esc(f.jurisdiction) + (f.registered ? ` · from ${esc(fmtDate(f.registered))}` : "") + (f.ceased ? " · ceased" : ""))}</li>`).join("")}</ul>
       ${(d.lobbyists_total || 0) > firms.length ? `<p class="fineprint" style="margin-top:0.5rem">${d.lobbyists_total} registered firms, ${firms.length} shown.</p>` : ""}`;
@@ -2245,7 +2245,7 @@ async function renderPersonDiary(name, container, chambers) {
       ${tile((m.external_total || 0).toLocaleString(), "with people and organisations outside government")}
     </div>
     ${m.by_org?.length ? barList(m.by_org, { heading: "Most-met organisations", linkTo }) : ""}
-    ${recent ? `<p class="kicker" style="margin-top:1.1rem">Recent meetings</p><ul class="subject-list" role="list">${recent}</ul>` : ""}
+    ${recent ? `<p class="kicker kicker-sub">Recent meetings</p><ul class="subject-list" role="list">${recent}</ul>` : ""}
     <p class="fineprint">${scheme} Staff, cabinet, departmental and other government meetings are counted
       but left out of the lists. Organisation names link to a donor's entry where the name matches an AEC donor
       exactly, otherwise to the record.${m.latest_pdf ? ` <a href="${esc(safeUrl(m.latest_pdf) || "#")}" rel="noopener" target="_blank">Latest diary (PDF) ↗</a>` : ""}</p>`;
@@ -2297,7 +2297,7 @@ async function renderPartyDebts(label, sections) {
   }
   if (ents.length) {
     const shown = ents.slice(0, 6);
-    html += `<p class="kicker" style="margin-top:1.1rem">Associated entities</p>
+    html += `<p class="kicker kicker-sub">Associated entities</p>
       <ul class="subject-list" role="list">${shown.map((e) => `
       <li><a class="source-title" href="${esc(searchHash(`"${e.name}"`, {}))}">${esc(e.name)}</a>
         <span class="result-meta">${esc([e.year, e.receipts != null ? `receipts ${fmtMoney(e.receipts)}` : "",

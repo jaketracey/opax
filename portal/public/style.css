@@ -1472,7 +1472,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
    takes the middle step: clearly a break, clearly not a new section.
    app.js still writes `style="margin-top:1.1rem"` on those kickers — shorter
    than the gap between two rows, which is what made them read as rows. */
-#subject-sections .kicker[style] { margin-top: var(--sub-gap) !important; }
+#subject-sections .kicker-sub { margin-top: var(--sub-gap); }
 #subject-sections .votes-col-kicker { margin-top: var(--sub-gap); }
 
 #report-positions:not(:empty), #report-moments:not(:empty) { margin-top: var(--section-gap); }
