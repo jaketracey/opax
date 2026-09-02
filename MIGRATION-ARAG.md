@@ -82,6 +82,9 @@ gets `ARAG_KB_ID` as a var and `ARAG_KB_TOKEN` via `wrangler secret put`.
 
 Staying relational: votes 304K · donations 199K · grants 230K · contracts 15.8K ·
 bills 5.3K · members 2,415 · speech_topics 2.98M · lobbyists/meetings/interests.
+MONEY expansion (2026-09-02, additive `ext_*` tables: state donations 35.7K, IPEA
+expenses 1.23M, ministerial diaries 61.5K, six lobbyist registers) is documented in
+`docs/DATA-MONEY.md` with licences, gates and the static-JSON exposure design.
 
 ## Runbook
 

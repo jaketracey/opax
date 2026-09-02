@@ -17,8 +17,6 @@ import os
 import time
 from collections import defaultdict
 
-import anthropic
-
 from parli.schema import get_db, init_db
 
 # Keyword-to-industry mapping. Keywords are matched case-insensitively
@@ -30,6 +28,7 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
         "betting", "responsible wagering", "bet365", "entain", "flutter",
         "ladbrokes", "lotteries", "tatts", "pokies",
         "clubs association", "clubsnsw", "registered clubs",
+        "clubs queensland", "clubs qld", "keno", "lottery corporation",
     ],
     "mining": [
         "bhp", "rio tinto", "glencore", "fortescue", "hancock",
@@ -45,6 +44,7 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
         "energy producers", "chevron", "shell", "bp",
         "origin energy", "energy australia", "country energy",
         "agl energy", "stanwell", "ampol", "caltex",
+        "appea", "senex energy", "arrow energy", "qgc",
     ],
     "property": [
         "property", "developer", "real estate", "construction",
@@ -55,6 +55,7 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
         "goodman group", "scentre", "vicinity",
         "springfield land", "australand", "costain",
         "nrma", "national roads & motorists",
+        "watpac", "builders", "constructions", "urban development institute",
     ],
     "finance": [
         "bank", "macquarie", "westpac", "commonwealth bank", "anz",
@@ -72,6 +73,7 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
         "barton deakin", "newgate", "crosby textor",
         "gci", "nexus apac", "capita", "public policy",
         "anacta strategies", "climate 200",
+        "govstrat", "sas consulting group", "sas group",
     ],
     "legal": [
         "solicitor", "barrister", "law firm", "lawyers",
@@ -99,6 +101,8 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
         "sda", "cepu", "amwu", "asu", "hsu", "usu",
         "electrical trades", "plumbing", "meat workers",
         "textile", "shearers", "cpsu", "psu group",
+        "united voice", "employees association", "employees' association",
+        "together queensland", "shop, distributive", "shop distributive",
     ],
     "telecom": [
         "telstra", "optus", "singtel", "vodafone", "tpg telecom",
@@ -171,7 +175,7 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
         "tenix",
     ],
     "waste_management": [
-        "jj richards", "cleanaway", "veolia", "suez",
+        "jj richards", "j.j. richards", "cleanaway", "veolia", "suez",
         "remondis", "waste",
     ],
     "education": [
@@ -288,8 +292,28 @@ def _db_commit_with_retry(db, max_retries=10):
             raise
 
 
+def classify_donor_name(donor_name: str | None) -> str | None:
+    """Keyword-classify a single donor name with the same rules as the SQL pass.
+
+    Returns an industry key, 'unidentified' for placeholder names, or None when
+    no keyword matches (callers decide between 'individual' / 'other' / LLM).
+    """
+    if donor_name is None or len(donor_name.strip()) <= 2 or donor_name.strip() in (
+        "0", "1", "2", "3", "-", "--", "n/a", "N/A", ""
+    ):
+        return "unidentified"
+    name = donor_name.lower()
+    for industry, keywords in INDUSTRY_KEYWORDS.items():
+        for kw in keywords:
+            if kw.lower() in name:
+                return industry
+    return None
+
+
 def classify_donations_llm(db, batch_size: int = 100, max_batches: int = 0) -> dict[str, int]:
     """Classify remaining unclassified donations using Claude Haiku."""
+    import anthropic  # optional dependency: only the LLM pass needs it
+
     client = anthropic.Anthropic()
     counts: dict[str, int] = defaultdict(int)
 

@@ -97,6 +97,7 @@ def cached_bytes(session: requests.Session, url: str, cache_path: Path, delay: f
 _DATE_FORMATS = {
     "dmy_dash": "%d-%m-%Y",
     "dmy_slash": "%d/%m/%Y",
+    "dmy_slash2": "%d/%m/%y",
     "dmy_dot": "%d.%m.%Y",
     "dmy_dot2": "%d.%m.%y",
     "mdy_slash": "%m/%d/%Y",
