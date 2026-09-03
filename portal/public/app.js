@@ -4055,6 +4055,12 @@ const CAMPAIGNER_PEAK_COLUMNS = [[0, "receipts"], [3, "electoral expenditure"], 
  *  index rows, the sort and the entry page all use this one phrase, so a reader
  *  moving between them is never comparing two definitions. */
 const CAMPAIGNER_PEAK_LABEL = "largest received or spent on politics";
+/* The sort control caps at 230px, where the full phrase clips to "Largest
+   received or spen" and reads as a broken control rather than a considered one.
+   The tile above states the phrase whole, so the sort only has to be unambiguous
+   in that company: "raised or spent" matches the lede and cannot be mistaken for
+   the payments column the way a bare "spent" could. */
+const CAMPAIGNER_SORT_LABEL = "Most raised or spent";
 const capFirst = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /** A party filter's count, with its unit spelled out so the number cannot be
@@ -4183,7 +4189,7 @@ async function buildCampaignersDirectory() {
       // 230px so the closed control clips it, which is the lesser cost: the open
       // dropdown shows the phrase whole, and dropping "on politics" to make it
       // fit would leave "spent" free to be read as the payments column.
-      ["peak", capFirst(CAMPAIGNER_PEAK_LABEL), byNumDesc((e) => e.peak)],
+      ["peak", CAMPAIGNER_SORT_LABEL, byNumDesc((e) => e.peak)],
       ["name", "Name A-Z", byName],
       ["recent", "Most recent return", (a, b) => b._last.localeCompare(a._last) || (b.peak || 0) - (a.peak || 0)],
     ],
