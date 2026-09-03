@@ -4064,10 +4064,14 @@ function campaignerPeakSource(e) {
  *  with nothing on that line stay in the series as zero, because dropping them
  *  would leave a chart whose axis claims the returns ran without a gap. */
 function campaignerSeries(e, col, heading) {
-  const rows = e.years || [];
-  const vals = rows.map((r) => Number(r[col + 1]) || 0);
-  if (!vals.some((v) => v > 0)) return "";
-  const pairs = rows.map((r, i) => [String(r[0] || ""), vals[i]]);
+  // A null is a line the return left empty, not a nil figure, and the two must
+  // not be drawn the same way: charting the CFMEU's unreported 2006-07 receipts
+  // as a zero bar tells a reader it took in nothing that year, which the return
+  // does not say. Empty lines are left out of the series; a real zero stays.
+  const pairs = (e.years || [])
+    .filter((r) => r[col + 1] !== null && r[col + 1] !== undefined && r[col + 1] !== "")
+    .map((r) => [String(r[0] || ""), Number(r[col + 1]) || 0]);
+  if (!pairs.some(([, v]) => v > 0)) return "";
   return pairs.length >= 6
     ? columnChart(pairs, { fmt: fmtMoney, heading })
     : barList(pairs, { fmt: fmtMoney, heading });
