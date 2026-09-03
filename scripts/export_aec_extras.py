@@ -1,15 +1,22 @@
 #!/usr/bin/env python3
 """Export the AEC Transparency Register extras (debts, discretionary benefits,
 return headline totals, the associated-entity / third-party roster) from
-parli.db's ext_aec_* tables to one static JSON file for the portal.
+parli.db's ext_aec_* tables to static JSON files for the portal.
 
 Run on the box that holds the database (read-only; self-contained so it can be
 piped over ssh like the other exports):
 
     ssh desktop python3 - < scripts/export_aec_extras.py > portal/public/graph/aec-extras.json
+    ssh desktop python3 - campaigners < scripts/export_aec_extras.py > portal/public/graph/campaigners.json
 
-Shape (amounts are whole dollars; year arrays are compact and documented in
-`meta.year_columns`):
+The default output serves the party entry pages, every one of which fetches it,
+so its roster stays capped per kind and the file must not grow. `campaigners`
+writes the same roster uncapped and nothing else, for the campaigners directory
+and the per-entity pages, which are worth a second fetch on the pages that want
+the whole register rather than one party's neighbours.
+
+Shape of aec-extras.json (amounts are whole dollars; year arrays are compact and
+documented in `meta.year_columns`):
 
   meta      source, licence (CC BY 4.0), coverage, latest_year, counts, notes
   parties   { "<canonical party>": {
@@ -56,6 +63,8 @@ LICENCE_URL = "https://www.aec.gov.au/footer/Copyright.htm"
 TOP_LENDERS = 12          # per party, latest year
 TOP_PROVIDERS = 8         # discretionary benefits per party, latest year
 TOP_ASSOCIATED = 12       # associated entities per party
+ROSTER_KINDS = ("associated_entity", "significant_third_party", "political_campaigner", "third_party")
+KIND_SLOTS = ",".join("?" * len(ROSTER_KINDS))
 ROSTER_CAPS = {           # entities per kind, ranked by peak annual receipts (or expenditure)
     "associated_entity": 150,
     "significant_third_party": 150,
@@ -104,9 +113,88 @@ def R(x) -> int | None:
     return None if x is None else int(round(float(x)))
 
 
-def main() -> None:
+def open_db():
     db = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
+    return db
+
+
+def roster_entities(q) -> dict[str, dict]:
+    """One entry per normalised name across the four non-donor return kinds, keyed
+    by norm_key: the register's return types, associated parties and a per-year
+    series of the entity's own headline totals. Shared by both outputs so the
+    entity object cannot drift between them; the floor and the caps are the
+    caller's to apply."""
+    ents: dict[str, dict] = {}
+    for r in q("""SELECT financial_year AS fy, return_type, kind, entity_name, abn, associated_party_canonical AS apc,
+                         total_receipts, total_payments, total_debts, electoral_expenditure, total_donations_received
+                  FROM ext_aec_returns WHERE kind IN (%s)
+                  ORDER BY financial_year""" % KIND_SLOTS, *ROSTER_KINDS):
+        k = norm_key(r["entity_name"])
+        if not k:
+            continue
+        e = ents.setdefault(k, {"name": None, "kind": None, "return_types": [], "associated_parties": [],
+                                "abn": None, "years": [], "peak": 0, "latest_year": None})
+        e["name"] = display(r["entity_name"])  # rows arrive oldest first: the newest spelling wins
+        e["kind"] = r["kind"]
+        e["latest_year"] = r["fy"]
+        if r["return_type"] not in e["return_types"]:
+            e["return_types"].append(r["return_type"])
+        for p in (r["apc"] or "").split("; "):
+            if p and p not in e["associated_parties"]:
+                e["associated_parties"].append(p)
+        if r["abn"]:
+            e["abn"] = r["abn"]
+        e["years"].append([r["fy"], R(r["total_receipts"]), R(r["total_payments"]), R(r["total_debts"]),
+                           R(r["electoral_expenditure"]), R(r["total_donations_received"])])
+        e["peak"] = max(e["peak"], R(r["total_receipts"]) or 0, R(r["electoral_expenditure"]) or 0,
+                        R(r["total_donations_received"]) or 0)
+    return ents
+
+
+def export_campaigners() -> None:
+    """campaigners.json: the whole roster above the floor, no per-kind cap, sorted
+    by peak descending so the file reads usefully even unsorted by the consumer.
+    Nothing but the roster, because the party blocks it would otherwise carry are
+    already fetched from aec-extras.json by the pages that need them."""
+    db = open_db()
+    q = lambda sql, *p: db.execute(sql, p).fetchall()  # noqa: E731
+
+    ents = roster_entities(q)
+    roster = sorted((e for e in ents.values() if e["peak"] >= ROSTER_FLOOR),
+                    key=lambda e: (-e["peak"], e["name"].lower()))
+    by_kind = {k: sum(1 for e in roster if e["kind"] == k) for k in ROSTER_KINDS}
+    latest_year = db.execute("SELECT MAX(financial_year) FROM ext_aec_returns WHERE kind IN (%s)"
+                             % KIND_SLOTS, ROSTER_KINDS).fetchone()[0]
+
+    out = {
+        "meta": {
+            "generated": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "source": "AEC Transparency Register annual returns (AllAnnualData bundle) via parli.db",
+            "source_url": AEC_ANNUAL_URL,
+            "register_url": REGISTER_URL,
+            "licence": "CC BY 4.0 (Australian Electoral Commission)",
+            "licence_url": LICENCE_URL,
+            "latest_year": latest_year,
+            "columns": {"years": ["year", "receipts", "payments", "debts", "electoral_expenditure", "gifts_received"]},
+            "floor": ROSTER_FLOOR,
+            "counts": {"entities": len(roster), "by_kind": by_kind, "entities_before_floor": len(ents)},
+            "notes": [
+                "Every registered associated entity, significant third party, political campaigner and third party above the floor. The same roster in aec-extras.json is capped per kind for the party pages; this file is not.",
+                "An entity is left out only if its receipts, electoral expenditure and gifts received all stayed under $100,000 in every year it lodged a return.",
+                "Return totals are the lodger's own headline figures; itemised receipts cover only lines above the disclosure threshold, so they sum to less than total receipts.",
+                "Names are matched on case, punctuation and company suffixes only; the same body under two spellings appears twice.",
+                "Donor and member of parliament returns are not exported; donors already have the money map.",
+            ],
+        },
+        "entities": roster,
+    }
+    json.dump(out, sys.stdout, ensure_ascii=False, separators=(",", ":"))
+    sys.stdout.write("\n")
+
+
+def main() -> None:
+    db = open_db()
     q = lambda sql, *p: db.execute(sql, p).fetchall()  # noqa: E731
 
     counts = {t: db.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
@@ -192,31 +280,7 @@ def main() -> None:
         d["associated_entities_total"] = len(ents)
 
     # ── roster ───────────────────────────────────────────────────────────────
-    ents: dict[str, dict] = {}
-    for r in q("""SELECT financial_year AS fy, return_type, kind, entity_name, abn, associated_party_canonical AS apc,
-                         total_receipts, total_payments, total_debts, electoral_expenditure, total_donations_received
-                  FROM ext_aec_returns
-                  WHERE kind IN ('associated_entity', 'significant_third_party', 'political_campaigner', 'third_party')
-                  ORDER BY financial_year"""):
-        k = norm_key(r["entity_name"])
-        if not k:
-            continue
-        e = ents.setdefault(k, {"name": None, "kind": None, "return_types": [], "associated_parties": [],
-                                "abn": None, "years": [], "peak": 0, "latest_year": None})
-        e["name"] = display(r["entity_name"])  # rows arrive oldest first: the newest spelling wins
-        e["kind"] = r["kind"]
-        e["latest_year"] = r["fy"]
-        if r["return_type"] not in e["return_types"]:
-            e["return_types"].append(r["return_type"])
-        for p in (r["apc"] or "").split("; "):
-            if p and p not in e["associated_parties"]:
-                e["associated_parties"].append(p)
-        if r["abn"]:
-            e["abn"] = r["abn"]
-        e["years"].append([r["fy"], R(r["total_receipts"]), R(r["total_payments"]), R(r["total_debts"]),
-                           R(r["electoral_expenditure"]), R(r["total_donations_received"])])
-        e["peak"] = max(e["peak"], R(r["total_receipts"]) or 0, R(r["electoral_expenditure"]) or 0,
-                        R(r["total_donations_received"]) or 0)
+    ents = roster_entities(q)
 
     roster = []
     per_kind: dict[str, int] = defaultdict(int)
@@ -270,4 +334,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    if "campaigners" in sys.argv[1:]:
+        export_campaigners()
+    else:
+        main()

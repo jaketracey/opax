@@ -499,12 +499,14 @@ portal/public/graph/aec-extras.json`) writes one static file, **~235 KB raw / ~6
   branches named, and a per-year series), `benefits` (latest year's discretionary benefits,
   top 8 providers, per-year series), `associated_entities` (top 12 by receipts on their
   latest return, out of `associated_entities_total`).
-- `entities` -- the roster: 290 of 701 distinct associated entities, significant third
-  parties, political campaigners and third parties (caps 150 / 150 / 150 / 80 per kind,
-  $100k floor on peak annual receipts or expenditure), each with the register's return
-  types, ABN, canonical associated parties and a per-year series of its own headline totals
-  (receipts, payments, debts, electoral expenditure, gifts received). Donor and MP returns
-  are not exported (donors have the money map).
+- `entities` -- the roster: 290 of the 438 associated entities, significant third parties,
+  political campaigners and third parties that clear the floor, out of 701 distinct names
+  before it (caps 150 / 150 / 150 / 80 per kind, $100k floor on peak annual receipts or
+  expenditure), each with the register's return types, ABN, canonical associated parties
+  and a per-year series of its own headline totals (receipts, payments, debts, electoral
+  expenditure, gifts received). Donor and MP returns are not exported (donors have the
+  money map). Only `associated_entity` (290 above the floor) and `third_party` (88) are
+  actually truncated here; the other two kinds are complete at 51 and 9.
 
 Where it appears: the party entry page (`openSubject`, party branch) gains **"Debts and
 other funding"** after "Where it came from": three tiles (owed at 30 June, of it to financial
@@ -516,6 +518,27 @@ agent's). The infobox gains "Debts at 30 June YYYY". The fineprint says balances
 borrowing; trade creditors and tax beside loans; threshold; source and licence, with a link
 to the register. Donor index and donor pages: nothing yet (the roster is in the JSON for
 whoever builds it). Third-party / associated-entity pages: not built; the data is there.
+
+### 4.3 The uncapped campaigner roster (built 2026-09-03)
+
+`portal/public/graph/campaigners.json` (**~264 KB raw**) is the same roster with the
+per-kind caps lifted: **438** entities, all of them above the $100k floor, as
+`associated_entity` 290, `third_party` 88, `significant_third_party` 51,
+`political_campaigner` 9. The entity objects are byte-for-byte the ones in
+`aec-extras.json` -- same keys, same compact year rows, named in `meta.columns.years` --
+so a page can read either file; only the row count and the sort differ, this one being
+sorted by `peak` descending. It carries no `parties` block, because the pages that want
+that already fetch `aec-extras.json`.
+
+It exists because `aec-extras.json` is fetched by every party page and must not grow,
+while the campaigners directory and the per-entity pages need the whole register. The
+same script writes both: the roster is built once in `roster_entities()` and the caps
+are applied only on the aec-extras path, so the two files cannot drift in shape.
+
+Note that `aec-extras.json`'s `meta.counts.entities_before_cap` (701) counts every
+distinct name *before* the floor as well as before the caps; the uncapped roster above
+the floor is 438, not 701. Lifting the floor as well would add 263 bodies that never
+reached $100,000 in any year they lodged.
 
 ## 5. Runbook
 
@@ -535,6 +558,7 @@ once, then `PYTHONPATH=. .venv/bin/python -m parli.ingest.<module>`. Writers def
 | Classification | `money_classify --report` after any donation load | with donations |
 | State money maps | `ssh desktop python3 - qld < scripts/export_state_money.py > portal/public/graph/money.qld.json` (and `vic`, `tas`); then from `portal/`: `node graph/smoke-test.mjs`. WA/ACT/NT refuse without `--gated` and must not land under `portal/public/` | after a state donation load |
 | AEC extras | on desktop: `PYTHONPATH=. .venv/bin/python -m parli.ingest.money_aec_extras --refresh --db ~/.cache/autoresearch/parli.db` (~10 s; `--table debts` etc. for one), then `ssh desktop python3 - < scripts/export_aec_extras.py > portal/public/graph/aec-extras.json` | yearly, after the AEC's early-February release of annual returns; the bundle is one fetch |
+| Campaigner roster | `ssh desktop python3 - campaigners < scripts/export_aec_extras.py > portal/public/graph/campaigners.json` | with the AEC extras above; same tables, same load |
 
 Run-time 2026-09-02 (laptop, polite delays): donations ~5 min, IPEA ~35 min (37 CSV
 downloads), NSW diaries ~40 min (633 PDFs), QLD diaries ~25 min (611 PDFs), lobbyists
