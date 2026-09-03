@@ -2895,7 +2895,7 @@ async function renderPartyDebts(label, sections) {
     const shown = ents.slice(0, 6);
     html += `<p class="kicker kicker-sub">Associated entities</p>
       <ul class="subject-list" role="list">${shown.map((e) => `
-      <li><a class="source-title" href="${esc(searchHash(`"${e.name}"`, {}))}">${esc(e.name)}</a>
+      <li><a class="source-title" href="${esc(subjectHash("campaigner", e.name))}">${esc(e.name)}</a>
         <span class="result-meta">${esc([e.year, e.receipts != null ? `receipts ${fmtMoney(e.receipts)}` : "",
           e.payments != null ? `payments ${fmtMoney(e.payments)}` : "", e.debts ? `debts ${fmtMoney(e.debts)}` : ""].filter(Boolean).join(" · "))}</span></li>`).join("")}</ul>
       ${(p.associated_entities_total || 0) > shown.length ? `<p class="fineprint" style="margin-top:0.5rem">${p.associated_entities_total} entities have named ${esc(label)} on an associated-entity return; the ${shown.length} with the largest receipts on their latest return are shown, each with that return's year.</p>` : ""}`;
@@ -2986,10 +2986,17 @@ async function openSubject(kind, name, manageFocus) {
   currentSubjectKey = key;
   destroySubjectMap();
   const body = $("subject-body");
-  body.innerHTML = subjectSkeleton(
-    kind === "person" ? "Parliamentarian" : kind === "party" ? "Political party" : "Donor",
-    name, `<span class="status" style="margin:0">Opening the entry…</span>`);
+  const SUBJECT_LABELS = {
+    person: "Parliamentarian", party: "Political party", donor: "Donor",
+    // Provisional: the entry names its own AEC category once the register
+    // file has loaded and the entity is known.
+    campaigner: "Campaigner or third party",
+  };
+  body.innerHTML = subjectSkeleton(SUBJECT_LABELS[kind] || "Donor", name,
+    `<span class="status" style="margin:0">Opening the entry…</span>`);
   if (manageFocus) $("subject-title")?.focus();
+
+  if (kind === "campaigner") { await renderCampaignerEntry(name, key); return; }
 
   if (kind === "donor" || kind === "party") {
     reserveSubjectMap(true);
@@ -3380,7 +3387,10 @@ async function openTopicsIndex(manageFocus) {
 // each page supplies its rows, filters and sorts. Rows render in chunks of
 // DIR_CHUNK with a "Show more" button so 1,400 people stay instant.
 
-const DIRECTORY_KINDS = { person: "Parliamentarians", party: "Parties", donor: "Donors" };
+const DIRECTORY_KINDS = {
+  person: "Parliamentarians", party: "Parties", donor: "Donors",
+  campaigner: "Campaigners & third parties",
+};
 const DIR_CHUNK = 60;
 
 // Chamber codes as parli.db records them, in the order the filter lists them.
@@ -3643,7 +3653,10 @@ async function openDirectory(kind, params, manageFocus) {
     </div>`;
   if (manageFocus) $("subject-title")?.focus();
   showPageLoader("subject-loader", "Opening the directory.");
-  const build = { person: buildPeopleDirectory, party: buildPartiesDirectory, donor: buildDonorsDirectory }[kind];
+  const build = {
+    person: buildPeopleDirectory, party: buildPartiesDirectory,
+    donor: buildDonorsDirectory, campaigner: buildCampaignersDirectory,
+  }[kind];
   let spec = null;
   try { spec = await build(); } catch { /* honest failure below */ }
   if (currentSubjectKey !== key) return;
@@ -3974,6 +3987,284 @@ async function buildDonorsDirectory() {
       donor is on the Attorney-General's Foreign Influence Transparency Scheme register; registration is a
       disclosure the scheme requires by law, not a finding of wrongdoing.`,
   };
+}
+
+// --- campaigners and third parties -------------------------------------------
+// The organisations that spend on politics without donating: associated
+// entities, third parties, significant third parties and political campaigners,
+// each of which lodges an annual return of its own with the AEC. The money map
+// only knows donors, so without this wing some of the largest political
+// spenders in the country have no page anywhere on the site.
+// The AEC annual-returns export writes /graph/campaigners.json; it is about
+// half a megabyte, so only this index and its entry pages fetch it, never the
+// front page.
+
+const CAMPAIGNER_KINDS = {
+  associated_entity: "Associated entity",
+  third_party: "Third party",
+  significant_third_party: "Significant third party",
+  political_campaigner: "Political campaigner",
+};
+
+// The `years` rows in file order: [year, receipts, payments, debts,
+// electoral_expenditure, gifts_received]. Each column carries how it reads
+// inside a sentence and what its own chart is called.
+const CAMPAIGNER_COLUMNS = [
+  ["receipts", "Receipts, year by year"],
+  ["payments", "Payments, year by year"],
+  ["debts", "Owed at each 30 June"],
+  ["electoral expenditure", "Electoral expenditure, year by year"],
+  ["gifts received", "Gifts received, year by year"],
+];
+
+// Flows before the year-end balance: what an organisation raised and spent
+// says more about its politics than what it happened to owe on 30 June.
+const CAMPAIGNER_CHART_ORDER = [0, 1, 3, 4, 2];
+
+let campaignersPromise = null;
+function loadCampaigners() {
+  campaignersPromise ??= fetch("/graph/campaigners.json")
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return campaignersPromise;
+}
+
+const campaignerKindLabel = (kind) => CAMPAIGNER_KINDS[kind] || "Registered organisation";
+
+/** The register chip a campaigner wears wherever it is listed. The four kinds
+ *  share one hue on purpose: the words tell them apart, never the colour. */
+const campaignerKindChip = (kind) =>
+  `<span class="party party-oth" style="--pc:var(--bronze)"><i aria-hidden="true"></i>${esc(campaignerKindLabel(kind))}</span>`;
+
+/** The years an organisation's returns run over, as the AEC writes them. */
+function campaignerSpan(e) {
+  const years = (e.years || []).map((r) => r[0]).filter(Boolean);
+  if (!years.length) return "";
+  const first = years[0], last = years[years.length - 1];
+  return first === last ? String(first) : `${first} to ${last}`;
+}
+
+/** Which line `peak` came off, and in which year. The file gives the largest
+ *  figure an organisation ever put on a return but not where on the form it
+ *  sat, and "receipts" reads very differently from "debts". Matched against
+ *  the rows rather than assumed, so a peak the columns cannot account for goes
+ *  unlabelled instead of mislabelled. */
+function campaignerPeakSource(e) {
+  const peak = Number(e.peak) || 0;
+  if (!peak) return null;
+  for (const row of e.years || []) {
+    for (let i = 0; i < CAMPAIGNER_COLUMNS.length; i++) {
+      if (row[i + 1] === peak) return { noun: CAMPAIGNER_COLUMNS[i][0], year: String(row[0] || "") };
+    }
+  }
+  return null;
+}
+
+/** One year-by-year money series. Six returns or more make a column chart worth
+ *  reading; two make one fat block, so a short series takes the bar list. Years
+ *  with nothing on that line stay in the series as zero, because dropping them
+ *  would leave a chart whose axis claims the returns ran without a gap. */
+function campaignerSeries(e, col, heading) {
+  const rows = e.years || [];
+  const vals = rows.map((r) => Number(r[col + 1]) || 0);
+  if (!vals.some((v) => v > 0)) return "";
+  const pairs = rows.map((r, i) => [String(r[0] || ""), vals[i]]);
+  return pairs.length >= 6
+    ? columnChart(pairs, { fmt: fmtMoney, heading })
+    : barList(pairs, { fmt: fmtMoney, heading });
+}
+
+/** Campaigners and third parties: one row per organisation on the register,
+ *  sorted by the largest figure it ever lodged. */
+async function buildCampaignersDirectory() {
+  const data = await loadCampaigners();
+  const items = data?.entities;
+  if (!items?.length) return null;
+  const meta = data.meta || {};
+  const num = (n) => Number(n || 0).toLocaleString();
+  const kindCounts = new Map();
+  const partyCounts = new Map();
+  let first = "", last = "", largest = 0, returns = 0;
+  for (const e of items) {
+    e._sortName = String(e.name || "").toLowerCase();
+    e._parties = e.associated_parties || [];
+    e._span = campaignerSpan(e);
+    e._returns = (e.years || []).length;
+    e._last = String(e.latest_year || e.years?.[e._returns - 1]?.[0] || "");
+    const start = String(e.years?.[0]?.[0] || "");
+    kindCounts.set(e.kind, (kindCounts.get(e.kind) || 0) + 1);
+    for (const p of e._parties) partyCounts.set(p, (partyCounts.get(p) || 0) + 1);
+    if (start && (!first || start < first)) first = start;
+    if (e._last && e._last > last) last = e._last;
+    largest = Math.max(largest, Number(e.peak) || 0);
+    returns += e._returns;
+  }
+  const withParty = items.filter((e) => e._parties.length).length;
+  const floor = Number(meta.floor) || 0;
+  const register = safeUrl(meta.register_url);
+
+  const row = (e) => {
+    const shown = e._parties.slice(0, 3);
+    const more = e._parties.length - shown.length;
+    const partiesHTML = shown.length
+      ? `<span class="dir-parties">associated with ${shown.map((p) => `${anyPartyDotHTML(p)}${esc(p)}`).join(", ")}${more > 0 ? ` and ${more} more` : ""}</span>`
+      : "";
+    const metaLine = [campaignerKindChip(e.kind), e._span ? esc(e._span) : "", partiesHTML].filter(Boolean).join(" · ");
+    return `<li class="dir-row">
+      <span class="dir-mono" aria-hidden="true">${esc(String(e.name || "?").slice(0, 1))}</span>
+      <div class="dir-main">
+        <a class="source-title dir-name" href="${esc(subjectHash("campaigner", e.name))}">${esc(e.name)}</a>
+        <span class="result-meta">${metaLine}</span>
+      </div>
+      <div class="dir-figs">
+        <span class="dir-fig"><b>${esc(fmtMoney(Number(e.peak) || 0))}</b>largest figure</span>
+        <span class="dir-fig"><b>${num(e._returns)}</b>${e._returns === 1 ? "return" : "returns"}</span>
+      </div>
+    </li>`;
+  };
+
+  return {
+    title: DIRECTORY_KINDS.campaigner,
+    lede: `The <b>${num(items.length)}</b> organisations that lodge annual returns with the AEC as associated
+      entities, third parties, significant third parties or political campaigners${first && last
+        ? `, covering ${esc(first)} to ${esc(last)}` : ""}. This is money raised and spent on politics outside
+      the donation columns. Every name opens its entry.`,
+    tiles: [[num(items.length), "organisations listed"], [fmtMoney(largest), "largest figure on a return"],
+      [num(returns), "annual returns covered"], [num(withParty), "naming a party on the return"]],
+    items,
+    text: (e) => `${e.name} ${campaignerKindLabel(e.kind)} ${(e.return_types || []).join(" ")} ${e._parties.join(" ")}`,
+    filters: [
+      { key: "kind", label: "Register category", any: "Any category",
+        options: Object.keys(CAMPAIGNER_KINDS).filter((k) => kindCounts.has(k))
+          .map((k) => countOpt(k, CAMPAIGNER_KINDS[k], kindCounts.get(k))),
+        test: (e, v) => e.kind === v },
+      { key: "party", label: "Associated party", any: "Any party",
+        options: [...partyCounts.entries()].sort((a, b) => b[1] - a[1]).map(([p, n]) => countOpt(p, p, n))
+          .concat([countOpt("none", "No party named", items.length - withParty)]),
+        test: (e, v) => v === "none" ? !e._parties.length : e._parties.includes(v) },
+    ],
+    sorts: [
+      ["peak", "Largest figure reported", byNumDesc((e) => e.peak)],
+      ["name", "Name A-Z", byName],
+      ["recent", "Most recent return", (a, b) => b._last.localeCompare(a._last) || (b.peak || 0) - (a.peak || 0)],
+    ],
+    row,
+    fineprint: `${(meta.notes || []).map((n) => esc(String(n))).join(" ")}
+      ${floor ? `Only organisations whose largest figure on any return reaches ${esc(fmtMoney(floor))} are listed,
+      so the smallest filers are not here.` : ""}
+      Every figure is a headline total the organisation itself put on its own return: receipts are its income and
+      payments its spending, and neither is a donation to or from a party. An associated party is the party the
+      return names; it does not mean that party gave or received the money. Amounts under the AEC's disclosure
+      threshold are never itemised, so each figure is a floor rather than a ceiling.
+      Source: ${esc(meta.source || "AEC Transparency Register annual returns")}${meta.licence ? `, ${esc(meta.licence)}` : ""}.${
+      register ? ` <a href="${esc(register)}" rel="noopener" target="_blank">Open the register ↗︎</a>` : ""}`,
+  };
+}
+
+/** One campaigner or third party: the facts off its own returns, the money year
+ *  by year, and the two ways into the record. Nothing on this page is a
+ *  donation, and the copy never lets it read as one. */
+async function renderCampaignerEntry(name, key) {
+  const body = $("subject-body");
+  const data = await loadCampaigners();
+  if (currentSubjectKey !== key) return;
+  const box = $("subject-infobox");
+  const sections = $("subject-sections");
+  const list = data?.entities || [];
+  const nn = normName(name);
+  // Exact spelling first: normName drops company suffixes, so it would fold
+  // two entities that differ only by "Pty Ltd" into whichever came first.
+  const e = list.find((x) => x.name === name) || list.find((x) => normName(x.name) === nn) || null;
+  if (!e) {
+    body.querySelector(".subject-tag").innerHTML = data
+      ? `<span>No annual return is held under this name on the register roster. The record may still mention them.</span>`
+      : `<span>The register file could not be loaded. The record may still mention them.</span>`;
+    box.innerHTML = infoboxHTML([["Type", "Organisation"]], "", [
+      actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for them", { primary: true }),
+      actionBtn("entry", "/subject/campaigner", "All campaigners and third parties"),
+      actionBtn("external", webSearchUrl(name), "Search the web", { external: true }),
+    ]);
+    await subjectMentions(name, sections, "In parliament");
+    return;
+  }
+  // The register's own spelling is the entry's, so a link that arrived under an
+  // older one never leaves the totals attributed to a name the AEC does not use.
+  if (e.name !== name) {
+    const h = $("subject-title");
+    if (h) h.textContent = e.name;
+    replaceRoute(subjectHash("campaigner", e.name));
+    currentSubjectKey = `campaigner:${e.name}`;
+    key = currentSubjectKey;
+    setCrumbs([{ label: DIRECTORY_KINDS.campaigner, href: "/subject/campaigner" }, { label: e.name }]);
+  }
+  const kicker = body.querySelector(".kicker");
+  if (kicker) kicker.textContent = campaignerKindLabel(e.kind);
+
+  const parties = e.associated_parties || [];
+  const span = campaignerSpan(e);
+  const count = (e.years || []).length;
+  const peak = Number(e.peak) || 0;
+  const peakFrom = campaignerPeakSource(e);
+  // The kicker above the name already says the AEC category, so the tag line
+  // carries what it does not: how far back the returns run, and who the
+  // organisation names.
+  body.querySelector(".subject-tag").innerHTML = [
+    span
+      ? `<span class="subject-active"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l2.8 1.8"/></svg>Returns ${esc(span)}</span>`
+      : campaignerKindChip(e.kind),
+    parties.length
+      ? `<span>associated with ${parties.map((p) => `${anyPartyDotHTML(p)}${esc(p)}`).join(", ")}</span>`
+      : "",
+  ].filter(Boolean).join(" · ");
+
+  box.innerHTML = infoboxHTML([
+    ["Register category", esc(campaignerKindLabel(e.kind))],
+    ["Associated party", parties.length
+      ? parties.map((p) => `${anyPartyDotHTML(p)}<a href="${esc(subjectHash("party", p))}">${esc(p)}</a>`).join(", ")
+      : `<span class="dir-muted">None named on the return</span>`],
+    e.abn && ["ABN", esc(String(e.abn))],
+    // An organisation can change category between returns, and which forms it
+    // has lodged over the years is part of the record. "Return" comes off each
+    // one: the label above it already says these are returns.
+    (e.return_types || []).length
+      && ["Return types", esc(e.return_types.map((t) => String(t).replace(/\s+Return$/i, "")).join(", "))],
+    span && ["Years covered", `${esc(span)} (${count} ${count === 1 ? "return" : "returns"})`],
+    peak && ["Largest figure on a return",
+      `<b>${esc(fmtMoney(peak))}</b>${peakFrom ? ` <span class="dir-muted">(${esc(peakFrom.noun)}, ${esc(peakFrom.year)})</span>` : ""}`],
+  ], "", [
+    actionBtn("ask", askHash(`What has parliament said about ${e.name}?`),
+      "Ask what parliament said about them", { primary: true }),
+    actionBtn("search", searchHash(`"${e.name}"`, {}), "Search mentions in the record"),
+    actionBtn("download", "/graph/campaigners.json", "Download the data"),
+    actionBtn("external", webSearchUrl(e.name), "Search the web", { external: true }),
+  ]);
+
+  const charts = CAMPAIGNER_CHART_ORDER
+    .map((i) => campaignerSeries(e, i, CAMPAIGNER_COLUMNS[i][1])).filter(Boolean).join("");
+  // Newest return first: a reader coming to a name for the first time wants
+  // what it filed last, not what it filed in 1998.
+  const yearRows = (e.years || []).slice().reverse().map((r) => {
+    const figs = CAMPAIGNER_COLUMNS
+      .map(([noun], i) => (r[i + 1] == null ? "" : `${noun} ${fmtMoney(Number(r[i + 1]))}`))
+      .filter(Boolean).join(" · ");
+    return `<li><b>${esc(String(r[0] || ""))}</b>
+      <span class="result-meta">${esc(figs || "nothing itemised on the return")}</span></li>`;
+  }).join("");
+  const register = safeUrl(data?.meta?.register_url);
+  sections.insertAdjacentHTML("beforeend", `
+    <p class="kicker">The money on the returns</p>
+    ${charts || `<p class="status" style="margin-top:0.4rem">Every money column on this organisation's returns is blank or nil.</p>`}
+    <details class="chat-sources" style="margin-top:1rem">
+      <summary>Every year on the return</summary>
+      <ul class="subject-list" role="list">${yearRows}</ul>
+    </details>
+    <p class="fineprint">These are the totals ${esc(e.name)} put on its own annual returns to the AEC. Receipts are
+      what it took in and payments what it spent; neither is a donation to or from a party, and an associated party
+      named on a return neither gave nor received this money. A blank column is a line the return left empty, not a
+      nil figure, and amounts under the disclosure threshold are never itemised, so every number is a floor.
+      Debts are balances owed at 30 June, not new borrowing.
+      Source: AEC Transparency Register, CC BY 4.0.${register
+        ? ` <a href="${esc(register)}" rel="noopener" target="_blank">Open the register ↗︎</a>` : ""}</p>`);
+  await subjectMentions(e.name, sections, "In parliament");
 }
 
 // --- explore (time machine + quiz) ------------------------------------------
