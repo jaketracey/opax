@@ -1824,6 +1824,7 @@ function notePeopleScroll() {
   peopleRail.scrolled = true;
 }
 
+let heroWaitTimer = 0;
 function updateQuoteRail() {
   const rail = $("quote-rail");
   const n = quoteRail.sources.length;
@@ -1842,7 +1843,15 @@ function updateQuoteRail() {
   const room = space >= 348 && !$("ask-result").hidden && rect.height > 1;
   // The people hold the slot until the reader's first real scroll. Reduced
   // motion skips the state outright rather than snapping between two panels.
-  const people = room && peopleRail.list.length > 0 && !peopleRail.scrolled &&
+  // ...and only once the hero has finished folding away. A cached answer comes
+  // back almost at once, so without this the rail faded up while the line above
+  // was still collapsing and the two moves fought each other.
+  const heroLeft = heroSettledAt - Date.now();
+  if (heroLeft > 0) {
+    clearTimeout(heroWaitTimer);
+    heroWaitTimer = setTimeout(updateQuoteRail, heroLeft + 16);
+  }
+  const people = room && heroLeft <= 0 && peopleRail.list.length > 0 && !peopleRail.scrolled &&
     !matchMedia("(prefers-reduced-motion: reduce)").matches &&
     rect.bottom > innerHeight * 0.32 && clearOf($("people-card").offsetHeight);
   // The card is fixed at 30vh: it may only appear once the answer's top has
@@ -4553,12 +4562,19 @@ function revealAskResult() {
 }
 
 let heroFoldTimer = 0;
+/* When the hero will have finished folding: a 900ms beat before it starts, then
+   the 520ms the max-height transition takes. The people rail waits for this so
+   the two moves do not overlap. A cached answer returns almost at once, which
+   is when they used to collide. */
+const HERO_FOLD_MS = 900 + 520;
+let heroSettledAt = 0;
 /** The hero line folds away a beat after a question is asked, or comes back. */
 function foldHero(folded) {
   clearTimeout(heroFoldTimer);
   const hero = $("hero-intro");
   if (!hero) return;
-  if (!folded) { hero.classList.remove("hero-folded"); return; }
+  if (!folded) { hero.classList.remove("hero-folded"); heroSettledAt = 0; return; }
+  heroSettledAt = Date.now() + HERO_FOLD_MS;
   heroFoldTimer = setTimeout(() => hero.classList.add("hero-folded"), 900);
 }
 

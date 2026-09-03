@@ -800,7 +800,7 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
   padding: 0.15rem 0 0.15rem 14px;
   opacity: 0; transform: translateY(10px); pointer-events: none;
 }
-.people-card.shown { opacity: 1; transform: none; }
+.people-card.shown { opacity: 1; transform: none; pointer-events: auto; }
 @media (prefers-reduced-motion: no-preference) {
   /* The same pacing as the quote card, so the handover reads as one move. */
   .people-card { transition: opacity 240ms ease-in, transform 240ms ease-in; }
