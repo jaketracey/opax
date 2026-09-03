@@ -4043,26 +4043,41 @@ function campaignerSpan(e) {
   return first === last ? String(first) : `${first} to ${last}`;
 }
 
+// The three lines `peak` is drawn from, as [column, noun]. Payments and debts
+// are not among them, which is why nothing on these pages calls peak the
+// largest figure on a return: for 169 of the roster a payments or debts figure
+// is larger, and the Nursing and Midwifery Federation's $130.0M peak sits
+// beside $139.6M of payments. What peak measures is the money an organisation
+// took in or put into politics, and the labels say exactly that.
+const CAMPAIGNER_PEAK_COLUMNS = [[0, "receipts"], [3, "electoral expenditure"], [4, "gifts received"]];
+
+/** How the peak figure is described wherever it appears: the index tiles, the
+ *  index rows, the sort and the entry page all use this one phrase, so a reader
+ *  moving between them is never comparing two definitions. */
+const CAMPAIGNER_PEAK_LABEL = "largest received or spent on politics";
+const capFirst = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** A party filter's count, with its unit spelled out so the number cannot be
+ *  taken for an amount of money. */
+const orgCount = (n) => `${Number(n || 0).toLocaleString()} organisation${n === 1 ? "" : "s"}`;
+
 /** Which line `peak` came off, and in which year. The file gives the largest
- *  figure an organisation ever put on a return but not where on the form it
- *  sat, and "receipts" reads very differently from "debts". Matched against
- *  the rows rather than assumed, so a peak the columns cannot account for goes
- *  unlabelled instead of mislabelled. */
+ *  figure but not where on the form it sat, and "receipts" reads very
+ *  differently from "gifts received". Matched against the rows rather than
+ *  assumed, columns before years so a figure two lines happen to tie on is
+ *  reported as the receipts it almost always is. A peak these columns cannot
+ *  account for goes unlabelled, never mislabelled. */
 function campaignerPeakSource(e) {
   const peak = Number(e.peak) || 0;
   if (!peak) return null;
-  for (const row of e.years || []) {
-    for (let i = 0; i < CAMPAIGNER_COLUMNS.length; i++) {
-      if (row[i + 1] === peak) return { noun: CAMPAIGNER_COLUMNS[i][0], year: String(row[0] || "") };
-    }
+  for (const [col, noun] of CAMPAIGNER_PEAK_COLUMNS) {
+    for (const row of e.years || []) if (row[col + 1] === peak) return { noun, year: String(row[0] || "") };
   }
   return null;
 }
 
 /** One year-by-year money series. Six returns or more make a column chart worth
- *  reading; two make one fat block, so a short series takes the bar list. Years
- *  with nothing on that line stay in the series as zero, because dropping them
- *  would leave a chart whose axis claims the returns ran without a gap. */
+ *  reading; two make one fat block, so a short series takes the bar list. */
 function campaignerSeries(e, col, heading) {
   // A null is a line the return left empty, not a nil figure, and the two must
   // not be drawn the same way: charting the CFMEU's unreported 2006-07 receipts
@@ -4094,6 +4109,7 @@ async function buildCampaignersDirectory() {
     e._span = campaignerSpan(e);
     e._returns = (e.years || []).length;
     e._last = String(e.latest_year || e.years?.[e._returns - 1]?.[0] || "");
+    e._peakFrom = campaignerPeakSource(e);
     const start = String(e.years?.[0]?.[0] || "");
     kindCounts.set(e.kind, (kindCounts.get(e.kind) || 0) + 1);
     for (const p of e._parties) partyCounts.set(p, (partyCounts.get(p) || 0) + 1);
@@ -4109,8 +4125,10 @@ async function buildCampaignersDirectory() {
   const row = (e) => {
     const shown = e._parties.slice(0, 3);
     const more = e._parties.length - shown.length;
+    // "names" rather than "associated with": the return names a party, which
+    // is all the register says and all this row may imply.
     const partiesHTML = shown.length
-      ? `<span class="dir-parties">associated with ${shown.map((p) => `${anyPartyDotHTML(p)}${esc(p)}`).join(", ")}${more > 0 ? ` and ${more} more` : ""}</span>`
+      ? `<span class="dir-parties">names ${shown.map((p) => `${anyPartyDotHTML(p)}${esc(p)}`).join(", ")}${more > 0 ? ` and ${more} more` : ""}</span>`
       : "";
     const metaLine = [campaignerKindChip(e.kind), e._span ? esc(e._span) : "", partiesHTML].filter(Boolean).join(" · ");
     return `<li class="dir-row">
@@ -4120,7 +4138,13 @@ async function buildCampaignersDirectory() {
         <span class="result-meta">${metaLine}</span>
       </div>
       <div class="dir-figs">
-        <span class="dir-fig"><b>${esc(fmtMoney(Number(e.peak) || 0))}</b>largest figure</span>
+        <span class="dir-fig"><b>${esc(fmtMoney(Number(e.peak) || 0))}</b>${
+          // The tile and the sort name the measure once; each row then names
+          // the line and year its own figure came off, which is shorter than
+          // the definition, true of that row alone, and the same words the
+          // entry page puts beside the same number. The full phrase stands in
+          // only when the columns cannot account for the figure.
+          esc(e._peakFrom ? `${e._peakFrom.noun}, ${e._peakFrom.year}` : CAMPAIGNER_PEAK_LABEL)}</span>
         <span class="dir-fig"><b>${num(e._returns)}</b>${e._returns === 1 ? "return" : "returns"}</span>
       </div>
     </li>`;
@@ -4132,8 +4156,11 @@ async function buildCampaignersDirectory() {
       entities, third parties, significant third parties or political campaigners${first && last
         ? `, covering ${esc(first)} to ${esc(last)}` : ""}. This is money raised and spent on politics outside
       the donation columns. Every name opens its entry.`,
-    tiles: [[num(items.length), "organisations listed"], [fmtMoney(largest), "largest figure on a return"],
-      [num(returns), "annual returns covered"], [num(withParty), "naming a party on the return"]],
+    // The fourth tile counts the organisations naming NO party, not the ones
+    // naming one. Most of the roster names none, and leading with that is what
+    // keeps the party filter from reading as a map of who spends.
+    tiles: [[num(items.length), "organisations listed"], [fmtMoney(largest), CAMPAIGNER_PEAK_LABEL],
+      [num(returns), "annual returns covered"], [num(items.length - withParty), "naming no party at all"]],
     items,
     text: (e) => `${e.name} ${campaignerKindLabel(e.kind)} ${(e.return_types || []).join(" ")} ${e._parties.join(" ")}`,
     filters: [
@@ -4141,24 +4168,43 @@ async function buildCampaignersDirectory() {
         options: Object.keys(CAMPAIGNER_KINDS).filter((k) => kindCounts.has(k))
           .map((k) => countOpt(k, CAMPAIGNER_KINDS[k], kindCounts.get(k))),
         test: (e, v) => e.kind === v },
-      { key: "party", label: "Associated party", any: "Any party",
-        options: [...partyCounts.entries()].sort((a, b) => b[1] - a[1]).map(([p, n]) => countOpt(p, p, n))
-          .concat([countOpt("none", "No party named", items.length - withParty)]),
+      // Every count here is spelled "organisations", never left as a bare
+      // number: one side of politics registers far more associated entities
+      // than the other, and a bare "Labor (153)" beside "Liberal (36)" invites
+      // a reader to take it for four times the money, which it is not.
+      { key: "party", label: "Party named on the return", any: "Any party",
+        options: [...partyCounts.entries()].sort((a, b) => b[1] - a[1])
+          .map(([p, n]) => [p, `${p} (${orgCount(n)})`])
+          .concat([["none", `No party named (${orgCount(items.length - withParty)})`]]),
         test: (e, v) => v === "none" ? !e._parties.length : e._parties.includes(v) },
     ],
     sorts: [
-      ["peak", "Largest figure reported", byNumDesc((e) => e.peak)],
+      // Sentence case of the same phrase, not a shorter one. The select caps at
+      // 230px so the closed control clips it, which is the lesser cost: the open
+      // dropdown shows the phrase whole, and dropping "on politics" to make it
+      // fit would leave "spent" free to be read as the payments column.
+      ["peak", capFirst(CAMPAIGNER_PEAK_LABEL), byNumDesc((e) => e.peak)],
       ["name", "Name A-Z", byName],
       ["recent", "Most recent return", (a, b) => b._last.localeCompare(a._last) || (b.peak || 0) - (a.peak || 0)],
     ],
     row,
+    // The file's own caveats first, then the three things the page itself can
+    // be misread as saying: that the ranking figure is everything on a return,
+    // that these totals are donations, and that the party counts measure money.
     fineprint: `${(meta.notes || []).map((n) => esc(String(n))).join(" ")}
-      ${floor ? `Only organisations whose largest figure on any return reaches ${esc(fmtMoney(floor))} are listed,
-      so the smallest filers are not here.` : ""}
+      ${floor ? `Smaller filers are left out by a $${esc(floor.toLocaleString())} floor.` : ""}
+      The figure each organisation is ranked and listed by is the largest it ever reported receiving or spending on
+      politics in one year, taken from its receipts, its electoral expenditure and the gifts it received. It is not
+      the largest number on its returns: payments and debts are its own outgoings and balance sheet, they are often
+      larger, and they are not counted here.
       Every figure is a headline total the organisation itself put on its own return: receipts are its income and
-      payments its spending, and neither is a donation to or from a party. An associated party is the party the
-      return names; it does not mean that party gave or received the money. Amounts under the AEC's disclosure
+      payments its spending, and neither is a donation to or from a party. Amounts under the AEC's disclosure
       threshold are never itemised, so each figure is a floor rather than a ceiling.
+      Most of these organisations name no party at all, and where a return does name one that is a registration
+      fact and nothing more: the party named neither gave nor received the figures shown. The counts beside each
+      party in the filter count registered organisations, never money. More returns name Labor than any other
+      party because the associated-entity class fits that side of politics' organisational shape, its clubs and
+      its union-linked bodies, so a larger count there says nothing about which side spends more.
       Source: ${esc(meta.source || "AEC Transparency Register annual returns")}${meta.licence ? `, ${esc(meta.licence)}` : ""}.${
       register ? ` <a href="${esc(register)}" rel="noopener" target="_blank">Open the register ↗︎</a>` : ""}`,
   };
@@ -4216,15 +4262,17 @@ async function renderCampaignerEntry(name, key) {
       ? `<span class="subject-active"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l2.8 1.8"/></svg>Returns ${esc(span)}</span>`
       : campaignerKindChip(e.kind),
     parties.length
-      ? `<span>associated with ${parties.map((p) => `${anyPartyDotHTML(p)}${esc(p)}`).join(", ")}</span>`
+      ? `<span>names ${parties.map((p) => `${anyPartyDotHTML(p)}${esc(p)}`).join(", ")} on its returns</span>`
       : "",
   ].filter(Boolean).join(" · ");
 
   box.innerHTML = infoboxHTML([
     ["Register category", esc(campaignerKindLabel(e.kind))],
-    ["Associated party", parties.length
+    // "None" and not "independent": a return with no party on it records an
+    // absence on a form, not a political stance.
+    ["Party named on the return", parties.length
       ? parties.map((p) => `${anyPartyDotHTML(p)}<a href="${esc(subjectHash("party", p))}">${esc(p)}</a>`).join(", ")
-      : `<span class="dir-muted">None named on the return</span>`],
+      : `<span class="dir-muted">None</span>`],
     e.abn && ["ABN", esc(String(e.abn))],
     // An organisation can change category between returns, and which forms it
     // has lodged over the years is part of the record. "Return" comes off each
@@ -4232,7 +4280,9 @@ async function renderCampaignerEntry(name, key) {
     (e.return_types || []).length
       && ["Return types", esc(e.return_types.map((t) => String(t).replace(/\s+Return$/i, "")).join(", "))],
     span && ["Years covered", `${esc(span)} (${count} ${count === 1 ? "return" : "returns"})`],
-    peak && ["Largest figure on a return",
+    // Same phrase as the index tile, row and sort, so a reader arriving from
+    // the list is not handed a second definition of the same number.
+    peak && [capFirst(CAMPAIGNER_PEAK_LABEL),
       `<b>${esc(fmtMoney(peak))}</b>${peakFrom ? ` <span class="dir-muted">(${esc(peakFrom.noun)}, ${esc(peakFrom.year)})</span>` : ""}`],
   ], "", [
     actionBtn("ask", askHash(`What has parliament said about ${e.name}?`),
@@ -4262,10 +4312,11 @@ async function renderCampaignerEntry(name, key) {
       <ul class="subject-list" role="list">${yearRows}</ul>
     </details>
     <p class="fineprint">These are the totals ${esc(e.name)} put on its own annual returns to the AEC. Receipts are
-      what it took in and payments what it spent; neither is a donation to or from a party, and an associated party
-      named on a return neither gave nor received this money. A blank column is a line the return left empty, not a
-      nil figure, and amounts under the disclosure threshold are never itemised, so every number is a floor.
-      Debts are balances owed at 30 June, not new borrowing.
+      what it took in and payments what it spent; neither is a donation to or from a party, and a party named on a
+      return neither gave nor received this money. A blank column is a line the return left empty, not a nil figure,
+      and amounts under the disclosure threshold are never itemised, so every number is a floor.
+      Debts are balances owed at 30 June, not new borrowing. The quick fact above counts only what was received or
+      spent on politics, so a payments or debts figure on one of these returns can be larger than it.
       Source: AEC Transparency Register, CC BY 4.0.${register
         ? ` <a href="${esc(register)}" rel="noopener" target="_blank">Open the register ↗︎</a>` : ""}</p>`);
   await subjectMentions(e.name, sections, "In parliament");
