@@ -186,7 +186,12 @@ const SEARCH_CACHE_TTL = 600
  */
 const SEARCH_WINDOW_CACHE_TTL = 3600
 const RESOURCE_CACHE_TTL = 3600
-const FOLLOWUPS_CACHE_TTL = 24 * 3600
+// Follow-ups belong to the answer they were written from, and they are derived
+// from it deterministically: the same question, answer and passages ask for the
+// same follow-ups, and CACHE_EPOCH invalidates both together when the corpus
+// moves. Held for a day against the answer's seven, a cached ask replayed on
+// day two paid for a fresh model call every time. They expire together now.
+const FOLLOWUPS_CACHE_TTL = ASK_CACHE_TTL
 const STATS_CACHE_TTL = 300
 const RECENT_CACHE_TTL = 300
 

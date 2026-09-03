@@ -257,13 +257,13 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
   let isolatedGroup: string | null = null
   let matrix: Matrix | null = null
 
-  const topicUrl = (slug: string) => `${routeBase}#/subject/topic/${slug}`
+  const topicUrl = (slug: string) => `/subject/topic/${slug}`
   const searchUrl = (slug: string, party?: string) => {
     const p = new URLSearchParams()
     p.set('q', topicPhrase(slug))
     p.set('topic', slug)
     if (party) p.set('party', party)
-    return `${routeBase}#/search?${p.toString()}`
+    return `/search?${p.toString()}`
   }
   const partyColour = (party: string) => byId.get(`party:${party}`)?.colour ?? '#79706E'
 

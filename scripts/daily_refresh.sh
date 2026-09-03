@@ -171,16 +171,22 @@ PYEOF
   fi
   run_step tvfy_refresh "SELECT COUNT(*) FROM divisions WHERE state='federal'" \
     "$PY" -m parli.ingest.tvfy_refresh
-  if run_step export_votes "" "$PY" scripts/export_votes.py; then
-    # export_votes writes JSON to stdout, captured in its step log; publish it
-    # atomically as the portal asset once the step has succeeded.
-    if "$PY" -c 'import json,sys; json.load(open(sys.argv[1]))' "$PIPE/export_votes.log" 2>/dev/null; then
-      cp "$PIPE/export_votes.log" portal/public/votes.json.tmp \
+  # export_votes writes JSON to stdout and progress to stderr. run_step folds
+  # both into one log (2>&1), which interleaved a progress line INTO the middle
+  # of the JSON and made every run unpublishable. Keep the two streams apart:
+  # stdout to its own file, stderr to the step log where the other steps put it.
+  if timeout --kill-after=60 "$STEP_TIMEOUT" "$PY" scripts/export_votes.py \
+       >"$PIPE/export_votes.json" 2>"$PIPE/export_votes.log"; then
+    log "[export_votes] OK; $(wc -c < "$PIPE/export_votes.json") bytes of JSON"
+    if "$PY" -c 'import json,sys; json.load(open(sys.argv[1]))' "$PIPE/export_votes.json" 2>/dev/null; then
+      cp "$PIPE/export_votes.json" portal/public/votes.json.tmp \
         && mv portal/public/votes.json.tmp portal/public/votes.json \
         && log "[export_votes] wrote portal/public/votes.json ($(wc -c < portal/public/votes.json) bytes)"
     else
       log "[export_votes] output is not valid JSON; portal/public/votes.json left untouched"
     fi
+  else
+    log "[export_votes] FAILED (rc=$?); see $PIPE/export_votes.log"
   fi
 else
   log "[arag_sync] DISABLED (set OPAX_SYNC_KB=1 to push new speeches/news_articles to the knowledge box)"

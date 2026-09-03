@@ -428,13 +428,13 @@ export async function mountMoneyMap(
   const byId = new Map(raw.nodes.map((n) => [n.id, n]))
   const chrome = opts.chrome ?? 'full'
   container.dataset.mmChrome = chrome
-  // Route links: inside the SPA (served at /) a bare "#/..." href routes in
-  // place with no reload; on a standalone page (/map.html) the same route
-  // needs the leading slash to land on the app first.
-  const routeBase = location.pathname === '/' ? '' : '/'
+  // The app serves real paths, so map links are plain paths too. They were
+  // hash routes from before that change, which sent "Full profile" on /money to
+  // /#/subject/donor/... and landed nowhere.
+  const routeBase = ''
   const askUrl = opts.askUrl ??
     ((industry: string) =>
-      `${routeBase}#/ask?q=${encodeURIComponent(`What has parliament said about ${industry}?`)}`)
+      `/ask?q=${encodeURIComponent(`What has parliament said about ${industry}?`)}`)
 
   // Observed year extent of the flows, for the time scrub.
   let yearMin = 2026
@@ -826,7 +826,7 @@ export async function mountMoneyMap(
     `https://www.google.com/search?q=${encodeURIComponent(`${name} Australia`)}`
 
   const subjectUrl = (kind: 'donor' | 'party', label: string) =>
-    `${routeBase}#/subject/${kind}/${encodeURIComponent(label)}`
+    `/subject/${kind}/${encodeURIComponent(label)}`
 
   /** The industry that gave a party the most, for its ask-trigger. */
   const topIndustryOf = (partyId: string): string | null => {
@@ -905,7 +905,7 @@ export async function mountMoneyMap(
       // Quote the suffix-stripped name: MPs say "Philip Morris", never
       // "Philip Morris Limited" - the full label finds nothing.
       trigger(card,
-        `${routeBase}#/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`,
+        `/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`,
         `What was said about ${shortName(node.label)}?`, true)
       trigger(card, subjectUrl('donor', node.label), 'Full profile', true)
       trigger(card, webSearch(node.label), 'Search the web ↗', true, true)
@@ -930,7 +930,7 @@ export async function mountMoneyMap(
       const industry = topIndustryOf(node.id)
       if (industry) {
         trigger(card,
-          `${routeBase}#/ask?q=${
+          `/ask?q=${
             encodeURIComponent(`What has ${node.label} said about ${industry}?`)
           }`,
           `Ask what ${node.label} said about ${industry}`)
@@ -1037,7 +1037,7 @@ export async function mountMoneyMap(
     if (edge.firstYear && edge.lastYear) {
       const industry = donor.industry.replace(/_/g, ' ')
       trigger(card,
-        `${routeBase}#/search?q=${encodeURIComponent(industry)}` +
+        `/search?q=${encodeURIComponent(industry)}` +
           `&from=${edge.firstYear}&to=${edge.lastYear}`,
         `What was said about ${industry} in ${span}?`)
     }
