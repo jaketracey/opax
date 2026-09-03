@@ -24,11 +24,14 @@
     { "pattern": "www.opax.com.au", "custom_domain": true }
   ],
 
-  // Non-secret binding vars. The KB token is a secret:
+  // Non-secret binding vars. The knowledge box identity is not here: both the
+  // token and the KB id are secrets, because this repo is public and the id
+  // sitting in the open was being used to aim probes at /api/v1/kb/<id>/ask.
+  // Those 404 either way, but there is no reason to publish the target.
   //   npx wrangler secret put ARAG_KB_TOKEN
+  //   npx wrangler secret put ARAG_KB_ID
   "vars": {
     "ARAG_ZONE": "aws-ap-southeast-2-1",
-    "ARAG_KB_ID": "d33c0a87-98cb-4169-b0d2-ff9b75573fb7",
     // Folded into every response-cache key (/api/ask 7 days, /api/search,
     // /api/resource, /api/followups). Bump it whenever the corpus changes
     // (a load completes, a re-sync, an enrichment pass lands) so cached
