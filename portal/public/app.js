@@ -1836,7 +1836,8 @@ function updateQuoteRail() {
   // before that block climbs into its zone rather than sitting on top of it.
   const sourcesEl = $("ask-sources");
   const sourcesTop = sourcesEl.hidden ? Infinity : sourcesEl.getBoundingClientRect().top;
-  const clearOf = (h) => sourcesTop > innerHeight * 0.3 + (h || 280) + 12;
+  const clearOfFrom = (top, h) => sourcesTop > top + (h || 280) + 12;
+  const clearOf = (h) => clearOfFrom(innerHeight * 0.3, h);
   const clearOfSources = clearOf(rail.offsetHeight);
   // Both states want the same thing: room to the answer's right, and an answer
   // to sit beside. Narrow screens have no rail, so neither state appears.
@@ -1851,9 +1852,15 @@ function updateQuoteRail() {
     clearTimeout(heroWaitTimer);
     heroWaitTimer = setTimeout(updateQuoteRail, heroLeft + 16);
   }
+  // The rail sits at 30vh (see .quote-rail), but the ask form runs wider than
+  // the answer, so a card placed to the ANSWER's right still lands under the
+  // form's button while the form is on screen. The quote state avoids this by
+  // waiting for the answer to scroll up; the people state shows before any
+  // scroll by design, so it drops below the form instead of hiding.
+  const peopleTop = Math.max(innerHeight * 0.3, $("ask-form").getBoundingClientRect().bottom + 16);
   const people = room && heroLeft <= 0 && peopleRail.list.length > 0 && !peopleRail.scrolled &&
     !matchMedia("(prefers-reduced-motion: reduce)").matches &&
-    rect.bottom > innerHeight * 0.32 && clearOf($("people-card").offsetHeight);
+    rect.bottom > peopleTop + 24 && clearOfFrom(peopleTop, $("people-card").offsetHeight);
   // The card is fixed at 30vh: it may only appear once the answer's top has
   // actually scrolled up to that zone — otherwise it floats over the ask form
   // on short answers before any scrolling happens.
@@ -1863,6 +1870,9 @@ function updateQuoteRail() {
   // Both states ride the answer's right edge, so the left is set for whichever
   // one is up, not only for the quotes.
   if (visible || people) rail.style.left = `${Math.round(rect.right + Math.min(48, space - 316))}px`;
+  // Only the people state moves; the quotes keep the stylesheet's 30vh so they
+  // stay aligned with the answer as it scrolls past.
+  rail.style.top = people ? `${Math.round(peopleTop)}px` : "";
   const peopleCard = $("people-card");
   // The rail was display:none a statement ago; give the browser its zero state
   // to leave from, or the faces would land at full strength with no fade.
