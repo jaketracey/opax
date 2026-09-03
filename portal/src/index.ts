@@ -1749,7 +1749,16 @@ const CHAMBER_NAMES: Record<string, string> = {
   representatives: 'House of Representatives', senate: 'Senate',
   assembly: 'Legislative Assembly', council: 'Legislative Council',
 }
-const DIRECTORY_KINDS: Record<string, string> = { person: 'Parliamentarians', party: 'Parties', donor: 'Donors' }
+// The /subject/<dir> directories. app.js keeps its own copy for the client-side
+// router and the crumb labels; the two lists have to name the same four kinds.
+const DIRECTORY_KINDS: Record<string, string> = {
+  person: 'Parliamentarians',
+  party: 'Parties',
+  donor: 'Donors',
+  campaigner: 'Campaigners & third parties',
+}
+type DirectoryKind = 'person' | 'party' | 'donor' | 'campaigner'
+const isDirectoryKind = (s: string): s is DirectoryKind => s in DIRECTORY_KINDS
 
 // Static pages: title as app.js TITLES sets it, blurb from the masthead menus.
 const STATIC_PAGES: Record<string, { title: string; description: string; query?: boolean }> = {
@@ -1797,10 +1806,10 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
 type SeoRoute =
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
-  | { kind: 'index'; dir: 'person' | 'party' | 'donor' }
+  | { kind: 'index'; dir: DirectoryKind }
   | { kind: 'topics' }
   | { kind: 'topic'; slug: string }
-  | { kind: 'subject'; dir: 'person' | 'party' | 'donor'; name: string }
+  | { kind: 'subject'; dir: DirectoryKind; name: string }
   | { kind: 'doc'; slug: string }
 
 interface PageMeta {
@@ -1812,6 +1821,15 @@ interface PageMeta {
   jsonLd: Record<string, unknown> | null
   prerender: string | null
 }
+
+// How long a /subject/<dir>/<name> segment may be. A person, a party or a donor
+// is named in a few words; an AEC entity is named in its own registered legal
+// title, and the longest on the register runs to 127 characters ("Transport
+// Workers Union of Australia NSW QLD Interim Governance Branch formerly ...").
+// The bound is still a bound, and sitemapXml applies the same one so it can
+// never list a page this function would refuse.
+const SUBJECT_NAME_MAX = 120
+const CAMPAIGNER_NAME_MAX = 200
 
 /** Route table for real paths. Trailing slashes tolerated, never canonical. */
 function matchSeoRoute(url: URL): SeoRoute | null {
@@ -1838,10 +1856,12 @@ function matchSeoRoute(url: URL): SeoRoute | null {
       if (segs.length === 3 && /^[a-z][a-z-]*$/.test(dec[2])) return { kind: 'topic', slug: dec[2] }
       return null
     }
-    if (dec[1] === 'person' || dec[1] === 'party' || dec[1] === 'donor') {
-      if (segs.length === 2) return { kind: 'index', dir: dec[1] }
-      if (segs.length === 3 && dec[2].trim() && dec[2].length <= 120) {
-        return { kind: 'subject', dir: dec[1], name: dec[2].trim() }
+    const dir = dec[1]
+    if (isDirectoryKind(dir)) {
+      if (segs.length === 2) return { kind: 'index', dir }
+      const max = dir === 'campaigner' ? CAMPAIGNER_NAME_MAX : SUBJECT_NAME_MAX
+      if (segs.length === 3 && dec[2].trim() && dec[2].length <= max) {
+        return { kind: 'subject', dir, name: dec[2].trim() }
       }
     }
     return null
@@ -1883,6 +1903,54 @@ interface MoneyData { generated: string; donors: Map<string, MoneyEntry>; partie
 
 interface ReportEntry { slug: string; title: string; blurb: string; updated?: string }
 interface ReportsData { reports: ReportEntry[]; bySlug: Map<string, ReportEntry> }
+
+/** Reader-facing names for the four AEC registration classes. */
+const CAMPAIGNER_LABELS: Record<string, string> = {
+  associated_entity: 'Associated entity',
+  third_party: 'Third party',
+  significant_third_party: 'Significant third party',
+  political_campaigner: 'Political campaigner',
+}
+
+/** One row of `entities.years`, in the column order the asset's meta declares. */
+type CampaignerYear = [
+  year: string,
+  receipts: number | null,
+  payments: number | null,
+  debts: number | null,
+  electoralExpenditure: number | null,
+  giftsReceived: number | null,
+]
+
+interface CampaignerRaw {
+  name: string
+  kind: string
+  associated_parties?: string[] | null
+  abn?: string | null
+  years?: CampaignerYear[] | null
+  latest_year?: string | null
+}
+
+/** An amount and the year it was filed for. */
+interface CampaignerFigure { amount: number; year: string }
+
+/**
+ * What a meta description and a sitemap row need, reduced at parse time. The
+ * year tables are most of the 510 KB file and only the front end reads them,
+ * so holding 701 of them for the life of the isolate would buy nothing.
+ */
+interface Campaigner {
+  name: string
+  kindLabel: string
+  parties: string[]
+  abn: string | null
+  filings: number
+  firstYear: string
+  lastYear: string
+  receipts: CampaignerFigure | null
+  spent: CampaignerFigure | null
+}
+interface CampaignersData { generated: string; entities: Campaigner[]; byFold: Map<string, Campaigner> }
 
 /** Names as typed vs as stored: curly apostrophes, doubled spaces, case. */
 const foldName = (s: string): string =>
@@ -1951,6 +2019,65 @@ function loadMoney(env: Env): Promise<MoneyData> {
   return moneyMemo
 }
 
+/** A fixed column read defensively: a short row yields null, never undefined. */
+function cell(row: readonly unknown[], i: number): number | null {
+  const v = row[i]
+  return typeof v === 'number' ? v : null
+}
+
+/**
+ * The most recent year in which a column carries a figure. Entities on the way
+ * off the register file a year of zeroes first, so the latest row is often a
+ * nil return: reporting it as "$0 in 2019-20" says nothing about an entity that
+ * spent real money the year before.
+ */
+function latestFigure(rows: CampaignerYear[], col: number): CampaignerFigure | null {
+  for (let i = rows.length - 1; i >= 0; i--) {
+    const amount = cell(rows[i], col)
+    if (amount !== null && amount > 0) return { amount, year: rows[i][0] }
+  }
+  return null
+}
+
+let campaignersMemo: Promise<CampaignersData> | null = null
+function loadCampaigners(env: Env): Promise<CampaignersData> {
+  campaignersMemo ??= assetJson<{ meta?: { generated?: string }; entities?: CampaignerRaw[] }>(env, '/graph/campaigners.json')
+    .then((raw) => {
+      const entities: Campaigner[] = []
+      const byFold = new Map<string, Campaigner>()
+      for (const e of raw.entities ?? []) {
+        if (!e?.name) continue
+        // Sorted rather than assumed sorted: both the span and the latest
+        // figure are read off the ends of this array and quoted to readers.
+        const rows = (e.years ?? [])
+          .filter((r) => Array.isArray(r) && typeof r[0] === 'string')
+          .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+        const entry: Campaigner = {
+          name: e.name,
+          // An unrecognised class still gets a page; it just gets a plain noun.
+          kindLabel: CAMPAIGNER_LABELS[e.kind] ?? 'Registered political actor',
+          parties: e.associated_parties ?? [],
+          abn: e.abn ?? null,
+          filings: rows.length,
+          firstYear: rows[0]?.[0] ?? '',
+          lastYear: e.latest_year ?? rows[rows.length - 1]?.[0] ?? '',
+          receipts: latestFigure(rows, 1),
+          spent: latestFigure(rows, 4),
+        }
+        entities.push(entry)
+        const f = foldName(entry.name)
+        const prev = byFold.get(f)
+        if (!prev || entry.filings > prev.filings) byFold.set(f, entry) // twin spellings: keep the fuller entry
+      }
+      return { generated: raw.meta?.generated ?? '', entities, byFold }
+    })
+    .catch((err) => {
+      campaignersMemo = null
+      throw err
+    })
+  return campaignersMemo
+}
+
 let reportsMemo: Promise<ReportsData> | null = null
 function loadReports(env: Env): Promise<ReportsData> {
   reportsMemo ??= assetJson<{ reports: ReportEntry[] }>(env, '/reports/index.json')
@@ -2003,10 +2130,16 @@ function longDate(iso: string | null | undefined): string {
   return `${Number(m[3])} ${MONTHS[Number(m[2]) - 1]} ${m[1]}`
 }
 const industryLabel = (ind: string): string => ind.replace(/_/g, ' ')
+/** "Labor", then "Labor and LNP", then "Labor, LNP and the Greens". */
+const andList = (xs: string[]): string =>
+  xs.length <= 1 ? (xs[0] ?? '') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`
+/** "2024-25" on its own when an entity filed only once. */
+const yearSpan = (a: string, b: string): string => (a && b && a !== b ? `${a} to ${b}` : b || a)
 
 const indexLinks = (): string =>
   `<p><a href="/subject/person">Parliamentarians</a> · <a href="/subject/party">Parties</a> · ` +
-  `<a href="/subject/donor">Donors</a> · <a href="/subject/topic">Topics</a></p>`
+  `<a href="/subject/donor">Donors</a> · <a href="/subject/campaigner">Campaigners</a> · ` +
+  `<a href="/subject/topic">Topics</a></p>`
 
 function prerenderBlock(heading: string, sentence: string, kicker: string): string {
   return `<section id="prerender" class="wrap"><p class="kicker">${escHtml(kicker)}</p>` +
@@ -2098,6 +2231,12 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         description = clip(`Every parliamentarian in the OPAX record${people ? `: ${num(people.people.length)} speakers` : ''} since 1993, searchable by name, party and parliament, each with their speeches.`)
       } else if (route.dir === 'party') {
         description = 'Australian political parties in the record: speeches, members and disclosed receipts, party by party, from Hansard and electoral commission returns.'
+      } else if (route.dir === 'campaigner') {
+        const camp = await loadCampaigners(env).catch(() => null)
+        // Sized to survive the 158-character clip with the count in place.
+        description = clip(
+          `The organisations that spend on Australian politics without donating: ${camp ? `${num(camp.entities.length)} ` : ''}associated entities, third parties and political campaigners on the AEC register.`,
+        )
       } else {
         description = 'The largest disclosed political donors in Australia, by industry and by the parties they fund, from AEC, ECQ and VEC returns.'
       }
@@ -2137,7 +2276,9 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     }
 
     case 'subject':
-      return route.dir === 'person' ? personMeta(route.name, url, env) : moneySubjectMeta(route.dir, route.name, url, env)
+      if (route.dir === 'person') return personMeta(route.name, url, env)
+      if (route.dir === 'campaigner') return campaignerMeta(route.name, url, env)
+      return moneySubjectMeta(route.dir, route.name, url, env)
 
     case 'doc':
       return docMeta(route.slug, url, request, env, ctx)
@@ -2222,6 +2363,70 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: display, url: canonical, description },
     prerender: prerenderBlock(display, sentence, dir === 'party' ? 'Political party' : 'Donor'),
+  }
+}
+
+/**
+ * /subject/campaigner/<name>. A donor page stays 200 for a name it cannot find
+ * because money.json is a top-N cut and the app can still say something useful
+ * about the rest. This roster is not a cut: it is the AEC register itself, so a
+ * name absent from it names nothing and 404s. A roster that failed to LOAD is a
+ * different case, and stays 200 rather than telling a crawler an entity that
+ * exists does not.
+ */
+async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
+  const data = await loadCampaigners(env).catch(() => null)
+  const c = data?.byFold.get(foldName(name)) ?? null
+  const display = c?.name ?? name
+  const canonical = `${SITE_ORIGIN}/subject/campaigner/${encodeURIComponent(display)}`
+  // Registered legal names run to 127 characters. The h1, the canonical and the
+  // JSON-LD carry the whole name; the title is the one place it has to give way,
+  // and it gives way before the masthead does.
+  const title = `${clip(display, 90)} · OPAX`
+  if (!c) {
+    if (!data) {
+      const description = clip(`${display} in the OPAX record of AEC registered campaigners, third parties and associated entities.`)
+      return { title, description, canonical, ogType: 'profile', status: 200, jsonLd: null, prerender: prerenderBlock(display, description, 'Campaigners & third parties') }
+    }
+    return {
+      title: 'Campaigner not found · OPAX',
+      description: clip(`${display} is not on the AEC register of associated entities, third parties, significant third parties and political campaigners.`),
+      canonical,
+      ogType: 'website',
+      status: 404,
+      jsonLd: null,
+      prerender: null,
+    }
+  }
+  const linked = c.parties.length ? ` linked to ${andList(c.parties.slice(0, 3))}` : ''
+  const parts: string[] = []
+  if (c.filings) parts.push(`${num(c.filings)} annual return${c.filings === 1 ? '' : 's'}, ${yearSpan(c.firstYear, c.lastYear)}`)
+  // Third parties and campaigners are registered for what they spend; an
+  // associated entity's return is about what it took in. Lead with whichever
+  // number this one actually filed.
+  const figure = c.spent ?? c.receipts
+  if (figure) parts.push(`${money(figure.amount)} ${figure === c.spent ? 'in electoral expenditure' : 'received'} in ${figure.year}`)
+  const facts = `${display}: ${c.kindLabel.toLowerCase()}${linked} on the AEC register${parts.length ? `; ${parts.join('; ')}` : ''}.`
+  // True of all four classes: an associated entity reports what it took in,
+  // a campaigner what it spent, and both file a return every year.
+  const tail = 'Every return it filed, year by year.'
+  const description = withTail(facts, tail)
+  return {
+    title,
+    description,
+    canonical,
+    ogType: 'profile',
+    status: 200,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: display,
+      url: canonical,
+      description,
+      // The ABN is the one identifier that survives a rename or a rebrand.
+      ...(c.abn ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: c.abn } } : {}),
+    },
+    prerender: prerenderBlock(display, `${facts} ${tail}`, c.kindLabel),
   }
 }
 
@@ -2359,7 +2564,14 @@ function robotsTxt(): Response {
 /** Every indexable page, rebuilt from the data files and cached a day. */
 async function sitemapXml(env: Env): Promise<Response> {
   return cachedJson('/sitemap.xml', async () => {
-    const [people, moneyData, reports] = await Promise.all([loadPeople(env), loadMoney(env), loadReports(env)])
+    const [people, moneyData, reports, campaigners] = await Promise.all([
+      loadPeople(env),
+      loadMoney(env),
+      loadReports(env),
+      // The only optional one. A campaigners.json the exporter has not written
+      // yet must cost the sitemap its campaigner rows, not the whole sitemap.
+      loadCampaigners(env).catch(() => null),
+    ])
     const rows: string[] = []
     const add = (path: string, lastmod?: string) => {
       const mod = lastmod ? `<lastmod>${lastmod.slice(0, 10)}</lastmod>` : ''
@@ -2370,7 +2582,7 @@ async function sitemapXml(env: Env): Promise<Response> {
     for (const r of reports.reports) add(`/reports/${r.slug}`, r.updated)
     add('/subject/topic')
     for (const slug of Object.keys(TOPIC_NAMES)) add(`/subject/topic/${slug}`)
-    for (const dir of ['person', 'party', 'donor']) add(`/subject/${dir}`)
+    for (const dir of ['person', 'party', 'donor', 'campaigner']) add(`/subject/${dir}`)
     // Parties: every label the money data or the people data knows.
     const partyLabels = new Map<string, string>()
     for (const n of moneyData.parties.values()) partyLabels.set(foldName(n.label), n.label)
@@ -2378,6 +2590,15 @@ async function sitemapXml(env: Env): Promise<Response> {
     for (const label of [...partyLabels.values()].sort()) add(`/subject/party/${encodeURIComponent(label)}`, moneyData.generated || people.generated)
     for (const p of people.people) add(`/subject/person/${encodeURIComponent(p.name)}`, people.generated)
     for (const n of moneyData.donors.values()) add(`/subject/donor/${encodeURIComponent(n.label)}`, n.generated || moneyData.generated)
+    // byFold, not the raw list: two spellings of one name resolve to one page,
+    // and the length bound is the one matchSeoRoute enforces, so nothing listed
+    // here can 404 on the way the route was parsed.
+    if (campaigners) {
+      for (const c of campaigners.byFold.values()) {
+        if (c.name.length > CAMPAIGNER_NAME_MAX) continue
+        add(`/subject/campaigner/${encodeURIComponent(c.name)}`, campaigners.generated)
+      }
+    }
     const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${rows.join('\n')}\n</urlset>\n`
     return new Response(xml, { headers: { 'content-type': 'application/xml; charset=utf-8' } })
   }, 86400)
