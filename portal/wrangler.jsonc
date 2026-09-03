@@ -38,7 +38,7 @@
     // answers built on the old record are never served again. Any string;
     // the convention is the date of the corpus change. See docs/STREAMING.md
     // "Caching" and the MIGRATION-ARAG.md invariants.
-    "CACHE_EPOCH": "2026-09-02"
+    "CACHE_EPOCH": "2026-09-03-news-removed"
   },
 
   // Workers Rate Limiting bindings (wrangler >= 4.36 top-level `ratelimits`;

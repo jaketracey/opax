@@ -250,7 +250,7 @@
             </select>
           </span>
           <label class="ask-scope"><input type="checkbox" id="ask-wide">
-            Also search legal documents and news</label>
+            Also search recorded divisions</label>
         </div>
       </div>
       </div>
@@ -457,8 +457,10 @@
                 <label for="search-kind">Corpus</label>
                 <select id="search-kind">
                   <option value="speech">Speeches</option>
-                  <!-- "legal" returns once a legal corpus is in the knowledge box (cost-gated; see MIGRATION-ARAG.md). -->
-                  <option value="news">News</option>
+                  <!-- News was removed from the knowledge box: a journalist's
+                       account is not the record, and answers drawn from it read
+                       as though parliament had said it. "legal" returns once a
+                       legal corpus is loaded (cost-gated; see MIGRATION-ARAG.md). -->
                   <option value="division">Divisions (recorded votes)</option>
                   <option value="all">Everything</option>
                 </select>
@@ -779,8 +781,8 @@
 
       <h2>What you can do here</h2>
       <ul class="about-list">
-        <li><strong>Ask</strong>: put a question to the speech corpus (widen it to legal
-        documents and news with one checkbox) and get a grounded answer. Every claim is cited;
+        <li><strong>Ask</strong>: put a question to the speech corpus (widen it to the
+        recorded divisions with one checkbox) and get a grounded answer. Every claim is cited;
         every citation opens the actual speech at a stable, linkable page.</li>
         <li><strong>Search</strong>: hybrid semantic + keyword search with reranking, filterable
         by speaker, party, parliament and year, with citation-ready exports.</li>
@@ -886,6 +888,6 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/app.js?v=8bcddeed07" defer></script>
+<script src="/app.js?v=2fe0eeb210" defer></script>
 </body>
 </html>

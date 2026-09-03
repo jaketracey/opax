@@ -165,7 +165,7 @@ assert s["speeches"]["after"] > 1_000_000 and s["news_articles"]["after"] > 1_00
 PYEOF
   then
     run_step arag_sync "" \
-      "$PY" -m parli.ingest.arag_sync --tables speeches,news_articles --full
+      "$PY" -m parli.ingest.arag_sync --tables speeches --full
   else
     log "[arag_sync] SKIP: $STATE missing or implausible; refusing --full without a checkpoint"
   fi
@@ -189,7 +189,7 @@ PYEOF
     log "[export_votes] FAILED (rc=$?); see $PIPE/export_votes.log"
   fi
 else
-  log "[arag_sync] DISABLED (set OPAX_SYNC_KB=1 to push new speeches/news_articles to the knowledge box)"
+  log "[arag_sync] DISABLED (set OPAX_SYNC_KB=1 to push new speeches to the knowledge box)"
   log "[tvfy_refresh+export_votes] DISABLED (set OPAX_SYNC_KB=1)"
 fi
 

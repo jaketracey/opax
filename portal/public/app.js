@@ -5360,7 +5360,7 @@ function searchFiltersChanged() {
 }
 
 // The same three pieces for the ask page. Its scope checkbox ("Also search
-// legal documents and news") is the corpus filter under another name, so it
+// recorded divisions") is the corpus filter under another name, so it
 // arrives as `kind` and earns the same Corpus chip search shows.
 function askChipFilters() {
   return { ...askFilters(), kind: askKind() };
