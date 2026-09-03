@@ -777,7 +777,10 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
   .quote-card { transition: opacity 240ms ease-in, transform 240ms ease-in; }
   .quote-card.shown { transition: opacity 520ms cubic-bezier(0.2, 0.6, 0.2, 1), transform 520ms cubic-bezier(0.2, 0.6, 0.2, 1); }
 }
-.quote-card .quote-meta { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.55rem; }
+.quote-card .quote-meta {
+  display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+  margin-top: 0.45rem; font-size: 0.8125rem; color: var(--ink-faint);
+}
 .quote-card .quote-portrait { display: inline-flex; width: 28px; height: 28px; flex: 0 0 auto; }
 .quote-card .quote-portrait:empty { display: none; }
 .quote-card .quote-portrait img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover;
@@ -785,7 +788,6 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .quote-card .kicker { display: block; margin: 0 0 0.4rem; }
 .quote-card blockquote { margin: 0; font: italic 400 0.9375rem/1.55 var(--serif); color: var(--ink-soft); }
 .quote-card:hover blockquote { color: var(--ink); }
-.quote-card .quote-meta { display: block; margin-top: 0.45rem; font-size: 0.8125rem; color: var(--ink-faint); }
 .quote-card .quote-speaker { font-weight: 600; color: var(--ink); }
 /* An unwritten card must take no height: the rail's measured footprint is what
    keeps it clear of the sources block, and a bare padding box would lie. */
