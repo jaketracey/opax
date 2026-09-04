@@ -5302,17 +5302,23 @@ function initChat(manageFocus) {
   } catch { /* a bad seed leaves the existing thread standing */ }
   renderChatThread();
   requestChatFollowups();
-  // Land at the composer: the thread above is history, the input is the
-  // point of this view. Double-rAF so route()'s scroll-to-top settles first.
+  // Land at the end of the thread: the history above is context, the last
+  // answer, its chips and the input are the point of this view. The composer
+  // is sticky at the viewport's foot, so scrolling IT into view moves nothing;
+  // scroll the document to its end instead. Double-rAF so route()'s
+  // scroll-to-top settles first.
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    $("chat-form")?.scrollIntoView({
-      behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
-      block: "end",
-    });
+    scrollChatToEnd();
     if (manageFocus) $("chat-input").focus({ preventScroll: true });
   }));
 }
 
+function scrollChatToEnd() {
+  window.scrollTo({
+    top: document.documentElement.scrollHeight,
+    behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
+  });
+}
 function renderChatThread() {
   const thread = $("chat-thread");
   thread.replaceChildren();
@@ -5414,11 +5420,8 @@ async function requestChatFollowups() {
     last.next = questions;
     saveChatSession();
     renderChatNext(questions);
-    // They arrive under the answer and above the composer: bring them into view.
-    requestAnimationFrame(() => $("chat-form")?.scrollIntoView({
-      behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
-      block: "end",
-    }));
+    // They arrive under the answer, above the sticky composer: bring them into view.
+    requestAnimationFrame(() => scrollChatToEnd());
   } catch { /* follow-ups are an extra, never an error */ }
 }
 
