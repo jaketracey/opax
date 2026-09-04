@@ -1,7 +1,15 @@
 import unittest
 
 from scripts.generate_reports import (
+    REPORTS,
     brief_matches_topic,
+    compose_stat_label,
+    debate_question,
+    is_procedural_debate,
+    is_topic_echo,
+    period_question,
+    stat_support,
+    window_questions,
     debate_title,
     is_hollow_brief,
     is_hollow_speech,
@@ -98,3 +106,113 @@ class KeyMomentSpreadTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DiscoveryPredicateTests(unittest.TestCase):
+    def test_chamber_furniture_is_not_a_debate(self):
+        for title in (
+            "Statements by Members",
+            "Constituency Statements",
+            "Ministers statements: housing",
+            "Program",
+            "Standing and sessional orders",
+            "Matters Of Public Interest",
+            "Motions by leave",
+            "Government performance",
+        ):
+            with self.subTest(title=title):
+                self.assertTrue(is_procedural_debate(title))
+
+    def test_geography_headings_and_ocr_wreckage_are_rejected(self):
+        self.assertTrue(is_procedural_debate("Southern Metropolitan Region"))
+        self.assertTrue(is_procedural_debate("Appr Opr Iation (Parl Iament) B Ill"))
+
+    def test_real_debates_survive(self):
+        for title in (
+            "Statewide Treaty Bill 2025 - Second reading",
+            "Housing Supply",
+            "Environmental Planning and Assessment Amendment Bill 2025",
+            "Mount Arapiles rock climbing",
+        ):
+            with self.subTest(title=title):
+                self.assertFalse(is_procedural_debate(title))
+
+    def test_debate_question_drops_the_reading_stage(self):
+        self.assertEqual(
+            debate_question("Statewide Treaty Bill 2025 - Second reading"),
+            "What has parliament said about the Statewide Treaty Bill 2025?",
+        )
+        self.assertEqual(
+            debate_question("Planning policy"),
+            "What has parliament said about Planning policy?",
+        )
+
+    def test_topic_echo_keeps_the_finding_but_drops_the_question(self):
+        self.assertTrue(is_topic_echo("Housing", REPORTS["housing"]))
+        self.assertFalse(is_topic_echo("Housing Supply", REPORTS["housing"]))
+
+    def test_curated_questions_keep_their_slots(self):
+        discovered = [{"title": f"Some Bill {n} 2025"} for n in range(8)]
+        questions = window_questions(REPORTS["housing"], discovered)
+        self.assertEqual(len(questions), 8)
+        for curated in REPORTS["housing"]["questions"]:
+            self.assertIn(period_question(curated), questions)
+
+    def test_period_question_is_added_once(self):
+        asked = period_question("What have MPs said about housing?")
+        self.assertEqual(asked, "What have MPs said about housing since July 2024?")
+        self.assertEqual(period_question(asked), asked)
+
+
+class KeyFigureSupportTests(unittest.TestCase):
+    PASSAGE = (
+        "Aboriginal and Torres Strait Islander people make up just 3.8 per cent of the "
+        "Australian population but 27 per cent of the national prison population."
+    )
+
+    def stat(self, **over):
+        base = {
+            "value": "27%", "numerator": "27", "unit": "per cent",
+            "denominator": "the national prison population",
+            "measure": "First Nations share of the prison population",
+        }
+        return {**base, **over}
+
+    def test_a_supported_share_passes(self):
+        self.assertIsNone(stat_support(self.stat(), self.PASSAGE))
+
+    def test_a_reversed_denominator_is_rejected(self):
+        reversed_stat = self.stat(
+            denominator="Aboriginal and Torres Strait Islander people",
+            measure="share of First Nations people in prison")
+        self.assertIsNotNone(stat_support(reversed_stat, self.PASSAGE))
+
+    def test_the_base_may_precede_the_number(self):
+        passage = ("Of the national prison population, 27 per cent are Aboriginal "
+                   "and Torres Strait Islander people.")
+        self.assertIsNone(stat_support(self.stat(), passage))
+
+    def test_an_invented_number_is_rejected(self):
+        self.assertIsNotNone(stat_support(self.stat(value="52%", numerator="52"), self.PASSAGE))
+
+    def test_a_number_must_not_match_inside_a_longer_one(self):
+        passage = "There were 270 submissions to the inquiry."
+        self.assertIsNotNone(
+            stat_support(self.stat(denominator="270 submissions"), passage))
+
+    def test_a_missing_scale_word_is_rejected(self):
+        passage = "The fund will deliver 30,000 homes out of a 640,000 household shortfall."
+        self.assertIsNotNone(stat_support({
+            "value": "$30 billion", "numerator": "30 billion", "unit": "dollars",
+            "denominator": "640,000 households", "measure": "fund size"}, passage))
+
+    def test_a_stat_without_a_denominator_is_rejected(self):
+        self.assertEqual(stat_support(self.stat(denominator=""), self.PASSAGE), "no denominator")
+
+    def test_a_bare_year_is_not_a_figure(self):
+        self.assertIsNotNone(stat_support(
+            self.stat(value="2024", numerator="2024", unit="years"), self.PASSAGE))
+
+    def test_the_label_always_names_its_base(self):
+        label = compose_stat_label(self.stat(measure="First Nations people"))
+        self.assertEqual(label, "First Nations people as a share of the national prison population")

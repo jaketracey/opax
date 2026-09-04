@@ -15,18 +15,20 @@ the cheapest tier on the KB) — this does NOT trigger enrichment.
 """
 
 import argparse
+from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 import json
 import math
 import re
 import sys
 import time
+import urllib.parse
 from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from parli.arag import AragConfig, AragError, KbClient, load_dotenv  # noqa: E402
+from parli.arag import AragConfig, AragError, KbClient, _request, load_dotenv  # noqa: E402
 
 OUT_DIR = Path(__file__).resolve().parent.parent / "portal" / "public" / "reports"
 
@@ -289,6 +291,66 @@ SECTION_PROMPT = (
     "ANSWER:"
 )
 
+# Every v2 section is a DATE-FILTERED ask, and a filtered ask is a narrow,
+# mixed context the platform's default template refuses outright ("Not enough
+# data to answer this.") two runs in three — measured on prod and recorded in
+# MIGRATION-ARAG.md. The Worker's own askPayload template is the version that
+# was fixed against that behaviour, so v2 reuses it verbatim rather than
+# re-deriving it: it states the retrieval contract, reserves the refusal for a
+# truly empty record, and forbids the "Based on the provided context" opener
+# the owner rejected in v1.
+WINDOW_SYSTEM = (
+    "You are OPAX, a research assistant over the Australian parliamentary record. "
+    "You answer strictly from the passages provided, citing them. You never invent facts."
+)
+WINDOW_PROMPT = (
+    "Passages from the record (a speech is the named speaker's own words; first-person "
+    "text is theirs). Every passage was delivered in an Australian parliament {period}.\n"
+    "{context}\n\n"
+    "Question: {question}\n\n"
+    "Instructions: Answer from whichever passages address the question, quoting or closely "
+    "paraphrasing them. Ignore passages that are off-topic; answer from the ones that apply "
+    "even if only a few do or they address it only in part. If some passages mention the "
+    "subject only briefly, report what they say and note that the record is limited. "
+    "Name the speakers and their parties wherever the passages do, and say which parliament "
+    "when it is not the Commonwealth. Be exact with figures and never invent one. "
+    "Begin with the answer itself. Never open with a preamble such as \"Based on the provided "
+    "context\", \"According to the passages\" or \"The context shows\": the reader knows the "
+    "answer comes from the record. Do not explain how the passages are numbered, ordered or "
+    "provided. Write two to four tight paragraphs of plain Markdown — no headings. "
+    "Only if NO passage mentions the subject at all, reply exactly: "
+    "The record retrieved for this question does not discuss it."
+)
+
+REFUSAL = "The record retrieved for this question does not discuss it."
+
+# The window the reports call "now". Everything in `now` is filtered to it, and
+# the last era stops the day before so the two never double-count a speech.
+NOW_SINCE = "2024-07-01"
+
+ERAS = (
+    {"label": "1993–2009", "from": "1993-01-01", "to": "2009-12-31",
+     "period": "between 1993 and 2009"},
+    {"label": "2010–2019", "from": "2010-01-01", "to": "2019-12-31",
+     "period": "between 2010 and 2019"},
+    {"label": "2020–2024", "from": "2020-01-01", "to": "2024-06-30",
+     "period": "between 2020 and the middle of 2024"},
+)
+
+# `/api/tide`'s decades, and its method: a topic's count over the decade's
+# labelled speeches. Federal only, for the same reason the endpoint defaults
+# there — the state archives start at different dates, so an all-parliament
+# share measures the mix of sources as much as the mix of subjects.
+TIDE_DECADES = (
+    {"decade": "1990s", "label": "1993–99"},
+    {"decade": "2000s", "label": "2000s"},
+    {"decade": "2010s", "label": "2010s"},
+    {"decade": "2020s", "label": "2020–26"},
+)
+
+# Paid calls, counted for the budget line at the end of a run.
+ASKS: "Counter[str]" = Counter()
+
 
 def resource_summary(resource: dict) -> dict:
     meta = ((resource.get("extra") or {}).get("metadata")) or {}
@@ -298,9 +360,13 @@ def resource_summary(resource: dict) -> dict:
         for c in ((resource.get("usermetadata") or {}).get("classifications") or [])
     }
     snippet = ""
+    passages: list[str] = []
     for field in (resource.get("fields") or {}).values():
         for para in (field.get("paragraphs") or {}).values():
-            text = (para.get("text") or "").replace("\n", " ")
+            text = re.sub(r"\s+", " ", (para.get("text") or "")).strip()
+            if not text:
+                continue
+            passages.append(text)
             if len(text) > len(snippet):
                 snippet = text
     return {
@@ -311,12 +377,24 @@ def resource_summary(resource: dict) -> dict:
         "state": labels.get("state"),
         "date": meta.get("date"),
         "snippet": snippet[:240],
+        # The retrieved passages, whole. This is the text the model is shown
+        # AND the text a claimed figure is checked against, so the check is
+        # over exactly the evidence the model had.
+        "passage": " ".join(passages),
     }
 
 
-def numbered_sources(kb: KbClient, query: str, top_k: int = 24) -> tuple[dict, list[str]]:
-    """find() real sources and number them for source-grounded generation."""
-    res = kb.find(query, top_k=top_k, show=["basic", "origin", "extra"])
+def numbered_sources(kb: KbClient, query: str, top_k: int = 24,
+                     filter_expression: dict | None = None,
+                     chars: int = 900) -> tuple[dict, list[str]]:
+    """find() real sources and number them for source-grounded generation.
+
+    `chars` is how much of each source's retrieved passage the model sees. v1
+    showed 240 characters, which is enough to name a source but not enough to
+    read a figure out of it with its base attached — the reversed-denominator
+    tile the reviewer found came from a truncated passage."""
+    res = kb.find(query, top_k=top_k, show=["basic", "origin", "extra"],
+                  filter_expression=filter_expression)
     srcs: dict[int, dict] = {}
     lines: list[str] = []
     n = 0
@@ -327,17 +405,22 @@ def numbered_sources(kb: KbClient, query: str, top_k: int = 24) -> tuple[dict, l
         n += 1
         srcs[n] = s
         who = " · ".join(x for x in [s["speaker"], s["party"], (s["date"] or "")[:10]] if x)
-        lines.append(f"[{n}] {s['title']}{f' ({who})' if who else ''} — {s['snippet']}")
+        body = (s["passage"] or s["snippet"])[:chars]
+        lines.append(f"[{n}] {s['title']}{f' ({who})' if who else ''} — {body}")
     return srcs, lines
 
 
 STATS_SCHEMA = {
     "name": "key_figures",
     "description": (
-        "Key figures on the topic, taken ONLY from the provided numbered sources. "
-        "Every figure must appear verbatim in a source — never estimate, invent, "
-        "average or extrapolate. If the sources contain no genuine figures, return "
-        "an empty list; fewer verifiable figures are always better than more."
+        "Statistics on the topic, taken ONLY from the provided numbered sources. "
+        "A statistic is a NUMBER MEASURED AGAINST A STATED BASE: a share, a rate, a "
+        "proportion, or a count the source itself sets against a total. A number with "
+        "no base stated in the source — a fund's size, a bare year, the name of a rule "
+        "— is not a statistic and must not be returned. Every figure must appear "
+        "verbatim in its source; never estimate, invent, average or extrapolate. "
+        "Return an empty list rather than pad it: fewer verifiable figures are always "
+        "better than more."
     ),
     "parameters": {
         "type": "object",
@@ -350,12 +433,18 @@ STATS_SCHEMA = {
                     "type": "object",
                     "additionalProperties": False,
                     "properties": {
-                        "value": {"type": "string", "description": "The figure exactly as stated, short — e.g. '1 in 5', '34%', '$1.1 billion'. A bare year is not a figure."},
-                        "label": {"type": "string", "description": "What it measures, ten words or fewer, sentence case."},
+                        "value": {"type": "string", "description": "The figure exactly as the source states it, short — e.g. '1 in 5', '34%', '$1.1 billion'. A bare year is not a figure."},
+                        "numerator": {"type": "string", "description": "Just the number in the figure, digits as the source writes them — '1', '34', '1.1 billion'. No unit, no currency sign."},
+                        "denominator": {"type": "string", "description": "What the number is measured AGAINST, as the source states it: a number with its unit ('5', '19 targets', '2,600 homes') or the named base ('Australia's prison population', 'metropolitan newspaper circulation'). If the source states no base for this number, DO NOT return the figure at all."},
+                        "unit": {"type": "string", "description": "The unit of the numerator: 'per cent', 'dollars', 'people', 'homes', 'targets', 'tonnes', 'votes', 'years' …"},
+                        "measure": {"type": "string", "description": "What the numerator counts, ten words or fewer, sentence case, INCLUDING the base when the figure is a share — e.g. 'First Nations share of the prison population'. Never reverse the two: say which group is the part and which is the whole, the way the source does."},
+                        "jurisdiction": {"type": "string", "description": "The parliament or place the figure describes — 'Australia', 'Victoria', 'New South Wales', 'Queensland', 'South Australia'."},
+                        "as_of": {"type": "string", "description": "The year or date the figure describes, as the source gives it: 'YYYY' or 'YYYY-MM-DD'."},
                         "detail": {"type": "string", "description": "One short sentence of context from the source (who said it, when, about what)."},
                         "source_ref": {"type": "integer", "description": "The [n] of the provided source the figure comes from."},
                     },
-                    "required": ["value", "label", "detail", "source_ref"],
+                    "required": ["value", "numerator", "denominator", "unit", "measure",
+                                 "jurisdiction", "as_of", "detail", "source_ref"],
                 },
             },
         },
@@ -440,52 +529,206 @@ def openrouter_tool_call(schema: dict, prompt: str) -> dict:
         return {}
 
 
-def gen_key_stats(kb: KbClient, title: str, srcs: dict, lines: list[str]) -> list[dict]:
+# ---------------------------------------------------------------------------
+# Key figures: a tile survives only if the passage it cites actually carries
+# the number AND the base it is measured against, close enough together to be
+# the same claim. v1 asked for a value and a free sentence, and the free
+# sentence is where a tile can quietly reverse its denominator — "27% of the
+# prison population" and "27% of First Nations people" read the same to a
+# model and mean opposite things. v2 makes the model hand over the parts, then
+# checks the parts against the text.
+# ---------------------------------------------------------------------------
+
+_NUMBER = re.compile(r"\d[\d,\.]*")
+_SCALE = ("billion", "million", "thousand", "trillion")
+_STOPWORDS = {
+    "about", "after", "against", "among", "australia", "australian", "australias",
+    "because", "before", "being", "between", "during", "every", "first", "other",
+    "their", "there", "these", "those", "through", "total", "under", "which",
+    "while", "whole", "would", "years",
+}
+
+
+def _fold(text: str) -> str:
+    """Lower-case, strip thousands separators, collapse whitespace."""
+    return re.sub(r"\s+", " ", re.sub(r"(?<=\d),(?=\d)", "", str(text or "").casefold()))
+
+
+def _numbers(text: str) -> list[str]:
+    """The distinct numeric tokens in a string, comma-free."""
+    return [n.rstrip(".") for n in _NUMBER.findall(_fold(text))]
+
+
+def _content_words(text: str) -> list[str]:
+    words = re.findall(r"[a-z]{5,}", _fold(text))
+    return [w for w in words if w not in _STOPWORDS]
+
+
+def _positions(haystack: str, needle: str) -> list[int]:
+    out, start = [], 0
+    while True:
+        index = haystack.find(needle, start)
+        if index < 0:
+            return out
+        out.append(index)
+        start = index + 1
+
+
+def _number_positions(haystack: str, number: str) -> list[int]:
+    """Where a number occurs as a number — '27' must not match inside '270'."""
+    return [m.start() for m in re.finditer(rf"(?<![\d.]){re.escape(number)}(?![\d])", haystack)]
+
+
+def stat_support(stat: dict, passage: str) -> str | None:
+    """Why this figure fails its passage, or None when the passage carries it.
+
+    The proximity rule is the anti-reversal guard: a number and the base it is
+    claimed to be a share of have to occur in the same breath of the record,
+    not merely somewhere in the same speech."""
+    text = _fold(passage)
+    if not text:
+        return "no passage"
+    numerator = str(stat.get("numerator") or "")
+    denominator = str(stat.get("denominator") or "")
+    if not denominator.strip():
+        return "no denominator"
+    numbers = _numbers(numerator)
+    if not numbers:
+        return "numerator carries no number"
+    if _BARE_YEAR.match(numerator.strip()) or _BARE_YEAR.match(str(stat.get("value") or "").strip()):
+        return "a bare year is not a figure"
+    hits = _number_positions(text, numbers[0])
+    if not hits:
+        return f"numerator {numbers[0]} not in the passage"
+    # A scaled numerator must carry its scale word: "1.1" alone in a passage
+    # about 1.1 per cent does not support "$1.1 billion".
+    for scale in _SCALE:
+        if scale in _fold(numerator) or scale in _fold(stat.get("value")):
+            if scale not in text:
+                return f"scale word '{scale}' not in the passage"
+    anchors: list[int] = []
+    for number in _numbers(denominator):
+        found = _number_positions(text, number)
+        if not found:
+            return f"denominator {number} not in the passage"
+        anchors.extend(found)
+    for word in _content_words(denominator):
+        anchors.extend(_positions(text, word))
+    if not anchors:
+        return "denominator has nothing checkable in the passage"
+    if min(abs(a - h) for a in anchors for h in hits) > 240:
+        return "the number and its base are not in the same passage of text"
+    # A share is the case where reversing the part and the whole is both easy
+    # and invisible, so it gets the strict rule: the record has to join this
+    # number to THIS base, in one breath, with the word that joins them.
+    # ("27 per cent of the national prison population" passes; the same passage
+    # does not support "27 per cent of Aboriginal people".)
+    if "per cent" in _fold(stat.get("unit")) or "%" in str(stat.get("value") or ""):
+        for hit in hits:
+            window = text[max(0, hit - 40):hit + 60]
+            if " of " not in window and not window.startswith("of "):
+                continue
+            if any(a for a in anchors if max(0, hit - 40) <= a < hit + 60):
+                return None
+        return "the passage does not say this number is a share of that base"
+    return None
+
+
+def compose_stat_label(stat: dict) -> str:
+    """The tile's label, built from the fields — never a free sentence.
+
+    A share whose measure does not already name its base gets it appended, so
+    a tile can never show a percentage of something it does not name."""
+    measure = re.sub(r"\s+", " ", str(stat.get("measure") or "")).strip(" .")
+    denominator = re.sub(r"\s+", " ", str(stat.get("denominator") or "")).strip(" .")
+    if not measure:
+        return ""
+    share = "per cent" in _fold(stat.get("unit")) or "%" in str(stat.get("value") or "")
+    named = any(word in _fold(measure) for word in _content_words(denominator))
+    if share and denominator and not named and not _numbers(denominator):
+        measure = f"{measure} as a share of {denominator}"
+    return measure[0].upper() + measure[1:]
+
+
+def gen_key_stats(kb: KbClient, title: str, srcs: dict, lines: list[str],
+                  report: dict | None = None) -> tuple[list[dict], list[dict]]:
+    """Returns (kept, dropped). Dropped rows carry the reason, for the report."""
     if not lines:
-        return []
+        return [], []
     query = (
-        f'Extract the key figures a reader needs on "{title}" in Australian politics. '
-        "Below are real numbered sources from the parliamentary record. Report ONLY figures "
-        "that appear in those sources, exactly as stated — never estimate or invent — and set "
-        "source_ref to the number of the source each figure comes from. If the sources contain "
-        "no genuine figures, return an empty list.\n\nSOURCES:\n" + "\n".join(lines)
+        f'Extract the statistics a reader needs on "{title}" in Australian politics. '
+        "Below are real numbered sources from the parliamentary record, each printed with "
+        "the passage it was retrieved on. Report ONLY figures that appear in those passages, "
+        "exactly as stated, and ONLY where the passage also states what the figure is measured "
+        "against. Give the numerator, that base as the denominator, and the unit, and set "
+        "source_ref to the number of the source. Never reverse the part and the whole. If the "
+        "passages contain no such figures, return an empty list."
+        "\n\nSOURCES:\n" + "\n".join(lines)
     )
     stats = (openrouter_tool_call(STATS_SCHEMA, query)).get("stats") or []
+    ASKS["key_stats"] += 1
     seen: set[str] = set()
-    out = []
-    for s in stats:
-        ref = s.get("source_ref")
-        value = (s.get("value") or "").strip()
+    kept: list[dict] = []
+    dropped: list[dict] = []
+
+    def drop(stat: dict, reason: str) -> None:
+        dropped.append({
+            "value": (stat.get("value") or "").strip(),
+            "measure": (stat.get("measure") or "").strip(),
+            "reason": reason,
+        })
+
+    for stat in stats:
+        ref = stat.get("source_ref")
+        value = (stat.get("value") or "").strip()
         if ref not in srcs or not value:
-            continue  # must trace to a real source
-        if not any(ch.isdigit() for ch in value) or _BARE_YEAR.match(value):
-            continue  # a "figure" without a number isn't one
-        key = f"{value}|{s.get('label', '')}".lower()
+            drop(stat, "does not trace to a provided source")
+            continue
+        source = srcs[ref]
+        reason = stat_support(stat, source.get("passage") or source.get("snippet") or "")
+        if reason:
+            drop(stat, reason)
+            continue
+        label = compose_stat_label(stat)
+        if not label:
+            drop(stat, "no measure to label the tile with")
+            continue
+        key = _fold(f"{value}|{label}")
         if key in seen:
+            drop(stat, "duplicate of a figure already kept")
             continue
         seen.add(key)
-        src = srcs[ref]
-        out.append({
+        kept.append({
             "value": value,
-            "label": (s.get("label") or "").strip(),
-            "detail": (s.get("detail") or "").strip(),
-            "slug": src["slug"],
-            "source_title": src["title"],
+            "label": label,
+            "numerator": str(stat.get("numerator") or "").strip(),
+            "denominator": str(stat.get("denominator") or "").strip(),
+            "unit": str(stat.get("unit") or "").strip(),
+            "jurisdiction": str(stat.get("jurisdiction") or "").strip(),
+            "as_of": str(stat.get("as_of") or "").strip(),
+            "detail": str(stat.get("detail") or "").strip(),
+            "slug": source["slug"],
+            "source_title": source["title"],
         })
-    return out[:6]
+    return kept[:6], dropped
 
 
-def gen_positions(kb: KbClient, title: str, srcs: dict, lines: list[str]) -> list[dict]:
+def gen_positions(kb: KbClient, title: str, srcs: dict, lines: list[str],
+                  window: str = "now") -> list[dict]:
+    """Where the parties stand. v2 draws only on the `now` window, so a party
+    is never shown holding a position it has since abandoned."""
     if not lines:
         return []
     query = (
         f'Where does each party stand on "{title}"? Below are real numbered sources from the '
         "Australian parliamentary record, each tagged with its speaker and party. Report a "
         "position for a party ONLY when one of the sources shows a parliamentarian of that "
-        "party taking it, and set source_ref to that source's number. One entry per party. "
+        "party taking it, and set source_ref to that source's number. A question put to a "
+        "minister is the questioner's position, never the minister's. One entry per party. "
         "Return an empty list rather than infer.\n\nSOURCES:\n" + "\n".join(lines)
     )
     positions = (openrouter_tool_call(POSITIONS_SCHEMA, query)).get("positions") or []
+    ASKS["positions"] += 1
     seen_parties: set[str] = set()
     out = []
     for p in positions:
@@ -505,8 +748,91 @@ def gen_positions(kb: KbClient, title: str, srcs: dict, lines: list[str]) -> lis
             "source_title": src["title"],
             "speaker": src["speaker"],
             "date": src["date"],
+            "window": window,
         })
     return out[:6]
+
+
+LEDE_SCHEMA = {
+    "name": "lede",
+    "description": (
+        "Three sentences opening a report on what parliament is arguing about now, "
+        "each drawn from the numbered findings below and each carrying the number of "
+        "the source that evidences it."
+    ),
+    "parameters": {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+            "sentences": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "text": {"type": "string", "description": "One sentence, at most 32 words, plain and specific. Name speakers, parties, bills and figures where the findings do. No preamble, no 'the record shows', no meta-commentary."},
+                        "source_ref": {"type": "integer", "description": "The [n] of the source that evidences this sentence."},
+                    },
+                    "required": ["text", "source_ref"],
+                },
+            },
+        },
+        "required": ["sentences"],
+    },
+}
+
+
+def gen_lede(title: str, sections: list[dict]) -> dict:
+    """Three cited sentences over the `now` answers.
+
+    The numbered sources are the sections' own CITED sources, so the lede's
+    citations are the same records the sections were built on — not a fresh
+    retrieval that could point somewhere the report never went."""
+    srcs: dict[int, dict] = {}
+    lines: list[str] = []
+    index: dict[str, int] = {}
+    for section in sections:
+        for source in section.get("sources") or []:
+            if not source.get("cited") or source["slug"] in index:
+                continue
+            n = len(srcs) + 1
+            index[source["slug"]] = n
+            srcs[n] = source
+            who = " · ".join(x for x in [source.get("speaker"), source.get("party"),
+                                         str(source.get("date") or "")[:10]] if x)
+            lines.append(f"[{n}] {source.get('title')}{f' ({who})' if who else ''}")
+    if not srcs:
+        return {}
+    findings = "\n\n".join(
+        f"FINDING — {s['question']}\n{s['answer']}" for s in sections if s.get("answer"))
+    query = (
+        f'Open a report on "{title}" in the Australian parliament with three sentences about '
+        "what parliament is arguing over NOW. Below are the report's own findings and the "
+        "numbered sources they were built from. Write the three sentences from the findings, "
+        "and give each the number of the source that evidences it. Be specific: name the bills, "
+        "the parliaments, the speakers and the figures the findings name. Do not describe the "
+        "report, the sources or the record itself."
+        f"\n\n{findings}\n\nSOURCES:\n" + "\n".join(lines)
+    )
+    sentences = (openrouter_tool_call(LEDE_SCHEMA, query)).get("sentences") or []
+    ASKS["lede"] += 1
+    text: list[str] = []
+    used: list[dict] = []
+    for sentence in sentences:
+        ref = sentence.get("source_ref")
+        body = re.sub(r"\s+", " ", str(sentence.get("text") or "")).strip()
+        if ref not in srcs or not body:
+            continue
+        text.append(body)
+        source = srcs[ref]
+        if source["slug"] not in {u["slug"] for u in used}:
+            used.append({k: source.get(k) for k in
+                         ("slug", "title", "speaker", "party", "state", "date")})
+    if not text:
+        return {}
+    return {"text": " ".join(text), "sources": used}
 
 
 PARLIAMENT_NAMES = {
@@ -861,32 +1187,469 @@ def key_moments(kb: KbClient, report_slug: str, limit: int = 8) -> list[dict]:
     return [{key: candidate.get(key) for key in public_keys} for candidate in selected]
 
 
-def build_section(kb: KbClient, question: str) -> dict:
-    res = kb.ask(question, citations=True, prompt=SECTION_PROMPT, top_k=20)
+# ---------------------------------------------------------------------------
+# v2: discovery. The live debates are FOUND in the record, never guessed, so a
+# report cannot go quietly stale while parliament argues about something its
+# author never thought to ask about.
+#
+# The enumeration runs over /catalog, not /find: /catalog returns every
+# resource carrying the topic label, /find returns at most the 200 best
+# matches for a query. The cost is one catalog page per 200 rows (about a
+# second each, ~90 pages for the largest topic) and nothing else — retrieval
+# is free.
+#
+# PLATFORM QUIRK, verified live 2026-09-05: /catalog's `created` prop is INDEX
+# time, so a catalog date window selects by when the speech was loaded, not by
+# when it was spoken (the whole corpus was indexed over three days in September
+# 2026). /find and /ask read the same prop as origin.created, the speech date.
+# Discovery therefore takes its dates from each row's own extra.metadata.date
+# and windows client-side; the ASKS use `created` since/until, where it means
+# what it says.
+# ---------------------------------------------------------------------------
+
+ROWS_CACHE = Path(__file__).resolve().parent / "state" / "reports"
+
+# Recurring House and chamber furniture. These are real titles carrying real
+# topic labels, and they are the single largest source of noise in discovery:
+# a report that asked "what has parliament said about Statements by Members?"
+# would be asking about the shape of the day, not the subject.
+_PROCEDURAL_DEBATES = {
+    "adjournment", "adjournment debate", "answers", "answers to questions",
+    "bills", "business", "business of the house", "committee", "committees",
+    "condolences", "condolence motions", "constituency statements", "documents",
+    "government performance", "grievance debate", "matters of public importance",
+    "matters of public interest", "matters of urgency", "members statements",
+    "members' statements", "ministerial statements", "ministers statements",
+    "minister's statements", "motion", "motions", "motions by leave", "notices",
+    "order of business", "papers", "personal explanations", "petitions",
+    "points of order", "private members' business", "procedural motions",
+    "program", "questions", "questions on notice", "questions without notice",
+    "sessional orders", "standing and sessional orders", "standing orders",
+    "statements", "statements by members", "statements by senators",
+    "suspension of standing orders", "tabling of documents",
+    "take note of answers", "valedictory", "votes and proceedings",
+}
+_PROCEDURAL_PREFIXES = (
+    "constituency statements", "matters of public", "members statements",
+    "members' statements", "ministerial statements", "ministers statements",
+    "minister's statements", "ninety second statements", "questions without notice",
+    "statements by", "take note of", "three minute constituency",
+)
+# Titles that are a chamber's own geography, not a subject: Victorian members'
+# statements file under the speaker's upper-house region.
+_HEADING_SUFFIXES = (" region", " electorate")
+# The archival OCR leaves split words behind ("Appr Opr Iation (Parl Iament) B
+# Ill"). A stranded capital letter standing as its own word is the reliable
+# tell, and no real debate title contains one.
+_OCR_SPLIT = re.compile(r"(?<![\w'’])[B-HJ-Z](?![\w'’])")
+_READING_SUFFIX = re.compile(
+    r"\s*[-—:]\s*(?:second|third|first)\s+reading\s*$", re.I)
+
+
+def normalise_debate(title: str) -> str:
+    """Fold a debate title for comparison: case, spacing and punctuation."""
+    return re.sub(r"[^a-z0-9 ]+", "", re.sub(r"\s+", " ", str(title or "")).casefold()).strip()
+
+
+def is_procedural_debate(title: str) -> bool:
+    """True for chamber furniture, geography headings and OCR wreckage."""
+    compact = re.sub(r"\s+", " ", str(title or "")).strip(" .:-—")
+    folded = normalise_debate(compact)
+    if not folded or folded in _PROCEDURAL_DEBATES:
+        return True
+    if any(folded.startswith(prefix) for prefix in _PROCEDURAL_PREFIXES):
+        return True
+    if any(folded.endswith(suffix.strip()) for suffix in (s.strip() for s in _HEADING_SUFFIXES)):
+        return True
+    if _OCR_SPLIT.search(compact):
+        return True
+    return len(compact) < 4 or len(compact) > 160
+
+
+def debate_subject(title: str) -> str:
+    """The debate's subject: its title without the reading-stage suffix."""
+    return re.sub(r"\s+", " ", _READING_SUFFIX.sub("", str(title or ""))).strip(" .,;:—-")
+
+
+def debate_question(title: str) -> str:
+    """A discovered debate, asked in plain words."""
+    subject = debate_subject(title)
+    if (re.search(r"\b(?:Bill|Act|Amendment|Scheme|Fund|Commission|Inquiry)\b", subject)
+            and not re.match(r"(?i)^(?:the|a|an)\b", subject)):
+        subject = f"the {subject}"
+    return f"What has parliament said about {subject}?"
+
+
+def is_topic_echo(title: str, cfg: dict) -> bool:
+    """True when the debate title only repeats the report's own subject.
+
+    'Housing' is genuinely the largest heading in the housing record, so it
+    belongs in `discovered`; asking 'What has parliament said about housing?'
+    is the report's own curated question with the serial numbers filed off."""
+    words = [w for w in normalise_debate(title).split() if w]
+    if not words or len(words) > 3:
+        return False
+    terms = {t.casefold() for t in cfg.get("relevance_terms", ())}
+    terms.add(cfg["title"].casefold())
+    return all(any(w in term or term in w for term in terms) for w in words)
+
+
+def catalog_rows(kb: KbClient, topic: str, refresh: bool = False) -> list[dict]:
+    """Every labelled speech on a topic, with its speech date, speaker and party.
+
+    Cached on disk: one enumeration serves discovery for `now`, all three eras
+    and the voices tally, and a `--only` rerun should not pay for it again."""
+    ROWS_CACHE.mkdir(parents=True, exist_ok=True)
+    path = ROWS_CACHE / f"rows-{topic}.json"
+    if path.exists() and not refresh:
+        cached = json.loads(path.read_text())
+        return cached["rows"]
+    clauses = [
+        {"prop": "label", "labelset": "kind", "label": "speech"},
+        {"prop": "label", "labelset": "topic", "label": topic},
+    ]
+    rows: list[dict] = []
+    page = 0
+    while True:
+        result = _request("POST", kb._rag("/catalog"), kb._headers, {
+            "filter_expression": {"resource": {"and": clauses}},
+            "page_size": 200,
+            "page_number": page,
+            "show": ["basic", "origin", "extra"],
+            "sort": {"field": "created", "order": "asc"},
+        })
+        resources = result.get("resources") or {}
+        for resource in resources.values():
+            meta = ((resource.get("extra") or {}).get("metadata")) or {}
+            collabs = (resource.get("origin") or {}).get("collaborators") or []
+            labels = {
+                c.get("labelset"): c.get("label")
+                for c in ((resource.get("usermetadata") or {}).get("classifications") or [])
+            }
+            slug = resource.get("slug") or ""
+            if not slug or slug.startswith("da-"):
+                continue
+            rows.append({
+                "slug": slug,
+                "title": resource.get("title"),
+                "date": str(meta.get("date") or "")[:10],
+                "speaker": collabs[0] if collabs else None,
+                "party": labels.get("party"),
+                "state": labels.get("state"),
+            })
+        if not (result.get("fulltext") or {}).get("next_page") or not resources:
+            break
+        page += 1
+    path.write_text(json.dumps({
+        "topic": topic,
+        "enumerated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "rows": rows,
+    }))
+    return rows
+
+
+def in_window(rows: list[dict], since: str, until: str | None = None) -> list[dict]:
+    return [
+        r for r in rows
+        if r["date"] and r["date"] >= since and (not until or r["date"] <= until)
+    ]
+
+
+def discover_debates(rows: list[dict], cfg: dict, since: str, until: str | None,
+                     limit: int = 8, min_count: int = 3) -> list[dict]:
+    """The largest real debates in a window, grouped by debate title."""
+    groups: dict[str, list[dict]] = defaultdict(list)
+    for row in in_window(rows, since, until):
+        title = debate_title(row["title"], row["speaker"], row["date"])
+        if not title or is_hollow_title(title) or is_procedural_debate(title):
+            continue
+        groups[title].append(row)
+    ranked = sorted(groups.items(), key=lambda kv: (-len(kv[1]), kv[0]))
+    out = []
+    for title, members in ranked:
+        if len(members) < min_count:
+            break
+        dates = sorted(m["date"] for m in members)
+        parliaments = sorted({
+            PARLIAMENT_NAMES.get(str(m.get("state") or ""), str(m.get("state") or "").upper())
+            for m in members if m.get("state")
+        })
+        out.append({
+            "title": title,
+            "count": len(members),
+            "first": dates[0],
+            "last": dates[-1],
+            "parliaments": parliaments,
+            "search": search_link(debate_subject(title), cfg["topic"], dates[0], dates[-1]),
+        })
+        if len(out) >= limit:
+            break
+    return out
+
+
+def search_link(query: str, topic: str, first: str, last: str) -> str:
+    """A portal search that reproduces the discovered debate.
+
+    The Worker's filterExpression only accepts YEARS for from/to, so the link
+    carries years even though discovery works to the day."""
+    params = {"q": query, "topic": topic, "from": first[:4], "to": last[:4]}
+    return "/search?" + "&".join(
+        f"{k}={urllib.parse.quote_plus(v)}" for k, v in params.items() if v)
+
+
+def window_questions(cfg: dict, discovered: list[dict], limit: int = 8) -> list[str]:
+    """Discovery seeds the questions; the report's curated spine keeps its place.
+
+    Discovered debates lead — the owner's brief is that the report follows the
+    live argument — but a report whose eight largest debates are all one state's
+    bills would otherwise lose every question that gives it its identity, so the
+    curated questions are guaranteed their slots in the middle."""
+    found = [debate_question(d["title"]) for d in discovered if not is_topic_echo(d["title"], cfg)]
+    curated = [period_question(q) for q in cfg["questions"]]
+    lead = max(0, limit - len(curated))
+    ordered = found[:min(5, lead)] + curated + found[min(5, lead):]
+    seen: set[str] = set()
+    out = []
+    for question in ordered:
+        key = normalise_debate(question)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(question)
+        if len(out) >= limit:
+            break
+    return out
+
+
+def period_question(question: str, period: str = "since July 2024") -> str:
+    """Put the window in the question so the answer is explicitly about it."""
+    if re.search(r"\b(?:since|between|during|in the (?:19|20)\d0s)\b", question, re.I):
+        return question
+    return re.sub(r"\?\s*$", f" {period}?", question.strip())
+
+
+def era_question(cfg: dict, era: dict, discovered: list[dict]) -> str:
+    """One question per era, named after the era's own biggest debates."""
+    subjects = [
+        debate_subject(d["title"])
+        for d in discovered if not is_topic_echo(d["title"], cfg)
+    ][:3]
+    stem = (f"How did parliament argue about {cfg['title'].lower()} "
+            f"{era['period']}?")
+    if not subjects:
+        return stem
+    listed = subjects[0] if len(subjects) == 1 else (
+        ", ".join(subjects[:-1]) + " and " + subjects[-1])
+    return f"{stem} The debates of the period included {listed}."
+
+
+def window_clauses(topic: str, since: str | None, until: str | None) -> dict:
+    """The /find and /ask filter for a topic inside a date window.
+
+    `created` is the speech date on this path. The two not-clauses mirror the
+    Worker's: a title field holds only 'Name — date' and matches as retrieval
+    noise, and da-summary-t-body is a model's own paraphrase, which must never
+    come back as a source for a model to read."""
+    clauses: list[dict] = [
+        {"prop": "label", "labelset": "kind", "label": "speech"},
+        {"prop": "label", "labelset": "topic", "label": topic},
+    ]
+    if since or until:
+        clauses.append({
+            "prop": "created",
+            **({"since": f"{since}T00:00:00Z"} if since else {}),
+            **({"until": f"{until}T23:59:59Z"} if until else {}),
+        })
+    clauses.append({"not": {"prop": "field", "type": "generic"}})
+    clauses.append({"not": {"prop": "field", "type": "text", "name": "da-summary-t-body"}})
+    return {"field": {"and": clauses}}
+
+
+def ask_sources(res: dict) -> list[dict]:
+    """Cited sources first, each flagged, so a section can be checked by eye."""
+    cited_ids = {key.split("/")[0] for key in (res.get("citations") or {})}
     sources = []
     for rid, resource in ((res.get("retrieval_results") or {}).get("resources") or {}).items():
         slug = resource.get("slug") or ""
-        if slug.startswith("da-"):
+        if not slug or slug.startswith("da-"):
             continue
-        meta = ((resource.get("extra") or {}).get("metadata")) or {}
-        collabs = (resource.get("origin") or {}).get("collaborators") or []
-        labels = {
-            c.get("labelset"): c.get("label")
-            for c in ((resource.get("usermetadata") or {}).get("classifications") or [])
-        }
+        summary = resource_summary(resource)
         sources.append({
             "slug": slug,
             "title": resource.get("title"),
-            "speaker": collabs[0] if collabs else None,
-            "party": labels.get("party"),
-            "state": labels.get("state"),
-            "date": meta.get("date"),
+            "speaker": summary["speaker"],
+            "party": summary["party"],
+            "state": summary["state"],
+            "date": summary["date"],
+            "cited": rid in cited_ids,
         })
+    sources.sort(key=lambda s: (not s["cited"], str(s.get("date") or "")))
+    return sources
+
+
+def build_section(kb: KbClient, question: str, *, topic: str | None = None,
+                  since: str | None = None, until: str | None = None,
+                  period: str = "") -> dict:
+    """One window-filtered, cited ask. This is the unit the budget counts."""
+    if topic:
+        prompt = WINDOW_PROMPT.replace("{period}", period or "in the period asked about")
+        res = kb.ask(question, citations=True, prompt=prompt, system=WINDOW_SYSTEM,
+                     top_k=20, show=["basic", "origin", "extra"],
+                     filter_expression=window_clauses(topic, since, until))
+    else:
+        res = kb.ask(question, citations=True, prompt=SECTION_PROMPT, top_k=20,
+                     show=["basic", "origin", "extra"])
+    ASKS["ask"] += 1
     return {
         "question": question,
-        "answer": res.get("answer") or "",
-        "sources": sources,
+        "answer": (res.get("answer") or "").strip(),
+        "sources": ask_sources(res),
+        "asked_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
+
+
+def voices(rows: list[dict], since: str | None = None, until: str | None = None,
+           limit: int = 8) -> list[dict]:
+    """Who actually speaks on the topic in a window, counted from the catalog."""
+    scoped = in_window(rows, since, until) if since else rows
+    counts: Counter[str] = Counter()
+    parties: dict[str, Counter] = defaultdict(Counter)
+    for row in scoped:
+        speaker = str(row.get("speaker") or "").strip()
+        if not speaker:
+            continue
+        counts[speaker] += 1
+        if row.get("party"):
+            parties[speaker][row["party"]] += 1
+    out = []
+    for speaker, count in counts.most_common(limit):
+        party = parties[speaker].most_common(1)
+        out.append({
+            "speaker": speaker,
+            "party": party[0][0] if party else None,
+            "count": count,
+        })
+    return out
+
+
+def tide(kb: KbClient, topic: str) -> list[dict]:
+    """Topic share of labelled speeches by decade — /api/tide's method.
+
+    Federal only, for the endpoint's own reason: the state Hansards start at
+    different dates, so an all-parliament share tracks the mix of sources as
+    much as the mix of subjects."""
+    speech = {"prop": "label", "labelset": "kind", "label": "speech"}
+    federal = {"prop": "label", "labelset": "state", "label": "federal"}
+
+    def total(clauses: list[dict]) -> int:
+        result = _request("POST", kb._rag("/catalog"), kb._headers, {
+            "filter_expression": {"resource": {"and": clauses}}, "page_size": 0,
+        })
+        return (result.get("fulltext") or {}).get("total") or 0
+
+    out = []
+    for entry in TIDE_DECADES:
+        decade = {"prop": "label", "labelset": "decade", "label": entry["decade"]}
+        base = [speech, federal, decade]
+        labelled = total([*base, {"prop": "label", "labelset": "topic"}])
+        count = total([*base, {"prop": "label", "labelset": "topic", "label": topic}])
+        out.append({
+            "decade": entry["label"],
+            "count": count,
+            "labelled": labelled,
+            "share": round(count / labelled, 5) if labelled else 0.0,
+        })
+    return out
+
+
+BLOCKS = ("now", "over-time", "stats", "positions", "voices", "lede",
+          "key-moments", "sections")
+
+
+def build_now(kb: KbClient, slug: str, rows: list[dict], since: str) -> dict:
+    """The live debate: what parliament is arguing about in the window, found."""
+    cfg = REPORTS[slug]
+    discovered = discover_debates(rows, cfg, since, None)
+    questions = window_questions(cfg, discovered)
+    print(f"[{slug}] now: {len(discovered)} debates discovered, {len(questions)} questions")
+    for entry in discovered:
+        print(f"    {entry['count']:5d}  {entry['first']}..{entry['last']}  {entry['title'][:70]}")
+    sections = []
+    for question in questions:
+        t0 = time.time()
+        try:
+            section = build_section(
+                kb, question, topic=cfg["topic"], since=since,
+                period=f"on or after {since}")
+            sections.append(section)
+            state = "REFUSED" if section["answer"].startswith(REFUSAL[:24]) else "ok"
+            print(f"  {state} ({time.time() - t0:.0f}s): {question[:66]}")
+        except AragError as error:
+            print(f"  FAILED ({error.status}): {question[:66]}", file=sys.stderr)
+    return {"since": since, "discovered": discovered, "sections": sections}
+
+
+def build_over_time(kb: KbClient, slug: str, rows: list[dict],
+                    moments: list[dict]) -> dict:
+    """Three era answers, the decade tide, and the existing reading list."""
+    cfg = REPORTS[slug]
+    eras = []
+    for era in ERAS:
+        discovered = discover_debates(rows, cfg, era["from"], era["to"], limit=4)
+        question = era_question(cfg, era, discovered)
+        t0 = time.time()
+        try:
+            section = build_section(
+                kb, question, topic=cfg["topic"], since=era["from"], until=era["to"],
+                period=era["period"])
+        except AragError as error:
+            print(f"  FAILED ({error.status}): {era['label']}", file=sys.stderr)
+            continue
+        state = "REFUSED" if section["answer"].startswith(REFUSAL[:24]) else "ok"
+        print(f"  {era['label']} {state} ({time.time() - t0:.0f}s): {question[:60]}")
+        eras.append({
+            "label": era["label"],
+            "from": era["from"],
+            "to": era["to"],
+            "question": section["question"],
+            "answer": section["answer"],
+            "sources": section["sources"],
+            "asked_at": section["asked_at"],
+        })
+    tide_rows = tide(kb, cfg["topic"])
+    print("  tide: " + ", ".join(
+        f"{t['decade']} {t['share'] * 100:.1f}%" for t in tide_rows))
+    return {"eras": eras, "tide": tide_rows, "tide_scope": "federal",
+            "key_moments": moments}
+
+
+def now_sources(kb: KbClient, cfg: dict, since: str) -> tuple[dict, list[str]]:
+    """Numbered sources from the `now` window, for positions."""
+    return numbered_sources(
+        kb, cfg["blurb"] or cfg["title"], top_k=24,
+        filter_expression=window_clauses(cfg["topic"], since, None))
+
+
+def topic_sources(kb: KbClient, cfg: dict) -> tuple[dict, list[str]]:
+    """Numbered sources across the whole record, for key figures."""
+    return numbered_sources(
+        kb, f"{cfg['title']}: figures, shares, rates and totals in the record",
+        top_k=24, filter_expression=window_clauses(cfg["topic"], None, None))
+
+
+def report_path(slug: str) -> Path:
+    return OUT_DIR / f"{slug}.json"
+
+
+def load_prior(slug: str) -> dict:
+    path = report_path(slug)
+    return json.loads(path.read_text()) if path.exists() else {}
+
+
+def budget_line() -> str:
+    total = sum(ASKS.values())
+    detail = ", ".join(f"{name} {count}" for name, count in sorted(ASKS.items()))
+    return f"Paid calls this run: {total}" + (f" ({detail})" if detail else "")
 
 
 def main() -> None:
@@ -895,52 +1658,92 @@ def main() -> None:
     parser.add_argument("reports", nargs="*", help="report slugs (all when omitted)")
     parser.add_argument("--stats-only", action="store_true", help="refresh embedded static stats")
     parser.add_argument(
-        "--only", choices=("key-moments", "sections", "stats"),
+        "--only", choices=BLOCKS,
         help="refresh only one report block and preserve every other field",
     )
+    parser.add_argument(
+        "--since", default=NOW_SINCE,
+        help=f"start of the `now` window, YYYY-MM-DD (default {NOW_SINCE})")
+    parser.add_argument(
+        "--refresh-rows", action="store_true",
+        help="re-enumerate the topic's speeches from the catalog (free, ~1-2 min a topic)")
     args = parser.parse_args()
     if args.stats_only and args.only:
         parser.error("--stats-only and --only cannot be combined")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.since):
+        parser.error("--since must be YYYY-MM-DD")
     unknown = sorted(set(args.reports) - set(REPORTS))
     if unknown:
         parser.error(f"unknown report slug(s): {', '.join(unknown)}")
-    stats_only = args.stats_only
     picked = args.reports or list(REPORTS)
     kb = KbClient(AragConfig.from_env())
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     stats_path = Path(__file__).resolve().parent / "report_stats.json"
     all_stats = json.loads(stats_path.read_text()) if stats_path.exists() else {}
 
+    # --- one block at a time, everything else preserved --------------------
     if args.only:
-        ask_count = 0
         for slug in picked:
             cfg = REPORTS[slug]
-            prior_path = OUT_DIR / f"{slug}.json"
-            if not prior_path.exists():
-                parser.error(f"{prior_path} must exist for --only")
-            report = json.loads(prior_path.read_text())
+            path = report_path(slug)
+            if not path.exists():
+                parser.error(f"{path} must exist for --only")
+            report = json.loads(path.read_text())
+            needs_rows = args.only in ("now", "over-time", "voices")
+            rows = catalog_rows(kb, cfg["topic"], args.refresh_rows) if needs_rows else []
+            if needs_rows:
+                print(f"[{slug}] {len(rows):,} labelled speeches on {cfg['topic']}")
             if args.only == "stats":
                 report["stats"] = all_stats.get(slug)
-                print(f"[{slug}] embedded audited static stats")
+                srcs, lines = topic_sources(kb, cfg)
+                kept, dropped = gen_key_stats(kb, cfg["title"], srcs, lines)
+                report["key_stats"] = kept
+                report["key_stats_dropped"] = dropped
+                print(f"[{slug}] key figures: {len(kept)} kept, {len(dropped)} dropped")
+                for row in dropped:
+                    print(f"    dropped {row['value']!r}: {row['reason']}")
+            elif args.only == "positions":
+                srcs, lines = now_sources(kb, cfg, args.since)
+                report["positions"] = gen_positions(kb, cfg["title"], srcs, lines)
+                print(f"[{slug}] positions: {len(report['positions'])} traced")
+            elif args.only == "voices":
+                report["voices"] = {
+                    "now": voices(rows, args.since),
+                    "all": voices(rows),
+                }
+                print(f"[{slug}] voices: now {len(report['voices']['now'])}, "
+                      f"all {len(report['voices']['all'])}")
+            elif args.only == "lede":
+                sections = (report.get("now") or {}).get("sections") or []
+                report["lede"] = gen_lede(cfg["title"], sections)
+                print(f"[{slug}] lede: {len((report['lede'] or {}).get('text') or '')} chars")
+            elif args.only == "now":
+                report["now"] = build_now(kb, slug, rows, args.since)
+            elif args.only == "over-time":
+                report["over_time"] = build_over_time(
+                    kb, slug, rows, report.get("key_moments") or [])
             elif args.only == "key-moments":
                 print(f"[{slug}] retrieving and checking key speeches...")
                 report["key_moments"] = key_moments(kb, slug)
+                report.setdefault("over_time", {})["key_moments"] = report["key_moments"]
                 print(f"  key moments: {len(report['key_moments'])}")
-            else:
+            else:  # sections — the v1 block, kept so the live page keeps working
                 sections = []
                 for question in cfg["questions"]:
                     t0 = time.time()
                     try:
                         sections.append(build_section(kb, question))
-                        ask_count += 1
                         print(f"[{slug}] ok ({time.time() - t0:.0f}s): {question[:60]}")
                     except AragError as error:
                         print(f"[{slug}] FAILED ({error.status}): {question[:60]}", file=sys.stderr)
                 report["sections"] = sections
-            prior_path.write_text(json.dumps(report, indent=1) + "\n")
-        print(f"Wrote {args.only} for {len(picked)} report(s); /ask calls: {ask_count}")
+            report["version"] = 2
+            report["generated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+            path.write_text(json.dumps(report, indent=1) + "\n")
+        print(f"Wrote {args.only} for {len(picked)} report(s). {budget_line()}")
         return
 
+    # --- a whole report ----------------------------------------------------
     counters = kb.counters()
     index = []
     idx_path = OUT_DIR / "index.json"
@@ -949,80 +1752,81 @@ def main() -> None:
 
     for slug in picked:
         cfg = REPORTS[slug]
-        # Keep previously generated narrative when only refreshing stats.
-        prior_path = OUT_DIR / f"{slug}.json"
-        prior = json.loads(prior_path.read_text()) if prior_path.exists() else {}
-        sections = prior.get("sections", [])
-        brief = prior.get("brief")
-        stats_from_record = prior.get("key_stats", [])
-        positions = prior.get("positions", [])
-        moments = prior.get("key_moments", [])
-        if not stats_only:
-            print(f"[{slug}] evidence brief + {len(cfg['questions'])} questions...")
-            t0 = time.time()
-            try:
-                # The prose lead: cited ask with the evidence-brief prompt.
-                # Some topics come back 200-but-empty under the custom prompt;
-                # the platform's default template is the reliable fallback.
-                brief_q = f"What does the parliamentary record show about {cfg['title'].lower()}?"
-                res = kb.ask(brief_q, citations=True, prompt=BRIEF_PROMPT, top_k=20)
-                answer = (res.get("answer") or "").strip()
-                if not answer:
-                    print("  brief empty under custom prompt - retrying with default template")
-                    res = kb.ask(
-                        f"{brief_q} Cover the strongest findings, how the debate has shifted "
-                        "over time, and the sharpest points of disagreement.",
-                        citations=True, top_k=20)
-                    answer = (res.get("answer") or "").strip()
-                brief = {"question": brief_q, "answer": answer}
-                print(f"  brief {'ok' if answer else 'EMPTY'} ({time.time() - t0:.0f}s)")
-            except AragError as e:
-                print(f"  brief FAILED ({e.status})", file=sys.stderr)
-            # Numbered real sources ground the structured extractions; every
-            # emitted item must trace back to one of them or it is dropped.
-            try:
-                srcs, lines = numbered_sources(kb, cfg["blurb"] or cfg["title"])
-                stats_from_record = gen_key_stats(kb, cfg["title"], srcs, lines)
-                print(f"  key figures: {len(stats_from_record)} traced")
-                positions = gen_positions(kb, cfg["title"], srcs, lines)
-                print(f"  positions: {len(positions)} traced")
-            except AragError as e:
-                print(f"  structured extraction FAILED ({e.status})", file=sys.stderr)
-            try:
-                moments = key_moments(kb, slug)
-                print(f"  key moments: {len(moments)}")
-            except AragError as e:
-                print(f"  key moments FAILED ({e.status})", file=sys.stderr)
-            sections = []
-            for q in cfg["questions"]:
-                t0 = time.time()
-                try:
-                    sections.append(build_section(kb, q))
-                    print(f"  ok ({time.time() - t0:.0f}s): {q[:60]}")
-                except AragError as e:
-                    print(f"  FAILED ({e.status}): {q[:60]}", file=sys.stderr)
+        prior = load_prior(slug)
+        if args.stats_only:
+            report = {**prior, "stats": all_stats.get(slug)}
+            report_path(slug).write_text(json.dumps(report, indent=1) + "\n")
+            print(f"[{slug}] embedded audited static stats")
+            continue
+
+        rows = catalog_rows(kb, cfg["topic"], args.refresh_rows)
+        print(f"[{slug}] {len(rows):,} labelled speeches on {cfg['topic']}")
+
+        now = build_now(kb, slug, rows, args.since)
+
+        moments = prior.get("key_moments") or []
+        try:
+            moments = key_moments(kb, slug)
+            print(f"  key moments: {len(moments)}")
+        except AragError as error:
+            print(f"  key moments FAILED ({error.status})", file=sys.stderr)
+        over_time = build_over_time(kb, slug, rows, moments)
+
+        try:
+            srcs, lines = topic_sources(kb, cfg)
+            kept, dropped = gen_key_stats(kb, cfg["title"], srcs, lines)
+            print(f"  key figures: {len(kept)} kept, {len(dropped)} dropped")
+            for row in dropped:
+                print(f"    dropped {row['value']!r}: {row['reason']}")
+        except AragError as error:
+            print(f"  key figures FAILED ({error.status})", file=sys.stderr)
+            kept, dropped = prior.get("key_stats") or [], []
+        try:
+            now_srcs, now_lines = now_sources(kb, cfg, args.since)
+            positions = gen_positions(kb, cfg["title"], now_srcs, now_lines)
+            print(f"  positions: {len(positions)} traced")
+        except AragError as error:
+            print(f"  positions FAILED ({error.status})", file=sys.stderr)
+            positions = prior.get("positions") or []
+
+        lede = gen_lede(cfg["title"], now["sections"])
+        print(f"  lede: {len((lede or {}).get('text') or '')} chars, "
+              f"{len((lede or {}).get('sources') or [])} sources")
+
+        # v1's prose lead and its three unfiltered sections stay in the file so
+        # the live page keeps working until the v2 page lands. They are not
+        # re-asked here: v2's `now` and `lede` replace them, and re-asking them
+        # would double the budget for prose no reader will see.
         report = {
             "slug": slug,
             "title": cfg["title"],
             "blurb": cfg["blurb"],
+            "version": 2,
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "corpus_resources": counters.get("resources"),
             "stats": all_stats.get(slug),
-            "brief": brief,
-            "key_stats": stats_from_record,
+            "brief": prior.get("brief"),
+            "key_stats": kept,
+            "key_stats_dropped": dropped,
             "positions": positions,
             "key_moments": moments,
-            "sections": sections,
+            "sections": prior.get("sections") or [],
+            "lede": lede,
+            "now": now,
+            "over_time": over_time,
+            "voices": {"now": voices(rows, args.since), "all": voices(rows)},
         }
-        prior_path.write_text(json.dumps(report, indent=1))
+        report_path(slug).write_text(json.dumps(report, indent=1) + "\n")
         index = [r for r in index if r["slug"] != slug] + [{
             "slug": slug, "title": cfg["title"], "blurb": cfg["blurb"],
             "updated": report["generated_at"],
         }]
+        print(f"[{slug}] done. {budget_line()}")
 
     index.sort(key=lambda r: r["slug"])
     idx_path.write_text(json.dumps({"reports": index}, indent=1))
     print(f"Wrote {len(picked)} report(s) + index to {OUT_DIR}")
+    print(budget_line())
     print("Publish with: cd portal && npx wrangler deploy")
 
 
