@@ -1789,6 +1789,8 @@ function appendEmphasis(el, text) {
 }
 
 function renderAnswer(container, text) {
+  const evidence = container.askEvidence || [];
+  text = askCitationText(String(text), evidence);
   container.replaceChildren();
   for (const block of parseDocBlocks(normaliseAnswerBullets(String(text)))) {
     if (block.kind === "heading") {
@@ -1856,15 +1858,73 @@ function renderAnswer(container, text) {
       container.appendChild(p);
     }
   }
+  wireAskCitations(container, evidence);
 }
 
-// NOTE: answers may contain [n] markers, but the platform does not document
-// how they map onto retrieval results — wiring them to our renumbered cited
-// list risked visibly attributing a claim to the wrong speech. Until the
-// mapping is verified against the platform, markers render as plain text and
-// the sources list stands on its own.
+// Citation ranges come from the response, never from guessed [n] numbering.
+function askCitationText(text, sources) {
+  const points = Array.from(text);
+  const ends = new Map();
+  sources.forEach((source, index) => {
+    for (const range of source.answerRanges || []) {
+      if (!Array.isArray(range) || range.length !== 2) continue;
+      const [start, end] = range;
+      if (!Number.isInteger(start) || !Number.isInteger(end) || start < 0 || end <= start || end > points.length) continue;
+      let at = end;
+      while (at > start && /\s/.test(points[at - 1])) at--;
+      if (!ends.has(at)) ends.set(at, new Set());
+      ends.get(at).add(index + 1);
+    }
+  });
+  for (const [at, numbers] of [...ends].sort((a, b) => b[0] - a[0])) {
+    points.splice(at, 0, [...numbers].map((n) => ` ⟦source:${n}⟧`).join(""));
+  }
+  return points.join("");
+}
 
-function sourceItem(s, num) {
+function wireAskCitations(container, sources) {
+  if (!sources.length) return;
+  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  for (const node of nodes) {
+    const text = node.textContent;
+    const re = /⟦source:(\d+)⟧/g;
+    if (!re.test(text)) continue;
+    re.lastIndex = 0;
+    const fragment = document.createDocumentFragment();
+    let last = 0;
+    for (const match of text.matchAll(re)) {
+      fragment.append(document.createTextNode(text.slice(last, match.index)));
+      const source = sources[Number(match[1]) - 1];
+      if (!source) { fragment.append(document.createTextNode(match[0])); continue; }
+      const sup = document.createElement("sup");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "ask-citation";
+      button.textContent = match[1];
+      button.setAttribute("aria-label", `Source ${match[1]}: ${displayTitle(source)}`);
+      button.addEventListener("click", () => {
+        const scope = container.closest("#ask-result, .chat-turn-answer");
+        const row = [...(scope?.querySelectorAll("li[data-resource]") || [])]
+          .find((el) => el.dataset.resource === (source.resource || source.slug));
+        if (!row) return;
+        for (let parent = row.parentElement; parent && parent !== scope; parent = parent.parentElement) {
+          if (parent.tagName === "DETAILS") parent.open = true;
+        }
+        row.focus({ preventScroll: true });
+        row.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+      });
+      sup.appendChild(button);
+      fragment.appendChild(sup);
+      last = match.index + match[0].length;
+    }
+    fragment.append(document.createTextNode(text.slice(last)));
+    node.replaceWith(fragment);
+  }
+}
+
+function sourceItem(s, num, passage = false) {
   const li = document.createElement("li");
   const btn = document.createElement("button");
   btn.type = "button";
@@ -1878,14 +1938,24 @@ function sourceItem(s, num) {
     li.appendChild(numEl);
   }
   li.appendChild(btn);
+  if (passage) {
+    li.dataset.resource = s.resource || s.slug;
+    li.tabIndex = -1;
+  }
   // Speaker portrait, and the speaker and party open their own pages.
-  const meta = metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: true });
+  const meta = metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage });
   if (meta) {
     const span = document.createElement("span");
     span.className = "source-meta";
     span.innerHTML = meta;
     li.appendChild(span);
     decorateMetaPortraits(li);
+  }
+  if (passage && s.snippet?.trim()) {
+    const quote = document.createElement("p");
+    quote.className = "ask-source-passage";
+    quote.textContent = s.snippet.trim().replace(/\s+/g, " ");
+    li.appendChild(quote);
   }
   return li;
 }
@@ -6000,6 +6070,9 @@ async function runAsk(question) {
   const myAbort = new AbortController();
   askAbort = myAbort;
   foldHero(true);
+  $("ask-followups").hidden = true;
+  $("ask-followups").replaceChildren();
+  $("ask-answer").askEvidence = [];
   const btn = $("ask-submit");
   // Structured money answer, rendered immediately from local data.
   const moneyInd = detectMoneyIndustry(question);
@@ -6087,7 +6160,12 @@ async function runAsk(question) {
     // Trim before every use: a whitespace-only answer is truthy and would
     // otherwise slip past the "(no answer)" fallback and render nothing.
     const answerText = (data.answer || "").trim();
-    const sources = data.sources || [];
+    const sources = (data.sources || []).map((source) => ({
+      ...source,
+      answerRanges: Object.entries(data.citations || {})
+        .filter(([key]) => key.split("/")[0] === source.resource)
+        .flatMap(([, ranges]) => Array.isArray(ranges) ? ranges : []),
+    }));
     // The Worker flags cited sources (it owns the platform's citation-key
     // format); fall back to the raw citations map for older responses.
     const fallbackIds = new Set(
@@ -6099,6 +6177,7 @@ async function runAsk(question) {
     // Never fake the split: with no citation data, everything is "retrieved for this answer".
     const citedList = cited.length ? cited : sources;
     const alsoList = cited.length ? retrieved : [];
+    $("ask-answer").askEvidence = citedList;
     lastAsk = { question, answer: answerText, sources, kind: askKind() };
     prefetchAskFollowups(lastAsk);
 
@@ -6108,10 +6187,8 @@ async function runAsk(question) {
     revealAskResult();
     $("ask-result").querySelector(".action-row").hidden = false;
     if (answerText) {
-      // A streamed answer has already painted itself; only a cached or
-      // non-streaming one arrives whole, and it should not just appear.
-      if ($("ask-answer").childElementCount) renderAnswer($("ask-answer"), answerText);
-      else replayAnswer($("ask-answer"), answerText, () => askAbort === myAbort);
+      // Final rendering uses the complete citation ranges, including cache hits.
+      renderAnswer($("ask-answer"), answerText);
     } else {
       // Both attempts came back blank (it happens under model load). Own it
       // plainly and hand the reader a retry, rather than a bare sources list.
@@ -6125,13 +6202,14 @@ async function runAsk(question) {
       $("ask-answer").replaceChildren(p, retry);
     }
     $("ask-stamp").textContent =
-      `Generated ${fmtDate(localISODate())} · corpus v${corpusVersion()}` +
+      `Viewed ${fmtDate(localISODate())} · corpus v${corpusVersion()}` +
       ((askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
         ? ` · filtered: ${askFilterSummary(askFilters()) || `${speakerFilter}'s speeches`}` : "");
     renderAskDateRuler(sources, isCited);
-    $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1)));
+    $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1, true)));
+    $("ask-retrieved").open = false;
     $("ask-retrieved").hidden = !alsoList.length;
-    $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null)));
+    $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null, true)));
     $("ask-sources-sum").textContent = `Sources (${sources.length})`;
     $("ask-sources").open = false; // each new answer starts folded
     $("ask-sources").hidden = !sources.length;
@@ -6258,7 +6336,13 @@ function prefetchAskFollowups(ask) {
     body: JSON.stringify({ question: ask.question, answer: ask.answer, passages }),
   }).then((data) => {
     const questions = normaliseFollowups(data);
-    if (questions.length && lastAsk === ask) ask.next = questions;
+    if (questions.length && lastAsk === ask) {
+      ask.next = questions;
+      renderFollowups(questions, $("ask-followups"), (item) => {
+        $("ask-continue").click();
+        sendChat(item.question, item);
+      });
+    }
     return questions;
   }).catch(() => []);
   askFollowupsInflight = { question: ask.question, answer: ask.answer, promise };
@@ -6364,6 +6448,8 @@ function chatAnswerEl(msg) {
   wrap.className = "chat-turn chat-turn-answer";
   const body = document.createElement("div");
   body.className = "answer";
+  const citedSources = (msg.sources || []).filter((s) => s.cited);
+  body.askEvidence = citedSources.length ? citedSources : (msg.sources || []);
   renderAnswer(body, msg.text || "(no answer)");
   wrap.appendChild(body);
   const sources = msg.sources || [];
@@ -6371,7 +6457,7 @@ function chatAnswerEl(msg) {
     // Collapsed by default: in a running conversation the sources are a
     // reference, not the reading path between an answer and the composer.
     const cited = sources.filter((s) => s.cited);
-    const shown = (cited.length ? cited : sources).slice(0, 5);
+    const shown = (cited.length ? cited : sources);
     const rest = sources.filter((s) => !shown.includes(s));
     const det = document.createElement("details");
     det.className = "chat-sources";
@@ -6380,17 +6466,18 @@ function chatAnswerEl(msg) {
     det.appendChild(sum);
     const ol = document.createElement("ol");
     ol.className = "source-list chat-source-list";
-    shown.forEach((s, i) => ol.appendChild(sourceItem(s, i + 1)));
+    shown.forEach((s, i) => ol.appendChild(sourceItem(s, i + 1, true)));
     det.appendChild(ol);
     if (rest.length) {
-      const more = document.createElement("p");
-      more.className = "fineprint";
-      more.textContent = "Also retrieved for this answer:";
+      const more = document.createElement("details");
+      const summary = document.createElement("summary");
+      summary.textContent = `Also retrieved (${rest.length})`;
+      more.appendChild(summary);
       det.appendChild(more);
       const ol2 = document.createElement("ol");
       ol2.className = "source-list";
-      rest.forEach((s) => ol2.appendChild(sourceItem(s, null)));
-      det.appendChild(ol2);
+      rest.forEach((s) => ol2.appendChild(sourceItem(s, null, true)));
+      more.appendChild(ol2);
     }
     wrap.appendChild(det);
   }
@@ -6440,18 +6527,23 @@ async function requestChatFollowups() {
 
 function renderChatNext(questions) {
   const next = $("chat-next");
+  renderFollowups(questions, next, (item) => sendChat(item.question, item));
+}
+
+function renderFollowups(questions, next, onSelect) {
   if (!next || !questions.length) return;
+  next.hidden = false;
   next.replaceChildren();
   next.className = "chat-next";
-  const kicker = document.createElement("p");
-  kicker.className = "kicker";
+  const kicker = document.createElement("h3");
+  kicker.className = "subject-section-title";
   kicker.textContent = "Ask next";
   next.appendChild(kicker);
   const row = document.createElement("div");
   row.className = "chat-next-btns";
   row.setAttribute("role", "group");
   row.setAttribute("aria-label", "Suggested follow-up questions");
-  for (const raw of questions) {
+  for (const raw of questions.slice(0, 3)) {
     // Sessions saved before follow-ups carried evidence stored plain strings.
     const item = typeof raw === "string" ? { question: raw } : raw;
     if (!item?.question) continue;
@@ -6469,7 +6561,7 @@ function renderChatNext(questions) {
     arrow.setAttribute("aria-hidden", "true");
     arrow.textContent = "→";
     b.append(text, arrow);
-    b.addEventListener("click", () => sendChat(item.question, item));
+    b.addEventListener("click", () => onSelect(item));
     row.appendChild(b);
   }
   next.appendChild(row);
@@ -6505,6 +6597,7 @@ async function sendChat(question, carry) {
   setStatus($("chat-status"), "Checking the record.");
   $("chat-status").classList.add("visually-hidden"); // announced, not displayed
   const slot = document.createElement("div");
+  slot.className = "chat-pending";
   slot.setAttribute("role", "status");
   $("chat-thread").appendChild(slot);
   let trundler = null;
@@ -6563,7 +6656,12 @@ async function sendChat(question, carry) {
     chatThread.push({
       role: "answer",
       text: (data.answer || "").trim() || "(no answer)",
-      sources: data.sources || [],
+      sources: (data.sources || []).map((source) => ({
+        ...source,
+        answerRanges: Object.entries(data.citations || {})
+          .filter(([key]) => key.split("/")[0] === source.resource)
+          .flatMap(([, ranges]) => Array.isArray(ranges) ? ranges : []),
+      })),
       // Disclosed under the answer: the carried passage is real corpus text,
       // but this turn's retrieval did not necessarily surface it itself.
       ...(carry?.evidence ? { carried: { source: carry.source || "" } } : {}),
