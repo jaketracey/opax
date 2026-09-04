@@ -126,6 +126,7 @@ type SceneRow = {
 const STYLE_ID = 'opax-explain-style'
 const FIRST_YEAR = 1998
 const LAST_YEAR = 2025
+const NARROW_FRAME_INTERVAL = 1000 / 30
 const STEP_NAMES = [
   'Who gives',
   'How much, and when',
@@ -254,10 +255,13 @@ function injectStyles() {
   .explain-scene-label.clock,.explain-scene-label.election,.explain-scene-label.peak,
   .explain-scene-label.citation { font-size:.6875rem; line-height:1.25; }
   .explain-scene-label.citation { padding:.08rem .2rem; background:color-mix(in srgb,var(--paper) 98%,transparent); }
+  .explain-scene-label.limit,.explain-scene-label.limit-note { font-size:.6875rem; line-height:1.25; }
+  .explain-scene-label.limit-note { max-width:7.5rem; background:color-mix(in srgb,var(--paper) 97%,transparent); }
   .explain-scene-label.destination-summary { color:var(--bronze-ink); font-family:var(--sans); font-weight:650; }
   .explain-scene-label.stage-caption { max-width:11rem; padding:.2rem .38rem; }
   .explain-title { font-size:1.65rem; }
   .explain-facts { grid-template-columns:1fr 1fr; }
+  .explain-parties a,.explain-source-copy a { min-width:44px; min-height:44px; display:flex; align-items:center; }
 }
 @media (max-width:370px) {
   .explain-stage-label.from { max-width:37%; }
@@ -1351,14 +1355,15 @@ class FlowScene {
       ]
     }
     if (step === 4) {
+      const crossed = this.pointAt(.62, this.giverPoint, this.receiverPoint, 2.08)
       return [
         {
           text: 'below the disclosure threshold: not reported',
           position: new THREE.Vector3(0, -1.49, .08), className: 'limit', align: 'middle',
         },
         {
-          text: 'state + federal totals remain separate',
-          position: new THREE.Vector3(.9, 1.26, .08), className: 'limit-note', align: 'start', offsetX: 7,
+          text: '× state + federal totals stay separate',
+          position: crossed.add(new THREE.Vector3(.24, .04, .08)), className: 'limit-note', align: 'start', offsetX: 4,
         },
       ]
     }
@@ -1488,7 +1493,7 @@ class FlowScene {
   private frame = (now: number) => {
     this.raf = 0
     if (this.destroyed || !this.visible) return
-    if (!this.narrow || now - this.lastPaint >= 32) this.draw(now)
+    if (!this.narrow || now - this.lastPaint >= NARROW_FRAME_INTERVAL) this.draw(now)
     this.raf = requestAnimationFrame(this.frame)
   }
 
@@ -1552,7 +1557,7 @@ class FlowScene {
       drawable.geometry?.dispose?.()
       const materials = Array.isArray(drawable.material) ? drawable.material : [drawable.material]
       for (const material of materials) {
-        const map = (material as THREE.Material & { map?: THREE.Texture }).map
+        const map = (material as (THREE.Material & { map?: THREE.Texture }) | undefined)?.map
         map?.dispose()
         material?.dispose?.()
       }
