@@ -176,6 +176,14 @@ Two rules keep the cache honest:
 what the harness wants when it is measuring the live model, and what makes a
 `BYPASS` run leave the cache warm behind it.
 
+### Follow-ups are prefetched (2026-09-04)
+The Ask page requests `/api/followups` the moment its answer lands
+(`prefetchAskFollowups` in `app.js`) and keeps the result on `lastAsk`, so
+"Keep asking about this" seeds the chat with the chips already present; if the
+fetch is still running the chat awaits it rather than asking twice. When chips
+land in the chat the view scrolls to the composer so they are seen. Cost is
+unchanged: one follow-ups call per answer, just earlier.
+
 ### Slow-platform guard (2026-09-04)
 The platform's retrieval step normally lands in 4-6 s, but on 2026-09-04 a
 chat follow-up sat for 100 s and came back as a 524 while a labelling task was
