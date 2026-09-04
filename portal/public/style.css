@@ -391,6 +391,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 /* Each section folds behind a serif title; the chevron turns when it is open.
    Sentence case, not a small-caps eyebrow. */
 .drawer-group { border-top: 1px solid var(--line); margin-top: 0.15rem; }
+.drawer-group:first-of-type { border-top: 0; margin-top: 0; }
 .drawer-group:last-of-type { border-bottom: 1px solid var(--line); }
 .drawer-group summary.drawer-section {
   display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; list-style: none; cursor: pointer;
