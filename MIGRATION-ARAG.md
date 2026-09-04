@@ -283,10 +283,23 @@ returns topically-correct hits for all probed labels (gambling → Dutton 2004,
 immigration → Ruddock, financial-services → Costello, etc.). Per-doc
 classification metadata doesn't surface under usermetadata on the sampled
 resources (labels live at the field level the filter sees) — fine for the
-facet use case. NEXT (gated on user + load completion):
-`python3 scripts/arag_enrich.py start-full` labels the whole speech corpus
-(~$70-100 at quant pricing), unlocking topic facets in the Workbench and
-donation-industry ↔ speech-topic joins.
+facet use case. The whole-corpus run (`start-full`, task 2ff07426, 2026-09-02 08:00Z) **failed
+inside the platform worker** after reading one 1.2 GB partition ("cannot access
+local variable 'object'"); it left 297,771 of 595,763 speeches labelled (the
+portal's 306,842 includes ~9K news articles). Not a billing failure: the
+OpenRouter key stood at $188 of its $300 limit on 2026-09-04.
+
+**Finishing it (2026-09-04, user-approved):** `scripts/arag_enrich_resume.py`
+(bundled to desktop `/tmp/opax_enrich/`, runs detached, log `/tmp/opax_enrich/run.log`,
+checkpoint `scripts/state/checkpoint.json`) enumerates the unlabelled speeches with
+`POST /catalog` `{"resource":{"and":[kind=speech, {"not": labelset topic}]}}`
+walked in 5-minute `created` windows (offset paging over the whole set degrades to
+40 s a page; a window pages in ~1 s), then runs labeler tasks of 25,000 rids each,
+one at a time, deleting the stale `opax-topics` config first and waiting for each
+task to complete before the next. Cost estimate from the sample rate: ~$50 for
+~298K speeches. Summaries follow the same pattern (`plan-summaries` /
+`resume-summaries`, ask task, every speech the 485-doc sample did not cover,
+~$50). `python3 scripts/arag_enrich_resume.py status` on desktop reports both.
 
 ## Summaries sample (2026-09-01 evening — COMPLETE, live)
 
