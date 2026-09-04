@@ -3293,3 +3293,243 @@ textarea.grow-field.is-collapsed { white-space: nowrap; }
   border-bottom: 1.5px solid var(--bronze-rule); align-self: start; justify-self: start;
 }
 .source-read:hover { color: var(--ink); border-color: var(--bronze-ink); }
+
+/* ==== bills-ui ============================================================
+   The bill page and its touchpoints. Everything here reads in the house
+   register: the record's serif for anything the record or a model says about
+   the bill, the sans for machinery, hairlines rather than boxes, bronze only
+   where something touches the record. Party colour stays a dot beside a name —
+   the paired bars say aye or no, and nothing else, so a chart never asserts a
+   party identity the split does not carry. Mobile first at 360; every control
+   and disclosure clears 44px. ------------------------------------------ */
+
+/* ---- one bill: the head ------------------------------------------------- */
+
+.bill-head { max-width: 68ch; }
+.bill-title { font: 700 1.6rem/1.28 var(--serif); margin: 0; overflow-wrap: break-word; }
+.bill-short {
+  margin: var(--space-2) 0 0; font: 400 0.9375rem/1.5 var(--sans); color: var(--ink-soft);
+}
+.bill-tag { margin-top: var(--space-2); }
+.bill-tag a { text-decoration: none; border-bottom: 1px solid var(--bronze-rule); }
+.bill-tag a:hover { color: var(--bronze-ink); }
+/* The status is a fact with a date on it; the date is never allowed to leave. */
+.bill-status {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.75rem;
+  margin: var(--space-3) 0 0; padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+  font: 400 0.9375rem/1.5 var(--sans); color: var(--ink-soft); max-width: 68ch;
+}
+.bill-status b { font: 700 1.0625rem/1.4 var(--sans); color: var(--ink); }
+.bill-status-as { color: var(--ink-faint); font-size: 0.875rem; }
+
+/* ---- the summary card --------------------------------------------------- */
+/* Same treatment as a speech's machine brief (.doc-brief): a reader who has
+   learned that sunken panel with the bronze edge means "written by a model,
+   not the record" reads it the same way here. */
+
+.bill-summary {
+  margin: var(--space-5) 0 0; max-width: 68ch;
+  background: var(--paper-sunken); border-left: 3px solid var(--bronze);
+  border-radius: 0 4px 4px 0; padding: 0.9rem 1.1rem 1rem;
+}
+.bill-summary .subject-section-title { margin: 0; font-size: 1.2rem; }
+.bill-summary .doc-brief-head { margin-bottom: var(--space-3); }
+.bill-sentences p {
+  font: 400 1.0625rem/1.62 var(--serif); color: var(--ink); margin: 0 0 0.65rem;
+}
+.bill-sentences p:last-child { margin-bottom: 0; }
+.bill-sub {
+  font: 600 0.9375rem/1.3 var(--sans); color: var(--ink-soft); margin: var(--space-4) 0 var(--space-2);
+  letter-spacing: 0.01em;
+}
+.bill-changes { margin: 0; padding-left: 1.05rem; }
+.bill-changes li {
+  font: 400 0.9375rem/1.6 var(--sans); color: var(--ink); margin: 0 0 0.35rem;
+}
+.bill-changes li::marker { color: var(--bronze); }
+.bill-affected { margin: 0; font: 400 0.9375rem/1.6 var(--sans); color: var(--ink); }
+.bill-attrib { margin-top: var(--space-4); }
+.bill-attrib a { color: var(--ink-faint); }
+.bill-attrib a:hover { color: var(--bronze-ink); }
+.bill-summary-empty { background: none; border-left-color: var(--line-strong); padding-left: 1.1rem; }
+.bill-summary-empty .status { margin-top: 0; }
+
+/* ---- the timeline: a hairline ruler ------------------------------------- */
+
+.bill-section { margin: 0; }
+.bill-ruler { display: block; width: 100%; height: auto; max-width: 680px; margin: var(--space-3) 0 var(--space-4); }
+.bill-ruler-axis { stroke: var(--line-strong); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.bill-ruler-tick { stroke: var(--bronze-ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.bill-ruler-label { font: 400 11px/1 var(--sans); fill: var(--ink-faint); }
+.bill-dates { list-style: none; margin: 0; padding: 0; max-width: 68ch; }
+.bill-date {
+  display: grid; grid-template-columns: 6.25rem minmax(0, 1fr); column-gap: 0.7rem;
+  border-top: 1px solid var(--line); padding: var(--row-gap) 0;
+}
+.bill-date:first-child { border-top: none; }
+.bill-date-when { color: var(--ink-faint); font: 400 0.8125rem/1.7 var(--sans); }
+.bill-date-what { font: 400 0.9375rem/1.5 var(--sans); color: var(--ink); }
+.bill-date-what a { text-decoration: none; border-bottom: 1px solid var(--bronze-rule); }
+.bill-date-house { display: block; color: var(--ink-faint); font-size: 0.8125rem; }
+
+/* ---- divisions and their party splits ----------------------------------- */
+
+.bill-division-list { list-style: none; margin: 0; padding: 0; max-width: 68ch; }
+.bill-division { border-top: 1px solid var(--line); padding: var(--space-4) 0 var(--space-4); }
+.bill-division:first-child { border-top: none; padding-top: var(--space-2); }
+.bill-division-q {
+  font: 600 1.0625rem/1.42 var(--serif); display: block;
+  /* A question can be one long editorial note carrying a URL; it wraps inside
+     the column rather than pushing the page sideways. */
+  overflow-wrap: anywhere; max-width: 100%;
+}
+a.bill-division-q { text-decoration: none; }
+a.bill-division-q:hover { color: var(--bronze-ink); }
+.bill-division .result-meta { display: flex; margin-top: 0.2rem; color: var(--ink-faint); font-size: 0.8125rem; }
+.bill-division-out {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.6rem;
+  margin: var(--space-2) 0 var(--space-3); font: 400 0.9375rem/1.4 var(--sans); color: var(--ink-soft);
+}
+.bill-division-out b { color: var(--ink); }
+/* The count on TheyVoteForYou or the state Hansard: the number's own source,
+   one step from the number, without competing with the question above it. */
+.bill-division-src {
+  display: inline-flex; align-items: center; min-height: 44px; align-self: center;
+  font: 400 0.8125rem/1.4 var(--sans); color: var(--ink-faint);
+  text-decoration: none; border-bottom: 1px solid var(--line);
+}
+.bill-division-src:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }
+
+.bill-splits { list-style: none; margin: 0; padding: 0; }
+/* Phone: the party names the split, the bars sit under it full width, and the
+   two figures stay on the name's line where they can be compared down the column. */
+.bill-split {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline;
+  column-gap: 0.6rem; row-gap: 0.25rem; padding: 0.3rem 0;
+}
+.bill-split-party {
+  display: inline-flex; align-items: baseline; gap: 0.35rem; min-width: 0;
+  font: 400 0.875rem/1.4 var(--sans); color: var(--ink); overflow-wrap: anywhere;
+}
+.bill-split-n {
+  font: 600 0.8125rem/1.4 var(--sans); color: var(--ink-soft); font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.bill-split-bars {
+  grid-column: 1 / -1; display: flex; flex-direction: column; gap: 2px;
+  background: none; min-width: 0;
+}
+.bill-split-bars i {
+  display: block; height: 5px; border-radius: 2.5px; min-width: 2px;
+  background: var(--paper-sunken);
+}
+.bill-split-bars i.bill-bar-aye { background: var(--bronze); }
+.bill-split-bars i.bill-bar-no { background: var(--ink-faint); }
+.bill-split-bars i[style*="width:0.0%"] { background: none; box-shadow: inset 0 0 0 1px var(--line); }
+.bill-split-none, .bill-split-partial { margin-top: var(--space-3); }
+
+/* ---- what was said, and what became law --------------------------------- */
+
+.bill-speech-brief {
+  margin: 0.35rem 0 0; font: 400 0.9375rem/1.6 var(--serif); color: var(--ink-soft); max-width: 62ch;
+}
+.bill-speeches .source-title { font-family: var(--serif); font-weight: 600; }
+.bill-actions { margin-top: var(--section-gap); display: flex; flex-wrap: wrap; gap: 0.6rem; }
+
+/* ---- the /bills index --------------------------------------------------- */
+
+.bill-row-title { font: 600 1.0625rem/1.4 var(--serif); }
+.bill-row-status { color: var(--ink); font-weight: 600; }
+.bill-row-long {
+  margin: 0.2rem 0 0; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-faint); max-width: 62ch;
+}
+.bill-row-figures { margin: 0.25rem 0 0; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-faint); }
+
+/* ---- the disclosure on a person's voting record ------------------------- */
+/* The row was a link to the record and stays one when nothing matches. Where
+   the register does name the bill, the row becomes a 44px disclosure: three
+   sentences and a way through, or the dated status when nothing is written. */
+
+.bill-peek { margin: 0; }
+.bill-peek-summary {
+  display: flex; flex-direction: column; justify-content: center; gap: 0.15rem;
+  min-height: 44px; padding: 0.25rem 1.6rem 0.25rem 0; position: relative;
+  cursor: pointer; list-style: none;
+}
+.bill-peek-summary::-webkit-details-marker { display: none; }
+.bill-peek-summary::after {
+  content: ""; position: absolute; right: 0.35rem; top: 50%; width: 8px; height: 8px;
+  border-right: 1.5px solid var(--bronze); border-bottom: 1.5px solid var(--bronze);
+  transform: translateY(-70%) rotate(45deg); transform-origin: center;
+}
+.bill-peek[open] > .bill-peek-summary::after { transform: translateY(-25%) rotate(-135deg); }
+.bill-peek-summary:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; }
+.bill-peek-name { font: 600 0.9375rem/1.4 var(--serif); color: var(--ink); }
+.bill-peek-summary:hover .bill-peek-name { color: var(--bronze-ink); }
+.bill-peek-body {
+  padding: var(--space-3) 0 var(--space-3) 0.9rem; margin: var(--space-2) 0 var(--space-3);
+  border-left: 3px solid var(--bronze-wash);
+}
+.bill-peek-body .bill-sentences p { font-size: 0.9375rem; line-height: 1.6; }
+.bill-peek-head { margin-bottom: var(--space-2); }
+.bill-peek-line { margin: 0; font: 400 0.9375rem/1.5 var(--sans); color: var(--ink); }
+.bill-peek-status { margin: 0; }
+.bill-peek-link { margin: var(--space-3) 0 0; }
+.bill-peek-link .action-btn { display: inline-flex; }
+
+/* ---- bills on a party page ---------------------------------------------- */
+
+.party-bill { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 0.6rem; }
+.party-bill .source-title { grid-column: 1 / -1; font-family: var(--serif); font-weight: 600; }
+.party-bill .result-meta { grid-column: 1 / -1; margin-top: 0.15rem; color: var(--ink-faint); font-size: 0.8125rem; }
+.party-bill-bars { grid-column: 1; margin-top: 0.4rem; align-self: center; }
+.party-bill-n { grid-column: 2; margin-top: 0.4rem; align-self: center; }
+
+/* ---- the bill behind a speech ------------------------------------------- */
+/* Quiet: a hairline panel with one bronze edge at the top, not the sunken
+   machine-brief block, so it never competes with the speech's own brief. */
+
+.doc-bill {
+  margin: var(--space-4) 0 0; max-width: 68ch; padding: var(--space-3) 0 0;
+  border-top: 2px solid var(--bronze-wash);
+}
+.doc-bill .subject-section-title { margin: 0; font-size: 1.0625rem; }
+.doc-bill .doc-brief-head { margin-bottom: var(--space-2); }
+.doc-bill-title { margin: 0; font: 600 1.0625rem/1.4 var(--serif); color: var(--ink); }
+.doc-bill-status { margin: 0.2rem 0 0; font: 400 0.875rem/1.5 var(--sans); color: var(--ink-soft); }
+.doc-bill-sentence { margin: var(--space-3) 0 0; font: 400 0.9375rem/1.6 var(--serif); color: var(--ink); }
+.doc-bill-attrib, .doc-bill-none { margin-top: var(--space-2); }
+.doc-bill-link { margin: var(--space-3) 0 0; }
+.doc-bill-link a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font: 600 0.875rem/1.3 var(--sans); color: var(--bronze-ink); text-decoration: none;
+  border-bottom: 1.5px solid var(--bronze-rule);
+}
+.doc-bill-link a:hover { color: var(--ink); border-color: var(--bronze-ink); }
+
+/* ---- wider than a phone -------------------------------------------------- */
+
+@media (min-width: 561px) {
+  .bill-title { font-size: 1.9rem; }
+  /* Room for the party name beside its bars, so the column of figures reads
+     down the division instead of interleaving with the names. */
+  .bill-split {
+    grid-template-columns: 8.5rem minmax(0, 1fr) 3.75rem; align-items: center; row-gap: 0;
+  }
+  .bill-split-bars { grid-column: 2; }
+  .bill-split-n { text-align: right; }
+  .party-bill { grid-template-columns: minmax(0, 1fr) 10.5rem; align-items: baseline; }
+  .party-bill .source-title, .party-bill .result-meta { grid-column: 1; }
+  .party-bill-bars { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; }
+  .party-bill-n { grid-column: 2; grid-row: 3; margin-top: 0.3rem; text-align: right; }
+}
+@media (min-width: 861px) {
+  .bill-title { font-size: 2.15rem; }
+}
+/* Tiny phones: the date column costs more than it gives, so the stage sits
+   under its own date rather than squeezing to two words a line. */
+@media (max-width: 379px) {
+  .bill-date { grid-template-columns: minmax(0, 1fr); row-gap: 0.1rem; }
+  .bill-date-when { line-height: 1.4; }
+}
