@@ -3307,3 +3307,6 @@ textarea.grow-field.is-collapsed { white-space: nowrap; }
   .subject-person .subject-section-title { margin-top: 2rem; }
 }
 
+/* ==== chat: the thread owns the foot of the page ==== */
+html[data-panel="chat"] footer { display: none; }
+

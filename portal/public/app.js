@@ -766,6 +766,7 @@ function showPanel(name) {
     if (active) { const group = t.closest("details.drawer-group"); if (group) group.open = true; }
   }
   for (const p of PANELS) $(`panel-${p}`).hidden = p !== name;
+  document.documentElement.dataset.panel = name; // lets the stylesheet know the page (the chat drops the footer)
   document.querySelector("main").classList.toggle("compact", name !== "ask");
   const statsLink = document.querySelector(".masthead-link");
   if (statsLink) {
