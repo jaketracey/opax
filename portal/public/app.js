@@ -819,10 +819,17 @@ function loadMoneyFile(jur) {
   return moneyFiles[jur];
 }
 
-function moneyHash(jur, industry) {
+function moneyHash(jur, industry, keepView = false) {
   const p = new URLSearchParams();
   if (jur && jur !== "federal") p.set("jur", jur);
   if (industry) p.set("industry", industry);
+  if (keepView) {
+    const current = parseHash().params;
+    for (const key of ["from", "to", "cpi"]) {
+      const value = current.get(key);
+      if (value) p.set(key, value);
+    }
+  }
   const q = p.toString();
   return q ? `/money?${q}` : "/money";
 }
@@ -833,7 +840,7 @@ function renderMoneySwitch(jur) {
   box.innerHTML = Object.entries(MONEY_JURISDICTIONS).map(([k, c]) =>
     `<button type="button" data-jur="${esc(k)}" aria-pressed="${k === jur ? "true" : "false"}">${esc(c.label)}</button>`).join("");
   for (const btn of box.querySelectorAll("button")) {
-    btn.addEventListener("click", () => { goRoute(moneyHash(btn.dataset.jur)); });
+    btn.addEventListener("click", () => { goRoute(moneyHash(btn.dataset.jur, moneyMapIsolate, true)); });
   }
 }
 
@@ -850,7 +857,15 @@ function moneyFineprintHTML(jur, meta) {
     parts.push("Source: Australian Electoral Commission annual and election returns, financial years 1998-99 to 2025-26.");
     parts.push(AEC_NOTE, "Public electoral funding and internal party transfers are excluded.", STATE_NOT_SUMMED);
   }
-  const full = jur === "federal" ? "/map" : `/map?jur=${encodeURIComponent(jur)}`;
+  const fullParams = new URLSearchParams();
+  if (jur !== "federal") fullParams.set("jur", jur);
+  const current = parseHash().params;
+  for (const key of ["from", "to", "cpi"]) {
+    const value = current.get(key);
+    if (value) fullParams.set(key, value);
+  }
+  const fullQuery = fullParams.toString();
+  const full = fullQuery ? `/map?${fullQuery}` : "/map";
   // The note runs the width of the map; its two ways out are buttons, not prose.
   return `<span class="money-note-text">${parts.filter(Boolean).map((s) => esc(s)).join(" ")}</span>
       <span class="money-note-actions">${actionBtn("download", cfg.file, "Download the data")}${actionBtn("map", full, "Full-screen map")}</span>`;
