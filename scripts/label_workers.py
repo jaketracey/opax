@@ -49,7 +49,7 @@ DEFAULT_DB = Path(os.environ.get("LABEL_QUEUE_DB") or (
     "/private/tmp/claude-501/-Users-jake-Projects-opax/c097728b-8dc8-4ab0-90d6-0b7645b85942/scratchpad/labels_queue.sqlite"))
 STOP_FILE = DEFAULT_DB.with_name("labels_stop")
 STALE_CLAIM_S = 45 * 60
-MAX_LABELS = 3
+MAX_LABELS = 4
 TEXT_HEAD, TEXT_TAIL = 1800, 400
 
 
