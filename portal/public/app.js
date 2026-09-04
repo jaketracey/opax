@@ -3943,7 +3943,7 @@ async function openSubject(kind, name, manageFocus) {
   renderPersonVotes(name, photoMap?.[name.trim().toLowerCase()] ?? null, sections).then(() => refreshPersonJumps(sections));
   renderPersonInterests(name, null, sections).then(() => refreshPersonJumps(sections));
   renderPersonSpeeches(name, speeches, chambers, sections).then(() => refreshPersonJumps(sections));
-  renderPersonDiary(name, sections, chambers);
+  renderPersonDiary(name, sections, chambers).then(() => polishPersonSections(sections));
   const news = document.createElement("section");
   sections.appendChild(news);
   await subjectNews(name, news);
@@ -3963,6 +3963,7 @@ async function openSubject(kind, name, manageFocus) {
   const mentionHeading = mentions.querySelector(".kicker");
   if (mentionHeading) mentionHeading.outerHTML = `<h3 class="subject-section-title">Mentions in parliament</h3>`;
   else mentions.remove();
+  polishPersonSections(sections);
   refreshPersonJumps(sections);
 }
 
@@ -4002,7 +4003,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections) {
   refreshPersonJumps(sections);
   const briefs = await fetchBriefMap(newest);
   if (currentSubjectKey !== key || !slot.isConnected) return;
-  // Preserve focus and scroll position while optional briefs arrive.
+  // Preserve existing links and keyboard focus while optional briefs arrive.
   slot.querySelectorAll(".person-speech-link").forEach((link, index) => {
     const brief = briefs[newest[index].resource];
     if (typeof brief !== "string" || !brief.trim()) return;
@@ -4011,14 +4012,30 @@ async function renderPersonSpeeches(name, fallback, chambers, sections) {
   });
 }
 
+function polishPersonSections(sections) {
+  if (!sections.isConnected) return;
+  // Adapt auxiliary sections only in this entry; their shared renderers stay intact.
+  for (const label of sections.querySelectorAll(":scope > .kicker, #subject-diary .kicker")) {
+    const heading = document.createElement(label.classList.contains("kicker-sub") ? "h4" : "h3");
+    heading.className = "subject-section-title";
+    heading.textContent = label.textContent;
+    label.replaceWith(heading);
+  }
+}
+
 function refreshPersonJumps(sections) {
   if (!sections.isConnected) return;
   const nav = sections.querySelector(".person-jumps");
   if (!nav) return;
   const entries = [["person-topics", "Topics"], ["subject-votes", "Votes"], ["person-ties", "Ties"], ["person-register", "Interests"], ["person-speeches", "Speeches"]];
-  nav.innerHTML = entries.filter(([id]) => sections.querySelector(`#${id}`)?.textContent.trim())
+  const markup = entries.filter(([id]) => sections.querySelector(`#${id}`)?.textContent.trim())
     .map(([id, label]) => `<a href="#${id}" data-person-jump="${id}">${label}</a>`).join("");
+  if (nav.dataset.markup === markup) return;
+  const focused = nav.contains(document.activeElement) ? document.activeElement.dataset.personJump : null;
+  nav.dataset.markup = markup;
+  nav.innerHTML = markup;
   nav.hidden = !nav.children.length;
+  if (focused) nav.querySelector(`[data-person-jump="${focused}"]`)?.focus({ preventScroll: true });
   nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", (event) => {
     event.preventDefault();
     const target = sections.querySelector(`#${link.dataset.personJump}`);

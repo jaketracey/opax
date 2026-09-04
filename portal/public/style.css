@@ -2545,3 +2545,25 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 .subject-person .person-jumps { gap: 0 .4rem; }
 .subject-person .person-jumps a { min-width: 44px; justify-content: center; }
 .subject-person .person-topic-legend[hidden] { display: none; }
+
+.subject-person #subject-sections :is(a, button, summary, input):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
+.subject-person #subject-sections :is(section, h3, #subject-votes):focus { outline: none; }
+.subject-person #subject-sections :is(section, h3, #subject-votes):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 4px; }
+.subject-person #subject-sections .fineprint, .subject-person .person-topic-legend { font-size: .875rem; line-height: 1.6; }
+.subject-person .votes-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; }
+.subject-person .votes-tiles .tile:last-child { grid-column: auto; }
+.subject-person .votes-tiles .tile b { font-size: 1.45rem; font-variant-numeric: tabular-nums; }
+.subject-person .votes-tiles .tile span { font-size: .8125rem; }
+.subject-person #person-mentions .source-title { display: inline-flex; align-items: center; min-height: 44px; font: 600 1rem/1.5 var(--serif); }
+.subject-person #person-mentions .snippet { font: 400 1rem/1.6 var(--serif); }
+.subject-person #person-mentions .result-meta { display: block; }
+.subject-person #person-mentions .fineprint > a { display: inline-flex; align-items: center; min-height: 44px; }
+.subject-person .interests-items .result-meta a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+.subject-person .interests-holders li { grid-template-columns: 4.5rem minmax(0, 1fr); }
+.subject-person .person-topic-bars .barrow-name { overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: reduce) {
+  .subject-person #subject-sections *, .subject-person #subject-sections *::before, .subject-person #subject-sections *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+.subject-person .votes-tiles { display: grid; }
+.subject-person .votes-tiles .tile { min-width: 0; }
+.subject-person .interests-items .interests-desc, .subject-person .interests-items .result-meta { display: block; }
