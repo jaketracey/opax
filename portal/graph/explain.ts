@@ -891,6 +891,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       scene = new FlowScene(stage, giverColour, partyColour)
     } catch {
       scene = null
+      stage.querySelector('canvas.explain-canvas')?.remove()
       stage.classList.add('explain-stage-static')
       stage.append(el('p', 'explain-status', 'The animated flow needs WebGL, which this browser does not offer; the figures and the record are below.'))
     }
