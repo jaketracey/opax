@@ -377,6 +377,18 @@ const CSS = `
 .mm-cpi-copy { display: block; min-width: 0; }
 .mm-cpi-name { display: block; font-size: 12px; font-weight: 600; color: #33322e; }
 .mm-cpi-note { display: block; font-size: 10px; line-height: 1.25; color: #8a8578; }
+/* On the compact strip the note lives behind a small i: a 44px target drawing
+   a 22px ring, and a paper popover beneath the strip. Hidden on the full plate,
+   where the note sits under the label. */
+.mm-cpi-info { display: none; flex: none; width: 44px; height: 44px; margin: 0 -8px 0 -6px; padding: 0;
+  border: 0; background: none; cursor: pointer; color: #8a6a10; align-items: center; justify-content: center; }
+.mm-cpi-info span { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px currentColor; font: italic 700 13px/1 Georgia, 'Times New Roman', serif; }
+.mm-cpi-info[aria-expanded='true'] span { background: #8a6a10; color: ${SURFACE}; }
+.mm-cpi-pop { position: absolute; top: calc(100% + 6px); left: 0; z-index: 6; width: min(300px, 100%);
+  padding: 9px 11px; background: ${SURFACE}; border: 1px solid #d5d1c4; border-radius: 6px;
+  box-shadow: 0 10px 24px rgba(30, 26, 18, 0.16); font-size: 12px; line-height: 1.45; color: #33322e; }
+.mm-cpi-pop[hidden] { display: none; }
 /* The same control on a small plate: one row, the window years as its label,
    the two thumbs and inflation switch sharing one compact strip. */
 .mm-scrub-mini { width: auto; max-width: calc(100% - 24px); padding: 5px 10px;
@@ -390,8 +402,11 @@ const CSS = `
 .mm-scrub-mini input[type='range']::-moz-range-track { height: 44px; }
 .mm-scrub-mini input[type='range']::-webkit-slider-thumb { width: 14px; height: 14px; margin-top: 15px; }
 .mm-scrub-mini input[type='range']::-moz-range-thumb { width: 14px; height: 14px; }
-.mm-scrub-mini .mm-cpi { flex: none; width: 143px; margin: 0; padding: 0 0 0 9px;
+.mm-scrub-mini .mm-cpi { flex: none; width: auto; margin: 0; padding: 0 0 0 9px;
   border-top: 0; border-left: 1px solid #e4e1d8; }
+.mm-scrub-mini .mm-cpi-name { font-size: 11px; white-space: nowrap; }
+.mm-scrub-mini .mm-cpi-note { display: none; }
+.mm-scrub-mini .mm-cpi-info { display: flex; }
 .mm-fallback { display: flex; align-items: center; justify-content: center;
   height: 100%; padding: 24px; text-align: center; color: #57544a; }
 @media (prefers-reduced-motion: reduce) {
@@ -890,6 +905,29 @@ export async function mountMoneyMap(
     cpiName.textContent = 'Adjust for inflation'
     const cpiNote = el('span', 'mm-cpi-note', cpiCopy)
     cpiNote.textContent = 'in 2025–26 dollars, ABS CPI'
+    // The compact strip has no room for the note: a small i opens it as a
+    // popover beneath the strip (outside the label, so a tap never toggles
+    // the switch by accident).
+    const cpiInfo = el('button', 'mm-cpi-info', scrub)
+    cpiInfo.type = 'button'
+    cpiInfo.setAttribute('aria-label', 'About the inflation adjustment')
+    cpiInfo.setAttribute('aria-expanded', 'false')
+    el('span', '', cpiInfo).textContent = 'i'
+    const cpiPop = el('div', 'mm-cpi-pop', scrub)
+    cpiPop.hidden = true
+    cpiPop.setAttribute('role', 'note')
+    cpiPop.textContent = 'Adjusted to 2025–26 dollars with the ABS Consumer Price Index (all groups, Australia, financial-year average). Nominal figures are on the returns.'
+    const closePop = () => { cpiPop.hidden = true; cpiInfo.setAttribute('aria-expanded', 'false') }
+    cpiInfo.addEventListener('click', (event) => {
+      event.stopPropagation()
+      const open = cpiPop.hidden
+      cpiPop.hidden = !open
+      cpiInfo.setAttribute('aria-expanded', String(open))
+    })
+    document.addEventListener('pointerdown', (event) => {
+      if (!cpiPop.hidden && !cpiPop.contains(event.target as Node) && event.target !== cpiInfo && !cpiInfo.contains(event.target as Node)) closePop()
+    })
+    scrub.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !cpiPop.hidden) { closePop(); cpiInfo.focus() } })
 
     let pending = 0
     const applyScrub = () => {
