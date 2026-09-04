@@ -3927,7 +3927,7 @@ async function openSubject(kind, name, manageFocus) {
   await renderPersonExpenses(name, photoMap?.[name.trim().toLowerCase()], sections);
   if (party) {
     sections.insertAdjacentHTML("beforeend",
-      `<p class="person-money-link"><a href="${esc(subjectHash("party", party))}">Money map from ${esc(party)} →</a></p>`);
+      `<p class="person-money-link"><a class="action-btn" href="${esc(subjectHash("party", party))}"><span class="btn-glyph" aria-hidden="true">$</span><span>Money map from ${esc(party)}</span></a></p>`);
   }
 }
 
