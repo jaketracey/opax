@@ -2226,11 +2226,6 @@ function votesFor(name) {
   return (pid && votesData?.[pid]) || null;
 }
 
-/** Off-site lookup for a person, company or party: a web search in a new tab. */
-function webSearchUrl(name) {
-  return `https://www.google.com/search?q=${encodeURIComponent(`${name} Australia`)}`;
-}
-
 function subjectHash(kind, label) {
   return `/subject/${kind}/${encodeURIComponent(label)}`;
 }
@@ -2559,14 +2554,6 @@ async function subjectMentions(name, container, heading) {
       `<p class="kicker">${esc(heading)}</p><ul class="subject-list" role="list">${items}</ul>
        <p class="fineprint"><a href="${esc(searchHash(`"${name}"`, {}))}">All mentions in the record</a></p>`);
   } catch { /* mentions are a bonus, not a dependency */ }
-}
-
-function weeklyFunFact(node) {
-  const years = Math.max((node.lastYear || 0) - (node.firstYear || 0) + 1, 1);
-  const perWeek = node.total / (years * 52);
-  if (!isFinite(perWeek) || perWeek < 1) return "";
-  return `That works out to about <b>${fmtMoney(Math.round(perWeek))}</b> every single week for
-    ${years} year${years > 1 ? "s" : ""}, all from published AEC disclosures.`;
 }
 
 /**
@@ -3229,7 +3216,9 @@ async function renderPersonVotes(name, personId, sections) {
   const years = recs.flatMap((r) => (Array.isArray(r.years) ? r.years : [])).map(Number).filter(Number.isFinite);
   const jurs = [...new Set(recs.map((r) => r.jurisdiction).filter(Boolean))];
   const jurName = (j) => STATE_NAMES[j] || String(j || "").toUpperCase();
-  const jurChip = (j) => `<span class="party party-oth" style="--pc:var(--bronze)"><i aria-hidden="true"></i>${esc(jurName(j))}</span>`;
+  const jurChip = (j) => jurs.length > 1
+    ? `<span class="party party-oth" style="--pc:var(--bronze)"><i aria-hidden="true"></i>${esc(jurName(j))}</span>`
+    : "";
   const side = (field) => recs
     .flatMap((r) => (Array.isArray(r[field]) ? r[field] : []).map((d) => ({ ...d, jur: d.jur || r.jurisdiction })))
     .sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 6);
@@ -3282,6 +3271,7 @@ async function openSubject(kind, name, manageFocus) {
   currentSubjectKey = key;
   destroySubjectMap();
   const body = $("subject-body");
+  body.classList.toggle("subject-person", kind === "person");
   const SUBJECT_LABELS = {
     person: "Parliamentarian", party: "Political party", donor: "Donor",
     // Provisional: the entry names its own AEC category once the register
@@ -3319,8 +3309,7 @@ async function openSubject(kind, name, manageFocus) {
         [["Type", kind === "party" ? "Political party" : "Organisation"],
          kind === "donor" && fitsInfoRow(fits, "by_entity", name)], "",
         [actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for them", { primary: true }),
-         actionBtn("map", "/money", "Open the money map"),
-         actionBtn("external", webSearchUrl(name), "Search the web", { external: true })]);
+         actionBtn("map", "/money", "Open the money map")]);
       if (kind === "donor") renderDonorStateMoney(name, sections);
       subjectMentions(name, sections, "In parliament");
       return;
@@ -3363,7 +3352,7 @@ async function openSubject(kind, name, manageFocus) {
           `<span class="alias-toggle">and ${a.length - 3} more</span></summary>` +
           `<span class="alias-list alias-rest">${a.slice(3).map(esc).join("; ")}</span></details>`;
       })()],
-    ], weeklyFunFact(node), [
+    ], "", [
       actionBtn("ask",
         askHash(isParty
           ? `What has parliament said about the ${node.label}?`
@@ -3373,7 +3362,6 @@ async function openSubject(kind, name, manageFocus) {
         `Ask what parliament said about ${isParty ? "them" : (["individual", "other", ""].includes(String(node.industry || "").toLowerCase()) ? "this donor" : "this industry")}`, { primary: true }),
       actionBtn("search", searchHash(`"${node.label}"`, {}), "Search mentions in the record"),
       actionBtn("download", "/graph/money.json", "Download the data"),
-      actionBtn("external", webSearchUrl(node.label), "Search the web", { external: true }),
     ]);
     sections.insertAdjacentHTML("beforeend", barList(flowRows, {
       fmt: fmtMoney,
@@ -3438,10 +3426,8 @@ async function openSubject(kind, name, manageFocus) {
     fitsInfoRow(fits, "people", name),
   ], "", [
     actionBtn("speeches", searchHash("", { speaker: name }), "View all their speeches", { primary: true }),
-    actionBtn("external", `https://theyvoteforyou.org.au/search?query=${q}`, "Voting record", { external: true }),
     actionBtn("external", `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliamentary profile", { external: true }),
     actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
-    actionBtn("external", webSearchUrl(name), "Search the web", { external: true }),
   ]);
   renderPortraitCredit(name, key);
   sections.insertAdjacentHTML("beforeend", `
@@ -3488,15 +3474,8 @@ async function openSubject(kind, name, manageFocus) {
   await subjectNews(name, sections);
   await renderPersonExpenses(name, photoMap?.[name.trim().toLowerCase()], sections);
   if (party) {
-    await loadMoneyData();
-    if (currentSubjectKey !== key) return;
-    const pnode = findMoneyNode("party", party);
-    if (pnode) {
-      sections.insertAdjacentHTML("beforeend",
-        `<p class="fineprint" style="margin-top:1rem">The money map starts from ${esc(party)}, the party this
-         speaker's indexed speeches carry. In AEC disclosure data, money flows to parties, not individuals.</p>`);
-      mountSubjectMap(pnode.id);
-    }
+    sections.insertAdjacentHTML("beforeend",
+      `<p class="person-money-link"><a href="${esc(subjectHash("party", party))}">Money map from ${esc(party)} →</a></p>`);
   }
 }
 
@@ -3537,6 +3516,7 @@ async function openTopicPage(slug, manageFocus) {
   currentSubjectKey = key;
   destroySubjectMap();
   const body = $("subject-body");
+  body.classList.remove("subject-person");
   const name = TOPICS[slug];
   if (!name) {
     body.innerHTML = `<p class="kicker">Topic</p>
@@ -4545,7 +4525,6 @@ async function renderCampaignerEntry(name, key) {
     box.innerHTML = infoboxHTML([["Type", "Organisation"]], "", [
       actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for them", { primary: true }),
       actionBtn("entry", "/subject/campaigner", "All campaigners and third parties"),
-      actionBtn("external", webSearchUrl(name), "Search the web", { external: true }),
     ]);
     await subjectMentions(name, sections, "In parliament");
     return;
@@ -4603,7 +4582,6 @@ async function renderCampaignerEntry(name, key) {
       "Ask what parliament said about them", { primary: true }),
     actionBtn("search", searchHash(`"${e.name}"`, {}), "Search mentions in the record"),
     actionBtn("download", "/graph/campaigners.json", "Download the data"),
-    actionBtn("external", webSearchUrl(e.name), "Search the web", { external: true }),
   ]);
 
   const charts = CAMPAIGNER_CHART_ORDER
@@ -4971,14 +4949,12 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
   const topDonor = don?.top_donors?.[0];
   if (topDonor) {
     const node = findMoneyNode("donor", topDonor[0]);
-    const fact = node ? weeklyFunFact(node).replace(/<[^>]+>/g, "") : "";
     cards.push(`<article class="report-card ency-card">
       <div class="ency-id">
         <span class="card-kicker">Donor${node?.industry ? ` · ${esc(industryLabel(node.industry))}` : ""}</span>
         <a class="card-title ency-name" href="${esc(subjectHash("donor", topDonor[0]))}">${esc(topDonor[0])}</a>
       </div>
-      <p class="card-blurb">${esc(fmtMoney(topDonor[1]))} disclosed${node ? `, ${node.firstYear} to ${node.lastYear}` : " to parties"}.
-        ${esc(fact)}</p>
+      <p class="card-blurb">${esc(fmtMoney(topDonor[1]))} disclosed${node ? `, ${node.firstYear} to ${node.lastYear}` : " to parties"}.</p>
       ${actionBtn("entry", subjectHash("donor", topDonor[0]), "Open the entry")}
     </article>`);
   }
@@ -6391,7 +6367,7 @@ $("pager-pages")?.addEventListener("click", (e) => {
 // --- empty record ------------------------------------------------------------
 // A blank record is a finding in itself, so it gets the page's own register
 // rather than a grey status line: what was looked for, why Hansard may not
-// hold it, and the ways out (looser phrase, fewer filters, the web).
+// hold it, and the ways out (a looser phrase or fewer filters).
 
 function renderSearchEmpty(q, f) {
   const box = $("search-empty");
@@ -6404,7 +6380,6 @@ function renderSearchEmpty(q, f) {
   if (q && bare !== q) actions.push(`<a class="action-btn" href="${esc(searchHash(bare, f))}">Try without the quotes</a>`);
   if (q && f.mode === "keyword") actions.push(`<a class="action-btn" href="${esc(searchHash(q, { ...f, mode: "hybrid" }))}">Match by meaning too</a>`);
   if (q && activeFilterSummary(f)) actions.push(`<a class="action-btn" href="${esc(searchHash(q, { kind: f.kind, mode: f.mode }))}">Search without filters</a>`);
-  if (shown) actions.push(`<a class="action-btn" href="${esc(webSearchUrl(shown))}" target="_blank" rel="noopener">Search the web ↗︎</a>`);
   box.innerHTML = `
     <span class="empty-mark" aria-hidden="true">“ ”</span>
     <h2 class="empty-title">Nothing in the record for “${esc(shown)}”.</h2>

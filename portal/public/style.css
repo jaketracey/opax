@@ -1674,11 +1674,6 @@ a.ency-name:hover, a.ency-name:focus-visible {
   text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
 .alias-more[open] > summary .alias-toggle::after { content: " (hide)"; }
 .alias-rest { display: block; margin-top: 0.3rem; }
-.funfact {
-  background: var(--bronze-wash); border-radius: 4px; padding: 0.8rem 1rem;
-  margin-top: 0.9rem; font-size: 0.9375rem; line-height: 1.5;
-}
-.funfact b { font-variant-numeric: tabular-nums; }
 .subject-list { list-style: none; margin: 0; padding: 0; }
 .subject-list li { border-top: 1px solid var(--line); padding: var(--row-gap) 0; }
 .subject-list li:first-child { border-top: none; }
@@ -1848,7 +1843,9 @@ a.ency-name:hover, a.ency-name:focus-visible {
 @media (max-width: 900px) {
   .subject-grid { grid-template-columns: 1fr; }
   .infobox { position: static; }
+  .subject-person .infobox { order: -1; }
 }
+.person-money-link { margin: var(--section-gap) 0 0; font: 600 1rem/1.4 var(--serif); }
 
 /* ---- about / methods ---------------------------------------------------- */
 

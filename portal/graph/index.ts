@@ -821,10 +821,6 @@ export async function mountMoneyMap(
     a.textContent = label
     if (external) { a.target = '_blank'; a.rel = 'noopener' }
   }
-  // Off-site lookup for a person, company or party, in a new tab.
-  const webSearch = (name: string) =>
-    `https://www.google.com/search?q=${encodeURIComponent(`${name} Australia`)}`
-
   const subjectUrl = (kind: 'donor' | 'party', label: string) =>
     `/subject/${kind}/${encodeURIComponent(label)}`
 
@@ -908,7 +904,6 @@ export async function mountMoneyMap(
         `/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`,
         `What was said about ${shortName(node.label)}?`, true)
       trigger(card, subjectUrl('donor', node.label), 'Full profile', true)
-      trigger(card, webSearch(node.label), 'Search the web ↗', true, true)
     } else {
       listTitle.textContent = 'Top donors shown on the map'
       const incoming = view.edges
@@ -936,7 +931,6 @@ export async function mountMoneyMap(
           `Ask what ${node.label} said about ${industry}`)
       }
       trigger(card, subjectUrl('party', node.label), 'Full profile', true)
-      trigger(card, webSearch(node.label), 'Search the web ↗', true, true)
     }
   }
 
