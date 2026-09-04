@@ -8386,7 +8386,12 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {
         : bar.replace("/>", `>${tip}</path>`);
     }
     if (i === peakIdx) {
-      bars += `<text x="${Math.min(Math.max(x + bw / 2, 24), W - 24)}" y="${y - 5}" class="chart-peak" text-anchor="middle">${esc(fmt(v))}</text>`;
+      // A peak near either edge keeps its figure inside the drawing: the label
+      // hangs from the bar's outer edge instead of straddling the chart's rim.
+      const cx = x + bw / 2;
+      const anchor = cx < W * 0.14 ? "start" : cx > W * 0.86 ? "end" : "middle";
+      const lx = anchor === "start" ? x : anchor === "end" ? x + bw : cx;
+      bars += `<text x="${lx.toFixed(1)}" y="${y - 6}" class="chart-peak" text-anchor="${anchor}">${esc(fmt(v))}</text>`;
     }
   });
   const first = pairs[0]?.[0] ?? "", last = pairs[pairs.length - 1]?.[0] ?? "";

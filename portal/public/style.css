@@ -1331,7 +1331,9 @@ button.link.result-title:hover { color: var(--bronze-ink); }
    set in larger units to land at a readable size; the year ticks drop below
    the axis and the svg may overflow its box by that much. */
 @media (max-width: 700px) {
-  .chart svg { overflow: visible; margin-bottom: 10px; }
+  .chart { padding: 1rem 1.1rem 1.25rem; }
+  .chart figcaption { margin-bottom: 0.9rem; }
+  .chart svg { overflow: visible; margin: 6px 0 16px; }
   .chart-tick, .chart-peak { font-size: 24px; }
   .chart-tick { transform: translateY(9px); }
 }

@@ -384,34 +384,6 @@
  ],
  "key_moments": [
   {
-   "resource": "66fa5dc580f149969f72f0d6cec9d280",
-   "slug": "speech-789604",
-   "title": "National Rental Affordability Scheme Bill 2008; National Rental Affordability Scheme (Consequential Amendments) Bill 2008",
-   "speaker": "Marise Payne",
-   "party": null,
-   "state": "federal",
-   "chamber": "senate",
-   "date": "2008-11-24",
-   "brief": "The speaker argued the National Rental Affordability Scheme would only address a small fraction of the projected 200,000 housing unit shortfall, and raised concerns that its fixed $6,000 annual incentive and rigid parameters may fail to attract institutional investors or deliver a competitive rate of return. The speaker also noted the scheme's tenant eligibility criteria could exclude key workers and that the government had only provided a temporary two-year fix for the charitable status of not-for-profit participants.",
-   "why": "National Rental Affordability Scheme Bill 2008; National Rental\u2026, Federal, 2008",
-   "role": "parliamentarian",
-   "length": 117878
-  },
-  {
-   "resource": "13ca866f3d79464ab112828ba02ef8bc",
-   "slug": "speech-810627",
-   "title": "Matters of Public Interest",
-   "speaker": "Scott Ludlam",
-   "party": "Greens",
-   "state": "federal",
-   "chamber": "senate",
-   "date": "2011-09-21",
-   "brief": "The speaker argued for a national plan to deliver affordable housing, supporting the Australians for Affordable Housing alliance\u2019s six-point plan, and highlighted a shortfall of 90,000 homes requiring $24 billion, while criticizing the lack of a dedicated housing minister and $50 billion in annual tax concessions that inflate house prices.",
-   "why": "Matters of Public Interest, Federal, 2011",
-   "role": "parliamentarian",
-   "length": 15342
-  },
-  {
    "resource": "ef96ea088b3c4407b3b9260bf017e6ad",
    "slug": "speech-328110",
    "title": "Negative gearing and capital gains tax",
@@ -454,18 +426,46 @@
    "length": 4394
   },
   {
-   "resource": "0d784a73f02447c99a6bc146ba9530d2",
-   "slug": "speech-827701",
+   "resource": "419593804aef4f75a02c59ec22ecd158",
+   "slug": "speech-827328",
    "title": "Housing Australia Future Fund Bill 2023",
-   "speaker": "Matt Thistlethwaite",
+   "speaker": "Julie Collins",
    "party": "Labor",
    "state": "federal",
    "chamber": "representatives",
-   "date": "2023-02-15",
-   "brief": "The speaker argued that the Housing Australia Future Fund, a $10 billion investment, is needed to build 30,000 social and affordable homes over five years, including 4,000 for women and children fleeing domestic violence, $30 million for veterans at risk of homelessness, and $200 million for remote Indigenous housing, and criticised the previous coalition government for neglecting housing policy.",
-   "why": "Housing Australia Future Fund Bill 2023, Federal, 2023",
+   "date": "2023-02-09",
+   "brief": "The government introduced the Housing Australia Future Fund bill, a $10 billion fund with annual disbursements capped at $500 million, intended to fund 30,000 social and affordable homes in its first five years. The bill also renames the National Housing Finance and Investment Corporation as Housing Australia and establishes the National Housing Supply and Affordability Council.",
+   "why": "Second reading, Housing Australia Future Fund Bill 2023, 2023",
+   "role": "bill mover",
+   "length": 10024
+  },
+  {
+   "resource": "a65bb723e6f64b95b4280ecad2a8193f",
+   "slug": "speech-838953",
+   "title": "Help To Buy (Commonwealth Powers) Bill",
+   "speaker": "Bolton",
+   "party": "Independent",
+   "state": "qld",
+   "chamber": "qld_la",
+   "date": "2024-06-11",
+   "brief": "The speaker supported the bill to refer powers for the Help to Buy scheme, which would assist 40,000 participants nationally (2,000 in Queensland) through up to 40% Commonwealth shared equity, but noted criticisms from economist John Quiggin that subsidies are undesirable, the scheme has a lottery character, and social housing should be prioritised, while arguing the scheme is too small to address the housing crisis.",
+   "why": "Help To Buy (Commonwealth Powers) Bill, Queensland, 2024",
+   "role": "speaker",
+   "length": 9383
+  },
+  {
+   "resource": "5ffd88dc09274cc1bfeb38d0eb2d6e78",
+   "slug": "speech-839842",
+   "title": "Housing",
+   "speaker": "Will Fowles",
+   "party": null,
+   "state": "vic",
+   "chamber": "vic_la",
+   "date": "2025-05-28",
+   "brief": "The speaker announced a broadcast housing crisis conversation with Major Brendan Nottle, Cr Sarah McKenzie and Rob Pradolin, arguing for urgent nonpartisan action and the Housing First principle to provide stable housing as the foundation for addressing homelessness.",
+   "why": "Housing, Victoria, 2025",
    "role": "parliamentarian",
-   "length": 177495
+   "length": 1671
   }
  ],
  "sections": [
