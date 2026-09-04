@@ -373,7 +373,19 @@ header :focus-visible { outline-color: var(--bronze-bright); }
   box-shadow: 0 14px 32px rgba(21, 27, 20, 0.18); padding: 0.3rem; max-height: 60vh; overflow-y: auto;
 }
 .drawer-sugg .ms-row { min-height: 44px; font-size: 1rem; }
-/* The primary three read as the drawer's headline entries. */
+/* Ask and the money map as two small engraved cards; the field above is the search. */
+.drawer-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin: 0.1rem 0 1rem; }
+.drawer-card {
+  display: flex; flex-direction: column; gap: 0.2rem; min-height: 104px; padding: 0.85rem 0.9rem 0.8rem;
+  background: var(--paper-raised); border: 1px solid var(--line-strong); border-radius: 4px;
+  color: var(--ink); text-decoration: none;
+}
+.drawer-card:hover { border-color: var(--bronze-ink); }
+.drawer-card.active { border-color: var(--bronze); box-shadow: inset 0 0 0 1px var(--bronze-wash); }
+.drawer-card:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; }
+.drawer-card-icon { width: 28px; height: 28px; color: var(--bronze-ink); margin-bottom: 0.35rem; }
+.drawer-card-title { font: 600 1.125rem/1.2 var(--serif); color: var(--ink); }
+.drawer-card-sub { font: 400 0.8125rem/1.3 var(--sans); color: var(--ink-faint); }
 .drawer-link { font: 600 1.375rem/1.25 var(--serif); color: var(--ink); min-height: 52px; }
 .drawer-sub { font: 400 1.0625rem/1.35 var(--sans); color: var(--ink-soft); min-height: 46px; padding-left: 1rem; }
 /* Each section folds behind a serif title; the chevron turns when it is open.
