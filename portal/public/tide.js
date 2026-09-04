@@ -107,7 +107,10 @@ export function mountTide (container, options = {}) {
 
   const load = async () => {
     status.textContent = 'Counting the labelled record by decade…'
-    view.replaceChildren()
+    // Paper placeholder rows in the shape of the list, so the dialog never
+    // stands empty while the decades are counted (see .chart-skeleton).
+    view.innerHTML = `<ol class="tide-list chart-skeleton" aria-hidden="true">${Array.from({ length: 6 }, () => `
+      <li><i class="sk-name"></i><span class="sk-bars"><i style="height:78%"></i><i style="height:52%"></i><i style="height:36%"></i><i style="height:24%"></i></span></li>`).join('')}</ol>`
     controller?.abort()
     controller = new AbortController()
     const wanted = scope

@@ -4356,10 +4356,15 @@ async function openTopicPage(slug, manageFocus) {
     }
   }
 
+  // The tide strip's slot holds its shape while the decades are counted.
+  sections.insertAdjacentHTML("beforeend", `<div class="chart-skeleton tide-strip-skel" id="topic-tide-skel" aria-hidden="true">${
+    [72, 44, 58, 30].map((h) => `<span class="sk-bars"><i style="height:${h}%"></i></span>`).join("")}</div>`);
   const tide = await tidePromise;
   if (currentSubjectKey !== key) return;
   const tideHTML = topicTideHTML(tide, slug, phrase);
-  if (tideHTML) sections.insertAdjacentHTML("beforeend", tideHTML);
+  const tideSkel = $("topic-tide-skel");
+  if (tideHTML) { if (tideSkel) tideSkel.outerHTML = tideHTML; else sections.insertAdjacentHTML("beforeend", tideHTML); }
+  else tideSkel?.remove();
 
   const arc = document.createElement("section");
   arc.className = "topic-arc";
@@ -5533,6 +5538,7 @@ async function openGame(which) {
         displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, coverageRuleHTML,
       });
     }
+    if (which === "tm") wireDialogHeadYear($(game.dialog), ".tm-year");
   } catch (err) {
     $(game.body).innerHTML =
       `<p class="status">This could not load (${esc(String(err.message || err))}). Try again shortly.</p>`;
@@ -5546,6 +5552,35 @@ $("explore-ledger-btn").addEventListener("click", () => openGame("ledger"));
 $("explore-matrix-btn").addEventListener("click", () => openGame("matrix"));
 $("explore-wd-btn").addEventListener("click", () => openGame("wd"));
 $("explore-tvn-btn").addEventListener("click", () => openGame("tvn"));
+// A long dialog scrolls under its sticky head: once its hero figure (the
+// Time Machine's big year) has scrolled past, the head shows that figure,
+// rising in, and a fade beneath the head softens what slides under it.
+const dialogHeadWired = new WeakSet();
+function wireDialogHeadYear(dialog, heroSelector) {
+  if (!dialog || dialogHeadWired.has(dialog)) return;
+  const head = dialog.querySelector(".game-dialog-head");
+  if (!head) return;
+  dialogHeadWired.add(dialog);
+  const label = document.createElement("span");
+  label.className = "game-head-year";
+  label.setAttribute("aria-hidden", "true");
+  head.insertBefore(label, head.firstChild);
+  let hero = null;
+  const sync = () => {
+    hero = hero?.isConnected ? hero : dialog.querySelector(heroSelector);
+    head.classList.toggle("is-scrolled", dialog.scrollTop > 6);
+    if (!hero) { head.classList.remove("is-past"); return; }
+    const r = hero.getBoundingClientRect();
+    const past = r.bottom < head.getBoundingClientRect().bottom + 8;
+    if (past) label.textContent = hero.textContent.trim();
+    head.classList.toggle("is-past", past);
+  };
+  let raf = 0;
+  dialog.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; sync(); }); }, { passive: true });
+  new MutationObserver(() => { hero = null; sync(); }).observe(dialog, { childList: true, subtree: true, characterData: true });
+  sync();
+}
+
 // Closing a game: the dialog settles out (see .game-dialog.is-closing) and
 // the cross on the close control turns away with it; then the real close.
 const GAME_CLOSE_ICON = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg>';
