@@ -235,6 +235,22 @@ async function api(path, options) {
   return data;
 }
 
+/** Read optional machine briefs without ever asking for whole resources. */
+async function fetchBriefMap(resources) {
+  const validRid = /^[0-9a-f]{32}$/;
+  const rids = [...new Set((resources || []).map((r) => r.resource).filter((rid) => validRid.test(rid)))];
+  const briefs = {};
+  // /api/brief deliberately caps a call at 24. Keep the groups serial so a
+  // long topic spine never fans out into dozens of simultaneous KB reads.
+  for (let i = 0; i < rids.length; i += 24) {
+    const query = new URLSearchParams({ rids: rids.slice(i, i + 24).join(",") });
+    try {
+      Object.assign(briefs, (await api(`/api/brief?${query}`)).briefs || {});
+    } catch { /* missing briefs leave their passages in place */ }
+  }
+  return briefs;
+}
+
 /* --- streamed asks -----------------------------------------------------------
    POST /api/ask?stream=1 answers as Server-Sent Events (docs/STREAMING.md):
      event: status  {phase, words}                the model is still reading
@@ -3404,8 +3420,80 @@ function topicParliamentCoverage() {
   return spans;
 }
 
+function topicArcItemHTML(item, brief) {
+  const date = String(item.date || "").slice(0, 10);
+  const year = date.slice(0, 4) || "—";
+  const passage = String(item.snippet || "").trim() || "Open the speech to read the passage.";
+  return `<li class="topic-arc-item">
+    <time class="topic-arc-year"${date ? ` datetime="${esc(date)}"` : ""}>${esc(year)}</time>
+    <div class="topic-arc-entry">
+      <a class="topic-arc-source" href="/doc/${encodeURIComponent(item.slug)}">${esc(displayTitle(item))}</a>
+      <span class="result-meta">${metaHTML(item, { linkSpeaker: true, linkParty: true })}</span>
+      ${brief
+        ? `<p class="topic-arc-brief">${esc(brief)}</p>`
+        : `<p class="topic-arc-passage"><span>Passage · no brief yet</span>${esc(passage)}</p>`}
+    </div>
+  </li>`;
+}
+
+async function renderTopicArc(slug, phrase, key, mount) {
+  mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3>
+    <p class="status">Reading the labelled speeches in date order…</p>`;
+  try {
+    const params = searchQueryParams(phrase, {
+      speaker: "", party: "", state: "", topic: slug, from: "", to: "",
+      kind: "speech", mode: "hybrid",
+    }, 1, "newest");
+    params.set("per", String(SEARCH_EXPORT_MAX));
+    const data = await api(`/api/search?${params}`);
+    if (currentSubjectKey !== key || !mount.isConnected) return;
+    const results = (data.results || []).filter((item) => item.slug);
+    if (!results.length) {
+      mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3>
+        <p class="status">No dated, labelled speeches are in the search window yet.</p>`;
+      return;
+    }
+    mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3>
+      <p class="status">Reading the available machine briefs…</p>`;
+    const briefs = await fetchBriefMap(results);
+    if (currentSubjectKey !== key || !mount.isConnected) return;
+    let order = "newest";
+    const paint = () => {
+      const sorted = [...results].sort((a, b) => {
+        if (!a.date) return b.date ? 1 : 0;
+        if (!b.date) return -1;
+        const byDate = String(a.date || "").localeCompare(String(b.date || ""));
+        return order === "oldest" ? byDate : -byDate;
+      });
+      const briefCount = sorted.filter((item) => briefs[item.resource]).length;
+      mount.innerHTML = `
+        <div class="topic-arc-head">
+          <h3 class="topic-arc-heading">The arc of this debate</h3>
+          <div class="quiet-toggle" role="group" aria-label="Debate chronology">
+            <button type="button" data-arc-order="newest" aria-pressed="${order === "newest"}">Newest</button>
+            <button type="button" data-arc-order="oldest" aria-pressed="${order === "oldest"}">Oldest</button>
+          </div>
+        </div>
+        <ol class="topic-arc-list">${sorted.map((item) => topicArcItemHTML(item, briefs[item.resource])).join("")}</ol>
+        <p class="fineprint">${briefCount.toLocaleString()} of these ${sorted.length.toLocaleString()} strongest labelled matches carry a machine brief so far. The rest retain their opening passage. Each entry opens the speech; <a href="${esc(searchHash(phrase, { topic: slug }, 1, "newest"))}">search the debate</a> for the full retrieval window.</p>`;
+      for (const button of mount.querySelectorAll("[data-arc-order]")) {
+        button.addEventListener("click", () => {
+          if (button.dataset.arcOrder === order) return;
+          order = button.dataset.arcOrder;
+          paint();
+        });
+      }
+    };
+    paint();
+  } catch {
+    if (currentSubjectKey === key && mount.isConnected) {
+      mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3>
+        <p class="status">The chronological view could not be loaded. <a href="${esc(searchHash(phrase, { topic: slug }, 1, "newest"))}">Search the labelled speeches instead</a>.</p>`;
+    }
+  }
+}
+
 async function openTopicPage(slug, manageFocus) {
-  let newestHTML = ""; // built with the counts, rendered last on the page
   const key = `topic:${slug}`;
   if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
   currentSubjectKey = key;
@@ -3494,20 +3582,17 @@ async function openTopicPage(slug, manageFocus) {
         `<p class="fineprint">Share of that parliament's labelled record, then the count.${years
           ? ` Years held: ${esc(years)}.` : ""} Each row opens the speeches behind it.</p>`);
     }
-    if (data.recent?.length) {
-      newestHTML =
-        `<p class="kicker">Newest in the index with this label</p>
-         <ul class="subject-list" role="list">${data.recent.map((r) => `
-           <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(displayTitle(r))}</a>
-             <span class="result-meta">${metaHTML(r, { linkSpeaker: true })}</span></li>`).join("")}</ul>
-         <p class="fineprint">The newest labelled speeches to enter the index, not the newest
-         speeches on the subject. <a href="${esc(searchTopic)}">Search all of them</a></p>`;
-    } else if (count !== null) {
+    if (count === 0) {
       sections.insertAdjacentHTML("beforeend",
         `<p class="status">The labelling pass has not reached this debate yet.
          <a href="${esc(searchHash(phrase, {}))}">Search the record for ${esc(phrase)} instead</a>.</p>`);
     }
   }
+
+  const arc = document.createElement("section");
+  arc.className = "topic-arc";
+  sections.appendChild(arc);
+  const arcPromise = renderTopicArc(slug, phrase, key, arc);
 
   const moneyInd = detectMoneyIndustry(`who donates money to ${phrase}`);
   if (moneyInd) {
@@ -3517,35 +3602,7 @@ async function openTopicPage(slug, manageFocus) {
     if (html) sections.insertAdjacentHTML("beforeend", html);
   }
 
-  // "The latest, in brief": the machine summaries of the newest labelled
-  // speeches, stitched into a briefing under the sections above. The topic
-  // endpoint serves no summaries, so each comes from its own /api/resource
-  // fetch; speeches the summariser has not reached are skipped, and under
-  // two summaries the section stays out entirely rather than stand as a stub.
-  if ((data?.recent?.length ?? 0) >= 2) {
-    const docs = await Promise.all(data.recent.slice(0, 5).map(async (r) => {
-      try {
-        const doc = await api(`/api/resource/${encodeURIComponent(r.slug)}`);
-        return doc?.summary ? { ...r, summary: doc.summary } : null;
-      } catch { return null; }
-    }));
-    if (currentSubjectKey !== key) return;
-    const briefed = docs.filter(Boolean);
-    if (briefed.length >= 2) {
-      sections.insertAdjacentHTML("beforeend", `
-        <div class="topic-digest">
-          <p class="kicker">The latest, in brief</p>
-          ${briefed.map((d) => `
-            <div class="topic-digest-item">
-              <a class="topic-digest-source" href="/doc/${esc(d.slug)}">${partyDotHTML(d.party)}${esc(d.speaker || String(d.title || "").replace(/\s+—\s+\d{4}-\d{2}-\d{2}\s*$/, ""))}${d.date ? `, ${esc(fmtDate(d.date))}` : ""}</a>
-              <p class="topic-digest-text">${inlineHTML(d.summary)}</p>
-            </div>`).join("")}
-          <p class="fineprint">Machine summaries of the newest speeches to enter the index
-            with this label; each links to the full record.</p>
-        </div>`);
-    }
-  }
-  if (newestHTML && currentSubjectKey === key) sections.insertAdjacentHTML("beforeend", newestHTML);
+  await arcPromise;
 }
 
 async function openTopicsIndex(manageFocus) {
