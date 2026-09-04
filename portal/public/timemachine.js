@@ -1064,9 +1064,11 @@ export function mountTimeMachine(container, opts = {}) {
   }
 
   /** The record's own heading for a speech ("Bills", "Housing"), if the title carries one. */
-  function subjectOf(r) {
+  function subjectOf(r, debate) {
     const t = String(cardTitle(r) || '').trim()
     if (!t || t === String(r.title || '').trim() || t === String(r.speaker || '').trim()) return ''
+    // The heading often is the debate ("Supermarket prices"); say it once.
+    if (debate && t.toLowerCase() === String(debate).toLowerCase()) return ''
     return clipText(t, 44)
   }
 
@@ -1099,7 +1101,7 @@ export function mountTimeMachine(container, opts = {}) {
     }
     if (!line1.childNodes.length) line1.textContent = 'Speaker not recorded'
     const line2 = el('div', 'tm-when')
-    line2.textContent = [fmtDate(r.date), parliamentName(r.state), subjectOf(r)].filter(Boolean).join(' · ')
+    line2.textContent = [fmtDate(r.date), parliamentName(r.state), subjectOf(r, topicLabel)].filter(Boolean).join(' · ')
     text.append(line1, line2)
     who.appendChild(text)
 
