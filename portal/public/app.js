@@ -2719,7 +2719,7 @@ async function renderPersonInterests(name, personId, sections) {
       `${years.length ? ` <span class="result-meta">${Math.min(...years)}–${Math.max(...years)}</span>` : ""}</p>`;
   };
   const tiesHTML = tiesByOrg.size ? `
-    <section class="declared-ties" aria-labelledby="declared-ties-heading">
+    <section id="person-ties" class="declared-ties" aria-labelledby="declared-ties-heading">
       <h3 class="subject-section-title" id="declared-ties-heading">Declared ties to disclosed money</h3>
       <p class="interests-summary">${base ? `<a href="${esc(base)}" rel="noopener" target="_blank"><b>${tiesByOrg.size}</b></a>` : `<b>${tiesByOrg.size}</b>`}
         ${tiesByOrg.size === 1 ? "organisation named" : "organisations named"} in this register also ${tiesByOrg.size === 1 ? "appears" : "appear"} in an AEC donor return, on a lobbyist register or on the Foreign Influence Transparency Scheme register.</p>
@@ -2776,7 +2776,7 @@ async function renderPersonInterests(name, personId, sections) {
     : `no alterations notified ${since}`;
   slot.innerHTML = `
     ${tiesHTML}
-    <p class="kicker">Declared interests</p>
+    <h3 id="person-register" class="subject-section-title">Declared interests</h3>
     <p class="interests-summary"><b>${num(data.total)}</b> ${data.total === 1 ? "entry" : "entries"} across ${num(buckets.length)} ${buckets.length === 1 ? "category" : "categories"} · ${alterations}</p>
     <ul class="subject-list interests-list" role="list">${rows}</ul>
     <p class="fineprint">${esc(register)}; entries as declared, not verified by OPAX. One entry is one cell of the form, so a list typed in one cell counts once.${base ? ` <a href="${esc(base)}" rel="noopener" target="_blank">Open the register entry ↗︎</a>` : ""}</p>
@@ -3637,7 +3637,7 @@ async function renderPersonVotes(name, personId, sections) {
           <span class="result-meta">${[d.stage ? esc(d.stage) : "", esc(String(d.date || "").slice(0, 4)), jurChip(d.jur)].filter(Boolean).join(" · ")}</span></li>`;
   const col = (label, rows) => rows.length ? `
     <div>
-      <p class="kicker votes-col-kicker">${esc(label)}</p>
+      <h4 class="person-vote-side">${esc(label)}</h4>
       <ul class="subject-list" role="list">${rows.map(billRow).join("")}</ul>
     </div>` : "";
   const forRows = side("for");
@@ -3653,7 +3653,7 @@ async function renderPersonVotes(name, personId, sections) {
     ? actionBtn("external", `https://theyvoteforyou.org.au/search?query=${encodeURIComponent(name)}`, "Full record on They Vote For You", { external: true })
     : "";
   slot.innerHTML = `
-    <p class="kicker">Voting record</p>
+    <h3 class="subject-section-title">Voting record</h3>
     <div class="tiles tiles-compact votes-tiles">
       <div class="tile"><b>${esc(total.toLocaleString())}</b><span>recorded division${total === 1 ? "" : "s"}</span></div>
       <div class="tile"><b>${esc(ayes.toLocaleString())}</b><span>ayes</span></div>
@@ -3679,7 +3679,8 @@ async function renderPersonTopics(name, sections) {
   const key = currentSubjectKey;
   const slot = document.createElement("section");
   slot.className = "person-topics";
-  slot.innerHTML = `<h3>What they talk about</h3><p class="status">Counting their labelled speeches…</p>`;
+  slot.id = "person-topics";
+  slot.innerHTML = `<h3 class="subject-section-title">What they talk about</h3><p class="status">Counting their labelled speeches…</p>`;
   sections.appendChild(slot);
   try {
     const nameQuery = new URLSearchParams({ name });
@@ -3692,6 +3693,7 @@ async function renderPersonTopics(name, sections) {
       topic.slug,
       allTopics.labelled ? Number(topic.count || 0) / Number(allTopics.labelled) : 0,
     ]));
+    if (!data.profiles?.all?.topics?.length) { slot.remove(); return; }
     let era = "all";
     const paint = () => {
       const profile = data.profiles?.[era];
@@ -3722,7 +3724,7 @@ async function renderPersonTopics(name, sections) {
       }) : `<p class="status">No topic-labelled speeches are held for this era yet.</p>`;
       slot.innerHTML = `
         <div class="person-topics-head">
-          <h3>What they talk about <span>(labelled so far)</span></h3>
+          <h3 class="subject-section-title">What they talk about <span>(labelled so far)</span></h3>
           <div class="quiet-toggle" role="group" aria-label="Speech era">
             <button type="button" data-person-era="all" aria-pressed="${era === "all"}">All</button>
             <button type="button" data-person-era="then" aria-pressed="${era === "then"}">Then</button>
@@ -3742,7 +3744,7 @@ async function renderPersonTopics(name, sections) {
     paint();
   } catch {
     if (currentSubjectKey === key && slot.isConnected) {
-      slot.innerHTML = `<h3>What they talk about</h3><p class="status">Their topic profile could not be loaded. Their speeches below are still available.</p>`;
+      slot.innerHTML = `<h3 class="subject-section-title">What they talk about</h3><p class="status">Their topic profile could not be loaded. Their speeches below are still available.</p>`;
     }
   }
 }
@@ -3920,11 +3922,13 @@ async function openSubject(kind, name, manageFocus) {
     actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
   ]);
   renderPortraitCredit(name, key);
+  sections.insertAdjacentHTML("beforeend", `<nav class="person-jumps" aria-label="On this page"></nav>`);
+  if (party) sections.insertAdjacentHTML("beforeend", `<p class="person-money-link"><a class="action-btn" href="${esc(subjectHash("party", party))}"><span class="btn-glyph" aria-hidden="true">$</span><span>Money map from ${esc(party)}</span></a></p>`);
   sections.insertAdjacentHTML("beforeend", `
     <form class="query-line" id="subject-ask-form" style="margin:0 0 0.4rem">
-      <label class="visually-hidden" for="subject-ask-topic">Topic</label>
+      <label for="subject-ask-topic">Ask about their speeches</label>
       <input id="subject-ask-topic" type="text" autocomplete="off"
-             placeholder="Ask what ${esc(name)} said about…">
+             placeholder="Enter a topic…">
       <button type="submit" class="secondary">Ask</button>
     </form>`);
   $("subject-ask-form").addEventListener("submit", (e) => {
@@ -3933,8 +3937,9 @@ async function openSubject(kind, name, manageFocus) {
     if (topic) goRoute(askHash(`What did ${name} say about ${topic}?`));
   });
   // The structured record first; the speeches follow it.
-  renderPersonTopics(name, sections);
-  renderPersonVotes(name, photoMap?.[name.trim().toLowerCase()] ?? null, sections);
+  renderPersonTopics(name, sections).then(() => refreshPersonJumps(sections));
+  renderPersonVotes(name, photoMap?.[name.trim().toLowerCase()] ?? null, sections).then(() => refreshPersonJumps(sections));
+  renderPersonInterests(name, null, sections).then(() => refreshPersonJumps(sections));
   if (speeches.length) {
     const newest = [...speeches].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 8);
     // On the person's own page the name and party are known, so each row
@@ -3942,7 +3947,7 @@ async function openSubject(kind, name, manageFocus) {
     // "Name — date" the passage itself carries the row.
     const multiHouse = chambers.length > 1;
     sections.insertAdjacentHTML("beforeend",
-      `<p class="kicker">Latest indexed speeches</p><ul class="speech-rows" role="list">${newest.map((r) => {
+      `<section id="person-speeches"><h3 class="subject-section-title">Latest indexed speeches</h3><ul class="speech-rows" role="list">${newest.map((r) => {
         const debate = titleSubject(r);
         const snip = String(r.snippet || "").trim();
         const where = multiHouse && r.state ? ` <span class="speech-where">${esc(STATE_NAMES[r.state] || r.state)}</span>` : "";
@@ -3954,20 +3959,40 @@ async function openSubject(kind, name, manageFocus) {
         return `<li><time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "")}</time>
           <div>${body}</div></li>`;
       }).join("")}</ul>
-      <p class="fineprint">Their newest indexed speeches, a sample rather than their full record.</p>`);
+      <p class="fineprint">Their newest indexed speeches, a sample rather than their full record.</p></section>`);
   } else {
     sections.insertAdjacentHTML("beforeend",
       `<p class="status">No speeches by “${esc(name)}” in the indexed corpus yet. Names appear as in
        Hansard, and the record is still loading. <a href="${esc(searchHash(name, {}))}">Search the record instead</a>.</p>`);
   }
-  renderPersonInterests(name, null, sections);
   renderPersonDiary(name, sections, chambers);
-  await subjectNews(name, sections);
-  await renderPersonExpenses(name, photoMap?.[name.trim().toLowerCase()], sections);
-  if (party) {
-    sections.insertAdjacentHTML("beforeend",
-      `<p class="person-money-link"><a class="action-btn" href="${esc(subjectHash("party", party))}"><span class="btn-glyph" aria-hidden="true">$</span><span>Money map from ${esc(party)}</span></a></p>`);
+  const news = document.createElement("section");
+  sections.appendChild(news);
+  await subjectNews(name, news);
+  if (currentSubjectKey !== key) return;
+  if (!news.querySelector(".news-list")) news.remove();
+  else {
+    const heading = news.querySelector(".kicker");
+    if (heading) heading.outerHTML = `<h3 class="subject-section-title">In the news</h3>`;
   }
+  await renderPersonExpenses(name, photoMap?.[name.trim().toLowerCase()], sections);
+  refreshPersonJumps(sections);
+}
+
+function refreshPersonJumps(sections) {
+  if (!sections.isConnected) return;
+  const nav = sections.querySelector(".person-jumps");
+  if (!nav) return;
+  const entries = [["person-topics", "Topics"], ["subject-votes", "Votes"], ["person-ties", "Ties"], ["person-register", "Interests"], ["person-speeches", "Speeches"]];
+  nav.innerHTML = entries.filter(([id]) => sections.querySelector(`#${id}`)?.textContent.trim())
+    .map(([id, label]) => `<a href="#${id}" data-person-jump="${id}">${label}</a>`).join("");
+  nav.hidden = !nav.children.length;
+  nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", (event) => {
+    event.preventDefault();
+    const target = sections.querySelector(`#${link.dataset.personJump}`);
+    target?.scrollIntoView({ behavior: "instant", block: "start" });
+    if (target) { target.tabIndex = -1; target.focus({ preventScroll: true }); }
+  }));
 }
 
 // --- topic entries (the encyclopedia's ideas wing) ---------------------------
