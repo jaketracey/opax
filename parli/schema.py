@@ -85,9 +85,13 @@ CREATE TABLE IF NOT EXISTS speeches (
     date TEXT NOT NULL,
     topic TEXT,
     text TEXT NOT NULL,
+    text_clean TEXT,
+    text_clean_rules TEXT,
     word_count INTEGER,
     source TEXT,  -- 'zenodo', 'openaustralia', 'wragge_xml', 'nsw_hansard'
     state TEXT DEFAULT 'federal',  -- 'federal', 'nsw', 'vic', 'qld', etc.
+    speaker_name_clean TEXT,
+    party_canonical TEXT,
     FOREIGN KEY (person_id) REFERENCES members(person_id)
 );
 
