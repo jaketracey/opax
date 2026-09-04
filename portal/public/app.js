@@ -5237,8 +5237,27 @@ $("explore-ledger-btn").addEventListener("click", () => openGame("ledger"));
 $("explore-matrix-btn").addEventListener("click", () => openGame("matrix"));
 $("explore-wd-btn").addEventListener("click", () => openGame("wd"));
 $("explore-tvn-btn").addEventListener("click", () => openGame("tvn"));
+// Closing a game: the dialog settles out (see .game-dialog.is-closing) and
+// the cross on the close control turns away with it; then the real close.
+const GAME_CLOSE_ICON = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg>';
+function closeGame(dialog) {
+  if (!dialog?.open || dialog.classList.contains("is-closing")) return;
+  const btn = dialog.querySelector(".game-close");
+  const finish = () => {
+    dialog.close();
+    dialog.classList.remove("is-closing");
+    btn?.classList.remove("is-pressed");
+  };
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { finish(); return; }
+  dialog.classList.add("is-closing");
+  let done = false;
+  const once = (e) => { if (e && e.target !== dialog) return; if (done) return; done = true; dialog.removeEventListener("animationend", once); finish(); };
+  dialog.addEventListener("animationend", once);
+  setTimeout(once, 320);
+}
 for (const btn of document.querySelectorAll(".game-close")) {
-  btn.addEventListener("click", () => $(btn.dataset.close).close());
+  btn.innerHTML = GAME_CLOSE_ICON;
+  btn.addEventListener("click", () => { btn.classList.add("is-pressed"); closeGame($(btn.dataset.close)); });
 }
 // A click on the backdrop (outside the dialog's box) closes the game.
 for (const dialog of document.querySelectorAll(".game-dialog")) {
@@ -5256,8 +5275,10 @@ for (const dialog of document.querySelectorAll(".game-dialog")) {
     const r = dialog.getBoundingClientRect();
     const inside = e.clientX >= r.left && e.clientX <= r.right &&
                    e.clientY >= r.top && e.clientY <= r.bottom;
-    if (!inside) dialog.close();
+    if (!inside) closeGame(dialog);
   });
+  // Esc: the same settle-out as the button, not the platform's instant close.
+  dialog.addEventListener("cancel", (e) => { e.preventDefault(); closeGame(dialog); });
 }
 
 
