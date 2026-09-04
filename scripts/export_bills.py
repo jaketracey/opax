@@ -398,10 +398,27 @@ def load_v2_bills(db: sqlite3.Connection) -> list[dict]:
              if e["date"] and "assent" in (e["stage"] or "").lower()),
             default=None,
         )
+        # aliases_json is a list of alias titles per the contract, but the
+        # registry currently writes an object of listing extras for ParlInfo
+        # rows. Read either, and take the source's own sponsor party when the
+        # object carries one -- that is the party as the bill page printed it,
+        # which beats anything derived here.
+        extras: dict = {}
+        aliases: list = []
         try:
-            aliases = json.loads(row.get("aliases_json") or "[]")
+            parsed = json.loads(row.get("aliases_json") or "[]")
         except (TypeError, ValueError):
-            aliases = []
+            parsed = []
+        if isinstance(parsed, list):
+            aliases = [a for a in parsed if isinstance(a, str)]
+        elif isinstance(parsed, dict):
+            extras = parsed
+            listed = parsed.get("aliases")
+            if isinstance(listed, list):
+                aliases = [a for a in listed if isinstance(a, str)]
+            other = parsed.get("listing_title")
+            if isinstance(other, str) and other and other != row.get("title"):
+                aliases.append(other)
         bills.append({
             "key": row["bill_key"],
             "legacy_bill_id": row.get("legacy_bill_id"),
@@ -416,7 +433,7 @@ def load_v2_bills(db: sqlite3.Connection) -> list[dict]:
             "introduced": row.get("introduced_date"),
             "originating_house": house_code(row.get("originating_house")),
             "sponsor": row.get("sponsor_name"),
-            "sponsor_party": None,
+            "sponsor_party": extras.get("sponsor_party") or None,
             "sponsor_person_id": row.get("sponsor_person_id"),
             "portfolio": row.get("portfolio"),
             "status": row.get("status"),
@@ -435,7 +452,7 @@ def fill_sponsor_parties(bills: list[dict], timeline: PartyTimeline) -> None:
     """The sponsor's party on the day they introduced the bill, for the
     `sponsor_party/<party>` label."""
     for b in bills:
-        if b.get("sponsor_person_id"):
+        if not b.get("sponsor_party") and b.get("sponsor_person_id"):
             party, how = timeline.at(b["sponsor_person_id"], b.get("introduced"))
             b["sponsor_party"] = None if how == "unknown" else party
 
@@ -842,6 +859,18 @@ def sample_keys(index: dict, n: int) -> set[str]:
     return set(picked)
 
 
+def write_index(path: Path, index: dict) -> None:
+    """One bill per line inside an ordinary JSON array. Indenting five thousand
+    rows would add a megabyte the browser has to download and the reviewer has
+    to scroll; one line each keeps the file small and still diffs cleanly."""
+    head = {k: v for k, v in index.items() if k != "bills"}
+    body = json.dumps(head, ensure_ascii=False, indent=1)[:-2].rstrip()  # drop closing brace
+    rows = ",\n  ".join(
+        json.dumps(b, ensure_ascii=False, separators=(",", ":")) for b in index["bills"]
+    )
+    path.write_text(f"{body},\n \"bills\": [\n  {rows}\n ]\n}}\n")
+
+
 def write_out(docs: list[dict], index: dict, out: Path, sample: int | None) -> None:
     out.mkdir(parents=True, exist_ok=True)
     keys = sample_keys(index, sample) if sample else None
@@ -850,7 +879,7 @@ def write_out(docs: list[dict], index: dict, out: Path, sample: int | None) -> N
             "files": len(keys),
             "note": "A fixture: index.json lists every bill, only these keys have a file.",
         }
-    (out / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
+    write_index(out / "index.json", index)
     written = 0
     for d in docs:
         if keys is not None and d["key"] not in keys:
