@@ -603,9 +603,13 @@
       <article id="report-view" hidden>
         <h2 id="report-title" tabindex="-1"></h2>
         <p id="report-blurb" class="report-blurb"></p>
-        <!-- v2 head: the lede in reading size, the window it covers, and the
-             two-stop nav. Empty and hidden for a v1 report. -->
+        <!-- v2 head: the window the report covers and the lede in reading
+             size. Empty and hidden for a v1 report. -->
         <div id="report-head2" class="report-head2" hidden></div>
+        <!-- The nav is a child of the article, not of the head: a sticky
+             element is bounded by its containing block, and inside the head it
+             would unpin one line later. -->
+        <nav id="report-jump" class="report-jump" hidden aria-label="Parts of this report"></nav>
         <p id="report-meta" class="report-meta"></p>
         <div class="report-lead" id="report-lead">
           <div id="report-brief"></div>
@@ -619,6 +623,8 @@
         <div id="report-moments"></div>
         <div id="report-sections"></div>
         <div id="report-allsources" hidden></div>
+        <!-- v2 keeps its provenance at the foot, beside the data it describes. -->
+        <p id="report-meta2" class="report-meta report-foot-meta" hidden></p>
         <p class="fineprint" id="report-download"></p>
       </article>
     </section>
