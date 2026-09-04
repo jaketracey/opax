@@ -1,0 +1,299 @@
+{
+ "year": 1999,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 1999, and what positions did members and parties take? Debates that year included The republic referendum, East Timor, Passing the GST and Aged care.",
+  "prompt": "year-brief-v1",
+  "answer": "The Australian parliament in 1999 was dominated by debate over the upcoming referendum on whether Australia should become a republic. The government introduced the Referendum Legislation Amendment Bill 1999 to provide funding and machinery for the referendum, with the Attorney-General arguing that public funding should support a \"free, fair and open debate.\" Labor speakers, including the member for Grayndler, strongly supported the republic, criticising the Prime Minister for a \"profoundly disappointing\" approach and accusing senior government republicans like Treasurer Peter Costello and Minister Peter Reith of being \"missing in action\" or sowing confusion in the public debate. Government speakers defended the process, with the member for Kooyong warning the opposition against making the debate \"partisan,\" arguing that polarising Liberal voters could jeopardise the republic's chances. A key point of contention was the proposed preamble to the Constitution, with Labor speakers attacking the Prime Minister for refusing to include the word \"custodianship\" in reference to Indigenous Australians, despite the Constitutional Convention's recommendation.\n\nThe parliament also debated Australia's military and humanitarian commitment to East Timor following the violence that erupted after the independence referendum there. The government introduced the Appropriation (East Timor) Bill 1999-2000, which provided special appropriations to the Department of Defence and AusAID for Australia's involvement. The opposition, led by the member for Melbourne, confirmed its support for the commitment, though some members used the debate to criticise the government's broader budgetary approach. Questions were also raised in parliament about the government's steps to prevent the Indonesian military from arming militias in East Timor and about tax deductions for Australian businesses donating goods to rebuild the territory's infrastructure.\n\nThe introduction of the Goods and Services Tax (GST) was another major issue, debated in the context of the States Grants (General Purposes) Amendment Bill 1999, which gave effect to financial arrangements with the states. Opposition speakers raised concerns about the impact of the new tax system, suggesting that some effects would be \"a bit more harsh than was first thought\" and questioning whether price cuts would be passed on to consumers. Government speakers, however, framed tax reform as a necessary national opportunity, arguing that completing the GST process was essential before the nation could \"legitimately move on\" to the republic debate.",
+  "sources": [
+   {
+    "slug": "speech-21386",
+    "title": "Warren Snowdon — 1999-03-23",
+    "speaker": "Warren Snowdon",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1999-03-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-21384",
+    "title": "Kelly Hoare — 1999-03-23",
+    "speaker": "Kelly Hoare",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1999-03-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-21378",
+    "title": "Kevin Rudd — 1999-03-23",
+    "speaker": "Kevin Rudd",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1999-03-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-27900",
+    "title": "Christine Gallus — 1999-08-09",
+    "speaker": "Christine Gallus",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1999-08-09",
+    "cited": true
+   },
+   {
+    "slug": "speech-29330",
+    "title": "Alan Griffin — 1999-08-25",
+    "speaker": "Alan Griffin",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1999-08-25",
+    "cited": true
+   },
+   {
+    "slug": "speech-35709",
+    "title": "Peter Slipper — 1999-12-08",
+    "speaker": "Peter Slipper",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1999-12-08",
+    "cited": true
+   },
+   {
+    "slug": "speech-21383",
+    "title": "Michael Danby — 1999-03-23",
+    "speaker": "Michael Danby",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1999-03-23",
+    "cited": false
+   },
+   {
+    "slug": "speech-21357",
+    "title": "Anthony Albanese — 1999-03-23",
+    "speaker": "Anthony Albanese",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1999-03-23",
+    "cited": false
+   },
+   {
+    "slug": "speech-21377",
+    "title": "Chris Pyne — 1999-03-23",
+    "speaker": "Chris Pyne",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1999-03-23",
+    "cited": false
+   },
+   {
+    "slug": "speech-22507",
+    "title": "Mark Latham — 1999-03-30",
+    "speaker": "Mark Latham",
+    "party": null,
+    "state": "federal",
+    "date": "1999-03-30",
+    "cited": false
+   },
+   {
+    "slug": "speech-25364",
+    "title": "Daryl Williams — 1999-06-10",
+    "speaker": "Daryl Williams",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1999-06-10",
+    "cited": false
+   },
+   {
+    "slug": "speech-27714",
+    "title": "Peter Andren — 1999-06-30",
+    "speaker": "Peter Andren",
+    "party": "Independent",
+    "state": "federal",
+    "date": "1999-06-30",
+    "cited": false
+   },
+   {
+    "slug": "speech-27438",
+    "title": "Warren Snowdon — 1999-06-30",
+    "speaker": "Warren Snowdon",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1999-06-30",
+    "cited": false
+   },
+   {
+    "slug": "speech-27854",
+    "title": "Bronwyn Bishop — 1999-08-09",
+    "speaker": "Bronwyn Bishop",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1999-08-09",
+    "cited": false
+   },
+   {
+    "slug": "speech-27851",
+    "title": "Daryl Williams — 1999-08-09",
+    "speaker": "Daryl Williams",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1999-08-09",
+    "cited": false
+   },
+   {
+    "slug": "speech-29375",
+    "title": "Roger Price — 1999-08-25",
+    "speaker": "Roger Price",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1999-08-25",
+    "cited": false
+   },
+   {
+    "slug": "speech-34648",
+    "title": "Jann McFarlane — 1999-11-23",
+    "speaker": "Jann McFarlane",
+    "party": null,
+    "state": "federal",
+    "date": "1999-11-23",
+    "cited": false
+   },
+   {
+    "slug": "speech-35677",
+    "title": "John Fahey — 1999-12-08",
+    "speaker": "John Fahey",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1999-12-08",
+    "cited": false
+   },
+   {
+    "slug": "speech-35937",
+    "title": "Michael Danby — 1999-12-08",
+    "speaker": "Michael Danby",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1999-12-08",
+    "cited": false
+   },
+   {
+    "slug": "speech-36151",
+    "title": "Peter Reith — 1999-12-09",
+    "speaker": "Peter Reith",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1999-12-09",
+    "cited": false
+   }
+  ],
+  "cited_count": 6,
+  "seconds": 10.3,
+  "tokens": {
+   "input": 15374,
+   "output": 466
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 1999; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 1999 run through /api/search (hybrid retrieval, from=1999&to=1999, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "189 distinct speeches among the 189 strongest matches for the year's 4 debates - not every speech given in 1999, and the index is still loading.",
+  "probes": [
+   {
+    "q": "republic referendum head of state",
+    "label": "The republic referendum",
+    "retrieved": 49,
+    "truncated": true
+   },
+   {
+    "q": "East Timor peacekeeping INTERFET",
+    "label": "East Timor",
+    "retrieved": 45,
+    "truncated": true
+   },
+   {
+    "q": "goods and services tax legislation",
+    "label": "Passing the GST",
+    "retrieved": 49,
+    "truncated": true
+   },
+   {
+    "q": "aged care nursing homes",
+    "label": "Aged care",
+    "retrieved": 46,
+    "truncated": true
+   }
+  ],
+  "retrieved": 189,
+  "unique_speeches": 189,
+  "unlabelled_party": 10,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Margaret Reid",
+   "Neil Andrew"
+  ],
+  "speakers": [
+   {
+    "name": "Bronwyn Bishop",
+    "party": "Liberal",
+    "speeches": 15
+   },
+   {
+    "name": "Peter Costello",
+    "party": "Liberal",
+    "speeches": 15
+   },
+   {
+    "name": "Alexander Downer",
+    "party": "Liberal",
+    "speeches": 9
+   },
+   {
+    "name": "John Moore",
+    "party": "Liberal",
+    "speeches": 6
+   },
+   {
+    "name": "Kim Beazley",
+    "party": "Labor",
+    "speeches": 6
+   },
+   {
+    "name": "Kelvin Thomson",
+    "party": "Labor",
+    "speeches": 6
+   },
+   {
+    "name": "Peter Slipper",
+    "party": "Liberal",
+    "speeches": 6
+   },
+   {
+    "name": "Jill Hall",
+    "party": "Labor",
+    "speeches": 5
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 90
+   },
+   {
+    "party": "Labor",
+    "speeches": 77
+   },
+   {
+    "party": "Nationals",
+    "speeches": 10
+   },
+   {
+    "party": "Independent",
+    "speeches": 2
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:56:45+00:00",
+ "corpus_resources": 609644
+}

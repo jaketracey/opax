@@ -1,0 +1,299 @@
+{
+ "year": 2000,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2000, and what positions did members and parties take? Debates that year included The GST arrives, The Sydney Olympics, Reconciliation and Petrol prices.",
+  "prompt": "year-brief-v1",
+  "answer": "The year 2000 in the Australian parliament was dominated by the implementation and political fallout of the new tax system, particularly the Goods and Services Tax (GST). The government, led by Prime Minister John Howard, championed the legislative changes as a historic achievement, citing the lowering of income taxes by $12 billion, increased family allowances of $2.4 billion, and a four per cent rise in pensions. Government speakers, including the Minister for Financial Services and Regulation, defended the scale of the reform, arguing it was the largest tax and financial reform in the nation's history and that the opposition, the Australian Labor Party (ALP), was running a \"relentless negative campaign\" against a tax it intended to keep.\n\nThe opposition, however, focused its attacks on the government's broken promises regarding the GST's effect on petrol prices. Labor speakers, such as the member for McEwen, accused the government of deceiving rural and regional Australia, highlighting the Prime Minister's pre-election statement that \"anybody who is saying it will rise as a result of the GST is telling lies.\" They argued that the government's own $500 million Fuel Sales Grants Bill was a \"humiliating backdown\" and proof that petrol prices would rise, contrasting the original promise that prices \"will not rise\" with the Treasurer's later admission that they \"need not rise.\" The opposition also moved to suspend standing orders to debate soaring petrol prices, citing the GST's cascading effect as a \"tax on a tax\" and accusing the government of planning a further 2 cents per litre increase in February 2001 due to excise indexation.\n\nBeyond the GST, the government's legislative agenda included the Renewable Energy (Electricity) Bill 2000, which aimed to meet Australia's Kyoto target. While the opposition did not oppose the bill outright, reserving its right for Senate scrutiny, Labor speakers expressed concern about the government's internal tensions over climate change policy. The year also saw the government introduce the Roads to Recovery Bill 2000, which the opposition used as another platform to criticise the government's fuel policy, arguing that the broken promise on petrol prices undermined the value of additional road funding. The year concluded with the Prime Minister's valedictory speech, which celebrated the success of the Sydney Olympics and Paralympics as a source of national pride.",
+  "sources": [
+   {
+    "slug": "speech-38413",
+    "title": "Alan Cadman — 2000-03-13",
+    "speaker": "Alan Cadman",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2000-03-13",
+    "cited": true
+   },
+   {
+    "slug": "speech-39990",
+    "title": "Joe Hockey — 2000-04-06",
+    "speaker": "Joe Hockey",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2000-04-06",
+    "cited": true
+   },
+   {
+    "slug": "speech-41352",
+    "title": "Gavan O'Connor — 2000-05-10",
+    "speaker": "Gavan O'Connor",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2000-05-10",
+    "cited": true
+   },
+   {
+    "slug": "speech-42449",
+    "title": "Peter McGauran — 2000-05-31",
+    "speaker": "Peter McGauran",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2000-05-31",
+    "cited": true
+   },
+   {
+    "slug": "speech-43212",
+    "title": "Paul Neville — 2000-06-06",
+    "speaker": "Paul Neville",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2000-06-06",
+    "cited": true
+   },
+   {
+    "slug": "speech-44953",
+    "title": "Simon Crean — 2000-06-26",
+    "speaker": "Simon Crean",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2000-06-26",
+    "cited": true
+   },
+   {
+    "slug": "speech-46778",
+    "title": "Simon Crean — 2000-08-17",
+    "speaker": "Simon Crean",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2000-08-17",
+    "cited": true
+   },
+   {
+    "slug": "speech-46775",
+    "title": "Simon Crean — 2000-08-17",
+    "speaker": "Simon Crean",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2000-08-17",
+    "cited": true
+   },
+   {
+    "slug": "speech-55176",
+    "title": "Peter Costello — 2000-12-06",
+    "speaker": "Peter Costello",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2000-12-06",
+    "cited": true
+   },
+   {
+    "slug": "speech-55657",
+    "title": "John Howard — 2000-12-07",
+    "speaker": "John Howard",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2000-12-07",
+    "cited": true
+   },
+   {
+    "slug": "speech-55493",
+    "title": "Peter Costello — 2000-12-07",
+    "speaker": "Peter Costello",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2000-12-07",
+    "cited": true
+   },
+   {
+    "slug": "speech-38376",
+    "title": "Kathryn Sullivan — 2000-03-13",
+    "speaker": "Kathryn Sullivan",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2000-03-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-38681",
+    "title": "Peter Slipper — 2000-03-15",
+    "speaker": "Peter Slipper",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2000-03-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-38979",
+    "title": "Kim Beazley — 2000-03-15",
+    "speaker": "Kim Beazley",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2000-03-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-39983",
+    "title": "Kelvin Thomson — 2000-04-06",
+    "speaker": "Kelvin Thomson",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2000-04-06",
+    "cited": false
+   },
+   {
+    "slug": "speech-45160",
+    "title": "John Howard — 2000-06-27",
+    "speaker": "John Howard",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2000-06-27",
+    "cited": false
+   },
+   {
+    "slug": "speech-45864",
+    "title": "Harry Jenkins — 2000-06-29",
+    "speaker": "Harry Jenkins",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2000-06-29",
+    "cited": false
+   },
+   {
+    "slug": "speech-45658",
+    "title": "Peter Slipper — 2000-06-29",
+    "speaker": "Peter Slipper",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2000-06-29",
+    "cited": false
+   },
+   {
+    "slug": "speech-52037",
+    "title": "Warren Snowdon — 2000-11-02",
+    "speaker": "Warren Snowdon",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2000-11-02",
+    "cited": false
+   },
+   {
+    "slug": "speech-54358",
+    "title": "Martin Ferguson — 2000-11-30",
+    "speaker": "Martin Ferguson",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2000-11-30",
+    "cited": false
+   }
+  ],
+  "cited_count": 11,
+  "seconds": 9.7,
+  "tokens": {
+   "input": 11198,
+   "output": 476
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2000; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2000 run through /api/search (hybrid retrieval, from=2000&to=2000, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "200 distinct speeches among the 200 strongest matches for the year's 4 debates - not every speech given in 2000, and the index is still loading.",
+  "probes": [
+   {
+    "q": "GST implementation new tax system",
+    "label": "The GST arrives",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "Sydney Olympic Games",
+    "label": "The Sydney Olympics",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "reconciliation bridge walk",
+    "label": "Reconciliation",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "petrol prices fuel excise",
+    "label": "Petrol prices",
+    "retrieved": 50,
+    "truncated": true
+   }
+  ],
+  "retrieved": 200,
+  "unique_speeches": 200,
+  "unlabelled_party": 7,
+  "bare_surnames_skipped": 1,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Margaret Reid",
+   "Neil Andrew"
+  ],
+  "speakers": [
+   {
+    "name": "Peter Costello",
+    "party": "Liberal",
+    "speeches": 20
+   },
+   {
+    "name": "John Howard",
+    "party": "Liberal",
+    "speeches": 16
+   },
+   {
+    "name": "John Anderson",
+    "party": "Nationals",
+    "speeches": 12
+   },
+   {
+    "name": "Simon Crean",
+    "party": "Labor",
+    "speeches": 11
+   },
+   {
+    "name": "Kim Beazley",
+    "party": "Labor",
+    "speeches": 10
+   },
+   {
+    "name": "Bruce Baird",
+    "party": "Liberal",
+    "speeches": 6
+   },
+   {
+    "name": "Philip Ruddock",
+    "party": "Liberal",
+    "speeches": 5
+   },
+   {
+    "name": "Craig Emerson",
+    "party": "Labor",
+    "speeches": 4
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 93
+   },
+   {
+    "party": "Labor",
+    "speeches": 73
+   },
+   {
+    "party": "Nationals",
+    "speeches": 26
+   },
+   {
+    "party": "Independent",
+    "speeches": 1
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:56:48+00:00",
+ "corpus_resources": 609644
+}

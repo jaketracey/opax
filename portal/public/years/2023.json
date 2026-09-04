@@ -1,0 +1,267 @@
+{
+ "year": 2023,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2023, and what positions did members and parties take? Debates that year included The Voice referendum, The housing fund, Cost of living and The safeguard mechanism.",
+  "prompt": "year-brief-v1",
+  "answer": "In 2023, the Australian parliament was dominated by debates over the government's legislative agenda, with the Housing Australia Future Fund and related housing bills at the forefront. The Labor government championed the $10 billion fund, arguing it would build 30,000 new social and affordable dwellings over five years and address acute needs for Indigenous Australians, women and children fleeing domestic violence, older women at risk of homelessness, and veterans. The Coalition opposed the Housing Australia Future Fund Bill itself, with members like the Member for Hughes citing housing affordability as a major constituent concern, though they indicated support for the accompanying National Housing Supply and Affordability Council Bill and the Treasury Laws Amendment (Housing Measures No. 1) Bill, subject to amendments. The House of Representatives passed the Safeguard Mechanism (Crediting) Amendment Bill 2023 by a vote of 89 to 51, with the 51 noes including Coalition figures such as Scott Morrison, Angus Taylor, and Barnaby Joyce, as well as crossbench members like Bob Katter. The Prime Minister defended the safeguard mechanism as part of broader reforms, citing support from major companies and industry groups, while the Coalition opposed it on climate and economic grounds.\n\nThe year also saw significant debate over the proposed Voice to Parliament referendum. The speaker declared 2023 the year of the Voice referendum, and the government pursued legislation for the referendum machinery. Some MPs, such as the member for Petrie, relayed constituent opposition to the Voice, with constituents like Jill from Bracken Ridge arguing that cost of living, schools, housing, roads, and health care were more pressing issues, and Robert from Redcliffe questioning the need for a separate Voice when elected representatives already serve as voices for their communities. The MP noted that the Australian people would ultimately decide the referendum, while also criticising the absence of yes and no pamphlets for voters. In contrast, the Malinauskas Labor government in South Australia had introduced its own First Nations Voice Bill 2023, making that state the first with such a body, and the speech urged a Yes vote federally, citing the Uluru Statement from the Heart as a key foundation.",
+  "sources": [
+   {
+    "slug": "division-federal-representatives-8074-p2",
+    "title": "House of Representatives division, 30 March 2023: Safeguard Mechanism (Crediting) Amendment Bill 2023 - Consideration of Senate Message - Agree with Senate amendments and so pass b (part 2 of 2)",
+    "speaker": "Aaron Violi",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-827325",
+    "title": "Karen Grogan — Adjournment — 2023-02-08",
+    "speaker": "Karen Grogan",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2023-02-08",
+    "cited": true
+   },
+   {
+    "slug": "speech-827667",
+    "title": "Fiona Phillips — Bills — 2023-02-14",
+    "speaker": "Fiona Phillips",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2023-02-14",
+    "cited": true
+   },
+   {
+    "slug": "speech-827746",
+    "title": "Jenny Ware — Bills — 2023-02-15",
+    "speaker": "Jenny Ware",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2023-02-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-827701",
+    "title": "Matt Thistlethwaite — Bills — 2023-02-15",
+    "speaker": "Matt Thistlethwaite",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2023-02-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-827727",
+    "title": "Josh Wilson — Questions without Notice — 2023-02-15",
+    "speaker": "Josh Wilson",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2023-02-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-829857",
+    "title": "Anne Ruston — Bills — 2023-05-09",
+    "speaker": "Anne Ruston",
+    "party": null,
+    "state": "federal",
+    "date": "2023-05-09",
+    "cited": true
+   },
+   {
+    "slug": "division-federal-senate-8081",
+    "title": "Senate division, 30 March 2023: Safeguard Mechanism (Crediting) Amendment Bill 2023 - in Committee - Government amendments",
+    "speaker": "Alex Antic",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-senate-8351",
+    "title": "Senate division, 12 September 2023: Business - Consideration of Legislation - Housing Australia Future Fund Bill 2023 and related bills",
+    "speaker": "Alex Antic",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-7987-p2",
+    "title": "House of Representatives division, 9 March 2023: Migration Amendment (Australia's Engagement in the Pacific and Other Measures) Bill 2023 - Report from Federation Chamber - Agree w (part 2 of 2)",
+    "speaker": "Aaron Violi",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-7987",
+    "title": "House of Representatives division, 9 March 2023: Migration Amendment (Australia's Engagement in the Pacific and Other Measures) Bill 2023 - Report from Federation Chamber - Agree w (part 1 of 2)",
+    "speaker": "Adam Bandt",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "speech-826911",
+    "title": "Peta Murphy — Statements by Members — 2023-02-06",
+    "speaker": "Peta Murphy",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2023-02-06",
+    "cited": false
+   },
+   {
+    "slug": "speech-827407",
+    "title": "Luke Howarth — Adjournment — 2023-02-09",
+    "speaker": "Luke Howarth",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2023-02-09",
+    "cited": false
+   },
+   {
+    "slug": "speech-828207",
+    "title": "Allegra Spender — Questions without Notice — 2023-03-08",
+    "speaker": "Allegra Spender",
+    "party": "Independent",
+    "state": "federal",
+    "date": "2023-03-08",
+    "cited": false
+   },
+   {
+    "slug": "speech-828678",
+    "title": "Tania Lawrence — Statements by Members — 2023-03-21",
+    "speaker": "Tania Lawrence",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2023-03-21",
+    "cited": false
+   },
+   {
+    "slug": "speech-829706",
+    "title": "Sue Lines — Committees — 2023-03-30",
+    "speaker": "Sue Lines",
+    "party": null,
+    "state": "federal",
+    "date": "2023-03-30",
+    "cited": false
+   }
+  ],
+  "cited_count": 7,
+  "seconds": 8.1,
+  "tokens": {
+   "input": 2071,
+   "output": 435
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 16 strongest passages the knowledge box retrieved for 2023; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2023 run through /api/search (hybrid retrieval, from=2023&to=2023, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "131 distinct speeches among the 133 strongest matches for the year's 4 debates - not every speech given in 2023, and the index is still loading.",
+  "probes": [
+   {
+    "q": "Voice to Parliament referendum",
+    "label": "The Voice referendum",
+    "retrieved": 37,
+    "truncated": true
+   },
+   {
+    "q": "housing Australia future fund",
+    "label": "The housing fund",
+    "retrieved": 22,
+    "truncated": true
+   },
+   {
+    "q": "cost of living interest rates",
+    "label": "Cost of living",
+    "retrieved": 39,
+    "truncated": true
+   },
+   {
+    "q": "safeguard mechanism emissions",
+    "label": "The safeguard mechanism",
+    "retrieved": 35,
+    "truncated": true
+   }
+  ],
+  "retrieved": 133,
+  "unique_speeches": 131,
+  "unlabelled_party": 41,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 8,
+  "presiding_excluded": [
+   "Milton Dick",
+   "Sue Lines"
+  ],
+  "speakers": [
+   {
+    "name": "Karen Grogan",
+    "party": "Labor",
+    "speeches": 4
+   },
+   {
+    "name": "Jane Hume",
+    "party": null,
+    "speeches": 3
+   },
+   {
+    "name": "Fatima Payman",
+    "party": "Labor",
+    "speeches": 3
+   },
+   {
+    "name": "James McGrath",
+    "party": null,
+    "speeches": 3
+   },
+   {
+    "name": "Zoe McKenzie",
+    "party": "Liberal",
+    "speeches": 3
+   },
+   {
+    "name": "Louise Miller-Frost",
+    "party": "Labor",
+    "speeches": 3
+   },
+   {
+    "name": "Louise Pratt",
+    "party": "Labor",
+    "speeches": 2
+   },
+   {
+    "name": "Pauline Hanson",
+    "party": null,
+    "speeches": 2
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 56
+   },
+   {
+    "party": "Liberal",
+    "speeches": 22
+   },
+   {
+    "party": "Independent",
+    "speeches": 8
+   },
+   {
+    "party": "Greens",
+    "speeches": 3
+   },
+   {
+    "party": "Nationals",
+    "speeches": 1
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:58:03+00:00",
+ "corpus_resources": 609644
+}

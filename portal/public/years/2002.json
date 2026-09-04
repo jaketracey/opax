@@ -1,0 +1,300 @@
+{
+ "year": 2002,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2002, and what positions did members and parties take? Debates that year included The Bali bombings, Offshore processing, The drought and Stem-cell research.",
+  "prompt": "year-brief-v1",
+  "answer": "The Australian parliament in 2002 was dominated by two major debates. The first followed the terrorist bombings in Bali on 12 October 2002. The Prime Minister moved a motion expressing outrage and condemnation at the \"barbaric terrorist bombings,\" extending sympathy to the families of Australians killed, missing or injured, and committing the government to work with Indonesia to bring those responsible to justice. The Prime Minister reported that 181 people were dead, with 14 Australians confirmed among the dead, at least 113 Australians hospitalised, and 220 Australians unaccounted for. He announced a review of domestic terrorist legislation and counter-terrorism capacity, and proposed a national day of mourning. The Leader of the Opposition supported the motion and suggested the national day of mourning. Many members spoke in support, with one member noting the bombings \"fundamentally altered the historic assumption that Australia's isolation in a global sense guarantees safety from the horrors of other parts of the world.\"\n\nThe second major debate concerned the Research Involving Embryos and Prohibition of Human Cloning Bill 2002. Members fell into two broad categories: those who opposed cloning, supported adult stem cell research and supported research on embryos, and those who opposed cloning, supported adult stem cell research but opposed research on embryos. A key procedural argument was whether to split the bill to allow separate votes on the cloning ban and the embryo research provisions. One member supporting the split argued that forcing members to vote on the bill as a whole would give a \"distorted view\" of parliament's \"overwhelming rejection of human reproductive cloning.\" The opposition's formal position was to oppose all amendments, but this was subject to a conscience vote. The bill was ultimately passed by the House 99 votes to 33.",
+  "sources": [
+   {
+    "slug": "speech-82236",
+    "title": "Petro Georgiou — 2002-08-29",
+    "speaker": "Petro Georgiou",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2002-08-29",
+    "cited": true
+   },
+   {
+    "slug": "speech-82248",
+    "title": "Gavan O'Connor — 2002-08-29",
+    "speaker": "Gavan O'Connor",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2002-08-29",
+    "cited": true
+   },
+   {
+    "slug": "speech-82228",
+    "title": "Tony Abbott — 2002-08-29",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2002-08-29",
+    "cited": true
+   },
+   {
+    "slug": "speech-82715",
+    "title": "Stephen Smith — 2002-09-16",
+    "speaker": "Stephen Smith",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2002-09-16",
+    "cited": true
+   },
+   {
+    "slug": "speech-84724",
+    "title": "Jenkins — 2002-09-26",
+    "speaker": "Jenkins",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2002-09-26",
+    "cited": true
+   },
+   {
+    "slug": "speech-84828",
+    "title": "John Howard — 2002-10-14",
+    "speaker": "John Howard",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2002-10-14",
+    "cited": true
+   },
+   {
+    "slug": "speech-84955",
+    "title": "Tony Abbott — 2002-10-15",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2002-10-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-85958",
+    "title": "Petro Georgiou — 2002-10-22",
+    "speaker": "Petro Georgiou",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2002-10-22",
+    "cited": true
+   },
+   {
+    "slug": "speech-85981",
+    "title": "Anthony Smith — 2002-10-22",
+    "speaker": "Anthony Smith",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2002-10-22",
+    "cited": true
+   },
+   {
+    "slug": "speech-73195",
+    "title": "Murphy — 2002-03-13",
+    "speaker": "Murphy",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2002-03-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-74658",
+    "title": "Fran Bailey — 2002-05-14",
+    "speaker": "Fran Bailey",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2002-05-14",
+    "cited": false
+   },
+   {
+    "slug": "speech-80739",
+    "title": "Tony Abbott — 2002-08-20",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2002-08-20",
+    "cited": false
+   },
+   {
+    "slug": "speech-82296",
+    "title": "Kevin Andrews — 2002-08-29",
+    "speaker": "Kevin Andrews",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2002-08-29",
+    "cited": false
+   },
+   {
+    "slug": "speech-82729",
+    "title": "John Anderson — 2002-09-16",
+    "speaker": "John Anderson",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2002-09-16",
+    "cited": false
+   },
+   {
+    "slug": "speech-84720",
+    "title": "Ripoll — 2002-09-26",
+    "speaker": "Ripoll",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2002-09-26",
+    "cited": false
+   },
+   {
+    "slug": "speech-85520",
+    "title": "Michael Hatton — 2002-10-17",
+    "speaker": "Michael Hatton",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2002-10-17",
+    "cited": false
+   },
+   {
+    "slug": "speech-86588",
+    "title": "Steve Gibbons — 2002-11-11",
+    "speaker": "Steve Gibbons",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2002-11-11",
+    "cited": false
+   },
+   {
+    "slug": "speech-87490",
+    "title": "Alby Schultz — 2002-12-02",
+    "speaker": "Alby Schultz",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2002-12-02",
+    "cited": false
+   },
+   {
+    "slug": "speech-89559",
+    "title": "Jackie Kelly — 2002-12-12",
+    "speaker": "Jackie Kelly",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2002-12-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-89536",
+    "title": "John Anderson — 2002-12-12",
+    "speaker": "John Anderson",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2002-12-12",
+    "cited": false
+   }
+  ],
+  "cited_count": 9,
+  "seconds": 11.1,
+  "tokens": {
+   "input": 15304,
+   "output": 357
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2002; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2002 run through /api/search (hybrid retrieval, from=2002&to=2002, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "200 distinct speeches among the 200 strongest matches for the year's 4 debates - not every speech given in 2002, and the index is still loading.",
+  "probes": [
+   {
+    "q": "Bali bombing terrorism",
+    "label": "The Bali bombings",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "asylum seekers Pacific solution detention",
+    "label": "Offshore processing",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "drought exceptional circumstances farmers",
+    "label": "The drought",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "stem cell research embryos",
+    "label": "Stem-cell research",
+    "retrieved": 50,
+    "truncated": true
+   }
+  ],
+  "retrieved": 200,
+  "unique_speeches": 200,
+  "unlabelled_party": 4,
+  "bare_surnames_skipped": 1,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Margaret Reid",
+   "Neil Andrew",
+   "Paul Calvert"
+  ],
+  "speakers": [
+   {
+    "name": "Philip Ruddock",
+    "party": "Liberal",
+    "speeches": 21
+   },
+   {
+    "name": "Warren Truss",
+    "party": "Nationals",
+    "speeches": 13
+   },
+   {
+    "name": "Julia Gillard",
+    "party": "Labor",
+    "speeches": 8
+   },
+   {
+    "name": "John Murphy",
+    "party": "Labor",
+    "speeches": 8
+   },
+   {
+    "name": "John Howard",
+    "party": "Liberal",
+    "speeches": 6
+   },
+   {
+    "name": "Daryl Williams",
+    "party": "Liberal",
+    "speeches": 5
+   },
+   {
+    "name": "Simon Crean",
+    "party": "Labor",
+    "speeches": 5
+   },
+   {
+    "name": "Sharman Stone",
+    "party": "Liberal",
+    "speeches": 5
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 86
+   },
+   {
+    "party": "Labor",
+    "speeches": 71
+   },
+   {
+    "party": "Nationals",
+    "speeches": 33
+   },
+   {
+    "party": "Independent",
+    "speeches": 6
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:56:54+00:00",
+ "corpus_resources": 609644
+}

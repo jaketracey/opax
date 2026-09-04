@@ -1,0 +1,285 @@
+{
+ "year": 2009,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2009, and what positions did members and parties take? Debates that year included The stimulus, Emissions trading, Black Saturday and The insulation program.",
+  "prompt": "year-brief-v1",
+  "answer": "The Australian Parliament in 2009 was dominated by two major debates: the government's fiscal stimulus packages in response to the global financial crisis, and the proposed Carbon Pollution Reduction Scheme (an emissions trading scheme). On the stimulus, the Rudd government argued that its packages—including the $42 billion Nation Building and Jobs Plan, the Building the Education Revolution program, and the home insulation program—were essential to support jobs and household consumption during the recession. Government speakers, such as the member for Makin, highlighted that retail figures held up compared with other countries and that insulation rebates of up to $1,600 for owner-occupiers and $1,000 for landlords would create work for small business. The opposition, however, criticised the packages as wasteful and poorly targeted, with some members, like the member for Lyne, opposing specific bills such as the Australian Business Investment Partnership Bill 2009, while others supported the broader stimulus logic.\n\nThe emissions trading scheme was the most contentious issue. The government, led by Climate Change Minister Senator Wong, argued the Carbon Pollution Reduction Scheme was crucial to Australia's economic and environmental future and a mandate from the election. Government speakers accused the opposition of being \"flat-earthers\" and \"climate change sceptics,\" pointing to internal divisions within the Liberal Party over Leader Malcolm Turnbull's support for a cap-and-trade scheme. The opposition, including Senator Bernardi and Senator Joyce, countered that the scheme was the \"biggest deliberate structural change\" to the economy, would impose massive costs on electricity and grocery bills, and would export jobs and emissions. They demanded more scrutiny, citing concerns from the Australian Workers Union about job impacts. The Senate tied 32–32 on an emissions trading division on 23 June 2009, with the question resolved in the negative, reflecting the deep partisan split.",
+  "sources": [
+   {
+    "slug": "division-federal-senate-1674",
+    "title": "Senate division, 23 June 2009: Emissions Trading Scheme",
+    "speaker": "Alan Eggleston",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-200426",
+    "title": "Jill Hall — 2009-03-18",
+    "speaker": "Jill Hall",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2009-03-18",
+    "cited": true
+   },
+   {
+    "slug": "speech-792083",
+    "title": "Joe Ludwig — Business — 2009-03-18",
+    "speaker": "Joe Ludwig",
+    "party": null,
+    "state": "federal",
+    "date": "2009-03-18",
+    "cited": true
+   },
+   {
+    "slug": "speech-206676",
+    "title": "Kevin Rudd — 2009-08-11",
+    "speaker": "Kevin Rudd",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2009-08-11",
+    "cited": true
+   },
+   {
+    "slug": "speech-794385",
+    "title": "Brett Mason — Carbon Pollution Reduction Scheme Bill 2009; Carbon Pollution Reduction Scheme (Consequential Amendments) Bill 2009; Australian Climate Change Regulatory Authority Bill 2009; Carbon Pollution Reduction Scheme (Charges-Customs) Bill 2009; Carbon Pollution Reduction Scheme (Charges-Excise) Bill 2009; Carbon Pollution Reduction Scheme (Charges-General) Bill 2009; Carbon Pollution Reduction Scheme (CPRS Fuel Credits) Bill 2009; Carbon Pollution Reduction Scheme (CPRS Fuel Credits) (Consequential Amendments) Bill 2009; Excise Tariff Amendment (Carbon Pollution Reduction Scheme) Bill 2009; Customs Tariff Amendment (Carbon Pollution Reduction Scheme) Bill 2009; Carbon Pollution Reduction Scheme Amendment (Household Assistance) Bill 2009 — 2009-08-12",
+    "speaker": "Brett Mason",
+    "party": null,
+    "state": "federal",
+    "date": "2009-08-12",
+    "cited": true
+   },
+   {
+    "slug": "speech-797154",
+    "title": "Kate Lundy — Carbon Pollution Reduction Scheme Bill 2009 [No. 2]; Carbon Pollution Reduction Scheme (Consequential Amendments) Bill 2009 [No. 2]; Australian Climate Change Regulatory Authority Bill 2009 [No. 2]; Carbon Pollution Reduction Scheme (Charges — Customs) Bill 2009 [No. 2]; Carbon Pollution Reduction Scheme (Charges — Excise) Bill 2009 [No. 2]; Carbon Pollution Reduction Scheme (Charges — General) Bill 2009 [No. 2]; Carbon Pollution Reduction Scheme (CPRS Fuel Credits) Bill 2009 [No. 2]; Carbon Pollution Reduction Scheme (CPRS Fuel Credits) (Consequential Amendments) Bill 2009 [No. 2]; Excise Tariff Amendment (Carbon Pollution Reduction Scheme) Bill 2009 [No. 2]; Customs Tariff Amendment (Carbon Pollution Reduction Scheme) Bill 2009 [No. 2]; Carbon Pollution Reduction Scheme Amendment (Household Assistance) Bill 2009 [No. 2] — 2009-11-19",
+    "speaker": "Kate Lundy",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2009-11-19",
+    "cited": true
+   },
+   {
+    "slug": "speech-790707",
+    "title": "Mathias Cormann — Adjournment — 2009-02-03",
+    "speaker": "Mathias Cormann",
+    "party": null,
+    "state": "federal",
+    "date": "2009-02-03",
+    "cited": false
+   },
+   {
+    "slug": "speech-790677",
+    "title": "Louise Pratt — Questions without Notice — 2009-02-03",
+    "speaker": "Louise Pratt",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2009-02-03",
+    "cited": false
+   },
+   {
+    "slug": "speech-790945",
+    "title": "Chris Evans — Business — 2009-02-09",
+    "speaker": "Chris Evans",
+    "party": null,
+    "state": "federal",
+    "date": "2009-02-09",
+    "cited": false
+   },
+   {
+    "slug": "speech-791761",
+    "title": "Alan Ferguson — Matters of Urgency — 2009-03-12",
+    "speaker": "Alan Ferguson",
+    "party": null,
+    "state": "federal",
+    "date": "2009-03-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-200295",
+    "title": "Antony Windsor — 2009-03-17",
+    "speaker": "Antony Windsor",
+    "party": "Independent",
+    "state": "federal",
+    "date": "2009-03-17",
+    "cited": false
+   },
+   {
+    "slug": "speech-201299",
+    "title": "Wilson Tuckey — 2009-05-12",
+    "speaker": "Wilson Tuckey",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2009-05-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-794030",
+    "title": "Judith Troeth — Delegation Reports — 2009-06-24",
+    "speaker": "Judith Troeth",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2009-06-24",
+    "cited": false
+   },
+   {
+    "slug": "speech-794199",
+    "title": "Ian Macdonald — Appropriation (Parliamentary Departments) Bill (No. 1) 2009-2010; Appropriation Bill (No. 1) 2009-2010; Appropriation Bill (No. 2) 2009-2010 — 2009-06-25",
+    "speaker": "Ian Macdonald",
+    "party": null,
+    "state": "federal",
+    "date": "2009-06-25",
+    "cited": false
+   },
+   {
+    "slug": "speech-206706",
+    "title": "Peter Garrett — 2009-08-11",
+    "speaker": "Peter Garrett",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2009-08-11",
+    "cited": false
+   },
+   {
+    "slug": "speech-794516",
+    "title": "Scott Ryan — Carbon Pollution Reduction Scheme Bill 2009; Carbon Pollution Reduction Scheme (Consequential Amendments) Bill 2009; Australian Climate Change Regulatory Authority Bill 2009; Carbon Pollution Reduction Scheme (Charges-Customs) Bill 2009; Carbon Pollution Reduction Scheme (Charges-Excise) Bill 2009; Carbon Pollution Reduction Scheme (Charges-General) Bill 2009; Carbon Pollution Reduction Scheme (CPRS Fuel Credits) Bill 2009; Carbon Pollution Reduction Scheme (CPRS Fuel Credits) (Consequential Amendments) Bill 2009; Excise Tariff Amendment (Carbon Pollution Reduction Scheme) Bill 2009; Customs Tariff Amendment (Carbon Pollution Reduction Scheme) Bill 2009; Carbon Pollution Reduction Scheme Amendment (Household Assistance) Bill 2009 — 2009-08-13",
+    "speaker": "Scott Ryan",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2009-08-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-797045",
+    "title": "Concetta Fierravanti-Wells — Questions without Notice: Take Note of Answers — 2009-11-18",
+    "speaker": "Concetta Fierravanti-Wells",
+    "party": null,
+    "state": "federal",
+    "date": "2009-11-18",
+    "cited": false
+   },
+   {
+    "slug": "speech-213351",
+    "title": "Mike Kelly — 2009-11-19",
+    "speaker": "Mike Kelly",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2009-11-19",
+    "cited": false
+   }
+  ],
+  "cited_count": 6,
+  "seconds": 7.9,
+  "tokens": {
+   "input": 3592,
+   "output": 371
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 18 strongest passages the knowledge box retrieved for 2009; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2009 run through /api/search (hybrid retrieval, from=2009&to=2009, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "142 distinct speeches among the 147 strongest matches for the year's 4 debates - not every speech given in 2009, and the index is still loading.",
+  "probes": [
+   {
+    "q": "economic stimulus package payments",
+    "label": "The stimulus",
+    "retrieved": 39,
+    "truncated": true
+   },
+   {
+    "q": "carbon pollution reduction scheme emissions trading",
+    "label": "Emissions trading",
+    "retrieved": 35,
+    "truncated": true
+   },
+   {
+    "q": "Black Saturday Victorian bushfires",
+    "label": "Black Saturday",
+    "retrieved": 36,
+    "truncated": true
+   },
+   {
+    "q": "home insulation program",
+    "label": "The insulation program",
+    "retrieved": 37,
+    "truncated": true
+   }
+  ],
+  "retrieved": 147,
+  "unique_speeches": 142,
+  "unlabelled_party": 42,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 1,
+  "presiding_excluded": [
+   "Harry Jenkins",
+   "John Hogg"
+  ],
+  "speakers": [
+   {
+    "name": "Peter Garrett",
+    "party": "Labor",
+    "speeches": 9
+   },
+   {
+    "name": "Nick Sherry",
+    "party": null,
+    "speeches": 6
+   },
+   {
+    "name": "Helen Coonan",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "Chris Evans",
+    "party": null,
+    "speeches": 4
+   },
+   {
+    "name": "Christine Milne",
+    "party": "Greens",
+    "speeches": 4
+   },
+   {
+    "name": "John Williams",
+    "party": "Nationals",
+    "speeches": 4
+   },
+   {
+    "name": "Barnaby Joyce",
+    "party": "Nationals",
+    "speeches": 3
+   },
+   {
+    "name": "Jenny Macklin",
+    "party": "Labor",
+    "speeches": 3
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 48
+   },
+   {
+    "party": "Liberal",
+    "speeches": 28
+   },
+   {
+    "party": "Nationals",
+    "speeches": 15
+   },
+   {
+    "party": "Greens",
+    "speeches": 6
+   },
+   {
+    "party": "Independent",
+    "speeches": 3
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:17+00:00",
+ "corpus_resources": 609644
+}

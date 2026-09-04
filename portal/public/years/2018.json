@@ -1,0 +1,307 @@
+{
+ "year": 2018,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2018, and what positions did members and parties take? Debates that year included The banking royal commission, The energy wars, Company tax cuts and Live sheep exports.",
+  "prompt": "year-brief-v1",
+  "answer": "The live sheep export trade dominated parliamentary debate in 2018, with Labor, Greens and crossbench MPs pushing to end or phase out long-haul voyages. Labor's Tony Burke moved motions to schedule debate on the Animal Export Legislation Amendment (Ending Long-Haul Live Sheep Exports) Bill 2018, which were defeated 70 votes to 73. The Senate had passed the bill 31–27, which would restrict exports to the Middle East during July–September over five years. Labor speakers cited the 60,000 sheep that suffered on the Awassi Express, argued that regulation cannot work from \"behind a desk in Canberra,\" and noted 72.2% community support in Wentworth for a ban. They criticised coalition members for Farrer and Corangamite for abandoning their earlier opposition to the trade after receiving promotions, and accused the government of \"running and hiding\" by stifling debate. Government speakers opposed the ban, arguing it would hurt farmers and shift supply to countries with lower welfare standards, citing new penalties in the Export Legislation Amendment (Livestock) Bill 2018 of fines up to $4.2 million and 10 years' jail for directors, and the loss of 40% of Australia's chilled meat market in Bahrain after disruptions to live exports.\n\nThe banking royal commission was another major debate. Labor speakers noted they had long called for the commission, while the Prime Minister had voted 26 times against it and called it \"a populist whinge.\" They argued that of 10,000 bank victims who made submissions, only 27 had told their stories, and criticised the government for not extending the commission. Labor conducted roundtables with victims from Perth to Launceston, hearing accounts of bank fraud, lost homes and farms, and abuse of the legal system, and called for the government to extend the royal commission to give victims a proper voice.\n\nCompany tax cuts also featured, with Labor supporting lower tax rates for small and medium businesses but criticising the government for failing to fund the cuts, and for rising electricity prices and delays to the banking royal commission and NBN rollout. The government also faced criticism over foreign aid cuts of $140 million and its refusal to debate a federal anticorruption commission, with Labor and crossbench MPs accusing it of avoiding votes on these issues.",
+  "sources": [
+   {
+    "slug": "division-federal-representatives-5387",
+    "title": "House of Representatives division, 10 September 2018: Animal Export Legislation Amendment (Ending Long-Haul Live Sheep Exports) Bill 2018 - First Reading - When to discuss the bill (part 1 of 2)",
+    "speaker": "Adam Bandt",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "division-federal-representatives-5387-p2",
+    "title": "House of Representatives division, 10 September 2018: Animal Export Legislation Amendment (Ending Long-Haul Live Sheep Exports) Bill 2018 - First Reading - When to discuss the bill (part 2 of 2)",
+    "speaker": "Alan Tudge",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-363891",
+    "title": "Damian Drum — 2018-05-30",
+    "speaker": "Damian Drum",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2018-05-30",
+    "cited": true
+   },
+   {
+    "slug": "speech-367821",
+    "title": "Jason Wood — 2018-08-20",
+    "speaker": "Jason Wood",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2018-08-20",
+    "cited": true
+   },
+   {
+    "slug": "speech-367826",
+    "title": "Steve Georganas — 2018-08-20",
+    "speaker": "Steve Georganas",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2018-08-20",
+    "cited": true
+   },
+   {
+    "slug": "speech-368536",
+    "title": "Graham Perrett — 2018-09-10",
+    "speaker": "Graham Perrett",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2018-09-10",
+    "cited": true
+   },
+   {
+    "slug": "speech-368472",
+    "title": "Adam Bandt — 2018-09-10",
+    "speaker": "Adam Bandt",
+    "party": "Greens",
+    "state": "federal",
+    "date": "2018-09-10",
+    "cited": true
+   },
+   {
+    "slug": "speech-370842",
+    "title": "Matt Thistlethwaite — 2018-10-16",
+    "speaker": "Matt Thistlethwaite",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2018-10-16",
+    "cited": true
+   },
+   {
+    "slug": "speech-372915",
+    "title": "Clare O'Neil — 2018-11-27",
+    "speaker": "Clare O'Neil",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2018-11-27",
+    "cited": true
+   },
+   {
+    "slug": "speech-373380",
+    "title": "Kerryn Phelps — 2018-12-03",
+    "speaker": "Kerryn Phelps",
+    "party": "Independent",
+    "state": "federal",
+    "date": "2018-12-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-373971",
+    "title": "David Gillespie — 2018-12-05",
+    "speaker": "David Gillespie",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2018-12-05",
+    "cited": true
+   },
+   {
+    "slug": "division-federal-senate-5393",
+    "title": "Senate division, 10 September 2018: Animal Export Legislation Amendment (Ending Long-Haul Live Sheep Exports) Bill 2018 - Second Reading - Agree with bill's main idea",
+    "speaker": "Alex Gallacher",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "speech-363660",
+    "title": "Tim Watts — 2018-05-29",
+    "speaker": "Tim Watts",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2018-05-29",
+    "cited": false
+   },
+   {
+    "slug": "speech-363912",
+    "title": "Michael Danby — 2018-05-30",
+    "speaker": "Michael Danby",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2018-05-30",
+    "cited": false
+   },
+   {
+    "slug": "speech-368316",
+    "title": "Madeleine King — 2018-09-10",
+    "speaker": "Madeleine King",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2018-09-10",
+    "cited": false
+   },
+   {
+    "slug": "speech-368471",
+    "title": "Joel Fitzgibbon — 2018-09-10",
+    "speaker": "Joel Fitzgibbon",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2018-09-10",
+    "cited": false
+   },
+   {
+    "slug": "speech-368630",
+    "title": "Tony Zappia — 2018-09-11",
+    "speaker": "Tony Zappia",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2018-09-11",
+    "cited": false
+   },
+   {
+    "slug": "speech-370390",
+    "title": "Rowan Ramsey — 2018-10-15",
+    "speaker": "Rowan Ramsey",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2018-10-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-372961",
+    "title": "Michael Danby — 2018-11-28",
+    "speaker": "Michael Danby",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2018-11-28",
+    "cited": false
+   },
+   {
+    "slug": "speech-373972",
+    "title": "Adam Bandt — 2018-12-05",
+    "speaker": "Adam Bandt",
+    "party": "Greens",
+    "state": "federal",
+    "date": "2018-12-05",
+    "cited": false
+   }
+  ],
+  "cited_count": 11,
+  "seconds": 9.0,
+  "tokens": {
+   "input": 4519,
+   "output": 470
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2018; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2018 run through /api/search (hybrid retrieval, from=2018&to=2018, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "169 distinct speeches among the 169 strongest matches for the year's 4 debates - not every speech given in 2018, and the index is still loading.",
+  "probes": [
+   {
+    "q": "banking royal commission misconduct",
+    "label": "The banking royal commission",
+    "retrieved": 39,
+    "truncated": true
+   },
+   {
+    "q": "national energy guarantee emissions",
+    "label": "The energy wars",
+    "retrieved": 44,
+    "truncated": true
+   },
+   {
+    "q": "company tax cuts",
+    "label": "Company tax cuts",
+    "retrieved": 46,
+    "truncated": true
+   },
+   {
+    "q": "live sheep exports",
+    "label": "Live sheep exports",
+    "retrieved": 40,
+    "truncated": true
+   }
+  ],
+  "retrieved": 169,
+  "unique_speeches": 169,
+  "unlabelled_party": 12,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Scott Ryan",
+   "Tony Smith"
+  ],
+  "speakers": [
+   {
+    "name": "Malcolm Turnbull",
+    "party": "Liberal",
+    "speeches": 20
+   },
+   {
+    "name": "Scott Morrison",
+    "party": "Liberal",
+    "speeches": 10
+   },
+   {
+    "name": "Josh Frydenberg",
+    "party": "Liberal",
+    "speeches": 9
+   },
+   {
+    "name": "Rick Wilson",
+    "party": "Liberal",
+    "speeches": 6
+   },
+   {
+    "name": "Matt Keogh",
+    "party": "Labor",
+    "speeches": 5
+   },
+   {
+    "name": "Bill Shorten",
+    "party": "Labor",
+    "speeches": 5
+   },
+   {
+    "name": "Jeremy Buckingham",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "Tony Zappia",
+    "party": "Labor",
+    "speeches": 5
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 80
+   },
+   {
+    "party": "Labor",
+    "speeches": 58
+   },
+   {
+    "party": "Nationals",
+    "speeches": 11
+   },
+   {
+    "party": "Independent",
+    "speeches": 4
+   },
+   {
+    "party": "Greens",
+    "speeches": 2
+   },
+   {
+    "party": "Centre Alliance",
+    "speeches": 2
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:47+00:00",
+ "corpus_resources": 609644
+}

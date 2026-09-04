@@ -1,0 +1,291 @@
+{
+ "year": 2017,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2017, and what positions did members and parties take? Debates that year included The postal survey, The citizenship crisis, Energy prices and Bank scrutiny.",
+  "prompt": "year-brief-v1",
+  "answer": "The Australian Parliament in 2017 was dominated by the debate over same-sex marriage, triggered by the coalition government’s decision to hold a voluntary postal survey rather than a compulsory plebiscite. Government ministers defended the $122 million survey as fulfilling a pre-election promise, with one minister noting the overwhelming response of 79.5 per cent participation, which he compared favourably to the Brexit referendum’s 72.7 per cent. Labor members opposed the survey as a wasteful and divisive “cop-out” driven by the Prime Minister’s inability to manage his party, while supporting the Marriage Law Survey (Additional Safeguards) Bill 2017 to protect LGBTI Australians from vilification. When the result returned 61.6 per cent in favour, the subsequent Marriage Amendment (Definition and Religious Freedoms) Bill 2017 saw members from both sides declare their positions. Some coalition members, like the member for Cowper, announced they would vote yes despite personally opposing change, citing respect for the majority decision, while others raised concerns about religious freedom and the lack of protections for Christians who might be complicit in same-sex marriages. Labor and crossbench members largely supported the bill, with several noting strong yes votes in their electorates, such as 71.2 per cent in Batman and 72.2 per cent in Curtin, and argued for inclusion over discrimination.\n\nA second major debate concerned the Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017, which the Liberal and National government introduced to put “Australian values first” by strengthening the citizenship test. The bill passed the House of Representatives on 14 August 2017 by a vote of 75 to 71, with government speakers emphasising the importance of shared values, while critics, including those who seconded an Australian Bill of Rights Bill, argued that the citizenship rule changes, alongside the postal survey, infringed human rights. Energy prices and security also featured as a public policy issue, with one speaker describing the energy crisis as causing the greatest frustration for constituents and questioning whether parliament was broken, while a parliamentary question sought updates on government efforts to strengthen energy security and maintain affordability.",
+  "sources": [
+   {
+    "slug": "division-federal-representatives-4855",
+    "title": "House of Representatives division, 14 August 2017: Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill  (part 1 of 2)",
+    "speaker": "Alan Tudge",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-350733",
+    "title": "Andrew Gee — 2017-08-09",
+    "speaker": "Andrew Gee",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2017-08-09",
+    "cited": true
+   },
+   {
+    "slug": "speech-351129",
+    "title": "Mark Dreyfus — 2017-08-10",
+    "speaker": "Mark Dreyfus",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2017-08-10",
+    "cited": true
+   },
+   {
+    "slug": "speech-353929",
+    "title": "Mark Dreyfus — 2017-09-13",
+    "speaker": "Mark Dreyfus",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2017-09-13",
+    "cited": true
+   },
+   {
+    "slug": "speech-357137",
+    "title": "Julie Bishop — 2017-12-05",
+    "speaker": "Julie Bishop",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2017-12-05",
+    "cited": true
+   },
+   {
+    "slug": "speech-357132",
+    "title": "Catherine King — 2017-12-05",
+    "speaker": "Catherine King",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2017-12-05",
+    "cited": true
+   },
+   {
+    "slug": "speech-357136",
+    "title": "Sharon Bird — 2017-12-05",
+    "speaker": "Sharon Bird",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2017-12-05",
+    "cited": true
+   },
+   {
+    "slug": "speech-357131",
+    "title": "Luke Hartsuyker — 2017-12-05",
+    "speaker": "Luke Hartsuyker",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2017-12-05",
+    "cited": true
+   },
+   {
+    "slug": "speech-357392",
+    "title": "David Feeney — 2017-12-06",
+    "speaker": "David Feeney",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2017-12-06",
+    "cited": true
+   },
+   {
+    "slug": "speech-344183",
+    "title": "Tim Watts — 2017-03-23",
+    "speaker": "Tim Watts",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2017-03-23",
+    "cited": false
+   },
+   {
+    "slug": "speech-347626",
+    "title": "Rick Wilson — 2017-05-30",
+    "speaker": "Rick Wilson",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2017-05-30",
+    "cited": false
+   },
+   {
+    "slug": "speech-351052",
+    "title": "Craig Kelly — 2017-08-10",
+    "speaker": "Craig Kelly",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2017-08-10",
+    "cited": false
+   },
+   {
+    "slug": "speech-351214",
+    "title": "Cathy McGowan — 2017-08-14",
+    "speaker": "Cathy McGowan",
+    "party": "Independent",
+    "state": "federal",
+    "date": "2017-08-14",
+    "cited": false
+   },
+   {
+    "slug": "speech-352103",
+    "title": "Julian Hill — 2017-08-17",
+    "speaker": "Julian Hill",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2017-08-17",
+    "cited": false
+   },
+   {
+    "slug": "speech-353928",
+    "title": "Darren Chester — 2017-09-13",
+    "speaker": "Darren Chester",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2017-09-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-884862",
+    "title": "David Clarke — Harassment of Same Sex-Marriage Opponents — 2017-10-12",
+    "speaker": "David Clarke",
+    "party": null,
+    "state": "nsw",
+    "date": "2017-10-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-354871",
+    "title": "Scott Morrison — 2017-10-16",
+    "speaker": "Scott Morrison",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2017-10-16",
+    "cited": false
+   },
+   {
+    "slug": "speech-357144",
+    "title": "Andrew Giles — 2017-12-05",
+    "speaker": "Andrew Giles",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2017-12-05",
+    "cited": false
+   },
+   {
+    "slug": "speech-357230",
+    "title": "Ed Husic — 2017-12-06",
+    "speaker": "Ed Husic",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2017-12-06",
+    "cited": false
+   }
+  ],
+  "cited_count": 9,
+  "seconds": 8.8,
+  "tokens": {
+   "input": 3235,
+   "output": 448
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 19 strongest passages the knowledge box retrieved for 2017; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2017 run through /api/search (hybrid retrieval, from=2017&to=2017, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "160 distinct speeches among the 160 strongest matches for the year's 4 debates - not every speech given in 2017, and the index is still loading.",
+  "probes": [
+   {
+    "q": "same-sex marriage postal survey",
+    "label": "The postal survey",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "dual citizenship section 44",
+    "label": "The citizenship crisis",
+    "retrieved": 39,
+    "truncated": true
+   },
+   {
+    "q": "energy prices national energy guarantee",
+    "label": "Energy prices",
+    "retrieved": 35,
+    "truncated": true
+   },
+   {
+    "q": "banking royal commission calls",
+    "label": "Bank scrutiny",
+    "retrieved": 36,
+    "truncated": true
+   }
+  ],
+  "retrieved": 160,
+  "unique_speeches": 160,
+  "unlabelled_party": 7,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Scott Ryan",
+   "Stephen Parry",
+   "Tony Smith"
+  ],
+  "speakers": [
+   {
+    "name": "Malcolm Turnbull",
+    "party": "Liberal",
+    "speeches": 21
+   },
+   {
+    "name": "Josh Frydenberg",
+    "party": "Liberal",
+    "speeches": 8
+   },
+   {
+    "name": "Bill Shorten",
+    "party": "Labor",
+    "speeches": 8
+   },
+   {
+    "name": "Scott Morrison",
+    "party": "Liberal",
+    "speeches": 6
+   },
+   {
+    "name": "Matt Thistlethwaite",
+    "party": "Labor",
+    "speeches": 6
+   },
+   {
+    "name": "Julie Bishop",
+    "party": "Liberal",
+    "speeches": 4
+   },
+   {
+    "name": "Julia Banks",
+    "party": "Liberal",
+    "speeches": 4
+   },
+   {
+    "name": "Christopher Pyne",
+    "party": "Liberal",
+    "speeches": 4
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 80
+   },
+   {
+    "party": "Labor",
+    "speeches": 59
+   },
+   {
+    "party": "Nationals",
+    "speeches": 12
+   },
+   {
+    "party": "Greens",
+    "speeches": 2
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:43+00:00",
+ "corpus_resources": 609644
+}

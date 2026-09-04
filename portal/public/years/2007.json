@@ -1,0 +1,241 @@
+{
+ "year": 2007,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2007, and what positions did members and parties take? Debates that year included Climate change, WorkChoices, Broadband and Water and the Murray-Darling.",
+  "prompt": "year-brief-v1",
+  "answer": "The Australian parliament’s 2007 sittings were dominated by the Water Bill 2007 and the Water (Consequential Amendments) Bill 2007, which sought to establish a Murray-Darling Basin Authority, a Commonwealth Environmental Water Holder, and new water market rules, backed by a $10 billion national investment plan. Labor speakers, including the member for Grayndler and the member for Lalor, supported the bills as a “step in the right direction” but argued they were a “second-best solution” and a “poll-driven response” rushed through in an election year. They criticised the Howard government for neglecting the basin for over a decade, failing to consult states and stakeholders—noting that the National Farmers Federation was not given a copy of the final bill—and allocating only $53 million of the $10 billion plan in the coming financial year. Labor’s second reading amendment, moved by the member for Grayndler, called for full implementation of the 2004 National Water Initiative principles, fixing overallocation of water licences, and returning sufficient water to the basin’s rivers. Government speakers, including the Minister for the Environment and Water Resources, defended the bills as the “most significant reform to water management in the Murray-Darling Basin in over 100 years,” while some coalition members, such as the member for Indi, blamed the Victorian state government for refusing to refer powers. The Australian Greens, through Senator Siewert, argued the government must immediately purchase water allocations for emergency environmental flows, warning that Lake Bonney had less than 12 months before becoming irretrievable.\n\nClimate change was another major debate, often linked to water policy. On 11 September 2007, the Senate divided on a motion noting the Asia-Pacific Economic Cooperation Leaders’ Sydney Declaration and Australia’s commitments under the United Nations Framework Convention on Climate Change; the motion was defeated 6 votes to 53, with only Australian Democrats and Greens senators voting in favour. Labor speakers accused the government of having “virtually no track record on climate change,” citing projections from the Intergovernmental Panel on Climate Change that annual stream flow into the Murray-Darling Basin would fall 10 to 25 per cent by 2050 and 16 to 48 per cent by 2100. Government members, including Senator Abetz and Senator Ian Macdonald, expressed scepticism about the degree of connection between climate change and drought, with Senator Macdonald noting that “the jury is still out.” The Workplace Relations Amendment (A Stronger Safety Net) Bill 2007 also drew debate, with Labor’s contribution concluding that “Work Choices has to go,” even as amended, calling it “still a gross unfairness for Australian families.”",
+  "sources": [
+   {
+    "slug": "division-federal-senate-1418",
+    "title": "Senate division, 11 September 2007: Climate Change",
+    "speaker": "Alan Eggleston",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-163477",
+    "title": "John Howard — 2007-02-06",
+    "speaker": "John Howard",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2007-02-06",
+    "cited": true
+   },
+   {
+    "slug": "speech-174178",
+    "title": "Malcolm Turnbull — 2007-08-07",
+    "speaker": "Malcolm Turnbull",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2007-08-07",
+    "cited": true
+   },
+   {
+    "slug": "speech-175341",
+    "title": "Gavan O’Connor — 2007-08-14",
+    "speaker": "Gavan O’Connor",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2007-08-14",
+    "cited": true
+   },
+   {
+    "slug": "speech-782173",
+    "title": "Richard Colbeck — Water Bill 2007; Water (Consequential Amendments) Bill 2007 — 2007-08-15",
+    "speaker": "Richard Colbeck",
+    "party": null,
+    "state": "federal",
+    "date": "2007-08-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-782324",
+    "title": "Kerry O'Brien — Water Bill 2007; Water (Consequential Amendments) Bill 2007 — 2007-08-16",
+    "speaker": "Kerry O'Brien",
+    "party": null,
+    "state": "federal",
+    "date": "2007-08-16",
+    "cited": true
+   },
+   {
+    "slug": "division-federal-senate-1410",
+    "title": "Senate division, 16 August 2007: Water Bill 2007; Water (Consequential Amendments) Bill 2007 — In Committee",
+    "speaker": "Alan Eggleston",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "speech-777849",
+    "title": "Penny Wong — Questions without Notice: Take Note of Answers — 2007-02-06",
+    "speaker": "Penny Wong",
+    "party": null,
+    "state": "federal",
+    "date": "2007-02-06",
+    "cited": false
+   },
+   {
+    "slug": "speech-779063",
+    "title": "Rachel Siewert — Questions without Notice: Take Note of Answers — 2007-03-21",
+    "speaker": "Rachel Siewert",
+    "party": "Greens",
+    "state": "federal",
+    "date": "2007-03-21",
+    "cited": false
+   },
+   {
+    "slug": "speech-779332",
+    "title": "Andrew Bartlett — Committees — 2007-03-26",
+    "speaker": "Andrew Bartlett",
+    "party": "Australian Democrats",
+    "state": "federal",
+    "date": "2007-03-26",
+    "cited": false
+   },
+   {
+    "slug": "speech-781116",
+    "title": "Ursula Stephens — Workplace Relations Amendment (a Stronger Safety Net) Bill 2007 — 2007-06-19",
+    "speaker": "Ursula Stephens",
+    "party": null,
+    "state": "federal",
+    "date": "2007-06-19",
+    "cited": false
+   },
+   {
+    "slug": "speech-175223",
+    "title": "Peter Garrett — 2007-08-14",
+    "speaker": "Peter Garrett",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2007-08-14",
+    "cited": false
+   },
+   {
+    "slug": "speech-783272",
+    "title": "Penny Wong — National Greenhouse and Energy Reporting Bill 2007 — 2007-09-20",
+    "speaker": "Penny Wong",
+    "party": null,
+    "state": "federal",
+    "date": "2007-09-20",
+    "cited": false
+   }
+  ],
+  "cited_count": 6,
+  "seconds": 9.0,
+  "tokens": {
+   "input": 8988,
+   "output": 552
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 13 strongest passages the knowledge box retrieved for 2007; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2007 run through /api/search (hybrid retrieval, from=2007&to=2007, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "115 distinct speeches among the 117 strongest matches for the year's 4 debates - not every speech given in 2007, and the index is still loading.",
+  "probes": [
+   {
+    "q": "climate change Kyoto protocol",
+    "label": "Climate change",
+    "retrieved": 24,
+    "truncated": true
+   },
+   {
+    "q": "WorkChoices industrial relations",
+    "label": "WorkChoices",
+    "retrieved": 31,
+    "truncated": true
+   },
+   {
+    "q": "broadband network internet",
+    "label": "Broadband",
+    "retrieved": 32,
+    "truncated": true
+   },
+   {
+    "q": "Murray-Darling water drought",
+    "label": "Water and the Murray-Darling",
+    "retrieved": 30,
+    "truncated": true
+   }
+  ],
+  "retrieved": 117,
+  "unique_speeches": 115,
+  "unlabelled_party": 42,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 3,
+  "presiding_excluded": [
+   "Alan Ferguson",
+   "David Hawker",
+   "Paul Calvert"
+  ],
+  "speakers": [
+   {
+    "name": "Stephen Conroy",
+    "party": null,
+    "speeches": 10
+   },
+   {
+    "name": "Malcolm Turnbull",
+    "party": "Liberal",
+    "speeches": 8
+   },
+   {
+    "name": "Penny Wong",
+    "party": null,
+    "speeches": 8
+   },
+   {
+    "name": "Rachel Siewert",
+    "party": "Greens",
+    "speeches": 4
+   },
+   {
+    "name": "Christine Milne",
+    "party": "Greens",
+    "speeches": 3
+   },
+   {
+    "name": "Joe Hockey",
+    "party": "Liberal",
+    "speeches": 3
+   },
+   {
+    "name": "Brendan O’Connor",
+    "party": "Labor",
+    "speeches": 3
+   },
+   {
+    "name": "Eric Abetz",
+    "party": null,
+    "speeches": 3
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 28
+   },
+   {
+    "party": "Liberal",
+    "speeches": 27
+   },
+   {
+    "party": "Greens",
+    "speeches": 8
+   },
+   {
+    "party": "Nationals",
+    "speeches": 6
+   },
+   {
+    "party": "Australian Democrats",
+    "speeches": 4
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:11+00:00",
+ "corpus_resources": 609644
+}

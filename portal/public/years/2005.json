@@ -1,0 +1,299 @@
+{
+ "year": 2005,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2005, and what positions did members and parties take? Debates that year included WorkChoices, Selling the rest of Telstra, Anti-terror laws and Student unionism.",
+  "prompt": "year-brief-v1",
+  "answer": "The year’s parliamentary proceedings were dominated by the sale of the Commonwealth's remaining 51 per cent share in Telstra, a package of bills that included the Telstra (Transition to Full Private Ownership) Bill 2005, the Telecommunications Legislation Amendment (Competition and Consumer Issues) Bill 2005, and the Telecommunications Legislation Amendment (Future Proofing and Other Measures) Bill 2005. Government speakers, including the minister introducing the bills, argued that the sale would remove the conflict of interest inherent in the government owning the nation's largest carrier while also being its regulator. They said the accompanying Connect Australia package, with a $1.1 billion investment in services and a perpetual $2 billion Communications Fund, would address rural and regional concerns, and that operational separation would force Telstra to treat its wholesale customers fairly. Government members repeatedly said the policy had been taken to four elections and that the debate had been extensive, with one member noting 2½ days of House debate on top of ten years of national debate.\n\nThe Australian Labor Party opposed the sale, with speakers arguing that Telstra was an essential service with monopoly power and that public ownership provided social and economic outcomes, including cross-subsidies for rural users. Labor members cited opinion polls showing 70 to 85 per cent of Australians opposed the sale, and argued the privatisation was ideologically driven and poor economics, with one member citing Treasury analysis showing a loss to public coffers of $140 million a year. They also pointed to Australia's broadband performance of 7.7 subscribers per 100 people, ranking 21st in the developed world. Labor speakers attacked the National Party for negotiating its support, with particular focus on Senator Barnaby Joyce, who had been elected on a platform of opposing the sale but was now bargaining over the package, which Labor members noted fell short of the $5 billion, $5.7 billion, or $7 billion figures that had been discussed. Government members countered that Labor had privatised Qantas and the Commonwealth Bank while in office, and that services had improved since partial privatisation, with one member contrasting a two-year wait for connection under full government ownership with a maximum 20-day wait under the current regime.\n\nThe House also debated the Higher Education Support Amendment (Abolition of Compulsory Up-front Student Union Fees) Bill 2005, which introduced voluntary student unionism. Government speakers framed the bill as a matter of freedom of association and choice for students, with one member calling it an historic day for those beliefs. Labor members opposed the bill, with one speaker making what a government member described as \"bizarre claims\" that mateship and friendship were reliant on compulsory unionism, and another arguing about the right to protest. The government member dismissed the Labor arguments as missing the point that no student should have their money forcibly acquired for union activities.",
+  "sources": [
+   {
+    "slug": "speech-127657",
+    "title": "Catherine King — 2005-03-16",
+    "speaker": "Catherine King",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2005-03-16",
+    "cited": true
+   },
+   {
+    "slug": "speech-128834",
+    "title": "Anthony Smith — 2005-05-12",
+    "speaker": "Anthony Smith",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2005-05-12",
+    "cited": true
+   },
+   {
+    "slug": "speech-134674",
+    "title": "Peter McGauran — 2005-08-16",
+    "speaker": "Peter McGauran",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2005-08-16",
+    "cited": true
+   },
+   {
+    "slug": "speech-136127",
+    "title": "John Howard — 2005-09-06",
+    "speaker": "John Howard",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2005-09-06",
+    "cited": true
+   },
+   {
+    "slug": "speech-136469",
+    "title": "Kenneth Ticehurst — 2005-09-07",
+    "speaker": "Kenneth Ticehurst",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2005-09-07",
+    "cited": true
+   },
+   {
+    "slug": "speech-136477",
+    "title": "Simon Crean — 2005-09-07",
+    "speaker": "Simon Crean",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2005-09-07",
+    "cited": true
+   },
+   {
+    "slug": "speech-136923",
+    "title": "Bernie Ripoll — 2005-09-12",
+    "speaker": "Bernie Ripoll",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2005-09-12",
+    "cited": true
+   },
+   {
+    "slug": "speech-137631",
+    "title": "Robert Baldwin — 2005-09-15",
+    "speaker": "Robert Baldwin",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2005-09-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-137607",
+    "title": "Michael Keenan — 2005-09-15",
+    "speaker": "Michael Keenan",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2005-09-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-137597",
+    "title": "Tony Abbott — 2005-09-15",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2005-09-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-137601",
+    "title": "Peter McGauran — 2005-09-15",
+    "speaker": "Peter McGauran",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2005-09-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-128831",
+    "title": "Sophie Panopoulos — 2005-05-12",
+    "speaker": "Sophie Panopoulos",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2005-05-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-133790",
+    "title": "Joel Fitzgibbon — 2005-08-10",
+    "speaker": "Joel Fitzgibbon",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2005-08-10",
+    "cited": false
+   },
+   {
+    "slug": "speech-136484",
+    "title": "Peter Lindsay — 2005-09-07",
+    "speaker": "Peter Lindsay",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2005-09-07",
+    "cited": false
+   },
+   {
+    "slug": "speech-136544",
+    "title": "Barry Wakelin — 2005-09-08",
+    "speaker": "Barry Wakelin",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2005-09-08",
+    "cited": false
+   },
+   {
+    "slug": "speech-136935",
+    "title": "Chris Bowen — 2005-09-12",
+    "speaker": "Chris Bowen",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2005-09-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-136971",
+    "title": "Tony Abbott — 2005-09-12",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2005-09-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-136937",
+    "title": "Joel Fitzgibbon — 2005-09-12",
+    "speaker": "Joel Fitzgibbon",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2005-09-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-136919",
+    "title": "Peter Slipper — 2005-09-12",
+    "speaker": "Peter Slipper",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2005-09-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-137605",
+    "title": "Michael Keenan — 2005-09-15",
+    "speaker": "Michael Keenan",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2005-09-15",
+    "cited": false
+   }
+  ],
+  "cited_count": 11,
+  "seconds": 11.7,
+  "tokens": {
+   "input": 17995,
+   "output": 577
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2005; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2005 run through /api/search (hybrid retrieval, from=2005&to=2005, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "200 distinct speeches among the 200 strongest matches for the year's 4 debates - not every speech given in 2005, and the index is still loading.",
+  "probes": [
+   {
+    "q": "WorkChoices industrial relations reform",
+    "label": "WorkChoices",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "Telstra full sale privatisation",
+    "label": "Selling the rest of Telstra",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "anti-terrorism laws control orders",
+    "label": "Anti-terror laws",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "voluntary student unionism",
+    "label": "Student unionism",
+    "retrieved": 50,
+    "truncated": true
+   }
+  ],
+  "retrieved": 200,
+  "unique_speeches": 200,
+  "unlabelled_party": 3,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "David Hawker",
+   "Paul Calvert"
+  ],
+  "speakers": [
+   {
+    "name": "Philip Ruddock",
+    "party": "Liberal",
+    "speeches": 8
+   },
+   {
+    "name": "Kim Beazley",
+    "party": "Labor",
+    "speeches": 7
+   },
+   {
+    "name": "Kevin Andrews",
+    "party": "Liberal",
+    "speeches": 6
+   },
+   {
+    "name": "Peter McGauran",
+    "party": "Nationals",
+    "speeches": 6
+   },
+   {
+    "name": "Sophie Panopoulos",
+    "party": "Liberal",
+    "speeches": 6
+   },
+   {
+    "name": "Patrick Secker",
+    "party": "Liberal",
+    "speeches": 5
+   },
+   {
+    "name": "Peter Costello",
+    "party": "Liberal",
+    "speeches": 5
+   },
+   {
+    "name": "Peter Andren",
+    "party": "Independent",
+    "speeches": 5
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 92
+   },
+   {
+    "party": "Labor",
+    "speeches": 85
+   },
+   {
+    "party": "Nationals",
+    "speeches": 14
+   },
+   {
+    "party": "Independent",
+    "speeches": 6
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:04+00:00",
+ "corpus_resources": 609644
+}

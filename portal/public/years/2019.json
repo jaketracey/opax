@@ -1,0 +1,315 @@
+{
+ "year": 2019,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2019, and what positions did members and parties take? Debates that year included Climate and bushfires, Franking credits, Drought relief and Religious freedom.",
+  "prompt": "year-brief-v1",
+  "answer": "In 2019, the Australian parliament was dominated by debates over climate change and bushfires, with the Morrison government and Labor sharply divided. Labor speakers argued that the government had no effective climate policy, pointing to catastrophic early bushfires and extreme fire danger in Tasmania, and citing Bureau of Meteorology links to human-driven global heating. They criticised the Prime Minister for denying a direct link between Australia's emissions and the record bushfire season. In contrast, government speakers asserted there was no climate emergency, citing data from 500 scientists and declining climate-related death rates, and criticised Labor for supporting groups like Extinction Rebellion. A Senate motion on 13 November 2019 linking bushfires to climate change was defeated 10–47, with only crossbench and minor party senators in favour, while the government and most others opposed.\n\nDrought relief was another major debate, centred on the Future Drought Fund Bill. The government, led by figures like Deputy Prime Minister Michael McCormack and Treasurer Josh Frydenberg, pushed the legislation to support farmers and rural communities, with the bill passing the Senate on 24 July 2019 by 44 votes to 9, with Labor and the Greens opposed. Labor speakers argued the government was not doing enough, calling for urgent measures like municipal rate subsidies for farmers in Gippsland and criticising the government for opposing their attempts to extend support. The government also highlighted its broader economic record, including tax relief for over 10 million Australians and a $4.1 billion surplus for 2019-20, while Labor countered that the economy was weak, citing stagnant wages, low growth, and rising costs of living.\n\nEconomic management and tax policy were also fiercely contested. Government speakers defended their record, claiming 1.2 million jobs created since 2013 and a small business tax rate cut to 27.5%, while attacking Labor's proposed policies as imposing $200 billion in new taxes, including on franking credits and negative gearing. Labor speakers, in turn, accused the government of creating a \"perfect storm\" of low wage growth, soaring power prices, and unaffordable housing, and criticised the Minister for Finance for boasting that ultra-low wages growth was a \"deliberate design feature\" of the economic architecture. The government also sought to pass a \"union-bashing bill\" to restrict workers' rights, which Labor opposed, seeing it as an attack on the union movement.",
+  "sources": [
+   {
+    "slug": "division-federal-representatives-5753-p2",
+    "title": "House of Representatives division, 22 July 2019: Future Drought Fund Bill 2019 - Second Reading - Adjourn debate (part 2 of 2)",
+    "speaker": "Alan Tudge",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "division-federal-senate-5785",
+    "title": "Senate division, 24 July 2019: Future Drought Fund Bill 2019, Future Drought Fund (Consequential Amendments) Bill 2019 - Third Reading - Pass the bill",
+    "speaker": "Alex Antic",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "division-federal-senate-5972",
+    "title": "Senate division, 13 November 2019: Motions - Australian Bushfires - Climate Change",
+    "speaker": "Alex Antic",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "division-federal-representatives-5752-p2",
+    "title": "House of Representatives division, 22 July 2019: Future Drought Fund Bill 2019 - Second Reading - Adjourn debate (part 2 of 2)",
+    "speaker": "Alan Tudge",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-374989",
+    "title": "Steve Irons — 2019-02-13",
+    "speaker": "Steve Irons",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2019-02-13",
+    "cited": true
+   },
+   {
+    "slug": "speech-1118167",
+    "title": "D O'Brien — Program — 2019-02-19",
+    "speaker": "D O'Brien",
+    "party": null,
+    "state": "vic",
+    "date": "2019-02-19",
+    "cited": true
+   },
+   {
+    "slug": "speech-377679",
+    "title": "Scott Morrison — 2019-07-22",
+    "speaker": "Scott Morrison",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2019-07-22",
+    "cited": true
+   },
+   {
+    "slug": "speech-383041",
+    "title": "Craig Kelly — 2019-10-16",
+    "speaker": "Craig Kelly",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2019-10-16",
+    "cited": true
+   },
+   {
+    "slug": "speech-386733",
+    "title": "Brian Mitchell — 2019-12-05",
+    "speaker": "Brian Mitchell",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2019-12-05",
+    "cited": true
+   },
+   {
+    "slug": "division-federal-representatives-5753",
+    "title": "House of Representatives division, 22 July 2019: Future Drought Fund Bill 2019 - Second Reading - Adjourn debate (part 1 of 2)",
+    "speaker": "Adam Bandt",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-5701",
+    "title": "House of Representatives division, 21 February 2019: Future Drought Fund Bill 2018 and Future Drought Fund (Consequential Amendments) Bill 2018 - Consideration in Detail - Agree wi (part 1 of 2)",
+    "speaker": "Alan Tudge",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-5701-p2",
+    "title": "House of Representatives division, 21 February 2019: Future Drought Fund Bill 2018 and Future Drought Fund (Consequential Amendments) Bill 2018 - Consideration in Detail - Agree wi (part 2 of 2)",
+    "speaker": "Adam Bandt",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "speech-375525",
+    "title": "Andrew Wallace — 2019-02-18",
+    "speaker": "Andrew Wallace",
+    "party": "LNP",
+    "state": "federal",
+    "date": "2019-02-18",
+    "cited": false
+   },
+   {
+    "slug": "speech-380581",
+    "title": "Adam Bandt — 2019-09-11",
+    "speaker": "Adam Bandt",
+    "party": "Greens",
+    "state": "federal",
+    "date": "2019-09-11",
+    "cited": false
+   },
+   {
+    "slug": "speech-382003",
+    "title": "Ged Kearney — 2019-09-19",
+    "speaker": "Ged Kearney",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2019-09-19",
+    "cited": false
+   },
+   {
+    "slug": "speech-1053866",
+    "title": "Rose Jackson — Climate Change — 2019-10-16",
+    "speaker": "Rose Jackson",
+    "party": null,
+    "state": "nsw",
+    "date": "2019-10-16",
+    "cited": false
+   },
+   {
+    "slug": "speech-1061268",
+    "title": "Jodi McKay — Bushfires — 2019-11-12",
+    "speaker": "Jodi McKay",
+    "party": null,
+    "state": "nsw",
+    "date": "2019-11-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-1063374",
+    "title": "Alister Henskens — Natural Disaster Assistance — 2019-11-13",
+    "speaker": "Alister Henskens",
+    "party": null,
+    "state": "nsw",
+    "date": "2019-11-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-1075930",
+    "title": "Rose Jackson — Domestic Violence Leave; Year in Review — 2019-11-21",
+    "speaker": "Rose Jackson",
+    "party": null,
+    "state": "nsw",
+    "date": "2019-11-21",
+    "cited": false
+   },
+   {
+    "slug": "speech-386354",
+    "title": "Andrew Gee — 2019-12-04",
+    "speaker": "Andrew Gee",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2019-12-04",
+    "cited": false
+   }
+  ],
+  "cited_count": 9,
+  "seconds": 9.2,
+  "tokens": {
+   "input": 5245,
+   "output": 488
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2019; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2019 run through /api/search (hybrid retrieval, from=2019&to=2019, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "152 distinct speeches among the 152 strongest matches for the year's 4 debates - not every speech given in 2019, and the index is still loading.",
+  "probes": [
+   {
+    "q": "climate change bushfires emergency",
+    "label": "Climate and bushfires",
+    "retrieved": 41,
+    "truncated": true
+   },
+   {
+    "q": "franking credits refunds retirees",
+    "label": "Franking credits",
+    "retrieved": 32,
+    "truncated": true
+   },
+   {
+    "q": "drought relief water",
+    "label": "Drought relief",
+    "retrieved": 44,
+    "truncated": true
+   },
+   {
+    "q": "religious discrimination freedom",
+    "label": "Religious freedom",
+    "retrieved": 35,
+    "truncated": true
+   }
+  ],
+  "retrieved": 152,
+  "unique_speeches": 152,
+  "unlabelled_party": 77,
+  "bare_surnames_skipped": 11,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Scott Ryan",
+   "Tony Smith"
+  ],
+  "speakers": [
+   {
+    "name": "Josh Frydenberg",
+    "party": "Liberal",
+    "speeches": 8
+   },
+   {
+    "name": "Scott Morrison",
+    "party": "Liberal",
+    "speeches": 7
+   },
+   {
+    "name": "Mark Latham",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "Adam Searle",
+    "party": null,
+    "speeches": 4
+   },
+   {
+    "name": "Don Harwin",
+    "party": null,
+    "speeches": 4
+   },
+   {
+    "name": "Rose Jackson",
+    "party": null,
+    "speeches": 3
+   },
+   {
+    "name": "Andrew Wilkie",
+    "party": "Independent",
+    "speeches": 3
+   },
+   {
+    "name": "Tim Wilson",
+    "party": "Liberal",
+    "speeches": 3
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 35
+   },
+   {
+    "party": "Labor",
+    "speeches": 14
+   },
+   {
+    "party": "Nationals",
+    "speeches": 10
+   },
+   {
+    "party": "LNP",
+    "speeches": 8
+   },
+   {
+    "party": "Independent",
+    "speeches": 4
+   },
+   {
+    "party": "Greens",
+    "speeches": 2
+   },
+   {
+    "party": "Centre Alliance",
+    "speeches": 1
+   },
+   {
+    "party": "Katter's Australian Party",
+    "speeches": 1
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:50+00:00",
+ "corpus_resources": 609644
+}

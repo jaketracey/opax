@@ -1,0 +1,291 @@
+{
+ "year": 2004,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2004, and what positions did members and parties take? Debates that year included The US free trade deal, The Medicare safety net, Tasmania’s forests and The baby bonus.",
+  "prompt": "year-brief-v1",
+  "answer": "The Australian parliament in 2004 was dominated by debate over the US Free Trade Agreement Implementation Bill 2004 and the US Free Trade Agreement Implementation (Customs Tariff) Bill 2004. Government ministers, including the Minister for Trade, argued the agreement was a historic opportunity that would deliver a $6 billion boost to the economy each year after a decade and create more than 30,000 jobs. They highlighted benefits for beef, dairy, lamb, and access to the US government procurement market, while insisting the Pharmaceutical Benefits Scheme (PBS) was protected. Opposition Labor members, however, argued the legislation was being rushed through without proper scrutiny, pointing to the Senate select committee inquiry and the Joint Standing Committee on Treaties report. They raised concerns about the exclusion of sugar, the potential impact on the PBS and drug prices, the extension of copyright terms, and the effect on local content in broadcasting. Labor members also cited economic modelling by Dr Philippa Dee suggesting only a small net benefit of $53 million per year after 10 years, in contrast to the government's figures.\n\nThe government also faced criticism for the process, with Labor members noting the legislation was introduced less than an hour after the JSCOT report was tabled. In response, the government agreed to Senate amendments that placed a floor under local content rules and addressed the relationship between patented and generic drugs, with the Minister for Trade stating these amendments were unnecessary but accepted to secure passage. The debate also touched on the broader election context, with coalition members citing their victory in October 2004 as a mandate for policies like increasing the GP rebate from 85% to 100% of the Medicare fee, while Labor members questioned the government's approach to health and other issues.",
+  "sources": [
+   {
+    "slug": "speech-119493",
+    "title": "Mark Vaile — 2004-06-23",
+    "speaker": "Mark Vaile",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2004-06-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-120024",
+    "title": "Mark Vaile — 2004-06-24",
+    "speaker": "Mark Vaile",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2004-06-24",
+    "cited": true
+   },
+   {
+    "slug": "speech-120014",
+    "title": "Sharon Grierson — 2004-06-24",
+    "speaker": "Sharon Grierson",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2004-06-24",
+    "cited": true
+   },
+   {
+    "slug": "speech-120009",
+    "title": "Julia Gillard — 2004-06-24",
+    "speaker": "Julia Gillard",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2004-06-24",
+    "cited": true
+   },
+   {
+    "slug": "speech-119823",
+    "title": "Martyn Evans — 2004-06-24",
+    "speaker": "Martyn Evans",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2004-06-24",
+    "cited": true
+   },
+   {
+    "slug": "speech-119837",
+    "title": "Jill Hall — 2004-06-24",
+    "speaker": "Jill Hall",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2004-06-24",
+    "cited": true
+   },
+   {
+    "slug": "speech-119835",
+    "title": "Kim Wilkie — 2004-06-24",
+    "speaker": "Kim Wilkie",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2004-06-24",
+    "cited": true
+   },
+   {
+    "slug": "speech-121973",
+    "title": "Mark Vaile — 2004-08-12",
+    "speaker": "Mark Vaile",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2004-08-12",
+    "cited": true
+   },
+   {
+    "slug": "speech-112375",
+    "title": "Michael Johnson — 2004-03-08",
+    "speaker": "Michael Johnson",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2004-03-08",
+    "cited": false
+   },
+   {
+    "slug": "speech-118230",
+    "title": "Chris Pyne — 2004-06-15",
+    "speaker": "Chris Pyne",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2004-06-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-119291",
+    "title": "Tony Abbott — 2004-06-22",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2004-06-22",
+    "cited": false
+   },
+   {
+    "slug": "speech-119830",
+    "title": "Bernie Ripoll — 2004-06-24",
+    "speaker": "Bernie Ripoll",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2004-06-24",
+    "cited": false
+   },
+   {
+    "slug": "speech-120603",
+    "title": "John Murphy — 2004-08-03",
+    "speaker": "John Murphy",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2004-08-03",
+    "cited": false
+   },
+   {
+    "slug": "speech-120609",
+    "title": "John Murphy — 2004-08-03",
+    "speaker": "John Murphy",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2004-08-03",
+    "cited": false
+   },
+   {
+    "slug": "speech-122096",
+    "title": "Roger Price — 2004-08-12",
+    "speaker": "Roger Price",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2004-08-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-122097",
+    "title": "Tony Abbott — 2004-08-12",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2004-08-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-122105",
+    "title": "Tony Abbott — 2004-08-12",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2004-08-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-122104",
+    "title": "Harry Quick — 2004-08-12",
+    "speaker": "Harry Quick",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2004-08-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-122307",
+    "title": "Andrew Southcott — 2004-11-17",
+    "speaker": "Andrew Southcott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2004-11-17",
+    "cited": false
+   }
+  ],
+  "cited_count": 8,
+  "seconds": 9.3,
+  "tokens": {
+   "input": 22960,
+   "output": 351
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 19 strongest passages the knowledge box retrieved for 2004; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2004 run through /api/search (hybrid retrieval, from=2004&to=2004, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "198 distinct speeches among the 199 strongest matches for the year's 4 debates - not every speech given in 2004, and the index is still loading.",
+  "probes": [
+   {
+    "q": "free trade agreement United States",
+    "label": "The US free trade deal",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "Medicare safety net",
+    "label": "The Medicare safety net",
+    "retrieved": 49,
+    "truncated": true
+   },
+   {
+    "q": "Tasmanian forests old growth logging",
+    "label": "Tasmania’s forests",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "family payments baby bonus",
+    "label": "The baby bonus",
+    "retrieved": 50,
+    "truncated": true
+   }
+  ],
+  "retrieved": 199,
+  "unique_speeches": 198,
+  "unlabelled_party": 5,
+  "bare_surnames_skipped": 2,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "David Hawker",
+   "Neil Andrew",
+   "Paul Calvert"
+  ],
+  "speakers": [
+   {
+    "name": "Tony Abbott",
+    "party": "Liberal",
+    "speeches": 30
+   },
+   {
+    "name": "Mark Vaile",
+    "party": "Nationals",
+    "speeches": 16
+   },
+   {
+    "name": "Peter Costello",
+    "party": "Liberal",
+    "speeches": 13
+   },
+   {
+    "name": "Larry Anthony",
+    "party": "Nationals",
+    "speeches": 9
+   },
+   {
+    "name": "Alexander Downer",
+    "party": "Liberal",
+    "speeches": 8
+   },
+   {
+    "name": "Jenny Macklin",
+    "party": "Labor",
+    "speeches": 7
+   },
+   {
+    "name": "Sid Sidebottom",
+    "party": "Labor",
+    "speeches": 6
+   },
+   {
+    "name": "Wayne Swan",
+    "party": "Labor",
+    "speeches": 6
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 87
+   },
+   {
+    "party": "Labor",
+    "speeches": 68
+   },
+   {
+    "party": "Nationals",
+    "speeches": 36
+   },
+   {
+    "party": "Greens",
+    "speeches": 2
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:01+00:00",
+ "corpus_resources": 609644
+}

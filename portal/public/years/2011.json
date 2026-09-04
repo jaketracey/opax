@@ -1,0 +1,308 @@
+{
+ "year": 2011,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2011, and what positions did members and parties take? Debates that year included The carbon price, Live cattle exports, The Queensland floods and Pokie reform.",
+  "prompt": "year-brief-v1",
+  "answer": "The carbon price dominated the Australian parliament in 2011, with the government introducing the Clean Energy Bill 2011 to impose a tax starting at $23 per tonne on the country’s 500 largest polluters. Government and Greens senators defended the policy as the most cost-effective way to cut emissions, citing support from 13 prominent economists and arguing that revenue would compensate nine out of ten households and fund clean energy investment. Opposition senators and speakers countered that the tax broke Prime Minister Julia Gillard’s election promise, would raise costs, cost jobs, and shift emissions overseas, noting that countries like Canada and the US were not adopting similar measures. One opposition senator accused the “Gillard-Brown Labor-Green government” of being “dictatorial” for gagging debate, while a government speaker highlighted that there had been around 250 questions and over 15 separate MPI debates on carbon pricing that year alone.\n\nLive cattle exports also sparked fierce argument after footage showed Australian cattle being mistreated in Indonesian abattoirs. The government suspended exports to Indonesia until animal welfare standards were established, a move supported by government senators. Opposition senators, including Senator Joyce, called the blanket suspension a “disaster,” citing a failure to consult Western Australia, the Northern Territory, Queensland, and Indonesia, and criticised Foreign Minister Kevin Rudd for being absent from trade negotiations. A bill to end all live exports by 1 July 2014, with interim stunning requirements, cited over 150 million sheep and cattle exported in 30 years and more than two million deaths en route.\n\nThe Queensland floods and Cyclone Yasi prompted debate over the Temporary Flood and Cyclone Reconstruction Levy bills, with speakers recalling the devastation—the worst flooding in history, affecting Queensland, New South Wales, Victoria, and Tasmania, plus fires in Western Australia—and supporting the levy to fund recovery. Opposition senators used the broader debate to accuse the Labor government of incompetence and dishonesty, citing 23 broken promises since 2010, including on the education revolution, trade training centres, GroceryWatch, Fuelwatch, and the carbon tax.",
+  "sources": [
+   {
+    "slug": "speech-805504",
+    "title": "Scott Ryan — Tax Laws Amendment (Temporary Flood and Cyclone Reconstruction Levy) Bill 2011; Income Tax Rates Amendment (Temporary Flood and Cyclone Reconstruction Levy) Bill 2011 — 2011-03-21",
+    "speaker": "Scott Ryan",
+    "party": null,
+    "state": "federal",
+    "date": "2011-03-21",
+    "cited": true
+   },
+   {
+    "slug": "speech-807687",
+    "title": "Nick Xenophon — Bills — 2011-06-20",
+    "speaker": "Nick Xenophon",
+    "party": "Independent",
+    "state": "federal",
+    "date": "2011-06-20",
+    "cited": true
+   },
+   {
+    "slug": "speech-807951",
+    "title": "Brett Mason — Questions without Notice: Take Note of Answers — 2011-06-22",
+    "speaker": "Brett Mason",
+    "party": null,
+    "state": "federal",
+    "date": "2011-06-22",
+    "cited": true
+   },
+   {
+    "slug": "speech-808110",
+    "title": "Barnaby Joyce — Questions without Notice: Take Note of Answers — 2011-06-23",
+    "speaker": "Barnaby Joyce",
+    "party": null,
+    "state": "federal",
+    "date": "2011-06-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-810776",
+    "title": "John Madigan — Questions without Notice — 2011-09-22",
+    "speaker": "John Madigan",
+    "party": null,
+    "state": "federal",
+    "date": "2011-09-22",
+    "cited": true
+   },
+   {
+    "slug": "speech-811064",
+    "title": "Joe Ludwig — Business — 2011-10-12",
+    "speaker": "Joe Ludwig",
+    "party": null,
+    "state": "federal",
+    "date": "2011-10-12",
+    "cited": true
+   },
+   {
+    "slug": "speech-811457",
+    "title": "Eric Abetz — Bills — 2011-10-31",
+    "speaker": "Eric Abetz",
+    "party": null,
+    "state": "federal",
+    "date": "2011-10-31",
+    "cited": true
+   },
+   {
+    "slug": "speech-804938",
+    "title": "Judith Troeth — Matters of Public Importance — 2011-02-28",
+    "speaker": "Judith Troeth",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2011-02-28",
+    "cited": false
+   },
+   {
+    "slug": "speech-805108",
+    "title": "Fiona Nash — Tax Laws Amendment (Temporary Flood and Cyclone Reconstruction Levy) Bill 2011; Income Tax Rates Amendment (Temporary Flood and Cyclone Reconstruction Levy) Bill 2011 — 2011-03-02",
+    "speaker": "Fiona Nash",
+    "party": null,
+    "state": "federal",
+    "date": "2011-03-02",
+    "cited": false
+   },
+   {
+    "slug": "speech-805303",
+    "title": "Mathias Cormann — Alp Governments’ Delivery of Commitments — 2011-03-03",
+    "speaker": "Mathias Cormann",
+    "party": null,
+    "state": "federal",
+    "date": "2011-03-03",
+    "cited": false
+   },
+   {
+    "slug": "speech-235280",
+    "title": "Mike Symon — 2011-05-25",
+    "speaker": "Mike Symon",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2011-05-25",
+    "cited": false
+   },
+   {
+    "slug": "speech-237516",
+    "title": "Jill Hall — 2011-06-15",
+    "speaker": "Jill Hall",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2011-06-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-237955",
+    "title": "Scott Buchholz — 2011-06-16",
+    "speaker": "Scott Buchholz",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2011-06-16",
+    "cited": false
+   },
+   {
+    "slug": "speech-808645",
+    "title": "Ian Macdonald — Bills — 2011-07-07",
+    "speaker": "Ian Macdonald",
+    "party": null,
+    "state": "federal",
+    "date": "2011-07-07",
+    "cited": false
+   },
+   {
+    "slug": "speech-808825",
+    "title": "Mathias Cormann — Questions on Notice — 2011-08-16",
+    "speaker": "Mathias Cormann",
+    "party": null,
+    "state": "federal",
+    "date": "2011-08-16",
+    "cited": false
+   },
+   {
+    "slug": "speech-241256",
+    "title": "Anthony Albanese — 2011-08-22",
+    "speaker": "Anthony Albanese",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2011-08-22",
+    "cited": false
+   },
+   {
+    "slug": "speech-242711",
+    "title": "Greg Combet — 2011-09-13",
+    "speaker": "Greg Combet",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2011-09-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-243976",
+    "title": "Catherine King — 2011-09-20",
+    "speaker": "Catherine King",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2011-09-20",
+    "cited": false
+   },
+   {
+    "slug": "speech-811294",
+    "title": "Ian Macdonald — Documents — 2011-10-13",
+    "speaker": "Ian Macdonald",
+    "party": null,
+    "state": "federal",
+    "date": "2011-10-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-811498",
+    "title": "Louise Pratt — Bills — 2011-10-31",
+    "speaker": "Louise Pratt",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2011-10-31",
+    "cited": false
+   }
+  ],
+  "cited_count": 7,
+  "seconds": 8.0,
+  "tokens": {
+   "input": 2570,
+   "output": 422
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2011; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2011 run through /api/search (hybrid retrieval, from=2011&to=2011, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "140 distinct speeches among the 141 strongest matches for the year's 4 debates - not every speech given in 2011, and the index is still loading.",
+  "probes": [
+   {
+    "q": "carbon price clean energy future",
+    "label": "The carbon price",
+    "retrieved": 42,
+    "truncated": true
+   },
+   {
+    "q": "live cattle exports Indonesia",
+    "label": "Live cattle exports",
+    "retrieved": 35,
+    "truncated": true
+   },
+   {
+    "q": "Queensland floods levy",
+    "label": "The Queensland floods",
+    "retrieved": 25,
+    "truncated": true
+   },
+   {
+    "q": "poker machine reform pre-commitment",
+    "label": "Pokie reform",
+    "retrieved": 39,
+    "truncated": true
+   }
+  ],
+  "retrieved": 141,
+  "unique_speeches": 140,
+  "unlabelled_party": 37,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Harry Jenkins",
+   "John Hogg",
+   "Peter Slipper"
+  ],
+  "speakers": [
+   {
+    "name": "Anne McEwen",
+    "party": "Labor",
+    "speeches": 10
+   },
+   {
+    "name": "Andrew Wilkie",
+    "party": "Independent",
+    "speeches": 6
+   },
+   {
+    "name": "Nigel Scullion",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "Stephen Parry",
+    "party": "Liberal",
+    "speeches": 5
+   },
+   {
+    "name": "Julia Gillard",
+    "party": "Labor",
+    "speeches": 4
+   },
+   {
+    "name": "Greg Combet",
+    "party": "Labor",
+    "speeches": 4
+   },
+   {
+    "name": "Ian Macdonald",
+    "party": null,
+    "speeches": 4
+   },
+   {
+    "name": "Eric Abetz",
+    "party": null,
+    "speeches": 3
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 60
+   },
+   {
+    "party": "Liberal",
+    "speeches": 24
+   },
+   {
+    "party": "Independent",
+    "speeches": 9
+   },
+   {
+    "party": "Nationals",
+    "speeches": 7
+   },
+   {
+    "party": "Greens",
+    "speeches": 2
+   },
+   {
+    "party": "Country Liberal Party",
+    "speeches": 1
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:24+00:00",
+ "corpus_resources": 609644
+}

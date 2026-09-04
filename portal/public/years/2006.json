@@ -1,0 +1,289 @@
+{
+ "year": 2006,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2006, and what positions did members and parties take? Debates that year included The AWB wheat scandal, The nuclear question, Media ownership and Petrol prices.",
+  "prompt": "year-brief-v1",
+  "answer": "The AWB \"wheat for weapons\" scandal dominated the Australian parliament in 2006. Labor MPs, including the member for Griffith, argued that the Howard government had been negligent on national security, citing 17 warnings dismissed and cables from early 2000 that were ignored by Foreign Minister Alexander Downer's office. They claimed the government's inaction damaged Australia's export interests and wheat farmers, with $300 million paid to Saddam Hussein's regime. Labor moved a censure motion against Prime Minister John Howard and Foreign Minister Downer on 28 February 2006, which was defeated 56–80. Government speakers, such as Senator McGauran, dismissed Labor's claims as false witness and lies, while some coalition members, including a Western Australian wheat grower, defended the government and said they would wait for the Cole royal commission findings.\n\nThe Petroleum Retail Legislation Repeal Bill 2006 also sparked debate amid record high oil prices. Labor speakers, including the member for New England, criticised the government for a lack of interest, noting only three government speakers contributed compared to 23 on their side. They argued the legislation was needed to address a subcompetitive retail environment and higher costs for consumers. Government members supported the bill as a response to structural changes in the petroleum industry, with some declaring personal interests as motorists. The government also increased parliamentary publications allowances from $125,000 to $150,000 per annum, which Labor criticised as self-promotion at taxpayers' expense.\n\nMedia ownership reform was another contentious issue. The government introduced the Broadcasting Services Amendment (Media Ownership) Bill 2006, arguing it updated outdated laws while protecting diversity. Labor and some crossbench speakers condemned the bill, claiming it would massively concentrate media ownership and threaten democracy. A Senate inquiry into the bill was described by one senator as a \"cynical and superficial shotgun inquiry.\"",
+  "sources": [
+   {
+    "slug": "division-federal-representatives-2453-p2",
+    "title": "House of Representatives division, 28 February 2006: Prime Minister; Minister for Foreign Affairs — Censure Motion (part 2 of 2)",
+    "speaker": "Alan Cadman",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-146206",
+    "title": "Kevin Rudd — 2006-02-28",
+    "speaker": "Kevin Rudd",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2006-02-28",
+    "cited": true
+   },
+   {
+    "slug": "speech-154987",
+    "title": "Kelvin Thomson — 2006-08-15",
+    "speaker": "Kelvin Thomson",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2006-08-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-155116",
+    "title": "Martin Ferguson — 2006-08-16",
+    "speaker": "Martin Ferguson",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2006-08-16",
+    "cited": true
+   },
+   {
+    "slug": "speech-775004",
+    "title": "Lyn Allison — Petroleum Retail Legislation Repeal Bill 2006 — 2006-09-11",
+    "speaker": "Lyn Allison",
+    "party": "Australian Democrats",
+    "state": "federal",
+    "date": "2006-09-11",
+    "cited": true
+   },
+   {
+    "slug": "speech-157909",
+    "title": "John Murphy — 2006-10-09",
+    "speaker": "John Murphy",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2006-10-09",
+    "cited": true
+   },
+   {
+    "slug": "speech-776980",
+    "title": "Joe Ludwig — Questions without Notice: Take Note of Answers — 2006-11-28",
+    "speaker": "Joe Ludwig",
+    "party": null,
+    "state": "federal",
+    "date": "2006-11-28",
+    "cited": true
+   },
+   {
+    "slug": "speech-161619",
+    "title": "Gavan O’Connor — 2006-11-28",
+    "speaker": "Gavan O’Connor",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2006-11-28",
+    "cited": true
+   },
+   {
+    "slug": "division-federal-representatives-2453",
+    "title": "House of Representatives division, 28 February 2006: Prime Minister; Minister for Foreign Affairs — Censure Motion (part 1 of 2)",
+    "speaker": "Alan Griffin",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "speech-770589",
+    "title": "Kerry O'Brien — Questions without Notice: Take Note of Answers — 2006-02-09",
+    "speaker": "Kerry O'Brien",
+    "party": null,
+    "state": "federal",
+    "date": "2006-02-09",
+    "cited": false
+   },
+   {
+    "slug": "speech-144838",
+    "title": "John Howard — 2006-02-14",
+    "speaker": "John Howard",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2006-02-14",
+    "cited": false
+   },
+   {
+    "slug": "speech-771316",
+    "title": "Kerry O'Brien — Government Accountability — 2006-03-02",
+    "speaker": "Kerry O'Brien",
+    "party": null,
+    "state": "federal",
+    "date": "2006-03-02",
+    "cited": false
+   },
+   {
+    "slug": "speech-155293",
+    "title": "Kevin Rudd — 2006-08-16",
+    "speaker": "Kevin Rudd",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2006-08-16",
+    "cited": false
+   },
+   {
+    "slug": "speech-155595",
+    "title": "Simon Crean — 2006-08-17",
+    "speaker": "Simon Crean",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2006-08-17",
+    "cited": false
+   },
+   {
+    "slug": "speech-775352",
+    "title": "Stephen Conroy — Questions without Notice: Take Note of Answers — 2006-09-14",
+    "speaker": "Stephen Conroy",
+    "party": null,
+    "state": "federal",
+    "date": "2006-09-14",
+    "cited": false
+   },
+   {
+    "slug": "speech-775696",
+    "title": "Helen Coonan — Broadcasting Services Amendment (Media Ownership) Bill 2006; Broadcasting Legislation Amendment (Digital Television) Bill 2006; Communications Legislation Amendment (Enforcement Powers) Bill 2006; Television Licence Fees Amendment Bill 2006 — 2006-10-11",
+    "speaker": "Helen Coonan",
+    "party": null,
+    "state": "federal",
+    "date": "2006-10-11",
+    "cited": false
+   },
+   {
+    "slug": "speech-777591",
+    "title": "Annette Hurley — Wheat Marketing Amendment Bill 2006 — 2006-12-06",
+    "speaker": "Annette Hurley",
+    "party": null,
+    "state": "federal",
+    "date": "2006-12-06",
+    "cited": false
+   },
+   {
+    "slug": "speech-777747",
+    "title": "Alan Eggleston — Wheat Marketing Amendment Bill 2006 — 2006-12-07",
+    "speaker": "Alan Eggleston",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2006-12-07",
+    "cited": false
+   }
+  ],
+  "cited_count": 8,
+  "seconds": 8.4,
+  "tokens": {
+   "input": 7022,
+   "output": 376
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 18 strongest passages the knowledge box retrieved for 2006; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2006 run through /api/search (hybrid retrieval, from=2006&to=2006, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "133 distinct speeches among the 134 strongest matches for the year's 4 debates - not every speech given in 2006, and the index is still loading.",
+  "probes": [
+   {
+    "q": "AWB wheat Iraq kickbacks inquiry",
+    "label": "The AWB wheat scandal",
+    "retrieved": 48,
+    "truncated": true
+   },
+   {
+    "q": "nuclear power energy debate",
+    "label": "The nuclear question",
+    "retrieved": 27,
+    "truncated": true
+   },
+   {
+    "q": "media ownership cross-media laws",
+    "label": "Media ownership",
+    "retrieved": 24,
+    "truncated": true
+   },
+   {
+    "q": "petrol prices fuel",
+    "label": "Petrol prices",
+    "retrieved": 35,
+    "truncated": true
+   }
+  ],
+  "retrieved": 134,
+  "unique_speeches": 133,
+  "unlabelled_party": 33,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "David Hawker",
+   "Paul Calvert"
+  ],
+  "speakers": [
+   {
+    "name": "Kelvin Thomson",
+    "party": "Labor",
+    "speeches": 9
+   },
+   {
+    "name": "John Howard",
+    "party": "Liberal",
+    "speeches": 8
+   },
+   {
+    "name": "Gavan O’Connor",
+    "party": "Labor",
+    "speeches": 5
+   },
+   {
+    "name": "Kevin Rudd",
+    "party": "Labor",
+    "speeches": 5
+   },
+   {
+    "name": "Kim Beazley",
+    "party": "Labor",
+    "speeches": 5
+   },
+   {
+    "name": "Kerry O'Brien",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "Ursula Stephens",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "Stephen Conroy",
+    "party": null,
+    "speeches": 4
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 50
+   },
+   {
+    "party": "Liberal",
+    "speeches": 31
+   },
+   {
+    "party": "Australian Democrats",
+    "speeches": 7
+   },
+   {
+    "party": "Nationals",
+    "speeches": 6
+   },
+   {
+    "party": "Greens",
+    "speeches": 4
+   },
+   {
+    "party": "Independent",
+    "speeches": 2
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:08+00:00",
+ "corpus_resources": 609644
+}

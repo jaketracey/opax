@@ -1,0 +1,303 @@
+{
+ "year": 2003,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2003, and what positions did members and parties take? Debates that year included The Iraq war, Medicare, The Canberra bushfires and University fees.",
+  "prompt": "year-brief-v1",
+  "answer": "The Australian parliamentary record for 2003 shows that the year's dominant debates centred on the government's proposed changes to Medicare and higher education, with the Iraq war and the Canberra bushfires also featuring prominently. The Health Legislation Amendment (Medicare and Private Health Insurance) Bill 2003 and the Higher Education Support Bill 2003 drew sharp divisions between the government and the opposition. Labor speakers, including the member for Griffith, argued the government was \"rewriting the Australian social contract\" by dismantling universal health care and making education a matter of \"ability to pay\" rather than merit. They claimed the government's plan to allow private health insurers to cover out-of-pocket costs and to introduce a safety net for concessional patients would create a two-tiered system, and that allowing doctors to charge copayments while billing Medicare would increase costs for families. Labor proposed an alternative plan to restore bulk-billing, including lifting the Medicare rebate to 95 per cent of the scheduled fee and offering financial incentives to doctors. Government speakers, such as the member for Ryan, defended the changes, stating the Liberal Party was committed to retaining Medicare, bulk-billing, and community rating, and argued the government's $42 billion public hospital funding package was the most generous ever offered.\n\nOn higher education, Labor members, including the member for Ballarat and the member for Fraser, condemned the government's plan to deregulate tuition fees, warning it would lead to \"$100,000 degrees\" and a blow-out in student debt to more than $9 billion. They argued the changes would make university the preserve of the wealthy and criticised the government for tying university funding to industrial relations conditions. The government, through the member for Ryan, countered that its reforms would create a \"fairer, more accessible and more equitable system,\" citing an additional $1.5 billion over four years and an increase in the minimum threshold for HECS payments from $24,365 in 2002-03 to $30,000 in 2005-06. The budget debate also saw Labor's second reading amendment condemn the government for \"shifting the cost of health and education from the budget to Australian families,\" while the government highlighted its tax cuts and security spending. The Iraq war was debated, with the member for Bass opposing the war without United Nations sanction, while the government moved to suspend standing orders to allow a statement by the Prime Minister on Iraq. The Canberra bushfires were also discussed, with the member for Bass calling for a national bushfire strategy.",
+  "sources": [
+   {
+    "slug": "speech-97411",
+    "title": "Michelle O'Byrne — 2003-06-04",
+    "speaker": "Michelle O'Byrne",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-06-04",
+    "cited": true
+   },
+   {
+    "slug": "speech-97501",
+    "title": "Sid Sidebottom — 2003-06-05",
+    "speaker": "Sid Sidebottom",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-06-05",
+    "cited": true
+   },
+   {
+    "slug": "speech-89901",
+    "title": "Tony Abbott — 2003-02-04",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2003-02-04",
+    "cited": false
+   },
+   {
+    "slug": "speech-90602",
+    "title": "Michelle O'Byrne — 2003-02-06",
+    "speaker": "Michelle O'Byrne",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-02-06",
+    "cited": false
+   },
+   {
+    "slug": "speech-92991",
+    "title": "Kim Wilkie — 2003-03-19",
+    "speaker": "Kim Wilkie",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-03-19",
+    "cited": false
+   },
+   {
+    "slug": "speech-93002",
+    "title": "Bernie Ripoll — 2003-03-19",
+    "speaker": "Bernie Ripoll",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-03-19",
+    "cited": false
+   },
+   {
+    "slug": "speech-95005",
+    "title": "Michael Danby — 2003-05-14",
+    "speaker": "Michael Danby",
+    "party": null,
+    "state": "federal",
+    "date": "2003-05-14",
+    "cited": false
+   },
+   {
+    "slug": "speech-95707",
+    "title": "Bob McMullan — 2003-05-26",
+    "speaker": "Bob McMullan",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-05-26",
+    "cited": false
+   },
+   {
+    "slug": "speech-97168",
+    "title": "Trish Worth — 2003-06-04",
+    "speaker": "Trish Worth",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2003-06-04",
+    "cited": false
+   },
+   {
+    "slug": "speech-97505",
+    "title": "Kevin Rudd — 2003-06-05",
+    "speaker": "Kevin Rudd",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-06-05",
+    "cited": false
+   },
+   {
+    "slug": "speech-97882",
+    "title": "Rod Sawford — 2003-06-16",
+    "speaker": "Rod Sawford",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-06-16",
+    "cited": false
+   },
+   {
+    "slug": "speech-98125",
+    "title": "Peter Slipper — 2003-06-17",
+    "speaker": "Peter Slipper",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2003-06-17",
+    "cited": false
+   },
+   {
+    "slug": "speech-98119",
+    "title": "Laurie Brereton — 2003-06-17",
+    "speaker": "Laurie Brereton",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-06-17",
+    "cited": false
+   },
+   {
+    "slug": "speech-100797",
+    "title": "Catherine King — 2003-08-13",
+    "speaker": "Catherine King",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-08-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-104728",
+    "title": "Julia Irwin — 2003-09-18",
+    "speaker": "Julia Irwin",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-09-18",
+    "cited": false
+   },
+   {
+    "slug": "speech-104843",
+    "title": "Andrew Southcott — 2003-10-07",
+    "speaker": "Andrew Southcott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2003-10-07",
+    "cited": false
+   },
+   {
+    "slug": "speech-105884",
+    "title": "Martin Ferguson — 2003-10-15",
+    "speaker": "Martin Ferguson",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-10-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-105880",
+    "title": "Gavan O'Connor — 2003-10-15",
+    "speaker": "Gavan O'Connor",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2003-10-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-106983",
+    "title": "Lloyd — 2003-11-05",
+    "speaker": "Lloyd",
+    "party": null,
+    "state": "federal",
+    "date": "2003-11-05",
+    "cited": false
+   },
+   {
+    "slug": "speech-107967",
+    "title": "Tony Abbott — 2003-11-25",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2003-11-25",
+    "cited": false
+   }
+  ],
+  "cited_count": 2,
+  "seconds": 11.2,
+  "tokens": {
+   "input": 28499,
+   "output": 506
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2003; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2003 run through /api/search (hybrid retrieval, from=2003&to=2003, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "200 distinct speeches among the 200 strongest matches for the year's 4 debates - not every speech given in 2003, and the index is still loading.",
+  "probes": [
+   {
+    "q": "Iraq war weapons of mass destruction",
+    "label": "The Iraq war",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "Medicare bulk billing",
+    "label": "Medicare",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "Canberra bushfires",
+    "label": "The Canberra bushfires",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "higher education university fees HECS",
+    "label": "University fees",
+    "retrieved": 50,
+    "truncated": true
+   }
+  ],
+  "retrieved": 200,
+  "unique_speeches": 200,
+  "unlabelled_party": 6,
+  "bare_surnames_skipped": 1,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Neil Andrew",
+   "Paul Calvert"
+  ],
+  "speakers": [
+   {
+    "name": "Brendan Nelson",
+    "party": "Liberal",
+    "speeches": 20
+   },
+   {
+    "name": "Jenny Macklin",
+    "party": "Labor",
+    "speeches": 11
+   },
+   {
+    "name": "John Howard",
+    "party": "Liberal",
+    "speeches": 10
+   },
+   {
+    "name": "Alexander Downer",
+    "party": "Liberal",
+    "speeches": 10
+   },
+   {
+    "name": "Tony Abbott",
+    "party": "Liberal",
+    "speeches": 8
+   },
+   {
+    "name": "Simon Crean",
+    "party": "Labor",
+    "speeches": 7
+   },
+   {
+    "name": "Gary Nairn",
+    "party": "Liberal",
+    "speeches": 6
+   },
+   {
+    "name": "Kevin Rudd",
+    "party": "Labor",
+    "speeches": 5
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 102
+   },
+   {
+    "party": "Labor",
+    "speeches": 79
+   },
+   {
+    "party": "Nationals",
+    "speeches": 9
+   },
+   {
+    "party": "Greens",
+    "speeches": 2
+   },
+   {
+    "party": "Independent",
+    "speeches": 2
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:56:58+00:00",
+ "corpus_resources": 609644
+}
