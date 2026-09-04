@@ -896,7 +896,7 @@ export function mountTimeMachine(container, opts = {}) {
       </div>
     </div>
 
-    <footer class="tm-footer"></footer>
+    <div class="tm-footer"></div>
   `
 
   const $ = (sel) => root.querySelector(sel)
@@ -1039,11 +1039,15 @@ export function mountTimeMachine(container, opts = {}) {
     footerEl.replaceChildren()
     const p = el('p')
     const b = el('b')
-    b.textContent = 'The archive is still being digitised, oldest first.'
+    const progress = staticData.progress
+    const complete = !progress || Number(progress.pct) >= 99.5
+    b.textContent = complete
+      ? 'The whole archive is searchable.'
+      : 'The archive is still being digitised, oldest first.'
     p.appendChild(b)
-    const rest = staticData.progress
-      ? ` About ${staticData.progress.pct}% of ${fmtInt(staticData.progress.expected)} records are searchable so far, and more arrive every day. The numbers panel uses the complete historical dataset, so it works for every year; the live quotes, the year in brief and the voices catch up year by year.`
-      : ' Live quotes appear as each year is shelved; the numbers panel already covers the whole record.'
+    const rest = complete
+      ? ` ${progress ? `All ${fmtInt(progress.expected)} records are in the index.` : ''} The numbers panel uses the complete historical dataset; the live quotes, the year in brief and the voices are built year by year.`
+      : ` About ${progress.pct}% of ${fmtInt(progress.expected)} records are searchable so far, and more arrive every day. The numbers panel uses the complete historical dataset, so it works for every year; the live quotes, the year in brief and the voices catch up year by year.`
     p.appendChild(document.createTextNode(rest))
     footerEl.appendChild(p)
   }

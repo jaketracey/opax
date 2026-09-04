@@ -2020,6 +2020,11 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     title: 'Corpus stats · OPAX',
     description: 'Live counts for every collection in the OPAX index: speeches, divisions, legislation and news, by parliament and year.',
   },
+  declared: {
+    title: 'Just declared · OPAX',
+    description: "The newest additions and deletions on parliamentarians' registers of interests, grouped by week, each entry linked to its register source.",
+    query: true,
+  },
   expenses: {
     title: 'What the expense categories mean · OPAX',
     description: 'Plain definitions of every parliamentary work expense category the Independent Parliamentary Expenses Authority publishes, from COMCAR and travel allowance to the private-plated vehicle.',
