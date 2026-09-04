@@ -178,6 +178,16 @@ function injectStyles() {
   font-size:clamp(.5rem,.78vw,.61rem); font-weight:600; }
 .explain-scene-label.peak { color:var(--bronze-ink); border-bottom:1px solid var(--bronze-rule);
   font-size:clamp(.6rem,.9vw,.7rem); }
+.explain-scene-label.citation { color:var(--ink-soft); font-size:clamp(.51rem,.78vw,.6rem); }
+.explain-scene-label.gauge { max-width:8.5rem; padding:.18rem .32rem; color:var(--bronze-ink);
+  border-bottom:1px solid var(--bronze-rule); white-space:normal; text-align:center; }
+.explain-scene-label.limit { max-width:15rem; padding:.25rem .45rem; color:var(--bronze-ink);
+  border:1px solid var(--bronze-rule); background:color-mix(in srgb,var(--paper) 92%,transparent);
+  white-space:normal; text-align:center; }
+.explain-stage[data-explain-step="4"] .explain-canvas { opacity:.72; }
+.explain-sources [data-scene-citation] { transition:background-color .16s ease; }
+.explain-sources [data-scene-citation]:hover,.explain-sources [data-scene-citation]:focus-within {
+  background:var(--bronze-wash); }
 .explain-narrative { min-width:0; overflow:auto; padding:clamp(1.1rem,3vw,2.2rem); }
 .explain-title { margin:0; font:700 clamp(1.7rem,3.2vw,2.45rem)/1.12 var(--serif); letter-spacing:-.018em; }
 .explain-deck { margin:.55rem 0 1.25rem; color:var(--ink-soft); font:400 .93rem/1.55 var(--serif); }
@@ -446,13 +456,11 @@ function questionFor(flow: ResolvedFlow, detail: ExplainDetail, helpers: Explain
 }
 
 function sourceList(data: { citations?: Record<string, unknown>; sources?: AskSource[] }, helpers: ExplainHelpers) {
-  const sources = data.sources || []
-  const fallback = new Set(Object.keys(data.citations || {}).map((key) => key.split('/')[0]))
-  const cited = sources.filter((source) => source.cited ?? (source.resource ? fallback.has(source.resource) : false))
-  const shown = (cited.length ? cited : sources).filter((source) => source.slug).slice(0, 6)
+  const shown = citedSources(data)
   const list = el('ol', 'explain-sources')
-  for (const source of shown) {
+  shown.forEach((source, index) => {
     const li = el('li')
+    li.dataset.sceneCitation = String(index)
     const copy = el('span', 'explain-source-copy')
     const link = el('a')
     link.href = `/doc/${encodeURIComponent(String(source.slug))}`
@@ -471,8 +479,15 @@ function sourceList(data: { citations?: Record<string, unknown>; sources?: AskSo
     }
     li.append(copy)
     list.append(li)
-  }
+  })
   return list
+}
+
+function citedSources(data: { citations?: Record<string, unknown>; sources?: AskSource[] }) {
+  const sources = data.sources || []
+  const fallback = new Set(Object.keys(data.citations || {}).map((key) => key.split('/')[0]))
+  const cited = sources.filter((source) => source.cited ?? (source.resource ? fallback.has(source.resource) : false))
+  return (cited.length ? cited : sources).filter((source) => source.slug).slice(0, 6)
 }
 
 class FlowScene {
@@ -485,6 +500,9 @@ class FlowScene {
   private readonly baseGroup = new THREE.Group()
   private readonly whoGroup = new THREE.Group()
   private readonly historyGroup = new THREE.Group()
+  private readonly destinationGroup = new THREE.Group()
+  private readonly citationGroup = new THREE.Group()
+  private readonly limitsGroup = new THREE.Group()
   private readonly giverGroup: THREE.Group
   private readonly receiverGroup: THREE.Group
   private readonly mainArc: THREE.Line
@@ -496,6 +514,7 @@ class FlowScene {
   private readonly historyGeometry: THREE.BufferGeometry
   private readonly historyPositions: Float32Array
   private readonly historyTargets = new Float32Array(LAST_YEAR - FIRST_YEAR + 1)
+  private readonly historyMaterial: THREE.LineBasicMaterial
   private readonly labelLayer: HTMLDivElement
   private readonly resizeObserver: ResizeObserver
   private readonly motion = matchMedia('(prefers-reduced-motion: reduce)')
@@ -509,6 +528,16 @@ class FlowScene {
   private readonly whoGiverPoint = new THREE.Vector3(-3.0, -.62, 0)
   private readonly receiverPoint = new THREE.Vector3(3.5, -.62, 0)
   private labels: Array<SceneLabel & { element: HTMLSpanElement }> = []
+  private destinationRows: SceneRow[] = []
+  private destinationPositions: THREE.Vector3[] = []
+  private destinationSide: 'left' | 'right' = 'right'
+  private destinationGaugeIndex = -1
+  private destinationGaugeShare = 0
+  private citationCards: Array<{ x: number; y: number; source: AskSource; sourceIndex: number }> = []
+  private citationFill: THREE.InstancedMesh | null = null
+  private citationEdge: THREE.InstancedMesh | null = null
+  private citationArrival = performance.now()
+  private activeCitation: number | null = null
   private step = 0
   private year = LAST_YEAR
   private yearAmount = 0
@@ -557,7 +586,14 @@ class FlowScene {
     })
     this.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5))
     this.scene.add(this.root)
-    this.root.add(this.baseGroup, this.whoGroup, this.historyGroup)
+    this.root.add(
+      this.baseGroup,
+      this.whoGroup,
+      this.historyGroup,
+      this.destinationGroup,
+      this.citationGroup,
+      this.limitsGroup,
+    )
     this.camera.position.set(0, .16, this.currentZ)
 
     const arcPoints = Array.from({ length: 73 }, (_, index) => this.pointAt(index / 72))
@@ -587,6 +623,10 @@ class FlowScene {
     const history = this.buildHistory()
     this.historyGeometry = history.geometry
     this.historyPositions = history.positions
+    this.historyMaterial = history.material
+    this.buildDestinations()
+    this.buildCitationTimeline()
+    this.buildLimits()
 
     this.travellingGeometry = new THREE.BufferGeometry()
     this.travellingGeometry.setAttribute('position', new THREE.BufferAttribute(this.travellingPositions, 3))
@@ -595,6 +635,10 @@ class FlowScene {
     this.travelling = new THREE.Points(this.travellingGeometry, this.travellingMaterial)
     this.travelling.frustumCulled = false
     this.baseGroup.add(this.travelling)
+    this.historyGroup.visible = false
+    this.destinationGroup.visible = false
+    this.citationGroup.visible = false
+    this.limitsGroup.visible = false
 
     this.resizeObserver = new ResizeObserver(() => this.resize())
     this.resizeObserver.observe(host)
@@ -803,11 +847,300 @@ class FlowScene {
       positions[offset++] = .02
     }
     const geometry = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    const material = new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .54 })
     this.historyGroup.add(new THREE.LineSegments(
       geometry,
-      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .54 }),
+      material,
     ))
-    return { geometry, positions }
+    return { geometry, positions, material }
+  }
+
+  private makeRibbonField(rows: Array<{
+    from: THREE.Vector3
+    to: THREE.Vector3
+    lift: number
+    width: number
+    colour: string
+  }>) {
+    const positions: number[] = []
+    const colours: number[] = []
+    const indices: number[] = []
+    const segments = 30
+    for (const row of rows) {
+      const colour = new THREE.Color(row.colour)
+      const start = positions.length / 3
+      for (let index = 0; index <= segments; index++) {
+        const t = index / segments
+        const point = this.pointAt(t, row.from, row.to, row.lift)
+        const before = this.pointAt(Math.max(0, t - .008), row.from, row.to, row.lift)
+        const after = this.pointAt(Math.min(1, t + .008), row.from, row.to, row.lift)
+        const tangent = after.sub(before).normalize()
+        const normal = new THREE.Vector3(-tangent.y, tangent.x, 0).multiplyScalar(row.width * .5)
+        positions.push(point.x + normal.x, point.y + normal.y, -.015, point.x - normal.x, point.y - normal.y, -.015)
+        colours.push(colour.r, colour.g, colour.b, colour.r, colour.g, colour.b)
+        if (index < segments) {
+          const at = start + index * 2
+          indices.push(at, at + 1, at + 2, at + 1, at + 3, at + 2)
+        }
+      }
+      const arrowAt = this.pointAt(.84, row.from, row.to, row.lift)
+      const arrowBefore = this.pointAt(.825, row.from, row.to, row.lift)
+      const tangent = arrowAt.clone().sub(arrowBefore).normalize()
+      const normal = new THREE.Vector3(-tangent.y, tangent.x, 0)
+      const arrowStart = positions.length / 3
+      const arrowLength = .17 + row.width * .45
+      const arrowWidth = .11 + row.width * .34
+      positions.push(
+        arrowAt.x + tangent.x * arrowLength, arrowAt.y + tangent.y * arrowLength, .025,
+        arrowAt.x - tangent.x * arrowLength + normal.x * arrowWidth, arrowAt.y - tangent.y * arrowLength + normal.y * arrowWidth, .025,
+        arrowAt.x - tangent.x * arrowLength - normal.x * arrowWidth, arrowAt.y - tangent.y * arrowLength - normal.y * arrowWidth, .025,
+      )
+      colours.push(colour.r, colour.g, colour.b, colour.r, colour.g, colour.b, colour.r, colour.g, colour.b)
+      indices.push(arrowStart, arrowStart + 1, arrowStart + 2)
+    }
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colours, 3))
+    geometry.setIndex(indices)
+    return new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+      vertexColors: true, transparent: true, opacity: .34, side: THREE.DoubleSide, depthWrite: false,
+    }))
+  }
+
+  private makeInstancedRings(rows: SceneRow[], positions: THREE.Vector3[], radii: number[]) {
+    const rings = new THREE.InstancedMesh(
+      new THREE.RingGeometry(.78, 1, 48),
+      new THREE.MeshBasicMaterial({ transparent: true, opacity: .92, side: THREE.DoubleSide }),
+      rows.length,
+    )
+    const matrix = new THREE.Matrix4()
+    rows.forEach((row, index) => {
+      matrix.compose(positions[index], new THREE.Quaternion(), new THREE.Vector3(radii[index], radii[index], 1))
+      rings.setMatrixAt(index, matrix)
+      rings.setColorAt(index, new THREE.Color(row.colour))
+    })
+    rings.instanceMatrix.needsUpdate = true
+    if (rings.instanceColor) rings.instanceColor.needsUpdate = true
+    return rings
+  }
+
+  private mainPartyShare() {
+    const party = this.flow.party
+    if (!party) return 0
+    const represented = this.flow.contextEdges
+      .filter((edge) => edge.target === party.id)
+      .reduce((sum, edge) => sum + (Number(edge.total) || 0), 0)
+    return THREE.MathUtils.clamp(represented / Math.max(1, Number(party.total) || represented), 0, 1)
+  }
+
+  private addGauge(group: THREE.Group, position: THREE.Vector3, radius: number, colour: string, share: number) {
+    const background = new THREE.Mesh(
+      new THREE.RingGeometry(radius * 1.1, radius * 1.24, 48),
+      new THREE.MeshBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .16, side: THREE.DoubleSide }),
+    )
+    const fill = new THREE.Mesh(
+      new THREE.RingGeometry(radius * 1.1, radius * 1.24, 48, 1, Math.PI / 2, Math.PI * 2 * share),
+      new THREE.MeshBasicMaterial({ color: colour, transparent: true, opacity: .88, side: THREE.DoubleSide }),
+    )
+    background.position.copy(position)
+    fill.position.copy(position)
+    fill.position.z = .035
+    group.add(background, fill)
+  }
+
+  private buildDestinations() {
+    const allRows = this.detail.kind === 'party' ? this.industryRows() : this.partyRows()
+    let rows = allRows.slice(0, 7)
+    if (this.detail.kind !== 'party' && this.flow.party && !rows.some((row) => row.label === this.flow.party?.label)) {
+      const primary = allRows.find((row) => row.label === this.flow.party?.label)
+      if (primary) rows = [...rows.slice(0, 6), primary]
+    }
+    this.destinationRows = rows
+    this.destinationSide = this.detail.kind === 'party' ? 'left' : 'right'
+    const total = Math.max(rows.reduce((sum, row) => sum + row.total, 0), 1)
+    const max = Math.max(...rows.map((row) => row.total), 1)
+    const ribbons: Array<{ from: THREE.Vector3; to: THREE.Vector3; lift: number; width: number; colour: string }> = []
+    const radii: number[] = []
+    if (this.detail.kind === 'party') {
+      this.destinationPositions = rows.map((_, index) => new THREE.Vector3(
+        -3.42 + (index % 2) * .14,
+        rows.length === 1 ? -.5 : 1.42 - index * (2.9 / Math.max(1, rows.length - 1)),
+        0,
+      ))
+      rows.forEach((row, index) => {
+        ribbons.push({
+          from: this.destinationPositions[index], to: this.receiverPoint,
+          lift: 1.15 + index * .09,
+          width: .028 + .21 * Math.sqrt(row.total / total), colour: row.colour,
+        })
+        radii.push(.25 + .2 * Math.sqrt(row.total / max))
+      })
+      this.destinationGroup.add(this.makeRibbonField(ribbons))
+      this.destinationGroup.add(this.makeInstancedRings(rows, this.destinationPositions, radii))
+      const receiver = this.makeHatchedMedallion(this.partyColour, .51, false)
+      receiver.position.copy(this.receiverPoint)
+      this.destinationGroup.add(receiver)
+      this.destinationGaugeShare = this.mainPartyShare()
+      this.addGauge(this.destinationGroup, this.receiverPoint, .51, this.partyColour, this.destinationGaugeShare)
+    } else {
+      this.destinationPositions = rows.map((_, index) => new THREE.Vector3(
+        3.42 - (index % 2) * .14,
+        rows.length === 1 ? -.5 : 1.42 - index * (2.9 / Math.max(1, rows.length - 1)),
+        0,
+      ))
+      rows.forEach((row, index) => {
+        ribbons.push({
+          from: this.giverPoint, to: this.destinationPositions[index],
+          lift: 1.25 + index * .08,
+          width: .028 + .21 * Math.sqrt(row.total / total), colour: this.giverColour,
+        })
+        radii.push(.25 + .2 * Math.sqrt(row.total / max))
+      })
+      this.destinationGroup.add(this.makeRibbonField(ribbons))
+      this.destinationGroup.add(this.makeInstancedRings(rows, this.destinationPositions, radii))
+      const giver = this.makeHatchedMedallion(this.giverColour, .51)
+      giver.position.copy(this.giverPoint)
+      this.destinationGroup.add(giver)
+      this.destinationGaugeIndex = Math.max(0, rows.findIndex((row) => row.label === this.flow.party?.label))
+      this.destinationGaugeShare = this.mainPartyShare()
+      this.addGauge(
+        this.destinationGroup,
+        this.destinationPositions[this.destinationGaugeIndex] || this.receiverPoint,
+        radii[this.destinationGaugeIndex] || .4,
+        rows[this.destinationGaugeIndex]?.colour || this.partyColour,
+        this.destinationGaugeShare,
+      )
+    }
+  }
+
+  private timelineX(year: number) {
+    return -3.5 + ((year - 1993) / (2026 - 1993)) * 7
+  }
+
+  private buildCitationTimeline() {
+    const y = -2.04
+    const vertices = [-3.55, y, 0, 3.55, y, 0]
+    for (const year of [1993, 2000, 2010, 2020, 2026]) {
+      const x = this.timelineX(year)
+      vertices.push(x, y - .07, .01, x, y + .13, .01)
+    }
+    this.citationGroup.add(new THREE.LineSegments(
+      new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3)),
+      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .45 }),
+    ))
+  }
+
+  private citationColour(party: string | undefined) {
+    const key = normFallback(party || '')
+    const node = this.flow.graph.nodes.find((candidate) => candidate.kind === 'party' && (
+      normFallback(candidate.label) === key || key.includes(normFallback(candidate.label)) || normFallback(candidate.label).includes(key)
+    ))
+    return node?.colour || (key.includes('labor') ? '#D93025' : key.includes('green') ? '#3C9A46' : key.includes('liberal') ? '#1565C0' : '#8A5A12')
+  }
+
+  setCitations(sources: AskSource[]) {
+    for (const mesh of [this.citationFill, this.citationEdge]) {
+      if (!mesh) continue
+      this.citationGroup.remove(mesh)
+      mesh.geometry.dispose()
+      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+      materials.forEach((material) => material.dispose())
+    }
+    const dated = sources.map((source, sourceIndex) => {
+      const match = String(source.date || '').match(/(19|20)\d{2}/)
+      const year = Number(match?.[0])
+      return { source, sourceIndex, year }
+    }).filter((row) => row.year >= 1993 && row.year <= 2026).slice(0, 6)
+    this.citationCards = dated.map((row, index) => ({
+      x: this.timelineX(row.year), y: -1.65 + (index % 3) * .34, source: row.source, sourceIndex: row.sourceIndex,
+    }))
+    this.citationArrival = performance.now()
+    this.activeCitation = null
+    if (!this.citationCards.length) {
+      this.citationFill = this.citationEdge = null
+      if (this.step === 3) this.setLabels(this.labelsForStep(3))
+      return
+    }
+    this.citationEdge = new THREE.InstancedMesh(
+      new THREE.PlaneGeometry(.72, .32),
+      new THREE.MeshBasicMaterial({ transparent: true, opacity: .82, side: THREE.DoubleSide }),
+      this.citationCards.length,
+    )
+    this.citationFill = new THREE.InstancedMesh(
+      new THREE.PlaneGeometry(.65, .25),
+      new THREE.MeshBasicMaterial({ color: 0xfaf9f6, transparent: true, opacity: .96, side: THREE.DoubleSide }),
+      this.citationCards.length,
+    )
+    this.citationEdge.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+    this.citationFill.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+    this.citationCards.forEach((card, index) => this.citationEdge?.setColorAt(index, new THREE.Color(this.citationColour(card.source.party))))
+    if (this.citationEdge.instanceColor) this.citationEdge.instanceColor.needsUpdate = true
+    this.citationGroup.add(this.citationEdge, this.citationFill)
+    if (this.step === 3) this.setLabels(this.labelsForStep(3))
+    this.updateCitationCards(performance.now())
+    this.ensureLoop()
+  }
+
+  highlightCitation(index: number | null) {
+    this.activeCitation = index
+    this.updateCitationCards(performance.now())
+    this.renderer.render(this.scene, this.camera)
+  }
+
+  private updateCitationCards(now: number) {
+    if (!this.citationFill || !this.citationEdge) return
+    const matrix = new THREE.Matrix4()
+    const quaternion = new THREE.Quaternion()
+    this.citationCards.forEach((card, index) => {
+      const progress = this.motion.matches
+        ? 1
+        : THREE.MathUtils.clamp((now - this.citationArrival - index * 150) / 520, 0, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      const y = THREE.MathUtils.lerp(-2.01, card.y, eased)
+      const emphasis = this.activeCitation === null ? 1 : this.activeCitation === card.sourceIndex ? 1.18 : .86
+      matrix.compose(new THREE.Vector3(card.x, y, .055), quaternion, new THREE.Vector3(emphasis, Math.max(.08, eased) * emphasis, 1))
+      this.citationEdge?.setMatrixAt(index, matrix)
+      matrix.compose(new THREE.Vector3(card.x, y, .08), quaternion, new THREE.Vector3(emphasis, Math.max(.08, eased) * emphasis, 1))
+      this.citationFill?.setMatrixAt(index, matrix)
+    })
+    this.citationEdge.instanceMatrix.needsUpdate = true
+    this.citationFill.instanceMatrix.needsUpdate = true
+  }
+
+  private buildLimits() {
+    const top = -.78
+    const bottom = -2.2
+    this.limitsGroup.add(new THREE.Mesh(
+      new THREE.PlaneGeometry(7.08, top - bottom),
+      new THREE.MeshBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .045, side: THREE.DoubleSide }),
+    ))
+    this.limitsGroup.children[0].position.set(0, (top + bottom) / 2, -.09)
+    const hatch: number[] = []
+    for (let x = -4.05; x <= 3.5; x += .28) {
+      const startX = THREE.MathUtils.clamp(x, -3.54, 3.54)
+      const endX = THREE.MathUtils.clamp(x + .62, -3.54, 3.54)
+      if (endX - startX < .08) continue
+      hatch.push(startX, bottom, -.06, endX, top, -.06)
+    }
+    hatch.push(-3.54, bottom, 0, 3.54, bottom, 0, -3.54, top, 0, 3.54, top, 0)
+    this.limitsGroup.add(new THREE.LineSegments(
+      new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(hatch, 3)),
+      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .28 }),
+    ))
+    const secondArc = Array.from({ length: 61 }, (_, index) => this.pointAt(index / 60, this.giverPoint, this.receiverPoint, 2.08))
+    this.limitsGroup.add(new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints(secondArc),
+      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .2 }),
+    ))
+    const crossed = this.pointAt(.62, this.giverPoint, this.receiverPoint, 2.08)
+    const cross = .2
+    this.limitsGroup.add(new THREE.LineSegments(
+      new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute([
+        crossed.x - cross, crossed.y - cross, .04, crossed.x + cross, crossed.y + cross, .04,
+        crossed.x - cross, crossed.y + cross, .04, crossed.x + cross, crossed.y - cross, .04,
+      ], 3)),
+      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .72 }),
+    ))
   }
 
   private updateHistory(cutoff: number) {
@@ -865,6 +1198,52 @@ class FlowScene {
           position: new THREE.Vector3(xAt(this.flow.peakYear), -2.16 + peakHeight + .18, .06),
           className: 'peak', align: 'middle' as const,
         }] : []),
+      ]
+    }
+    if (step === 2) {
+      const labels: SceneLabel[] = this.destinationRows.map((row, index) => {
+        return {
+          text: stageShortLabel(row.label),
+          position: this.destinationPositions[index].clone().add(new THREE.Vector3(this.destinationSide === 'left' ? .42 : -.42, 0, .08)),
+          className: 'destination',
+          align: (this.destinationSide === 'left' ? 'start' : 'end') as 'start' | 'end',
+          offsetX: this.destinationSide === 'left' ? 5 : -5,
+        }
+      })
+      const partyName = stageShortLabel(this.flow.party?.label || 'party')
+      const gaugeAnchor = this.detail.kind === 'party'
+        ? this.receiverPoint.clone().add(new THREE.Vector3(-1.12, .5, .08))
+        : (this.destinationPositions[this.destinationGaugeIndex] || this.receiverPoint).clone().add(new THREE.Vector3(-1.28, -.02, .08))
+      if (this.detail.kind !== 'party' && this.destinationGaugeIndex >= 0) labels.splice(this.destinationGaugeIndex, 1)
+      labels.push({
+        text: `${(this.destinationGaugeShare * 100).toFixed(1)}% of ${partyName} receipts`,
+        position: gaugeAnchor, className: 'gauge', align: 'middle',
+        offsetX: 0,
+      })
+      return labels
+    }
+    if (step === 3) {
+      return [
+        { text: '1993', position: new THREE.Vector3(this.timelineX(1993), -2.27, .06), className: 'election', align: 'middle' },
+        { text: 'parliamentary record', position: new THREE.Vector3(0, -2.27, .06), className: 'clock', align: 'middle' },
+        { text: '2026', position: new THREE.Vector3(this.timelineX(2026), -2.27, .06), className: 'election', align: 'middle' },
+        ...this.citationCards.map((card) => ({
+          text: String(card.source.date || '').slice(0, 10),
+          position: new THREE.Vector3(card.x, card.y + .24, .08),
+          className: 'citation', align: 'middle' as const,
+        })),
+      ]
+    }
+    if (step === 4) {
+      return [
+        {
+          text: 'below the disclosure threshold: not reported',
+          position: new THREE.Vector3(0, -1.49, .08), className: 'limit', align: 'middle',
+        },
+        {
+          text: 'state + federal totals remain separate',
+          position: new THREE.Vector3(.9, 1.26, .08), className: 'destination', align: 'start', offsetX: 7,
+        },
       ]
     }
     return []
@@ -926,11 +1305,16 @@ class FlowScene {
     this.targetZ = this.baseTargetZ * Math.max(1, 1.26 / this.aspect)
     this.maxYearAmount = Math.max(...[...this.flow.years.values()].map((cell) => cell[0]), 1)
     this.start = performance.now()
+    this.baseGroup.visible = step !== 2
     this.whoGroup.visible = step === 0
-    this.mainArc.visible = step !== 0
-    this.mainArrow.visible = step !== 0
-    this.historyGroup.visible = step === 1
-    this.travelling.visible = step === 1 || step === 3 || step === 4
+    this.destinationGroup.visible = step === 2
+    this.citationGroup.visible = step === 3
+    this.limitsGroup.visible = step === 4
+    this.mainArc.visible = step !== 0 && step !== 2
+    this.mainArrow.visible = step !== 0 && step !== 2
+    this.historyGroup.visible = step === 1 || step === 4
+    this.historyMaterial.opacity = step === 4 ? .13 : .54
+    this.travelling.visible = step === 1
     this.giverGroup.visible = step !== 0 || this.detail.kind !== 'party'
     this.giverGroup.position.x = step === 0 && this.detail.kind !== 'party' ? this.whoGiverPoint.x : this.giverPoint.x
     this.receiverGroup.visible = step !== 0 || this.detail.kind === 'party'
@@ -948,6 +1332,7 @@ class FlowScene {
       this.onYear?.(this.year, this.yearAmount)
     }
     this.setLabels(this.labelsForStep(step))
+    this.updateCitationCards(performance.now())
     this.ensureLoop()
   }
 
@@ -995,7 +1380,7 @@ class FlowScene {
     const ratio = Math.max(0, this.yearAmount) / this.maxYearAmount
     const desired = this.step === 1
       ? historyComplete ? 10 : Math.max(1, Math.round(2 + 58 * ratio))
-      : this.step === 4 ? 4 : this.step === 3 ? 10 : 0
+      : 0
     const count = Math.min(72, desired)
     const flowT = still ? .82 : (elapsed % (historyComplete ? 9 : 2.8)) / (historyComplete ? 9 : 2.8)
     for (let index = 0; index < count; index++) {
@@ -1007,6 +1392,7 @@ class FlowScene {
     }
     ;(this.travellingGeometry.getAttribute('position') as THREE.BufferAttribute).needsUpdate = true
     this.travellingGeometry.setDrawRange(0, count)
+    this.updateCitationCards(now)
     this.updateLabels()
     this.renderer.render(this.scene, this.camera)
   }
@@ -1156,6 +1542,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       copy.append(answer, sources)
       const showStoredAnswer = () => {
         if (askResult) {
+          scene?.setCitations(citedSources(askResult))
           const text = String(askResult.answer || '').trim()
           if (text) helpers.renderAnswer(answer, text)
           else answer.replaceChildren(el('p', 'explain-status', 'The record returned sources but no written answer this time.'))
@@ -1200,6 +1587,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
           window.clearTimeout(timeout)
           askPending = false
           askResult = data
+          scene?.setCitations(citedSources(data))
           if (destroyed || !answer.isConnected) return
           waitHandle?.destroy?.()
           const text = String(data.answer || '').trim()
@@ -1300,6 +1688,25 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     narrative.append(steps)
     copy = el('section', 'explain-step-copy')
     copy.tabIndex = -1
+    const citationTarget = (target: EventTarget | null) =>
+      target instanceof Element ? target.closest<HTMLElement>('[data-scene-citation]') : null
+    copy.addEventListener('pointerover', (event) => {
+      const target = citationTarget(event.target)
+      if (target) scene?.highlightCitation(Number(target.dataset.sceneCitation))
+    })
+    copy.addEventListener('pointerout', (event) => {
+      const from = citationTarget(event.target)
+      const to = citationTarget(event.relatedTarget)
+      if (from !== to) scene?.highlightCitation(to ? Number(to.dataset.sceneCitation) : null)
+    })
+    copy.addEventListener('focusin', (event) => {
+      const target = citationTarget(event.target)
+      if (target) scene?.highlightCitation(Number(target.dataset.sceneCitation))
+    })
+    copy.addEventListener('focusout', (event) => {
+      const to = citationTarget(event.relatedTarget)
+      scene?.highlightCitation(to ? Number(to.dataset.sceneCitation) : null)
+    })
     narrative.append(copy)
     const controls = el('div', 'explain-controls')
     prev = el('button', '', 'Previous')
