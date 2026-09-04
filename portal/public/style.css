@@ -3249,3 +3249,10 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 .tie-tag-holder { background: var(--paper-sunken); color: var(--ink-soft); }
 .donor-ties-list .declared-description { font-family: var(--serif); font-size: 1rem; line-height: 1.55; color: var(--ink); }
 
+/* ==== ask sources tidy ==== */
+.source-list li:has(> .source-num) > .source-num {
+  font: 600 0.8125rem/1.6 var(--sans); color: var(--bronze-ink); min-width: 1.6em; text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.ask-source-passage { margin: 0.35rem 0 0; }
+

@@ -275,7 +275,7 @@ const CHAMBER_NAMES = {
   assembly: "Legislative Assembly", council: "Legislative Council",
 };
 
-function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = false } = {}) {
+function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = false, hideSpeaker = false } = {}) {
   const bits = [];
   // The portrait slot sits outside the dot-separated run, so a speaker with
   // no photo leaves no stray separator. Filled by decorateMetaPortraits.
@@ -286,7 +286,7 @@ function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = fal
       ? `<a class="meta-party" href="${esc(subjectHash("party", item.party))}">${partyChipHTML(item.party)}</a>`
       : partyChipHTML(item.party));
   }
-  if (item.speaker) {
+  if (item.speaker && !hideSpeaker) {
     bits.push(linkSpeaker
       ? `<a href="${esc(subjectHash("person", item.speaker))}">${esc(item.speaker)}</a>`
       : esc(item.speaker));
@@ -1940,7 +1940,13 @@ function sourceItem(s, num, passage = false) {
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = "link source-title";
-  btn.textContent = displayTitle(s);
+  // A record titled only "Speaker — 2013-03-19" has no debate name to show:
+  // the row leads with the speaker in words and the byline carries the rest,
+  // rather than the name twice and an ISO date in the title.
+  const subject = titleSubject(s);
+  const nameOnly = !subject && s.speaker;
+  btn.textContent = subject || (nameOnly ? String(s.speaker) : String(s.title || s.slug || ""));
+  if (nameOnly) li.classList.add("source-name-only");
   btn.addEventListener("click", () => { goRoute(`/doc/${s.slug}`); });
   if (num) {
     const numEl = document.createElement("span");
@@ -1954,7 +1960,7 @@ function sourceItem(s, num, passage = false) {
     li.tabIndex = -1;
   }
   // Speaker portrait, and the speaker and party open their own pages.
-  const meta = metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage });
+  const meta = metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage, hideSpeaker: nameOnly });
   if (meta) {
     const span = document.createElement("span");
     span.className = "source-meta";
@@ -1965,7 +1971,8 @@ function sourceItem(s, num, passage = false) {
   if (passage && s.snippet?.trim()) {
     const quote = document.createElement("p");
     quote.className = "ask-source-passage";
-    quote.textContent = s.snippet.trim().replace(/\s+/g, " ");
+    // Retrieval marks elided text with runs of ellipses; one is enough.
+    quote.textContent = s.snippet.trim().replace(/\s+/g, " ").replace(/^(?:[…\.]{1,3}\s*){2,}/, "… ").replace(/(?:\s*…){2,}/g, " …");
     li.appendChild(quote);
   }
   return li;

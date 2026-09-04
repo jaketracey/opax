@@ -150,29 +150,29 @@
  },
  "brief": {
   "question": "What does the parliamentary record show about first nations?",
-  "answer": "The most decision-relevant finding in the record is statistical and urgent: in Victoria, First Nations people are about one per cent of the population but 12.7 per cent of adult prisoners. The speaker attributed this record incarceration to 2013 and 2018 bail law changes that were \"driven by politics rather than evidence,\" and noted the impact falls especially on non-violent Indigenous women. Amendments were announced to require regular parliamentary reporting on bail reform impacts and to insert guiding principles against discrimination. A separate reform milestone is also recorded: South Australia\u2019s Malinauskas Labour government became the first jurisdiction to pass a bill enshrining a First Nations Voice into a parliament, making history in a special Sunday sitting.\n\nThe record shows the parliamentary debate shifting from apology and recognition toward structural voice and treaty. Speakers trace Labor\u2019s historical record through land rights, the Bringing Them Home report, and Kevin Rudd\u2019s national apology, framed as \"just a step\" toward practical reconciliation and closing the gap. The Uluru Statement from the Heart is repeatedly invoked as a \"powerful document\" seeking constitutional reform, and the Makarrata Commission for agreement-making and truth-telling is part of Labor\u2019s stated commitment. More recent entries note Victoria beginning \"historic treaty negotiations\" through the Yoorrook Justice Commission, First Peoples\u2019 Assembly, and Treaty Authority, while another speaker called for a national anti-racism framework with \"teeth\" and a human rights act.\n\nThe sharpest disagreement is over whether and how constitutional recognition should happen. Labor speakers reject the criticism that the Voice is race-based, would not address disadvantage, or that a treaty must come first, arguing the Voice enables better policy and determines who negotiates a treaty. They accuse the then Turnbull government of dismissing Uluru and mounting a scare campaign about \"third chambers,\" though the Voice \"plays no role in the legislative process in terms of making law.\" More confrontationally, one speaker wrote to every embassy claiming the Albanese government represents a state that has \"committed genocide\" according to the Bringing Them Home report and the \"Europe justice commission,\" and cited United Nations recommendations on mass incarceration and raising the age of criminal responsibility.\n\nPromises and outcomes are uneven. The apology was delivered under Labor after the Howard government refused it, but speakers say constitutional recognition remains unfinished and the Commonwealth has been slow. South Australia\u2019s Voice is reported as law, and Victoria\u2019s treaty bodies are operating, yet the same record criticises the Morrison government\u2019s climate record and one MP hosted a constitutional monarchy event that allegedly denies \"colonisation's true history.\" Turning to climate, First Nations stewardship is presented as grounded in over 65,000 years of care for country, with the IPCC report used to underline that First Nations peoples in Australia and globally face disproportionate impacts. Thus, the record shows real institutional progress at state level, persistent statistical disadvantage in the justice system, and unresolved conflict over the pace and form of national recognition."
+  "answer": "The most decision-relevant finding in the record is statistical and urgent: in Victoria, First Nations people are about one per cent of the population but 12.7 per cent of adult prisoners. The speaker attributed this record incarceration to 2013 and 2018 bail law changes that were \"driven by politics rather than evidence,\" and noted the impact falls especially on non-violent Indigenous women. Amendments were announced to require regular parliamentary reporting on bail reform impacts and to insert guiding principles against discrimination. A separate reform milestone is also recorded: South Australia’s Malinauskas Labour government became the first jurisdiction to pass a bill enshrining a First Nations Voice into a parliament, making history in a special Sunday sitting.\n\nThe record shows the parliamentary debate shifting from apology and recognition toward structural voice and treaty. Speakers trace Labor’s historical record through land rights, the Bringing Them Home report, and Kevin Rudd’s national apology, framed as \"just a step\" toward practical reconciliation and closing the gap. The Uluru Statement from the Heart is repeatedly invoked as a \"powerful document\" seeking constitutional reform, and the Makarrata Commission for agreement-making and truth-telling is part of Labor’s stated commitment. More recent entries note Victoria beginning \"historic treaty negotiations\" through the Yoorrook Justice Commission, First Peoples’ Assembly, and Treaty Authority, while another speaker called for a national anti-racism framework with \"teeth\" and a human rights act.\n\nThe sharpest disagreement is over whether and how constitutional recognition should happen. Labor speakers reject the criticism that the Voice is race-based, would not address disadvantage, or that a treaty must come first, arguing the Voice enables better policy and determines who negotiates a treaty. They accuse the then Turnbull government of dismissing Uluru and mounting a scare campaign about \"third chambers,\" though the Voice \"plays no role in the legislative process in terms of making law.\" More confrontationally, one speaker wrote to every embassy claiming the Albanese government represents a state that has \"committed genocide\" according to the Bringing Them Home report and the \"Europe justice commission,\" and cited United Nations recommendations on mass incarceration and raising the age of criminal responsibility.\n\nPromises and outcomes are uneven. The apology was delivered under Labor after the Howard government refused it, but speakers say constitutional recognition remains unfinished and the Commonwealth has been slow. South Australia’s Voice is reported as law, and Victoria’s treaty bodies are operating, yet the same record criticises the Morrison government’s climate record and one MP hosted a constitutional monarchy event that allegedly denies \"colonisation's true history.\" Turning to climate, First Nations stewardship is presented as grounded in over 65,000 years of care for country, with the IPCC report used to underline that First Nations peoples in Australia and globally face disproportionate impacts. Thus, the record shows real institutional progress at state level, persistent statistical disadvantage in the justice system, and unresolved conflict over the pace and form of national recognition."
  },
  "key_stats": [
   {
    "value": "27%",
-   "label": "First Nations adults in prison",
-   "detail": "First Nations adults make up 27% of the prison population, per Anthony Albanese's argument for a Voice to Parliament.",
+   "label": "of the prison population are First Nations people",
+   "detail": "First Nations people make up 27% of Australia's prison population, as Anthony Albanese put it in arguing for a Voice to Parliament.",
    "slug": "speech-387892",
-   "source_title": "Anthony Albanese \u2014 2020-02-12"
+   "source_title": "Anthony Albanese — 2020-02-12"
   },
   {
    "value": "over 90%",
    "label": "Support for 1967 referendum",
    "detail": "The 1967 referendum passed with over 90% support, per Graham Perrett.",
    "slug": "speech-406956",
-   "source_title": "Graham Perrett \u2014 2021-05-26"
+   "source_title": "Graham Perrett — 2021-05-26"
   },
   {
    "value": "25 years",
    "label": "Years of progress acknowledged",
    "detail": "Minister Ben Franklin acknowledged the Parliament's unity in celebrating 25 years of progress.",
    "slug": "speech-1177901",
-   "source_title": "Ben Franklin \u2014 Stolen Generations Apology Twenty-Fifth Anniversary \u2014 2022-06-07"
+   "source_title": "Ben Franklin — Stolen Generations Apology Twenty-Fifth Anniversary — 2022-06-07"
   }
  ],
  "positions": [
@@ -180,7 +180,7 @@
    "party": "Labor",
    "position": "Labor parliamentarians support closing the gap, reconciliation, and constitutionally enshrining an Indigenous Voice to Parliament, truth-telling, and treaty-making as steps toward righting ongoing wrongs for First Nations people.",
    "slug": "speech-387892",
-   "source_title": "Anthony Albanese \u2014 2020-02-12",
+   "source_title": "Anthony Albanese — 2020-02-12",
    "speaker": "Anthony Albanese",
    "date": "2020-02-12"
   },
@@ -188,7 +188,7 @@
    "party": "Australian Democrats",
    "position": "The Australian Democrats supported the national apology as a historic first step and called for concrete action on health, education, life expectancy and reparations.",
    "slug": "speech-783427",
-   "source_title": "Andrew Bartlett \u2014 Apology to Australia\u2019S Indigenous Peoples \u2014 2008-02-13",
+   "source_title": "Andrew Bartlett — Apology to Australia’S Indigenous Peoples — 2008-02-13",
    "speaker": "Andrew Bartlett",
    "date": "2008-02-13"
   }
@@ -217,7 +217,7 @@
    "state": "federal",
    "chamber": "senate",
    "date": "2008-02-14",
-   "brief": "The speaker reintroduced a bill to provide monetary compensation to Stolen Generations victims, modelled on Tasmania\u2019s scheme which distributed $5 million among 106 applicants, and criticised the federal government for rejecting compensation while supporting the national apology.",
+   "brief": "The speaker reintroduced a bill to provide monetary compensation to Stolen Generations victims, modelled on Tasmania’s scheme which distributed $5 million among 106 applicants, and criticised the federal government for rejecting compensation while supporting the national apology.",
    "why": "Second reading, Stolen Generation Compensation Bill 2008, 2008",
    "role": "bill mover",
    "length": 6318
@@ -245,7 +245,7 @@
    "state": "federal",
    "chamber": "representatives",
    "date": "2017-06-22",
-   "brief": "The 1967 referendum, which achieved a 90.77% yes vote nationally, is being commemorated alongside the 25th anniversary of the High Court's Mabo decision; the speaker also noted upcoming discussions for a proposed referendum to recognise Aboriginal people in the Australian Constitution, drawing on the Uluru Statement, Patrick Dodson\u2019s expert panel, and a parliamentary committee\u2019s work.",
+   "brief": "The 1967 referendum, which achieved a 90.77% yes vote nationally, is being commemorated alongside the 25th anniversary of the High Court's Mabo decision; the speaker also noted upcoming discussions for a proposed referendum to recognise Aboriginal people in the Australian Constitution, drawing on the Uluru Statement, Patrick Dodson’s expert panel, and a parliamentary committee’s work.",
    "why": "Constitutional recognition and the Uluru Statement, Federal, 2017",
    "role": "parliamentarian",
    "length": 5079
@@ -259,7 +259,7 @@
    "state": "federal",
    "chamber": "representatives",
    "date": "2018-02-14",
-   "brief": "Progress on Closing the Gap is mixed: child mortality, early childhood education and Year 12 attainment are on track, but literacy, numeracy, employment, life expectancy and school attendance are failing. The speaker argued that failures stem from a lack of genuine partnership with Indigenous communities and community-owned programs, and supported Labor\u2019s initiatives including the Uluru Statement from the Heart, additional targets on incarceration and out-of-home care, and compensation for the stolen generations.",
+   "brief": "Progress on Closing the Gap is mixed: child mortality, early childhood education and Year 12 attainment are on track, but literacy, numeracy, employment, life expectancy and school attendance are failing. The speaker argued that failures stem from a lack of genuine partnership with Indigenous communities and community-owned programs, and supported Labor’s initiatives including the Uluru Statement from the Heart, additional targets on incarceration and out-of-home care, and compensation for the stolen generations.",
    "why": "Closing the Gap statement, Federal, 2018",
    "role": "parliamentarian",
    "length": 6721
@@ -273,7 +273,7 @@
    "state": "vic",
    "chamber": "vic_la",
    "date": "2021-02-02",
-   "brief": "The speaker supported the decriminalisation of public drunkenness bill but criticised the Andrews government for the disproportionate rise in Aboriginal incarceration from 12 to 16 times the rate of non-Indigenous Victorians under its policies. They named Tanya Day\u2019s family, campaigners Belinda Stevens, Apryl Watson, Warren Stevens and Kimberly Watson, and cited 434 Aboriginal deaths in custody since the 1991 royal commission recommendation.",
+   "brief": "The speaker supported the decriminalisation of public drunkenness bill but criticised the Andrews government for the disproportionate rise in Aboriginal incarceration from 12 to 16 times the rate of non-Indigenous Victorians under its policies. They named Tanya Day’s family, campaigners Belinda Stevens, Apryl Watson, Warren Stevens and Kimberly Watson, and cited 434 Aboriginal deaths in custody since the 1991 royal commission recommendation.",
    "why": "Second reading, Summary Offences Amendment (Decriminalisation of Public Drunkenness) Bill 2020, 2021",
    "role": "parliamentarian",
    "length": 7713
@@ -314,7 +314,7 @@
    "sources": [
     {
      "slug": "speech-821965",
-     "title": "Ian Macdonald \u2014 Bills \u2014 2013-02-26",
+     "title": "Ian Macdonald — Bills — 2013-02-26",
      "speaker": null,
      "party": null,
      "state": "federal",
@@ -322,7 +322,7 @@
     },
     {
      "slug": "speech-422797",
-     "title": "Graham Perrett \u2014 Parliamentary Representation \u2014 2025-02-10",
+     "title": "Graham Perrett — Parliamentary Representation — 2025-02-10",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -330,7 +330,7 @@
     },
     {
      "slug": "speech-375081",
-     "title": "Bill Shorten \u2014 2019-02-14",
+     "title": "Bill Shorten — 2019-02-14",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -338,7 +338,7 @@
     },
     {
      "slug": "speech-1165513",
-     "title": "Shaoquett Moselmane \u2014 Aboriginal and Torres Strait Islander People \u2014 2021-06-08",
+     "title": "Shaoquett Moselmane — Aboriginal and Torres Strait Islander People — 2021-06-08",
      "speaker": null,
      "party": null,
      "state": "nsw",
@@ -346,7 +346,7 @@
     },
     {
      "slug": "speech-383534",
-     "title": "Josh Burns \u2014 2019-10-21",
+     "title": "Josh Burns — 2019-10-21",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -354,7 +354,7 @@
     },
     {
      "slug": "speech-1314356",
-     "title": "Cameron Murphy \u2014 National Reconciliation Week \u2014 2026-06-04",
+     "title": "Cameron Murphy — National Reconciliation Week — 2026-06-04",
      "speaker": null,
      "party": null,
      "state": "nsw",
@@ -362,7 +362,7 @@
     },
     {
      "slug": "speech-829041",
-     "title": "David Van \u2014 Bills \u2014 2023-03-23",
+     "title": "David Van — Bills — 2023-03-23",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
@@ -370,7 +370,7 @@
     },
     {
      "slug": "speech-769255",
-     "title": "Dylan Wight \u2014 Statewide Treaty Bill 2025 - Second reading \u2014 2025-10-15",
+     "title": "Dylan Wight — Statewide Treaty Bill 2025 - Second reading — 2025-10-15",
      "speaker": null,
      "party": null,
      "state": "vic",
@@ -378,7 +378,7 @@
     },
     {
      "slug": "speech-821927",
-     "title": "George Brandis \u2014 Bills \u2014 2013-02-26",
+     "title": "George Brandis — Bills — 2013-02-26",
      "speaker": null,
      "party": null,
      "state": "federal",
@@ -386,7 +386,7 @@
     },
     {
      "slug": "speech-1203171",
-     "title": "Marion Scrymgour \u2014 Questions without Notice \u2014 2026-05-27",
+     "title": "Marion Scrymgour — Questions without Notice — 2026-05-27",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -394,7 +394,7 @@
     },
     {
      "slug": "speech-798024",
-     "title": "Ian Macdonald \u2014 Questions without Notice \u2014 2010-02-03",
+     "title": "Ian Macdonald — Questions without Notice — 2010-02-03",
      "speaker": null,
      "party": null,
      "state": "federal",
@@ -402,7 +402,7 @@
     },
     {
      "slug": "speech-1184002",
-     "title": "R.A. Simms \u2014 First Nations Voice Bill \u2014 2023-02-21",
+     "title": "R.A. Simms — First Nations Voice Bill — 2023-02-21",
      "speaker": null,
      "party": null,
      "state": "sa",
@@ -410,7 +410,7 @@
     },
     {
      "slug": "speech-267273",
-     "title": "Kevin Andrews \u2014 2012-11-27",
+     "title": "Kevin Andrews — 2012-11-27",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
@@ -418,7 +418,7 @@
     },
     {
      "slug": "speech-875452",
-     "title": "Sarah Connolly \u2014 Voice to Parliament \u2014 2023-08-02",
+     "title": "Sarah Connolly — Voice to Parliament — 2023-08-02",
      "speaker": null,
      "party": null,
      "state": "vic",
@@ -426,7 +426,7 @@
     },
     {
      "slug": "speech-783392",
-     "title": "Chris Evans \u2014 Apology to Australia\u2019S Indigenous Peoples \u2014 2008-02-13",
+     "title": "Chris Evans — Apology to Australia’S Indigenous Peoples — 2008-02-13",
      "speaker": null,
      "party": null,
      "state": "federal",
@@ -434,7 +434,7 @@
     },
     {
      "slug": "speech-374253",
-     "title": "Anthony Albanese \u2014 2018-12-05",
+     "title": "Anthony Albanese — 2018-12-05",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -442,7 +442,7 @@
     },
     {
      "slug": "speech-29423",
-     "title": "Philip Ruddock \u2014 1999-08-26",
+     "title": "Philip Ruddock — 1999-08-26",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
@@ -450,7 +450,7 @@
     },
     {
      "slug": "speech-987940",
-     "title": "David Harris \u2014 National Reconciliation Week \u2014 2019-05-30",
+     "title": "David Harris — National Reconciliation Week — 2019-05-30",
      "speaker": null,
      "party": null,
      "state": "nsw",
@@ -458,7 +458,7 @@
     },
     {
      "slug": "speech-367377",
-     "title": "Rebekha Sharkie \u2014 2018-08-16",
+     "title": "Rebekha Sharkie — 2018-08-16",
      "speaker": null,
      "party": "Centre Alliance",
      "state": "federal",
@@ -466,7 +466,7 @@
     },
     {
      "slug": "speech-1295699",
-     "title": "Jenny Aitchison \u2014 Tilly's Play and Development Centre Rutherford \u2013 Finalists In Narragunnawali Reconciliation In Education Awards 2025 \u2014 2025-09-09",
+     "title": "Jenny Aitchison — Tilly's Play and Development Centre Rutherford – Finalists In Narragunnawali Reconciliation In Education Awards 2025 — 2025-09-09",
      "speaker": null,
      "party": null,
      "state": "nsw",
@@ -476,11 +476,11 @@
   },
   {
    "question": "What was said in parliament about the Voice to Parliament referendum?",
-   "answer": "Parliamentarians expressed sharply divided views on the Voice to Parliament referendum. Supporters, including the speaker and several others, argued it would deliver long-overdue constitutional recognition and an advisory body to improve outcomes in health, education, housing, and welfare. One speaker cited the 1967 referendum\u2019s 90.77% Yes vote as proof Australians could again support change, while another referenced William Cooper\u2019s 1937 petition and the Uluru Statement from the Heart. A speaker who had already voted yes stressed the Voice cannot make laws, impose taxes, or control funding, and another called it vital for race relations and urged equal government funding for both campaign sides.\n\nOpponents countered that the proposal was divisive, race-based, and premature. One argued it was a flawed model lacking bipartisanship and transparency, accusing the Prime Minister of wedge politics. Another claimed it would lead to demands making 97% of Australians second-class citizens\u2014citing reduced tax rates for Aboriginal people, Aboriginal ownership of beaches, and racially exclusive parliamentary seats\u2014and urged a No vote. A different speaker noted 11 Indigenous federal parliamentarians already hold 4.85% of seats, exceeding the Indigenous population share, and said most Aboriginal people they consulted preferred tangible solutions like education and employment. Another opposed a state-based Voice sitting, questioning its cost and calling it a publicity stunt.\n\nSeveral speakers focused on process: one criticised the proposed amendment as radical, not modest, warning of implied constitutional obligations and justiciability concerns; another condemned a motion attacking peak Indigenous organisations as undermining the referendum; and one questioned a $300,000 departmental expenditure on monitoring mental health during the referendum. A speaker supporting the Voice emphasised the need for respectful debate, stating the referendum\u2019s outcome depends on the integrity of the process.",
+   "answer": "Parliamentarians expressed sharply divided views on the Voice to Parliament referendum. Supporters, including the speaker and several others, argued it would deliver long-overdue constitutional recognition and an advisory body to improve outcomes in health, education, housing, and welfare. One speaker cited the 1967 referendum’s 90.77% Yes vote as proof Australians could again support change, while another referenced William Cooper’s 1937 petition and the Uluru Statement from the Heart. A speaker who had already voted yes stressed the Voice cannot make laws, impose taxes, or control funding, and another called it vital for race relations and urged equal government funding for both campaign sides.\n\nOpponents countered that the proposal was divisive, race-based, and premature. One argued it was a flawed model lacking bipartisanship and transparency, accusing the Prime Minister of wedge politics. Another claimed it would lead to demands making 97% of Australians second-class citizens—citing reduced tax rates for Aboriginal people, Aboriginal ownership of beaches, and racially exclusive parliamentary seats—and urged a No vote. A different speaker noted 11 Indigenous federal parliamentarians already hold 4.85% of seats, exceeding the Indigenous population share, and said most Aboriginal people they consulted preferred tangible solutions like education and employment. Another opposed a state-based Voice sitting, questioning its cost and calling it a publicity stunt.\n\nSeveral speakers focused on process: one criticised the proposed amendment as radical, not modest, warning of implied constitutional obligations and justiciability concerns; another condemned a motion attacking peak Indigenous organisations as undermining the referendum; and one questioned a $300,000 departmental expenditure on monitoring mental health during the referendum. A speaker supporting the Voice emphasised the need for respectful debate, stating the referendum’s outcome depends on the integrity of the process.",
    "sources": [
     {
      "slug": "speech-827855",
-     "title": "Angus Taylor \u2014 Bills \u2014 2023-03-06",
+     "title": "Angus Taylor — Bills — 2023-03-06",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
@@ -488,7 +488,7 @@
     },
     {
      "slug": "speech-829682",
-     "title": "Tracey Roberts \u2014 Constituency Statements \u2014 2023-03-30",
+     "title": "Tracey Roberts — Constituency Statements — 2023-03-30",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -496,7 +496,7 @@
     },
     {
      "slug": "speech-873092",
-     "title": "Steve McGhie \u2014 Voice to Parliament \u2014 2023-10-04",
+     "title": "Steve McGhie — Voice to Parliament — 2023-10-04",
      "speaker": null,
      "party": null,
      "state": "vic",
@@ -504,7 +504,7 @@
     },
     {
      "slug": "speech-420791",
-     "title": "Josh Burns \u2014 2022-08-01",
+     "title": "Josh Burns — 2022-08-01",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -512,7 +512,7 @@
     },
     {
      "slug": "speech-829551",
-     "title": "Pauline Hanson \u2014 Statements by Senators \u2014 2023-03-29",
+     "title": "Pauline Hanson — Statements by Senators — 2023-03-29",
      "speaker": null,
      "party": null,
      "state": "federal",
@@ -520,7 +520,7 @@
     },
     {
      "slug": "speech-827913",
-     "title": "Keith Wolahan \u2014 Bills \u2014 2023-03-06",
+     "title": "Keith Wolahan — Bills — 2023-03-06",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
@@ -528,7 +528,7 @@
     },
     {
      "slug": "speech-391839",
-     "title": "Linda Burney \u2014 2020-06-11",
+     "title": "Linda Burney — 2020-06-11",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -536,7 +536,7 @@
     },
     {
      "slug": "speech-1182279",
-     "title": "S.L. Game \u2014 First Nations Voice to Parliament \u2014 2023-02-08",
+     "title": "S.L. Game — First Nations Voice to Parliament — 2023-02-08",
      "speaker": null,
      "party": null,
      "state": "sa",
@@ -544,7 +544,7 @@
     },
     {
      "slug": "speech-829589",
-     "title": "Richard Colbeck \u2014 Committees \u2014 2023-03-29",
+     "title": "Richard Colbeck — Committees — 2023-03-29",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
@@ -552,7 +552,7 @@
     },
     {
      "slug": "speech-874204",
-     "title": "Emma Vulin \u2014 Voice to Parliament \u2014 2023-08-17",
+     "title": "Emma Vulin — Voice to Parliament — 2023-08-17",
      "speaker": null,
      "party": null,
      "state": "vic",
@@ -560,7 +560,7 @@
     },
     {
      "slug": "speech-872942",
-     "title": "Jacinta Allan \u2014 Ministers statements: Voice to Parliament \u2014 2023-10-05",
+     "title": "Jacinta Allan — Ministers statements: Voice to Parliament — 2023-10-05",
      "speaker": null,
      "party": null,
      "state": "vic",
@@ -568,7 +568,7 @@
     },
     {
      "slug": "speech-829164",
-     "title": "Zoe McKenzie \u2014 Statements by Members \u2014 2023-03-27",
+     "title": "Zoe McKenzie — Statements by Members — 2023-03-27",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
@@ -576,7 +576,7 @@
     },
     {
      "slug": "speech-829205",
-     "title": "Luke Gosling \u2014 Adjournment \u2014 2023-03-27",
+     "title": "Luke Gosling — Adjournment — 2023-03-27",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -584,7 +584,7 @@
     },
     {
      "slug": "speech-829522",
-     "title": "Keith Wolahan \u2014 Adjournment \u2014 2023-03-29",
+     "title": "Keith Wolahan — Adjournment — 2023-03-29",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
@@ -592,7 +592,7 @@
     },
     {
      "slug": "speech-880635",
-     "title": "Nick Staikos \u2014 Voice to Parliament \u2014 2023-03-21",
+     "title": "Nick Staikos — Voice to Parliament — 2023-03-21",
      "speaker": null,
      "party": null,
      "state": "vic",
@@ -600,7 +600,7 @@
     },
     {
      "slug": "speech-972204",
-     "title": "Liddle \u2014 Community Affairs Legislation Committee - Community Affairs Legislation Committee 03/12/2025 Estimates; and HEALTH, DISABILITY AND AGEING PORTFOLIO National Health and Medical Research Council \u2014 2025-12-03",
+     "title": "Liddle — Community Affairs Legislation Committee - Community Affairs Legislation Committee 03/12/2025 Estimates; and HEALTH, DISABILITY AND AGEING PORTFOLIO National Health and Medical Research Council — 2025-12-03",
      "speaker": null,
      "party": null,
      "state": "federal",
@@ -608,7 +608,7 @@
     },
     {
      "slug": "speech-1189469",
-     "title": "S.L. Game \u2014 First Nations Voice, Parliamentary Sitting \u2014 2023-03-21",
+     "title": "S.L. Game — First Nations Voice, Parliamentary Sitting — 2023-03-21",
      "speaker": null,
      "party": null,
      "state": "sa",
@@ -616,7 +616,7 @@
     },
     {
      "slug": "speech-406956",
-     "title": "Graham Perrett \u2014 2021-05-26",
+     "title": "Graham Perrett — 2021-05-26",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -626,11 +626,11 @@
   },
   {
    "question": "How has parliament discussed Closing the Gap outcomes?",
-   "answer": "Parliamentary debate on Closing the Gap has consistently mixed bipartisan rhetoric with sharp partisan criticism over delivery, funding, and governance. Speakers from both sides have acknowledged the annual report as a key accountability moment, but they diverge sharply on causes of failure and remedies.\n\n**Bipartisan acknowledgements and structural commitments**\n- Multiple speakers across parties have reaffirmed support for the Closing the Gap targets, with some noting the annual Prime Minister\u2019s report and the involvement of Aboriginal and Torres Strait Islander leaders as significant parliamentary events.\n- The Commonwealth, states, and territories have committed to annual reports and implementation plans under the National Agreement, with the Coalition of Peaks as a formal partner.\n- In 2024, the government tabled its annual report and 2025 implementation plan, emphasising actions on remote jobs, housing overcrowding, and safety.\n\n**Labor and cross-party criticism of Coalition governments**\n- Labor speakers have repeatedly criticised Coalition governments for withdrawing from remote housing agreements, citing the Northern Territory example where the Commonwealth refused to match the NT\u2019s $1.1 billion over 10 years, offering only two years of funding.\n- They have argued that inadequate housing undermines health targets, linking to rheumatic heart disease and other preventable conditions.\n- Labor and some crossbench members have long called for a justice target to reduce incarceration rates, noting that the proportion of Indigenous children in out-of-home care rose from 20% in 1997 to 35% today.\n- In 2019, a Labor speaker described the report as \u201cshameful\u201d because only two of seven targets were on track, while noting Victoria\u2019s relatively stronger outcomes.\n- In 2026, a speaker highlighted that of 19 targets, only one had been met, three were on track, five were improving, and four were going backwards.\n\n**Government and opposition responses on the Voice and governance**\n- Government speakers have defended the Closing the Gap process as a genuine partnership, with NSW Minister Penny Sharpe rejecting an Auditor-General\u2019s finding of inadequate oversight of $222 million in NSW, arguing the report provides a basis to strengthen governance with the Coalition of Aboriginal Peak Organisations.\n- Opposition speakers have criticised the proposed Voice to Parliament as a departure from Westminster conventions, arguing their alternative\u2014an Aboriginal representative body working within existing committees\u2014would better deliver practical outcomes.\n- Government and Labor speakers have countered that a Voice is critical structural reform, citing Aboriginal leaders like Emma Lee who argue Indigenous peoples lack formal say over their own affairs.\n\n**Recurring themes across the record**\n- Education targets have been a focus: early childhood enrolment was on track in 2013, but reading and numeracy results have stagnated or declined in some years.\n- Employment and child mortality have been cited as areas of progress, with a 32% reduction in the child mortality gap from 1998 to 2016.\n- Multiple speakers have noted that social determinants\u2014housing, health, and education\u2014are interlinked, and that failing on one undermines progress on others.\n- The Productivity Commission\u2019s 2026 data compilation report was cited as evidence that most targets will not be met by 2031, with adult incarceration worsening.",
+   "answer": "Parliamentary debate on Closing the Gap has consistently mixed bipartisan rhetoric with sharp partisan criticism over delivery, funding, and governance. Speakers from both sides have acknowledged the annual report as a key accountability moment, but they diverge sharply on causes of failure and remedies.\n\n**Bipartisan acknowledgements and structural commitments**\n- Multiple speakers across parties have reaffirmed support for the Closing the Gap targets, with some noting the annual Prime Minister’s report and the involvement of Aboriginal and Torres Strait Islander leaders as significant parliamentary events.\n- The Commonwealth, states, and territories have committed to annual reports and implementation plans under the National Agreement, with the Coalition of Peaks as a formal partner.\n- In 2024, the government tabled its annual report and 2025 implementation plan, emphasising actions on remote jobs, housing overcrowding, and safety.\n\n**Labor and cross-party criticism of Coalition governments**\n- Labor speakers have repeatedly criticised Coalition governments for withdrawing from remote housing agreements, citing the Northern Territory example where the Commonwealth refused to match the NT’s $1.1 billion over 10 years, offering only two years of funding.\n- They have argued that inadequate housing undermines health targets, linking to rheumatic heart disease and other preventable conditions.\n- Labor and some crossbench members have long called for a justice target to reduce incarceration rates, noting that the proportion of Indigenous children in out-of-home care rose from 20% in 1997 to 35% today.\n- In 2019, a Labor speaker described the report as “shameful” because only two of seven targets were on track, while noting Victoria’s relatively stronger outcomes.\n- In 2026, a speaker highlighted that of 19 targets, only one had been met, three were on track, five were improving, and four were going backwards.\n\n**Government and opposition responses on the Voice and governance**\n- Government speakers have defended the Closing the Gap process as a genuine partnership, with NSW Minister Penny Sharpe rejecting an Auditor-General’s finding of inadequate oversight of $222 million in NSW, arguing the report provides a basis to strengthen governance with the Coalition of Aboriginal Peak Organisations.\n- Opposition speakers have criticised the proposed Voice to Parliament as a departure from Westminster conventions, arguing their alternative—an Aboriginal representative body working within existing committees—would better deliver practical outcomes.\n- Government and Labor speakers have countered that a Voice is critical structural reform, citing Aboriginal leaders like Emma Lee who argue Indigenous peoples lack formal say over their own affairs.\n\n**Recurring themes across the record**\n- Education targets have been a focus: early childhood enrolment was on track in 2013, but reading and numeracy results have stagnated or declined in some years.\n- Employment and child mortality have been cited as areas of progress, with a 32% reduction in the child mortality gap from 1998 to 2016.\n- Multiple speakers have noted that social determinants—housing, health, and education—are interlinked, and that failing on one undermines progress on others.\n- The Productivity Commission’s 2026 data compilation report was cited as evidence that most targets will not be met by 2031, with adult incarceration worsening.",
    "sources": [
     {
      "slug": "speech-828319",
-     "title": "Karen Grogan \u2014 Adjournment \u2014 2023-03-08",
+     "title": "Karen Grogan — Adjournment — 2023-03-08",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -638,7 +638,7 @@
     },
     {
      "slug": "speech-1194626",
-     "title": "Lidia Thorpe \u2014 Bills \u2014 2025-02-13",
+     "title": "Lidia Thorpe — Bills — 2025-02-13",
      "speaker": null,
      "party": "Independent",
      "state": "federal",
@@ -646,7 +646,7 @@
     },
     {
      "slug": "speech-270213",
-     "title": "Sharon Bird \u2014 2013-03-12",
+     "title": "Sharon Bird — 2013-03-12",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -654,7 +654,7 @@
     },
     {
      "slug": "speech-1187945",
-     "title": "Patterson \u2014 First Nations Voice Bill \u2014 2023-03-09",
+     "title": "Patterson — First Nations Voice Bill — 2023-03-09",
      "speaker": null,
      "party": null,
      "state": "sa",
@@ -662,7 +662,7 @@
     },
     {
      "slug": "speech-359624",
-     "title": "Warren Snowdon \u2014 2018-02-14",
+     "title": "Warren Snowdon — 2018-02-14",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -670,7 +670,7 @@
     },
     {
      "slug": "speech-1205695",
-     "title": "Monique Ryan \u2014 Adjournment \u2014 2026-08-19",
+     "title": "Monique Ryan — Adjournment — 2026-08-19",
      "speaker": null,
      "party": "Independent",
      "state": "federal",
@@ -678,7 +678,7 @@
     },
     {
      "slug": "speech-828249",
-     "title": "Louise Pratt \u2014 Documents \u2014 2023-03-08",
+     "title": "Louise Pratt — Documents — 2023-03-08",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -686,7 +686,7 @@
     },
     {
      "slug": "speech-944442",
-     "title": "Guivarra \u2014 Finance and Public Administration Legislation Committee - Finance and Public Administration Legislation Committee 01/12/2025 Estimates PRIME MINISTER AND CABINET PORTFOLIO National Indigenous Australians Agency \u2014 2025-12-01",
+     "title": "Guivarra — Finance and Public Administration Legislation Committee - Finance and Public Administration Legislation Committee 01/12/2025 Estimates PRIME MINISTER AND CABINET PORTFOLIO National Indigenous Australians Agency — 2025-12-01",
      "speaker": null,
      "party": null,
      "state": "federal",
@@ -694,7 +694,7 @@
     },
     {
      "slug": "speech-424024",
-     "title": "Blyth \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 09/02/2026 Estimates ATTORNEY-GENERAL'S PORTFOLIO Attorney-General's Department \u2014 2026-02-09",
+     "title": "Blyth — Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 09/02/2026 Estimates ATTORNEY-GENERAL'S PORTFOLIO Attorney-General's Department — 2026-02-09",
      "speaker": null,
      "party": null,
      "state": "federal",
@@ -702,7 +702,7 @@
     },
     {
      "slug": "speech-1292575",
-     "title": "John Ruddick \u2014 Closing the Gap Initiative \u2014 2025-06-05",
+     "title": "John Ruddick — Closing the Gap Initiative — 2025-06-05",
      "speaker": null,
      "party": null,
      "state": "nsw",
@@ -710,7 +710,7 @@
     },
     {
      "slug": "speech-1118190",
-     "title": "Couzens \u2014 Closing the Gap \u2014 2019-02-19",
+     "title": "Couzens — Closing the Gap — 2019-02-19",
      "speaker": null,
      "party": null,
      "state": "vic",
@@ -718,7 +718,7 @@
     },
     {
      "slug": "speech-826960",
-     "title": "Kate Thwaites \u2014 Private Members' Business \u2014 2023-02-06",
+     "title": "Kate Thwaites — Private Members' Business — 2023-02-06",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -726,7 +726,7 @@
     },
     {
      "slug": "speech-1197714",
-     "title": "Jana Stewart \u2014 Questions without Notice \u2014 2025-10-28",
+     "title": "Jana Stewart — Questions without Notice — 2025-10-28",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -734,7 +734,7 @@
     },
     {
      "slug": "speech-826829",
-     "title": "Deborah O'Neill \u2014 Motions \u2014 2013-12-12",
+     "title": "Deborah O'Neill — Motions — 2013-12-12",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -742,7 +742,7 @@
     },
     {
      "slug": "speech-1121451",
-     "title": "Shaoquett Moselmane \u2014 National Apology \u2014 2021-02-18",
+     "title": "Shaoquett Moselmane — National Apology — 2021-02-18",
      "speaker": null,
      "party": null,
      "state": "nsw",
@@ -750,7 +750,7 @@
     },
     {
      "slug": "speech-401836",
-     "title": "Gavin Pearce \u2014 2021-02-15",
+     "title": "Gavin Pearce — 2021-02-15",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
@@ -758,7 +758,7 @@
     },
     {
      "slug": "speech-305008",
-     "title": "Sharon Claydon \u2014 2015-02-11",
+     "title": "Sharon Claydon — 2015-02-11",
      "speaker": null,
      "party": "Labor",
      "state": "federal",

@@ -108,6 +108,10 @@ function filterExpression(f: {
   // field text everywhere. (Verified live: the legacy `fields` param cannot
   // mix with filter_expression; this not-clause is the supported form.)
   clauses.push({ not: { prop: 'field', type: 'generic' } })
+  // The machine brief is a text field of its own (da-summary-t-body): a
+  // paragraph matched there is a model's paraphrase, never the record, and
+  // must not surface as a passage or a source.
+  clauses.push({ not: { prop: 'field', type: 'text', name: 'da-summary-t-body' } })
   return { field: clauses.length === 1 ? clauses[0] : { and: clauses } }
 }
 
