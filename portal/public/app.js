@@ -3992,7 +3992,7 @@ function topicMoneyHTML(ind) {
   const donorRows = donors.sort((a, b) => (b.total || 0) - (a.total || 0)).slice(0, 6)
     .map((n) => [n.label, n.total || 0]);
   return `
-    <p class="kicker">The money beside the words</p>
+    <h3 class="subject-section-title">The money beside the words</h3>
     <p style="margin:0.2rem 0 0.6rem">While parliament debated this, ${esc(industryLabel(ind))}
       interests disclosed <b>${esc(fmtMoney(total))}</b> in donations to political parties.</p>
     ${barList(donorRows, { fmt: fmtMoney, heading: `Largest ${industryLabel(ind)} donors`,
@@ -4159,6 +4159,7 @@ async function openTopicPage(slug, manageFocus) {
     return;
   }
   body.innerHTML = subjectSkeleton("Topic", name, `<span id="subject-loader" class="subject-loader"></span>`);
+  body.querySelector(".subject-grid").classList.add("topic-page-grid");
   if (manageFocus) $("subject-title")?.focus();
   showPageLoader("subject-loader", "Counting the labelled record.");
   const sections = $("subject-sections");
@@ -4191,7 +4192,20 @@ async function openTopicPage(slug, manageFocus) {
        ${esc(labelled.toLocaleString())} labelled to date. The labelling pass is still running.</span>`;
 
   const share = count && labelled ? `${((count / labelled) * 100).toFixed(1)}%` : null;
-  box.hidden = false;
+  body.querySelector('.subject-head').insertAdjacentHTML('beforeend', `
+    <div class="topic-reader-tools">
+      <form class="topic-ask-form">
+        <label for="topic-question">Ask about ${esc(name)}</label>
+        <div><textarea id="topic-question" name="question" required rows="2">${esc(`What has parliament said about ${phrase}?`)}</textarea><button type="submit">Ask</button></div>
+      </form>
+      <p class="topic-reader-links"><a href="${esc(searchTopic)}">Search this topic</a>${report ? `<a href="/reports/${esc(report.slug)}">Read the ${esc(report.title)} report</a>` : ''}</p>
+    </div>`);
+  body.querySelector('.topic-ask-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const question = body.querySelector('#topic-question').value.trim();
+    if (question) goRoute(askHash(question));
+  });
+  box.hidden = true;
   box.innerHTML = infoboxHTML([
     ["Type", "Topic"],
     count !== null && ["Labelled so far", `<b>${esc(count.toLocaleString())}</b> speeches`],
@@ -4257,7 +4271,7 @@ async function openTopicPage(slug, manageFocus) {
     await loadMoneyData();
     if (currentSubjectKey !== key) return;
     const html = topicMoneyHTML(moneyInd);
-    if (html) sections.insertAdjacentHTML("beforeend", html);
+    if (html) sections.insertAdjacentHTML("beforeend", `<section class="topic-money">${html}</section>`);
   }
 
   await arcPromise;
