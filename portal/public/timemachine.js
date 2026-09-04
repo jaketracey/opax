@@ -719,7 +719,7 @@ const CSS = `
 .tm-picture-mat {
   display: flex; align-items: center; justify-content: center; width: 100%; height: min(56vh, 530px); min-height: 250px;
   padding: clamp(0.55rem, 2vw, 1.1rem); overflow: hidden;
-  border: 1px solid var(--line-strong, #8D897B); background: var(--paper-raised, #fff);
+  border: 1px solid var(--line, #DFDCD2); background: var(--paper-raised, #fff);
 }
 .tm-gallery-image {
   display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; min-width: 0; min-height: 0;
