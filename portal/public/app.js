@@ -4075,21 +4075,21 @@ function topicArcItemHTML(item, brief) {
   const date = String(item.date || "").slice(0, 10);
   const year = date.slice(0, 4) || "—";
   const passage = String(item.snippet || "").trim() || "Open the speech to read the passage.";
-  return `<li class="topic-arc-item">
+  return `<li class="topic-arc-item" data-arc-resource="${esc(item.resource || '')}">
     <time class="topic-arc-year"${date ? ` datetime="${esc(date)}"` : ""}>${esc(year)}</time>
     <div class="topic-arc-entry">
       <a class="topic-arc-source" href="/doc/${encodeURIComponent(item.slug)}">${esc(displayTitle(item))}</a>
-      <span class="result-meta">${metaHTML(item, { linkSpeaker: true, linkParty: true })}</span>
+      <span class="result-meta">${item.speaker ? `<a class="topic-arc-speaker" href="${esc(subjectHash('person', item.speaker))}">${item.party ? partyDotHTML(item.party) : ''}${esc(item.speaker)}</a>` : ''}${item.party ? `<span>${esc(item.party)}</span>` : ''}<span>${esc(PARLIAMENT_NAMES[item.state] || STATE_NAMES[item.state] || item.state || '')}${date ? ` · ${esc(fmtDate(date))}` : ''}</span></span>
       ${brief
         ? `<p class="topic-arc-brief">${esc(brief)}</p>`
-        : `<p class="topic-arc-passage"><span>Passage · no brief yet</span>${esc(passage)}</p>`}
+        : `<p class="topic-arc-passage"><span>Passage</span>${esc(passage)}</p>`}
     </div>
   </li>`;
 }
 
 async function renderTopicArc(slug, phrase, key, mount) {
-  mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3>
-    <p class="status">Reading the labelled speeches in date order…</p>`;
+  mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3><p class="status" role="status">Reading the labelled speeches…</p>`;
+  const active = () => currentSubjectKey === key && mount.isConnected;
   try {
     const params = searchQueryParams(phrase, {
       speaker: "", party: "", state: "", topic: slug, from: "", to: "",
@@ -4097,50 +4097,86 @@ async function renderTopicArc(slug, phrase, key, mount) {
     }, 1, "newest");
     params.set("per", String(SEARCH_EXPORT_MAX));
     const data = await api(`/api/search?${params}`);
-    if (currentSubjectKey !== key || !mount.isConnected) return;
+    if (!active()) return;
     const results = (data.results || []).filter((item) => item.slug);
     if (!results.length) {
-      mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3>
-        <p class="status">No dated, labelled speeches are in the search window yet.</p>`;
+      mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3><p class="status">No dated, labelled speeches are in the search window yet.</p>`;
       return;
     }
-    mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3>
-      <p class="status">Reading the available machine briefs…</p>`;
-    const briefs = await fetchBriefMap(results);
-    if (currentSubjectKey !== key || !mount.isConnected) return;
-    let order = "newest";
-    const paint = () => {
-      const sorted = [...results].sort((a, b) => {
-        if (!a.date) return b.date ? 1 : 0;
-        if (!b.date) return -1;
-        const byDate = String(a.date || "").localeCompare(String(b.date || ""));
-        return order === "oldest" ? byDate : -byDate;
+    const briefs = {};
+    const attempted = new Set();
+    let order = "newest", visible = 30, revision = 0;
+    let queue = Promise.resolve();
+    const sorted = () => [...results].sort((a, b) => {
+      if (!a.date) return b.date ? 1 : 0;
+      if (!b.date) return -1;
+      const cmp = String(a.date).localeCompare(String(b.date));
+      return order === "oldest" ? cmp : -cmp;
+    });
+    const enrich = (items) => {
+      const version = revision;
+      queue = queue.then(async () => {
+        const pending = items.filter((item) => /^[0-9a-f]{32}$/.test(item.resource) && !attempted.has(item.resource));
+        for (let i = 0; i < pending.length; i += 24) {
+          if (!active() || version !== revision) return;
+          const batch = pending.slice(i, i + 24);
+          batch.forEach((item) => attempted.add(item.resource));
+          Object.assign(briefs, await fetchBriefMap(batch));
+          if (!active()) return;
+          // Replace only passage text: controls, focus and list position survive reads.
+          for (const row of mount.querySelectorAll('[data-arc-resource]')) {
+            const brief = briefs[row.dataset.arcResource];
+            const passage = row.querySelector('.topic-arc-passage');
+            if (brief && passage) {
+              passage.className = 'topic-arc-brief';
+              passage.textContent = brief;
+            }
+          }
+        }
       });
-      const briefCount = sorted.filter((item) => briefs[item.resource]).length;
-      mount.innerHTML = `
-        <div class="topic-arc-head">
-          <h3 class="topic-arc-heading">The arc of this debate</h3>
-          <div class="quiet-toggle" role="group" aria-label="Debate chronology">
-            <button type="button" data-arc-order="newest" aria-pressed="${order === "newest"}">Newest</button>
-            <button type="button" data-arc-order="oldest" aria-pressed="${order === "oldest"}">Oldest</button>
-          </div>
-        </div>
-        <ol class="topic-arc-list">${sorted.map((item) => topicArcItemHTML(item, briefs[item.resource])).join("")}</ol>
-        <p class="fineprint">${briefCount.toLocaleString()} of these ${sorted.length.toLocaleString()} strongest labelled matches carry a machine brief so far. The rest retain their opening passage. Each entry opens the speech; <a href="${esc(searchHash(phrase, { topic: slug }, 1, "newest"))}">search the debate</a> for the full retrieval window.</p>`;
-      for (const button of mount.querySelectorAll("[data-arc-order]")) {
-        button.addEventListener("click", () => {
-          if (button.dataset.arcOrder === order) return;
-          order = button.dataset.arcOrder;
-          paint();
-        });
-      }
+    };
+    const paint = () => {
+      const items = sorted().slice(0, visible);
+      mount.innerHTML = `<div class="topic-arc-head">
+        <h3 class="topic-arc-heading">The arc of this debate</h3>
+        <div class="quiet-toggle" role="group" aria-label="Debate chronology">
+          <button type="button" data-arc-order="newest" aria-pressed="${order === 'newest'}">Newest</button>
+          <button type="button" data-arc-order="oldest" aria-pressed="${order === 'oldest'}">Oldest</button>
+        </div></div>
+        <p class="fineprint">A window of ${results.length.toLocaleString()} labelled matches, ordered by date. Available machine briefs replace passages as they arrive.</p>
+        <ol class="topic-arc-list">${items.map((item) => topicArcItemHTML(item, briefs[item.resource])).join('')}</ol>
+        <div class="topic-arc-footer"><p class="fineprint" role="status">Showing ${items.length} of ${results.length} matches.</p>
+        ${items.length < results.length ? `<button type="button" data-arc-more>Show ${Math.min(30, results.length - items.length)} more</button>` : ''}
+        <a href="${esc(searchHash(phrase, { topic: slug }, 1, 'newest'))}">Search the full debate</a></div>`;
+      mount.querySelectorAll('[data-arc-order]').forEach((button) => button.addEventListener('click', () => {
+        if (order === button.dataset.arcOrder) return;
+        order = button.dataset.arcOrder;
+        visible = 30;
+        revision++;
+        paint();
+        mount.querySelector(`[data-arc-order="${order}"]`).focus({ preventScroll: true });
+        enrich(sorted().slice(0, visible));
+      }));
+      mount.querySelector('[data-arc-more]')?.addEventListener('click', () => {
+        const from = visible;
+        visible += 30;
+        const next = sorted().slice(from, visible);
+        mount.querySelector('.topic-arc-list').insertAdjacentHTML('beforeend', next.map((item) => topicArcItemHTML(item, briefs[item.resource])).join(''));
+        const count = Math.min(visible, results.length);
+        mount.querySelector('[role="status"]').textContent = `Showing ${count} of ${results.length} matches.`;
+        const button = mount.querySelector('[data-arc-more]');
+        if (count === results.length) button.remove();
+        else button.textContent = `Show ${Math.min(30, results.length - count)} more`;
+        const first = mount.querySelectorAll('.topic-arc-source')[from];
+        first?.focus({ preventScroll: true });
+        first?.closest('.topic-arc-item').scrollIntoView({ block: 'start', behavior: 'instant' });
+        enrich(next);
+      });
     };
     paint();
+    enrich(sorted().slice(0, visible));
   } catch {
-    if (currentSubjectKey === key && mount.isConnected) {
-      mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3>
-        <p class="status">The chronological view could not be loaded. <a href="${esc(searchHash(phrase, { topic: slug }, 1, "newest"))}">Search the labelled speeches instead</a>.</p>`;
-    }
+    if (active()) mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3><p class="status">The chronological view could not be loaded. <a href="${esc(searchHash(phrase, { topic: slug }, 1, 'newest'))}">Search the labelled speeches instead</a>.</p>`;
   }
 }
 
@@ -4283,6 +4319,7 @@ async function openTopicsIndex(manageFocus) {
   currentSubjectKey = key;
   destroySubjectMap();
   const body = $("subject-body");
+  body.classList.remove("subject-person");
   body.innerHTML = `
     <div class="subject-head">
       <h2 id="subject-title" tabindex="-1">Topics A-Z</h2>
@@ -4291,6 +4328,7 @@ async function openTopicsIndex(manageFocus) {
     <div id="subject-sections"></div>`;
   if (manageFocus) $("subject-title")?.focus();
   showPageLoader("subject-loader", "Counting the labelled record.");
+  const tidePromise = api("/api/tide").catch(() => null);
   let data = null;
   try { data = await api("/api/topics"); } catch { /* honest failure below */ }
   if (currentSubjectKey !== key) return;
@@ -4304,17 +4342,55 @@ async function openTopicsIndex(manageFocus) {
     so far. The labelling pass is still running, so every count below is a floor.</span>`;
   const known = data.topics.filter((t) => TOPICS[t.slug])
     .sort((a, b) => TOPICS[a.slug].localeCompare(TOPICS[b.slug]));
-  const li = (t) => `<li><a href="${esc(subjectHash("topic", t.slug))}" class="source-title">${esc(TOPICS[t.slug])}</a>
-    <span class="result-meta">${esc(t.count.toLocaleString())} labelled so far</span></li>`;
-  const half = Math.ceil(known.length / 2);
+  const li = (t) => `<li><a href="${esc(subjectHash("topic", t.slug))}" class="topic-index-row">
+    <span class="topic-index-name">${esc(TOPICS[t.slug])}</span>
+    <span class="topic-index-count">${esc(Number(t.count || 0).toLocaleString())}<span class="visually-hidden"> labelled speeches</span></span>
+    <span class="topic-index-description" title="${esc(topicIndexDescription(t.slug))}">${esc(topicIndexDescription(t.slug))}</span>
+    <span class="topic-index-spark" data-topic-spark="${esc(t.slug)}" aria-hidden="true"></span>
+  </a></li>`;
   $("subject-sections").innerHTML = `
-    <div class="split-list">
-      <ul class="subject-list" role="list">${known.slice(0, half).map(li).join("")}</ul>
-      <ul class="subject-list" role="list">${known.slice(half).map(li).join("")}</ul>
-    </div>
+    <ul class="topic-index-list" role="list">${known.map(li).join("")}</ul>
     <p class="fineprint">A machine pass is labelling every speech in the corpus by subject;
     these counts are live and grow as it runs. A topic with few speeches yet is not a quiet
     debate, just one the pass has not reached.</p>`;
+  const tide = await tidePromise;
+  if (currentSubjectKey !== key || !tide) return;
+  for (const spark of body.querySelectorAll('[data-topic-spark]')) {
+    const series = tide.topics?.[spark.dataset.topicSpark] || [];
+    const max = Math.max(...series.map((point) => Number(point.share) || 0), Number.EPSILON);
+    spark.innerHTML = series.map((point) => `<i style="height:${Math.max(2, (Number(point.share) || 0) / max * 24)}px"></i>`).join('');
+  }
+  body.querySelector('.topic-index-list').insertAdjacentHTML('beforebegin', '<p class="fineprint">Counts are labelled speeches. Small bars show the federal share over time, scaled within each topic.</p>');
+}
+
+// Display descriptions mirror the canonical enrichment taxonomy in scripts/arag_enrich.py.
+function topicIndexDescription(slug) {
+  return ({
+    "gambling": "Gambling, poker machines, casinos, wagering, betting advertising and gambling harm.",
+    "financial-services": "Banks, insurance, superannuation, financial regulation and consumer credit.",
+    "mining-energy": "Mining, coal, gas, oil, resources projects and energy markets.",
+    "climate-environment": "Climate change, emissions targets, renewables, conservation, water and environmental protection.",
+    "property-construction": "Property development, construction industry, planning and building regulation.",
+    "housing": "Housing affordability, home ownership, rents, social and public housing.",
+    "health": "Hospitals, Medicare, aged care, mental health, pharmaceuticals and private health insurance.",
+    "media-communications": "Media ownership, broadcasting, journalism, telecommunications and digital platforms.",
+    "hospitality-alcohol": "Hotels, clubs, alcohol, liquor licensing and tourism.",
+    "defence-security": "Defence, national security, veterans, intelligence and policing.",
+    "agriculture": "Farming, live exports, drought, biosecurity and regional industries.",
+    "unions-workplace": "Industrial relations, unions, wages, workplace safety and employment conditions.",
+    "immigration": "Immigration, asylum seekers, detention, citizenship and multicultural affairs.",
+    "indigenous-affairs": "First Nations peoples, reconciliation, native title, Closing the Gap and the Voice.",
+    "tax-budget": "Taxation, the budget, GST, deficits and fiscal policy.",
+    "education": "Schools, universities, TAFE, childcare and research funding.",
+    "welfare-social": "Social security, pensions, disability support, NDIS and community services.",
+    "integrity-democracy": "Political integrity, corruption, donations, lobbying, elections and accountability.",
+    "infrastructure-transport": "Roads, rail, ports, public transport and infrastructure investment.",
+    "justice-law": "Courts, criminal law, civil liberties, consumer law and legal system.",
+    "foreign-affairs": "Foreign policy, trade agreements, aid, defence alliances and international relations.",
+    "configs": "running",
+    "title": "?",
+    "usermetadata": "computedmetadata"
+})[slug] || '';
 }
 
 // --- encyclopedia indexes (directories) -------------------------------------

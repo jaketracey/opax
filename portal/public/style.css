@@ -2529,3 +2529,24 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-subject .topic-ask-form textarea { flex: 1; min-width: 0; resize: vertical; padding: .65rem; border: 1px solid var(--line-strong); background: var(--paper); color: var(--ink); font: 400 1rem/1.5 var(--sans); }
 #panel-subject .topic-ask-form button { min-width: 44px; }
 #panel-subject .topic-tide .coverage-rule figcaption { margin: .8rem 0 .4rem; font: 400 .8125rem/1.5 var(--sans); color: var(--ink-soft); }
+
+#panel-subject .topic-arc-entry .result-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .2rem .65rem; font: 400 .875rem/1.5 var(--sans); }
+#panel-subject .topic-arc-speaker { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; }
+#panel-subject .topic-arc-entry .result-meta > span:last-child { flex-basis: 100%; }
+#panel-subject .topic-arc-footer { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+#panel-subject .topic-arc-footer .fineprint { flex-basis: 100%; margin: 0; }
+#panel-subject .topic-arc-footer :is(button, a) { min-height: 44px; display: inline-flex; align-items: center; }
+#panel-subject .topic-index-list { list-style: none; padding: 0; margin: 1rem 0; max-width: 960px; }
+#panel-subject .topic-index-list li { border-top: 1px solid var(--line); }
+#panel-subject .topic-index-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .4rem .75rem; padding: .85rem 0; min-height: 44px; color: var(--ink); text-decoration: none; }
+#panel-subject .topic-index-name { font: 600 1.05rem/1.4 var(--serif); }
+#panel-subject .topic-index-count { font: 400 .9375rem/1.5 var(--sans); font-variant-numeric: tabular-nums; }
+#panel-subject .topic-index-description { font: 400 .875rem/1.5 var(--sans); color: var(--ink-soft); }
+#panel-subject .topic-index-spark { display: flex; gap: 3px; align-items: flex-end; justify-content: flex-end; height: 26px; align-self: end; }
+#panel-subject .topic-index-spark i { width: 5px; background: var(--bronze); }
+#panel-subject .topic-index-row:hover .topic-index-name { color: var(--bronze-ink); text-decoration: underline; }
+
+#panel-subject .topic-index-description { grid-column: 1 / -1; grid-row: 2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#panel-subject .topic-index-spark { grid-column: 2; grid-row: 3; height: 16px; }
+#panel-subject .topic-index-spark i { max-height: 16px; }
+#panel-subject .topic-arc-item { scroll-margin-top: 100px; }
