@@ -3817,8 +3817,7 @@ async function buildPeopleDirectory() {
 
   return {
     title: "Parliamentarians",
-    lede: `<b>${num(items.length)}</b> people who spoke in ${stateCounts.size} parliaments since the 1993 election,
-      with ${num(speeches)} speeches between them under the site's corpus rule. Every name opens its entry.`,
+    lede: "",
     tiles: [[num(items.length), "people listed"], [String(partyCounts.size), "parties"],
       [String(stateCounts.size), "parliaments"], [num(speeches), "speeches in the corpus"], [num(withVotes), "with a voting record"]],
     items,
@@ -3916,8 +3915,7 @@ async function buildPartiesDirectory() {
 
   return {
     title: "Parties",
-    lede: `<b>${num(items.length)}</b> parties, from the record's party labels, the parliamentarians directory and the
-      disclosure returns of ${files.length} commission${files.length === 1 ? "" : "s"}. Every name opens its entry.`,
+    lede: "",
     tiles: [[num(items.length), "parties listed"], [num(live?.labelled), "speeches with a party label"],
       [num(members), "directory members with a party"], [fmtMoney(aecTotal), "disclosed to the AEC, all parties"]],
     items,
@@ -4038,8 +4036,7 @@ async function buildDonorsDirectory() {
   const commissions = files.map(([j, d]) => d.meta?.commission || (j === "federal" ? "Australian Electoral Commission" : j));
   return {
     title: "Donors",
-    lede: `The <b>${num(items.length)}</b> largest disclosed donors to registered parties across ${files.length} disclosure
-      files, merged where one name appears in more than one. Every name opens its entry.`,
+    lede: "",
     tiles: [[num(items.length), "donors listed"], [fmtMoney(aecTotal), "disclosed to the AEC"],
       [String(partyCounts.size), "parties given to"], [num(withAccess), "with lobbyists or meetings"]],
     items,
