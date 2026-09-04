@@ -3626,49 +3626,48 @@ function partyReceiptsHTML(rows, registerURL) {
       branches: Number(r[4]) || 0,
       clamped: rawDonations + rawOther > receipts,
     };
-  }).filter((r) => r.year && r.receipts > 0).reverse();
+  }).filter((r) => r.year && r.receipts > 0).sort((a, b) => b.year.localeCompare(a.year));
   if (!series.length) return "";
   const latest = series[0];
   const max = Math.max(...series.map((r) => r.receipts), 1);
-  const peak = series.find((r) => r.receipts === max);
   const pct = (value, total) => total > 0 ? Math.round((value / total) * 100) : 0;
   const srcFigure = (value, label) => `<a class="fig-src" href="${esc(source)}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(value)}</a>`;
   const clamped = series.filter((r) => r.clamped).length;
-  const rowHTML = series.map((r) => {
+  const rowHTML = series.map((r, index) => {
     const donationPct = r.receipts ? (r.donations / r.receipts) * 100 : 0;
     const otherPct = r.receipts ? (r.other / r.receipts) * 100 : 0;
     const missingPct = r.receipts ? (r.notItemised / r.receipts) * 100 : 0;
-    const showPct = r === latest || r === peak;
     const detail = `${r.year}: receipts ${fmtMoney(r.receipts)}; itemised donations ${fmtMoney(r.donations)}; itemised other receipts ${fmtMoney(r.other)}; not itemised ${fmtMoney(r.notItemised)} (${pct(r.notItemised, r.receipts)}%)`;
-    return `<div class="receipts-row" title="${esc(detail)}">
+    return `<a class="receipts-row${index >= 10 ? " receipts-older" : ""}" href="${esc(source)}" rel="noopener" target="_blank" aria-label="${esc(detail)}, AEC source">
       <span class="receipts-year">${esc(r.year)}</span>
       <span class="receipts-track" aria-hidden="true"><span class="receipts-bar" style="width:${((r.receipts / max) * 100).toFixed(1)}%">
         <i class="receipts-donations" style="flex-basis:${donationPct.toFixed(1)}%"></i>
         <i class="receipts-other" style="flex-basis:${otherPct.toFixed(1)}%"></i>
         <i class="receipts-unitemised" style="flex-basis:${missingPct.toFixed(1)}%"></i>
       </span></span>
-      <span class="receipts-value">${srcFigure(fmtMoney(r.receipts), `${r.year} receipts ${fmtMoney(r.receipts)}, AEC source`)}</span>
-      <span class="receipts-pct">${showPct ? srcFigure(`${pct(r.notItemised, r.receipts)}%`, `${r.year}, ${pct(r.notItemised, r.receipts)} percent not itemised, AEC source`) : ""}</span>
-    </div>`;
+      <span class="receipts-value">${esc(fmtMoney(r.receipts))}</span>
+      <span class="receipts-pct">${pct(r.notItemised, r.receipts)}%<span class="receipts-pct-label"> not itemised</span></span>
+    </a>`;
   }).join("");
   const table = `<div class="visually-hidden"><table><caption>Receipts on the return</caption>
     <thead><tr><th scope="col">Year</th><th scope="col">Receipts</th><th scope="col">Itemised donations</th><th scope="col">Itemised other receipts</th><th scope="col">Not itemised</th></tr></thead>
-    <tbody>${series.map((r) => `<tr><th scope="row"><a href="${esc(source)}" rel="noopener" target="_blank">${esc(r.year)}</a></th>${[r.receipts, r.donations, r.other, r.notItemised].map((v) => `<td><a href="${esc(source)}" rel="noopener" target="_blank">${esc(fmtMoney(v))}</a></td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    <tbody>${series.map((r) => `<tr><th scope="row">${esc(r.year)}</th>${[r.receipts, r.donations, r.other, r.notItemised].map((v) => `<td>${esc(fmtMoney(v))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
   return `<section class="party-receipts" aria-labelledby="party-receipts-heading">
     <h3 class="subject-section-title" id="party-receipts-heading">Receipts on the return</h3>
     <div class="receipts-legend" aria-label="Receipt categories">
-      <span><i class="receipts-swatch receipts-donations" aria-hidden="true"></i>itemised as donations</span>
-      <span><i class="receipts-swatch receipts-other" aria-hidden="true"></i>itemised as other receipts</span>
-      <span><i class="receipts-swatch receipts-unitemised" aria-hidden="true"></i>not itemised on the return</span>
+      <span><i class="receipts-swatch receipts-donations" aria-hidden="true"></i>Donations</span>
+      <span><i class="receipts-swatch receipts-other" aria-hidden="true"></i>Other receipts</span>
+      <span><i class="receipts-swatch receipts-unitemised" aria-hidden="true"></i>Not itemised</span>
     </div>
     <div class="tiles receipts-tiles">
       <div class="tile"><b>${srcFigure(fmtMoney(latest.receipts), `${latest.year} receipts ${fmtMoney(latest.receipts)}, AEC source`)}</b><span>receipts on the ${esc(latest.year)} return${latest.branches > 1 ? `, ${latest.branches} branches summed` : ""}</span></div>
       <div class="tile"><b>${srcFigure(fmtMoney(latest.donations), `${latest.year} itemised donations ${fmtMoney(latest.donations)}, AEC source`)}</b><span>itemised as donations</span></div>
       <div class="tile"><b>${srcFigure(`${pct(latest.notItemised, latest.receipts)}%`, `${latest.year}, ${pct(latest.notItemised, latest.receipts)} percent not itemised, AEC source`)}</b><span>of receipts not itemised</span></div>
     </div>
-    <div class="receipts-rows">${rowHTML}</div>
+    ${series.length > 10 ? `<button type="button" class="secondary party-years-toggle" aria-expanded="false" aria-controls="party-receipts-rows" data-years="${series.length}">Show all ${series.length} years</button>` : ""}
+    <div class="receipts-rows" id="party-receipts-rows">${rowHTML}</div>
     ${table}
-    <p class="fineprint">Bars are scaled to the party's largest year shown. “Not itemised” is receipts minus the sums itemised as donations and as other receipts on the same return; the AEC does not require receipts under the disclosure threshold to be itemised. Public election funding is left where the return puts it.${clamped ? ` ${clamped} historic ${clamped === 1 ? "row reports" : "rows report"} itemised components above the headline receipts total; ${clamped === 1 ? "its bar is" : "their bars are"} clamped to that total.` : ""} Source: <a href="${esc(source)}" rel="noopener" target="_blank">AEC Transparency Register, annual returns, CC BY 4.0 ↗︎</a></p>
+    <p class="fineprint">Bars share one scale across all ${series.length} years, including older years. “Not itemised” is receipts minus the sums itemised as donations and as other receipts on the same return; the AEC does not require receipts under the disclosure threshold to be itemised. Public election funding is left where the return puts it.${clamped ? ` ${clamped} historic ${clamped === 1 ? "row reports" : "rows report"} itemised components above the headline receipts total; ${clamped === 1 ? "its bar is" : "their bars are"} clamped to that total.` : ""} Source: <a href="${esc(source)}" rel="noopener" target="_blank">AEC annual returns ↗︎</a> · CC BY 4.0.</p>
   </section>`;
 }
 
@@ -3681,7 +3680,7 @@ async function renderPartyDebts(label, sections) {
   slot.id = "subject-party-debts";
   sections.appendChild(slot);
   const extras = await loadAecExtras();
-  if (currentSubjectKey !== key) return;
+  if (currentSubjectKey !== key || !slot.isConnected) return;
   const p = extras?.parties?.[label];
   const returns = p?.returns || [];
   const d = p?.debts, b = p?.benefits, ents = p?.associated_entities || [];
@@ -3689,7 +3688,7 @@ async function renderPartyDebts(label, sections) {
   const endOf = (fy) => String(Number(String(fy).slice(0, 4)) + 1); // "2024-25" -> "2025"
   const reg = safeUrl(extras.meta?.register_url);
   let html = partyReceiptsHTML(returns, reg);
-  if (d || b || ents.length) html += `<p class="kicker">Debts and other funding</p>`;
+  if (d || b || ents.length) html += `<h3 class="subject-section-title">Debts and other funding</h3>`;
   if (d) {
     const lenders = (d.top || []).map((l) => [l.type === "Financial" ? `${l.name} (financial institution)` : l.name, l.amount || 0]);
     html += `<div class="tiles">
@@ -3705,12 +3704,12 @@ async function renderPartyDebts(label, sections) {
   }
   if (b) {
     const top = (b.top || []).slice(0, 3).map((t) => `${t.name} ${fmtMoney(t.amount || 0)}`).join(", ");
-    html += `<p style="margin:0.6rem 0 0"><b>${esc(fmtMoney(b.total || 0))}</b> in discretionary benefits in ${esc(b.year)}${top ? `: ${esc(top)}` : ""}.
+    html += `<p class="party-benefits"><b>${esc(fmtMoney(b.total || 0))}</b> in discretionary benefits in ${esc(b.year)}${top ? `: ${esc(top)}` : ""}.
       These are government payments other than public election funding, as listed on the return.</p>`;
   }
   if (ents.length) {
     const shown = ents.slice(0, 6);
-    html += `<p class="kicker kicker-sub">Associated entities</p>
+    html += `<h3 class="subject-section-title">Associated entities</h3>
       <ul class="subject-list" role="list">${shown.map((e) => `
       <li><a class="source-title" href="${esc(subjectHash("campaigner", e.name))}">${esc(e.name)}</a>
         <span class="result-meta">${esc([e.year, e.receipts != null ? `receipts ${fmtMoney(e.receipts)}` : "",
@@ -3721,6 +3720,13 @@ async function renderPartyDebts(label, sections) {
     annual returns, all branches summed: bank loans sit beside trade creditors and tax owed, and a balance is not new
     borrowing. Creditors under the disclosure threshold are not itemised. Source: AEC Transparency Register, CC BY 4.0.${reg ? ` <a href="${esc(reg)}" rel="noopener" target="_blank">Open the register ↗︎</a>` : ""}</p>`;
   slot.innerHTML = html;
+  const yearsToggle = slot.querySelector(".party-years-toggle");
+  yearsToggle?.addEventListener("click", () => {
+    const expanded = yearsToggle.getAttribute("aria-expanded") !== "true";
+    yearsToggle.setAttribute("aria-expanded", String(expanded));
+    yearsToggle.closest(".party-receipts").classList.toggle("party-years-expanded", expanded);
+    yearsToggle.textContent = expanded ? "Show newest 10 years" : `Show all ${yearsToggle.dataset.years} years`;
+  });
   if (returns.length) {
     const latest = returns[returns.length - 1];
     const receipts = Math.max(0, Number(latest[1]) || 0);
@@ -3733,6 +3739,70 @@ async function renderPartyDebts(label, sections) {
   }
   if (d) $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Debts at 30 June ${esc(endOf(d.year))}</dt><dd><b>${esc(fmtMoney(d.total || 0))}</b></dd>`);
+}
+
+/** Count people, not the multiple Hansard spellings of one member. */
+async function renderPartyMembers(label, head, key) {
+  const slot = document.createElement("section");
+  slot.className = "party-members";
+  slot.setAttribute("aria-label", "Party members");
+  slot.innerHTML = `<p class="status">Reading the members directory…</p>`;
+  head.appendChild(slot);
+  const data = await loadParliamentarians();
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  if (!data?.people?.length) {
+    slot.innerHTML = `<p class="status">Member counts are unavailable.</p>`;
+    return;
+  }
+  const identity = (person) => person.pid ? `pid:${person.pid}` : `name:${String(person.full || person.name).trim().toLowerCase()}`;
+  const sitting = new Set(), speakers = new Set();
+  for (const person of data.people) {
+    if (person.current && samePartyLabel(person.party_now || person.party, label)) sitting.add(identity(person));
+    if (person.speeches > 0 && [person.party, ...(person.parties || [])].some((party) => party && samePartyLabel(party, label))) speakers.add(identity(person));
+  }
+  const directoryParty = data.people.flatMap((person) => [person.party, ...(person.parties || [])])
+    .find((party) => party && samePartyLabel(party, label)) || label;
+  slot.innerHTML = `<div class="party-member-counts">
+    <span><b>${sitting.size.toLocaleString()}</b> sitting ${sitting.size === 1 ? "member" : "members"} in the directory</span>
+    <span><b>${speakers.size.toLocaleString()}</b> recorded ${speakers.size === 1 ? "speaker" : "speakers"}</span>
+    <a href="${esc(directoryHash("person", { party: directoryParty }))}">Browse people →</a>
+  </div>
+  <p class="fineprint">Directory snapshot${data.meta?.generated ? ` · ${esc(fmtDate(data.meta.generated))}` : ""}. Speakers since ${esc(String(data.meta?.since || "1993").slice(0, 4))}, with at least ${Number(data.meta?.floor) || 5} speeches; member IDs counted once. Sitting members use their current party.</p>`;
+}
+
+/** Party-only mentions: existing result styling with optional stored briefs. */
+async function renderPartyMentions(label, sections, key) {
+  const slot = document.createElement("section");
+  slot.className = "party-mentions";
+  slot.innerHTML = `<h3 class="subject-section-title">In parliament</h3><p class="status">Finding mentions in the record…</p>`;
+  sections.appendChild(slot);
+  const allLink = `<p class="fineprint"><a href="${esc(searchHash(`"${label}"`, {}))}">All mentions in the record</a></p>`;
+  try {
+    const [data, roster] = await Promise.all([
+      api(`/api/search?${new URLSearchParams({ q: `"${label}"`, top_k: "6" })}`), loadParliamentarians(),
+    ]);
+    if (currentSubjectKey !== key || !slot.isConnected) return;
+    const results = (data.results || []).slice(0, 5);
+    const byName = new Map((roster?.people || []).map((person) => [person.name.toLowerCase(), person.party_now || person.party]));
+    for (const result of results) if (!result.party && result.speaker) result.party = byName.get(String(result.speaker).toLowerCase()) || null;
+    const paint = (briefs) => {
+      if (currentSubjectKey !== key || !slot.isConnected) return;
+      slot.innerHTML = `<h3 class="subject-section-title">In parliament</h3>
+        ${results.length ? `<ul class="subject-list" role="list">${results.map((result) => {
+          const brief = briefs[result.resource];
+          const passage = String(result.snippet || "").trim();
+          const excerpt = passage.length > 240 ? `${passage.slice(0, 240).replace(/\s+\S*$/, "")}…` : passage;
+          return `<li><a href="/doc/${encodeURIComponent(result.slug)}" class="source-title doc-title">${esc(displayTitle(result))}</a>
+            <span class="result-meta">${metaHTML(result, { linkSpeaker: true, linkParty: true })}</span>
+            <p class="${brief ? "party-mention-brief" : "snippet"}">${brief ? `<span class="party-brief-label">Machine brief</span>` : ""}${esc(brief || excerpt || "Open the speech to read the passage.")}</p></li>`;
+        }).join("")}</ul>` : `<p class="status">No mentions found in the indexed record.</p>`}${allLink}`;
+    };
+    paint({});
+    const briefs = await fetchBriefMap(results);
+    if (Object.keys(briefs).length) paint(briefs);
+  } catch {
+    if (currentSubjectKey === key && slot.isConnected) slot.innerHTML = `<h3 class="subject-section-title">In parliament</h3><p class="status">Mentions could not be loaded.</p>${allLink}`;
+  }
 }
 
 // --- voting record on person pages -------------------------------------------
@@ -3992,6 +4062,8 @@ async function openSubject(kind, name, manageFocus) {
       fmt: fmtMoney,
       heading: isParty ? "Where it came from" : "Where the money went",
       linkTo: (nm) => subjectHash(isParty ? "donor" : "party", nm),
+      className: isParty ? "party-flow-bars" : "",
+      detail: isParty ? (nm) => industryLabel(moneyData.nodes.find((n) => n.kind === "donor" && n.label === nm)?.industry || "Industry not recorded") : null,
       partyDots: !isParty, // donor page rows are parties; party page rows are donors
     }));
     if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
@@ -3999,9 +4071,14 @@ async function openSubject(kind, name, manageFocus) {
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
     if (!isParty) renderDonorInterests(node.label, sections);
     if (!isParty) renderDonorStateMoney(node.label, sections);
-    if (isParty) renderPartyDebts(node.label, sections);
+    if (isParty) {
+      renderPartyMembers(node.label, body.querySelector(".subject-head"), key);
+      renderPartyDebts(node.label, sections);
+    }
     renderDonorAccess(node.label, sections);
-    await subjectMentions(node.label, sections, "In parliament");
+    if (isParty) await renderPartyMentions(node.label, sections, key);
+    else await subjectMentions(node.label, sections, "In parliament");
+    if (isParty && currentSubjectKey !== key) return;
     subjectNews(node.label, sections);
     mountSubjectMap(node.id);
     return;

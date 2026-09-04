@@ -2872,3 +2872,127 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 .subject-person .votes-tiles { display: grid; }
 .subject-person .votes-tiles .tile { min-width: 0; }
 .subject-person .interests-items .interests-desc, .subject-person .interests-items .result-meta { display: block; }
+/* ==== page-party: Party entry pages (/subject/party/<name>) ==== */
+#panel-subject .party-flow-bars .barrow {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.2rem 0.75rem; padding: 0.45rem 0; margin: 0;
+}
+#panel-subject .party-flow-bars .barrow-name {
+  white-space: normal; overflow-wrap: anywhere; min-height: 44px;
+  display: flex; align-items: center; line-height: 1.45;
+}
+#panel-subject .party-flow-bars .barrow-value { white-space: nowrap; font-weight: 600; }
+#panel-subject .party-flow-bars .barrow-track { grid-column: 1 / -1; grid-row: 2; height: 4px; }
+#panel-subject .party-flow-bars figcaption {
+  font: 700 1.25rem/1.4 var(--serif); text-transform: none; letter-spacing: normal; color: var(--ink);
+}
+#panel-subject .party-receipts .receipts-legend { font-size: 0.8125rem; gap: 0.5rem 0.8rem; }
+#panel-subject .party-receipts .receipts-legend span { white-space: nowrap; }
+#panel-subject .party-receipts .receipts-row {
+  grid-template-columns: minmax(0, 1fr) auto; gap: 0 0.5rem;
+  padding: 0.3rem 0; font-size: 0.875rem; border-bottom: 1px solid var(--line);
+}
+#panel-subject .party-receipts .receipts-year { color: var(--ink-soft); grid-column: 1; grid-row: 1; }
+#panel-subject .party-receipts .receipts-value { grid-column: 2; grid-row: 1; font-weight: 600; }
+#panel-subject .party-receipts .receipts-track { grid-column: 1; grid-row: 2; height: 12px; }
+#panel-subject .party-receipts .receipts-pct { grid-column: 2; grid-row: 2; font-size: 0.8125rem; font-weight: 400; }
+#panel-subject .party-receipts .receipts-row a { display: inline-flex; align-items: center; min-height: 44px; }
+#panel-subject .party-receipts .receipts-bar { gap: 0; }
+#panel-subject .party-years-toggle { display: none; min-height: 44px; margin-top: 0.75rem; }
+#subject-party-debts .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem 1rem; }
+#subject-party-debts .tile { min-width: 0; max-width: none; border-top-width: 1px; }
+#subject-party-debts .tile b { font-size: 1.55rem; }
+#subject-party-debts .tile:last-child { grid-column: 1 / -1; }
+#subject-party-debts .fineprint { font-size: 0.875rem; line-height: 1.65; }
+@media (max-width: 700px) {
+  #panel-subject .party-years-toggle { display: inline-flex; align-items: center; }
+  #panel-subject .party-receipts:not(.party-years-expanded) .receipts-older { display: none; }
+}
+@media (min-width: 701px) {
+  #subject-party-debts .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #subject-party-debts .tile:last-child { grid-column: auto; }
+  #panel-subject .party-receipts .receipts-row { grid-template-columns: 5rem minmax(0, 1fr) 5rem 9rem; }
+  #panel-subject .party-receipts .receipts-track { grid-column: 2; grid-row: 1; }
+  #panel-subject .party-receipts .receipts-value { grid-column: 3; }
+  #panel-subject .party-receipts .receipts-pct { grid-column: 4; grid-row: 1; }
+}
+#panel-subject .party-receipts a.receipts-row {
+  min-height: 56px; row-gap: 0.4rem; text-decoration: none;
+}
+#panel-subject .party-receipts a.receipts-row:hover { background: var(--bronze-wash); }
+#subject-party-debts > .chart .barrow {
+  grid-template-columns: minmax(0, 1fr) auto; gap: 0.35rem 0.75rem; padding: 0.4rem 0;
+}
+#subject-party-debts > .chart .barrow-name { white-space: normal; overflow-wrap: anywhere; line-height: 1.45; }
+#subject-party-debts > .chart .barrow-track { grid-column: 1 / -1; grid-row: 2; height: 4px; }
+#subject-party-debts > .chart .barrow-value { white-space: nowrap; }
+#panel-subject .party-flow-bars .barrow-value small {
+  max-width: 7.5rem; margin-top: 0.35rem; white-space: normal;
+  font: 400 0.8125rem/1.4 var(--sans); color: var(--ink-soft);
+}
+#panel-subject .party-flow-bars .barrow-value small::before {
+  content: ""; display: inline-block; width: 0.45em; height: 0.45em;
+  margin-right: 0.35em; border-radius: 50%; background: var(--bronze); vertical-align: 0.1em;
+}
+#panel-subject .party-members { border-top: 1px solid var(--line); padding-top: 0.8rem; margin: 0.75rem 0 1.5rem; }
+#panel-subject .party-member-counts { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem 1.5rem; font: 400 0.875rem/1.5 var(--sans); }
+#panel-subject .party-member-counts b { font: 700 1.4rem/1.4 var(--serif); font-variant-numeric: tabular-nums; }
+#panel-subject .party-member-counts a { display: inline-flex; align-items: center; min-height: 44px; }
+#panel-subject .party-members .fineprint { margin: 0.35rem 0 0; font-size: 0.8125rem; line-height: 1.6; max-width: 75ch; }
+#subject-party-debts .party-benefits,
+#panel-subject .party-mentions .snippet,
+#panel-subject .party-mention-brief { font: 400 1rem/1.7 var(--serif); color: var(--ink); }
+#panel-subject .party-mentions .snippet { display: block; -webkit-line-clamp: unset; overflow: visible; }
+#panel-subject .party-mentions .source-title { font: 700 1rem/1.5 var(--serif); display: inline-flex; align-items: center; min-height: 44px; }
+#panel-subject .party-mentions .result-meta { font: 400 0.8125rem/1.7 var(--sans); }
+#panel-subject .party-brief-label { display: block; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); margin-bottom: 0.3rem; }
+#panel-subject .party-member-counts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.25rem 1rem; }
+#panel-subject .party-member-counts b { display: block; }
+#panel-subject .party-member-counts a { grid-column: 1 / -1; justify-self: start; }
+#panel-subject .party-mentions .result-meta { display: block; }
+@media (min-width: 701px) {
+  #panel-subject .party-member-counts { display: flex; gap: 1rem 2rem; }
+  #panel-subject .party-member-counts b { display: inline; }
+}
+#panel-subject .party-flow-bars .barrow-name:focus-visible,
+#panel-subject .party-receipts a:focus-visible,
+#panel-subject .party-years-toggle:focus-visible,
+#panel-subject .party-members a:focus-visible,
+#panel-subject .party-mentions a:focus-visible,
+#subject-party-debts a:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
+#panel-subject .party-receipts .receipts-tiles a,
+#subject-party-debts .fineprint a,
+#subject-party-debts .subject-list .source-title,
+#panel-subject .party-mentions .fineprint a,
+#panel-subject .party-mentions .result-meta a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+#panel-subject .party-mentions .result-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.35rem; }
+#panel-subject .party-mentions .subject-list li { padding: 0.8rem 0; }
+#panel-subject .party-mentions p { max-width: 68ch; }
+#subject-party-debts .fineprint { font-family: var(--serif); }
+#subject-party-debts .party-benefits { margin: 1rem 0 0; }
+#subject-party-debts > .chart figcaption { font: 700 1rem/1.5 var(--serif); text-transform: none; letter-spacing: normal; }
+#panel-subject .party-receipts,
+#panel-subject .party-mentions,
+#subject-party-debts .subject-section-title { scroll-margin-top: calc(var(--header-h) + 1rem); }
+@media (min-width: 701px) {
+  #panel-subject .party-flow-bars .barrow,
+  #subject-party-debts > .chart .barrow { grid-template-columns: minmax(0, 46%) minmax(0, 1fr) 7.5rem; gap: 0.7rem; }
+  #panel-subject .party-flow-bars .barrow-track,
+  #subject-party-debts > .chart .barrow-track { grid-column: 2; grid-row: 1; height: 6px; }
+  #panel-subject .party-flow-bars .barrow-value,
+  #subject-party-debts > .chart .barrow-value { text-align: right; }
+  #panel-subject .party-flow-bars .barrow-value small { margin-left: auto; }
+  #panel-subject .party-receipts a.receipts-row { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #panel-subject .party-flow-bars *,
+  #panel-subject .party-receipts *,
+  #panel-subject .party-members *,
+  #panel-subject .party-mentions * { animation: none; transition: none; scroll-behavior: auto; }
+}
+#panel-subject .party-mentions .source-title { min-width: 44px; }
+#panel-subject .party-receipts .fineprint a { white-space: nowrap; }
+@media (max-width: 700px) {
+  #subject-party-debts .tile:last-child { display: flex; align-items: baseline; gap: 0.65rem; }
+  #subject-party-debts .tile:last-child span { margin-top: 0; }
+}
