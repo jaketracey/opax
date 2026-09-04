@@ -146,7 +146,9 @@ and the projection does not need them:
 python3 scripts/export_bills.py --fill-briefs portal/public/bills
 ```
 
-It reads `da-summary-t-body` for each speech slug, caches every answer in
+It reads `da-summary-t-body` for each speech slug through
+`GET /slug/<slug>/text/<field>`, which is the same field a per-rid read returns
+without needing a resource-id lookup first. It caches every answer in
 `~/.cache/autoresearch/bill_speech_briefs.json` so a rerun is free, and writes
 the briefs back into the bill files. Speeches are capped at 24 per bill,
 earliest first. In the committed fixture, 1,846 unique slugs across 200 bills,
