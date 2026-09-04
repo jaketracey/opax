@@ -659,6 +659,11 @@ export async function mountMoneyMap(
     // narrow screens), so the free area is re-measured on every resize; a
     // view the reader has not taken is refitted into it.
     engine.setInsets(measureInsets())
+    // A host grown to hold its card (fitHostToCard) changes aspect for the
+    // card's sake, not the reader's: re-laying out for it would rebuild the
+    // scene and drop the very selection the card is showing. Hold the layout
+    // until the card closes and the host is its own size again.
+    if (hostBase) return
     const bucket = aspectBucket()
     if (bucket !== lastBucket) {
       lastBucket = bucket
