@@ -5088,6 +5088,7 @@ async function runAsk(question) {
     const citedList = cited.length ? cited : sources;
     const alsoList = cited.length ? retrieved : [];
     lastAsk = { question, answer: answerText, sources, kind: askKind() };
+    prefetchAskFollowups(lastAsk);
 
     hideWombat();
     setStatus($("ask-status"), `Answer ready: ${sources.length} sources.`);
@@ -5217,6 +5218,39 @@ function setFrontPageHidden(hidden) {
 }
 
 // --- chat (keep asking) -----------------------------------------------------
+// Follow-up questions for the answer on the Ask page are generated as soon as
+// the answer lands, not when the reader chooses "Keep asking about this": by
+// then the chips are usually ready and the chat opens with them in place. The
+// result rides on lastAsk (so the seed carries it); an unfinished fetch is
+// registered so the chat view can await it instead of asking again.
+let askFollowupsInflight = null; // {question, answer, promise}
+function followupPassages(sources) {
+  return (sources || [])
+    .map((s) => ({ title: s.title || s.slug || "", text: (s.snippet || "").trim() }))
+    .filter((p) => p.text)
+    .slice(0, 8);
+}
+function normaliseFollowups(data) {
+  return (data?.questions || [])
+    .map((item) => (typeof item === "string" ? { question: item } : item))
+    .filter((item) => item && typeof item.question === "string" && item.question.trim());
+}
+function prefetchAskFollowups(ask) {
+  if (!ask?.question || !ask?.answer) return;
+  const passages = followupPassages(ask.sources);
+  if (!passages.length) return;
+  const promise = api("/api/followups", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ question: ask.question, answer: ask.answer, passages }),
+  }).then((data) => {
+    const questions = normaliseFollowups(data);
+    if (questions.length && lastAsk === ask) ask.next = questions;
+    return questions;
+  }).catch(() => []);
+  askFollowupsInflight = { question: ask.question, answer: ask.answer, promise };
+}
+
 // The ask page's "Keep asking about this" button seeds a conversation with the
 // original question and answer; every later turn goes back to /api/ask with
 // the prior turns as context, and each answer offers follow-up questions the
@@ -5259,7 +5293,7 @@ function initChat(manageFocus) {
           !(chatThread[0]?.text === seed.question && chatThread[1]?.text === seed.answer)) {
         chatThread = [
           { role: "user", text: seed.question },
-          { role: "answer", text: seed.answer, sources: seed.sources || [] },
+          { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined },
         ];
         chatKind = seed.kind === "all" ? "all" : "speech";
         saveChatSession();
@@ -5358,28 +5392,33 @@ async function requestChatFollowups() {
   const asked = chatThread[chatThread.length - 2];
   if (!last || last.role !== "answer" || asked?.role !== "user") return;
   if (last.next?.length) { renderChatNext(last.next); return; } // generated once, kept on the message
-  const passages = (last.sources || [])
-    .map((s) => ({ title: s.title || s.slug || "", text: (s.snippet || "").trim() }))
-    .filter((p) => p.text)
-    .slice(0, 8);
+  const passages = followupPassages(last.sources);
   if (!passages.length) return; // no passages, no follow-ups — never a spinner
   const myAbort = new AbortController();
   chatFollowAbort = myAbort;
   try {
-    const data = await api("/api/followups", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ question: asked.text, answer: last.text, passages }),
-      signal: myAbort.signal,
-    });
+    // The Ask page started generating these the moment its answer landed;
+    // if that fetch is still running for this very turn, wait for it.
+    const inflight = askFollowupsInflight;
+    const reuse = inflight && inflight.question === asked.text && inflight.answer === last.text;
+    const questions = reuse
+      ? await inflight.promise
+      : normaliseFollowups(await api("/api/followups", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ question: asked.text, answer: last.text, passages }),
+          signal: myAbort.signal,
+        }));
     if (chatFollowAbort !== myAbort || chatThread[chatThread.length - 1] !== last) return;
-    const questions = (data.questions || [])
-      .map((item) => (typeof item === "string" ? { question: item } : item))
-      .filter((item) => item && typeof item.question === "string" && item.question.trim());
     if (!questions.length) return;
     last.next = questions;
     saveChatSession();
     renderChatNext(questions);
+    // They arrive under the answer and above the composer: bring them into view.
+    requestAnimationFrame(() => $("chat-form")?.scrollIntoView({
+      behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
+      block: "end",
+    }));
   } catch { /* follow-ups are an extra, never an error */ }
 }
 
