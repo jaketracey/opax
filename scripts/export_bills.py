@@ -278,25 +278,34 @@ class PartyTimeline:
       unknown   nothing recorded
     """
 
-    def __init__(self, runs: dict[str, list[tuple[str, str]]], member_party: dict[str, str]):
+    def __init__(self, runs: dict[str, tuple[list[str], list[str]]], member_party: dict[str, str]):
         self.runs = runs
         self.member_party = member_party
 
     @classmethod
     def load(cls, db: sqlite3.Connection) -> "PartyTimeline":
-        runs: dict[str, list[tuple[str, str]]] = {}
+        # Parallel date and party lists per person, so a lookup bisects the
+        # dates directly. party_canonical is in the ORDER BY as well as the
+        # date: a person appearing under two parties on one sitting day would
+        # otherwise arrive in an arbitrary order, and an unsorted list breaks
+        # the bisect. With it, the last party recorded for that day wins, the
+        # same way on every run.
+        runs: dict[str, tuple[list[str], list[str]]] = {}
         last: dict[str, str] = {}
         for r in db.execute(
             "SELECT person_id, date, party_canonical party FROM speeches "
             "WHERE state='federal' AND person_id IS NOT NULL AND date IS NOT NULL "
             "AND party_canonical IS NOT NULL AND party_canonical != '' "
-            "GROUP BY person_id, date, party_canonical ORDER BY person_id, date"
+            "GROUP BY person_id, date, party_canonical "
+            "ORDER BY person_id, date, party_canonical"
         ):
             pid, date, party = r["person_id"], r["date"], r["party"]
             if last.get(pid) == party:
                 continue  # only transitions; a run's start date is what matters
             last[pid] = party
-            runs.setdefault(pid, []).append((date, party))
+            dates, parties = runs.setdefault(pid, ([], []))
+            dates.append(date)
+            parties.append(party)
         member_party = {}
         for r in db.execute(
             "SELECT person_id, COALESCE(party_canonical, party) p FROM members "
@@ -304,7 +313,7 @@ class PartyTimeline:
         ):
             member_party[r["person_id"]] = r["p"]
         log(f"party timeline: {len(runs)} people, "
-            f"{sum(len(v) for v in runs.values())} runs, {len(member_party)} member rows")
+            f"{sum(len(d) for d, _ in runs.values())} runs, {len(member_party)} member rows")
         return cls(runs, member_party)
 
     def at(self, person_id: str | None, date: str | None) -> tuple[str, str]:
@@ -313,13 +322,12 @@ class PartyTimeline:
             return "Unknown", "unknown"
         pid = person_id[5:] if person_id.startswith("tvfy_") else person_id
         run = self.runs.get(pid)
-        if run and date:
-            i = bisect.bisect_right(run, (date, "￿"))
-            if i:
-                return run[i - 1][1], "dated"
-            return run[0][1], "earliest"
         if run:
-            return run[0][1], "earliest"
+            dates, parties = run
+            if date:
+                k = bisect.bisect_right(dates, date)
+                return (parties[k - 1], "dated") if k else (parties[0], "earliest")
+            return parties[0], "earliest"
         party = self.member_party.get(pid)
         return (party, "member") if party else ("Unknown", "unknown")
 
