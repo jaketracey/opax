@@ -56,7 +56,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=8f1c3a4900">
+<link rel="stylesheet" href="/style.css?v=ac16d600d5">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -521,6 +521,13 @@
         </span>
       </div>
       <div id="search-date-ruler" class="date-ruler" hidden></div>
+      <div id="search-readbar" class="search-readbar" hidden>
+        <div class="quiet-toggle" role="group" aria-label="Search result text">
+          <button type="button" id="search-read-passages" aria-pressed="true">Passages</button>
+          <button type="button" id="search-read-briefs" aria-pressed="false">Briefs</button>
+        </div>
+        <span id="search-brief-status" class="search-brief-status" aria-live="polite"></span>
+      </div>
       <ul id="search-results" class="results" role="list"></ul>
       <!-- The band keeps its height whether or not there is a second page, so
            arriving at a short last page does not lift the footer. -->
@@ -938,6 +945,6 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/app.js?v=7044c658c3" defer></script>
+<script src="/app.js?v=b069893a32" defer></script>
 </body>
 </html>

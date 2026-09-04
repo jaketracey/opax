@@ -16,7 +16,12 @@ let reportsIndex = null;
 let lastSearch = {
   key: "", query: "", filters: {}, sort: "relevance", results: [],
   page: 1, perPage: 20, pageCount: 1, total: 0, truncated: false, years: {},
+  briefs: {}, briefsLoading: false,
 };
+let searchReadMode = "passages";
+try {
+  if (sessionStorage.getItem("opax-search-read") === "briefs") searchReadMode = "briefs";
+} catch { /* storage is a preference, never a prerequisite */ }
 let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
@@ -6261,11 +6266,13 @@ function clearSearchResults() {
   lastSearch = {
     key: "", query: "", filters: {}, sort: "relevance", results: [],
     page: 1, perPage: SEARCH_PER_PAGE, pageCount: 1, total: 0, truncated: false, years: {},
+    briefs: {}, briefsLoading: false,
   };
   $("search-results").replaceChildren();
   $("results-bar").hidden = true;
   $("search-date-ruler").hidden = true;
   $("search-date-ruler").replaceChildren();
+  $("search-readbar").hidden = true;
   $("search-pager").hidden = true;
   $("search-empty").hidden = true;
   $("search-answer").hidden = true;
@@ -6318,12 +6325,45 @@ function activeFilterSummary(f) {
   return bits.join(", ");
 }
 
+function syncSearchReadBar() {
+  const bar = $("search-readbar");
+  if (!bar) return;
+  bar.hidden = !lastSearch.results.length;
+  $("search-read-passages").setAttribute("aria-pressed", String(searchReadMode === "passages"));
+  $("search-read-briefs").setAttribute("aria-pressed", String(searchReadMode === "briefs"));
+  const status = $("search-brief-status");
+  if (searchReadMode !== "briefs") status.textContent = "";
+  else if (lastSearch.briefsLoading) status.textContent = "Reading the available briefs…";
+  else {
+    const count = lastSearch.results.filter((result) => lastSearch.briefs[result.resource]).length;
+    status.textContent = `${count} of this page's ${lastSearch.results.length} ${lastSearch.results.length === 1 ? "result has" : "results have"} a brief so far.`;
+  }
+}
+
+function setSearchReadMode(mode) {
+  if (mode !== "passages" && mode !== "briefs") return;
+  searchReadMode = mode;
+  try { sessionStorage.setItem("opax-search-read", mode); } catch { /* optional preference */ }
+  syncSearchReadBar();
+  if (lastSearch.results.length) renderResults(lastSearch.results);
+}
+
+$("search-read-passages")?.addEventListener("click", () => setSearchReadMode("passages"));
+$("search-read-briefs")?.addEventListener("click", () => setSearchReadMode("briefs"));
+
+async function loadSearchBriefs(results, mySeq) {
+  const briefs = await fetchBriefMap(results);
+  if (mySeq !== searchSeq || lastSearch.results !== results) return;
+  lastSearch.briefs = briefs;
+  lastSearch.briefsLoading = false;
+  syncSearchReadBar();
+  if (searchReadMode === "briefs") renderResults(results);
+}
+
 // Sorting is the Worker's job now. It orders every retrieved match before it
 // slices the page, so "newest first" means newest of the whole result set and
-// not merely newest of the twenty in hand.
-// The gold bar is a button, not decoration: hovering, focusing or tapping it
-// opens the shared definition card (see initTermTips) with the score in words.
-// Its own label carries the number, so the row says it once.
+// not merely newest of the twenty in hand. Passages remain the default; Briefs
+// swaps in the optional machine summary without changing that ranking.
 function renderResults(results) {
   initTermTips();
   // A new page of results throws away the row the open card was parented to.
@@ -6332,6 +6372,12 @@ function renderResults(results) {
     ...results.map((r) => {
       const li = document.createElement("li");
       const pct = Math.round((r.score || 0) * 100);
+      const brief = lastSearch.briefs[r.resource];
+      const text = searchReadMode === "briefs"
+        ? brief
+          ? `<p class="search-result-brief">${esc(brief)}</p>`
+          : `<p class="snippet"><span class="search-passage-tag">Passage · ${lastSearch.briefsLoading ? "checking for a brief…" : "no brief yet"}</span>${highlightHTML(r.snippet, $("search-input").value)}</p>`
+        : `<p class="snippet">${highlightHTML(r.snippet, $("search-input").value)}</p>`;
       li.innerHTML = `
         <div>
           <button type="button" class="link result-title">${esc(displayTitle(r))}</button><button
@@ -6339,7 +6385,7 @@ function renderResults(results) {
             aria-label="Relevance ${pct}%"><i style="width:${pct}%"></i></button>
         </div>
         <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true, portrait: true })}</span>
-        <p class="snippet">${highlightHTML(r.snippet, $("search-input").value)}</p>`;
+        ${text}`;
       li.querySelector(".result-title").addEventListener("click", () => {
         goRoute(`/doc/${r.slug}`);
       });
@@ -6706,6 +6752,7 @@ async function runSearch(page = 1) {
     $("results-bar").hidden = true;
     $("search-date-ruler").hidden = true;
     $("search-date-ruler").replaceChildren();
+    $("search-readbar").hidden = true;
     $("search-pager").hidden = true;
   }
   $("search-results").replaceChildren();
@@ -6723,6 +6770,8 @@ async function runSearch(page = 1) {
       total: data.total ?? results.length,
       truncated: !!data.truncated,
       years: data.years || {},
+      briefs: {},
+      briefsLoading: true,
     };
     if (!data.count) {
       hideLoader("search-wombat");
@@ -6730,6 +6779,7 @@ async function runSearch(page = 1) {
       $("search-status").classList.add("visually-hidden"); // announced; the empty state carries the words
       $("results-bar").hidden = true;
       $("search-date-ruler").hidden = true;
+      $("search-readbar").hidden = true;
       $("search-pager").hidden = true;
       renderSearchEmpty(q, f);
       giveUpSearchAnswer();
@@ -6740,8 +6790,10 @@ async function runSearch(page = 1) {
       $("results-count").textContent = resultsCountLine(lastSearch);
       $("results-bar").hidden = false;
       renderSearchDateRuler(lastSearch.years, q, f);
+      syncSearchReadBar();
       renderResults(results);
       renderPager();
+      loadSearchBriefs(results, mySeq);
       // A stale &page=9 past the end lands on the last real page; correct the
       // URL in place so the link the reader copies is the page they can see.
       if (lastSearch.page !== page) {
