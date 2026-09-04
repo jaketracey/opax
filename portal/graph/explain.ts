@@ -702,7 +702,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       next.disabled = step === STEP_NAMES.length - 1
       next.textContent = step === STEP_NAMES.length - 2 ? 'Read the limits' : 'Next'
     }
-    scene.setStep(step, flow.years)
+    scene?.setStep(step, flow.years)
     if (yearLabel) yearLabel.hidden = step !== 1
 
     const heading = el('h2', '', STEP_NAMES[step])
@@ -885,8 +885,16 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     stage.append(yearLabel)
     const giverColour = clusterColour(resolved.donor?.group || resolved.industry || 'other').colour
     const partyColour = resolved.party?.colour || '#8A5A12'
-    scene = new FlowScene(stage, giverColour, partyColour)
-    scene.onYear = (year) => {
+    // No WebGL (a locked-down browser, a failed context): the stage stays a
+    // paper panel and the figures and the record below still tell the story.
+    try {
+      scene = new FlowScene(stage, giverColour, partyColour)
+    } catch {
+      scene = null
+      stage.classList.add('explain-stage-static')
+      stage.append(el('p', 'explain-status', 'The animated flow needs WebGL, which this browser does not offer; the figures and the record are below.'))
+    }
+    if (scene) scene.onYear = (year) => {
       if (!flow || !yearLabel) return
       const amount = flow.years.get(year)?.[0] || 0
       scene?.updateYearAmount(amount)
