@@ -4471,8 +4471,9 @@ function renderDirectory(spec) {
       if (!terms.length) return [];
       const starts = [], within = [];
       for (const it of spec.items) {
-        if (!terms.every((t) => it._text.includes(t))) continue;
-        (foldText(spec.name(it)).startsWith(terms[0]) ? starts : within).push(it);
+        const nm = foldText(spec.name(it));
+        if (!terms.every((t) => nm.includes(t))) continue; // the name itself, not the row's other words
+        (nm.startsWith(terms[0]) ? starts : within).push(it);
         if (starts.length >= 8) break;
       }
       return [...starts, ...within].slice(0, 8)
