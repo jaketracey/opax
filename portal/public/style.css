@@ -3315,3 +3315,7 @@ textarea.grow-field.is-collapsed { white-space: nowrap; }
 /* ==== chat: the thread owns the foot of the page ==== */
 html[data-panel="chat"] footer { display: none; }
 
+/* ==== report reading list: byline centred on the portrait ==== */
+.report-speech-byline { align-items: center; }
+.report-speech-byline .meta-portrait { align-self: center; }
+
