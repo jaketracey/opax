@@ -19,6 +19,8 @@
  *                                         scripts/generate_years.py) and the
  *                                         voices tally (speakers and parties
  *                                         across the year's retrieved windows)
+ *   GET /years/pictures.json              freely licensed event photographs,
+ *                                         with per-image credits and sources
  *   GET /reports/index.json               the six tracked topic reports
  *   GET /reports/{slug}.json              stats.timeline + stats.donations
  *   GET /api/stats + /corpus.json         indexing progress (honesty strip)
@@ -417,7 +419,7 @@ const CSS = `
 .tm-pictures-open:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
 @media (min-width: 761px) {
   .tm-pictures-open {
-    position: absolute; left: calc(100% + 0.8rem); top: 50%; transform: translateY(-50%);
+    position: absolute; left: calc(100% + 3.8rem); top: 50%; transform: translateY(-50%);
     min-height: 40px; padding: 0 0.2rem; border: 0; border-radius: 0;
     font-weight: 400; text-decoration: underline;
     text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.24em;
@@ -720,7 +722,7 @@ const CSS = `
   border: 1px solid var(--line-strong, #8D897B); background: var(--paper-raised, #fff);
 }
 .tm-gallery-image {
-  display: block; width: auto; height: auto; max-width: 100%; max-height: 100%;
+  display: block; width: 100%; height: 100%;
   object-fit: contain; user-select: none; -webkit-user-drag: none;
 }
 .tm-gallery-caption {
@@ -1035,7 +1037,7 @@ export function mountTimeMachine(container, opts = {}) {
         <button type="button" class="tm-gallery-nav tm-gallery-prev" aria-label="Previous photograph">‹</button>
         <figure class="tm-gallery-figure">
           <div class="tm-picture-mat">
-            <img class="tm-gallery-image" alt="" decoding="async">
+            <img class="tm-gallery-image" alt="" loading="eager" decoding="async" fetchpriority="high">
           </div>
           <figcaption>
             <p class="tm-gallery-caption"></p>
