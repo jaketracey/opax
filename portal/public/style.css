@@ -2996,3 +2996,95 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   #subject-party-debts .tile:last-child { display: flex; align-items: baseline; gap: 0.65rem; }
   #subject-party-debts .tile:last-child span { margin-top: 0; }
 }
+/* ==== page-home: The home page (/) ==== */
+#front-map, #front-page { font-variant-numeric: tabular-nums; }
+#front-map { margin-top: 2.5rem; }
+#front-page .front-mod { margin-bottom: 0; }
+#front-page, #front-page .front-main, #front-page .front-rail { gap: 2.5rem; }
+#front-page .front-mod > .subject-section-title,
+#front-map .subject-section-title { margin: 0 0 1rem; font-size: 1.4rem; line-height: 1.35; }
+#panel-ask:has(#front-page:not([hidden])) #chip-row { flex-wrap: wrap; gap: 0.5rem; mask-image: none; animation: none; }
+#panel-ask:has(#front-page:not([hidden])) #chip-row .chip {
+  display: inline-flex; align-items: center; min-height: 44px; white-space: normal;
+  text-align: left; line-height: 1.45; border-radius: 6px; height: auto;
+}
+#front-map .fineprint, #front-page .fineprint { font-size: 0.875rem; line-height: 1.6; }
+#front-map .map-chip { min-height: 44px; font-size: 0.8125rem; }
+#front-map .front-state-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+#front-map .front-map-foot .action-btn { min-height: 48px; }
+#front-map-root { height: 380px; max-height: none; }
+#front-statemap .sm-federal { min-height: 44px; }
+#front-statemap .sm-tip-actions a { min-height: 44px; display: flex; align-items: center; }
+@media (max-width: 700px) {
+  #front-map .front-map-half + .front-map-half { margin-top: 2.5rem; padding-top: 2rem; }
+  #front-statemap { height: 290px; }
+  #front-map-root { height: 320px; }
+  #front-map .front-map-foot { gap: 1rem; }
+  #front-map .front-map-foot .action-btn { align-self: flex-start; padding-inline: 1rem; }
+  #front-map-chips { margin-inline: 0; padding: 0 0 0.5rem; scrollbar-width: thin; }
+  #front-map-chips::-webkit-scrollbar { display: block; height: 4px; }
+}
+#front-map-root .mm-card-close { width: 44px; height: 44px; top: 4px; right: 4px; }
+#front-map-root .mm-card h2 { margin-right: 40px; font-family: var(--serif); line-height: 1.4; }
+#front-map-root .mm-card { overscroll-behavior: contain; scrollbar-gutter: stable; }
+#front-statemap .sm-tip-meta { font-size: 0.8125rem; line-height: 1.5; }
+#front-statemap .sm-tip-name { font-family: var(--serif); font-size: 1rem; }
+
+#front-news .news-list li { padding: 1rem 0; }
+#front-news .news-headline { display: flex; align-items: center; min-height: 44px; font: 600 1.0625rem/1.5 var(--serif); }
+#front-news .news-meta { margin-top: 0.4rem; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); }
+#front-news .news-source { font: inherit; text-transform: none; letter-spacing: 0; }
+#front-news .news-record-chip {
+  display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; margin-top: 0.5rem;
+  padding: 0.45rem 0.75rem; border: 1px solid var(--line); border-radius: 999px;
+  font: 600 0.8125rem/1.4 var(--sans); color: var(--bronze-ink); text-decoration: none;
+}
+#front-news-more { min-height: 44px; margin-top: 0.75rem; }
+#front-declared .front-declared-day > h3 {
+  margin: 1.25rem 0 0; padding: 0.5rem 0; border-bottom: 1px solid var(--line-strong);
+  color: var(--ink-soft); font: 500 0.875rem/1.5 var(--sans);
+}
+#front-declared .declared-row { grid-template-columns: 48px minmax(0, 1fr); padding: 1rem 0; gap: 0.75rem; }
+#front-declared .declared-portrait { grid-column: 1; }
+#front-declared .declared-entry { grid-column: 2; }
+#front-declared .declared-kind { font: 400 0.8125rem/1.5 var(--sans); }
+#front-declared .declared-description { font: 400 0.9375rem/1.65 var(--serif); }
+#front-declared .declared-person > a { display: inline-flex; align-items: center; min-height: 44px; }
+#front-reports { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
+#front-reports .report-card { min-width: 0; padding: 1rem; border: 1px solid var(--line); border-radius: 0; }
+#front-reports .card-title { font-size: 1.125rem; line-height: 1.4; }
+#front-reports .card-blurb { font: 400 0.8125rem/1.5 var(--sans); }
+@media (max-width: 700px) {
+  #front-reports { display: flex; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 0.75rem; scrollbar-width: thin; }
+  #front-reports .report-card { flex: 0 0 285px; scroll-snap-align: start; }
+  #front-declared .declared-entry { display: contents; }
+  #front-declared .declared-person { grid-column: 2; min-height: 48px; }
+  #front-declared .declared-kind, #front-declared .declared-description, #front-declared .declared-match { grid-column: 1 / -1; margin: 0; }
+}
+
+#front-declared .declared-source-link { display: table; margin: 0.35rem 0 0; padding-block: 0.55rem; }
+#front-declared .declared-match { margin-top: 0.4rem; }
+
+#front-page :is(a, button, summary), #front-map :is(a, button) { scroll-margin-block: 90px 20px; }
+#front-page :is(a, button, summary):focus-visible,
+#front-map :is(a, button):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
+#front-page .action-btn, #front-page button, #front-page .mw-chips .chip { min-height: 44px; }
+#front-page .front-declared-notes { border-top: 1px solid var(--line); margin-top: 0.75rem; }
+#front-page .front-declared-notes > summary { padding-block: 0.75rem; min-height: 44px; font: 500 0.875rem/1.5 var(--sans); cursor: pointer; }
+#front-declared .declared-match a, #mod-declared > .fineprint a { display: inline-flex; align-items: center; min-height: 44px; }
+#front-declared .declared-portrait img { max-width: none; flex-shrink: 0; }
+#front-map-root .mm-row { min-height: 44px; align-items: center; font-size: 0.875rem; }
+#front-map-root .mm-row-name { white-space: normal; overflow-wrap: anywhere; }
+#front-map-root .mm-row-years { font-size: 0.75rem; color: var(--ink-soft); }
+#front-map-root .mm-card-sub, #front-map-root .mm-card-fine { font-size: 0.8125rem; line-height: 1.5; color: var(--ink-soft); }
+@media (max-width: 700px) {
+  #front-reports .report-card { flex-basis: 270px; }
+  #front-news .news-record-chip { max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #front-page *, #front-map * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  #front-reports { scroll-snap-type: none; }
+}
+#front-page button { min-width: 44px; }
+#front-declared .front-declared-notes a { display: inline-flex; align-items: center; min-height: 44px; }
+#front-reports .report-card:focus-visible, #front-map-chips .map-chip:focus-visible { outline-offset: -3px; }

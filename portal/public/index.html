@@ -338,17 +338,20 @@
       <section class="front-map" id="front-map" aria-label="Two maps of the record">
         <div class="front-map-grid">
           <section class="front-map-half" aria-labelledby="h-map-states">
-            <h2 class="kicker" id="h-map-states">The record by state</h2>
+            <h2 class="subject-section-title" id="h-map-states">The record by state</h2>
             <div id="front-statemap" class="front-map-root"><p class="status">Loading the map…</p></div>
-            <p class="fineprint">Five parliaments so far: the Commonwealth, New South Wales, Victoria,
-            South Australia and Queensland, each labelled with the speeches indexed from it. Click a
-            state to search its parliament's record; Western Australia, the Northern Territory and
-            Tasmania are not yet in the corpus. State donations:
-            <a href="/money?jur=qld">Queensland</a> · <a href="/money?jur=vic">Victoria</a> ·
-            <a href="/money?jur=tas">Tasmania</a> (from 1 July 2025, when its disclosure scheme began).</p>
+            <p class="fineprint">Tap a state to explore its parliamentary record. Counts show indexed
+            speeches. The Commonwealth, NSW, Victoria, South Australia and Queensland are included;
+            WA, the NT and Tasmania are not yet in the speech corpus.</p>
+            <nav class="front-state-links" aria-label="State donation records">
+              <a class="map-chip" href="/money?jur=qld">Queensland donations</a>
+              <a class="map-chip" href="/money?jur=vic">Victoria donations</a>
+              <a class="map-chip" href="/money?jur=tas">Tasmania donations</a>
+            </nav>
+            <p class="fineprint">Tasmania's disclosure scheme began on 1 July 2025.</p>
           </section>
           <section class="front-map-half" aria-labelledby="h-map-money">
-            <h2 class="kicker" id="h-map-money">Where the money goes</h2>
+            <h2 class="subject-section-title" id="h-map-money">Where the money goes</h2>
             <div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div>
             <nav class="map-chips" id="front-map-chips" aria-label="Industries on the money map"></nav>
             <div class="front-map-foot">
@@ -363,27 +366,27 @@
       <div class="front-grid" id="front-page">
         <div class="front-main">
         <section class="front-mod" aria-labelledby="h-news" id="mod-news">
-          <h2 class="kicker" id="h-news">In the news right now</h2>
+          <h2 class="subject-section-title" id="h-news">In the news right now</h2>
           <div id="front-news"><p class="status">Fetching today's headlines…</p></div>
         </section>
 <section class="front-mod" aria-labelledby="h-mw" id="mod-mw" hidden>
-          <h2 class="kicker" id="h-mw">Money &amp; words</h2>
+          <h2 class="subject-section-title" id="h-mw">Money &amp; words</h2>
           <div id="front-mw"></div>
         </section>
 <section class="front-mod" aria-labelledby="h-added" id="mod-added" hidden>
-          <h2 class="kicker" id="h-added">Just added to the record</h2>
+          <h2 class="subject-section-title" id="h-added">Just added to the record</h2>
           <div class="split-list" id="front-added"></div>
           <p class="fineprint">The newest documents to enter the index. The corpus updates as
           parliaments publish.</p>
           <p style="margin:0.6rem 0 0"><a class="action-btn search-everything" href="/search"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg><span>Search everything</span></a></p>
         </section>
 <section class="front-mod" aria-labelledby="h-declared" id="mod-declared" hidden>
-          <h2 class="kicker" id="h-declared">Just declared</h2>
+          <h2 class="subject-section-title" id="h-declared">Just declared</h2>
           <div id="front-declared"></div>
           <p class="fineprint"><a href="/declared">All alterations since the statements, by week →</a></p>
         </section>
 <section class="front-mod" aria-labelledby="h-reports" id="mod-reports" hidden>
-          <h2 class="kicker" id="h-reports">Reports</h2>
+          <h2 class="subject-section-title" id="h-reports">Reports</h2>
           <p class="fineprint" style="margin:-0.2rem 0 0.6rem">Long-running investigations pairing
           the money with the words, every claim cited.</p>
           <div class="report-cards" id="front-reports"></div>
@@ -391,18 +394,18 @@
         </div>
         <aside class="front-rail">
         <section class="front-mod" aria-labelledby="h-numbers">
-          <h2 class="kicker" id="h-numbers">Today's numbers</h2>
+          <h2 class="subject-section-title" id="h-numbers">Today's numbers</h2>
           <div class="tiles tiles-compact" id="front-numbers"></div>
           <p class="fineprint" id="front-numbers-note">Live from the search index.
           <a href="/stats">Full corpus breakdown</a></p>
         </section>
 <section class="front-mod" aria-labelledby="h-ency" id="mod-ency" hidden>
-          <h2 class="kicker" id="h-ency">From the encyclopedia</h2>
+          <h2 class="subject-section-title" id="h-ency">From the encyclopedia</h2>
           <div class="entry-stack" id="front-ency"></div>
           <p class="fineprint">From AEC disclosures and the speech index. Totals are a floor, not a ceiling.</p>
         </section>
 <section class="front-mod" aria-labelledby="h-ways">
-          <h2 class="kicker" id="h-ways">More ways in</h2>
+          <h2 class="subject-section-title" id="h-ways">More ways in</h2>
           <div class="entry-stack">
             <a class="report-card" href="/money">
               <span class="card-kicker">Interactive</span>
