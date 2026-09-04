@@ -5817,6 +5817,25 @@ const billOutcome = (o) => BILL_OUTCOMES[String(o || "").toLowerCase()] || sente
 /** The short title when the register carries one, else the title itself. */
 const billName = (b) => b?.short_title || b?.title || b?.key || "";
 
+/* The register writes a private member's bill's sponsor into the portfolio
+   field, in its own notation: "(s) WILKIE, Andrew, MP". That is a person, not
+   a department, and printing it as a portfolio invents a department called
+   "(s) BANDT, Adam, MP". Read back, it is the sponsor — which is otherwise
+   null on every bill in this projection. Anything that does not fit the
+   notation is left exactly as the register wrote it. */
+function billSponsorFromPortfolio(portfolio) {
+  const raw = String(portfolio || "").trim();
+  if (!/^\(s\)\s*/i.test(raw)) return null;
+  const rest = raw.replace(/^\(s\)\s*/i, "").trim();
+  const m = rest.match(/^([^,]+),\s*([^,]+?)(?:,\s*(.+))?$/);
+  if (!m) return { name: rest, suffix: "" };
+  const surname = m[1].trim().replace(/\p{Lu}[\p{Lu}'-]+/gu,
+    (w) => w[0] + w.slice(1).toLowerCase().replace(/(['-])(\p{Ll})/gu, (_, s, c) => s + c.toUpperCase()));
+  return { name: `${m[2].trim()} ${surname}`, suffix: (m[3] || "").trim() };
+}
+/** What the portfolio slot should say: nothing when the field is really a sponsor. */
+const billPortfolio = (b) => (billSponsorFromPortfolio(b?.portfolio) ? "" : String(b?.portfolio || ""));
+
 /** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
 function billStatusLine(b) {
   const status = sentenceCase(b?.status) || "Status not recorded";
@@ -5843,21 +5862,24 @@ function billSourcesHTML(sources) {
 /** The head of every bill list row: the name, then what it is and where it got to. */
 function billRowHTML(b) {
   const year = String(b.introduced || "").slice(0, 4);
+  const member = billSponsorFromPortfolio(b.portfolio);
+  const figures = [
+    Number(b.divisions) ? `${b.divisions} division${b.divisions === 1 ? "" : "s"}` : "",
+    Number(b.speeches) ? `${b.speeches} speech${b.speeches === 1 ? "" : "es"}` : "",
+    Number(b.acts) ? "became law" : "",
+    // Absence is the norm here, so only a summary that exists is worth a word.
+    b.has_summary ? "summary" : "",
+  ].filter(Boolean);
   return `<li>
     <a class="source-title bill-row-title" href="${esc(billHash(b.key))}">${esc(billName(b))}</a>
-    <span class="result-meta">${[
+    <span class="result-meta bill-row-meta">${[
       b.status ? `<b class="bill-row-status">${esc(sentenceCase(b.status))}</b>` : "",
       year ? esc(year) : "",
       b.sponsor_party ? partyChipHTML(b.sponsor_party) : "",
-      b.portfolio ? esc(b.portfolio) : "",
+      member ? `${esc(member.name)}${member.suffix ? ` ${esc(member.suffix)}` : ""}` : esc(billPortfolio(b)),
     ].filter(Boolean).join(" · ")}</span>
     ${b.short_title && b.short_title !== b.title ? `<p class="bill-row-long">${esc(b.title)}</p>` : ""}
-    <p class="bill-row-figures">${[
-      Number(b.divisions) ? `${b.divisions} division${b.divisions === 1 ? "" : "s"}` : "",
-      Number(b.speeches) ? `${b.speeches} speech${b.speeches === 1 ? "" : "es"}` : "",
-      Number(b.acts) ? "became law" : "",
-      b.has_summary ? "summary" : "no summary yet",
-    ].filter(Boolean).join(" · ")}</p>
+    ${figures.length ? `<p class="bill-row-figures">${figures.join(" · ")}</p>` : ""}
   </li>`;
 }
 
@@ -5907,8 +5929,11 @@ async function openBillsIndex(params, manageFocus) {
   renderDirectory({
     kind: "bill", mount: "bill-body", kicker: "Bills", params,
     title: "Bills",
-    lede: `${items.length.toLocaleString()} bills from the federal record, ${
-      withSummary.toLocaleString()} with a summary. Each one opens its dates, its divisions and what was said about it.`,
+    lede: withSummary
+      ? `${items.length.toLocaleString()} bills from the federal record, ${
+        withSummary.toLocaleString()} with a summary. Each one opens its dates, its divisions and what was said about it.`
+      : `${items.length.toLocaleString()} bills from the federal record. Each one opens its dates, its divisions
+         and what was said about it. Summaries are still being written, so no bill carries one yet.`,
     items,
     name: billName,
     text: (b) => [b.title, b.short_title, b.sponsor, b.portfolio, b.status, b._year].filter(Boolean).join(" "),
@@ -5990,14 +6015,24 @@ function billTimelineHTML(bill) {
    noes below, both measured against the largest party in that division so the
    party sizes read as well as the split inside each one. Party colour is a dot
    and a name, never a bar — the bar says aye or no, nothing else. */
+/* One party carrying two votes should not take the same three rows as one
+   carrying twenty-two. The parties that decide the division are drawn; the
+   one- and two-member remainder is named on a single line, in full, so
+   nothing disappears — only the bars a reader cannot see anyway. */
+const BILL_SPLIT_DRAWN = 5;
+const BILL_SPLIT_SMALL = 2;
+
 function billSplitHTML(division) {
   const splits = Object.entries(division.party_splits || {})
     .map(([party, v]) => ({ party, ayes: Number(v?.ayes) || 0, noes: Number(v?.noes) || 0 }))
     .filter((s) => s.ayes || s.noes)
     .sort((a, b) => (b.ayes + b.noes) - (a.ayes + a.noes) || a.party.localeCompare(b.party));
   if (!splits.length) return `<p class="fineprint bill-split-none">Party split not recorded for this division.</p>`;
-  const max = Math.max(...splits.map((s) => Math.max(s.ayes, s.noes)), 1);
-  const rows = splits.map((s) => `
+  let drawn = splits.filter((s, i) => i < BILL_SPLIT_DRAWN || s.ayes + s.noes > BILL_SPLIT_SMALL);
+  let folded = splits.slice(drawn.length);
+  if (folded.length === 1) { drawn = splits; folded = []; } // one line saved is no saving
+  const max = Math.max(...drawn.map((s) => Math.max(s.ayes, s.noes)), 1);
+  const rows = drawn.map((s) => `
     <li class="bill-split">
       <span class="bill-split-party">${partyDotHTML(s.party)}${esc(s.party)}</span>
       <span class="bill-split-bars" aria-hidden="true">
@@ -6006,26 +6041,25 @@ function billSplitHTML(division) {
       </span>
       <span class="bill-split-n">${s.ayes}<span aria-hidden="true">–</span>${s.noes}<span class="visually-hidden"> ayes to noes</span></span>
     </li>`).join("");
+  const rest = folded.length
+    ? `<p class="fineprint bill-split-rest">Also ${esc(folded
+      .map((s) => `${s.party} ${s.ayes}–${s.noes}`).join(", "))}.</p>`
+    : "";
+  // What the attribution rests on, as a clause rather than a paragraph:
+  // party_coverage counts the votes carried by a party observed on or before
+  // the day against those falling back to a member's earliest or current one.
   const named = splits.reduce((a, s) => a + s.ayes + s.noes, 0);
   const total = (Number(division.ayes) || 0) + (Number(division.noes) || 0);
-  const notes = [];
-  if (total && named && named < total) {
-    notes.push(`The record places ${named} of the ${total} members who voted here with a party; the rest are counted but unattributed.`);
-  }
-  // party_coverage says what each attribution actually rests on. A split
-  // largely carried by "member" or "earliest" is a weaker claim than one
-  // carried by a dated observation, and the reader is told which it is.
   const cov = division.party_coverage || {};
   const weak = (Number(cov.member) || 0) + (Number(cov.earliest) || 0) + (Number(cov.unknown) || 0);
   const dated = Number(cov.dated) || 0;
-  if (weak > 0 && dated + weak > 0) {
-    notes.push(`${weak} of these ${dated + weak} votes rest on a member's earliest or current recorded party rather than one observed on or before the day.`);
-  }
-  if (Number(division.paired) > 0) {
-    notes.push(`${division.paired} member${division.paired === 1 ? " was" : "s were"} paired and did not vote.`);
-  }
-  return `<ul class="bill-splits" role="list">${rows}</ul>${
-    notes.length ? `<p class="fineprint bill-split-partial">${esc(notes.join(" "))}</p>` : ""}`;
+  const notes = [
+    total && named && named < total ? `${total - named} not placed with a party` : "",
+    weak > 0 && dated + weak > 0 ? `${weak} of ${dated + weak} inferred, not observed on the day` : "",
+    Number(division.paired) > 0 ? `${division.paired} paired` : "",
+  ].filter(Boolean);
+  return `<ul class="bill-splits" role="list">${rows}</ul>${rest}${
+    notes.length ? `<p class="fineprint bill-split-partial">${esc(notes.join(" · "))}</p>` : ""}`;
 }
 
 /** A division's own page in the record: the registry's key is the resource slug without its kind. */
@@ -6035,15 +6069,32 @@ function billDivisionHref(d) {
   return `/doc/${encodeURIComponent(key.startsWith("division-") ? key : `division-${key}`)}`;
 }
 
+/* A division's question field carries the motion put — but TheyVoteForYou
+   writes its editorial notes into the same field, so it can also hold a
+   700-character explanation or "This is a duplicate of an earlier division
+   available here." Set at heading size in the serif, a note reads as the
+   motion the House divided on. The first sentence stands as the heading;
+   whatever follows is a note and is set as one. Nothing is dropped. */
+function billQuestionParts(text) {
+  const whole = billQuestion(text);
+  if (!whole) return { head: "", note: "" };
+  if (whole.length <= 110) return { head: whole, note: "" };
+  const cut = whole.slice(0, 160).search(/[.?!](\s|$)/);
+  if (cut < 20) return { head: `${whole.slice(0, 105).trimEnd()}…`, note: whole };
+  return { head: whole.slice(0, cut + 1), note: whole.slice(cut + 1).trim() };
+}
+
 function billDivisionHTML(d) {
   const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
   const target = billDivisionHref(d);
-  const question = billQuestion(d.question) || "Question not recorded";
+  const { head, note } = billQuestionParts(d.question);
+  const question = head || "Question not recorded";
   const official = safeUrl(d.url);
   return `<li class="bill-division">
     ${target
       ? `<a class="source-title bill-division-q" href="${esc(target)}">${esc(question)}</a>`
       : `<span class="source-title bill-division-q">${esc(question)}</span>`}
+    ${note ? `<p class="bill-division-note">${esc(note)}</p>` : ""}
     <span class="result-meta">${[
       billStage(d.stage) ? esc(billStage(d.stage)) : "",
       billHouse(d.house) ? esc(billHouse(d.house)) : "",
@@ -6083,13 +6134,16 @@ function billSpeechesHTML(bill) {
     return `<section class="bill-section"><h3 class="subject-section-title">What was said</h3>
       <p class="status">No speeches linked to this bill yet.</p></section>`;
   }
+  // A speech the record leaves unattributed has one fact — its date — so the
+  // date is what opens it, rather than nine rows all reading the same absence.
   const rows = speeches.slice(0, 24).map((s) => `<li>
-    <a class="source-title" href="/doc/${encodeURIComponent(s.slug)}">${esc(s.speaker || "Speaker not named")}</a>
+    <a class="source-title" href="/doc/${encodeURIComponent(s.slug)}">${
+      s.speaker ? esc(s.speaker) : `Speech${s.date ? ` on ${esc(fmtDate(s.date))}` : ", speaker not named"}`}</a>
     <span class="result-meta">${[
       s.party ? partyChipHTML(s.party) : "",
       s.state && s.state !== "federal" ? esc(STATE_NAMES[s.state] || s.state) : "",
       s.stage_hint ? esc(billStage(s.stage_hint)) : "",
-      s.date ? esc(fmtDate(s.date)) : "",
+      s.speaker && s.date ? esc(fmtDate(s.date)) : "",
     ].filter(Boolean).join(" · ")}</span>
     ${s.brief ? `<p class="bill-speech-brief">${esc(s.brief)}</p>` : ""}
   </li>`).join("");
@@ -6193,12 +6247,15 @@ async function openBill(key, manageFocus) {
   const title = bill.title || bill.short_title || key;
   document.title = `${crumbLabel(billName(bill), 60)} · OPAX`;
   setCrumbs([{ label: "Bills", href: "/bills" }, { label: crumbLabel(billName(bill), 48) }]);
+  const member = billSponsorFromPortfolio(bill.portfolio);
+  const sponsorName = bill.sponsor || member?.name || null;
   const sponsorBits = [
-    bill.sponsor
-      ? `Introduced by <a href="${esc(subjectHash("person", bill.sponsor))}">${esc(bill.sponsor)}</a>`
+    sponsorName
+      ? `Introduced by <a href="${esc(subjectHash("person", sponsorName))}">${esc(sponsorName)}</a>${
+        member?.suffix ? ` ${esc(member.suffix)}` : ""}`
       : "Sponsor not recorded",
     bill.sponsor_party ? partyChipHTML(bill.sponsor_party) : "",
-    bill.portfolio ? esc(bill.portfolio) : "",
+    billPortfolio(bill) ? esc(billPortfolio(bill)) : "",
   ].filter(Boolean);
   const billhome = safeUrl((bill.sources || []).find((s) => s.kind === "billhome")?.url);
   body.innerHTML = `
@@ -6283,16 +6340,14 @@ async function fillBillPeek(details, entry) {
     iconSvg("entry")}<span>Bill page</span></a></p>`;
   // No summary written: the dated status is the honest thing to show instead.
   if (!entry.has_summary) {
-    box.innerHTML = `<p class="bill-peek-line">${esc(billStatusLine(entry))}.</p>
-      <p class="fineprint">No summary yet.</p>${foot}`;
+    box.innerHTML = `<p class="bill-peek-line">${esc(billStatusLine(entry))}. No summary yet.</p>${foot}`;
     return;
   }
   const bill = await loadBill(entry.key);
   if (!box.isConnected) return;
   const sentences = (bill?.summary?.sentences || []).filter(Boolean);
   if (!sentences.length) {
-    box.innerHTML = `<p class="bill-peek-line">${esc(billStatusLine(entry))}.</p>
-      <p class="fineprint">No summary yet.</p>${foot}`;
+    box.innerHTML = `<p class="bill-peek-line">${esc(billStatusLine(entry))}. No summary yet.</p>${foot}`;
     return;
   }
   box.innerHTML = `
@@ -6308,24 +6363,30 @@ async function fillBillPeek(details, entry) {
    names which bills carry divisions but not what the splits were, so the bill
    files are read — newest first and capped, because this is a page, not a
    report. The cap is stated in the note rather than hidden. */
-const PARTY_BILLS_SCAN = 48;
+const PARTY_BILLS_SCAN = 96;   // most candidates ever asked for
+const PARTY_BILLS_ENOUGH = 32; // stop as soon as this many bill files have arrived
 const PARTY_BILLS_SHOW = 10;
 
 async function renderPartyBillDivisions(label, sections, key) {
-  const idx = await loadBillsIndex();
-  if (currentSubjectKey !== key || !idx?.bills?.length) return;
-  const candidates = idx.bills.filter((b) => Number(b.divisions) > 0)
-    .sort((a, b) => String(b.status_as_of || b.introduced || "").localeCompare(
-      String(a.status_as_of || a.introduced || ""))).slice(0, PARTY_BILLS_SCAN);
-  if (!candidates.length) return;
+  // The section takes its place in the column before anything is fetched:
+  // where a reader finds it should not depend on how fast a file returns.
   const slot = document.createElement("section");
   slot.className = "party-bills";
   slot.id = "party-bills";
   slot.innerHTML = `<h3 class="subject-section-title">Bills they divided on</h3>
     <p class="status">Reading the divisions…</p>`;
   sections.appendChild(slot);
+  const idx = await loadBillsIndex();
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  if (!idx?.bills?.length) { slot.remove(); return; }
+  const candidates = idx.bills.filter((b) => Number(b.divisions) > 0)
+    .sort((a, b) => String(b.status_as_of || b.introduced || "").localeCompare(
+      String(a.status_as_of || a.introduced || ""))).slice(0, PARTY_BILLS_SCAN);
+  if (!candidates.length) { slot.remove(); return; }
+  // Read in small batches and stop as soon as enough bills have answered: a
+  // register entry need not have a file yet, and a page should not keep asking.
   const files = [];
-  for (let i = 0; i < candidates.length; i += 8) {
+  for (let i = 0; i < candidates.length && files.length < PARTY_BILLS_ENOUGH; i += 8) {
     const batch = await Promise.all(candidates.slice(i, i + 8).map((b) => loadBill(b.key)));
     if (currentSubjectKey !== key || !slot.isConnected) return;
     files.push(...batch.filter(Boolean));
@@ -6344,17 +6405,22 @@ async function renderPartyBillDivisions(label, sections, key) {
   }
   if (!rows.length) {
     slot.innerHTML = `<h3 class="subject-section-title">Bills they divided on</h3>
-      <p class="status">No division in the ${PARTY_BILLS_SCAN} most recent bills records a vote by this party.</p>`;
+      <p class="status">No division in the ${files.length} most recent bills the register could open
+        records a vote by this party.</p>`;
     return;
   }
   rows.sort((a, b) => String(b.d.date || "").localeCompare(String(a.d.date || "")));
   const max = Math.max(...rows.map((r) => Math.max(r.ayes, r.noes)), 1);
+  // Two divisions on one bill are two rows with the same name, stage and date;
+  // the question is the only thing that says what the party voted on twice.
   const rowHTML = (r) => `<li class="party-bill">
     <a class="source-title" href="${esc(billHash(r.bill.key))}">${esc(billName(r.bill))}</a>
     <span class="result-meta">${[
-      r.d.stage ? esc(r.d.stage) : "", r.d.date ? esc(fmtDate(r.d.date)) : "",
-      r.d.outcome ? `<b>${esc(r.d.outcome)}</b>` : "",
+      r.d.stage ? esc(billStage(r.d.stage)) : "", r.d.date ? esc(fmtDate(r.d.date)) : "",
+      r.d.outcome ? `<b>${esc(billOutcome(r.d.outcome))}</b>` : "",
     ].filter(Boolean).join(" · ")}</span>
+    ${billQuestionParts(r.d.question).head
+      ? `<span class="party-bill-q">${esc(billQuestionParts(r.d.question).head)}</span>` : ""}
     <span class="bill-split-bars party-bill-bars" aria-hidden="true">
       <i class="bill-bar-aye" style="width:${((r.ayes / max) * 100).toFixed(1)}%"></i>
       <i class="bill-bar-no" style="width:${((r.noes / max) * 100).toFixed(1)}%"></i>
@@ -6366,10 +6432,10 @@ async function renderPartyBillDivisions(label, sections, key) {
     <h3 class="subject-section-title">Bills they divided on</h3>
     <ul class="subject-list party-bill-list" role="list" id="party-bill-list">${head.map(rowHTML).join("")}</ul>
     ${rest.length ? `<p class="dir-more-row"><button type="button" class="secondary" id="party-bills-more">Show more (${rest.length} more)</button></p>` : ""}
-    <p class="fineprint">This party's own ayes and noes in each division, newest first, from the
-      ${PARTY_BILLS_SCAN} most recent bills the register holds divisions for — not the party's whole voting
-      history. Party is each member's recorded affiliation, not a reconstruction of who they sat with on the
-      day. A division on an amendment is not a vote on the bill itself.</p>`;
+    <p class="fineprint">This party's own ayes and noes, newest first, read from the ${files.length}
+      most recently decided bills the register could open — not the party's whole voting history, and not
+      every bill it divided on. Party is each member's recorded affiliation, not a reconstruction of who
+      they sat with on the day. A division on an amendment is not a vote on the bill itself.</p>`;
   const more = $("party-bills-more");
   if (more) {
     more.addEventListener("click", () => {
@@ -6394,13 +6460,18 @@ async function renderDocBillPanel(doc, slug) {
   const subject = doc.metadata?.bill_ref || doc.metadata?.topic || doc.metadata?.debate || titleSubject(doc);
   const entry = await billForTitle(subject);
   if (!entry || currentDocSlug !== slug) return;
+  // The speech's own headline is often the bill's title; printing it again
+  // directly beneath says nothing twice.
+  const headline = titleKey($("doc-title")?.textContent || "");
+  const repeats = Boolean(headline) &&
+    (headline === titleKey(entry.title) || headline === titleKey(billName(entry)));
   const line = `<p class="doc-bill-status">${esc(billStatusLine(entry))}</p>`;
   const link = `<p class="doc-bill-link"><a href="${esc(billHash(entry.key))}">Bill page</a></p>`;
   const head = `<div class="doc-brief-head">
       <h3 class="subject-section-title" id="doc-bill-head">The bill</h3>
       <span class="doc-brief-tag">Register</span>
     </div>
-    <p class="doc-bill-title">${esc(billName(entry))}</p>`;
+    ${repeats ? "" : `<p class="doc-bill-title">${esc(billName(entry))}</p>`}`;
   box.innerHTML = `${head}${line}<p class="status doc-bill-sentence">Reading the summary…</p>${link}`;
   box.hidden = false;
   if (!entry.has_summary) {

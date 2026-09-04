@@ -3533,3 +3533,35 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .bill-date { grid-template-columns: minmax(0, 1fr); row-gap: 0.1rem; }
   .bill-date-when { line-height: 1.4; }
 }
+
+/* ---- loop 1 ------------------------------------------------------------- */
+
+/* A row's name and a row's facts are two lines, not one sentence: a long
+   title otherwise runs straight on into "Lapsed · 2022 · Treasury". */
+.bill-row-meta { display: flex; margin-top: 0.2rem; }
+/* An editorial note that arrived in the question field, set as a note. */
+.bill-division-note {
+  margin: 0.3rem 0 0; font: 400 0.875rem/1.55 var(--sans); color: var(--ink-soft);
+  max-width: 62ch; overflow-wrap: anywhere;
+}
+/* The one- and two-member parties, named on one line under the bars. */
+.bill-split-rest { margin-top: var(--space-2); }
+.bill-split-partial { margin-top: var(--space-2); }
+/* The question a party's division was on, under its bill's name. */
+.party-bill-q {
+  grid-column: 1 / -1; margin-top: 0.15rem;
+  font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); overflow-wrap: anywhere;
+}
+/* The register's floor is 44px, and these are the page's primary actions.
+   Scoped to this panel: the shared button elsewhere is not this work's to move. */
+#panel-bill .action-btn { min-height: 44px; }
+/* At 360 three filter labels were cut off inside their boxes ("All parliam").
+   On a phone each control takes the row it needs. */
+@media (max-width: 430px) {
+  #panel-bill .dir-controls { gap: 0.55rem 0.7rem; }
+  #panel-bill .dir-field { flex: 1 1 100%; min-width: 0; }
+  #panel-bill .dir-field select { width: 100%; min-width: 0; }
+}
+@media (min-width: 561px) {
+  .party-bill .party-bill-q { grid-column: 1; }
+}

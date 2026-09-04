@@ -1479,8 +1479,13 @@ export function mountTimeMachine(container, opts = {}) {
       })
     }
     if (!rows.length) { billsSec.hidden = true; return }
-    rows.sort((a, c) => String(a.date).localeCompare(String(c.date)))
+    // A bill becoming law is the year's news; an introduction in February is
+    // not. Passage first, then introductions, each in the order it happened —
+    // so eight rows are eight things that happened, not the year's first eight.
+    const weight = (r) => (r.note === 'Introduced' ? 1 : 0)
+    rows.sort((a, c) => weight(a) - weight(c) || String(a.date).localeCompare(String(c.date)))
     const shown = rows.slice(0, 8)
+    const passed = rows.filter((r) => r.note !== 'Introduced').length
     const ol = el('ol', 'tm-bill-list')
     for (const r of shown) {
       const li = el('li', 'tm-bill')
@@ -1499,7 +1504,9 @@ export function mountTimeMachine(container, opts = {}) {
     const more = rows.length - shown.length
     fine.textContent = `${fmtInt(rows.length)} bill${rows.length === 1 ? '' : 's'} in the register ` +
       `were introduced or finished their passage in ${year}` +
-      (more > 0 ? `; the ${fmtInt(shown.length)} earliest are listed.` : '.') +
+      (more > 0
+        ? `; ${fmtInt(shown.length)} are listed, the ${fmtInt(passed)} that finished first.`
+        : '.') +
       ' Introduction and passage are separate dates, so a bill can appear in two years.'
     billsEl.appendChild(fine)
     billsSec.hidden = false
