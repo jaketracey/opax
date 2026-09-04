@@ -6,8 +6,12 @@ docs/DATA-INTERESTS.md) as one static file the portal serves as-is for the
 one small file per person plus an index (a single combined file would be
 ~760KB, most of it never read by any one page):
 
-  scp scripts/export_interests.py desktop:/tmp/
-  ssh desktop 'rm -rf /tmp/interests && python3 /tmp/export_interests.py --out /tmp/interests'
+  mkdir -p /tmp/opax-interests-export
+  scp scripts/export_interests.py portal/public/{access,fits}.json \
+      portal/public/graph/money.json desktop:/tmp/opax-interests-export/
+  ssh desktop 'rm -rf /tmp/interests && python3 /tmp/opax-interests-export/export_interests.py \
+      --out /tmp/interests --money /tmp/opax-interests-export/money.json \
+      --access /tmp/opax-interests-export/access.json --fits /tmp/opax-interests-export/fits.json'
   rsync -a --delete desktop:/tmp/interests/ portal/public/interests/
 
 Without --out the combined object is printed to stdout (handy for analysis).
@@ -27,6 +31,12 @@ Without --out the combined object is printed to stdout (handy for analysis).
                    {"holder": "self", "description": "Australian Ethical Investments",
                     "kind": "statement", "date": null, "page": 2}, ...]}, ...}}}
 
+  interests/recent.json
+  {"meta": {"generated": "2026-09-04", "rows": 300, "available": 1660},
+   "items": [{"id": 123, "person_id": "10007", "name": "Anthony Albanese",
+              "bucket": "gifts", "kind": "addition", "date": "2026-08-14",
+              "description": "...", "url": "https://...#page=12", "ties": [...]}, ...]}
+
 Federal members are keyed by members.person_id, the same id photos/people.json
 resolves a name to. Queensland members and the documents the loader could not
 match to `members` are keyed by a name slug ("n-jessica-pugh"): the qld_la rows
@@ -45,8 +55,21 @@ characters. The page link is built client-side as source_url + "#page=" +
 page; an item carries its own "url" only when it comes from a different
 document than the person's primary one. Senate rows have no page (the
 register is an HTML page). "ocr" is set on rows machine-read from a scan.
+The newest 300 dated additions and deletions across every person are written
+to recent.json without the six-per-bucket serving cap; a row also carries any
+exact organisation matches made for the ties join below.
+
+Every uncapped row in the eligible buckets is also compared with the names in
+the federal money map, the lobbying firms in access.json and the registrants in
+fits.json. Exact normalised names are the default; a deliberately small brand
+list below covers short register spellings such as "Telstra" and "NAB". The
+per-person file gains a `ties` array and `ties-by-donor.json` mirrors donor
+matches for donor pages. Liabilities and the folded "other" bucket are omitted
+from matching so ordinary bank accounts and mortgages do not become ties.
 """
 
+import argparse
+from collections import defaultdict
 import json
 import os
 import re
@@ -57,6 +80,7 @@ from datetime import date
 
 DB = "file:/home/jake/.cache/autoresearch/parli.db?mode=ro"
 PER_BUCKET = 6
+RECENT_LIMIT = 300
 DESC_CHARS = 120
 
 BUCKETS = ["shareholdings", "real_estate", "trusts", "directorships", "gifts",
@@ -74,11 +98,221 @@ NIL = re.compile(r"^\s*(?:nil(?:\s+applicable|\s+return)?|n/?a|not\s+applicable|
 # form-structure fields that are labels, not content
 LABEL_FIELDS = {"subclause", "item"}
 WS = re.compile(r"\s+")
+ORG_DROP = re.compile(r"\b(?:pty|ltd|limited|inc|incorporated|co|holdings)\b", re.I)
+TICKER = re.compile(r"\(\s*(?:(?:asx|nsx)\s*:?\s*)?[a-z]{2,6}\s*\)", re.I)
+LEADING_RELATION = re.compile(
+    r"^(?:(?:shares?|shareholding|units?|membership|member|director(?:ship)?|office)\s+"
+    r"(?:(?:held\s+)?(?:in|of|with)\s+)?|(?:gift|hospitality|travel|tickets?)\s+(?:from|by)\s+)", re.I)
+
+# Conservative brand spellings seen in the registers. These are aliases, not
+# fuzzy matches: each must resolve to an organisation actually present in the
+# AEC money map, access.json or fits.json. Keep this list short and auditable.
+CURATED_BRANDS = {
+    "telstra": "Telstra Corporation Limited",
+    "santos": "Santos Limited",
+    "suncorp": "Suncorp Group Limited",
+    "woodside": "Woodside Energy",
+    "bhp": "BHP Group",
+    "rio tinto": "Rio Tinto",
+    "qantas": "Qantas",
+    "westpac": "Westpac Banking Corporation",
+    "anz": "Australia and New Zealand Banking Group Limited",
+    "nab": "National Australia Bank",
+    "cba": "Commonwealth Bank of Australia",
+    "macquarie": "Macquarie Group Limited",
+    "adani": "Adani Mining Pty Ltd",
+    "bravus": "Adani Mining Pty Ltd",
+    "hancock": "Hancock Prospecting Pty Ltd",
+    "crown": "Crown Resorts Limited",
+    "star": "The Star Entertainment Group Limited",
+    "tabcorp": "Tabcorp Holdings Limited",
+    "sportsbet": "Sportsbet",
+    "minerals council": "Minerals Council of Australia",
+    "clubs nsw": "Registered Clubs Association of NSW",
+    "clubsnsw": "Registered Clubs Association of NSW",
+    "aha": "Australian Hotels Association",
+}
+
+ELIGIBLE_TIE_BUCKETS = {
+    "shareholdings", "real_estate", "trusts", "directorships", "gifts", "travel", "memberships"
+}
 
 
 def slug(name):
     s = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
     return "n-" + re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+
+
+def norm_org(value):
+    """The client money-map normalisation, with tickers stripped first."""
+    s = TICKER.sub(" ", str(value or ""))
+    s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower()
+    s = re.sub(r"[^a-z0-9]+", " ", s)
+    s = ORG_DROP.sub(" ", s)
+    s = re.sub(r"\bthe\b", " ", s)
+    return WS.sub(" ", s).strip()
+
+
+def row_values(fields_json, fallback):
+    """Untruncated text cells and useful cell fragments for exact matching."""
+    try:
+        fields = json.loads(fields_json) if fields_json else {}
+    except ValueError:
+        fields = {}
+    vals = [WS.sub(" ", str(v)).strip() for k, v in fields.items()
+            if k not in LABEL_FIELDS and v and not NIL.match(str(v))]
+    if not vals and fallback:
+        vals = [WS.sub(" ", str(fallback)).strip()]
+    out = []
+    for value in vals:
+        out.append(value)
+        out.extend(x.strip() for x in re.split(r"\s*[;·•]\s*|\s+—\s+", value) if x.strip())
+    cleaned = []
+    for value in out:
+        cleaned.append(value)
+        relationless = LEADING_RELATION.sub("", value).strip(" ,;:-")
+        if relationless and relationless != value:
+            cleaned.append(relationless)
+    return list(dict.fromkeys(cleaned))
+
+
+def unique_index(pairs):
+    """Name -> object, with ambiguous normalised names deliberately disabled."""
+    index = {}
+    identity = {}
+    for name, value in pairs:
+        key = norm_org(name)
+        if not key:
+            continue
+        marker = value.get("id") or value.get("label") or value.get("organisation")
+        if key in identity and identity[key] != marker:
+            index[key] = None
+        else:
+            index[key] = value
+            identity[key] = marker
+    return index
+
+
+def load_tie_registers(money_path, access_path, fits_path):
+    with open(money_path, encoding="utf-8") as f:
+        money = json.load(f)
+    with open(access_path, encoding="utf-8") as f:
+        access = json.load(f)
+    with open(fits_path, encoding="utf-8") as f:
+        fits = json.load(f)
+
+    donors = [n for n in money.get("nodes", []) if n.get("kind") == "donor"]
+    donor_index = unique_index(
+        (name, node) for node in donors for name in [node.get("label"), *(node.get("aliases") or [])])
+    edges = defaultdict(list)
+    for edge in money.get("edges", []):
+        source = edge.get("source")
+        if not str(source).startswith("donor:"):
+            continue
+        edges[source].append({
+            "party": str(edge.get("target") or "").removeprefix("party:"),
+            "total": round(edge.get("total") or 0),
+            "from": edge.get("firstYear"),
+            "to": edge.get("lastYear"),
+        })
+    for source in edges:
+        edges[source].sort(key=lambda x: (-x["total"], x["party"]))
+
+    firms = {}
+    for donor in (access.get("donors") or {}).values():
+        for item in donor.get("lobbyists") or []:
+            name = str(item.get("firm") or "").strip()
+            key = norm_org(name)
+            if key and not key.startswith("unlinked "):
+                firm = firms.setdefault(key, {"organisation": name, "jurisdictions": []})
+                if item.get("jurisdiction") and item["jurisdiction"] not in firm["jurisdictions"]:
+                    firm["jurisdictions"].append(item["jurisdiction"])
+    firm_index = unique_index((v["organisation"], v) for v in firms.values())
+
+    fits_entities = {}
+    for key, rows in (fits.get("by_entity") or {}).items():
+        if not rows:
+            continue
+        display = next((r.get("registrant") for r in rows if r.get("registrant")), key)
+        item = {"organisation": display, "url": next((r.get("url") for r in rows if r.get("url")), None)}
+        fits_entities[norm_org(key)] = item
+        fits_entities.setdefault(norm_org(display), item)
+    fits_index = unique_index((k, v) for k, v in fits_entities.items())
+
+    def registries_for(key):
+        found = []
+        donor = donor_index.get(key)
+        if donor:
+            found.append(("donor", donor))
+        firm = firm_index.get(key)
+        if firm:
+            found.append(("lobbyist", firm))
+        fit = fits_index.get(key)
+        if fit:
+            found.append(("fits", fit))
+        return found
+
+    curated = {}
+    for alias, target in CURATED_BRANDS.items():
+        hits = registries_for(norm_org(target)) or registries_for(norm_org(alias))
+        if hits:
+            curated[norm_org(alias)] = hits
+
+    # Only gift/travel prose gets containment matching. Requiring at least two
+    # significant tokens (or one explicit curated brand) avoids ordinary words.
+    phrases = {}
+    for index in (donor_index, firm_index, fits_index):
+        for key, value in index.items():
+            if value and len([w for w in key.split() if len(w) > 2]) >= 2:
+                phrases[key] = registries_for(key)
+    return donor_index, firm_index, fits_index, curated, phrases, edges
+
+
+def match_tie(values, bucket, registries):
+    donor_index, firm_index, fits_index, curated, phrases, _ = registries
+    matches = []
+    seen = set()
+    for value in values:
+        key = norm_org(value)
+        if not key:
+            continue
+        candidates = []
+        for kind, index in (("donor", donor_index), ("lobbyist", firm_index), ("fits", fits_index)):
+            item = index.get(key)
+            if item:
+                candidates.append((kind, item))
+        candidates.extend(curated.get(key, []))
+        if bucket not in {"gifts", "travel"}:
+            for brand, hits in curated.items():
+                if key in {f"{brand} australia", f"{brand} group", f"{brand} corporation", f"{brand} bank"}:
+                    candidates.extend(hits)
+        if bucket in {"gifts", "travel"}:
+            padded = f" {key} "
+            for phrase, hits in phrases.items():
+                marker = f" {phrase} "
+                pos = padded.find(marker)
+                prefix = padded[:pos].rstrip() if pos >= 0 else ""
+                if pos >= 0 and re.search(
+                        r"\b(?:provided by|courtesy of|guest of|sponsored by|gifted by|supplied by|"
+                        r"paid for by|facilitated by|hosted by|from|provider of benefit was|"
+                        r"provider of the benefit was)\s*$", prefix):
+                    candidates.extend(hits)
+            for brand, hits in curated.items():
+                marker = f" {brand} "
+                pos = padded.find(marker)
+                prefix = padded[:pos].rstrip() if pos >= 0 else ""
+                if pos >= 0 and re.search(
+                        r"\b(?:provided by|courtesy of|guest of|sponsored by|gifted by|supplied by|"
+                        r"paid for by|facilitated by|hosted by|from|provider of benefit was|"
+                        r"provider of the benefit was)\s*$", prefix):
+                    candidates.extend(hits)
+        for kind, item in candidates:
+            marker = item.get("id") or item.get("label") or item.get("organisation")
+            identity = (kind, norm_org(marker))
+            if identity not in seen:
+                seen.add(identity)
+                matches.append((kind, item))
+    return matches
 
 
 # register spellings that differ from the name the corpus (and photos/people.json) uses
@@ -95,7 +329,7 @@ def name_keys(name):
     return {n, n.replace("’", "'"), n.replace("'", "’"), *ALIASES.get(n, [])}
 
 
-def description(fields_json, fallback):
+def description(fields_json, fallback, max_chars=DESC_CHARS):
     fields = {}
     try:
         fields = json.loads(fields_json) if fields_json else {}
@@ -108,9 +342,9 @@ def description(fields_json, fallback):
     text = " · ".join(vals) if vals else WS.sub(" ", fallback or "").strip()
     # the parser joins columns with an em dash; the site's register uses a middle dot
     text = text.replace(" — ", " · ").replace("—", "-")
-    if len(text) > DESC_CHARS:
-        cut = text[:DESC_CHARS].rsplit(" ", 1)[0]
-        text = (cut if len(cut) > DESC_CHARS * 0.6 else text[:DESC_CHARS]).rstrip(" ,;:·") + "…"
+    if max_chars and len(text) > max_chars:
+        cut = text[:max_chars].rsplit(" ", 1)[0]
+        text = (cut if len(cut) > max_chars * 0.6 else text[:max_chars]).rstrip(" ,;:·") + "…"
     return text
 
 
@@ -126,6 +360,14 @@ def is_nil_row(fields_json, desc):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out")
+    parser.add_argument("--money", default="portal/public/graph/money.json")
+    parser.add_argument("--access", default="portal/public/access.json")
+    parser.add_argument("--fits", default="portal/public/fits.json")
+    args = parser.parse_args()
+    registries = load_tie_registers(args.money, args.access, args.fits)
+    tie_flows = registries[-1]
     con = sqlite3.connect(DB, uri=True)
     con.row_factory = sqlite3.Row
     docs = {r["doc_id"]: dict(r) for r in con.execute(
@@ -158,6 +400,7 @@ def main():
                 "total": 0, "ocr_rows": 0, "unread_pages": unread,
                 "alterations": {"added": 0, "deleted": 0},
                 "buckets": {b: {"count": 0, "items": []} for b in BUCKETS},
+                "ties": [],
                 "_rows": {b: [] for b in BUCKETS},
             }
         for nk in name_keys(name) if d["jurisdiction"] == "federal" else name_keys(name) - set(sum(ALIASES.values(), [])):
@@ -168,6 +411,8 @@ def main():
 
     n_rows = 0
     n_nil = 0
+    reverse = defaultdict(list)
+    recent = []
     for r in con.execute(
             "SELECT id, doc_id, holder, category, kind, fields_json, description, date_declared, page, ocr "
             "FROM ext_interests ORDER BY id"):
@@ -197,6 +442,101 @@ def main():
             item["url"] = src
         p["_rows"][b].append((r["id"], item))
 
+        row_url = f"{src}#page={int(r['page'])}" if src and r["page"] else src
+        recent_ties = []
+        if b in ELIGIBLE_TIE_BUCKETS:
+            matches = match_tie(row_values(r["fields_json"], r["description"]), b, registries)
+            grouped = defaultdict(list)
+            donor_keys = [norm_org(org.get("label")) for kind, org in matches if kind == "donor"]
+            for kind, org in matches:
+                org_key = norm_org(org.get("label") or org.get("organisation"))
+                related_donor = next((k for k in donor_keys if k and
+                                      (org_key.startswith(f"{k} ") or k.startswith(f"{org_key} "))), None)
+                grouped[related_donor or org_key].append((kind, org))
+            for group in grouped.values():
+                group.sort(key=lambda x: {"donor": 0, "lobbyist": 1, "fits": 2}[x[0]])
+                primary_kind, primary = group[0]
+                donor = next((org for kind, org in group if kind == "donor"), None)
+                organisation = (donor or primary).get("label") or (donor or primary).get("organisation")
+                kinds = list(dict.fromkeys(kind for kind, _ in group))
+                tie = {
+                    "organisation": organisation,
+                    "kind": primary_kind,
+                    "kinds": kinds,
+                    "register": {
+                        "holder": r["holder"] or "unspecified",
+                        "category": b,
+                        "description": description(r["fields_json"], r["description"], None),
+                        "kind": r["kind"],
+                        "date": r["date_declared"],
+                        "url": row_url,
+                        "page": r["page"],
+                    },
+                }
+                if primary_kind == "lobbyist" or any(kind == "lobbyist" for kind, _ in group):
+                    lobby = next(org for kind, org in group if kind == "lobbyist")
+                    tie["lobbyist_jurisdictions"] = lobby.get("jurisdictions", [])
+                if primary_kind == "fits" or any(kind == "fits" for kind, _ in group):
+                    fit = next(org for kind, org in group if kind == "fits")
+                    if fit.get("url"):
+                        tie["fits_url"] = fit["url"]
+                if donor:
+                    tie.update({
+                        "donor_id": donor.get("id"),
+                        "industry": donor.get("industry"),
+                        "flows": tie_flows.get(donor.get("id"), []),
+                    })
+                recent_tie = {"organisation": organisation, "kind": primary_kind, "kinds": kinds}
+                if donor:
+                    recent_tie.update({
+                        "donor_id": donor.get("id"),
+                        "industry": donor.get("industry"),
+                    })
+                if tie.get("lobbyist_jurisdictions"):
+                    recent_tie["lobbyist_jurisdictions"] = tie["lobbyist_jurisdictions"]
+                if tie.get("fits_url"):
+                    recent_tie["fits_url"] = tie["fits_url"]
+                recent_ties.append(recent_tie)
+                p["ties"].append(tie)
+                if donor:
+                    reverse[donor["label"]].append({
+                        "id": d["key"], "name": p["name"], "jurisdiction": p["jurisdiction"],
+                        "chamber": p["chamber"], "parliament": p["parliament"],
+                        "holder": r["holder"] or "unspecified", "category": b,
+                        "description": tie["register"]["description"], "kind": r["kind"],
+                        "date": r["date_declared"], "url": row_url,
+                    })
+
+        if r["kind"] in {"addition", "deletion"} and r["date_declared"]:
+            recent_item = {
+                "id": r["id"], "person_id": d["key"], "name": p["name"],
+                "jurisdiction": p["jurisdiction"], "chamber": p["chamber"],
+                "parliament": p["parliament"], "holder": r["holder"] or "unspecified",
+                "bucket": b, "kind": r["kind"], "date": r["date_declared"],
+                "description": description(r["fields_json"], r["description"], None),
+                "url": row_url, "page": r["page"],
+            }
+            if r["ocr"]:
+                recent_item["ocr"] = 1
+            if recent_ties:
+                recent_item["ties"] = recent_ties
+            recent.append(recent_item)
+
+    # The source table retains some identical rows from successive document
+    # snapshots. They are one printed alteration, so the public ledger lists
+    # each person/date/category/text/source combination once.
+    recent.sort(key=lambda r: (r["date"], r["id"]), reverse=True)
+    recent_unique = []
+    recent_seen = set()
+    for item in recent:
+        marker = (item["person_id"], item["date"], item["kind"], item["bucket"],
+                  item["description"], item.get("url"))
+        if marker in recent_seen:
+            continue
+        recent_seen.add(marker)
+        recent_unique.append(item)
+    recent = recent_unique
+
     for p in people.values():
         for b in BUCKETS:
             rows = p["_rows"][b]
@@ -216,6 +556,11 @@ def main():
                 del p[k]
         if not p["unread_pages"]:
             del p["unread_pages"]
+        if p["ties"]:
+            p["ties"].sort(key=lambda t: (t["organisation"].lower(), t["register"]["category"],
+                                           t["register"].get("date") or ""))
+        else:
+            del p["ties"]
 
     people = dict(sorted(((k, v) for k, v in people.items() if v["total"]), key=lambda kv: kv[1]["name"]))
     by_name = {n: k for n, k in by_name.items() if k in people}
@@ -226,13 +571,15 @@ def main():
             "sources": {f"{d['chamber']}-{d['parliament']}": 0 for d in docs.values()},
         },
         "_by_name": dict(sorted(by_name.items())),
-        "people": {k: {"name": v["name"], "total": v["total"]} for k, v in people.items()},
+        "people": {k: {"name": v["name"], "total": v["total"],
+                        **({"ties": len({t["organisation"] for t in v.get("ties", [])})}
+                           if v.get("ties") else {})} for k, v in people.items()},
     }
     for d in docs.values():
         if d["key"] in people:
             index["_meta"]["sources"][f"{d['chamber']}-{d['parliament']}"] += 1
 
-    out_dir = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else None
+    out_dir = args.out
     dump = dict(ensure_ascii=False, separators=(",", ":"))
     if out_dir:
         os.makedirs(out_dir, exist_ok=True)
@@ -241,10 +588,37 @@ def main():
         for k, v in people.items():
             with open(os.path.join(out_dir, f"{k}.json"), "w") as f:
                 json.dump(v, f, **dump)
+        ties_by_donor = {
+            "meta": {
+                "generated": date.today().isoformat(),
+                "source": "Registers of Members' and Senators' Interests, 48th Parliament, and Queensland Register of Members' Interests, 58th Parliament",
+                "matching": "Exact normalised organisation names plus the curated brand aliases in scripts/export_interests.py",
+                "donors": len(reverse),
+                "rows": sum(len(rows) for rows in reverse.values()),
+            },
+            "donors": {name: sorted(rows, key=lambda r: (r["name"], r["category"], r.get("date") or ""))
+                       for name, rows in sorted(reverse.items())},
+        }
+        with open(os.path.join(out_dir, "ties-by-donor.json"), "w") as f:
+            json.dump(ties_by_donor, f, **dump)
+        recent_export = {
+            "meta": {
+                "generated": date.today().isoformat(),
+                "rows": min(len(recent), RECENT_LIMIT),
+                "available": len(recent),
+                "limit": RECENT_LIMIT,
+                "source": "Registers of Members' and Senators' Interests, 48th Parliament, and Queensland Register of Members' Interests, 58th Parliament",
+            },
+            "items": recent[:RECENT_LIMIT],
+        }
+        with open(os.path.join(out_dir, "recent.json"), "w") as f:
+            json.dump(recent_export, f, **dump)
     else:
         json.dump({**index, "people": people}, sys.stdout, **dump)
     print(f"[export_interests] {n_rows} rows ({n_nil} nil dropped), {len(people)} people, "
-          f"{len(by_name)} name keys" + (f" -> {out_dir}/" if out_dir else ""), file=sys.stderr)
+          f"{len(by_name)} name keys, {sum(len(p.get('ties', [])) for p in people.values())} ties "
+          f"across {len(reverse)} donors, {len(recent)} dated alterations" +
+          (f" -> {out_dir}/" if out_dir else ""), file=sys.stderr)
     for nk, kept, dropped in collisions:
         print(f"[export_interests] name collision: '{nk}' -> {kept} (also {dropped}, reachable only by id)", file=sys.stderr)
 

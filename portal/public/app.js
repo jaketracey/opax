@@ -26,7 +26,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "about", "methods", "stats", "expenses"];
+const PANELS = ["ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses"];
 
 // --- helpers ----------------------------------------------------------------
 
@@ -123,6 +123,90 @@ function partyDotHTML(party) {
   const cls = partyClass(party);
   if (!cls) return "";
   return `<span class="party party-${cls} party-dot-only"><i aria-hidden="true"></i></span>`;
+}
+
+const BALANCE_COALITION = new Set(["Liberal", "Nationals", "LNP", "Country Liberal Party"]);
+const BALANCE_ELECTION_YEARS = new Set([1998, 2001, 2004, 2007, 2010, 2013, 2016, 2019, 2022, 2025]);
+
+/** Print a donor's federal disclosure history as a two-sided ledger. */
+function donorBalanceHTML(flows) {
+  const source = "https://transparency.aec.gov.au/";
+  const byYear = new Map();
+  const totals = { coalition: 0, labor: 0, other: 0 };
+  const otherNames = new Set();
+
+  for (const edge of flows) {
+    const fallback = String(edge.target || "").replace(/^party:/, "");
+    const party = moneyData.nodes.find((n) => n.id === edge.target)?.label || fallback;
+    const group = BALANCE_COALITION.has(party) ? "coalition" : party === "Labor" ? "labor" : "other";
+    totals[group] += Number(edge.total) || 0;
+    if (group === "other") otherNames.add(party);
+    for (const [yearText, cell] of Object.entries(edge.byYear || {})) {
+      const year = Number(yearText);
+      const value = Math.max(0, Number(Array.isArray(cell) ? cell[0] : cell) || 0);
+      if (!Number.isFinite(year) || value <= 0) continue;
+      if (!byYear.has(year)) byYear.set(year, { year, coalition: 0, labor: 0, other: 0, otherNames: new Set() });
+      const row = byYear.get(year);
+      row[group] += value;
+      if (group === "other") row.otherNames.add(party);
+    }
+  }
+  const rows = [...byYear.values()].sort((a, b) => a.year - b.year);
+  if (!rows.length) return "";
+
+  const groups = ["coalition", "labor", "other"];
+  const peak = Object.fromEntries(groups.map((group) => [group,
+    rows.reduce((best, row) => row[group] > best[group] ? row : best, rows[0])]));
+  const scaleRow = rows.reduce((best, row) => {
+    const rowMax = Math.max(...groups.map((group) => row[group]));
+    const bestMax = Math.max(...groups.map((group) => best[group]));
+    return rowMax > bestMax ? row : best;
+  }, rows[0]);
+  const scaleGroup = groups.reduce((best, group) => scaleRow[group] > scaleRow[best] ? group : best, groups[0]);
+  const scale = Math.max(scaleRow[scaleGroup], 1);
+  const groupLabel = { coalition: "Coalition", labor: "Labor", other: "other parties" };
+  const srcFigure = (value, label) => `<a href="${source}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(value)}</a>`;
+  const width = (value) => Math.min(72, (value / scale) * 72).toFixed(1);
+  const peakLabel = (row, group) => row === peak[group] && row[group]
+    ? `<a class="balance-label" href="${source}" rel="noopener" target="_blank" aria-label="${esc(`${row.year}, ${groupLabel[group]} ${fmtMoney(row[group])}, AEC source`)}">${esc(fmtMoney(row[group]))}</a>`
+    : "";
+
+  const rowHTML = rows.map((row) => {
+    const election = BALANCE_ELECTION_YEARS.has(row.year);
+    const others = [...row.otherNames].sort().join(", ");
+    const detail = `${row.year}: Coalition ${fmtMoney(row.coalition)}, Labor ${fmtMoney(row.labor)}, other parties ${fmtMoney(row.other)}${others ? ` (${others})` : ""}${election ? " · federal election year" : ""}`;
+    return `<div class="balance-row${election ? " balance-election" : ""}" title="${esc(detail)}">
+      <span class="balance-year">${row.year}${election ? "<em>election</em>" : ""}</span>
+      <span class="balance-left">${peakLabel(row, "coalition")}<i class="balance-coalition" style="width:${width(row.coalition)}%" aria-hidden="true"></i></span>
+      <span class="balance-right">
+        <span><i class="balance-labor" style="width:${width(row.labor)}%" aria-hidden="true"></i>${peakLabel(row, "labor")}</span>
+        ${row.other ? `<span><i class="balance-other" style="width:${width(row.other)}%" aria-hidden="true"></i>${peakLabel(row, "other")}</span>` : ""}
+      </span>
+    </div>`;
+  }).join("");
+  const table = `<div class="visually-hidden"><table><caption>Disclosed money from this donor by year and party grouping</caption>
+    <thead><tr><th scope="col">Year</th><th scope="col">Coalition parties</th><th scope="col">Labor</th><th scope="col">Other parties</th></tr></thead>
+    <tbody>${rows.map((row) => `<tr><th scope="row"><a href="${source}" rel="noopener" target="_blank">${row.year}</a></th>${groups.map((group) => `<td><a href="${source}" rel="noopener" target="_blank">${esc(fmtMoney(row[group]))}</a></td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  const otherList = [...otherNames].sort();
+  const otherText = otherList.length
+    ? `; other parties here ${otherList.length === 1 ? "is" : "are"} ${otherList.map(esc).join(", ")}`
+    : "";
+
+  return `<section class="donor-balance" aria-labelledby="donor-balance-heading">
+    <h3 class="subject-section-title" id="donor-balance-heading">The balance, year by year</h3>
+    <div class="tiles balance-tiles">
+      <div class="tile"><b>${srcFigure(fmtMoney(totals.coalition), `Total to Coalition parties ${fmtMoney(totals.coalition)}, AEC source`)}</b><span>to Coalition parties</span></div>
+      <div class="tile"><b>${srcFigure(fmtMoney(totals.labor), `Total to Labor ${fmtMoney(totals.labor)}, AEC source`)}</b><span>to Labor</span></div>
+      <div class="tile"><b>${srcFigure(fmtMoney(totals.other), `Total to other parties ${fmtMoney(totals.other)}, AEC source`)}</b><span>to other parties</span></div>
+    </div>
+    <div class="balance-legend" aria-label="Party groupings">
+      <span><i class="balance-swatch balance-coalition" aria-hidden="true"></i>Coalition parties ${partyDotHTML("Liberal")}${partyDotHTML("Nationals")}${partyDotHTML("LNP")}</span>
+      <span><i class="balance-swatch balance-labor" aria-hidden="true"></i>Labor ${partyDotHTML("Labor")}</span>
+      <span><i class="balance-swatch balance-other" aria-hidden="true"></i>other parties</span>
+    </div>
+    <div class="balance-rows">${rowHTML}</div>${table}
+    <p class="fineprint">Bars are scaled to the largest single-side year for this donor (${esc(groupLabel[scaleGroup])}, ${scaleRow.year}). Coalition parties are the Liberal Party, the Nationals, the LNP and the Country Liberal Party summed${otherText}. Election years are marked. Source: <a href="${source}" rel="noopener" target="_blank">AEC disclosure returns as aggregated in the money map, CC BY 4.0 ↗︎</a>; totals are a floor.</p>
+  </section>`;
 }
 
 function samePartyLabel(a, b) {
@@ -698,6 +782,7 @@ const TITLES = {
   reports: "Reports · OPAX",
   doc: "From the record · OPAX",
   subject: "OPAX encyclopedia",
+  declared: "Just declared · OPAX",
   explore: "Explore · OPAX",
   about: "About · OPAX",
   methods: "Methods · OPAX",
@@ -957,6 +1042,11 @@ function route() {
     document.title = `${DIRECTORY_KINDS[segs[1]]} · OPAX`;
     setCrumbs([{ label: DIRECTORY_KINDS[segs[1]] }]);
     openDirectory(segs[1], params, manageFocus);
+  } else if (view === "declared") {
+    showPanel("declared");
+    document.title = TITLES.declared;
+    setCrumbs([{ label: "Just declared" }]);
+    renderDeclaredPage(params, manageFocus);
   } else if (view === "doc" && segs[1]) {
     showPanel("doc");
     document.title = TITLES.doc;
@@ -2380,13 +2470,142 @@ function votesFor(name) {
   return (pid && votesData?.[pid]) || null;
 }
 
-/** Off-site lookup for a person, company or party: a web search in a new tab. */
-function webSearchUrl(name) {
-  return `https://www.google.com/search?q=${encodeURIComponent(`${name} Australia`)}`;
-}
-
 function subjectHash(kind, label) {
   return `/subject/${kind}/${encodeURIComponent(label)}`;
+}
+
+const DECLARED_BUCKET_LABELS = {
+  shareholdings: "Shareholding", real_estate: "Real estate", trusts: "Trust",
+  directorships: "Directorship", gifts: "Gift", travel: "Sponsored travel or hospitality",
+  memberships: "Membership or office", liabilities: "Liability",
+  other: "Other interest",
+};
+let recentInterestsPromise = null;
+function loadRecentInterests() {
+  recentInterestsPromise ??= fetch("/interests/recent.json")
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return recentInterestsPromise;
+}
+
+function partyMapForRoster(roster) {
+  const map = new Map();
+  for (const p of roster?.people || []) {
+    const party = p.party_now || p.party;
+    if (!party) continue;
+    for (const name of [p.name, p.full]) {
+      if (name) map.set(String(name).toLowerCase(), party);
+    }
+  }
+  return map;
+}
+
+function declaredTieHTML(ties) {
+  if (!Array.isArray(ties) || !ties.length) return "";
+  return `<p class="declared-match">Name match: ${ties.map((tie) => {
+    const kinds = Array.isArray(tie.kinds) ? tie.kinds : [tie.kind];
+    const labels = [];
+    if (kinds.includes("donor")) labels.push(`AEC donor${tie.industry ? ` · ${industryLabel(tie.industry)}` : ""}`);
+    if (kinds.includes("lobbyist")) labels.push("registered lobbying firm");
+    if (kinds.includes("fits")) labels.push("FITS registrant");
+    const org = tie.donor_id
+      ? `<a href="${esc(subjectHash("donor", tie.organisation))}">${esc(tie.organisation)}</a>`
+      : safeUrl(tie.fits_url)
+        ? `<a href="${esc(tie.fits_url)}" rel="noopener" target="_blank">${esc(tie.organisation)} ↗︎</a>`
+        : `<span>${esc(tie.organisation)}</span>`;
+    return `${org}${labels.length ? ` <span class="result-meta">${esc(labels.join(" · "))}</span>` : ""}`;
+  }).join("; ")}. Exact names only; this identifies a shared name across public registers, not wrongdoing.</p>`;
+}
+
+function declaredRowHTML(item, partyByName, { showDate = true } = {}) {
+  const party = partyByName.get(String(item.name || "").toLowerCase());
+  const source = safeUrl(item.url);
+  const photo = photoUrlFor(item.name);
+  const chamber = item.chamber === "house" ? "House" : item.chamber === "senate" ? "Senate"
+    : item.chamber === "qld_la" ? "Queensland Legislative Assembly" : jurName(item.jurisdiction);
+  const category = DECLARED_BUCKET_LABELS[item.bucket] || String(item.bucket || "Interest").replace(/_/g, " ");
+  const kind = item.kind === "deletion" ? "Deletion" : "Addition";
+  const sourceText = item.page ? `page ${Number(item.page) || 1}` : "register";
+  return `<li class="declared-row${item.kind === "deletion" ? " interests-deleted" : ""}">
+    ${showDate ? `<time datetime="${esc(item.date)}">${esc(fmtDate(item.date))}</time>` : ""}
+    <span class="declared-portrait">${photo
+      ? `<img src="${esc(photo)}" width="48" height="48" loading="lazy" decoding="async" alt="">`
+      : `<span aria-hidden="true">${esc(String(item.name || "?").split(/\s+/).map((w) => w[0]).slice(0, 2).join(""))}</span>`}</span>
+    <div class="declared-entry">
+      <div class="declared-person"><a href="${esc(subjectHash("person", item.name))}">${esc(item.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}${chamber ? ` <span class="result-meta">${esc(chamber)}</span>` : ""}</div>
+      <div class="declared-kind">${esc(kind)} · ${esc(category)}${item.ocr ? ` <span class="result-meta">· machine-read from a scan</span>` : ""}</div>
+      <p class="declared-description">“${esc(item.description || "")}”${source ? ` <a class="declared-source-link" href="${esc(source)}" rel="noopener" target="_blank">${esc(sourceText)} ↗︎</a>` : ""}</p>
+      ${declaredTieHTML(item.ties)}
+    </div>
+  </li>`;
+}
+
+function weekStart(iso) {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
+  return d.toISOString().slice(0, 10);
+}
+
+function declaredLedgerHTML(items, partyByName) {
+  const weeks = new Map();
+  for (const item of items) {
+    const week = weekStart(item.date);
+    if (!weeks.has(week)) weeks.set(week, new Map());
+    const days = weeks.get(week);
+    if (!days.has(item.date)) days.set(item.date, []);
+    days.get(item.date).push(item);
+  }
+  return `<div class="declared-ledger">${[...weeks].map(([week, days]) => `
+    <section class="declared-week" aria-labelledby="declared-week-${week}">
+      <h3 id="declared-week-${week}">Week of ${esc(fmtDate(week))}</h3>
+      ${[...days].map(([day, rows]) => `<section class="declared-day">
+        <h4>${esc(fmtDate(day))}</h4>
+        <ul class="subject-list" role="list">${rows.map((item) => declaredRowHTML(item, partyByName)).join("")}</ul>
+      </section>`).join("")}
+    </section>`).join("")}</div>`;
+}
+
+async function renderDeclaredPage(params, manageFocus) {
+  const root = $("declared-list");
+  root.innerHTML = `<p class="status">Opening the register ledger…</p>`;
+  const [data, roster] = await Promise.all([loadRecentInterests(), loadParliamentarians(), loadPhotoMap()]);
+  const items = Array.isArray(data?.items) ? data.items : [];
+  if (!items.length) {
+    root.innerHTML = `<p class="status">No dated alterations are available in the current export.</p>`;
+    return;
+  }
+  const partyByName = partyMapForRoster(roster);
+  const bucket = params.get("category") || "";
+  const party = params.get("party") || "";
+  const person = params.get("person") || "";
+  const bucketSelect = $("declared-bucket");
+  const partySelect = $("declared-party");
+  const buckets = [...new Set(items.map((x) => x.bucket).filter(Boolean))]
+    .sort((a, b) => (DECLARED_BUCKET_LABELS[a] || a).localeCompare(DECLARED_BUCKET_LABELS[b] || b));
+  const parties = [...new Set(items.map((x) => partyByName.get(String(x.name || "").toLowerCase())).filter(Boolean))].sort();
+  bucketSelect.innerHTML = `<option value="">all categories</option>${buckets.map((b) => `<option value="${esc(b)}">${esc(DECLARED_BUCKET_LABELS[b] || b)}</option>`).join("")}`;
+  partySelect.innerHTML = `<option value="">all parties</option>${parties.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}`;
+  bucketSelect.value = buckets.includes(bucket) ? bucket : "";
+  partySelect.value = parties.includes(party) ? party : "";
+  const filtered = items.filter((item) => (!bucketSelect.value || item.bucket === bucketSelect.value) &&
+    (!partySelect.value || partyByName.get(String(item.name || "").toLowerCase()) === partySelect.value) &&
+    (!person || String(item.name || "").toLowerCase() === person.toLowerCase()));
+  const reg = "https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results/Registers_of_Interests";
+  $("declared-summary").innerHTML = `${person ? `For <a href="${esc(subjectHash("person", person))}">${esc(person)}</a> · ` : ""}` +
+    `<a href="${reg}" rel="noopener" target="_blank"><b>${filtered.length.toLocaleString()}</b> of the newest ${items.length.toLocaleString()} alterations shown` +
+    (Number(data.meta?.available) > items.length ? ` (${Number(data.meta.available).toLocaleString()} dated alterations in the source export)` : "") + `</a>` +
+    `${person ? ` · <a href="/declared">view everyone</a>` : ""}`;
+  root.innerHTML = filtered.length ? declaredLedgerHTML(filtered, partyByName) : `<p class="status">No alterations match these filters.</p>`;
+  const navigate = () => {
+    const next = new URLSearchParams();
+    if (bucketSelect.value) next.set("category", bucketSelect.value);
+    if (partySelect.value) next.set("party", partySelect.value);
+    if (person) next.set("person", person);
+    goRoute(`/declared${next.size ? `?${next}` : ""}`);
+  };
+  bucketSelect.onchange = navigate;
+  partySelect.onchange = navigate;
+  $("declared-filters").onsubmit = (event) => event.preventDefault();
+  if (manageFocus) $("panel-declared").querySelector("h2")?.focus?.({ preventScroll: true });
 }
 
 // Declared interests on person pages: the registers of members' interests
@@ -2419,6 +2638,11 @@ async function renderPersonInterests(name, personId, sections) {
     memberships: "Memberships and offices", liabilities: "Liabilities",
     other: "Other (savings, income, assets, partnerships)",
   };
+  const TIE_LABELS = {
+    shareholdings: "Shareholding", real_estate: "Real estate", trusts: "Trust",
+    directorships: "Directorship", gifts: "Gift", travel: "Sponsored travel or hospitality",
+    memberships: "Membership or office",
+  };
   const HOLDER = { self: "Self", spouse: "Spouse", children: "Dependent" };
   const REGISTER = {
     house: "Register of Members' Interests", senate: "Register of Senators' Interests",
@@ -2429,6 +2653,65 @@ async function renderPersonInterests(name, personId, sections) {
   const base = safeUrl(data.source_url);
   const buckets = Object.keys(LABELS).filter((b) => data.buckets[b]?.count > 0);
   const hasHolders = buckets.some((b) => (data.buckets[b].items || []).some((it) => HOLDER[it.holder]));
+  const register = `${REGISTER[data.chamber] || "Register of interests"}${data.parliament ? `, ${ordinal(Number(data.parliament))} Parliament` : ""}${data.as_at ? `, as at ${esc(fmtDate(data.as_at))}` : ""}`;
+
+  const ties = Array.isArray(data.ties) ? data.ties : [];
+  const tiesByOrg = new Map();
+  for (const tie of ties) {
+    const org = String(tie.organisation || "").trim();
+    if (!org) continue;
+    if (!tiesByOrg.has(org)) tiesByOrg.set(org, []);
+    tiesByOrg.get(org).push(tie);
+  }
+  const aecRegister = "https://transparency.aec.gov.au/";
+  const tieKindLine = (tie) => {
+    const kinds = Array.isArray(tie.kinds) ? tie.kinds : [tie.kind];
+    const parts = [];
+    if (kinds.includes("donor")) parts.push(`AEC donor${tie.industry ? ` · ${industryLabel(tie.industry)}` : ""}`);
+    if (kinds.includes("lobbyist")) {
+      const where = (tie.lobbyist_jurisdictions || []).filter(Boolean).join(", ");
+      parts.push(`registered lobbying firm${where ? ` · ${where}` : ""}`);
+    }
+    if (kinds.includes("fits")) parts.push("FITS registrant");
+    return parts.join(" · ");
+  };
+  const tieFlowLine = (tie) => {
+    const flows = Array.isArray(tie.flows) ? tie.flows : [];
+    if (!flows.length) return "";
+    const shown = flows.slice(0, 4);
+    const years = flows.flatMap((f) => [Number(f.from), Number(f.to)]).filter(Number.isFinite);
+    return `<p class="tie-flow">gave ${shown.map((f) => `${partyDotHTML(f.party)}${esc(f.party)} ` +
+      `<a href="${aecRegister}" rel="noopener" target="_blank"><b>${esc(fmtMoney(f.total || 0))}</b></a>`).join(" · ")}` +
+      `${flows.length > shown.length ? ` · <span class="result-meta">and ${flows.length - shown.length} more</span>` : ""}` +
+      `${years.length ? ` <span class="result-meta">${Math.min(...years)}–${Math.max(...years)}</span>` : ""}</p>`;
+  };
+  const tiesHTML = tiesByOrg.size ? `
+    <section class="declared-ties" aria-labelledby="declared-ties-heading">
+      <h3 class="subject-section-title" id="declared-ties-heading">Declared ties to disclosed money</h3>
+      <p class="interests-summary">${base ? `<a href="${esc(base)}" rel="noopener" target="_blank"><b>${tiesByOrg.size}</b></a>` : `<b>${tiesByOrg.size}</b>`}
+        ${tiesByOrg.size === 1 ? "organisation named" : "organisations named"} in this register also ${tiesByOrg.size === 1 ? "appears" : "appear"} in an AEC donor return, on a lobbyist register or on the Foreign Influence Transparency Scheme register.</p>
+      <ul class="subject-list ties-list" role="list">${[...tiesByOrg].map(([org, orgTies]) => {
+        const sourceTie = orgTies.find((t) => t.kind === "donor") || orgTies[0];
+        const lead = { ...sourceTie, kinds: [...new Set(orgTies.flatMap((t) => t.kinds || [t.kind]))] };
+        const orgLabel = lead.donor_id
+          ? `<a class="source-title" href="${esc(subjectHash("donor", org))}">${esc(org)}</a>`
+          : `<span class="source-title">${esc(org)}</span>`;
+        const declarations = orgTies.map((tie) => {
+          const row = tie.register || {};
+          const source = safeUrl(row.url);
+          const changed = row.kind === "addition" ? `, added ${esc(fmtDate(row.date) || "later")}`
+            : row.kind === "deletion" ? `, deleted ${esc(fmtDate(row.date) || "later")}` : "";
+          return `<p class="tie-declaration${row.kind === "deletion" ? " interests-deleted" : ""}">` +
+            `${HOLDER[row.holder] ? `<span class="interests-holder">${esc(HOLDER[row.holder])}</span>` : ""}` +
+            `<span>${esc(TIE_LABELS[row.category] || row.category || "Interest")}${changed}, as declared: “${esc(row.description || "")}”</span>` +
+            `${source ? `<a class="tie-source" href="${esc(source)}" rel="noopener" target="_blank">${row.page ? `page ${esc(String(row.page))}` : "register"} ↗︎</a>` : ""}</p>`;
+        }).join("");
+        const fits = (lead.kinds || []).includes("fits") && safeUrl(lead.fits_url)
+          ? ` <a href="${esc(lead.fits_url)}" rel="noopener" target="_blank">register ↗︎</a>` : "";
+        return `<li><div>${orgLabel}</div><div class="result-meta">${esc(tieKindLine(lead))}${fits}</div>${declarations}${tieFlowLine(lead)}</li>`;
+      }).join("")}</ul>
+      <p class="fineprint">A name matches when the register spells it as the AEC or the lobbyist register does; subsidiaries, trading names and funds that hold the shares are not matched, so this list is a floor. Flows are that organisation's disclosed gifts to each party, 1998-99 to 2025-26, and say nothing about the member. Source: ${base ? `<a href="${esc(base)}" rel="noopener" target="_blank">${esc(register)} ↗︎</a>` : esc(register)}; <a href="${aecRegister}" rel="noopener" target="_blank">AEC disclosure returns, CC BY 4.0 ↗︎</a>.${ties.some((t) => (t.kinds || []).includes("fits")) ? " FITS registration is a disclosure required by law, not a finding of wrongdoing." : ""}</p>
+    </section>` : "";
 
   const itemHTML = (it) => {
     const src = safeUrl(it.url) || base;
@@ -2456,10 +2739,10 @@ async function renderPersonInterests(name, personId, sections) {
   const deleted = Number(data.alterations?.deleted) || 0;
   const since = data.statement_date ? `since the statement of ${esc(fmtDate(data.statement_date))}` : "since the statement";
   const alterations = added || deleted
-    ? `+${num(added)} addition${added === 1 ? "" : "s"}, -${num(deleted)} deletion${deleted === 1 ? "" : "s"} ${since}`
+    ? `<a href="${esc(`/declared?person=${encodeURIComponent(data.name || name)}`)}">+${num(added)} addition${added === 1 ? "" : "s"}, -${num(deleted)} deletion${deleted === 1 ? "" : "s"} ${since}</a>`
     : `no alterations notified ${since}`;
-  const register = `${REGISTER[data.chamber] || "Register of interests"}${data.parliament ? `, ${ordinal(Number(data.parliament))} Parliament` : ""}${data.as_at ? `, as at ${esc(fmtDate(data.as_at))}` : ""}`;
   slot.innerHTML = `
+    ${tiesHTML}
     <p class="kicker">Declared interests</p>
     <p class="interests-summary"><b>${num(data.total)}</b> ${data.total === 1 ? "entry" : "entries"} across ${num(buckets.length)} ${buckets.length === 1 ? "category" : "categories"} · ${alterations}</p>
     <ul class="subject-list interests-list" role="list">${rows}</ul>
@@ -2467,7 +2750,55 @@ async function renderPersonInterests(name, personId, sections) {
     ${data.ocr_rows > 0 ? `<p class="fineprint">${num(data.ocr_rows)} ${data.ocr_rows === 1 ? "entry comes" : "entries come"} from scanned pages and may contain recognition errors.</p>` : ""}
     ${data.unread_pages > 0 ? `<p class="fineprint">${num(data.unread_pages)} ${data.unread_pages === 1 ? "page" : "pages"} of the source could not be read by machine; the register itself is complete.</p>` : ""}`;
   $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
-    `<dt>Declared interests</dt><dd>${num(data.total)} ${data.total === 1 ? "entry" : "entries"}</dd>`);
+    `<dt>Declared interests</dt><dd>${num(data.total)} ${data.total === 1 ? "entry" : "entries"}</dd>` +
+    (tiesByOrg.size ? `<dt>Ties to disclosed money</dt><dd><b>${num(tiesByOrg.size)}</b> ${tiesByOrg.size === 1 ? "organisation" : "organisations"}</dd>` : ""));
+}
+
+let interestsTiesPromise = null;
+function loadInterestsTies() {
+  interestsTiesPromise ??= fetch("/interests/ties-by-donor.json")
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return interestsTiesPromise;
+}
+
+/** The donor-side mirror of the exact-name join made by export_interests.py. */
+async function renderDonorInterests(name, sections) {
+  const key = currentSubjectKey;
+  const slot = document.createElement("div");
+  slot.className = "donor-interests";
+  sections.appendChild(slot);
+  const [index, roster] = await Promise.all([loadInterestsTies(), loadParliamentarians()]);
+  if (currentSubjectKey !== key) return;
+  const rows = index?.donors?.[name];
+  if (!Array.isArray(rows) || !rows.length) { slot.remove(); return; }
+  const partyByName = new Map((roster?.people || []).map((p) => [String(p.name || "").toLowerCase(), p.party_now || p.party]));
+  const byPerson = new Map();
+  for (const row of rows) {
+    const personKey = row.id || row.name;
+    if (!byPerson.has(personKey)) byPerson.set(personKey, []);
+    byPerson.get(personKey).push(row);
+  }
+  const chamberName = { house: "House", senate: "Senate", qld_la: "Queensland Assembly" };
+  const categoryName = {
+    shareholdings: "shareholding", real_estate: "real estate", trusts: "trust",
+    directorships: "directorship", gifts: "gift", travel: "sponsored travel or hospitality",
+    memberships: "membership or office",
+  };
+  slot.innerHTML = `
+    <h3 class="subject-section-title">Named in members' registers</h3>
+    <p class="interests-summary"><b>${byPerson.size}</b> ${byPerson.size === 1 ? "parliamentarian names" : "parliamentarians name"} ${esc(name)} in their current register.</p>
+    <ul class="subject-list donor-ties-list" role="list">${[...byPerson.values()].map((personRows) => {
+      const person = personRows[0];
+      const party = partyByName.get(String(person.name || "").toLowerCase());
+      const details = personRows.map((row) => {
+        const source = safeUrl(row.url);
+        const holder = row.holder && row.holder !== "unspecified" ? `, ${row.holder}` : "";
+        return `<span>${esc(categoryName[row.category] || row.category)}${esc(holder)}: “${esc(row.description || "")}”${source ? ` <a class="tie-source" href="${esc(source)}" rel="noopener" target="_blank">source ↗︎</a>` : ""}</span>`;
+      }).join("");
+      return `<li><div class="source-title"><a href="${esc(subjectHash("person", person.name))}">${esc(person.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}</div>
+        <div class="result-meta">${esc(chamberName[person.chamber] || person.chamber || "Register")}</div>${details}</li>`;
+    }).join("")}</ul>
+    <p class="fineprint">From the registers of members' and senators' interests (48th Parliament) and the Queensland Register of Members' Interests (58th Parliament), matched on the exact name. Entries as declared, not verified by OPAX.</p>`;
 }
 
 function normName(x) {
@@ -2619,14 +2950,6 @@ async function subjectMentions(name, container, heading) {
   } catch { /* mentions are a bonus, not a dependency */ }
 }
 
-function weeklyFunFact(node) {
-  const years = Math.max((node.lastYear || 0) - (node.firstYear || 0) + 1, 1);
-  const perWeek = node.total / (years * 52);
-  if (!isFinite(perWeek) || perWeek < 1) return "";
-  return `That works out to about <b>${fmtMoney(Math.round(perWeek))}</b> every single week for
-    ${years} year${years > 1 ? "s" : ""}, all from published AEC disclosures.`;
-}
-
 /**
  * "Also disclosed to state commissions" on a donor page: one hairline row per
  * state file the donor appears in (exact match after normalising case and
@@ -2675,8 +2998,8 @@ async function renderDonorStateMoney(name, sections) {
 }
 
 // --- parliamentary expenses (IPEA) ------------------------------------------
-// Per-person totals, category split, per-year series and the five largest
-// lines, exported by scripts/export_expenses.py from the IPEA quarterly
+// Per-person totals, category split and per-year series, exported by
+// scripts/export_expenses.py from the IPEA quarterly
 // reports and served static. Keyed by person_id, with a name index for the
 // people who have no portrait entry; fetched only when a person page opens.
 let expensesData = null;
@@ -2691,6 +3014,73 @@ const IPEA_NOTE =
   "Independent Parliamentary Expenses Authority quarterly reports, CC BY 4.0. Figures are as " +
   "published; IPEA corrects prior quarters, so treat totals as indicative.";
 
+let expenseBenchmarks = null;
+function median(values) {
+  const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
+  if (!sorted.length) return 0;
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
+/** Annualised category baselines from long-running people still present in
+ *  the latest IPEA year. The export has years, rather than a sitting flag, so
+ *  `to === latestYear` is the deliberately plain proxy used by the memo. */
+function getExpenseBenchmarks() {
+  if (expenseBenchmarks || !expensesData?.people) return expenseBenchmarks;
+  const latestQuarter = String(expensesData.meta?.to || "");
+  const latestYear = Number(latestQuarter.slice(0, 4)) || Math.max(...Object.values(expensesData.people).map((p) => Number(p.to) || 0));
+  const fromCutoff = latestYear - 3;
+  const cohort = Object.values(expensesData.people).filter((p) => Number(p.to) === latestYear && Number(p.from) <= fromCutoff);
+  const categories = new Map();
+  const totals = [];
+  for (const person of cohort) {
+    const years = Math.max((Number(person.to) || latestYear) - (Number(person.from) || latestYear) + 1, 1);
+    totals.push((Number(person.total) || 0) / years);
+    for (const [category, total] of person.by_category || []) {
+      if (!categories.has(category)) categories.set(category, []);
+      categories.get(category).push((Number(total) || 0) / years);
+    }
+  }
+  const byCategory = new Map([...categories].map(([category, values]) => {
+    const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
+    return [category, {
+      median: median(sorted),
+      p90: sorted[Math.max(0, Math.ceil(sorted.length * 0.9) - 1)] || 0,
+      count: sorted.length,
+    }];
+  }));
+  expenseBenchmarks = {
+    latestQuarter, latestYear, fromCutoff, count: cohort.length,
+    totalMedian: median(totals), byCategory,
+  };
+  return expenseBenchmarks;
+}
+
+function expenseComparisonHTML(person, benchmark, source) {
+  const years = Math.max(Number(person.to) - Number(person.from) + 1, 1);
+  const rows = (person.by_category || []).map(([category, total]) => ({
+    category, total: Number(total) || 0, annual: (Number(total) || 0) / years,
+    baseline: benchmark.byCategory.get(category) || { median: 0, p90: 0, count: 0 },
+  }));
+  if (!rows.length) return "";
+  const scale = Math.max(...rows.flatMap((r) => [r.annual, r.baseline.median]), 1);
+  const amount = (value, label) => source
+    ? `<a href="${esc(source)}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(fmtMoney(value))}</a>`
+    : esc(fmtMoney(value));
+  return `<section class="expense-comparison" aria-labelledby="expense-comparison-heading">
+    <h3 class="subject-section-title" id="expense-comparison-heading">By category, a year, against the chamber</h3>
+    <div class="expense-rows">${rows.map((r, i) => {
+      const term = expenseTermKey(r.category);
+      const title = `${r.category}: ${fmtMoney(r.total)} over ${years} years, about ${fmtMoney(r.annual)} a year; median of ${r.baseline.count} parliamentarians ${fmtMoney(r.baseline.median)} a year${r.baseline.p90 ? `, ninetieth percentile ${fmtMoney(r.baseline.p90)}` : ""}`;
+      return `<div class="expense-row" title="${esc(title)}">
+        ${term ? `<button type="button" class="expense-name barrow-term" data-term="${esc(term)}">${esc(r.category)}</button>` : `<span class="expense-name">${esc(r.category)}</span>`}
+        <span class="expense-track" aria-hidden="true"><i class="expense-bar" style="width:${Math.max((r.annual / scale) * 100, r.annual ? 1 : 0).toFixed(1)}%"></i><i class="expense-median" style="left:${Math.min((r.baseline.median / scale) * 100, 100).toFixed(1)}%">${i === 0 ? "<em>median</em>" : ""}</i></span>
+        <span class="expense-value"><b>${amount(r.annual, `${r.category}, this parliamentarian ${fmtMoney(r.annual)} a year, IPEA source`)}</b> a year<small>median ${amount(r.baseline.median, `${r.category}, chamber median ${fmtMoney(r.baseline.median)} a year, IPEA source`)} · total ${amount(r.total, `${r.category}, total ${fmtMoney(r.total)}, IPEA source`)}</small></span>
+      </div>`;
+    }).join("")}</div>
+  </section>`;
+}
+
 /** "Parliamentary expenses" on a person page plus the infobox quick fact.
  *  Silent when the person has no IPEA entry (state MPs, pre-2017 members). */
 async function renderPersonExpenses(name, personId, sections) {
@@ -2701,28 +3091,25 @@ async function renderPersonExpenses(name, personId, sections) {
   const pid = personId || photoMap?.[nameKey] || expensesData.names?.[nameKey];
   const e = pid && expensesData.people[pid];
   if (!e) return;
-  const fmtDollars = (n) => `$${Math.round(n).toLocaleString()}`;
   const span = e.from === e.to ? `in ${e.from}` : `${e.from} to ${e.to}`;
   const lines = Number(e.lines || 0);
-  const items = (e.top || []).map((t) => `
-    <li class="barrow" style="grid-template-columns:auto minmax(0,1fr) auto">
-      <span class="barrow-value">${esc(fmtDate(t.date))}</span>
-      <span class="barrow-name" title="${esc(t.description ? `${t.category}: ${t.description}` : t.category)}">${esc(t.category)}${t.description ? ` · ${esc(t.description)}` : ""}</span>
-      <b class="barrow-value">${esc(fmtDollars(t.amount))}</b>
-    </li>`).join("");
   const src = safeUrl(expensesData.meta?.source_url);
+  const benchmark = getExpenseBenchmarks();
+  const years = Math.max(Number(e.to) - Number(e.from) + 1, 1);
+  const annual = (Number(e.total) || 0) / years;
+  const sourceAmount = (value, label) => src
+    ? `<a href="${esc(src)}" rel="noopener" target="_blank" aria-label="${esc(label)}"><b>${esc(fmtMoney(value))}</b></a>`
+    : `<b>${esc(fmtMoney(value))}</b>`;
   sections.insertAdjacentHTML("beforeend", `
     <p class="kicker">Parliamentary expenses</p>
-    <p style="margin:0.2rem 0 0.6rem"><b>${esc(fmtMoney(e.total))}</b> claimed, ${esc(span)},
-      across ${lines.toLocaleString()} published line${lines === 1 ? "" : "s"}.</p>
-    ${e.by_category?.length ? barList(e.by_category, { fmt: fmtMoney, heading: "By category", term: expenseTermKey }) : ""}
+    <p style="margin:0.2rem 0 0.6rem">${sourceAmount(e.total, `${fmtMoney(e.total)} claimed expenses, IPEA source`)} claimed, ${esc(span)},
+      across ${lines.toLocaleString()} published line${lines === 1 ? "" : "s"}${benchmark ? `: about ${sourceAmount(annual, `${fmtMoney(annual)} a year, IPEA source`)} a year against a median of ${sourceAmount(benchmark.totalMedian, `${fmtMoney(benchmark.totalMedian)} chamber median a year, IPEA source`)}` : ""}.</p>
+    ${benchmark ? expenseComparisonHTML(e, benchmark, src) : ""}
     ${e.by_year?.length > 1 ? columnChart(e.by_year, {
       fmt: fmtMoney, heading: "Claimed per year",
       note: "Summed by reporting quarter. IPEA data starts in April 2017 and runs to the latest published quarter, so the first and last years can be partial.",
     }) : ""}
-    ${items ? `<figure class="chart"><figcaption>Five largest line items</figcaption>
-      <ul class="subject-list" role="list" style="margin:0">${items}</ul></figure>` : ""}
-    <p class="fineprint">${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗︎</a>` : ""}</p>`);
+    ${benchmark ? `<p class="fineprint">Bronze is this member's average year; the ink tick is the median year of ${benchmark.count.toLocaleString()} parliamentarians claiming in ${benchmark.latestYear} who have claimed since ${benchmark.fromCutoff} or earlier. Office costs follow electorate size and travel follows portfolio, so a bar past its tick is a fact, not a finding. Per-year figures divide each total by the ${years} calendar ${years === 1 ? "year" : "years"} claimed; the first and last are partial. Source: ${src ? `<a href="${esc(src)}" rel="noopener" target="_blank">IPEA quarterly expenditure reports, CC BY 4.0, to ${esc(benchmark.latestQuarter)} ↗︎</a>` : "IPEA quarterly expenditure reports, CC BY 4.0"}. IPEA corrects prior quarters, so treat totals as indicative. <a href="/expenses">What the categories mean</a>.</p>` : `<p class="fineprint">${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗︎</a>` : ""}</p>`}`);
   $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Claimed expenses</dt><dd><b>${esc(fmtMoney(e.total))}</b></dd>`);
 }
@@ -3056,6 +3443,69 @@ function loadAecExtras() {
   return aecExtrasPromise;
 }
 
+/** The party return's own receipts, separated using the AEC's three columns.
+ *  Historic returns occasionally itemise more than the headline total; those
+ *  rows keep the headline as the scale and clamp the segments to its width. */
+function partyReceiptsHTML(rows, registerURL) {
+  const source = safeUrl(registerURL) || "https://transparency.aec.gov.au/";
+  const series = (rows || []).map((r) => {
+    const receipts = Math.max(0, Number(r[1]) || 0);
+    const rawDonations = Math.max(0, Number(r[5]) || 0);
+    const rawOther = Math.max(0, Number(r[6]) || 0);
+    const donations = Math.min(rawDonations, receipts);
+    const other = Math.min(rawOther, Math.max(0, receipts - donations));
+    const notItemised = Math.max(0, receipts - donations - other);
+    return {
+      year: String(r[0] || ""), receipts, donations, other, notItemised,
+      branches: Number(r[4]) || 0,
+      clamped: rawDonations + rawOther > receipts,
+    };
+  }).filter((r) => r.year && r.receipts > 0).reverse();
+  if (!series.length) return "";
+  const latest = series[0];
+  const max = Math.max(...series.map((r) => r.receipts), 1);
+  const peak = series.find((r) => r.receipts === max);
+  const pct = (value, total) => total > 0 ? Math.round((value / total) * 100) : 0;
+  const srcFigure = (value, label) => `<a href="${esc(source)}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(value)}</a>`;
+  const clamped = series.filter((r) => r.clamped).length;
+  const rowHTML = series.map((r) => {
+    const donationPct = r.receipts ? (r.donations / r.receipts) * 100 : 0;
+    const otherPct = r.receipts ? (r.other / r.receipts) * 100 : 0;
+    const missingPct = r.receipts ? (r.notItemised / r.receipts) * 100 : 0;
+    const showPct = r === latest || r === peak;
+    const detail = `${r.year}: receipts ${fmtMoney(r.receipts)}; itemised donations ${fmtMoney(r.donations)}; itemised other receipts ${fmtMoney(r.other)}; not itemised ${fmtMoney(r.notItemised)} (${pct(r.notItemised, r.receipts)}%)`;
+    return `<div class="receipts-row" title="${esc(detail)}">
+      <span class="receipts-year">${esc(r.year)}</span>
+      <span class="receipts-track" aria-hidden="true"><span class="receipts-bar" style="width:${((r.receipts / max) * 100).toFixed(1)}%">
+        <i class="receipts-donations" style="flex-basis:${donationPct.toFixed(1)}%"></i>
+        <i class="receipts-other" style="flex-basis:${otherPct.toFixed(1)}%"></i>
+        <i class="receipts-unitemised" style="flex-basis:${missingPct.toFixed(1)}%"></i>
+      </span></span>
+      <span class="receipts-value">${srcFigure(fmtMoney(r.receipts), `${r.year} receipts ${fmtMoney(r.receipts)}, AEC source`)}</span>
+      <span class="receipts-pct">${showPct ? srcFigure(`${pct(r.notItemised, r.receipts)}%`, `${r.year}, ${pct(r.notItemised, r.receipts)} percent not itemised, AEC source`) : ""}</span>
+    </div>`;
+  }).join("");
+  const table = `<div class="visually-hidden"><table><caption>Receipts on the return</caption>
+    <thead><tr><th scope="col">Year</th><th scope="col">Receipts</th><th scope="col">Itemised donations</th><th scope="col">Itemised other receipts</th><th scope="col">Not itemised</th></tr></thead>
+    <tbody>${series.map((r) => `<tr><th scope="row"><a href="${esc(source)}" rel="noopener" target="_blank">${esc(r.year)}</a></th>${[r.receipts, r.donations, r.other, r.notItemised].map((v) => `<td><a href="${esc(source)}" rel="noopener" target="_blank">${esc(fmtMoney(v))}</a></td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  return `<section class="party-receipts" aria-labelledby="party-receipts-heading">
+    <h3 class="subject-section-title" id="party-receipts-heading">Receipts on the return</h3>
+    <div class="receipts-legend" aria-label="Receipt categories">
+      <span><i class="receipts-swatch receipts-donations" aria-hidden="true"></i>itemised as donations</span>
+      <span><i class="receipts-swatch receipts-other" aria-hidden="true"></i>itemised as other receipts</span>
+      <span><i class="receipts-swatch receipts-unitemised" aria-hidden="true"></i>not itemised on the return</span>
+    </div>
+    <div class="tiles receipts-tiles">
+      <div class="tile"><b>${srcFigure(fmtMoney(latest.receipts), `${latest.year} receipts ${fmtMoney(latest.receipts)}, AEC source`)}</b><span>receipts on the ${esc(latest.year)} return${latest.branches > 1 ? `, ${latest.branches} branches summed` : ""}</span></div>
+      <div class="tile"><b>${srcFigure(fmtMoney(latest.donations), `${latest.year} itemised donations ${fmtMoney(latest.donations)}, AEC source`)}</b><span>itemised as donations</span></div>
+      <div class="tile"><b>${srcFigure(`${pct(latest.notItemised, latest.receipts)}%`, `${latest.year}, ${pct(latest.notItemised, latest.receipts)} percent not itemised, AEC source`)}</b><span>of receipts not itemised</span></div>
+    </div>
+    <div class="receipts-rows">${rowHTML}</div>
+    ${table}
+    <p class="fineprint">Bars are scaled to the party's largest year shown. “Not itemised” is receipts minus the sums itemised as donations and as other receipts on the same return; the AEC does not require receipts under the disclosure threshold to be itemised. Public election funding is left where the return puts it.${clamped ? ` ${clamped} historic ${clamped === 1 ? "row reports" : "rows report"} itemised components above the headline receipts total; ${clamped === 1 ? "its bar is" : "their bars are"} clamped to that total.` : ""} Source: <a href="${esc(source)}" rel="noopener" target="_blank">AEC Transparency Register, annual returns, CC BY 4.0 ↗︎</a></p>
+  </section>`;
+}
+
 /** Party page "Debts and other funding": the creditors on the party's own
  *  latest annual return, its discretionary benefits and the associated
  *  entities whose returns name it. Silent for a party the register lacks. */
@@ -3067,10 +3517,13 @@ async function renderPartyDebts(label, sections) {
   const extras = await loadAecExtras();
   if (currentSubjectKey !== key) return;
   const p = extras?.parties?.[label];
+  const returns = p?.returns || [];
   const d = p?.debts, b = p?.benefits, ents = p?.associated_entities || [];
-  if (!d && !b && !ents.length) { slot.remove(); return; }
+  if (!returns.length && !d && !b && !ents.length) { slot.remove(); return; }
   const endOf = (fy) => String(Number(String(fy).slice(0, 4)) + 1); // "2024-25" -> "2025"
-  let html = `<p class="kicker">Debts and other funding</p>`;
+  const reg = safeUrl(extras.meta?.register_url);
+  let html = partyReceiptsHTML(returns, reg);
+  if (d || b || ents.length) html += `<p class="kicker">Debts and other funding</p>`;
   if (d) {
     const lenders = (d.top || []).map((l) => [l.type === "Financial" ? `${l.name} (financial institution)` : l.name, l.amount || 0]);
     html += `<div class="tiles">
@@ -3098,11 +3551,20 @@ async function renderPartyDebts(label, sections) {
           e.payments != null ? `payments ${fmtMoney(e.payments)}` : "", e.debts ? `debts ${fmtMoney(e.debts)}` : ""].filter(Boolean).join(" · "))}</span></li>`).join("")}</ul>
       ${(p.associated_entities_total || 0) > shown.length ? `<p class="fineprint" style="margin-top:0.5rem">${p.associated_entities_total} entities have named ${esc(label)} on an associated-entity return; the ${shown.length} with the largest receipts on their latest return are shown, each with that return's year.</p>` : ""}`;
   }
-  const reg = safeUrl(extras.meta?.register_url);
-  html += `<p class="fineprint">Debts are the balances the party's branches listed as owed at 30 June on their own AEC
+  if (d || b || ents.length) html += `<p class="fineprint">Debts are the balances the party's branches listed as owed at 30 June on their own AEC
     annual returns, all branches summed: bank loans sit beside trade creditors and tax owed, and a balance is not new
     borrowing. Creditors under the disclosure threshold are not itemised. Source: AEC Transparency Register, CC BY 4.0.${reg ? ` <a href="${esc(reg)}" rel="noopener" target="_blank">Open the register ↗︎</a>` : ""}</p>`;
   slot.innerHTML = html;
+  if (returns.length) {
+    const latest = returns[returns.length - 1];
+    const receipts = Math.max(0, Number(latest[1]) || 0);
+    const donations = Math.min(Math.max(0, Number(latest[5]) || 0), receipts);
+    const other = Math.min(Math.max(0, Number(latest[6]) || 0), Math.max(0, receipts - donations));
+    const notItemised = Math.max(0, receipts - donations - other);
+    const share = receipts ? Math.round((notItemised / receipts) * 100) : 0;
+    $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
+      `<dt>Receipts ${esc(String(latest[0]))}</dt><dd><a href="${esc(reg || "https://transparency.aec.gov.au/")}" rel="noopener" target="_blank"><b>${esc(fmtMoney(receipts))}</b> · ${esc(String(share))}% not itemised</a></dd>`);
+  }
   if (d) $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Debts at 30 June ${esc(endOf(d.year))}</dt><dd><b>${esc(fmtMoney(d.total || 0))}</b></dd>`);
 }
@@ -3131,7 +3593,9 @@ async function renderPersonVotes(name, personId, sections) {
   const years = recs.flatMap((r) => (Array.isArray(r.years) ? r.years : [])).map(Number).filter(Number.isFinite);
   const jurs = [...new Set(recs.map((r) => r.jurisdiction).filter(Boolean))];
   const jurName = (j) => STATE_NAMES[j] || String(j || "").toUpperCase();
-  const jurChip = (j) => `<span class="party party-oth" style="--pc:var(--bronze)"><i aria-hidden="true"></i>${esc(jurName(j))}</span>`;
+  const jurChip = (j) => jurs.length > 1
+    ? `<span class="party party-oth" style="--pc:var(--bronze)"><i aria-hidden="true"></i>${esc(jurName(j))}</span>`
+    : "";
   const side = (field) => recs
     .flatMap((r) => (Array.isArray(r[field]) ? r[field] : []).map((d) => ({ ...d, jur: d.jur || r.jurisdiction })))
     .sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 6);
@@ -3259,6 +3723,7 @@ async function openSubject(kind, name, manageFocus) {
   currentSubjectKey = key;
   destroySubjectMap();
   const body = $("subject-body");
+  body.classList.toggle("subject-person", kind === "person");
   const SUBJECT_LABELS = {
     person: "Parliamentarian", party: "Political party", donor: "Donor",
     // Provisional: the entry names its own AEC category once the register
@@ -3297,8 +3762,7 @@ async function openSubject(kind, name, manageFocus) {
         [["Type", kind === "party" ? "Political party" : "Organisation"],
          kind === "donor" && fitsInfoRow(fits, "by_entity", name)], "",
         [actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for them", { primary: true }),
-         actionBtn("map", "/money", "Open the money map"),
-         actionBtn("external", webSearchUrl(name), "Search the web", { external: true })]);
+         actionBtn("map", "/money", "Open the money map")]);
       if (kind === "donor") renderDonorStateMoney(name, sections);
       subjectMentions(name, sections, "In parliament");
       return;
@@ -3341,7 +3805,7 @@ async function openSubject(kind, name, manageFocus) {
           `<span class="alias-toggle">and ${a.length - 3} more</span></summary>` +
           `<span class="alias-list alias-rest">${a.slice(3).map(esc).join("; ")}</span></details>`;
       })()],
-    ], weeklyFunFact(node), [
+    ], "", [
       actionBtn("ask",
         askHash(isParty
           ? `What has parliament said about the ${node.label}?`
@@ -3351,7 +3815,6 @@ async function openSubject(kind, name, manageFocus) {
         `Ask what parliament said about ${isParty ? "them" : (["individual", "other", ""].includes(String(node.industry || "").toLowerCase()) ? "this donor" : "this industry")}`, { primary: true }),
       actionBtn("search", searchHash(`"${node.label}"`, {}), "Search mentions in the record"),
       actionBtn("download", "/graph/money.json", "Download the data"),
-      actionBtn("external", webSearchUrl(node.label), "Search the web", { external: true }),
     ]);
     sections.insertAdjacentHTML("beforeend", barList(flowRows, {
       fmt: fmtMoney,
@@ -3359,8 +3822,10 @@ async function openSubject(kind, name, manageFocus) {
       linkTo: (nm) => subjectHash(isParty ? "donor" : "party", nm),
       partyDots: !isParty, // donor page rows are parties; party page rows are donors
     }));
+    if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
     sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
+    if (!isParty) renderDonorInterests(node.label, sections);
     if (!isParty) renderDonorStateMoney(node.label, sections);
     if (isParty) renderPartyDebts(node.label, sections);
     renderDonorAccess(node.label, sections);
@@ -3415,10 +3880,8 @@ async function openSubject(kind, name, manageFocus) {
     fitsInfoRow(fits, "people", name),
   ], "", [
     actionBtn("speeches", searchHash("", { speaker: name }), "View all their speeches", { primary: true }),
-    actionBtn("external", `https://theyvoteforyou.org.au/search?query=${q}`, "Voting record", { external: true }),
     actionBtn("external", `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliamentary profile", { external: true }),
     actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
-    actionBtn("external", webSearchUrl(name), "Search the web", { external: true }),
   ]);
   renderPortraitCredit(name, key);
   sections.insertAdjacentHTML("beforeend", `
@@ -3466,15 +3929,8 @@ async function openSubject(kind, name, manageFocus) {
   await subjectNews(name, sections);
   await renderPersonExpenses(name, photoMap?.[name.trim().toLowerCase()], sections);
   if (party) {
-    await loadMoneyData();
-    if (currentSubjectKey !== key) return;
-    const pnode = findMoneyNode("party", party);
-    if (pnode) {
-      sections.insertAdjacentHTML("beforeend",
-        `<p class="fineprint" style="margin-top:1rem">The money map starts from ${esc(party)}, the party this
-         speaker's indexed speeches carry. In AEC disclosure data, money flows to parties, not individuals.</p>`);
-      mountSubjectMap(pnode.id);
-    }
+    sections.insertAdjacentHTML("beforeend",
+      `<p class="person-money-link"><a href="${esc(subjectHash("party", party))}">Money map from ${esc(party)} →</a></p>`);
   }
 }
 
@@ -3655,6 +4111,7 @@ async function openTopicPage(slug, manageFocus) {
   currentSubjectKey = key;
   destroySubjectMap();
   const body = $("subject-body");
+  body.classList.remove("subject-person");
   const name = TOPICS[slug];
   if (!name) {
     body.innerHTML = `<p class="kicker">Topic</p>
@@ -4648,7 +5105,6 @@ async function renderCampaignerEntry(name, key) {
     box.innerHTML = infoboxHTML([["Type", "Organisation"]], "", [
       actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for them", { primary: true }),
       actionBtn("entry", "/subject/campaigner", "All campaigners and third parties"),
-      actionBtn("external", webSearchUrl(name), "Search the web", { external: true }),
     ]);
     await subjectMentions(name, sections, "In parliament");
     return;
@@ -4706,7 +5162,6 @@ async function renderCampaignerEntry(name, key) {
       "Ask what parliament said about them", { primary: true }),
     actionBtn("search", searchHash(`"${e.name}"`, {}), "Search mentions in the record"),
     actionBtn("download", "/graph/campaigners.json", "Download the data"),
-    actionBtn("external", webSearchUrl(e.name), "Search the web", { external: true }),
   ]);
 
   const charts = CAMPAIGNER_CHART_ORDER
@@ -5078,14 +5533,12 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
   const topDonor = don?.top_donors?.[0];
   if (topDonor) {
     const node = findMoneyNode("donor", topDonor[0]);
-    const fact = node ? weeklyFunFact(node).replace(/<[^>]+>/g, "") : "";
     cards.push(`<article class="report-card ency-card">
       <div class="ency-id">
         <span class="card-kicker">Donor${node?.industry ? ` · ${esc(industryLabel(node.industry))}` : ""}</span>
         <a class="card-title ency-name" href="${esc(subjectHash("donor", topDonor[0]))}">${esc(topDonor[0])}</a>
       </div>
-      <p class="card-blurb">${esc(fmtMoney(topDonor[1]))} disclosed${node ? `, ${node.firstYear} to ${node.lastYear}` : " to parties"}.
-        ${esc(fact)}</p>
+      <p class="card-blurb">${esc(fmtMoney(topDonor[1]))} disclosed${node ? `, ${node.firstYear} to ${node.lastYear}` : " to parties"}.</p>
       ${actionBtn("entry", subjectHash("donor", topDonor[0]), "Open the entry")}
     </article>`);
   }
@@ -5144,6 +5597,18 @@ async function renderFrontAdded() {
   } catch { /* stays hidden */ }
 }
 
+async function renderFrontDeclared() {
+  try {
+    const [data, roster] = await Promise.all([loadRecentInterests(), loadParliamentarians(), loadPhotoMap()]);
+    const items = (data?.items || []).slice(0, 6);
+    if (!items.length) return;
+    const partyByName = partyMapForRoster(roster);
+    $("front-declared").innerHTML = `<ul class="subject-list front-declared-list" role="list">${items.map((item) => declaredRowHTML(item, partyByName)).join("")}</ul>
+      <p class="fineprint">Registers of Members' and Senators' Interests, 48th Parliament, and Queensland Register of Members' Interests, 58th Parliament; entries as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. AEC matches use <a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">Transparency Register returns, CC BY 4.0 ↗︎</a>.</p>`;
+    $("mod-declared").hidden = false;
+  } catch { /* stays hidden */ }
+}
+
 function renderFrontPage() {
   setFrontPageHidden(false);
   renderFrontNumbers();
@@ -5151,7 +5616,7 @@ function renderFrontPage() {
   if (frontRendered) return;
   frontRendered = true;
   renderFrontNews();
-  onIdle(() => { mountFrontMaps(); renderFrontTopic(); renderFrontAdded(); });
+  onIdle(() => { mountFrontMaps(); renderFrontTopic(); renderFrontAdded(); renderFrontDeclared(); });
 }
 
 // --- the home maps ----------------------------------------------------------
@@ -6541,7 +7006,7 @@ $("pager-pages")?.addEventListener("click", (e) => {
 // --- empty record ------------------------------------------------------------
 // A blank record is a finding in itself, so it gets the page's own register
 // rather than a grey status line: what was looked for, why Hansard may not
-// hold it, and the ways out (looser phrase, fewer filters, the web).
+// hold it, and the ways out (a looser phrase or fewer filters).
 
 function renderSearchEmpty(q, f) {
   const box = $("search-empty");
@@ -6554,7 +7019,6 @@ function renderSearchEmpty(q, f) {
   if (q && bare !== q) actions.push(`<a class="action-btn" href="${esc(searchHash(bare, f))}">Try without the quotes</a>`);
   if (q && f.mode === "keyword") actions.push(`<a class="action-btn" href="${esc(searchHash(q, { ...f, mode: "hybrid" }))}">Match by meaning too</a>`);
   if (q && activeFilterSummary(f)) actions.push(`<a class="action-btn" href="${esc(searchHash(q, { kind: f.kind, mode: f.mode }))}">Search without filters</a>`);
-  if (shown) actions.push(`<a class="action-btn" href="${esc(webSearchUrl(shown))}" target="_blank" rel="noopener">Search the web ↗︎</a>`);
   box.innerHTML = `
     <span class="empty-mark" aria-hidden="true">“ ”</span>
     <h2 class="empty-title">Nothing in the record for “${esc(shown)}”.</h2>
