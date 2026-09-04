@@ -17,6 +17,17 @@ in the OpenRouter preset (dashboard edit, no KB touch): switch the preset's
 `only` to `order` if fallback-on-outage is preferred over strict pinning
 (strict = asks fail during a DeepSeek outage). generation_config 1600 max out
 / 120k max in.
+**Reasoning burn (found 2026-09-04):** the box's `model_id` is `@preset/opax`, and
+v4-flash reasons by default. The platform's `reasoning_features` knobs
+(`effort_key`, `dispatch` 0/1/2/3, `default_effort` 5) were tried live and change
+nothing — `reasoning` still comes back (4-19K chars) and on a bad draw eats the whole
+4,096-token completion cap: `answer: ""`, `status: success`, the portal shows "no
+written answer came back". Sent directly to OpenRouter, `reasoning: {enabled: false}`
+(or `reasoning_effort: "none"`) zeroes reasoning tokens on this model, so the fix is
+on the preset (dashboard: presets → opax → add `"reasoning": {"enabled": false}` to the
+config; the presets API is read-only). Verify with a direct `@preset/opax` call:
+`completion_tokens_details.reasoning_tokens` must be 0.
+
 Applied via `scripts/arag_byok_openrouter.py`; **rollback is one command**
 (`--rollback` restores the previously pinned `gemini-2.5-flash-lite` and
 clears the key). Verified in production: ~13s cited /ask, 20 sources/11 cited.
