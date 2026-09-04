@@ -5510,34 +5510,44 @@ async function renderFrontNews() {
   const holder = $("front-news");
   try {
     const data = await api("/api/news");
-    const items = (data.items || []).filter((i) => safeUrl(i.url)).slice(0, 6);
+    const items = (data.items || []).filter((i) => safeUrl(i.url)).slice(0, 18);
     if (!items.length) { $("mod-news").hidden = true; return; }
     const srcName = { ABC: "ABC News", Guardian: "The Guardian" };
-    holder.innerHTML = `<ol class="news-list" role="list">${items.map((i) => {
-      // Ask and search the SUBJECT, not the headline: a labelled topic when the
-      // headline names one, otherwise the two strongest words it left behind.
+    holder.innerHTML = `<ol class="news-list" role="list">${items.map((i, index) => {
+      // Search the subject rather than the headline.
       // A headline that matches no topic gets no pivots. The old fallback took
       // two words off the article's keyword string, which asked the record
       // about phrases like "populist one" and retrieved nothing.
-      const slug = newsTopicSlug(i.title);
+      const slug = frontNewsTopic(i.title);
       const subject = slug ? TOPICS[slug] : "";
-      // Six identical pairs of buttons read as a form, not as a way in. The
-      // topic leads instead, so every row differs where the eye lands, and the
-      // two ways in are quiet verbs after it rather than boxes.
-      const pivots = subject ? `<span class="news-pivots">
-          <a class="news-pivot-topic" href="${esc(askHash(`What has parliament said about ${subject.toLowerCase()}?`))}">${esc(subject)}</a>
-          <span class="news-pivot-rest">in the record<span aria-hidden="true"> · </span><a
-            href="${esc(searchHash(subject, { topic: slug }))}">search the speeches</a></span>
-        </span>` : "";
+      const pivots = subject ? `<a class="news-record-chip" href="${esc(searchHash(subject, { topic: slug }))}">${esc(subject)} in the record <span aria-hidden="true">→</span></a>` : "";
       const when = relTime(i.published);
-      return `<li>
+      return `<li${index >= 6 ? ' class="front-news-extra" hidden' : ""}>
         <a class="news-headline" href="${esc(safeUrl(i.url))}" rel="noopener" target="_blank">${esc(i.title)}</a>
         <span class="news-meta"><span class="news-source">${esc(srcName[i.source] || i.source || "")}</span>${when ? ` · ${esc(when)}` : ""}</span>
         ${pivots}</li>`;
-    }).join("")}</ol>`;
+    }).join("")}</ol>${items.length > 6 ? `<button type="button" class="action-btn" id="front-news-more" aria-expanded="false" aria-controls="front-news-list">More headlines (${items.length - 6})</button>` : ""}`;
+    holder.querySelector("ol").id = "front-news-list";
+    const more = $("front-news-more");
+    if (more) more.onclick = () => {
+      const expanded = more.getAttribute("aria-expanded") !== "true";
+      holder.querySelectorAll(".front-news-extra").forEach((row) => { row.hidden = !expanded; });
+      more.setAttribute("aria-expanded", String(expanded));
+      more.textContent = expanded ? "Fewer headlines" : `More headlines (${items.length - 6})`;
+    };
   } catch {
     $("mod-news").hidden = true;
   }
+}
+
+function frontNewsTopic(headline) {
+  const fallback = newsTopicSlug(headline);
+  // Keep overseas coverage overseas; otherwise explicit subject phrases
+  // outrank incidental party names and words such as "budget".
+  if (fallback === "foreign-affairs") return fallback;
+  if (/\b(house prices?|home loans?|housing|mortgages?|rents?|renters?|negative gearing)\b/i.test(headline)) return "housing";
+  if (/\b(tobacco|vaping)\b/i.test(headline)) return "hospitality-alcohol";
+  return fallback;
 }
 
 function renderFrontNumbers() {
@@ -5637,14 +5647,26 @@ async function renderFrontTopic() {
     // topic leading. Needs the other reports too, so it fills in on its own.
     renderFrontEncy(dayIdx, report, don).catch(() => { /* module stays hidden */ });
 
-    // Reports row (index already in hand).
-    $("front-reports").innerHTML = reportsIndex.map((r) => `
-      <a class="report-card" href="/reports/${esc(r.slug)}">
-        ${reportGlyph(r.slug, "card-glyph")}<span class="card-title">${esc(r.title)}</span>
-        <span class="card-blurb">${esc(r.blurb)}</span>
-        <span class="card-meta">Updated ${esc(fmtDate(r.updated || ""))}</span></a>`).join("");
-    $("mod-reports").hidden = false;
   } catch { /* modules stay hidden */ }
+}
+
+async function renderFrontReports() {
+  try {
+    if (!reportsIndex) await loadReportsIndex();
+    if (!reportsIndex?.length) return;
+    const lines = {
+      climate: "Targets, coal and renewables.",
+      gambling: "Pokies, wagering and reform.",
+      housing: "Affordability, tax and supply.",
+      immigration: "Borders, detention and migration.",
+      indigenous: "The Voice, treaty and native title.",
+      media: "Ownership, platforms and the press.",
+    };
+    $("front-reports").innerHTML = reportsIndex.map((report) => `<a class="report-card" href="/reports/${esc(report.slug)}">
+      ${reportGlyph(report.slug, "card-glyph")}<span class="card-title">${esc(report.title)}</span>
+      <span class="card-blurb">${esc(lines[report.slug] || report.blurb)}</span></a>`).join("");
+    $("mod-reports").hidden = false;
+  } catch { /* The other front-page modules remain available. */ }
 }
 
 // The encyclopedia slider: one card per report's top speaker (today's topic
@@ -5775,7 +5797,15 @@ async function renderFrontDeclared() {
     const items = (data?.items || []).slice(0, 6);
     if (!items.length) return;
     const partyByName = partyMapForRoster(roster);
-    $("front-declared").innerHTML = `<ul class="subject-list front-declared-list" role="list">${items.map((item) => declaredRowHTML(item, partyByName)).join("")}</ul>
+    const days = new Map();
+    for (const item of items) {
+      if (!days.has(item.date)) days.set(item.date, []);
+      days.get(item.date).push(item);
+    }
+    $("front-declared").innerHTML = `${[...days].map(([date, rows]) => `<section class="front-declared-day" aria-labelledby="front-declared-${esc(date)}">
+      <h3 id="front-declared-${esc(date)}"><time datetime="${esc(date)}">${esc(fmtDate(date))}</time></h3>
+      <ul class="subject-list front-declared-list" role="list">${rows.map((item) => declaredRowHTML(item, partyByName, { showDate: false })).join("")}</ul>
+      </section>`).join("")}
       <p class="fineprint">Registers of Members' and Senators' Interests, 48th Parliament, and Queensland Register of Members' Interests, 58th Parliament; entries as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. AEC matches use <a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">Transparency Register returns, CC BY 4.0 ↗︎</a>.</p>`;
     $("mod-declared").hidden = false;
   } catch { /* stays hidden */ }
@@ -5788,7 +5818,7 @@ function renderFrontPage() {
   if (frontRendered) return;
   frontRendered = true;
   renderFrontNews();
-  onIdle(() => { mountFrontMaps(); renderFrontTopic(); renderFrontAdded(); renderFrontDeclared(); });
+  onIdle(() => { mountFrontMaps(); renderFrontTopic(); renderFrontReports(); renderFrontAdded(); renderFrontDeclared(); });
 }
 
 // --- the home maps ----------------------------------------------------------

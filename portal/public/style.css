@@ -2525,3 +2525,38 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #front-map-root .mm-card { overscroll-behavior: contain; scrollbar-gutter: stable; }
 #front-statemap .sm-tip-meta { font-size: 0.8125rem; line-height: 1.5; }
 #front-statemap .sm-tip-name { font-family: var(--serif); font-size: 1rem; }
+
+#front-news .news-list li { padding: 1rem 0; }
+#front-news .news-headline { display: flex; align-items: center; min-height: 44px; font: 600 1.0625rem/1.5 var(--serif); }
+#front-news .news-meta { margin-top: 0.4rem; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); }
+#front-news .news-source { font: inherit; text-transform: none; letter-spacing: 0; }
+#front-news .news-record-chip {
+  display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; margin-top: 0.5rem;
+  padding: 0.45rem 0.75rem; border: 1px solid var(--line); border-radius: 999px;
+  font: 600 0.8125rem/1.4 var(--sans); color: var(--bronze-ink); text-decoration: none;
+}
+#front-news-more { min-height: 44px; margin-top: 0.75rem; }
+#front-declared .front-declared-day > h3 {
+  margin: 1.25rem 0 0; padding: 0.5rem 0; border-bottom: 1px solid var(--line-strong);
+  color: var(--ink-soft); font: 500 0.875rem/1.5 var(--sans);
+}
+#front-declared .declared-row { grid-template-columns: 48px minmax(0, 1fr); padding: 1rem 0; gap: 0.75rem; }
+#front-declared .declared-portrait { grid-column: 1; }
+#front-declared .declared-entry { grid-column: 2; }
+#front-declared .declared-kind { font: 400 0.8125rem/1.5 var(--sans); }
+#front-declared .declared-description { font: 400 0.9375rem/1.65 var(--serif); }
+#front-declared .declared-person > a { display: inline-flex; align-items: center; min-height: 44px; }
+#front-reports { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
+#front-reports .report-card { min-width: 0; padding: 1rem; border: 1px solid var(--line); border-radius: 0; }
+#front-reports .card-title { font-size: 1.125rem; line-height: 1.4; }
+#front-reports .card-blurb { font: 400 0.8125rem/1.5 var(--sans); }
+@media (max-width: 700px) {
+  #front-reports { display: flex; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 0.75rem; scrollbar-width: thin; }
+  #front-reports .report-card { flex: 0 0 285px; scroll-snap-align: start; }
+  #front-declared .declared-entry { display: contents; }
+  #front-declared .declared-person { grid-column: 2; min-height: 48px; }
+  #front-declared .declared-kind, #front-declared .declared-description, #front-declared .declared-match { grid-column: 1 / -1; margin: 0; }
+}
+
+#front-declared .declared-source-link { display: table; margin: 0.35rem 0 0; padding-block: 0.55rem; }
+#front-declared .declared-match { margin-top: 0.4rem; }
