@@ -1026,13 +1026,13 @@ export function mountTimeMachine(container, opts = {}) {
     </div>
 
     <section class="tm-gallery" role="dialog" aria-modal="true" aria-labelledby="tm-gallery-title" tabindex="-1" hidden>
-      <header class="tm-gallery-head">
+      <div class="tm-gallery-head">
         <div>
           <h2 class="tm-gallery-title" id="tm-gallery-title"></h2>
           <span class="tm-gallery-count" aria-live="polite"></span>
         </div>
         <button type="button" class="tm-gallery-close">Back to the year</button>
-      </header>
+      </div>
       <div class="tm-gallery-stage">
         <button type="button" class="tm-gallery-nav tm-gallery-prev" aria-label="Previous photograph">‹</button>
         <figure class="tm-gallery-figure">
