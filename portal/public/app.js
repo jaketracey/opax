@@ -8696,16 +8696,21 @@ function moneyWordsCharts(stats, { topic } = {}) {
   return out;
 }
 
-function renderStats(container, stats, topic) {
+/**
+ * The money and words charts under a report. `speakers: false` drops the
+ * speaker ranking: a v2 report ranks the same people in its own voices block,
+ * from its own counts, and two league tables of one thing that disagree are
+ * worse than either alone.
+ */
+function renderStats(container, stats, topic, { speakers = true } = {}) {
   if (!stats) { container.innerHTML = ""; return; }
   const don = stats.donations;
-  const industries = fmtIndustries(don?.industries || []);
   let htmlOut = "";
   htmlOut += moneyWordsCharts(stats, { topic });
   if (don?.top_donors?.length) htmlOut += barList(don.top_donors, {
     heading: "Largest donors", fmt: fmtMoney,
     linkTo: (nm) => subjectHash("donor", nm) });
-  if (stats.top_speakers?.length) htmlOut += barList(stats.top_speakers, {
+  if (speakers && stats.top_speakers?.length) htmlOut += barList(stats.top_speakers, {
     heading: "Most speeches on this topic", fmt: (v) => v.toLocaleString(),
     linkTo: (nm) => subjectHash("person", nm) });
   container.innerHTML = htmlOut;
@@ -9189,8 +9194,14 @@ function reportStatTiles(stats) {
   return grid;
 }
 
-/** Where the parties stand, each line cited and dated to its own window. */
-function reportPositions(positions) {
+/**
+ * Where the parties stand. The window says which debate the position is read
+ * from, not when it was said — the citation's own date says that, and the two
+ * can honestly differ when a party's clearest statement of a current position
+ * is an older speech. A citation from before the window opens says so, rather
+ * than leaving the reader to notice the years do not line up.
+ */
+function reportPositions(positions, win) {
   const list = document.createElement("ul");
   list.className = "position-list report-position-list";
   for (const p of positions) {
@@ -9202,6 +9213,13 @@ function reportPositions(positions) {
     const text = document.createElement("span");
     text.className = "position-text";
     text.textContent = ` ${p.position} `;
+    li.append(head, text);
+    if (p.window) {
+      const scope = document.createElement("span");
+      scope.className = "report-position-window";
+      scope.textContent = `Their position in the debate ${p.window}`;
+      li.appendChild(scope);
+    }
     const cite = document.createElement("span");
     cite.className = "source-meta report-position-cite";
     const who = [p.speaker, fmtDate(p.date || "")].filter(Boolean).join(", ");
@@ -9209,14 +9227,9 @@ function reportPositions(positions) {
     read.href = `/doc/${p.slug}`;
     read.textContent = "read the speech";
     cite.append(who ? `${who} · ` : "", read);
-    if (p.window) {
-      const win = document.createElement("span");
-      win.className = "report-position-window";
-      win.textContent = `Stated ${p.window}`;
-      li.append(head, text, win, cite);
-    } else {
-      li.append(head, text, cite);
-    }
+    const earlier = win?.since && p.date && String(p.date) < String(win.since);
+    if (earlier) cite.append(" · cited from earlier in the record");
+    li.appendChild(cite);
     list.appendChild(li);
   }
   return list;
@@ -9446,7 +9459,7 @@ function renderReportV2(report, slug) {
       const h = document.createElement("h4");
       h.className = "report-sub-title";
       h.textContent = "Where the parties stand";
-      now.append(h, reportPositions(report.positions));
+      now.append(h, reportPositions(report.positions, win));
     }
   }
 
@@ -9563,13 +9576,16 @@ async function openReport(slug, sectionNum, manageFocus) {
   } else {
     renderReportBrief(report);
   }
-  renderStats($("report-stats"), report.stats, report.title);
+  renderStats($("report-stats"), report.stats, report.title,
+    { speakers: !(v2 && (report.voices?.now?.length || report.voices?.all?.length)) });
   if (report.stats) {
     if (v2) {
       // No figures rail on a v2 page: the money is its own closing part and
-      // the corpus totals lead it, saying how much record was read.
+      // the corpus totals lead it under a line of their own, because a speech
+      // count is not money and the part heading should not claim it is.
       $("report-stats").insertAdjacentHTML("afterbegin",
         `<h3 class="report-part-title" id="report-money-head" tabindex="-1">The money beside the words</h3>
+         <h4 class="report-sub-title report-corpus-title">How much record this reads</h4>
          <div class="tiles report-corpus-tiles">${corpusTotalsHTML(report.stats)}</div>`);
     } else {
       const figures = $("report-figures");
