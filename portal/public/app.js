@@ -134,6 +134,9 @@ function partyChipHTML(party) {
 }
 
 const STATE_NAMES = { federal: "Federal", nsw: "NSW", vic: "VIC", sa: "SA", qld: "QLD" };
+const PARLIAMENT_NAMES = {
+  federal: "Federal", nsw: "NSW", vic: "Victoria", sa: "South Australia", qld: "Queensland",
+};
 // The 21-topic enrichment taxonomy (scripts/arag_enrich.py TOPICS is
 // canonical): slug → display name. Slugs are the ARAG label values.
 const TOPICS = {
@@ -3278,6 +3281,29 @@ function topicMoneyHTML(ind) {
     <p class="fineprint">${esc(AEC_NOTE)} <a href="/money">Explore on the money map</a></p>`;
 }
 
+/** Coverage windows are held in the corpus manifest, not repeated in topic data. */
+function topicParliamentCoverage() {
+  const matchers = {
+    federal: /^Federal Hansard:/,
+    nsw: /^NSW Parliament$/,
+    vic: /^Victorian Parliament$/,
+    sa: /^SA Parliament$/,
+    qld: /^QLD Parliament$/,
+  };
+  const spans = {};
+  for (const [state, re] of Object.entries(matchers)) {
+    const years = (corpusManifest?.sources || [])
+      .filter((source) => re.test(source.name || ""))
+      .map((source) => String(source.coverage || "").match(/(\d{4})\D+(\d{4})/))
+      .filter(Boolean)
+      .map((m) => [Number(m[1]), Number(m[2])]);
+    if (years.length) {
+      spans[state] = `${Math.min(...years.map(([from]) => from))}–${Math.max(...years.map(([, to]) => to))}`;
+    }
+  }
+  return spans;
+}
+
 async function openTopicPage(slug, manageFocus) {
   let newestHTML = ""; // built with the counts, rendered last on the page
   const key = `topic:${slug}`;
@@ -3303,7 +3329,14 @@ async function openTopicPage(slug, manageFocus) {
 
   let data = null;
   try {
-    [data] = await Promise.all([api(`/api/topic/${encodeURIComponent(slug)}`), loadReportsIndex()]);
+    const [, , manifest] = await Promise.all([
+      api(`/api/topic/${encodeURIComponent(slug)}`).then((value) => { data = value; }),
+      loadReportsIndex(),
+      corpusManifest
+        ? Promise.resolve(corpusManifest)
+        : fetch("/corpus.json").then((r) => r.ok ? r.json() : null).catch(() => null),
+    ]);
+    if (!corpusManifest && manifest) corpusManifest = manifest;
   } catch { /* the ask and search actions below work without counts */ }
   if (currentSubjectKey !== key) return;
   const report = reportsIndex?.find((r) => r.slug === TOPIC_REPORT[slug]) || null;
@@ -3340,6 +3373,26 @@ async function openTopicPage(slug, manageFocus) {
       sections.insertAdjacentHTML("beforeend",
         `<p class="fineprint">Party names open that party's labelled speeches on this topic.
          Some speeches carry no party label, so the bars can sum below the total.</p>`);
+    }
+    if (data.states?.length) {
+      const rows = data.states
+        .filter(([state]) => PARLIAMENT_NAMES[state])
+        .map(([state, stateCount, stateShare]) => [PARLIAMENT_NAMES[state], stateShare, stateCount, state]);
+      sections.insertAdjacentHTML("beforeend", barList(rows, {
+        heading: "Which parliament argues it (labelled so far)",
+        fmt: (value) => `${(Number(value) * 100).toFixed(2)}%`,
+        detail: (_name, _value, row) => Number(row[2]).toLocaleString(),
+        linkTo: (_name, _value, row) => searchHash(phrase, { topic: slug, state: row[3] }),
+        maxValue: Math.max(...rows.map(([, value]) => value), Number.EPSILON),
+        className: "topic-parliaments",
+      }));
+      const coverage = topicParliamentCoverage();
+      const order = ["federal", "nsw", "vic", "sa", "qld"];
+      const years = order.filter((state) => coverage[state])
+        .map((state) => `${PARLIAMENT_NAMES[state]} ${coverage[state]}`).join(" · ");
+      sections.insertAdjacentHTML("beforeend",
+        `<p class="fineprint">Share of that parliament's labelled record, then the count.${years
+          ? ` Years held: ${esc(years)}.` : ""} Each row opens the speeches behind it.</p>`);
     }
     if (data.recent?.length) {
       newestHTML =
@@ -6733,23 +6786,28 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {
 /** `term(name)` turns a row label into a definition popover trigger (see
  *  initTermTips); the button's text is still the label, so its accessible name
  *  reads as the category. Only used where nothing else claims the label. */
-function barList(rows, { fmt = String, heading, linkTo, partyDots = false, term = null }) {
-  const max = Math.max(...rows.map(([, v]) => v), 1);
-  const items = rows.map(([name, v]) => {
+function barList(rows, {
+  fmt = String, heading, linkTo, partyDots = false, term = null, detail = null,
+  className = "", maxValue = null,
+}) {
+  const max = maxValue ?? Math.max(...rows.map(([, v]) => v), 1);
+  const items = rows.map((row) => {
+    const [name, v] = row;
     const key = linkTo ? null : term?.(name);
     const label = `${partyDots ? partyDotHTML(name) : ""}${esc(name)}`;
+    const sub = detail?.(name, v, row);
     return `
     <div class="barrow">
       ${linkTo
-        ? `<a class="barrow-name" title="${esc(name)}" href="${esc(linkTo(name))}">${label}</a>`
+        ? `<a class="barrow-name" title="${esc(name)}" href="${esc(linkTo(name, v, row))}">${label}</a>`
         : key
           ? `<button type="button" class="barrow-name barrow-term" data-term="${esc(key)}">${label}</button>`
           : `<span class="barrow-name" title="${esc(name)}">${label}</span>`}
       <span class="barrow-track" aria-hidden="true"><i style="width:${Math.max((v / max) * 100, 1)}%"></i></span>
-      <span class="barrow-value">${esc(fmt(v))}</span>
+      <span class="barrow-value">${esc(fmt(v))}${sub !== null && sub !== undefined ? `<small>${esc(sub)}</small>` : ""}</span>
     </div>`;
   }).join("");
-  return `<figure class="chart"><figcaption>${esc(heading)}</figcaption>${items}</figure>`;
+  return `<figure class="chart${className ? ` ${esc(className)}` : ""}"><figcaption>${esc(heading)}</figcaption>${items}</figure>`;
 }
 
 const fmtIndustries = (list) => list.map((i) => i.replace(/_/g, " ")).join(", ");

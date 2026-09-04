@@ -1208,6 +1208,11 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .barrow-track { height: 8px; background: var(--paper-sunken); border-radius: 4px; overflow: hidden; }
 .barrow-track i { display: block; height: 100%; background: var(--chart-mark); border-radius: 4px; }
 .barrow-value { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.barrow-value small { display: block; color: var(--ink-faint); font-size: 0.75rem; line-height: 1.25; }
+.topic-parliaments .barrow { min-height: 44px; }
+.topic-parliaments figcaption {
+  color: var(--ink); font: 600 1rem/1.35 var(--serif); letter-spacing: 0; text-transform: none;
+}
 
 /* ---- money & words (daily topic panel) ---------------------------------- */
 

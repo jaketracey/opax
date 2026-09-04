@@ -1596,6 +1596,7 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
 
 const TOPIC_FILTER_PREFIX = '/classification.labels/topic'
 const PARTY_FACET = '/classification.labels/party'
+const STATE_FACET = '/classification.labels/state'
 
 interface CatalogRow extends FindResource {
   created?: string
@@ -1672,30 +1673,47 @@ async function apiParties(env: Env): Promise<Response> {
 /**
  * One topic: total labelled so far (the filtered call's own total), per-party
  * split (facet within the topic filter — one request covers both, cheaper than
- * a faceted call per party), and the newest labelled speeches to enter the
- * index (apiRecent's pattern; catalog rows carry no machine summary, so none
- * is served — the client must not fetch per-doc to fill the gap).
+ * a faceted call per party), the topic's share of each parliament's labelled
+ * record, and the newest labelled speeches to enter the index (apiRecent's
+ * pattern; catalog rows carry no machine summary, so none is served).
  */
 async function apiTopic(slug: string, env: Env): Promise<Response> {
   if (!TOPIC_SLUGS.has(slug)) return json({ error: 'unknown topic' }, 404)
   return cachedJson(`/api/topic/${slug}`, async () => {
     const filter = `filters=${TOPIC_FILTER_PREFIX}/${slug}`
-    const [partyRes, newestRes, anyRes] = await Promise.all([
+    // Five responses are the most we open at once: Workers allows six
+    // simultaneous upstream connections, and an unread body still counts.
+    const [partyRes, newestRes, anyRes, stateRes, stateTotalsRes] = await Promise.all([
       kbFetch(env, `/catalog?faceted=${PARTY_FACET}&${filter}&page_size=0`),
       kbFetch(
         env,
         `/catalog?${filter}&sort_field=created&sort_order=desc&page_size=12&show=basic&show=origin&show=extra`,
       ),
       kbFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+      kbFetch(env, `/catalog?faceted=${STATE_FACET}&${filter}&page_size=0`),
+      kbFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
     ])
-    if (!partyRes.ok || !newestRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
+    if (!partyRes.ok || !newestRes.ok || !anyRes.ok || !stateRes.ok || !stateTotalsRes.ok) {
+      return json({ error: 'catalog failed' }, 502)
+    }
     const byParty = (await partyRes.json()) as CatalogPage
     const newest = (await newestRes.json()) as CatalogPage
     const any = (await anyRes.json()) as CatalogPage
+    const byState = (await stateRes.json()) as CatalogPage
+    const stateTotals = (await stateTotalsRes.json()) as CatalogPage
     const partyFacet = byParty.fulltext?.facets?.[PARTY_FACET] ?? {}
     const parties = Object.entries(partyFacet)
       .map(([path, n]): [string, number] => [path.slice(`${PARTY_FACET}/`.length), n])
       .sort((a, b) => b[1] - a[1])
+    const labelledByState = stateTotals.fulltext?.facets?.[STATE_FACET] ?? {}
+    const states = Object.entries(byState.fulltext?.facets?.[STATE_FACET] ?? {})
+      .map(([path, count]): [string, number, number] => {
+        const state = path.slice(`${STATE_FACET}/`.length)
+        const labelled = labelledByState[`${STATE_FACET}/${state}`] ?? 0
+        return [state, count, labelled > 0 ? count / labelled : 0]
+      })
+      .filter(([state, count]) => Boolean(state) && count > 0)
+      .sort((a, b) => b[2] - a[2] || b[1] - a[1] || a[0].localeCompare(b[0]))
     const recent = Object.values(newest.resources ?? {})
       .filter((r) => SLUG_RE.test(r.slug ?? ''))
       .map((r) => ({
@@ -1713,6 +1731,7 @@ async function apiTopic(slug: string, env: Env): Promise<Response> {
       count: byParty.fulltext?.total ?? 0,
       labelled: any.fulltext?.total ?? 0,
       parties,
+      states,
       recent,
     })
   })
