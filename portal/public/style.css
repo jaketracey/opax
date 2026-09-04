@@ -2574,3 +2574,45 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   #panel-subject .party-member-counts { display: flex; gap: 1rem 2rem; }
   #panel-subject .party-member-counts b { display: inline; }
 }
+#panel-subject .party-flow-bars .barrow-name:focus-visible,
+#panel-subject .party-receipts a:focus-visible,
+#panel-subject .party-years-toggle:focus-visible,
+#panel-subject .party-members a:focus-visible,
+#panel-subject .party-mentions a:focus-visible,
+#subject-party-debts a:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
+#panel-subject .party-receipts .receipts-tiles a,
+#subject-party-debts .fineprint a,
+#subject-party-debts .subject-list .source-title,
+#panel-subject .party-mentions .fineprint a,
+#panel-subject .party-mentions .result-meta a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+#panel-subject .party-mentions .result-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.35rem; }
+#panel-subject .party-mentions .subject-list li { padding: 0.8rem 0; }
+#panel-subject .party-mentions p { max-width: 68ch; }
+#subject-party-debts .fineprint { font-family: var(--serif); }
+#subject-party-debts .party-benefits { margin: 1rem 0 0; }
+#subject-party-debts > .chart figcaption { font: 700 1rem/1.5 var(--serif); text-transform: none; letter-spacing: normal; }
+#panel-subject .party-receipts,
+#panel-subject .party-mentions,
+#subject-party-debts .subject-section-title { scroll-margin-top: calc(var(--header-h) + 1rem); }
+@media (min-width: 701px) {
+  #panel-subject .party-flow-bars .barrow,
+  #subject-party-debts > .chart .barrow { grid-template-columns: minmax(0, 46%) minmax(0, 1fr) 7.5rem; gap: 0.7rem; }
+  #panel-subject .party-flow-bars .barrow-track,
+  #subject-party-debts > .chart .barrow-track { grid-column: 2; grid-row: 1; height: 6px; }
+  #panel-subject .party-flow-bars .barrow-value,
+  #subject-party-debts > .chart .barrow-value { text-align: right; }
+  #panel-subject .party-flow-bars .barrow-value small { margin-left: auto; }
+  #panel-subject .party-receipts a.receipts-row { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #panel-subject .party-flow-bars *,
+  #panel-subject .party-receipts *,
+  #panel-subject .party-members *,
+  #panel-subject .party-mentions * { animation: none; transition: none; scroll-behavior: auto; }
+}
+#panel-subject .party-mentions .source-title { min-width: 44px; }
+#panel-subject .party-receipts .fineprint a { white-space: nowrap; }
+@media (max-width: 700px) {
+  #subject-party-debts .tile:last-child { display: flex; align-items: baseline; gap: 0.65rem; }
+  #subject-party-debts .tile:last-child span { margin-top: 0; }
+}
