@@ -9,6 +9,7 @@ from scripts.generate_reports import (
     is_topic_echo,
     period_question,
     stat_support,
+    voices,
     window_questions,
     debate_title,
     is_hollow_brief,
@@ -216,3 +217,41 @@ class KeyFigureSupportTests(unittest.TestCase):
     def test_the_label_always_names_its_base(self):
         label = compose_stat_label(self.stat(measure="First Nations people"))
         self.assertEqual(label, "First Nations people as a share of the national prison population")
+
+
+class VoiceMergeTests(unittest.TestCase):
+    def test_a_surname_merges_into_its_only_full_name(self):
+        rows = ([{"date": "2025-01-01", "speaker": "Thorpe", "party": None}] * 3
+                + [{"date": "2025-01-02", "speaker": "Lidia Thorpe", "party": "Independent"}] * 2)
+        tally = voices(rows)
+        self.assertEqual(tally, [{"speaker": "Lidia Thorpe", "party": "Independent", "count": 5}])
+
+    def test_an_ambiguous_surname_is_left_alone(self):
+        rows = ([{"date": "2025-01-01", "speaker": "Thorpe", "party": None}] * 3
+                + [{"date": "2025-01-02", "speaker": "Lidia Thorpe", "party": None}] * 2
+                + [{"date": "2025-01-03", "speaker": "David Thorpe", "party": None}])
+        names = {row["speaker"] for row in voices(rows)}
+        self.assertEqual(names, {"Thorpe", "Lidia Thorpe", "David Thorpe"})
+
+    def test_the_window_bounds_the_tally(self):
+        rows = [{"date": "2023-01-01", "speaker": "Old Member", "party": None},
+                {"date": "2025-01-01", "speaker": "New Member", "party": None}]
+        self.assertEqual([v["speaker"] for v in voices(rows, "2024-07-01")], ["New Member"])
+
+
+class TautologicalDenominatorTests(unittest.TestCase):
+    def test_a_denominator_that_only_repeats_the_unit_is_rejected(self):
+        passage = ("Total enrolment of First Nations students increased by just over "
+                   "five per cent in 2024 to 24,561 students.")
+        self.assertEqual(
+            stat_support({
+                "value": "24,561 students", "numerator": "24,561", "unit": "students",
+                "denominator": "students", "measure": "First Nations enrolment"}, passage),
+            "the denominator only repeats the unit",
+        )
+
+    def test_a_real_base_in_the_same_unit_still_passes(self):
+        passage = "We funded 4,000 homes of the 30,000 homes the state needs."
+        self.assertIsNone(stat_support({
+            "value": "4,000 homes", "numerator": "4,000", "unit": "homes",
+            "denominator": "30,000 homes", "measure": "homes funded"}, passage))

@@ -518,8 +518,20 @@ def openrouter_tool_call(schema: dict, prompt: str) -> dict:
         "https://openrouter.ai/api/v1/chat/completions",
         data=json.dumps(body).encode(),
         headers={"content-type": "application/json", "authorization": f"Bearer {key}"})
-    with urllib.request.urlopen(req, timeout=120) as r:
-        data = json.load(r)
+    # A structured extraction is the LAST thing a report run does with a dozen
+    # paid asks already banked. A transient 429 or 5xx here must cost the
+    # block, never the run: retry a few times, then hand back nothing.
+    data: dict = {}
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req, timeout=180) as r:
+                data = json.load(r)
+            break
+        except Exception as error:  # noqa: BLE001 - any transport failure
+            if attempt == 3:
+                print(f"  {name} extraction gave up: {str(error)[:120]}", file=sys.stderr)
+                return {}
+            time.sleep(min(5 * 2 ** attempt, 60))
     calls = (data.get("choices") or [{}])[0].get("message", {}).get("tool_calls") or []
     if not calls:
         return {}
@@ -592,6 +604,14 @@ def stat_support(stat: dict, passage: str) -> str | None:
     denominator = str(stat.get("denominator") or "")
     if not denominator.strip():
         return "no denominator"
+    # "24,561 students out of ... students" is not a base, it is the unit said
+    # twice. A denominator has to add something the numerator does not have.
+    unit_words = set(_content_words(stat.get("unit")) or _fold(stat.get("unit")).split())
+    denominator_words = set(_content_words(denominator))
+    if not _numbers(denominator) and (
+            _fold(denominator).strip() == _fold(stat.get("unit")).strip()
+            or (denominator_words and denominator_words <= unit_words)):
+        return "the denominator only repeats the unit"
     numbers = _numbers(numerator)
     if not numbers:
         return "numerator carries no number"
@@ -1213,19 +1233,25 @@ ROWS_CACHE = Path(__file__).resolve().parent / "state" / "reports"
 # topic labels, and they are the single largest source of noise in discovery:
 # a report that asked "what has parliament said about Statements by Members?"
 # would be asking about the shape of the day, not the subject.
+# Compared after normalise_debate(), so punctuation is already gone
+# ("Governor-General's Speech" folds to "governorgenerals speech").
 _PROCEDURAL_DEBATES = {
-    "adjournment", "adjournment debate", "answers", "answers to questions",
-    "bills", "business", "business of the house", "committee", "committees",
-    "condolences", "condolence motions", "constituency statements", "documents",
-    "government performance", "grievance debate", "matters of public importance",
-    "matters of public interest", "matters of urgency", "members statements",
-    "members' statements", "ministerial statements", "ministers statements",
-    "minister's statements", "motion", "motions", "motions by leave", "notices",
-    "order of business", "papers", "personal explanations", "petitions",
-    "points of order", "private members' business", "procedural motions",
-    "program", "questions", "questions on notice", "questions without notice",
-    "sessional orders", "standing and sessional orders", "standing orders",
-    "statements", "statements by members", "statements by senators",
+    "addressinreply", "address in reply", "adjournment", "adjournment debate",
+    "answers", "answers to questions", "appropriation bill", "bills", "budget",
+    "budget reply", "business", "business of the house", "committee",
+    "committees", "condolences", "condolence motions", "constituency statements",
+    "documents", "first speech", "government performance",
+    "governorgenerals speech", "grievance debate", "maiden speech",
+    "matters of public importance", "matters of public interest",
+    "matters of urgency", "members statements", "ministerial statement",
+    "ministerial statements", "ministers statements", "motion", "motions",
+    "motions by leave", "notices", "order of business", "papers",
+    "personal explanations", "petitions", "petitions received",
+    "points of order",
+    "private members business", "procedural motions", "program", "questions",
+    "questions on notice", "questions without notice", "sessional orders",
+    "standing and sessional orders", "standing orders", "statements",
+    "statements by members", "statements by senators",
     "suspension of standing orders", "tabling of documents",
     "take note of answers", "valedictory", "votes and proceedings",
 }
@@ -1430,9 +1456,13 @@ def period_question(question: str, period: str = "since July 2024") -> str:
 
 def era_question(cfg: dict, era: dict, discovered: list[dict]) -> str:
     """One question per era, named after the era's own biggest debates."""
+    # A compound bill title runs to 140 characters and misdirects retrieval as
+    # much as it informs it; a truncated one names a bill that does not exist.
+    # Long titles are simply left out of the list.
     subjects = [
-        debate_subject(d["title"])
-        for d in discovered if not is_topic_echo(d["title"], cfg)
+        s for s in (debate_subject(d["title"]) for d in discovered
+                    if not is_topic_echo(d["title"], cfg))
+        if len(s) <= 80
     ][:3]
     stem = (f"How did parliament argue about {cfg['title'].lower()} "
             f"{era['period']}?")
@@ -1508,19 +1538,49 @@ def build_section(kb: KbClient, question: str, *, topic: str | None = None,
     }
 
 
+def merge_surname_variants(counts: "Counter[str]") -> dict[str, str]:
+    """Map a surname-only speaker onto its full name, but only when it is safe.
+
+    The sources alternate between 'Lidia Thorpe' and 'Thorpe' for the same
+    person, which splits a voices tally in two. Merging on a surname is the
+    classic misattribution trap, so it happens ONLY when exactly one full name
+    in this topic's own tally ends with that surname — two Thorpes and both
+    forms stay apart."""
+    full_by_surname: dict[str, list[str]] = defaultdict(list)
+    for name in counts:
+        parts = name.split()
+        if len(parts) > 1:
+            full_by_surname[parts[-1].casefold()].append(name)
+    merged: dict[str, str] = {}
+    for name in counts:
+        parts = name.split()
+        if len(parts) != 1:
+            continue
+        candidates = full_by_surname.get(parts[0].casefold()) or []
+        if len(candidates) == 1:
+            merged[name] = candidates[0]
+    return merged
+
+
 def voices(rows: list[dict], since: str | None = None, until: str | None = None,
            limit: int = 8) -> list[dict]:
     """Who actually speaks on the topic in a window, counted from the catalog."""
     scoped = in_window(rows, since, until) if since else rows
-    counts: Counter[str] = Counter()
+    raw: Counter[str] = Counter()
     parties: dict[str, Counter] = defaultdict(Counter)
     for row in scoped:
         speaker = str(row.get("speaker") or "").strip()
         if not speaker:
             continue
-        counts[speaker] += 1
+        raw[speaker] += 1
         if row.get("party"):
             parties[speaker][row["party"]] += 1
+    merged = merge_surname_variants(raw)
+    counts: Counter[str] = Counter()
+    for speaker, count in raw.items():
+        counts[merged.get(speaker, speaker)] += count
+    for short, full in merged.items():
+        parties[full].update(parties[short])
     out = []
     for speaker, count in counts.most_common(limit):
         party = parties[speaker].most_common(1)
@@ -1762,7 +1822,32 @@ def main() -> None:
         rows = catalog_rows(kb, cfg["topic"], args.refresh_rows)
         print(f"[{slug}] {len(rows):,} labelled speeches on {cfg['topic']}")
 
-        now = build_now(kb, slug, rows, args.since)
+        # v1's prose lead and its three unfiltered sections stay in the file so
+        # the live page keeps working until the v2 page lands. They are not
+        # re-asked here: v2's `now` and `lede` replace them, and re-asking them
+        # would double the budget for prose no reader will see.
+        report = {
+            **prior,
+            "slug": slug,
+            "title": cfg["title"],
+            "blurb": cfg["blurb"],
+            "version": 2,
+            "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "corpus_resources": counters.get("resources"),
+            "stats": all_stats.get(slug),
+            "voices": {"now": voices(rows, args.since), "all": voices(rows)},
+        }
+
+        # Checkpoint after every block. A whole report is a dozen paid asks and
+        # the platform 429s hard when other jobs share the account: a failure
+        # in the last block must not throw away the first eleven.
+        def checkpoint(**blocks: object) -> None:
+            report.update(blocks)
+            report["generated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+            report_path(slug).write_text(json.dumps(report, indent=1) + "\n")
+
+        checkpoint()
+        checkpoint(now=build_now(kb, slug, rows, args.since))
 
         moments = prior.get("key_moments") or []
         try:
@@ -1770,7 +1855,8 @@ def main() -> None:
             print(f"  key moments: {len(moments)}")
         except AragError as error:
             print(f"  key moments FAILED ({error.status})", file=sys.stderr)
-        over_time = build_over_time(kb, slug, rows, moments)
+        checkpoint(key_moments=moments)
+        checkpoint(over_time=build_over_time(kb, slug, rows, moments))
 
         try:
             srcs, lines = topic_sources(kb, cfg)
@@ -1781,6 +1867,8 @@ def main() -> None:
         except AragError as error:
             print(f"  key figures FAILED ({error.status})", file=sys.stderr)
             kept, dropped = prior.get("key_stats") or [], []
+        checkpoint(key_stats=kept, key_stats_dropped=dropped)
+
         try:
             now_srcs, now_lines = now_sources(kb, cfg, args.since)
             positions = gen_positions(kb, cfg["title"], now_srcs, now_lines)
@@ -1788,35 +1876,17 @@ def main() -> None:
         except AragError as error:
             print(f"  positions FAILED ({error.status})", file=sys.stderr)
             positions = prior.get("positions") or []
+        checkpoint(positions=positions)
 
-        lede = gen_lede(cfg["title"], now["sections"])
+        try:
+            lede = gen_lede(cfg["title"], report["now"]["sections"])
+        except AragError as error:
+            print(f"  lede FAILED ({error.status})", file=sys.stderr)
+            lede = prior.get("lede") or {}
         print(f"  lede: {len((lede or {}).get('text') or '')} chars, "
               f"{len((lede or {}).get('sources') or [])} sources")
+        checkpoint(lede=lede)
 
-        # v1's prose lead and its three unfiltered sections stay in the file so
-        # the live page keeps working until the v2 page lands. They are not
-        # re-asked here: v2's `now` and `lede` replace them, and re-asking them
-        # would double the budget for prose no reader will see.
-        report = {
-            "slug": slug,
-            "title": cfg["title"],
-            "blurb": cfg["blurb"],
-            "version": 2,
-            "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            "corpus_resources": counters.get("resources"),
-            "stats": all_stats.get(slug),
-            "brief": prior.get("brief"),
-            "key_stats": kept,
-            "key_stats_dropped": dropped,
-            "positions": positions,
-            "key_moments": moments,
-            "sections": prior.get("sections") or [],
-            "lede": lede,
-            "now": now,
-            "over_time": over_time,
-            "voices": {"now": voices(rows, args.since), "all": voices(rows)},
-        }
-        report_path(slug).write_text(json.dumps(report, indent=1) + "\n")
         index = [r for r in index if r["slug"] != slug] + [{
             "slug": slug, "title": cfg["title"], "blurb": cfg["blurb"],
             "updated": report["generated_at"],
