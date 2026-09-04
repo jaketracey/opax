@@ -357,16 +357,6 @@ header :focus-visible { outline-color: var(--bronze-bright); }
   @keyframes drawer-out { to { transform: translateX(100%); } }
   @keyframes backdrop-in { from { opacity: 0; } }
   @keyframes backdrop-out { to { opacity: 0; } }
-  /* The X draws itself once the panel has landed. */
-  .nav-drawer[open] .drawer-x line { stroke-dasharray: 20; stroke-dashoffset: 20; animation: x-draw 200ms ease-out forwards; }
-  .nav-drawer[open] .drawer-x .x1 { animation-delay: 200ms; }
-  .nav-drawer[open] .drawer-x .x2 { animation-delay: 300ms; }
-  @keyframes x-draw { to { stroke-dashoffset: 0; } }
-  /* The hamburger folds into an X while the panel is open. */
-  .nav-toggle svg path { transform-box: fill-box; transform-origin: center; transition: transform 220ms ease, opacity 160ms ease; }
-  .nav-toggle[aria-expanded="true"] svg path:nth-child(1) { transform: translateY(5px) rotate(45deg); }
-  .nav-toggle[aria-expanded="true"] svg path:nth-child(2) { opacity: 0; }
-  .nav-toggle[aria-expanded="true"] svg path:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
 }
 .drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.2rem; gap: 0.5rem; }
 .drawer-head .kicker { margin: 0; }
