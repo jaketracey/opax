@@ -448,7 +448,8 @@
           <button type="button" class="action-btn" id="search-options-btn" aria-expanded="false" aria-controls="search-options-pop" aria-label="Search filters" title="Filters">
             <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
           </button>
-          <div class="ask-options-pop" id="search-options-pop" hidden>
+          <dialog class="ask-options-pop" id="search-options-pop" hidden aria-labelledby="search-options-title">
+            <div class="search-sheet-head"><h2 id="search-options-title" class="subject-section-title">Search filters</h2><button type="button" class="action-btn" id="search-options-close" aria-label="Close search filters">Close</button></div>
             <div class="filter-rail ask-pop-rail">
               <span class="filter-item filter-item-wide">
                 <label for="f-from">Years <b id="f-years-label">1993–2026</b></label>
@@ -508,7 +509,8 @@
                 </select>
               </span>
             </div>
-          </div>
+            <div class="search-sheet-foot"><button type="button" class="action-btn" id="search-options-reset">Reset filters</button><button type="button" class="primary" id="search-options-apply">Apply filters</button></div>
+          </dialog>
           </div>
         </div>
       </form>

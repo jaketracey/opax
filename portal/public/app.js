@@ -6687,37 +6687,48 @@ function searchQueryParams(q, f, page, sort) {
   return p;
 }
 
-// Search filters popover: same behavior as the ask page's options button.
+// Search filters are a draft until Apply; dismissing restores the last search.
 {
   const btn = $("search-options-btn");
   const pop = $("search-options-pop");
+  const ids = ["f-speaker", "f-party", "f-state", "f-topic", "f-from", "f-to", "search-kind", "search-mode"];
+  let draftBefore = null;
+  const close = (apply = false) => {
+    if (!pop?.open) return;
+    if (!apply && draftBefore) for (const id of ids) $(id).value = draftBefore[id];
+    updateSearchYearsLabel();
+    pop.close();
+    pop.hidden = true;
+    btn.setAttribute("aria-expanded", "false");
+    btn.focus();
+    if (apply) {
+      searchFiltersChanged();
+      if (!lastSearch.key && $("search-input").value.trim()) $("search-form").requestSubmit();
+    }
+  };
   btn?.addEventListener("click", () => {
-    pop.hidden = !pop.hidden;
-    btn.setAttribute("aria-expanded", String(!pop.hidden));
+    draftBefore = Object.fromEntries(ids.map((id) => [id, $(id).value]));
+    pop.hidden = false;
+    pop.showModal();
+    btn.setAttribute("aria-expanded", "true");
+    $("search-options-close").focus();
   });
-  document.addEventListener("pointerdown", (e) => {
-    if (!pop || pop.hidden) return;
-    if (!pop.contains(e.target) && !btn.contains(e.target)) {
-      pop.hidden = true;
-      btn.setAttribute("aria-expanded", "false");
-    }
+  $("search-options-close")?.addEventListener("click", () => close());
+  $("search-options-apply")?.addEventListener("click", () => close(true));
+  $("search-options-reset")?.addEventListener("click", () => {
+    for (const reset of Object.values(SEARCH_FILTER_RESETS)) reset();
   });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && pop && !pop.hidden) {
-      pop.hidden = true;
-      btn.setAttribute("aria-expanded", "false");
-      btn.focus();
-    }
+  pop?.addEventListener("cancel", (e) => { e.preventDefault(); close(); });
+  pop?.addEventListener("click", (e) => {
+    const r = pop.getBoundingClientRect();
+    if (e.target === pop && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) close();
   });
+  pop?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); close(true); }
+  });
+  window.addEventListener("popstate", () => close());
   $("f-from")?.addEventListener("input", updateSearchYearsLabel);
   $("f-to")?.addEventListener("input", updateSearchYearsLabel);
-  // Chips and popover in step both ways: a control changing re-draws the chips
-  // and, once something has been searched, re-runs at page one. Range inputs
-  // fire `change` on release, so dragging a year is one search, not thirty.
-  for (const id of ["f-speaker", "f-party", "f-state", "f-topic", "f-from", "f-to",
-    "search-kind", "search-mode"]) {
-    $(id)?.addEventListener("change", searchFiltersChanged);
-  }
 }
 
 // --- active filters, shown outside the popover that set them ----------------
@@ -7275,6 +7286,7 @@ function foldSearchAnswer() {
   const box = $("search-answer");
   const body = $("search-answer-body");
   searchAnswerArrived();
+  if (box.hidden) return; // Cached answers may arrive before the rail is measurable.
   if (!box.classList.contains("is-clamped")) return;
   // A short summary needs no fold: let it stand whole.
   if (body.scrollHeight <= body.clientHeight + 8) { box.classList.remove("is-clamped"); $("search-answer-readmore").hidden = true; return; }
@@ -7447,7 +7459,10 @@ async function runSearch(page = 1) {
         searchApplied = fixed.replace(/^#\/search\?/, "");
         history.replaceState(null, "", fixed);
       }
-      if (searchAnswerWanted && fresh) $("search-answer").hidden = false; // the rail joins the results
+      if (searchAnswerWanted && fresh) {
+        $("search-answer").hidden = false; // the rail joins the results
+        if (!$("search-answer").classList.contains("is-loading")) foldSearchAnswer();
+      }
       if (searchScrollPending) scrollToResults();
     }
   } catch (err) {
