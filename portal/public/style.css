@@ -1776,10 +1776,41 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .tie-flow { margin: 0.35rem 0 0; color: var(--ink-soft); font-size: 0.875rem; line-height: 1.55; }
 .tie-flow .party-dot-only { margin-right: 0.2rem; }
 .donor-ties-list li > span { display: block; margin-top: 0.25rem; font-size: 0.875rem; line-height: 1.5; }
+.party-receipts { margin-top: var(--section-gap); max-width: 920px; }
+.party-receipts .subject-section-title { margin-top: 0; }
+.receipts-legend {
+  display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin: 0.4rem 0 var(--space-3);
+  color: var(--ink-soft); font-size: 0.75rem;
+}
+.receipts-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.receipts-swatch { display: inline-block; width: 14px; height: 9px; flex: 0 0 auto; }
+.receipts-donations { background: var(--bronze); }
+.receipts-other {
+  background: repeating-linear-gradient(135deg, var(--bronze) 0 1.5px, var(--bronze-wash) 1.5px 5px);
+  background-color: var(--bronze-wash);
+}
+.receipts-unitemised { background: transparent; box-shadow: inset 0 0 0 1px var(--line-strong); }
+.receipts-tiles { margin-top: var(--space-2); }
+.receipts-tiles .tile { border-top-width: 1px; padding-top: 0.55rem; }
+.receipts-tiles .tile b { font-size: 1.45rem; }
+.receipts-rows { display: flex; flex-direction: column; gap: 0.32rem; margin-top: var(--space-2); }
+.receipts-row {
+  display: grid; grid-template-columns: 4.6rem minmax(0, 1fr) 4.5rem 2.6rem;
+  gap: 0.5rem; align-items: center; font-size: 0.75rem; font-variant-numeric: tabular-nums;
+}
+.receipts-year { color: var(--ink-faint); }
+.receipts-track { display: block; height: 11px; }
+.receipts-bar { display: flex; gap: 2px; height: 100%; }
+.receipts-bar i { display: block; height: 100%; min-width: 0; flex: 0 0 auto; }
+.receipts-value, .receipts-pct { text-align: right; color: var(--ink-soft); white-space: nowrap; }
+.receipts-pct { font-weight: 600; min-height: 1em; }
+.receipts-row a, .receipts-tiles a { font-variant-numeric: tabular-nums; }
 @media (max-width: 600px) {
   .tie-declaration { grid-template-columns: 1fr; gap: 0.1rem; }
   .tie-declaration .interests-holder { padding-top: 0; }
   .tie-source { justify-self: start; }
+  .receipts-row { grid-template-columns: 3.7rem minmax(6rem, 1fr) 3.7rem 2.4rem; gap: 0.35rem; }
+  .receipts-legend { gap: 0.35rem 0.7rem; }
 }
 .topic-digest { max-width: 68ch; }
 .topic-digest-item { border-top: 1px solid var(--line); padding: var(--row-gap) 0; }

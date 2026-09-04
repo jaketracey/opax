@@ -3015,6 +3015,69 @@ function loadAecExtras() {
   return aecExtrasPromise;
 }
 
+/** The party return's own receipts, separated using the AEC's three columns.
+ *  Historic returns occasionally itemise more than the headline total; those
+ *  rows keep the headline as the scale and clamp the segments to its width. */
+function partyReceiptsHTML(rows, registerURL) {
+  const source = safeUrl(registerURL) || "https://transparency.aec.gov.au/";
+  const series = (rows || []).map((r) => {
+    const receipts = Math.max(0, Number(r[1]) || 0);
+    const rawDonations = Math.max(0, Number(r[5]) || 0);
+    const rawOther = Math.max(0, Number(r[6]) || 0);
+    const donations = Math.min(rawDonations, receipts);
+    const other = Math.min(rawOther, Math.max(0, receipts - donations));
+    const notItemised = Math.max(0, receipts - donations - other);
+    return {
+      year: String(r[0] || ""), receipts, donations, other, notItemised,
+      branches: Number(r[4]) || 0,
+      clamped: rawDonations + rawOther > receipts,
+    };
+  }).filter((r) => r.year && r.receipts > 0).reverse();
+  if (!series.length) return "";
+  const latest = series[0];
+  const max = Math.max(...series.map((r) => r.receipts), 1);
+  const peak = series.find((r) => r.receipts === max);
+  const pct = (value, total) => total > 0 ? Math.round((value / total) * 100) : 0;
+  const srcFigure = (value, label) => `<a href="${esc(source)}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(value)}</a>`;
+  const clamped = series.filter((r) => r.clamped).length;
+  const rowHTML = series.map((r) => {
+    const donationPct = r.receipts ? (r.donations / r.receipts) * 100 : 0;
+    const otherPct = r.receipts ? (r.other / r.receipts) * 100 : 0;
+    const missingPct = r.receipts ? (r.notItemised / r.receipts) * 100 : 0;
+    const showPct = r === latest || r === peak;
+    const detail = `${r.year}: receipts ${fmtMoney(r.receipts)}; itemised donations ${fmtMoney(r.donations)}; itemised other receipts ${fmtMoney(r.other)}; not itemised ${fmtMoney(r.notItemised)} (${pct(r.notItemised, r.receipts)}%)`;
+    return `<div class="receipts-row" title="${esc(detail)}">
+      <span class="receipts-year">${esc(r.year)}</span>
+      <span class="receipts-track" aria-hidden="true"><span class="receipts-bar" style="width:${((r.receipts / max) * 100).toFixed(1)}%">
+        <i class="receipts-donations" style="flex-basis:${donationPct.toFixed(1)}%"></i>
+        <i class="receipts-other" style="flex-basis:${otherPct.toFixed(1)}%"></i>
+        <i class="receipts-unitemised" style="flex-basis:${missingPct.toFixed(1)}%"></i>
+      </span></span>
+      <span class="receipts-value">${srcFigure(fmtMoney(r.receipts), `${r.year} receipts ${fmtMoney(r.receipts)}, AEC source`)}</span>
+      <span class="receipts-pct">${showPct ? srcFigure(`${pct(r.notItemised, r.receipts)}%`, `${r.year}, ${pct(r.notItemised, r.receipts)} percent not itemised, AEC source`) : ""}</span>
+    </div>`;
+  }).join("");
+  const table = `<div class="visually-hidden"><table><caption>Receipts on the return</caption>
+    <thead><tr><th scope="col">Year</th><th scope="col">Receipts</th><th scope="col">Itemised donations</th><th scope="col">Itemised other receipts</th><th scope="col">Not itemised</th></tr></thead>
+    <tbody>${series.map((r) => `<tr><th scope="row"><a href="${esc(source)}" rel="noopener" target="_blank">${esc(r.year)}</a></th>${[r.receipts, r.donations, r.other, r.notItemised].map((v) => `<td><a href="${esc(source)}" rel="noopener" target="_blank">${esc(fmtMoney(v))}</a></td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  return `<section class="party-receipts" aria-labelledby="party-receipts-heading">
+    <h3 class="subject-section-title" id="party-receipts-heading">Receipts on the return</h3>
+    <div class="receipts-legend" aria-label="Receipt categories">
+      <span><i class="receipts-swatch receipts-donations" aria-hidden="true"></i>itemised as donations</span>
+      <span><i class="receipts-swatch receipts-other" aria-hidden="true"></i>itemised as other receipts</span>
+      <span><i class="receipts-swatch receipts-unitemised" aria-hidden="true"></i>not itemised on the return</span>
+    </div>
+    <div class="tiles receipts-tiles">
+      <div class="tile"><b>${srcFigure(fmtMoney(latest.receipts), `${latest.year} receipts ${fmtMoney(latest.receipts)}, AEC source`)}</b><span>receipts on the ${esc(latest.year)} return${latest.branches > 1 ? `, ${latest.branches} branches summed` : ""}</span></div>
+      <div class="tile"><b>${srcFigure(fmtMoney(latest.donations), `${latest.year} itemised donations ${fmtMoney(latest.donations)}, AEC source`)}</b><span>itemised as donations</span></div>
+      <div class="tile"><b>${srcFigure(`${pct(latest.notItemised, latest.receipts)}%`, `${latest.year}, ${pct(latest.notItemised, latest.receipts)} percent not itemised, AEC source`)}</b><span>of receipts not itemised</span></div>
+    </div>
+    <div class="receipts-rows">${rowHTML}</div>
+    ${table}
+    <p class="fineprint">Bars are scaled to the party's largest year shown. “Not itemised” is receipts minus the sums itemised as donations and as other receipts on the same return; the AEC does not require receipts under the disclosure threshold to be itemised. Public election funding is left where the return puts it.${clamped ? ` ${clamped} historic ${clamped === 1 ? "row reports" : "rows report"} itemised components above the headline receipts total; ${clamped === 1 ? "its bar is" : "their bars are"} clamped to that total.` : ""} Source: <a href="${esc(source)}" rel="noopener" target="_blank">AEC Transparency Register, annual returns, CC BY 4.0 ↗︎</a></p>
+  </section>`;
+}
+
 /** Party page "Debts and other funding": the creditors on the party's own
  *  latest annual return, its discretionary benefits and the associated
  *  entities whose returns name it. Silent for a party the register lacks. */
@@ -3026,10 +3089,13 @@ async function renderPartyDebts(label, sections) {
   const extras = await loadAecExtras();
   if (currentSubjectKey !== key) return;
   const p = extras?.parties?.[label];
+  const returns = p?.returns || [];
   const d = p?.debts, b = p?.benefits, ents = p?.associated_entities || [];
-  if (!d && !b && !ents.length) { slot.remove(); return; }
+  if (!returns.length && !d && !b && !ents.length) { slot.remove(); return; }
   const endOf = (fy) => String(Number(String(fy).slice(0, 4)) + 1); // "2024-25" -> "2025"
-  let html = `<p class="kicker">Debts and other funding</p>`;
+  const reg = safeUrl(extras.meta?.register_url);
+  let html = partyReceiptsHTML(returns, reg);
+  if (d || b || ents.length) html += `<p class="kicker">Debts and other funding</p>`;
   if (d) {
     const lenders = (d.top || []).map((l) => [l.type === "Financial" ? `${l.name} (financial institution)` : l.name, l.amount || 0]);
     html += `<div class="tiles">
@@ -3057,11 +3123,20 @@ async function renderPartyDebts(label, sections) {
           e.payments != null ? `payments ${fmtMoney(e.payments)}` : "", e.debts ? `debts ${fmtMoney(e.debts)}` : ""].filter(Boolean).join(" · "))}</span></li>`).join("")}</ul>
       ${(p.associated_entities_total || 0) > shown.length ? `<p class="fineprint" style="margin-top:0.5rem">${p.associated_entities_total} entities have named ${esc(label)} on an associated-entity return; the ${shown.length} with the largest receipts on their latest return are shown, each with that return's year.</p>` : ""}`;
   }
-  const reg = safeUrl(extras.meta?.register_url);
-  html += `<p class="fineprint">Debts are the balances the party's branches listed as owed at 30 June on their own AEC
+  if (d || b || ents.length) html += `<p class="fineprint">Debts are the balances the party's branches listed as owed at 30 June on their own AEC
     annual returns, all branches summed: bank loans sit beside trade creditors and tax owed, and a balance is not new
     borrowing. Creditors under the disclosure threshold are not itemised. Source: AEC Transparency Register, CC BY 4.0.${reg ? ` <a href="${esc(reg)}" rel="noopener" target="_blank">Open the register ↗︎</a>` : ""}</p>`;
   slot.innerHTML = html;
+  if (returns.length) {
+    const latest = returns[returns.length - 1];
+    const receipts = Math.max(0, Number(latest[1]) || 0);
+    const donations = Math.min(Math.max(0, Number(latest[5]) || 0), receipts);
+    const other = Math.min(Math.max(0, Number(latest[6]) || 0), Math.max(0, receipts - donations));
+    const notItemised = Math.max(0, receipts - donations - other);
+    const share = receipts ? Math.round((notItemised / receipts) * 100) : 0;
+    $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
+      `<dt>Receipts ${esc(String(latest[0]))}</dt><dd><a href="${esc(reg || "https://transparency.aec.gov.au/")}" rel="noopener" target="_blank"><b>${esc(fmtMoney(receipts))}</b> · ${esc(String(share))}% not itemised</a></dd>`);
+  }
   if (d) $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Debts at 30 June ${esc(endOf(d.year))}</dt><dd><b>${esc(fmtMoney(d.total || 0))}</b></dd>`);
 }
