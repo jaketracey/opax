@@ -388,7 +388,7 @@
    "state": "federal",
    "date": "2006-03-01",
    "stage_hint": null,
-   "brief": null
+   "brief": "The senator moved to introduce multiple bills together, with a subsequent motion to list them separately on the Notice Paper, and the bills were read a first time."
   },
   {
    "slug": "speech-771191",
@@ -397,7 +397,7 @@
    "state": "federal",
    "date": "2006-03-01",
    "stage_hint": null,
-   "brief": null
+   "brief": "The Ministers of State Amendment Bill 2005 increases the annual ministerial salary appropriation from $2.8 million to $3.2 million following a Remuneration Tribunal determination. The Telecommunications (Interception) Amendment Bill 2006 implements Blunn Report recommendations, including stored communications warrants for offences with at least three years imprisonment, warrants for associates of persons of interest, and removal of the TIRAC function, while arguing that comparisons with US interception rates are misleading due to different reporting standards."
   },
   {
    "slug": "speech-771415",
@@ -406,7 +406,7 @@
    "state": "federal",
    "date": "2006-03-27",
    "stage_hint": null,
-   "brief": null
+   "brief": "Presented the Legal and Constitutional Legislation Committee's report on the Telecommunications (Interception) Amendment Bill 2006, including the Hansard record and accompanying documents."
   },
   {
    "slug": "speech-771547",
@@ -424,7 +424,7 @@
    "state": "federal",
    "date": "2006-03-28",
    "stage_hint": null,
-   "brief": null
+   "brief": "Senator Ludwig announced Labor's support for the Telecommunications (Interception) Amendment Bill 2006, which implements Blunn review recommendations on stored communications, B-party intercepts and equipment-based warrants, but noted that Labor would move amendments to strengthen privacy safeguards, and criticised the government's truncated committee process and the impending sunset clause expiration in June 2006."
   },
   {
    "slug": "speech-771554",
@@ -433,7 +433,7 @@
    "state": "federal",
    "date": "2006-03-28",
    "stage_hint": null,
-   "brief": null
+   "brief": "The speaker argued that the government was rushing the telecommunications interception bill through Parliament without adequate scrutiny, and moved amendments to include a sunset clause and an independent review of B-party warrants, citing privacy concerns with the proposed powers."
   },
   {
    "slug": "speech-771655",
@@ -442,7 +442,7 @@
    "state": "federal",
    "date": "2006-03-29",
    "stage_hint": null,
-   "brief": null
+   "brief": "The Temporary Chairman announced that the committee is considering the Telecommunications (Interception) Amendment Bill 2006 and a Greens amendment moved by Senator Bob Brown, with the question being whether the amendment should be agreed to."
   },
   {
    "slug": "speech-771656",
@@ -460,7 +460,7 @@
    "state": "federal",
    "date": "2006-03-29",
    "stage_hint": null,
-   "brief": null
+   "brief": "Government amendments (3) and (12) adjust pecuniary penalty thresholds for stored communications warrants: 180 penalty units ($19,800) for individuals and 900 penalty units for non-individuals for investigation, and 60 penalty units ($6,600) and 300 penalty units for use and disclosure. Amendment (4) clarifies when a communication is \"passing over\" a telecommunications system, with a special two-year sunset provision allowing the Australian Federal Police to monitor its own network for professional standards."
   },
   {
    "slug": "speech-771761",
@@ -487,7 +487,7 @@
    "state": "federal",
    "date": "2006-03-30",
    "stage_hint": null,
-   "brief": null
+   "brief": "Senator Ludwig argued that the Attorney-General had been \"lazy\" in addressing committee recommendations, leading to inadequate privacy protections in the bill, while Labor supported government amendments related to the Spam Act. Senator Stott Despoja raised concerns about the lowering of thresholds for ACMA members and questioned whether an amendment's wording requiring knowledge of \"neither\" the sender nor intended recipient was sufficiently clear."
   },
   {
    "slug": "speech-771809",
@@ -496,7 +496,7 @@
    "state": "federal",
    "date": "2006-03-30",
    "stage_hint": null,
-   "brief": null
+   "brief": "The Labor speaker argued the bill advances privacy overall but fails to protect B-party intercepts, blaming a \"lazy Attorney-General\" for rejecting amendments. The Democrats and Greens opposed the bill, citing insufficient privacy safeguards, particularly for B-party warrants and equipment-based warrants, and noting it allows surveillance of non-suspects."
   }
  ],
  "acts": [
