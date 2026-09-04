@@ -3268,7 +3268,7 @@ textarea.grow-field {
 }
 textarea.grow-field.is-collapsed { white-space: nowrap; }
 @media (hover: none) and (pointer: coarse) {
-  textarea.grow-field:focus { min-height: 6.4rem; white-space: pre-wrap; overflow: auto; }
+  textarea.grow-field.is-open { min-height: 6.4rem; white-space: pre-wrap; overflow: auto; }
 }
 @media (prefers-reduced-motion: reduce) { textarea.grow-field { transition: none; } }
 

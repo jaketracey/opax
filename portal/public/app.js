@@ -1317,9 +1317,10 @@ for (const id of ["ask-input", "search-input"]) {
       form?.requestSubmit ? form.requestSubmit() : form?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
     }
   });
-  field.addEventListener("focus", () => { field.classList.remove("is-collapsed"); if (matchMedia("(hover: none) and (pointer: coarse)").matches) fit(); });
-  field.addEventListener("input", () => { if (document.activeElement === field && matchMedia("(hover: none) and (pointer: coarse)").matches) fit(); });
-  field.addEventListener("blur", () => { field.style.height = ""; field.classList.add("is-collapsed"); field.scrollTop = 0; });
+  const touch = () => matchMedia("(hover: none) and (pointer: coarse)").matches;
+  field.addEventListener("focus", () => { field.classList.remove("is-collapsed"); if (touch()) { field.classList.add("is-open"); fit(); } });
+  field.addEventListener("input", () => { if (field.classList.contains("is-open")) fit(); });
+  field.addEventListener("blur", () => { field.style.height = ""; field.classList.remove("is-open"); field.classList.add("is-collapsed"); field.scrollTop = 0; });
 }
 attachQuickSearch($("mast-q"), $("mast-sugg"), { idPrefix: "ms" });
 attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: () => closeNavDrawer() });
