@@ -4190,7 +4190,7 @@ async function openSubject(kind, name, manageFocus) {
   sections.insertAdjacentHTML("beforeend", `<nav class="person-jumps" aria-label="On this page"></nav>`);
   if (party) sections.insertAdjacentHTML("beforeend", `<p class="person-money-link"><a class="action-btn" href="${esc(subjectHash("party", party))}"><span class="btn-glyph" aria-hidden="true">$</span><span>Money map from ${esc(party)}</span></a></p>`);
   sections.insertAdjacentHTML("beforeend", `
-    <form class="query-line" id="subject-ask-form" style="margin:0 0 0.4rem">
+    <form class="query-line subject-ask-form" id="subject-ask-form">
       <label for="subject-ask-topic">Ask about their speeches</label>
       <input id="subject-ask-topic" type="text" autocomplete="off"
              placeholder="Enter a topic…">

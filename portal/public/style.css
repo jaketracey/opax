@@ -3293,3 +3293,17 @@ textarea.grow-field.is-collapsed { white-space: nowrap; }
   border-bottom: 1.5px solid var(--bronze-rule); align-self: start; justify-self: start;
 }
 .source-read:hover { color: var(--ink); border-color: var(--bronze-ink); }
+
+/* ==== person page rhythm on phones ==== */
+.subject-ask-form { margin: 0 0 0.4rem; }
+@media (max-width: 700px) {
+  .subject-person .subject-grid { row-gap: 1.5rem; }
+  .subject-person .person-jumps { margin: 0 0 1.25rem; padding: 0.1rem 0; }
+  .subject-person .person-money-link { margin: 0 0 1.5rem; }
+  .subject-person .subject-ask-form { margin: 0 0 2rem; }
+  .subject-person .subject-ask-form label { margin: 0 0 0.15rem; }
+  .subject-person .person-topics { margin-top: 0; }
+  .subject-person .person-topics-head { margin-bottom: 0.9rem; }
+  .subject-person .subject-section-title { margin-top: 2rem; }
+}
+
