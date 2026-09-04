@@ -1606,6 +1606,8 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
 const TOPIC_FILTER_PREFIX = '/classification.labels/topic'
 const PARTY_FACET = '/classification.labels/party'
 const STATE_FACET = '/classification.labels/state'
+const DECADE_FILTER_PREFIX = '/classification.labels/decade'
+const SPEECH_FILTER = '/classification.labels/kind/speech'
 
 interface CatalogRow extends FindResource {
   created?: string
@@ -1723,6 +1725,64 @@ async function apiTopic(slug: string, env: Env): Promise<Response> {
       parties,
       states,
     })
+  })
+}
+
+const TIDE_DECADES = [
+  { slug: '1990s', label: '1993–99', from: 1993, to: 1999 },
+  { slug: '2000s', label: '2000s', from: 2000, to: 2009 },
+  { slug: '2010s', label: '2010s', from: 2010, to: 2019 },
+  { slug: '2020s', label: '2020–26', from: 2020, to: 2026 },
+] as const
+
+/**
+ * Topic share and topic-label coverage by decade. Catalog `created` is index
+ * time, so this endpoint only uses the decade labels written from speech dates
+ * at ingest. Federal is the default comparable run; `scope=all` includes all
+ * five parliaments and keeps its unequal source windows visible in coverage.
+ */
+async function apiTide(url: URL, env: Env): Promise<Response> {
+  const scope = url.searchParams.get('scope') ?? 'federal'
+  if (scope !== 'federal' && scope !== 'all') return json({ error: 'bad scope' }, 400)
+  return cachedJson(`/api/tide?scope=${scope}`, async () => {
+    const state = scope === 'federal' ? `&filters=${STATE_FACET}/federal` : ''
+    const paths = TIDE_DECADES.flatMap((decade) => {
+      const shared = `filters=${DECADE_FILTER_PREFIX}/${decade.slug}&filters=${SPEECH_FILTER}${state}&page_size=0`
+      return [
+        `/catalog?faceted=${TOPIC_FILTER_PREFIX}&${shared}`,
+        `/catalog?filters=${TOPIC_FILTER_PREFIX}&${shared}`,
+      ]
+    })
+    const parseCatalog = async (path: string): Promise<CatalogPage> => {
+      const response = await kbFetch(env, path)
+      if (!response.ok) throw new Error(`catalog ${response.status}`)
+      return (await response.json()) as CatalogPage
+    }
+    const pages: CatalogPage[] = []
+    try {
+      // Fetch and consume in fives: an unread response holds one of the
+      // Worker's six upstream connection slots open.
+      for (let i = 0; i < paths.length; i += 5) {
+        pages.push(...(await Promise.all(paths.slice(i, i + 5).map(parseCatalog))))
+      }
+    } catch {
+      return json({ error: 'catalog failed' }, 502)
+    }
+    const decades = TIDE_DECADES.map((decade, i) => {
+      const total = pages[i * 2].fulltext?.total ?? 0
+      const labelled = pages[i * 2 + 1].fulltext?.total ?? 0
+      return { ...decade, total, labelled, coverage: total > 0 ? labelled / total : 0 }
+    })
+    const topics: Record<string, Array<{ decade: string; count: number; share: number }>> = {}
+    for (const slug of TOPIC_SLUGS) {
+      topics[slug] = TIDE_DECADES.map((decade, i) => {
+        const path = `${TOPIC_FILTER_PREFIX}/${slug}`
+        const count = pages[i * 2].fulltext?.facets?.[TOPIC_FILTER_PREFIX]?.[path] ?? 0
+        const labelled = decades[i].labelled
+        return { decade: decade.slug, count, share: labelled > 0 ? count / labelled : 0 }
+      })
+    }
+    return json({ scope, decades, topics })
   })
 }
 
@@ -2967,6 +3027,9 @@ async function route(
       const topicMatch = url.pathname.match(/^\/api\/topic\/([a-z][a-z-]*)$/)
       if (topicMatch && request.method === 'GET') {
         return await apiTopic(topicMatch[1], env)
+      }
+      if (url.pathname === '/api/tide' && request.method === 'GET') {
+        return await apiTide(url, env)
       }
       if (url.pathname === '/api/matrix' && request.method === 'GET') {
         return await apiMatrix(env)

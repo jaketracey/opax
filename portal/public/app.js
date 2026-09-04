@@ -3420,6 +3420,51 @@ function topicParliamentCoverage() {
   return spans;
 }
 
+/** The same denominator engraving sits beneath every time-based "so far" view. */
+function coverageRuleHTML(decades, caption = "How much of the indexed speech record carries a topic label") {
+  if (!decades?.length) return "";
+  const bands = decades.map((decade) => {
+    const coverage = Math.max(0, Math.min(1, Number(decade.coverage) || 0));
+    const pct = `${(coverage * 100).toFixed(1)}%`;
+    const years = `${decade.from}–${String(decade.to).slice(-2)}`;
+    const span = Math.max(1, Number(decade.to) - Number(decade.from) + 1);
+    return `<span class="coverage-band" style="--coverage:${(coverage * 100).toFixed(3)}%;--years:${span}"
+      title="${esc(`${years}: ${pct} labelled (${Number(decade.labelled || 0).toLocaleString()} of ${Number(decade.total || 0).toLocaleString()} indexed speeches)`)}">
+      <i aria-hidden="true"><b></b></i><span>${esc(decade.label)}</span><strong>${pct}</strong>
+    </span>`;
+  }).join("");
+  const spoken = decades.map((d) => `${d.label} ${(Number(d.coverage || 0) * 100).toFixed(1)}%`).join(", ");
+  return `<figure class="coverage-rule" aria-label="${esc(`${caption}: ${spoken}`)}">
+    <figcaption>${esc(caption)}</figcaption><div class="coverage-bands">${bands}</div>
+  </figure>`;
+}
+
+function topicTideHTML(data, slug, phrase) {
+  const series = data?.topics?.[slug] || [];
+  if (!series.length || !data?.decades?.length) return "";
+  const byDecade = new Map(data.decades.map((decade) => [decade.slug, decade]));
+  const max = Math.max(...series.map((point) => Number(point.share) || 0), Number.EPSILON);
+  const bars = series.map((point) => {
+    const decade = byDecade.get(point.decade);
+    if (!decade) return "";
+    const share = Number(point.share) || 0;
+    const pct = `${(share * 100).toFixed(1)}%`;
+    const height = Math.max(2, (share / max) * 100);
+    return `<a class="topic-tide-decade" href="${esc(searchHash(phrase, {
+      topic: slug, from: String(decade.from), to: String(decade.to),
+    }))}" aria-label="${esc(`${decade.label}: ${pct} of labelled speeches, ${Number(point.count || 0).toLocaleString()} speeches`)}">
+      <span class="topic-tide-label">${esc(decade.label)}</span>
+      <span class="topic-tide-track" aria-hidden="true"><i style="height:${height.toFixed(2)}%"></i></span>
+      <strong>${pct}</strong><small>${Number(point.count || 0).toLocaleString()}</small>
+    </a>`;
+  }).join("");
+  return `<section class="topic-tide">
+    <figure><figcaption>The share over time</figcaption><div class="topic-tide-bars">${bars}</div></figure>
+    ${coverageRuleHTML(data.decades)}
+    <p class="fineprint">Each bar is this topic's share of federal speeches carrying any topic label in that decade; the small figure is the count. Federal is the longest comparable run. Labels are applied so far, and each decade opens the speeches behind it.</p>
+  </section>`;
+}
+
 function topicArcItemHTML(item, brief) {
   const date = String(item.date || "").slice(0, 10);
   const year = date.slice(0, 4) || "—";
@@ -3514,6 +3559,7 @@ async function openTopicPage(slug, manageFocus) {
   box.hidden = true; // fills once the counts land
   const phrase = topicPhrase(slug);
   const searchTopic = searchHash(phrase, { topic: slug });
+  const tidePromise = api("/api/tide").catch(() => null);
 
   let data = null;
   try {
@@ -3588,6 +3634,11 @@ async function openTopicPage(slug, manageFocus) {
          <a href="${esc(searchHash(phrase, {}))}">Search the record for ${esc(phrase)} instead</a>.</p>`);
     }
   }
+
+  const tide = await tidePromise;
+  if (currentSubjectKey !== key) return;
+  const tideHTML = topicTideHTML(tide, slug, phrase);
+  if (tideHTML) sections.insertAdjacentHTML("beforeend", tideHTML);
 
   const arc = document.createElement("section");
   arc.className = "topic-arc";
@@ -4598,10 +4649,11 @@ async function renderCampaignerEntry(name, key) {
 // Both are standalone lazy modules with a mount/destroy contract; the page
 // only owns the toggle. Modules are mounted once and kept alive per session.
 
-const explore = { tm: null, quiz: null, ledger: null, matrix: null, wd: null, tvn: null };
+const explore = { tm: null, tide: null, quiz: null, ledger: null, matrix: null, wd: null, tvn: null };
 
 const GAMES = {
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
+  tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js", mount: "mountLedger" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
@@ -4622,7 +4674,9 @@ async function openGame(which) {
       // The modules stay standalone (they carry their own fallbacks), but a
       // speech reads the same in here as it does in search because the shell
       // hands them its own title helper rather than each keeping a copy.
-      explore[which] = mod[game.mount]($(game.body), { displayTitle });
+      explore[which] = mod[game.mount]($(game.body), {
+        displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, coverageRuleHTML,
+      });
     }
   } catch (err) {
     $(game.body).innerHTML =
@@ -4631,6 +4685,7 @@ async function openGame(which) {
 }
 
 $("explore-tm-btn").addEventListener("click", () => openGame("tm"));
+$("explore-tide-btn").addEventListener("click", () => openGame("tide"));
 $("explore-quiz-btn").addEventListener("click", () => openGame("quiz"));
 $("explore-ledger-btn").addEventListener("click", () => openGame("ledger"));
 $("explore-matrix-btn").addEventListener("click", () => openGame("matrix"));

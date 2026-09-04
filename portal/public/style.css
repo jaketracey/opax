@@ -957,6 +957,26 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .date-ruler-key i.is-cited { width: 2px; height: 18px; background: var(--bronze-ink); }
 .date-ruler .fineprint { margin-top: -0.15rem; }
 
+/* A denominator made visible: bronze is the share of indexed speeches whose
+   topic labelling has reached completion in each speech-date band. */
+.coverage-rule { margin: var(--space-4) 0 var(--space-2); max-width: 920px; }
+.coverage-rule figcaption {
+  margin-bottom: var(--space-2); color: var(--ink-soft);
+  font: 600 0.875rem/1.4 var(--serif); text-transform: none; letter-spacing: 0;
+}
+.coverage-bands { display: flex; gap: 3px; width: 100%; }
+.coverage-band {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1px var(--space-1);
+  flex: var(--years) 1 0; min-width: 0; color: var(--ink-faint);
+  font: 400 0.6875rem/1.3 var(--sans); font-variant-numeric: tabular-nums;
+}
+.coverage-band > i {
+  grid-column: 1 / -1; display: block; height: 3px; background: var(--line);
+}
+.coverage-band > i > b { display: block; width: var(--coverage); height: 100%; background: var(--bronze); }
+.coverage-band > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.coverage-band > strong { color: var(--ink-soft); font-weight: 600; }
+
 /* Active filters, said out loud under the search box and the ask box. Quieter
    than .chip (these are state, not suggestions), borrowing .map-chip's sunken
    pill. */
@@ -1419,6 +1439,40 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 .game-close:hover { color: var(--ink); background: var(--paper-sunken); }
 .game-dialog-body { padding: 0 1.4rem 1.4rem; }
 
+/* ---- the tide ---------------------------------------------------------- */
+
+.tide-shell { max-width: 980px; margin: 0 auto; padding-bottom: var(--space-4); }
+.tide-shell > h1 { margin: 0; font: 700 clamp(1.8rem, 5vw, 2.7rem)/1.16 var(--serif); }
+.tide-lede { max-width: 68ch; margin: var(--space-2) 0 var(--space-5); color: var(--ink-soft); font: 400 1rem/1.65 var(--serif); }
+.tide-controls { display: flex; align-items: end; gap: var(--space-4); flex-wrap: wrap; }
+.tide-control { display: grid; gap: var(--space-1); }
+.tide-control > span { color: var(--ink-faint); font-size: 0.75rem; }
+.tide-status { min-height: 1.5rem; margin-top: var(--space-3); }
+.tide-column-head, .tide-row {
+  display: grid; grid-template-columns: minmax(140px, 1fr) minmax(260px, 2fr) 5rem;
+  gap: var(--space-4); align-items: center; min-width: 0;
+}
+.tide-column-head {
+  padding: 0 0 var(--space-2); color: var(--ink-faint);
+  font-size: 0.6875rem; font-variant-numeric: tabular-nums;
+}
+.tide-column-head > span:nth-child(2) { display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; }
+.tide-column-head > span:last-child { text-align: right; }
+.tide-list { list-style: none; margin: 0; padding: 0; }
+.tide-row { min-height: 64px; padding: var(--space-2) 0; border-top: 1px solid var(--line); }
+.tide-topic { min-width: 0; font: 600 0.9375rem/1.3 var(--serif); text-decoration: none; }
+.tide-topic:hover { color: var(--bronze-ink); }
+.tide-quartet { display: grid; grid-template-columns: repeat(4, minmax(44px, 1fr)); align-items: end; height: 48px; min-width: 0; }
+.tide-decade {
+  display: flex; align-items: flex-end; justify-content: center; min-width: 44px; height: 48px;
+  border-radius: 2px; text-decoration: none;
+}
+.tide-decade:hover, .tide-decade:focus-visible { background: var(--bronze-wash); }
+.tide-decade i { display: block; width: 9px; min-height: 2px; background: var(--bronze); }
+.tide-row > strong { text-align: right; color: var(--ink-soft); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
+.tide-view > .coverage-rule { margin-top: var(--space-5); }
+.tide-view > .fineprint { margin-top: var(--space-3); }
+
 .action-btn {
   display: flex; align-items: center; gap: 0.55rem;
   border: 1px solid var(--line-strong); border-radius: 4px;
@@ -1846,6 +1900,28 @@ a.ency-name:hover, a.ency-name:focus-visible {
   font: 600 0.75rem/1.3 var(--sans);
 }
 .topic-arc .fineprint { margin-top: var(--space-2); }
+.topic-tide { margin-top: var(--section-gap); max-width: 760px; }
+.topic-tide > figure { margin: 0; }
+.topic-tide > figure > figcaption {
+  margin-bottom: var(--space-3); color: var(--ink);
+  font: 600 1.25rem/1.35 var(--serif); text-transform: none; letter-spacing: 0;
+}
+.topic-tide-bars { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); }
+.topic-tide-decade {
+  display: grid; grid-template-rows: auto 74px auto auto; justify-items: center;
+  gap: var(--space-1); min-width: 0; min-height: 142px; padding: var(--space-2);
+  border: 1px solid transparent; border-radius: 2px; text-decoration: none;
+}
+.topic-tide-decade:hover, .topic-tide-decade:focus-visible { border-color: var(--line-strong); background: var(--bronze-wash); }
+.topic-tide-label { color: var(--ink-soft); font-size: 0.75rem; }
+.topic-tide-track {
+  display: flex; align-items: flex-end; justify-content: center; width: 100%; height: 74px;
+  border-bottom: 1px solid var(--line-strong);
+}
+.topic-tide-track i { display: block; width: 14px; min-height: 2px; background: var(--bronze); }
+.topic-tide-decade strong { color: var(--ink); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+.topic-tide-decade small { color: var(--ink-faint); font-size: 0.6875rem; font-variant-numeric: tabular-nums; }
+.topic-tide .fineprint { margin-top: var(--space-2); }
 @media (max-width: 900px) {
   .subject-grid { grid-template-columns: 1fr; }
   .infobox { position: static; }
@@ -1931,7 +2007,8 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 /* ---- forced colors / high contrast -------------------------------------- */
 
 @media (forced-colors: active) {
-  .scorebar > i, .barrow-track i, .meter-track i, .date-ruler-bar { background: CanvasText; fill: CanvasText; }
+  .scorebar > i, .barrow-track i, .meter-track i, .date-ruler-bar,
+  .coverage-band > i > b, .topic-tide-track i, .tide-decade i { background: CanvasText; fill: CanvasText; }
   .date-ruler-axis, .date-ruler-tick { stroke: CanvasText; }
   /* Transparent inactive borders survive forced colors, so the active
      underline / left rule keep working; only the hover washes vanish. */
@@ -1980,6 +2057,16 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   .topic-arc-head .quiet-toggle button { flex: 1 1 50%; }
   .topic-arc-item { grid-template-columns: 2.7rem minmax(0, 1fr); column-gap: var(--space-2); }
   .topic-arc-entry { padding-left: var(--space-4); }
+  .topic-tide-decade { grid-template-rows: auto 64px auto auto; min-height: 132px; padding-inline: var(--space-1); }
+  .topic-tide-track { height: 64px; }
+  .coverage-band { font-size: 0.625rem; }
+  .tide-controls, .tide-control, .tide-control .quiet-toggle { width: 100%; }
+  .tide-control .quiet-toggle button { flex: 1 1 auto; padding-inline: var(--space-2); }
+  .tide-column-head, .tide-row { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2); }
+  .tide-column-head > span:first-child, .tide-column-head > span:last-child { display: none; }
+  .tide-column-head > span:nth-child(2) { grid-column: 1 / -1; }
+  .tide-quartet { grid-column: 1 / -1; grid-row: 2; width: 100%; }
+  .tide-row > strong { grid-column: 2; grid-row: 1; }
   .tile { min-width: 140px; flex-basis: 140px; }
   .tile b { font-size: 1.75rem; }
   #ask-wombat { padding: 1.75rem 0 0.4rem; }

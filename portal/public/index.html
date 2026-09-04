@@ -56,7 +56,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=de07e2ec20">
+<link rel="stylesheet" href="/style.css?v=c9cf100e53">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -104,6 +104,7 @@
               <div>
                 <p class="kicker">Play with the record</p>
                 <a class="mm-link" href="/explore" data-game="tm"><span class="mm-title">Time machine</span><span class="mm-blurb">Dial up any year since 1998 and see what parliament was arguing about.</span></a>
+                <a class="mm-link" href="/explore" data-game="tide"><span class="mm-title">The tide</span><span class="mm-blurb">See which debates are rising or fading across four decades of labelled speeches.</span></a>
                 <a class="mm-link" href="/explore" data-game="quiz"><span class="mm-title">The record quiz</span><span class="mm-blurb">Guess what the numbers say, then see the receipts.</span></a>
                 <a class="mm-link" href="/explore" data-game="ledger"><span class="mm-title">The ledger</span><span class="mm-blurb">Every disclosed donation flow in one sortable, exportable table.</span></a>
                 <a class="mm-link" href="/money"><span class="mm-title">The money map</span><span class="mm-blurb">250 donors, 11 parties, 28 years of AEC returns, as territory you can spin.</span></a>
@@ -185,6 +186,7 @@
       <ul class="drawer-list">
         <li><a class="drawer-link" data-panel="explore" href="/explore">Explore</a></li>
         <li><a class="drawer-sub" href="/explore" data-game="tm">Time machine</a></li>
+        <li><a class="drawer-sub" href="/explore" data-game="tide">The tide</a></li>
         <li><a class="drawer-sub" href="/explore" data-game="quiz">The record quiz</a></li>
         <li><a class="drawer-sub" href="/explore" data-game="ledger">The ledger</a></li>
       </ul>
@@ -644,6 +646,20 @@
           was arguing about, with the real speeches to prove it.</span>
           <span class="game-cta">Play</span>
         </button>
+        <button type="button" class="game-card" id="explore-tide-btn">
+          <span class="game-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 38h34"/>
+              <path d="M10 32V24M19 32V16M28 32V21M37 32V9"/>
+              <path d="M8 20c7-1 10-8 17-7s8 7 15 3"/>
+            </svg>
+          </span>
+          <span class="game-title">The tide</span>
+          <span class="game-blurb">Twenty-one debates across four decades, sorted by what is
+          rising, fading or largest now—with the labelling coverage in view.</span>
+          <span class="game-cta">Open</span>
+        </button>
         <button type="button" class="game-card" id="explore-quiz-btn">
           <span class="game-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
@@ -727,6 +743,12 @@
           <button type="button" class="game-close" data-close="dialog-tm" aria-label="Close">✕</button>
         </div>
         <div id="explore-tm" class="game-dialog-body"></div>
+      </dialog>
+      <dialog class="game-dialog" id="dialog-tide" aria-label="The tide">
+        <div class="game-dialog-head">
+          <button type="button" class="game-close" data-close="dialog-tide" aria-label="Close">✕</button>
+        </div>
+        <div id="explore-tide" class="game-dialog-body"></div>
       </dialog>
       <dialog class="game-dialog" id="dialog-quiz" aria-label="The record quiz">
         <div class="game-dialog-head">
@@ -916,6 +938,6 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/app.js?v=6a1bb2768f" defer></script>
+<script src="/app.js?v=8fa5eee58a" defer></script>
 </body>
 </html>
