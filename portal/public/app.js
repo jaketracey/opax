@@ -2380,10 +2380,26 @@ function subjectSkeleton(kindLabel, name, tagHTML) {
         <div class="subject-map" id="subject-map" hidden></div>
         <p class="fineprint" id="subject-map-hint" hidden>Drag to spin · click any bubble to jump to it ·
           <a href="/money">open the full map</a></p>
-        <div id="subject-sections"></div>
+        <div id="subject-sections">${skelHTML("section-skel", [26, 100, 92, 78])}</div>
       </div>
-      <aside class="infobox" id="subject-infobox"></aside>
+      <aside class="infobox" id="subject-infobox">${skelHTML("infobox-skel", [34, 72, 58, 66, 48])}</aside>
     </div>`;
+}
+
+/* Placeholder bars, one per width in percent, in the paper tones of the search
+   skeleton: the shape of the quick facts and the first section while an entry
+   opens. They step aside in subjectTag() when the entry has something to say. */
+function skelHTML(cls, widths) {
+  return `<div class="answer-skeleton subject-skel ${cls}" aria-hidden="true">${
+    widths.map((w) => `<i style="width:${w}%"></i>`).join("")}</div>`;
+}
+
+/** The entry's tag line, once the entry has something to say: the loader under
+ *  the title and the placeholder bars beneath it step aside first. */
+function subjectTag(body) {
+  clearPageLoader("subject-loader");
+  for (const el of body.querySelectorAll(".subject-skel")) el.remove();
+  return body.querySelector(".subject-tag");
 }
 
 function infoboxHTML(rows, funfact, actions) {
@@ -3068,8 +3084,9 @@ async function openSubject(kind, name, manageFocus) {
     campaigner: "Campaigner or third party",
   };
   body.innerHTML = subjectSkeleton(SUBJECT_LABELS[kind] || "Donor", name,
-    `<span class="status" style="margin:0">Opening the entry…</span>`);
+    `<span id="subject-loader" class="subject-loader"></span>`);
   if (manageFocus) $("subject-title")?.focus();
+  showPageLoader("subject-loader", "Opening the entry.");
 
   if (kind === "campaigner") { await renderCampaignerEntry(name, key); return; }
 
@@ -3092,7 +3109,7 @@ async function openSubject(kind, name, manageFocus) {
     const box = $("subject-infobox");
     if (!node) {
       reserveSubjectMap(false); // no map for this one: give the space back
-      body.querySelector(".subject-tag").innerHTML =
+      subjectTag(body).innerHTML =
         `<span>Not among the top 250 disclosed donors in the money data. The record may still mention them.</span>`;
       box.innerHTML = infoboxHTML(
         [["Type", kind === "party" ? "Political party" : "Organisation"],
@@ -3119,7 +3136,7 @@ async function openSubject(kind, name, manageFocus) {
       counter.set(label, (counter.get(label) || 0) + (e.total || 0));
     }
     const flowRows = [...counter.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
-    body.querySelector(".subject-tag").innerHTML = [
+    subjectTag(body).innerHTML = [
       isParty ? partyChipHTML(node.label) : `<span class="party party-oth"><i aria-hidden="true"></i>${esc(industryLabel(node.industry || ""))}</span>`,
       `<span class="subject-active"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l2.8 1.8"/></svg>Active ${node.firstYear}–${node.lastYear}</span>`,
     ].join(" · ");
@@ -3200,7 +3217,7 @@ async function openSubject(kind, name, manageFocus) {
   const formerly = partyNow && spokeAs && !samePartyLabel(partyNow, spokeAs) ? spokeAs : null;
   const dates = speeches.map((r) => r.date).filter(Boolean).sort();
   const chambers = [...new Set(speeches.map((r) => STATE_NAMES[r.state] || r.state).filter(Boolean))];
-  body.querySelector(".subject-tag").innerHTML = [
+  subjectTag(body).innerHTML = [
     party ? partyChipHTML(party) : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
     chambers.length ? `<span>${esc(chambers.join(" · "))} parliament</span>` : "",
@@ -3341,7 +3358,7 @@ async function openTopicPage(slug, manageFocus) {
   const count = data?.count ?? null;
   const labelled = data?.labelled ?? 0;
   clearPageLoader("subject-loader");
-  body.querySelector(".subject-tag").innerHTML = count === null
+  subjectTag(body).innerHTML = count === null
     ? `<span>The live counts could not be loaded. The searches below still work.</span>`
     : `<span>${esc(count.toLocaleString())} speeches carry this label so far, of
        ${esc(labelled.toLocaleString())} labelled to date. The labelling pass is still running.</span>`;
@@ -3748,7 +3765,7 @@ async function openDirectory(kind, params, manageFocus) {
   if (currentSubjectKey !== key) return;
   clearPageLoader("subject-loader");
   if (!spec) {
-    body.querySelector(".subject-tag").innerHTML = `<span>The directory could not be loaded. Try again shortly.</span>`;
+    subjectTag(body).innerHTML = `<span>The directory could not be loaded. Try again shortly.</span>`;
     return;
   }
   spec.kind = kind;
@@ -4310,7 +4327,7 @@ async function renderCampaignerEntry(name, key) {
   // two entities that differ only by "Pty Ltd" into whichever came first.
   const e = list.find((x) => x.name === name) || list.find((x) => normName(x.name) === nn) || null;
   if (!e) {
-    body.querySelector(".subject-tag").innerHTML = data
+    subjectTag(body).innerHTML = data
       ? `<span>No annual return is held under this name on the register roster. The record may still mention them.</span>`
       : `<span>The register file could not be loaded. The record may still mention them.</span>`;
     box.innerHTML = infoboxHTML([["Type", "Organisation"]], "", [
@@ -4342,7 +4359,7 @@ async function renderCampaignerEntry(name, key) {
   // The kicker above the name already says the AEC category, so the tag line
   // carries what it does not: how far back the returns run, and who the
   // organisation names.
-  body.querySelector(".subject-tag").innerHTML = [
+  subjectTag(body).innerHTML = [
     span
       ? `<span class="subject-active"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l2.8 1.8"/></svg>Returns ${esc(span)}</span>`
       : campaignerKindChip(e.kind),
