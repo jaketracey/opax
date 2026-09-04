@@ -238,7 +238,7 @@ function injectStyles() {
 @media (max-width:700px) {
   .explain-dialog { width:calc(100vw - .5rem); max-height:calc(100dvh - .5rem); }
   .explain-shell { display:block; height:auto; min-height:0; overflow:visible; }
-  .explain-stage { position:sticky; top:44px; z-index:1; height:42vh; min-height:260px; max-height:390px;
+  .explain-stage { position:sticky; top:44px; z-index:1; height:clamp(276px,38dvh,350px); min-height:0; max-height:350px;
     border-right:0; border-bottom:1px solid var(--line); }
   .explain-narrative { overflow:visible; padding:1.1rem; }
   .explain-stage-label { max-width:39%; font-size:.76rem; }
@@ -246,7 +246,11 @@ function injectStyles() {
   .explain-stage-year { top:3.15rem; bottom:auto; font-size:1.85rem; }
   .explain-stage-year[data-zero] { opacity:.68; }
   .explain-scene-label { max-width:6.7rem; font-size:.58rem; }
-  .explain-scene-label.destination { max-width:5.8rem; }
+  .explain-scene-label.destination { max-width:6.35rem; background:color-mix(in srgb,var(--paper) 97%,transparent);
+    font-size:.6875rem; line-height:1.25; }
+  .explain-scene-label.gauge { font-size:.6875rem; }
+  .explain-scene-label.destination-summary { color:var(--bronze-ink); font-family:var(--sans); font-weight:650; }
+  .explain-scene-label.stage-caption { max-width:11rem; padding:.2rem .38rem; }
   .explain-title { font-size:1.65rem; }
   .explain-facts { grid-template-columns:1fr 1fr; }
 }
@@ -1229,21 +1233,35 @@ class FlowScene {
     if (step === 0) {
       if (this.detail.kind === 'party') {
         const rows = this.industryRows().slice(0, 7)
-        return rows.map((row, index) => ({
+        const visible = this.narrow && rows.length > 5 ? rows.slice(0, 5) : rows
+        const labels: SceneLabel[] = visible.map((row, index) => ({
           text: stageShortLabel(row.label),
           position: new THREE.Vector3(-3.0 + (index % 2) * .2, rows.length === 1 ? -.55 : 1.45 - index * (2.95 / Math.max(1, rows.length - 1)), .08),
           className: 'destination', align: 'start', offsetX: 5,
         }))
+        if (visible.length < rows.length) labels.push({
+          text: `+${rows.length - visible.length} smaller`,
+          position: new THREE.Vector3(-2.8, 1.45 - (rows.length - 1) * (2.95 / Math.max(1, rows.length - 1)), .08),
+          className: 'destination destination-summary', align: 'start', offsetX: 5,
+        })
+        return labels
       }
       const rows = this.partyRows().slice(0, 7)
-      return [
+      const visible = this.narrow && rows.length > 5 ? rows.slice(0, 5) : rows
+      const labels: SceneLabel[] = [
         { text: '1998', position: new THREE.Vector3(this.whoGiverPoint.x, this.whoGiverPoint.y + 1.43, .08), className: 'clock', align: 'middle' },
-        ...rows.map((row, index) => ({
+        ...visible.map((row, index) => ({
           text: stageShortLabel(row.label),
           position: new THREE.Vector3(3.02 - (index % 2) * .18, rows.length === 1 ? -.62 : 1.42 - index * (2.9 / Math.max(1, rows.length - 1)), .08),
           className: 'destination', align: 'end' as const, offsetX: -5,
         })),
       ]
+      if (visible.length < rows.length) labels.push({
+        text: `+${rows.length - visible.length} smaller`,
+        position: new THREE.Vector3(2.84, 1.42 - (rows.length - 1) * (2.9 / Math.max(1, rows.length - 1)), .08),
+        className: 'destination destination-summary', align: 'end', offsetX: -5,
+      })
+      return labels
     }
     if (step === 1) {
       const xAt = (year: number) => -3.5 + ((year - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR)) * 7
@@ -1264,7 +1282,10 @@ class FlowScene {
       ]
     }
     if (step === 2) {
-      const labels: SceneLabel[] = this.destinationRows.map((row, index) => {
+      const visible = this.narrow && this.destinationRows.length > 5
+        ? this.destinationRows.slice(0, 5)
+        : this.destinationRows
+      const labels: SceneLabel[] = visible.map((row, index) => {
         return {
           text: stageShortLabel(row.label),
           position: this.destinationPositions[index].clone().add(new THREE.Vector3(this.destinationSide === 'left' ? .42 : -.42, 0, .08)),
@@ -1273,14 +1294,26 @@ class FlowScene {
           offsetX: this.destinationSide === 'left' ? 5 : -5,
         }
       })
+      if (visible.length < this.destinationRows.length) {
+        const index = this.destinationRows.length - 1
+        const position = this.destinationPositions[index].clone().add(new THREE.Vector3(this.destinationSide === 'left' ? .42 : -.42, 0, .08))
+        labels.push({
+          text: `+${this.destinationRows.length - visible.length} smaller`, position,
+          className: 'destination destination-summary',
+          align: (this.destinationSide === 'left' ? 'start' : 'end') as 'start' | 'end',
+          offsetX: this.destinationSide === 'left' ? 5 : -5,
+        })
+      }
       const partyName = stageShortLabel(this.flow.party?.label || 'party')
-      const gaugeAnchor = this.detail.kind === 'party'
-        ? this.receiverPoint.clone().add(new THREE.Vector3(-1.12, .5, .08))
-        : (this.destinationPositions[this.destinationGaugeIndex] || this.receiverPoint).clone().add(new THREE.Vector3(-1.28, -.02, .08))
+      const gaugeAnchor = this.narrow
+        ? new THREE.Vector3(0, -2.5, .08)
+        : this.detail.kind === 'party'
+          ? this.receiverPoint.clone().add(new THREE.Vector3(-1.12, .5, .08))
+          : (this.destinationPositions[this.destinationGaugeIndex] || this.receiverPoint).clone().add(new THREE.Vector3(-1.28, -.02, .08))
       if (this.detail.kind !== 'party' && this.destinationGaugeIndex >= 0) labels.splice(this.destinationGaugeIndex, 1)
       labels.push({
         text: `${(this.destinationGaugeShare * 100).toFixed(1)}% of ${partyName} receipts`,
-        position: gaugeAnchor, className: 'gauge', align: 'middle',
+        position: gaugeAnchor, className: `gauge${this.narrow ? ' stage-caption' : ''}`, align: 'middle',
         offsetX: 0,
       })
       return labels
@@ -1318,6 +1351,14 @@ class FlowScene {
     if (!width || !height) return
     this.camera.updateMatrixWorld()
     for (const label of this.labels) {
+      if (label.className?.includes('stage-caption')) {
+        label.element.style.left = '50%'
+        label.element.style.top = 'auto'
+        label.element.style.bottom = '1.05rem'
+        label.element.style.transform = 'translateX(-50%)'
+        label.element.hidden = false
+        continue
+      }
       const projected = label.position.clone().project(this.camera)
       const x = (projected.x * .5 + .5) * width + (label.offsetX || 0)
       const y = (-projected.y * .5 + .5) * height + (label.offsetY || 0)
@@ -1337,7 +1378,8 @@ class FlowScene {
     this.narrow = width <= 700
     this.camera.aspect = this.aspect
     this.camera.updateProjectionMatrix()
-    this.targetZ = this.baseTargetZ * Math.max(1, 1.26 / this.aspect)
+    this.targetZ = this.baseTargetZ * Math.max(1, (this.narrow ? 1.22 : 1.26) / this.aspect)
+    if (this.labels.length) this.setLabels(this.labelsForStep(this.step))
     this.draw(performance.now())
   }
 
@@ -1365,7 +1407,7 @@ class FlowScene {
     this.baseTargetZ = [11.45, 10.65, 11.1, 11.9, 12.3][step] || 11.8
     this.targetCameraX = [0, 0, .08, -.08, 0][step] || 0
     this.targetCameraY = [.12, .02, .13, .2, .16][step] || .16
-    this.targetZ = this.baseTargetZ * Math.max(1, 1.26 / this.aspect)
+    this.targetZ = this.baseTargetZ * Math.max(1, (this.narrow ? 1.22 : 1.26) / this.aspect)
     this.maxYearAmount = Math.max(...[...this.flow.years.values()].map((cell) => cell[0]), 1)
     this.start = performance.now()
     this.baseGroup.visible = step !== 2
