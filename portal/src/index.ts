@@ -2044,6 +2044,7 @@ type SeoRoute =
   | { kind: 'topic'; slug: string }
   | { kind: 'subject'; dir: DirectoryKind; name: string }
   | { kind: 'doc'; slug: string }
+  | { kind: 'bill'; key: string }
 
 interface PageMeta {
   title: string
@@ -2063,6 +2064,9 @@ interface PageMeta {
 // never list a page this function would refuse.
 const SUBJECT_NAME_MAX = 120
 const CAMPAIGNER_NAME_MAX = 200
+// A bill key is jurisdiction plus source identity, lowercase and hyphenated.
+const BILL_KEY_MAX = 64
+const BILL_KEY_RE = /^[a-z][a-z0-9-]*$/
 
 /** Route table for real paths. Trailing slashes tolerated, never canonical. */
 function matchSeoRoute(url: URL): SeoRoute | null {
@@ -2102,6 +2106,12 @@ function matchSeoRoute(url: URL): SeoRoute | null {
   if (dec[0] === 'doc' && segs.length === 2 && /^[a-z][a-z0-9-]*$/.test(dec[1])) {
     return { kind: 'doc', slug: dec[1] }
   }
+  // /bill/<bill_key>. The keys the projection mints are au-federal-r7531 and
+  // au-federal-alrc-1270 (docs/BILLS-CONTRACT.md), with au-nsw-18524 and kin to
+  // come; BILL_KEY_MAX is the shape bound, and index.json decides what exists.
+  if (dec[0] === 'bill' && segs.length === 2 && dec[1].length <= BILL_KEY_MAX && BILL_KEY_RE.test(dec[1])) {
+    return { kind: 'bill', key: dec[1] }
+  }
   return null
 }
 
@@ -2136,6 +2146,25 @@ interface MoneyData { generated: string; donors: Map<string, MoneyEntry>; partie
 
 interface ReportEntry { slug: string; title: string; blurb: string; updated?: string }
 interface ReportsData { reports: ReportEntry[]; bySlug: Map<string, ReportEntry> }
+
+/** One row of /bills/index.json, as scripts/export_bills.py writes it. */
+interface BillRow {
+  key: string
+  title: string | null
+  short_title: string | null
+  parliament: number | null
+  introduced: string | null
+  originating_house: string | null
+  status: string | null
+  sponsor: string | null
+  sponsor_party: string | null
+  portfolio: string | null
+  has_summary: boolean
+  divisions: number
+  speeches: number
+  acts: number
+}
+interface BillsData { generated: string; byKey: Map<string, BillRow> }
 
 /** Reader-facing names for the four AEC registration classes. */
 const CAMPAIGNER_LABELS: Record<string, string> = {
@@ -2309,6 +2338,26 @@ function loadCampaigners(env: Env): Promise<CampaignersData> {
       throw err
     })
   return campaignersMemo
+}
+
+let billsMemo: Promise<BillsData> | null = null
+/**
+ * The bill index, keyed. Only /bill/<key> reads it, and only for a title and a
+ * one-line description, so the isolate holds a Map rather than the parsed file:
+ * the per-bill files carry the divisions, speeches and summary the page needs,
+ * and the front end fetches the one it is showing.
+ */
+function loadBills(env: Env): Promise<BillsData> {
+  billsMemo ??= assetJson<{ generated_at?: string; bills: BillRow[] }>(env, '/bills/index.json')
+    .then((raw) => ({
+      generated: raw.generated_at ?? '',
+      byKey: new Map(raw.bills.map((b) => [b.key, b])),
+    }))
+    .catch((err) => {
+      billsMemo = null
+      throw err
+    })
+  return billsMemo
 }
 
 let reportsMemo: Promise<ReportsData> | null = null
@@ -2515,6 +2564,81 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
 
     case 'doc':
       return docMeta(route.slug, url, request, env, ctx)
+
+    case 'bill':
+      return billMeta(route.key, env)
+  }
+}
+
+/** Status as a reader meets it, from the registry's own vocabulary. */
+const BILL_STATUS: Record<string, string> = {
+  introduced: 'Introduced',
+  before_house: 'Before the house',
+  before_parliament: 'Before parliament',
+  passed_one_house: 'Passed one house',
+  passed_both: 'Passed both houses',
+  passed: 'Passed',
+  assented: 'Assented',
+  rejected: 'Rejected',
+  withdrawn: 'Withdrawn',
+  lapsed: 'Lapsed',
+}
+
+async function billMeta(key: string, env: Env): Promise<PageMeta> {
+  const canonical = `${SITE_ORIGIN}/bill/${key}`
+  const bills = await loadBills(env).catch(() => null)
+  const b = bills?.byKey.get(key) ?? null
+  if (!b) {
+    // Unlike a person, a bill key is minted by the exporter and cannot be
+    // typed from a name, so a key the index does not carry is a 404. A
+    // missing index.json is not: the app can still fetch the bill itself.
+    if (!bills) {
+      return {
+        title: 'Bill · OPAX',
+        description: 'A bill before the Australian Parliament: what it proposed, how it was voted on, and who spoke to it.',
+        canonical, ogType: 'article', status: 200, jsonLd: null, prerender: null,
+      }
+    }
+    return {
+      title: 'Bill not found · OPAX',
+      description: 'This bill is not in the OPAX registry. Search the parliamentary record for it by name.',
+      canonical, ogType: 'website', status: 404, jsonLd: null, prerender: null,
+    }
+  }
+  const name = b.short_title || b.title || key
+  const house = CHAMBER_NAMES[b.originating_house ?? ''] ?? null
+  const status = BILL_STATUS[b.status ?? ''] ?? ''
+  // "Passed. Introduced in the House of Representatives on 18 October 2006."
+  const opening = [
+    status ? `${status}.` : '',
+    b.introduced ? `Introduced${house ? ` in the ${house}` : ''} on ${longDate(b.introduced)}.` : '',
+  ].filter(Boolean).join(' ')
+  const counts: string[] = []
+  if (b.divisions) counts.push(`${num(b.divisions)} division${b.divisions === 1 ? '' : 's'}`)
+  if (b.speeches) counts.push(`${num(b.speeches)} speech${b.speeches === 1 ? '' : 'es'}`)
+  const tail = counts.length ? `${andList(counts)} in the record.` : 'The official record, on OPAX.'
+  const facts = `${name}. ${opening}`.trim()
+  const description = withTail(facts, tail)
+  return {
+    // Bill titles run long. Trim the bill, never the masthead — the same way
+    // docMeta trims a division's motion.
+    title: `${clip(name, 90)} · OPAX`,
+    description,
+    canonical,
+    ogType: 'article',
+    status: 200,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'Legislation',
+      name: b.title ?? name,
+      url: canonical,
+      description,
+      legislationJurisdiction: 'Australia',
+      ...(b.introduced ? { legislationDate: b.introduced } : {}),
+      ...(b.sponsor ? { creator: { '@type': 'Person', name: b.sponsor } } : {}),
+      publisher,
+    },
+    prerender: prerenderBlock(name, `${facts} ${tail}`, 'Bill'),
   }
 }
 
@@ -2928,7 +3052,7 @@ const MAX_PARTY_CHARS = 64
 const MIN_YEAR = 1900
 const MAX_YEAR = 2100
 
-const KINDS = new Set(['speech', 'legal', 'news', 'division', 'all'])
+const KINDS = new Set(['speech', 'legal', 'news', 'division', 'bill', 'all'])
 const STATES = new Set(['federal', 'nsw', 'vic', 'sa', 'qld'])
 const MODES = new Set(['hybrid', 'semantic', 'keyword'])
 // Party labels are the KB's own facet values (served by /api/parties) and grow
