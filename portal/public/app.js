@@ -3555,7 +3555,7 @@ async function renderPartyDebts(label, sections) {
   const endOf = (fy) => String(Number(String(fy).slice(0, 4)) + 1); // "2024-25" -> "2025"
   const reg = safeUrl(extras.meta?.register_url);
   let html = partyReceiptsHTML(returns, reg);
-  if (d || b || ents.length) html += `<p class="kicker">Debts and other funding</p>`;
+  if (d || b || ents.length) html += `<h3 class="subject-section-title">Debts and other funding</h3>`;
   if (d) {
     const lenders = (d.top || []).map((l) => [l.type === "Financial" ? `${l.name} (financial institution)` : l.name, l.amount || 0]);
     html += `<div class="tiles">
@@ -3571,12 +3571,12 @@ async function renderPartyDebts(label, sections) {
   }
   if (b) {
     const top = (b.top || []).slice(0, 3).map((t) => `${t.name} ${fmtMoney(t.amount || 0)}`).join(", ");
-    html += `<p style="margin:0.6rem 0 0"><b>${esc(fmtMoney(b.total || 0))}</b> in discretionary benefits in ${esc(b.year)}${top ? `: ${esc(top)}` : ""}.
+    html += `<p class="party-benefits"><b>${esc(fmtMoney(b.total || 0))}</b> in discretionary benefits in ${esc(b.year)}${top ? `: ${esc(top)}` : ""}.
       These are government payments other than public election funding, as listed on the return.</p>`;
   }
   if (ents.length) {
     const shown = ents.slice(0, 6);
-    html += `<p class="kicker kicker-sub">Associated entities</p>
+    html += `<h3 class="subject-section-title">Associated entities</h3>
       <ul class="subject-list" role="list">${shown.map((e) => `
       <li><a class="source-title" href="${esc(subjectHash("campaigner", e.name))}">${esc(e.name)}</a>
         <span class="result-meta">${esc([e.year, e.receipts != null ? `receipts ${fmtMoney(e.receipts)}` : "",
@@ -3606,6 +3606,68 @@ async function renderPartyDebts(label, sections) {
   }
   if (d) $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Debts at 30 June ${esc(endOf(d.year))}</dt><dd><b>${esc(fmtMoney(d.total || 0))}</b></dd>`);
+}
+
+/** Count people, not the multiple Hansard spellings of one member. */
+async function renderPartyMembers(label, head, key) {
+  const slot = document.createElement("section");
+  slot.className = "party-members";
+  slot.setAttribute("aria-label", "Party members");
+  slot.innerHTML = `<p class="status">Reading the members directory…</p>`;
+  head.appendChild(slot);
+  const data = await loadParliamentarians();
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  if (!data?.people?.length) {
+    slot.innerHTML = `<p class="status">Member counts are unavailable.</p>`;
+    return;
+  }
+  const identity = (person) => person.pid ? `pid:${person.pid}` : `name:${String(person.full || person.name).trim().toLowerCase()}`;
+  const sitting = new Set(), speakers = new Set();
+  for (const person of data.people) {
+    if (person.current && samePartyLabel(person.party_now || person.party, label)) sitting.add(identity(person));
+    if (person.speeches > 0 && [person.party, ...(person.parties || [])].some((party) => party && samePartyLabel(party, label))) speakers.add(identity(person));
+  }
+  const directoryParty = data.people.flatMap((person) => [person.party, ...(person.parties || [])])
+    .find((party) => party && samePartyLabel(party, label)) || label;
+  slot.innerHTML = `<div class="party-member-counts">
+    <span><b>${sitting.size.toLocaleString()}</b> sitting ${sitting.size === 1 ? "member" : "members"} in the directory</span>
+    <span><b>${speakers.size.toLocaleString()}</b> recorded ${speakers.size === 1 ? "speaker" : "speakers"}</span>
+    <a href="${esc(directoryHash("person", { party: directoryParty }))}">Browse people →</a>
+  </div>
+  <p class="fineprint"><a href="/parliamentarians.json">Directory snapshot</a>${data.meta?.generated ? ` · ${esc(fmtDate(data.meta.generated))}` : ""}. Speakers since ${esc(String(data.meta?.since || "1993").slice(0, 4))}, with at least ${Number(data.meta?.floor) || 5} speeches; member IDs counted once. Sitting members use their current party.</p>`;
+}
+
+/** Party-only mentions: existing result styling with optional stored briefs. */
+async function renderPartyMentions(label, sections, key) {
+  const slot = document.createElement("section");
+  slot.className = "party-mentions";
+  slot.innerHTML = `<h3 class="subject-section-title">In parliament</h3><p class="status">Finding mentions in the record…</p>`;
+  sections.appendChild(slot);
+  const allLink = `<p class="fineprint"><a href="${esc(searchHash(`"${label}"`, {}))}">All mentions in the record</a></p>`;
+  try {
+    const [data, roster] = await Promise.all([
+      api(`/api/search?${new URLSearchParams({ q: `"${label}"`, top_k: "6" })}`), loadParliamentarians(),
+    ]);
+    if (currentSubjectKey !== key || !slot.isConnected) return;
+    const results = (data.results || []).slice(0, 5);
+    const byName = new Map((roster?.people || []).map((person) => [person.name.toLowerCase(), person.party_now || person.party]));
+    for (const result of results) if (!result.party && result.speaker) result.party = byName.get(String(result.speaker).toLowerCase()) || null;
+    const paint = (briefs) => {
+      if (currentSubjectKey !== key || !slot.isConnected) return;
+      slot.innerHTML = `<h3 class="subject-section-title">In parliament</h3>
+        ${results.length ? `<ul class="subject-list" role="list">${results.map((result) => {
+          const brief = briefs[result.resource];
+          return `<li><a href="/doc/${encodeURIComponent(result.slug)}" class="source-title doc-title">${esc(displayTitle(result))}</a>
+            <span class="result-meta">${metaHTML(result, { linkSpeaker: true, linkParty: true })}</span>
+            <p class="${brief ? "party-mention-brief" : "snippet"}">${brief ? `<span class="party-brief-label">Machine brief</span>` : ""}${esc(brief || result.snippet || "Open the speech to read the passage.")}</p></li>`;
+        }).join("")}</ul>` : `<p class="status">No mentions found in the indexed record.</p>`}${allLink}`;
+    };
+    paint({});
+    const briefs = await fetchBriefMap(results);
+    if (Object.keys(briefs).length) paint(briefs);
+  } catch {
+    if (currentSubjectKey === key && slot.isConnected) slot.innerHTML = `<h3 class="subject-section-title">In parliament</h3><p class="status">Mentions could not be loaded.</p>${allLink}`;
+  }
 }
 
 // --- voting record on person pages -------------------------------------------
@@ -3863,6 +3925,7 @@ async function openSubject(kind, name, manageFocus) {
       heading: isParty ? "Where it came from" : "Where the money went",
       linkTo: (nm) => subjectHash(isParty ? "donor" : "party", nm),
       className: isParty ? "party-flow-bars" : "",
+      detail: isParty ? (nm) => industryLabel(moneyData.nodes.find((n) => n.kind === "donor" && n.label === nm)?.industry || "Industry not recorded") : null,
       partyDots: !isParty, // donor page rows are parties; party page rows are donors
     }));
     if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
@@ -3870,9 +3933,14 @@ async function openSubject(kind, name, manageFocus) {
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
     if (!isParty) renderDonorInterests(node.label, sections);
     if (!isParty) renderDonorStateMoney(node.label, sections);
-    if (isParty) renderPartyDebts(node.label, sections);
+    if (isParty) {
+      renderPartyMembers(node.label, body.querySelector(".subject-head"), key);
+      renderPartyDebts(node.label, sections);
+    }
     renderDonorAccess(node.label, sections);
-    await subjectMentions(node.label, sections, "In parliament");
+    if (isParty) await renderPartyMentions(node.label, sections, key);
+    else await subjectMentions(node.label, sections, "In parliament");
+    if (isParty && currentSubjectKey !== key) return;
     subjectNews(node.label, sections);
     mountSubjectMap(node.id);
     return;

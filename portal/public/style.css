@@ -2546,3 +2546,31 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #subject-party-debts > .chart .barrow-name { white-space: normal; overflow-wrap: anywhere; line-height: 1.45; }
 #subject-party-debts > .chart .barrow-track { grid-column: 1 / -1; grid-row: 2; height: 4px; }
 #subject-party-debts > .chart .barrow-value { white-space: nowrap; }
+#panel-subject .party-flow-bars .barrow-value small {
+  max-width: 7.5rem; margin-top: 0.35rem; white-space: normal;
+  font: 400 0.8125rem/1.4 var(--sans); color: var(--ink-soft);
+}
+#panel-subject .party-flow-bars .barrow-value small::before {
+  content: ""; display: inline-block; width: 0.45em; height: 0.45em;
+  margin-right: 0.35em; border-radius: 50%; background: var(--bronze); vertical-align: 0.1em;
+}
+#panel-subject .party-members { border-top: 1px solid var(--line); padding-top: 0.8rem; margin: 0.75rem 0 1.5rem; }
+#panel-subject .party-member-counts { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem 1.5rem; font: 400 0.875rem/1.5 var(--sans); }
+#panel-subject .party-member-counts b { font: 700 1.4rem/1.4 var(--serif); font-variant-numeric: tabular-nums; }
+#panel-subject .party-member-counts a { display: inline-flex; align-items: center; min-height: 44px; }
+#panel-subject .party-members .fineprint { margin: 0.35rem 0 0; font-size: 0.8125rem; line-height: 1.6; max-width: 75ch; }
+#subject-party-debts .party-benefits,
+#panel-subject .party-mentions .snippet,
+#panel-subject .party-mention-brief { font: 400 1rem/1.7 var(--serif); color: var(--ink); }
+#panel-subject .party-mentions .snippet { display: block; -webkit-line-clamp: unset; overflow: visible; }
+#panel-subject .party-mentions .source-title { font: 700 1rem/1.5 var(--serif); display: inline-flex; align-items: center; min-height: 44px; }
+#panel-subject .party-mentions .result-meta { font: 400 0.8125rem/1.7 var(--sans); }
+#panel-subject .party-brief-label { display: block; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); margin-bottom: 0.3rem; }
+#panel-subject .party-member-counts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.25rem 1rem; }
+#panel-subject .party-member-counts b { display: block; }
+#panel-subject .party-member-counts a { grid-column: 1 / -1; justify-self: start; }
+#panel-subject .party-mentions .result-meta { display: block; }
+@media (min-width: 701px) {
+  #panel-subject .party-member-counts { display: flex; gap: 1rem 2rem; }
+  #panel-subject .party-member-counts b { display: inline; }
+}
