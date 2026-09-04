@@ -412,52 +412,102 @@
  ],
  "key_moments": [
   {
-   "slug": "speech-1196035",
-   "title": "Zali Steggall \u2014 Bills \u2014 2025-08-25",
-   "speaker": "Zali Steggall",
-   "party": "Independent",
-   "state": "federal",
-   "date": "2025-08-25"
-  },
-  {
-   "slug": "speech-1205729",
-   "title": "Katy Gallagher \u2014 Bills \u2014 2026-08-19",
-   "speaker": "Katy Gallagher",
-   "party": null,
-   "state": "federal",
-   "date": "2026-08-19"
-  },
-  {
-   "slug": "speech-801931",
-   "title": "Christine Milne \u2014 Safe Climate (Energy Efficient Non-Residential Buildings Scheme) Bill 2010; Renewable Energy Amendment (Feed-in-Tariff for Electricity) Bill 2010 \u2014 2010-09-29",
+   "resource": "a87b5c81f28343ffaf84dab188adc127",
+   "slug": "speech-789956",
+   "title": "Renewable Energy Amendment (Increased Mandatory Renewable Energy Target) Bill 2008",
    "speaker": "Christine Milne",
    "party": "Greens",
    "state": "federal",
-   "date": "2010-09-29"
+   "chamber": "senate",
+   "date": "2008-11-27",
+   "brief": "The speaker introduced the Renewable Energy Amendment (Increased Mandatory Renewable Energy Target) Bill 2008 to increase the Mandatory Renewable Energy Target from 9,500 GWh to 45,000 GWh, aiming for 20% renewable electricity by 2020, and criticised the Rudd Government for failing to legislate its election promise.",
+   "why": "Second reading, Renewable Energy Amendment (Increased Mandatory Renewable Energy Target)\u2026, 2008",
+   "role": "bill mover",
+   "length": 9578
   },
   {
-   "slug": "speech-1146082",
-   "title": "R.A. Simms \u2014 Mining (Prohibition of Mining in Mount Lofty Ranges Watershed) Amendment Bill \u2014 2022-02-09",
-   "speaker": "R.A. Simms",
+   "resource": "1e3f8fd1459c4d88a3336b5932fbd20a",
+   "slug": "speech-797024",
+   "title": "Carbon Pollution Reduction Scheme Bills 2009",
+   "speaker": "Ursula Stephens",
+   "party": null,
+   "state": "federal",
+   "chamber": "senate",
+   "date": "2009-11-18",
+   "brief": "The government argued the Carbon Pollution Reduction Scheme would reduce emissions, create jobs, and drive investment, citing Treasury modelling of 1.7 million jobs by 2020 and $19 billion in renewables; opponents including the Coalition and Greens criticized the bill for risking job losses (e.g., 66,000 in mining), harming trade-exposed industries, and failing to achieve meaningful global emissions reductions without a comprehensive international agreement.",
+   "why": "Carbon Pollution Reduction Scheme Bills 2009, Federal, 2009",
+   "role": "parliamentarian",
+   "length": 337679
+  },
+  {
+   "resource": "a2da6796e60c4f08a635b09a0aac832f",
+   "slug": "speech-847488",
+   "title": "United Nations Climate Change Conference",
+   "speaker": "Jeremy Buckingham",
+   "party": null,
+   "state": "nsw",
+   "chamber": "nsw_lc",
+   "date": "2015-10-27",
+   "brief": "The speaker argued for a moratorium on all new coalmines and extensions in New South Wales, stating that 95% of Australia\u2019s coal reserves must remain unburned to limit global warming to two degrees; he noted that 41 new mines or extensions have been approved since 2011 and 10,000 coal jobs lost in the Hunter Valley.",
+   "why": "United Nations Climate Change Conference, NSW, 2015",
+   "role": "parliamentarian",
+   "length": 4943
+  },
+  {
+   "resource": "412d673b17b3485eaf64f8a0e67b975d",
+   "slug": "speech-937959",
+   "title": "National Energy Guarantee",
+   "speaker": "David Clarke",
+   "party": null,
+   "state": "nsw",
+   "chamber": "nsw_lc",
+   "date": "2018-08-15",
+   "brief": "The COAG Energy Council agreed to progress the National Energy Guarantee, with draft legislation released for consultation, expected to bring forward 1,000 megawatts of new generation and save households around $150 annually on electricity bills between 2020 and 2030, aiming for implementation by April 2019.",
+   "why": "National Energy Guarantee, NSW, 2018",
+   "role": "minister",
+   "length": 3478
+  },
+  {
+   "resource": "85b98ec5ea8f488f8d97cb023d6404ae",
+   "slug": "speech-1067966",
+   "title": "Bushfires and Climate Change",
+   "speaker": "David Shoebridge",
+   "party": null,
+   "state": "nsw",
+   "chamber": "nsw_lc",
+   "date": "2019-11-14",
+   "brief": "David Shoebridge argued that the government's deletion of all climate change references from the motion was a pattern of gagging experts, citing a directive that banned Department of Environment and Planning staff from discussing the link between climate change and bushfires at the Adapt NSW forum. He stated that bushfires are becoming more common and extreme due to climate change.",
+   "why": "Bushfires and Climate Change, NSW, 2019",
+   "role": "parliamentarian",
+   "length": 4260
+  },
+  {
+   "resource": "3c0ce226b70642dd9aa6600b2f64b781",
+   "slug": "speech-1159189",
+   "title": "Climate Change and Greenhouse Emissions Reduction (Targets) Amendment Bill",
+   "speaker": "D.J. Speirs",
    "party": null,
    "state": "sa",
-   "date": "2022-02-09"
+   "chamber": "sa_ha",
+   "date": "2022-07-06",
+   "brief": "The bill legislates net zero emissions by 2050, a 50% reduction by 2030 from 2005 levels, and 100% renewable electricity generation by 2030, enshrining previous Liberal government targets and the state's 2021\u20132025 climate action plan.",
+   "why": "Second reading, Climate Change and Greenhouse Emissions Reduction (Targets) Amendment Bill, 2022",
+   "role": "bill mover",
+   "length": 12531
   },
   {
-   "slug": "speech-325724",
-   "title": "Christopher Pyne \u2014 2016-02-02",
-   "speaker": "Christopher Pyne",
+   "resource": "b0e5190021f74e4090aad46425726d9e",
+   "slug": "speech-828224",
+   "title": "Safeguard Mechanism reforms",
+   "speaker": "Ted O'Brien",
    "party": "Liberal",
    "state": "federal",
-   "date": "2016-02-02"
-  },
-  {
-   "slug": "speech-811102",
-   "title": "Joe Ludwig \u2014 Motions \u2014 2011-10-12",
-   "speaker": "Joe Ludwig",
-   "party": null,
-   "state": "federal",
-   "date": "2011-10-12"
+   "chamber": "representatives",
+   "date": "2023-03-08",
+   "brief": "The coalition opposed the Safeguard Mechanism (Crediting) Amendment Bill 2022, arguing it imposes a hidden carbon tax of $75 per tonne that will raise costs for consumers and force businesses to close, while Labor and Greens speakers supported the bill as necessary to meet Australia's 43% emissions reduction target by 2030 and net zero by 2050.",
+   "why": "Safeguard Mechanism reforms, Federal, 2023",
+   "role": "parliamentarian",
+   "length": 37179
   }
  ],
  "sections": [

@@ -1,6 +1,7 @@
 import unittest
 
 from scripts.generate_reports import (
+    brief_matches_topic,
     debate_title,
     is_hollow_brief,
     is_hollow_speech,
@@ -32,6 +33,8 @@ class KeyMomentPredicateTests(unittest.TestCase):
             with self.subTest(title=title):
                 self.assertTrue(is_hollow_title(title))
         self.assertFalse(is_hollow_title("Apology to Australia's Indigenous Peoples"))
+        self.assertTrue(is_hollow_title("Questions without Notice: Take Note of Answers"))
+        self.assertTrue(is_hollow_title("Valedictory"))
 
     def test_short_and_procedural_speeches_are_rejected(self):
         self.assertTrue(is_hollow_speech("I move: That this bill be now read a second time."))
@@ -46,9 +49,27 @@ class KeyMomentPredicateTests(unittest.TestCase):
     def test_missing_or_single_procedural_briefs_are_rejected(self):
         self.assertTrue(is_hollow_brief(None))
         self.assertTrue(is_hollow_brief("The speaker moved the second reading of a bill."))
+        self.assertTrue(is_hollow_brief(
+            "The senator criticised the management of Senate business and moved to suspend standing orders. "
+            "The motion would extend sitting hours so the chamber could reach the carbon tax repeal bills."
+        ))
+        self.assertTrue(is_hollow_brief(
+            "The member requested further details from the Minister for Housing about how a new program "
+            "would affect jobs and housing construction in the electorate."
+        ))
         self.assertFalse(is_hollow_brief(
             "The speech argued that the bill would restore native-title protections removed by earlier amendments. "
             "It linked the reform to the response to the Wik decision and explained the practical effect on claimants."
+        ))
+
+    def test_brief_must_name_the_report_subject(self):
+        self.assertTrue(brief_matches_topic(
+            "The bill restricts gambling advertising and online wagering inducements.",
+            ("gambling", "wagering"),
+        ))
+        self.assertFalse(brief_matches_topic(
+            "The senator reflected on women in parliament during her valedictory.",
+            ("immigration", "refugee", "detention"),
         ))
 
 

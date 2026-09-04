@@ -35,6 +35,9 @@ REPORTS: dict[str, dict] = {
         "title": "Gambling",
         "blurb": "What parliament says about poker machines, online wagering and gambling reform.",
         "topic": "gambling",
+        "relevance_terms": (
+            "gambling", "wagering", "betting", "poker machine", "casino", "gaming",
+        ),
         "key_moment_questions": [
             "Which substantive speeches drove poker-machine reform, harm minimisation, precommitment or cashless-card policy?",
             "Which major speeches changed the regulation of online wagering, gambling credit or inducements?",
@@ -55,15 +58,39 @@ REPORTS: dict[str, dict] = {
         "title": "Climate & Energy",
         "blurb": "The climate debate on the record: targets, coal, renewables and carbon pricing.",
         "topic": "climate-environment",
+        "relevance_terms": (
+            "climate", "emission", "renewable", "carbon", "coal", "energy", "greenhouse",
+        ),
         "key_moment_questions": [
-            "Which substantive speeches led the introduction of carbon pricing or the Carbon Pollution Reduction Scheme?",
-            "Which major speeches led the repeal of the carbon price and Clean Energy legislation?",
-            "Which leaders or ministers set Australia's Paris, net-zero or legislated emissions targets?",
-            "Which landmark bill speeches changed the Renewable Energy Target or national renewable-energy policy?",
+            {
+                "question": "Which substantive speeches led the Carbon Pollution Reduction Scheme bills and the first national emissions-trading legislation?",
+                "query": "Carbon Pollution Reduction Scheme bills emissions trading renewable investment 2009",
+                "year": "2009",
+                "fallback_title": "Carbon Pollution Reduction Scheme Bills 2009",
+            },
+            {
+                "question": "Which major speeches made the government's case after repeal of the carbon price?",
+                "query": "Greg Hunt carbon price repeal electricity prices emissions reduction fund",
+                "speaker": "Greg Hunt",
+                "year": "2015",
+                "fallback_title": "The case for carbon price repeal",
+            },
+            {
+                "question": "Which leaders, ministers or crossbenchers led the Climate Change Bill 2022 and its legislated emissions targets?",
+                "query": "Climate Change Bill 2022 43 per cent emissions target net zero",
+                "year": "2022",
+                "fallback_title": "Climate Change Bill 2022",
+            },
+            "Which landmark speeches led Renewable Energy Target amendment bills and the 20 per cent renewable target?",
             "Which speeches defined the political fight over new coal mines and the transition from fossil fuels?",
-            "Which ministers, shadow ministers or crossbenchers drove the Safeguard Mechanism reforms?",
+            {
+                "question": "Which ministers, shadow ministers or crossbenchers drove the Safeguard Mechanism (Crediting) Amendment Bill reforms?",
+                "query": "Safeguard Mechanism Crediting Amendment Bill industrial emitters baseline decline",
+                "year": "2023",
+                "fallback_title": "Safeguard Mechanism reforms",
+            },
             "Which major speeches linked bushfires, droughts or floods to climate action and adaptation?",
-            "Which substantive speeches shaped national electricity-market policy, reliability and energy prices?",
+            "Which substantive speeches shaped the National Energy Guarantee, electricity reliability and energy prices?",
         ],
         "questions": [
             "What positions have MPs taken on climate change action and emissions targets?",
@@ -75,9 +102,23 @@ REPORTS: dict[str, dict] = {
         "title": "Housing",
         "blurb": "Decades of affordability promises, negative gearing fights and supply debates.",
         "topic": "housing",
+        "relevance_terms": (
+            "housing", "home", "rent", "tenant", "homeless", "mortgage", "property",
+            "negative gearing",
+        ),
         "key_moment_questions": [
-            "Which substantive speeches led the Housing Australia Future Fund bill and its passage?",
-            "Which leaders or shadow ministers made landmark cases for changing negative gearing or capital-gains tax concessions?",
+            {
+                "question": "Which substantive speeches led the Housing Australia Future Fund Bill 2023 and its passage?",
+                "query": "Housing Australia Future Fund Bill 2023 social affordable housing passage",
+                "year": "2023",
+                "fallback_title": "Housing Australia Future Fund Bill 2023",
+            },
+            {
+                "question": "Which leaders or shadow ministers made landmark cases for changing negative gearing or capital-gains tax concessions?",
+                "query": "negative gearing capital gains tax concessions housing affordability election policy",
+                "year": "2016",
+                "fallback_title": "Negative gearing and capital gains tax",
+            },
             "Which ministers made major budget or bill announcements about social and public housing construction?",
             "Which important speeches addressed rental affordability, tenant protections or rent increases?",
             "Which major speeches set policy for first-home buyers and home ownership?",
@@ -95,15 +136,44 @@ REPORTS: dict[str, dict] = {
         "title": "First Nations",
         "blurb": "Reconciliation, the Voice, Closing the Gap and native title, in parliament's own words.",
         "topic": "indigenous-affairs",
+        "relevance_terms": (
+            "indigenous", "aboriginal", "torres strait", "first nations", "native title",
+            "stolen generation", "uluru", "voice",
+        ),
         "key_moment_questions": [
-            "Which substantive speech delivered or answered the National Apology to the Stolen Generations in 2008?",
+            {
+                "question": "Which substantive crossbench speech answered the National Apology to the Stolen Generations in 2008?",
+                "query": "Andrew Bartlett national apology stolen generations 13 February 2008",
+                "speaker": "Andrew Bartlett",
+                "year": "2008",
+                "fallback_title": "Apology to Australia's Indigenous Peoples",
+            },
             "Which leaders and ministers made the defining speeches on the Uluru Statement, the Voice and the 2023 referendum?",
-            "Which prime ministers, opposition leaders or First Nations members delivered major Closing the Gap statements?",
-            "Which landmark bill speeches shaped native title after Mabo, Wik or later Native Title Act reforms?",
-            "Which major speeches confronted Aboriginal deaths in custody and the royal commission's recommendations?",
-            "Which ministers or shadow ministers led the debate over the Northern Territory Intervention and Stronger Futures?",
-            "Which substantive speeches advanced treaty, Makarrata or truth-telling in Australian parliaments?",
-            "Which leaders or crossbenchers made major speeches on constitutional recognition of First Nations peoples?",
+            {
+                "question": "Which prime ministers, opposition leaders or First Nations members delivered major Closing the Gap statements?",
+                "query": "major Closing the Gap statement targets outcomes prime minister opposition First Nations",
+                "fallback_title": "Closing the Gap statement",
+            },
+            "Which landmark speeches led the Native Title Amendment (Reform) Bill and other reforms to the burden of proof and agreement-making?",
+            "Which major speeches demanded implementation of the Royal Commission into Aboriginal Deaths in Custody, including removal of hanging points and decriminalisation of public drunkenness?",
+            {
+                "question": "Which ministers or shadow ministers led the debate over the Northern Territory Intervention and Stronger Futures?",
+                "query": "Nigel Scullion Northern Territory Intervention emergency response bills 2007",
+                "speaker": "Nigel Scullion",
+                "fallback_title": "Northern Territory Emergency Response Bills",
+            },
+            {
+                "question": "Which substantive speeches advanced treaty, Makarrata or truth-telling in Australian parliaments?",
+                "query": "K.J. Maher treaty Makarrata truth-telling First Nations South Australia",
+                "speaker": "K.J. Maher",
+                "fallback_title": "Treaty and truth-telling",
+            },
+            {
+                "question": "Which leaders or crossbenchers made major speeches on constitutional recognition of First Nations peoples?",
+                "query": "constitutional recognition Indigenous Voice Uluru Statement referendum",
+                "speaker": "Linda Burney",
+                "fallback_title": "Constitutional recognition and the Uluru Statement",
+            },
         ],
         "questions": [
             "What have MPs said about reconciliation and recognition of First Nations peoples?",
@@ -115,15 +185,29 @@ REPORTS: dict[str, dict] = {
         "title": "Immigration",
         "blurb": "Border policy, offshore detention and migration levels across the decades.",
         "topic": "immigration",
+        "relevance_terms": (
+            "immigration", "migration", "asylum", "refugee", "detention", "visa", "border",
+            "people smuggl", "nauru", "manus", "citizenship", "multicultural",
+        ),
         "key_moment_questions": [
-            "Which substantive speeches shaped the Tampa, border-protection and asylum-seeker debates?",
-            "Which ministers or shadow ministers led major debates on offshore detention in Nauru and Manus Island?",
-            "Which important bill speeches introduced, defended or repealed medical-transfer or Medevac policy?",
-            "Which landmark speeches changed policy on children and families in immigration detention?",
-            "Which ministers, opposition spokespeople or crossbenchers set major changes to skilled-migration levels?",
-            "Which substantive speeches shaped citizenship, multiculturalism and migrant-integration policy?",
-            "Which major Migration Act speeches addressed boat arrivals, turnbacks or temporary protection visas?",
-            "Which leaders or ministers made defining speeches on refugee resettlement and humanitarian intake?",
+            {
+                "question": "Which substantive speeches shaped the Tampa, Border Protection Bill and asylum-seeker debates?",
+                "query": "Tampa Border Protection Bill asylum seekers 2001",
+                "year": "2001",
+                "fallback_title": "The Tampa and Border Protection Bill",
+            },
+            "Which ministers or shadow ministers led major Migration Act debates on offshore detention in Nauru and Manus Island?",
+            {
+                "question": "Which important bill speeches introduced, defended or repealed the medical-transfer or Medevac law?",
+                "query": "Medevac medical transfer law Nauru Manus Migration Amendment bill",
+                "year": "2019",
+                "fallback_title": "The Medevac law",
+            },
+            "Which landmark Migration Amendment speeches changed policy on children and families in immigration detention?",
+            "Which ministers or opposition spokespeople announced major changes to skilled-migration program levels?",
+            "Which substantive Australian Citizenship Bill speeches shaped citizenship and multicultural policy?",
+            "Which major Migration Act speeches addressed boat turnbacks, temporary protection visas and Operation Sovereign Borders?",
+            "Which leaders or ministers made defining speeches on refugee resettlement and the humanitarian intake?",
         ],
         "questions": [
             "What positions have MPs taken on asylum seekers and offshore detention?",
@@ -134,12 +218,26 @@ REPORTS: dict[str, dict] = {
         "title": "Media Ownership",
         "blurb": "Concentration, regulation and the platforms: parliament on the press.",
         "topic": "media-communications",
+        "relevance_terms": (
+            "media", "press", "journalis", "broadcast", "abc", "sbs", "news", "newspaper",
+            "social media", "platform",
+        ),
         "key_moment_questions": [
-            "Which substantive speeches led major changes to cross-media ownership and media-concentration laws?",
-            "Which ministers, shadow ministers or crossbenchers drove the News Media Bargaining Code?",
+            "Which substantive speeches led the Broadcasting Services Amendment media ownership bills and cross-media concentration changes?",
+            {
+                "question": "Which ministers, shadow ministers or crossbenchers drove the Treasury Laws Amendment News Media and Digital Platforms Mandatory Bargaining Code Bill?",
+                "query": "News Media Digital Platforms Mandatory Bargaining Code Bill Google Facebook journalism",
+                "year": "2021",
+                "fallback_title": "News Media Bargaining Code",
+            },
             "Which landmark speeches defended or challenged the funding and independence of the ABC and SBS?",
             "Which important bill speeches advanced press freedom, journalist-source protection or public-interest journalism?",
-            "Which leaders or crossbenchers called for a royal commission or inquiry into media diversity and ownership?",
+            {
+                "question": "Which leaders or crossbenchers called for a royal commission or Senate inquiry into media diversity and ownership?",
+                "query": "media diversity ownership concentration royal commission Senate inquiry",
+                "year": "2020",
+                "fallback_title": "Media diversity and ownership inquiry",
+            },
             "Which major speeches shaped regulation of social-media platforms, misinformation or online safety?",
             "Which substantive speeches changed broadcasting law for streaming services and digital platforms?",
             "Which ministers or opposition spokespeople made major interventions on regional and local journalism?",
@@ -408,9 +506,11 @@ PARLIAMENT_NAMES = {
 }
 _BARE_DEBATE_TITLES = {
     "adjournment", "answers to questions", "bills", "business", "committee",
-    "matters of public importance", "motions", "notices", "petitions",
-    "points of order", "questions", "questions on notice",
-    "questions without notice", "statements", "votes and proceedings",
+    "committees", "documents", "governor-general's speech", "legislation amendment bill",
+    "matters of public importance", "matters of urgency", "ministerial statements",
+    "motion", "motions", "notices", "petitions", "private members' business",
+    "points of order", "questions", "questions on notice", "statements by senators",
+    "questions without notice", "statements", "valedictory", "votes and proceedings",
 }
 _ROLE_PATTERNS = (
     (1.45, "leader", re.compile(
@@ -430,7 +530,8 @@ def debate_title(raw_title: str | None, speaker: str | None, date: str | None) -
     iso_date = str(date or "")[:10]
     if parts and re.fullmatch(r"\d{4}-\d{2}-\d{2}", parts[-1]) and parts[-1] == iso_date:
         parts.pop()
-    return " — ".join(p for p in parts if p).strip()
+    title = " — ".join(p for p in parts if p).strip()
+    return re.sub(r"([a-z])’S\b", r"\1’s", title)
 
 
 def is_hollow_title(title: str | None) -> bool:
@@ -443,6 +544,8 @@ def is_hollow_title(title: str | None) -> bool:
         return True
     if re.search(r"\b(?:point of order|question on notice)\b", folded):
         return True
+    if folded.startswith("questions without notice"):
+        return True
     committee_words = re.search(
         r"\b(?:estimates?|committee transcript|committee hearing|public hearing)\b", folded)
     letters = [c for c in compact if c.isalpha()]
@@ -450,7 +553,7 @@ def is_hollow_title(title: str | None) -> bool:
     return bool(committee_words and (len(compact) > 90 or uppercase_share > 0.45))
 
 
-def is_hollow_speech(text: str | None, min_chars: int = 1200) -> bool:
+def is_hollow_speech(text: str | None, min_chars: int = 1500) -> bool:
     """True for short, procedural or boilerplate speech fields."""
     compact = re.sub(r"\s+", " ", str(text or "")).strip()
     if len(compact) < min_chars:
@@ -459,6 +562,10 @@ def is_hollow_speech(text: str | None, min_chars: int = 1200) -> bool:
     if re.search(
         r"\b(?:point of order|the answer to the honourable member(?:'s|’s) question is|"
         r"the committee met at|division required)\b", opening, re.I):
+        return True
+    if re.search(r"^I move\s*:?[\s\S]{0,160}?\b(?:Senate|House) take note\b", opening, re.I) and re.search(
+        r"\b(?:informal arrangements|limit the time|clerks|procedures?|leave granted)\b",
+        compact[:1400], re.I):
         return True
     move = re.search(
         r"\bI move\s*:?[\s\S]{0,220}?\b(?:bill be now read a second time|that the motion be agreed to)\b[.!]?",
@@ -486,7 +593,23 @@ def is_hollow_brief(brief: str | None) -> bool:
         r"(?:the )?speaker moved (?:the )?second reading of (?:a|the) bill\.?",
         compact, re.I):
         return True
+    if re.search(
+        r"\b(?:senate business|extended sitting hours|suspend standing orders|procedural motion)\b",
+        compact, re.I,
+    ):
+        return True
+    if re.search(
+        r"\b(?:requested further details from|asked the minister for (?:an )?(?:update|details)|"
+        r"requested an update from)\b", compact, re.I,
+    ):
+        return True
     return False
+
+
+def brief_matches_topic(brief: str | None, terms: tuple[str, ...] | list[str]) -> bool:
+    """Require the machine brief itself—not just its field label—to name the subject."""
+    folded = str(brief or "").casefold()
+    return any(term.casefold() in folded for term in terms)
 
 
 def retrieval_score(resource: dict) -> float:
@@ -515,16 +638,24 @@ def load_parliamentarians() -> dict[str, dict]:
     for person in people:
         for name in (person.get("name"), person.get("full")):
             if name:
-                out[name.strip().casefold()] = person
+                out.setdefault(name.strip().casefold(), person)
     return out
 
 
 def role_weight(title: str, text: str, speaker: str | None,
                 parliamentarians: dict[str, dict]) -> tuple[float, str]:
     """Weight leadership visible in the record; public membership is a small prior."""
-    header = f"{title} {text[:900]}"
+    header = text[:420]
+    speaker_name = str(speaker or "").strip()
+    speaker_pattern = re.escape(speaker_name.split()[-1]) if speaker_name else r"(?!)"
     for weight, label, pattern in _ROLE_PATTERNS:
-        if pattern.search(header):
+        role = pattern.search(header)
+        if role and (
+            re.search(speaker_pattern, header, re.I)
+            and abs(role.start() - (re.search(speaker_pattern, header, re.I) or role).start()) < 180
+        ):
+            return weight, label
+        if re.search(rf"\b(?:as|I am)\s+(?:the\s+)?{pattern.pattern}", header, re.I):
             return weight, label
     if re.search(r"\bI move\s*:?[\s\S]{0,220}?\bbill be now read a second time\b", text[:1200], re.I):
         return 1.30, "bill mover"
@@ -567,15 +698,22 @@ def select_key_moments(candidates: list[dict], limit: int = 8) -> list[dict]:
     states: set[str] = set()
     decades: set[str] = set()
     queries: set[int] = set()
+    titles: set[str] = set()
 
     def eligible(candidate: dict) -> bool:
         speaker = str(candidate.get("speaker") or candidate["slug"]).casefold()
         year = str(candidate.get("date") or "")[:4]
-        return speaker not in speakers and bool(year) and year not in years
+        title = str(candidate.get("title") or "").casefold()
+        return speaker not in speakers and bool(year) and year not in years and title not in titles
 
     while remaining and len(chosen) < limit:
         available = [c for c in remaining if eligible(c)]
         if not available:
+            break
+        uncovered = [c for c in available if set(c.get("query_indexes") or []) - queries]
+        if uncovered:
+            available = uncovered
+        elif len(chosen) >= 6:
             break
         # Guarantee a second parliament before optimising the rest of the mix.
         if len(chosen) == 1 and len(states) == 1:
@@ -603,6 +741,7 @@ def select_key_moments(candidates: list[dict], limit: int = 8) -> list[dict]:
         years.add(year)
         decades.add(year[:3])
         states.add(str(pick.get("state") or ""))
+        titles.add(str(pick.get("title") or "").casefold())
         queries.update(pick.get("query_indexes") or [])
 
     return sorted(chosen, key=lambda c: (str(c.get("date") or ""), c["title"]))
@@ -614,14 +753,28 @@ def key_moments(kb: KbClient, report_slug: str, limit: int = 8) -> list[dict]:
     clauses = [
         {"prop": "label", "labelset": "kind", "label": "speech"},
         {"prop": "label", "labelset": "topic", "label": cfg["topic"]},
+        {"not": {"prop": "field", "type": "generic"}},
     ]
-    filter_expression = {"field": {"and": clauses}}
     candidates: dict[str, dict] = {}
-    for query_index, question in enumerate(cfg["key_moment_questions"]):
+    for query_index, configured in enumerate(cfg["key_moment_questions"]):
+        spec = configured if isinstance(configured, dict) else {"question": configured}
+        question = spec.get("query") or spec["question"]
+        query_clauses = list(clauses)
+        if spec.get("speaker"):
+            query_clauses.insert(-1, {
+                "prop": "origin_collaborator", "collaborator": spec["speaker"],
+            })
+        if spec.get("year"):
+            year = spec["year"]
+            query_clauses.insert(-1, {
+                "prop": "created",
+                "since": f"{year}-01-01T00:00:00Z",
+                "until": f"{year}-12-31T23:59:59Z",
+            })
         result = kb.find(
             question,
             top_k=20,
-            filter_expression=filter_expression,
+            filter_expression={"field": {"and": query_clauses}},
             show=["basic", "origin", "extra"],
         )
         for rid, resource in (result.get("resources") or {}).items():
@@ -630,7 +783,13 @@ def key_moments(kb: KbClient, report_slug: str, limit: int = 8) -> list[dict]:
                 continue
             title = debate_title(resource.get("title"), summary["speaker"], summary["date"])
             if is_hollow_title(title):
-                continue
+                fallback = spec.get("fallback_title")
+                folded = re.sub(r"\s+", " ", title).strip(" .:-—").casefold()
+                replaceable = not title or folded in _BARE_DEBATE_TITLES or len(title) > 240
+                if fallback and replaceable:
+                    title = fallback
+                else:
+                    continue
             labels = resource_labels(resource)
             candidate = candidates.setdefault(rid, {
                 **summary,
@@ -659,7 +818,7 @@ def key_moments(kb: KbClient, report_slug: str, limit: int = 8) -> list[dict]:
         except AragError:
             return None
         brief = (((brief_data.get("value") or {}).get("body")) or "").strip()
-        if is_hollow_brief(brief):
+        if is_hollow_brief(brief) or not brief_matches_topic(brief, cfg["relevance_terms"]):
             return None
         weight, role = role_weight(candidate["title"], body, candidate.get("speaker"), parliamentarians)
         candidate.update({
