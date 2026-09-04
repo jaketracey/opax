@@ -476,7 +476,7 @@ main { flex: 1; padding: 2.75rem 0 3rem; }
   /* Narrow screens: the ask question takes its own line; the submit and the
      options icon share the next one. (The search row stays on one line — see
      the mobile block at the end of the file.) */
-  .ask-row > input { flex-basis: 100%; }
+  .ask-row > :is(input, .grow-field) { flex-basis: 100%; }
   .ask-row button.primary { flex: 1 1 auto; }
 }
 main:focus { outline: none; }
@@ -529,7 +529,7 @@ button.secondary:hover { border-color: var(--ink); }
 button.secondary:disabled { opacity: 0.55; cursor: wait; }
 
 .ask-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-.ask-row > input { flex: 1 1 320px; min-height: 56px; font-size: 1.0625rem; }
+.ask-row > :is(input, .grow-field) { flex: 1 1 320px; min-height: 56px; font-size: 1.0625rem; }
 
 .ask-options-wrap { position: relative; display: inline-block; }
 /* The ask row and the search row carry the same control, so it is one rule.
@@ -959,7 +959,7 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 
 .search-grid { display: grid; gap: 0.8rem; }
 .query-line { display: flex; gap: 0.6rem; flex-wrap: wrap; min-width: 0; } /* a grid item: without min-width 0 the search-grid column grows to the row's min-content and the input never shrinks */
-.query-line > input { flex: 1 1 280px; min-height: 48px; }
+.query-line > :is(input, .grow-field) { flex: 1 1 280px; min-height: 48px; }
 .filter-rail { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: end; }
 .filter-item { display: inline-flex; flex-direction: column; gap: 0.2rem; }
 .filter-item label { font-size: 0.75rem; color: var(--ink-faint); }
@@ -2196,13 +2196,13 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .balance-rows { display: flex; flex-direction: column; margin-top: var(--space-2); }
 .balance-row {
   display: grid; grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1fr);
-  align-items: center; padding: 0.15rem 0; font-size: 0.75rem; font-variant-numeric: tabular-nums;
+  align-items: start; padding: 0.3rem 0; font-size: 0.75rem; font-variant-numeric: tabular-nums;
 }
-.balance-election { border-top: 1px solid var(--bronze-rule); }
+.balance-election { border-top: 1px solid var(--bronze-rule); margin-top: 0.3rem; padding-top: 0.55rem; }
 .balance-election .balance-year { color: var(--bronze-ink); font-weight: 600; }
-.balance-year { color: var(--ink-faint); line-height: 1.1; }
+.balance-year { color: var(--ink-faint); line-height: 18px; } /* the year's line box matches the bar row, so the bar sits on the year and the election word hangs beneath */
 .balance-year em {
-  display: block; margin-top: 1px; color: var(--bronze-ink);
+  display: block; margin-top: 2px; line-height: 1; color: var(--bronze-ink);
   font: 500 0.55rem/1 var(--sans); font-style: normal; letter-spacing: 0.08em; text-transform: uppercase;
 }
 .balance-left {
@@ -2479,7 +2479,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 /* ---- mobile ------------------------------------------------------------- */
 
 @media (max-width: 640px) {
-  .ask-row > input { min-height: 52px; }
+  .ask-row > :is(input, .grow-field) { min-height: 52px; }
   /* Ask stretches, the options icon rides at its right on the same line. */
   .ask-row button.primary { flex: 1 1 auto; min-height: 52px; }
   #ask-options-btn, #search-options-btn { min-height: 52px; width: 52px; }
@@ -2487,7 +2487,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
      submit keeps its natural width and the filter icon rides at the right —
      no second line for the button, no third for the icon. */
   .query-line { flex-wrap: nowrap; }
-  .query-line > input { flex: 1 1 0; min-width: 0; min-height: 52px; }
+  .query-line > :is(input, .grow-field) { flex: 1 1 0; min-width: 0; min-height: 52px; }
   .query-line button.primary { flex: 0 0 auto; min-height: 52px; padding-inline: 1rem; }
   .query-line .ask-options-wrap { flex: 0 0 auto; }
   .chart { padding: 0.75rem; }
@@ -3272,6 +3272,8 @@ textarea.grow-field {
   font-family: var(--sans);
 }
 textarea.grow-field.is-collapsed { white-space: nowrap; }
+/* Inside the ask and search rows the field is a flex item, not a block: it shares the line with its buttons. */
+.ask-row > .grow-field, .query-line > .grow-field { width: auto; min-width: 0; }
 @media (hover: none) and (pointer: coarse) {
   textarea.grow-field.is-open { min-height: 6.4rem; white-space: pre-wrap; overflow: auto; }
 }
