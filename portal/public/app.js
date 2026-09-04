@@ -1983,13 +1983,32 @@ function sourceItem(s, num, passage = false) {
     li.dataset.resource = s.resource || s.slug;
     li.tabIndex = -1;
   }
-  const meta = metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage || nameOnly });
-  if (meta) {
-    const span = document.createElement("span");
-    span.className = "source-meta";
-    span.innerHTML = meta;
-    li.appendChild(span);
-    if (!passage) decorateMetaPortraits(li);
+  if (nameOnly) {
+    // Byline-led row: portrait (or initials), the speaker and party as links,
+    // the parliament and date beneath.
+    const by = document.createElement("span");
+    by.className = "source-byline";
+    const where = [STATE_NAMES[s.state] || (s.state ? String(s.state) : "Federal"), s.date ? fmtDate(s.date) : ""].filter(Boolean).join(" · ");
+    by.innerHTML = `<span class="source-face" aria-hidden="true">${esc(String(s.speaker).split(/\s+/).map((w) => w[0] || "").slice(0, 2).join(""))}</span>
+      <span class="source-byline-text">
+        <span class="source-byline-name"><a class="meta-speaker" href="${esc(subjectHash("person", s.speaker))}">${esc(s.speaker)}</a>${s.party ? ` <a class="meta-party" href="${esc(subjectHash("party", s.party))}">${partyChipHTML(s.party)}</a>` : ""}</span>
+        <span class="source-byline-sub">${esc(where)}</span>
+      </span>`;
+    li.appendChild(by);
+    loadPhotoMap().then(() => {
+      const url = photoUrlFor(s.speaker);
+      const face = by.querySelector(".source-face");
+      if (url && face) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
+    });
+  } else {
+    const meta = metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage });
+    if (meta) {
+      const span = document.createElement("span");
+      span.className = "source-meta";
+      span.innerHTML = meta;
+      li.appendChild(span);
+      if (!passage) decorateMetaPortraits(li);
+    }
   }
   if (passage && s.snippet?.trim()) {
     const quote = document.createElement("p");

@@ -3273,16 +3273,19 @@ textarea.grow-field.is-collapsed { white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { textarea.grow-field { transition: none; } }
 
 /* ==== ask sources: byline-led rows ==== */
-.source-list li.source-name-only > .source-meta {
-  grid-column: 2; display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 0.65rem; row-gap: 0.1rem;
-  align-items: center; color: var(--ink-soft); font-size: 0.875rem; margin-top: 0;
+.source-byline { grid-column: 2; display: flex; align-items: center; gap: 0.65rem; }
+.source-face {
+  flex: none; width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: grid; place-items: center;
+  background: var(--paper-sunken); color: var(--ink-soft); box-shadow: inset 0 0 0 1px var(--line);
+  font: 700 0.8125rem/1 var(--serif);
 }
-.source-list li.source-name-only > .source-meta .meta-portrait { grid-row: 1 / span 2; width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: var(--paper-sunken); box-shadow: inset 0 0 0 1px var(--line); }
-.source-list li.source-name-only > .source-meta .meta-portrait img { width: 40px; height: 40px; }
-.source-list li.source-name-only > .source-meta .meta-portrait:empty { display: block; }
-.source-list li.source-name-only > .source-meta .meta-speaker { font: 600 1.0625rem/1.3 var(--serif); color: var(--ink); text-decoration: none; }
-.source-list li.source-name-only > .source-meta .meta-speaker:hover { color: var(--bronze-ink); }
-.source-list li.source-name-only > .source-meta .meta-party { text-decoration: none; }
+.source-face img { display: block; width: 40px; height: 40px; object-fit: cover; }
+.source-byline-text { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.source-byline-name { display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; }
+.source-byline-name .meta-speaker { font: 600 1.0625rem/1.3 var(--serif); color: var(--ink); text-decoration: none; }
+.source-byline-name .meta-speaker:hover { color: var(--bronze-ink); }
+.source-byline-name .meta-party { text-decoration: none; }
+.source-byline-sub { color: var(--ink-faint); font-size: 0.8125rem; }
 .source-list li.source-name-only > .ask-source-passage { grid-column: 2; margin-top: 0.5rem; }
 .source-read {
   grid-column: 2; display: inline-flex; align-items: center; min-height: 44px; margin-top: 0.1rem;
@@ -3290,4 +3293,3 @@ textarea.grow-field.is-collapsed { white-space: nowrap; }
   border-bottom: 1.5px solid var(--bronze-rule); align-self: start; justify-self: start;
 }
 .source-read:hover { color: var(--ink); border-color: var(--bronze-ink); }
-
