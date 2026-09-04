@@ -691,7 +691,18 @@ const CSS = `
 
 /* Year in pictures: a focus-managed panel inside the Time Machine dialog. */
 .tm-gallery { min-height: 32rem; padding: 0.15rem 0 1rem; }
-.tm-gallery-head {
+/* The heading block is for assistive tech only: the sticky head carries the
+   year and the way back. */
+.tm-gallery-head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tm-gallery-close.tm-in-head {
+  align-self: center; margin: 0.35rem 0.4rem 0 0; min-height: 40px; padding: 0 0.85rem 0 0.6rem; border-radius: 999px;
+  border: 1px solid var(--line-strong, #8D897B); background: var(--paper, #FAF9F6); color: var(--ink, #23271F);
+  font: 600 0.8125rem/1 var(--sans, system-ui, sans-serif); text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;
+}
+.tm-gallery-close.tm-in-head::before { content: '‹'; font: 400 1.2rem/1 var(--serif, Georgia, serif); color: var(--bronze-ink, #8A5A12); }
+.tm-gallery-close.tm-in-head:hover { border-color: var(--bronze-ink, #8A5A12); }
+.tm-gallery-close.tm-in-head[hidden] { display: none; }
+.tm-gallery-head-legacy {
   display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1rem;
   padding-bottom: 0.65rem; border-bottom: 1px solid var(--line, #DFDCD2);
 }
@@ -1318,6 +1329,16 @@ export function mountTimeMachine(container, opts = {}) {
     renderGallery(direction)
   }
 
+  // The gallery's way back lives in the dialog's own sticky head, beside the
+  // close control, so the gallery needs no heading block of its own; the
+  // head's year label already names the year.
+  function placeBackInHead() {
+    const head = outerDialog?.querySelector('.game-dialog-head')
+    if (!head || galleryClose.parentElement === head) return
+    galleryClose.classList.add('tm-in-head')
+    head.insertBefore(galleryClose, head.querySelector('.game-close'))
+  }
+
   function openGallery(index = 0, trigger = null) {
     if (!picturesFor().length) return
     galleryOpen = true
@@ -1325,6 +1346,8 @@ export function mountTimeMachine(container, opts = {}) {
     galleryReturnFocus = trigger || document.activeElement
     machineEl.hidden = true
     galleryEl.hidden = false
+    placeBackInHead()
+    galleryClose.hidden = false
     if (outerDialog) outerDialog.scrollTop = 0
     renderGallery()
     galleryClose.focus({ preventScroll: true })
@@ -1333,6 +1356,7 @@ export function mountTimeMachine(container, opts = {}) {
   function closeGallery(restoreFocus = true) {
     if (!galleryOpen) return
     galleryOpen = false
+    galleryClose.hidden = true
     galleryEl.hidden = true
     machineEl.hidden = false
     galleryImage.removeAttribute('src')
