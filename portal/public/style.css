@@ -2549,3 +2549,49 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
   #panel-search .results-actions .action-btn { padding-inline: 8px; }
   #panel-search .results-actions select { width: 100%; padding-inline: 8px 24px; }
 }
+
+#panel-search .search-results-main { min-width: 0; }
+#panel-search #search-results > li { padding: 20px 0; border-top: 1px solid var(--line); }
+#panel-search .search-result-heading { margin: 0; font: 600 1.125rem/1.45 var(--serif); }
+#panel-search .result-title { display: inline-block; min-height: 44px; color: var(--ink); text-decoration: none; overflow-wrap: anywhere; }
+#panel-search .result-title:hover { color: var(--bronze-ink); text-decoration: underline; }
+#panel-search .result-meta { display: block; margin: 0; font: 400 .8125rem/1.8 var(--sans); color: var(--ink-soft); }
+#panel-search .result-meta a { display: inline-flex; align-items: center; min-height: 44px; }
+#panel-search .result-meta .party-chip { white-space: nowrap; }
+#panel-search .snippet, #panel-search .search-result-brief {
+  display: block; max-width: 68ch; padding: 0; margin: 8px 0 0; background: none;
+  font: 400 1rem/1.7 var(--serif); color: var(--ink); overflow-wrap: anywhere;
+}
+#panel-search .search-passage-tag { font: 400 .75rem/1.5 var(--sans); color: var(--ink-soft); }
+#panel-search .search-result-topics { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+#panel-search .search-result-topics a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px;
+  border: 1px solid var(--line); border-radius: 3px; font: 400 .75rem/1.4 var(--sans);
+  color: var(--bronze-ink); text-decoration: none; overflow-wrap: anywhere;
+}
+#panel-search .search-count-wide { display: none; }
+#panel-search #results-count { font-variant-numeric: tabular-nums; }
+#panel-search #search-date-ruler { margin: 20px 0; }
+#panel-search .search-year-hint { margin: 4px 0 10px; font: 400 .8125rem/1.5 var(--sans); color: var(--ink-soft); }
+#panel-search .search-year-scale { display: flex; justify-content: space-between; font: 400 .75rem/1.5 var(--sans); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+#panel-search .search-year-chart { display: grid; grid-template-columns: repeat(7, minmax(44px, 1fr)); gap: 1px; border-top: 1px dotted var(--line); }
+#panel-search .search-year-band { display: block; padding: 0 3px; color: var(--ink-soft); text-decoration: none; }
+#panel-search .search-year-band:hover, #panel-search .search-year-band[aria-current] { background: var(--bronze-wash); }
+#panel-search .search-year-bars { height: 64px; display: flex; align-items: end; gap: 2px; border-bottom: 1px solid var(--line-strong); }
+#panel-search .search-year-bars i { flex: 1; height: var(--year-height); background: var(--bronze); }
+#panel-search .search-year-label { display: block; padding: 6px 0; text-align: center; font: 400 .75rem/1.25 var(--sans); font-variant-numeric: tabular-nums; }
+#panel-search #search-empty { background: none; border: 0; border-top: 1px solid var(--line); border-radius: 0; text-align: left; padding: 24px 0; margin: 0; }
+#panel-search #search-empty .empty-title { font: 600 1.4rem/1.45 var(--serif); overflow-wrap: anywhere; margin: 0 0 12px; }
+#panel-search #search-empty .empty-lede { font: 400 1rem/1.7 var(--serif); max-width: 60ch; margin: 0; }
+#panel-search #search-empty .empty-actions { justify-content: flex-start; gap: 8px; margin-top: 20px; }
+@media (min-width: 641px) {
+  #panel-search .search-count-wide { display: inline; }
+  #panel-search .search-count-phone { display: none; }
+}
+
+#panel-search .search-result-heading .result-title { display: flex; align-items: center; }
+#panel-search .result-meta { margin-top: -4px; }
+#panel-search .search-result-text.is-collapsed { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+#panel-search .search-passage-more { padding: 4px 0; background: none; border: 0; color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 3px; font: 400 .875rem/1.5 var(--sans); cursor: pointer; }
+#panel-search .search-passage-more[hidden] { display: none; }
+#panel-search #search-readbar { margin-top: 12px; margin-bottom: 0; }
