@@ -127,24 +127,24 @@
   ],
   "top_speakers": [
    [
-    "Anthony Albanese",
-    1112
+    "Julia Gillard",
+    373
+   ],
+   [
+    "Greg Combet",
+    338
    ],
    [
     "Tony Abbott",
-    988
+    273
    ],
    [
-    "Julia Gillard",
-    973
+    "Anthony Albanese",
+    205
    ],
    [
-    "Warren Truss",
-    800
-   ],
-   [
-    "Malcolm Turnbull",
-    762
+    "Kevin Rudd",
+    204
    ]
   ],
   "donations": {
@@ -386,14 +386,6 @@
    "date": "2020-02-13"
   },
   {
-   "party": "Australian Democrats",
-   "position": "The minister defended the government's ten-year climate record and rejected carbon pricing and measures that would impose costs.",
-   "slug": "speech-779306",
-   "source_title": "Lyn Allison \u2014 Questions without Notice \u2014 2007-03-26",
-   "speaker": "Lyn Allison",
-   "date": "2007-03-26"
-  },
-  {
    "party": "Labor",
    "position": "Supported the Clean Energy Bill 2011 establishing a carbon price in Australia, describing it as a significant reform vital for the environment and essential for the economy.",
    "slug": "speech-811498",
@@ -412,65 +404,203 @@
  ],
  "key_moments": [
   {
-   "slug": "speech-1196035",
-   "title": "Zali Steggall \u2014 Bills \u2014 2025-08-25",
-   "speaker": "Zali Steggall",
-   "party": "Independent",
-   "state": "federal",
-   "date": "2025-08-25"
-  },
-  {
-   "slug": "speech-1205729",
-   "title": "Katy Gallagher \u2014 Bills \u2014 2026-08-19",
-   "speaker": "Katy Gallagher",
-   "party": null,
-   "state": "federal",
-   "date": "2026-08-19"
-  },
-  {
-   "slug": "speech-801931",
-   "title": "Christine Milne \u2014 Safe Climate (Energy Efficient Non-Residential Buildings Scheme) Bill 2010; Renewable Energy Amendment (Feed-in-Tariff for Electricity) Bill 2010 \u2014 2010-09-29",
+   "resource": "a87b5c81f28343ffaf84dab188adc127",
+   "slug": "speech-789956",
+   "title": "Renewable Energy Amendment (Increased Mandatory Renewable Energy Target) Bill 2008",
    "speaker": "Christine Milne",
    "party": "Greens",
    "state": "federal",
-   "date": "2010-09-29"
+   "chamber": "senate",
+   "date": "2008-11-27",
+   "brief": "The speaker introduced the Renewable Energy Amendment (Increased Mandatory Renewable Energy Target) Bill 2008 to increase the Mandatory Renewable Energy Target from 9,500 GWh to 45,000 GWh, aiming for 20% renewable electricity by 2020, and criticised the Rudd Government for failing to legislate its election promise.",
+   "why": "Second reading, Renewable Energy Amendment (Increased Mandatory Renewable Energy Target)\u2026, 2008",
+   "role": "bill mover",
+   "length": 9578
   },
   {
-   "slug": "speech-1146082",
-   "title": "R.A. Simms \u2014 Mining (Prohibition of Mining in Mount Lofty Ranges Watershed) Amendment Bill \u2014 2022-02-09",
-   "speaker": "R.A. Simms",
+   "resource": "1e3f8fd1459c4d88a3336b5932fbd20a",
+   "slug": "speech-797024",
+   "title": "Carbon Pollution Reduction Scheme Bills 2009",
+   "speaker": "Ursula Stephens",
+   "party": null,
+   "state": "federal",
+   "chamber": "senate",
+   "date": "2009-11-18",
+   "brief": "The government argued the Carbon Pollution Reduction Scheme would reduce emissions, create jobs, and drive investment, citing Treasury modelling of 1.7 million jobs by 2020 and $19 billion in renewables; opponents including the Coalition and Greens criticized the bill for risking job losses (e.g., 66,000 in mining), harming trade-exposed industries, and failing to achieve meaningful global emissions reductions without a comprehensive international agreement.",
+   "why": "Carbon Pollution Reduction Scheme Bills 2009, Federal, 2009",
+   "role": "parliamentarian",
+   "length": 337679
+  },
+  {
+   "resource": "a2da6796e60c4f08a635b09a0aac832f",
+   "slug": "speech-847488",
+   "title": "United Nations Climate Change Conference",
+   "speaker": "Jeremy Buckingham",
+   "party": null,
+   "state": "nsw",
+   "chamber": "nsw_lc",
+   "date": "2015-10-27",
+   "brief": "The speaker argued for a moratorium on all new coalmines and extensions in New South Wales, stating that 95% of Australia\u2019s coal reserves must remain unburned to limit global warming to two degrees; he noted that 41 new mines or extensions have been approved since 2011 and 10,000 coal jobs lost in the Hunter Valley.",
+   "why": "United Nations Climate Change Conference, NSW, 2015",
+   "role": "parliamentarian",
+   "length": 4943
+  },
+  {
+   "resource": "412d673b17b3485eaf64f8a0e67b975d",
+   "slug": "speech-937959",
+   "title": "National Energy Guarantee",
+   "speaker": "David Clarke",
+   "party": null,
+   "state": "nsw",
+   "chamber": "nsw_lc",
+   "date": "2018-08-15",
+   "brief": "The COAG Energy Council agreed to progress the National Energy Guarantee, with draft legislation released for consultation, expected to bring forward 1,000 megawatts of new generation and save households around $150 annually on electricity bills between 2020 and 2030, aiming for implementation by April 2019.",
+   "why": "National Energy Guarantee, NSW, 2018",
+   "role": "minister",
+   "length": 3478
+  },
+  {
+   "resource": "85b98ec5ea8f488f8d97cb023d6404ae",
+   "slug": "speech-1067966",
+   "title": "Bushfires and Climate Change",
+   "speaker": "David Shoebridge",
+   "party": null,
+   "state": "nsw",
+   "chamber": "nsw_lc",
+   "date": "2019-11-14",
+   "brief": "David Shoebridge argued that the government's deletion of all climate change references from the motion was a pattern of gagging experts, citing a directive that banned Department of Environment and Planning staff from discussing the link between climate change and bushfires at the Adapt NSW forum. He stated that bushfires are becoming more common and extreme due to climate change.",
+   "why": "Bushfires and Climate Change, NSW, 2019",
+   "role": "parliamentarian",
+   "length": 4260
+  },
+  {
+   "resource": "3c0ce226b70642dd9aa6600b2f64b781",
+   "slug": "speech-1159189",
+   "title": "Climate Change and Greenhouse Emissions Reduction (Targets) Amendment Bill",
+   "speaker": "D.J. Speirs",
    "party": null,
    "state": "sa",
-   "date": "2022-02-09"
+   "chamber": "sa_ha",
+   "date": "2022-07-06",
+   "brief": "The bill legislates net zero emissions by 2050, a 50% reduction by 2030 from 2005 levels, and 100% renewable electricity generation by 2030, enshrining previous Liberal government targets and the state's 2021\u20132025 climate action plan.",
+   "why": "Second reading, Climate Change and Greenhouse Emissions Reduction (Targets) Amendment Bill, 2022",
+   "role": "bill mover",
+   "length": 12531
   },
   {
-   "slug": "speech-325724",
-   "title": "Christopher Pyne \u2014 2016-02-02",
-   "speaker": "Christopher Pyne",
+   "resource": "b0e5190021f74e4090aad46425726d9e",
+   "slug": "speech-828224",
+   "title": "Safeguard Mechanism reforms",
+   "speaker": "Ted O'Brien",
    "party": "Liberal",
    "state": "federal",
-   "date": "2016-02-02"
-  },
-  {
-   "slug": "speech-811102",
-   "title": "Joe Ludwig \u2014 Motions \u2014 2011-10-12",
-   "speaker": "Joe Ludwig",
-   "party": null,
-   "state": "federal",
-   "date": "2011-10-12"
+   "chamber": "representatives",
+   "date": "2023-03-08",
+   "brief": "The coalition opposed the Safeguard Mechanism (Crediting) Amendment Bill 2022, arguing it imposes a hidden carbon tax of $75 per tonne that will raise costs for consumers and force businesses to close, while Labor and Greens speakers supported the bill as necessary to meet Australia's 43% emissions reduction target by 2030 and net zero by 2050.",
+   "why": "Safeguard Mechanism reforms, Federal, 2023",
+   "role": "parliamentarian",
+   "length": 37179
   }
  ],
  "sections": [
   {
    "question": "What positions have MPs taken on climate change action and emissions targets?",
-   "answer": "MPs in the context took a range of positions:\n\n- Some backed strong, legislated emissions targets, including a 50% reduction by 2030 and net zero by 2050, with an independent commission to monitor progress.\n- Some supported the federal Climate Change Bill 2022\u2019s target of a 43% reduction by 2030 and net zero by 2050, and the embedding of those targets across agencies and investment bodies.\n- Others argued 43% was only a first step and called for even stronger targets of 60\u201375% reduction by 2030, while also opposing new coal and gas projects.\n- Some government-aligned MPs defended the government\u2019s climate record, pointing to legislated net zero by 2050, increased emissions targets, emissions trading schemes, renewable energy targets, and the Safeguard Mechanism.\n- A Victorian Labor MP highlighted state-level achievement, including cutting emissions by almost 30%, investing in renewables, and adopting a 50% reduction target by 2030.\n- Several MPs criticised previous governments for weak targets, rising carbon pollution, cuts to renewable energy, and climate policy drift, and called for urgent, bipartisan action.\n- Some MPs argued the two major parties\u2019 targets were too low, with a Greens-aligned position saying Australia needed at least 25%, preferably 40%, cuts by 2020 rather than 5%.",
+   "answer": "MPs have taken a wide range of positions on climate change action and emissions targets, from supporting legislated targets to opposing them or calling for stronger action.\n\n- **Penny Sharpe** (Labor) moved the Climate Change (Emissions Targets) Bill 2021, which would legislate a 50% reduction in net greenhouse gas emissions by 2030 and net zero by 2050, and create an independent net zero commission.\n- **Dr Marjorie O'Neill** (Labor, Coogee) called climate change \"the single biggest issue facing our communities\" and urged the Liberal-Nationals Government to support the bill and \"end the climate wars now.\"\n- **Anna Watson** (Labor) moved to put the question, but the motion was negatived (Ayes 36, Noes 43), meaning the bill was not advanced at that stage.\n- **Government MPs** (Liberal-Nationals, including those voting No) opposed the bill, with the government instead citing its own record: a 17% drop in emissions below 2005 levels, a 459-million-tonne overshoot of 2020 targets, and investments including $10 billion in renewables, $1.42 billion for Snowy hydro, $500 million for hydrogen, $5 billion for drought resilience, and $1.19 billion for the Great Barrier Reef.\n- **Felicity Wilson** and **Melinda Pavey** (Liberal-Nationals) spoke in the debate, with Wilson leading for the Government.\n- **Federal Labor MPs** supported the Climate Change Bill 2022, which legislated a 43% reduction by 2030 and net zero by 2050, embedding targets across agencies like the Clean Energy Finance Corporation, ARENA, Export Finance Australia, Infrastructure Australia, and the CSIRO. They also cited the Powering Australia plan, claiming it would deliver 604,000 jobs.\n- **Some MPs, including the member for Hasluck**, argued the previous government failed on climate and committed to stronger action, including a constitutional Voice to Parliament and a federal integrity commission.\n- **Other MPs** (including the member for Hotham) called for urgent, bipartisan action after the summer bushfires, noting seven years of climate policy drift and rising emissions.\n- **Greens Senators** (e.g., Christine Milne, Sarah Hanson-Young, Peter Whish-Wilson) have consistently pushed for stronger targets, with a 2014 Senate motion for national emissions targets defeated 11\u201338.\n- **A Victorian state MP** (Labor) highlighted the Andrews government's record: slashing emissions by almost 30% since election, delivering almost $2 billion in investment, and setting a 2030 target of 50% reduction, calling it \"the most rapid decarbonisation of any state.\"\n- **One MP** supported the Climate Change Bill 2022 as a first step but argued its 43% target was insufficient, calling for at least a 60\u201375% reduction by 2030 and opposing new coal and gas projects.\n- **A government minister** (responding to the Greens) defended the federal government's action, citing legislated net zero by 2050 and the Safeguard Mechanism, while stating projects would only proceed if they \"stack up environmentally, socially and economically.\"",
    "sources": [
+    {
+     "slug": "speech-1151522",
+     "title": "Penny Sharpe \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2021-11-18",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-388106",
+     "title": "Clare O'Neil \u2014 2020-02-12",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "division-federal-senate-3644",
+     "title": "Senate division, 3 December 2014: Motions - Environment - Set national targets for emissions reductions",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-402975",
+     "title": "Julian Leeser \u2014 2021-02-22",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-846691",
+     "title": "Jan Barham \u2014 Climate Change Bill 2015 \u2014 2015-10-22",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
     {
      "slug": "speech-421348",
      "title": "Monique Ryan \u2014 2022-08-03",
      "speaker": null,
      "party": "Independent",
      "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-420384",
+     "title": "Tania Lawrence \u2014 2022-07-28",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-1184799",
+     "title": "Julia Finn \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2022-08-11",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-886840",
+     "title": "D\u2019Ambrosio \u2014 Ministers statements: climate change \u2014 2022-08-04",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-421210",
+     "title": "Ged Kearney \u2014 2022-08-03",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-206706",
+     "title": "Peter Garrett \u2014 2009-08-11",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-1184801",
+     "title": "Marjorie O'Neill \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2022-08-11",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
      "date": null
     },
     {
@@ -490,18 +620,26 @@
      "date": null
     },
     {
-     "slug": "speech-798043",
-     "title": "Alan Ferguson \u2014 Matters of Public Importance \u2014 2010-02-03",
+     "slug": "speech-1184802",
+     "title": "Felicity Wilson \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2022-08-11",
      "speaker": null,
      "party": null,
-     "state": "federal",
+     "state": "nsw",
      "date": null
     },
     {
-     "slug": "speech-421210",
-     "title": "Ged Kearney \u2014 2022-08-03",
+     "slug": "speech-1184800",
+     "title": "Melinda Pavey \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2022-08-11",
      "speaker": null,
-     "party": "Labor",
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-826929",
+     "title": "Adam Bandt \u2014 Questions without Notice \u2014 2023-02-06",
+     "speaker": null,
+     "party": "Greens",
      "state": "federal",
      "date": null
     },
@@ -514,177 +652,25 @@
      "date": null
     },
     {
-     "slug": "speech-826929",
-     "title": "Adam Bandt \u2014 Questions without Notice \u2014 2023-02-06",
-     "speaker": null,
-     "party": "Greens",
-     "state": "federal",
-     "date": null
-    },
-    {
      "slug": "speech-399485",
      "title": "Julian Hill \u2014 2020-12-01",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
-    },
-    {
-     "slug": "speech-206706",
-     "title": "Peter Garrett \u2014 2009-08-11",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-886840",
-     "title": "D\u2019Ambrosio \u2014 Ministers statements: climate change \u2014 2022-08-04",
-     "speaker": null,
-     "party": null,
-     "state": "vic",
-     "date": null
-    },
-    {
-     "slug": "speech-1184800",
-     "title": "Melinda Pavey \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2022-08-11",
-     "speaker": null,
-     "party": null,
-     "state": "nsw",
-     "date": null
-    },
-    {
-     "slug": "speech-388106",
-     "title": "Clare O'Neil \u2014 2020-02-12",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-1151522",
-     "title": "Penny Sharpe \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2021-11-18",
-     "speaker": null,
-     "party": null,
-     "state": "nsw",
-     "date": null
-    },
-    {
-     "slug": "speech-846691",
-     "title": "Jan Barham \u2014 Climate Change Bill 2015 \u2014 2015-10-22",
-     "speaker": null,
-     "party": null,
-     "state": "nsw",
-     "date": null
-    },
-    {
-     "slug": "division-federal-senate-3644",
-     "title": "Senate division, 3 December 2014: Motions - Environment - Set national targets for emissions reductions",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-1184799",
-     "title": "Julia Finn \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2022-08-11",
-     "speaker": null,
-     "party": null,
-     "state": "nsw",
-     "date": null
-    },
-    {
-     "slug": "speech-1154341",
-     "title": "Penny Sharpe \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2021-11-24",
-     "speaker": null,
-     "party": null,
-     "state": "nsw",
-     "date": null
-    },
-    {
-     "slug": "speech-1184801",
-     "title": "Marjorie O'Neill \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2022-08-11",
-     "speaker": null,
-     "party": null,
-     "state": "nsw",
-     "date": null
-    },
-    {
-     "slug": "speech-1184802",
-     "title": "Felicity Wilson \u2014 Climate Change (Emissions Targets) Bill 2021 (Sharpe) \u2014 2022-08-11",
-     "speaker": null,
-     "party": null,
-     "state": "nsw",
-     "date": null
     }
    ]
   },
   {
    "question": "What has been said in parliament about coal mining and the transition to renewable energy?",
-   "answer": "Parliament has heard strongly differing views on coal mining and the transition to renewable energy.\n\n**Speakers supporting action on coal and renewable transition said:**\n- The transition from coal to renewable energy is inevitable, and NSW should establish a public inquiry to develop a transition plan for the Hunter Valley and other coal communities, focusing on future industry opportunities, education, mine rehabilitation, and infrastructure use.\n- Coal is the single biggest contributor to NSW carbon emissions, with almost 80% of state emissions coming from fossil fuel extraction, processing, and burning.\n- Bills were proposed to ban new coal mines, including the *Mining Amendment (Climate Protection\u2014No New Coal Mines) Bill 2016*, the *Coal Prohibition (Quit Coal) Bill 2021*, and an *Energy and Resources Legislation Amendment (Transition Away from Coal) Bill 2023*.\n- Arguments included: no new coal mines such as Shenhua, Bylong, and Berrima should be approved; NSW should transition to renewable energy; existing coal mines and power stations need not be shut down immediately, but new ones should be ruled out.\n- Some called for phasing out thermal coal exports, ending coal burning and mining by 2030, and raising renewable energy targets to 100%.\n- It was argued that renewable energy jobs are growing and that there should be a jobs transition plan, including converting former mines to pumped hydro and replacing coal plants with batteries.\n- Some called for investment in regional communities and a \"just transition,\" noting that without funding, transition is a platitude.\n- Coal was described as an industry of the past, and many community members quoted in parliament supported ending new coal mines and moving to renewables to protect climate, water, farms, and future generations.\n\n**Opponents and critics of these proposals said:**\n- The Government strongly opposed the 2016 no-new-coal-mines bill, arguing it would shut down the coal industry, cause tens of thousands of job losses, jeopardise regional economies, turn away investment, and deprive households and businesses of affordable, reliable energy.\n- Coal was described as vital to NSW: in 2015-16 it produced 191 million tonnes of saleable coal worth $14.6 billion, was the state\u2019s number one export earner, supplied around 79% of the state\u2019s energy needs, employed more than 19,000 workers directly and around 80,000 indirectly, and contributed over $1.1 billion in royalties.\n- It was argued that banning new coal mines would reduce coal production by one-third by 2026, reject 69 applications, terminate 172 existing exploration licences, and affect regional towns such as Singleton, Muswellbrook, Gunnedah, and Cessnock.\n- Some argued the Greens were hypocritical for opposing coking coal while also calling for Australian steel, since coking coal is used in steel production.\n- Others said government climate policy was a \"sham\" and that both major parties were not prepared to scale up renewables to challenge coal, with billions going to coal, large emitters, and carbon capture and storage instead.\n- The Government said coal should continue to be developed under a strategic release framework, not through a ban.",
+   "answer": "Parliamentary debate reveals a sharp divide over coal's future. Greens members, including Justin Field and Jeremy Buckingham, argued that climate change demands an immediate halt to new coal mines, with Buckingham reading public submissions that overwhelmingly supported ending coal. They framed coal as a past industry and called for a planned transition to renewables, citing the ACT's 100% renewable target and specific wind farms as models. Jenny Leong noted renewable jobs were nearing 8,000 in NSW versus 19,000 in coal, urging a jobs plan that converts mines to pumped hydro and replaces coal plants with batteries.\n\nIn opposition, Minister Don Harwin rejected the Greens' bill as \"rash and irresponsible,\" stressing coal's economic weight: 191 million tonnes produced in 2015-16, worth $14.6 billion, with $13.2 billion in exports\u2014more than tourism and education combined. He highlighted 19,000 direct and 80,000 indirect jobs, plus $1.1 billion in royalties, and warned that banning new mines would cut production by one-third by 2026 and to 5% of current levels by 2041, threatening regional towns like Singleton, Muswellbrook, and Gunnedah. He also argued coking coal was essential for steel and local industries.\n\nOther speakers took middle positions. Mark Buttigieg insisted governments must proactively invest in regions losing old-economy jobs, citing Germany and northern Europe where coal plants aren't shut until replacement jobs mature, and called \"just transition\" a platitude without funding. Another speaker defended coal as part of the energy transition while implementing Hazelwood mine fire inquiry recommendations. A motion was amended to support the Premier's 3 May 2017 statement on \"managing a responsible transition to renewables,\" with the phrase \"away from coal\" removed, signalling reluctance to commit to an explicit coal exit.",
    "sources": [
     {
-     "slug": "speech-852750",
-     "title": "Jeremy Buckingham \u2014 Coal Industry \u2014 2015-11-12",
+     "slug": "speech-874665",
+     "title": "Don Harwin \u2014 Mining Amendment (Climate Protection\u2014No New Coal Mines) Bill 2016 \u2014 2017-03-09",
      "speaker": null,
      "party": null,
      "state": "nsw",
-     "date": null
-    },
-    {
-     "slug": "speech-793878",
-     "title": "Alan Ferguson \u2014 Matters of Public Importance \u2014 2009-06-23",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-814005",
-     "title": "Jacinta Collins \u2014 Bills \u2014 2012-02-29",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-800905",
-     "title": "Bob Brown \u2014 Matters of Public Interest \u2014 2010-06-16",
-     "speaker": null,
-     "party": "Greens",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-875569",
-     "title": "Justin Field \u2014 Mining Amendment (Climate Protection\u2014No New Coal Mines) Bill 2016 \u2014 2017-03-30",
-     "speaker": null,
-     "party": null,
-     "state": "nsw",
-     "date": null
-    },
-    {
-     "slug": "speech-1116033",
-     "title": "Mark Buttigieg \u2014 Newcastle Jobs Plan \u2014 2020-11-19",
-     "speaker": null,
-     "party": null,
-     "state": "nsw",
-     "date": null
-    },
-    {
-     "slug": "speech-984336",
-     "title": "Justin Field \u2014 Coalmining and Climate Change \u2014 2019-05-28",
-     "speaker": null,
-     "party": null,
-     "state": "nsw",
-     "date": null
-    },
-    {
-     "slug": "speech-828735",
-     "title": "Larissa Waters \u2014 Motions \u2014 2023-03-21",
-     "speaker": null,
-     "party": "Greens",
-     "state": "federal",
      "date": null
     },
     {
@@ -696,40 +682,8 @@
      "date": null
     },
     {
-     "slug": "speech-250580",
-     "title": "Greg Combet \u2014 2012-02-27",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-887882",
-     "title": "Jeremy Buckingham \u2014 Environmental Utopia \u2014 2017-11-23",
-     "speaker": null,
-     "party": null,
-     "state": "nsw",
-     "date": null
-    },
-    {
-     "slug": "speech-1122355",
-     "title": "Richardson \u2014 Mineral Resources (Sustainable Development) Amendment Bill 2018 - Second reading \u2014 2018-09-18",
-     "speaker": null,
-     "party": null,
-     "state": "vic",
-     "date": null
-    },
-    {
-     "slug": "speech-876362",
-     "title": "Gabrielle De Vietri \u2014 Energy and Resources Legislation Amendment (Transition Away from Coal) Bill 2023 - Introduction \u2014 2023-06-21",
-     "speaker": null,
-     "party": null,
-     "state": "vic",
-     "date": null
-    },
-    {
-     "slug": "speech-875572",
-     "title": "Jeremy Buckingham \u2014 Mining Amendment (Climate Protection\u2014No New Coal Mines) Bill 2016 \u2014 2017-03-30",
+     "slug": "speech-984336",
+     "title": "Justin Field \u2014 Coalmining and Climate Change \u2014 2019-05-28",
      "speaker": null,
      "party": null,
      "state": "nsw",
@@ -744,14 +698,6 @@
      "date": null
     },
     {
-     "slug": "speech-885690",
-     "title": "Read \u2014 Energy policy \u2014 2022-08-18",
-     "speaker": null,
-     "party": null,
-     "state": "vic",
-     "date": null
-    },
-    {
      "slug": "speech-884147",
      "title": "Jenny Leong \u2014 Environmental Planning and Assessment Amendment (Sydney Drinking Water Catchment) Bill 2017 \u2014 2017-10-10",
      "speaker": null,
@@ -760,8 +706,88 @@
      "date": null
     },
     {
-     "slug": "speech-874665",
-     "title": "Don Harwin \u2014 Mining Amendment (Climate Protection\u2014No New Coal Mines) Bill 2016 \u2014 2017-03-09",
+     "slug": "speech-800905",
+     "title": "Bob Brown \u2014 Matters of Public Interest \u2014 2010-06-16",
+     "speaker": null,
+     "party": "Greens",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-1122355",
+     "title": "Richardson \u2014 Mineral Resources (Sustainable Development) Amendment Bill 2018 - Second reading \u2014 2018-09-18",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-814005",
+     "title": "Jacinta Collins \u2014 Bills \u2014 2012-02-29",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-828735",
+     "title": "Larissa Waters \u2014 Motions \u2014 2023-03-21",
+     "speaker": null,
+     "party": "Greens",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-875569",
+     "title": "Justin Field \u2014 Mining Amendment (Climate Protection\u2014No New Coal Mines) Bill 2016 \u2014 2017-03-30",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-875572",
+     "title": "Jeremy Buckingham \u2014 Mining Amendment (Climate Protection\u2014No New Coal Mines) Bill 2016 \u2014 2017-03-30",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-887882",
+     "title": "Jeremy Buckingham \u2014 Environmental Utopia \u2014 2017-11-23",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-885690",
+     "title": "Read \u2014 Energy policy \u2014 2022-08-18",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-250580",
+     "title": "Greg Combet \u2014 2012-02-27",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-852750",
+     "title": "Jeremy Buckingham \u2014 Coal Industry \u2014 2015-11-12",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-877931",
+     "title": "Jeremy Buckingham \u2014 Renewable Energy \u2014 2017-05-10",
      "speaker": null,
      "party": null,
      "state": "nsw",
@@ -776,78 +802,38 @@
      "date": null
     },
     {
-     "slug": "speech-877931",
-     "title": "Jeremy Buckingham \u2014 Renewable Energy \u2014 2017-05-10",
+     "slug": "speech-876362",
+     "title": "Gabrielle De Vietri \u2014 Energy and Resources Legislation Amendment (Transition Away from Coal) Bill 2023 - Introduction \u2014 2023-06-21",
+     "speaker": null,
+     "party": null,
+     "state": "vic",
+     "date": null
+    },
+    {
+     "slug": "speech-1116033",
+     "title": "Mark Buttigieg \u2014 Newcastle Jobs Plan \u2014 2020-11-19",
      "speaker": null,
      "party": null,
      "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-793878",
+     "title": "Alan Ferguson \u2014 Matters of Public Importance \u2014 2009-06-23",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
      "date": null
     }
    ]
   },
   {
    "question": "How have MPs discussed carbon pricing and its repeal?",
-   "answer": "Based on the provided context, MPs discussed carbon pricing and its repeal in sharply divided terms:\n\n- **Supporters** described carbon pricing as an important economic and environmental reform, the culmination of decades of debate, and argued that the parliament should show leadership and act on climate change. They noted that many parliamentary inquiries had been held and that both major parties had previously supported a carbon price. Some claimed the Liberal Party would never actually repeal it because it was good for the economy and the environment.\n- **Opponents** argued the carbon tax was a broken promise, harmful to jobs and industries, and promised to repeal it. They cited examples such as Alcoa shelving a $3 billion expansion and lower international carbon prices compared with Australia\u2019s $23 per tonne price. Coalition MPs highlighted that repealing the carbon tax delivered around $500\u2013$550 in household savings.\n- There was also discussion of **procedural and political tactics**: one senator moved an amendment to the Senate sitting schedule to hinder repeal of carbon pricing legislation, and that amendment was defeated.\n- Some MPs discussed the **consequences of repeal**, with one arguing that policy uncertainty since repeal had created an energy crisis and calling for gas as a transitional fuel.\n- Others criticised the government\u2019s broader environmental record, including abolishing the Climate Commission, dismantling carbon pricing, and cutting renewable energy investment.\n- A division on a carbon pricing motion was recorded, with the motion rejected by 67 ayes to 68 noes.",
+   "answer": "The House of Representatives rejected a carbon pricing motion on 11 October 2012 by 67 ayes to 68 noes, with Labor MPs and independents Adam Bandt, Andrew Wilkie, Craig Thomson, Robert Oakeshott and Tony Windsor voting no. Labor MPs generally avoided defending the carbon tax, while the coalition pushed repeal, citing $550 in average household savings confirmed by the ACCC. The Member for Hunter later described Labor's renewables target as an uncosted aspiration and argued that policy uncertainty since repeal had created an energy crisis, urging bipartisan support for gas as a transitional fuel and proposing an LNG terminal in Newcastle to supply new gas-fired generators at the sites of the region's four existing coal plants (10,000 MW), while dismissing clean coal as unviable.\n\nGovernment speakers defended the carbon price as a long-debated economic and environmental reform, noting 37 parliamentary inquiries since 1991 and that Prime Minister Howard took a carbon pricing mechanism to the 2007 election. They cited past coalition support, including from the member for Flinders, member for North Sydney, member for Aston, member for Moore, and member for Wentworth, as well as the Opposition Leader's 2009 advocacy of a carbon tax, and criticised the Opposition Leader as a \"political weathervane.\" One speaker argued the coalition would never repeal the price because it was good for the economy and environment, while another called the repeal promise \"the most fraudulent claim\" of the opposition's campaign.\n\nOpposition speakers countered that the carbon tax would harm jobs and industries, citing Alcoa's shelved $3 billion expansion and Ross Garnaut's warnings that Australian industries could move overseas due to uncompetitive pricing. They noted international carbon prices were far lower\u2014New Zealand $6.38, Europe $8.45, China $1.59 per tonne\u2014versus Australia's $23, and committed to repeal. The coalition also highlighted that repealing the carbon tax saved households around $500 a year, with new network pricing rules lowering bills from 1 July in New South Wales, the ACT, South Australia and Queensland.\n\nThe Labor Party opposed the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, arguing it would repeal third-party legal standing rights for environmental groups introduced under the Howard government, and cited the Abbott government's record of abolishing the Climate Commission, dismantling carbon pricing, cutting renewable energy investment by 88%, and mishandling the Adani mine approval. A speaker also praised political courage, citing John Howard and Rob Borbidge's gun control laws after Port Arthur, and listed MPs who crossed the floor on migration, carbon pricing, mining tax, and other bills, while criticising the government for losing control of parliament.",
    "sources": [
-    {
-     "slug": "speech-812052",
-     "title": "Stephen Parry \u2014 Bills \u2014 2011-11-08",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-260914",
-     "title": "Greg Combet \u2014 2012-08-16",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "division-federal-representatives-2681-p2",
-     "title": "House of Representatives division, 11 October 2012: Private Members' Business \u2014 Carbon Pricing (part 2 of 2)",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-256422",
-     "title": "Julia Gillard \u2014 2012-05-29",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
     {
      "slug": "speech-237391",
      "title": "Julia Gillard \u2014 2011-06-15",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-313170",
-     "title": "Peter Hendy \u2014 2015-06-16",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-817465",
-     "title": "George Brandis \u2014 Questions without Notice \u2014 2012-08-15",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-336530",
-     "title": "Graham Perrett \u2014 2016-10-20",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -862,18 +848,18 @@
      "date": null
     },
     {
-     "slug": "division-federal-representatives-2604-p2",
-     "title": "House of Representatives division, 30 May 2012: Motions \u2014 Carbon Pricing (part 2 of 2)",
+     "slug": "speech-260914",
+     "title": "Greg Combet \u2014 2012-08-16",
      "speaker": null,
-     "party": null,
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-826053",
-     "title": "Mitch Fifield \u2014 Business \u2014 2013-12-03",
+     "slug": "speech-336530",
+     "title": "Graham Perrett \u2014 2016-10-20",
      "speaker": null,
-     "party": null,
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
@@ -886,8 +872,72 @@
      "date": null
     },
     {
-     "slug": "speech-317862",
-     "title": "Anthony Albanese \u2014 2015-09-09",
+     "slug": "speech-811102",
+     "title": "Joe Ludwig \u2014 Motions \u2014 2011-10-12",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-812052",
+     "title": "Stephen Parry \u2014 Bills \u2014 2011-11-08",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-242711",
+     "title": "Greg Combet \u2014 2011-09-13",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "division-federal-representatives-2604-p2",
+     "title": "House of Representatives division, 30 May 2012: Motions \u2014 Carbon Pricing (part 2 of 2)",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-817465",
+     "title": "George Brandis \u2014 Questions without Notice \u2014 2012-08-15",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-313170",
+     "title": "Peter Hendy \u2014 2015-06-16",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-319227",
+     "title": "Greg Hunt \u2014 2015-09-16",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "division-federal-representatives-2681-p2",
+     "title": "House of Representatives division, 11 October 2012: Private Members' Business \u2014 Carbon Pricing (part 2 of 2)",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-259115",
+     "title": "Julia Gillard \u2014 2012-06-25",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
@@ -902,10 +952,10 @@
      "date": null
     },
     {
-     "slug": "speech-259115",
-     "title": "Julia Gillard \u2014 2012-06-25",
+     "slug": "speech-826053",
+     "title": "Mitch Fifield \u2014 Business \u2014 2013-12-03",
      "speaker": null,
-     "party": "Labor",
+     "party": null,
      "state": "federal",
      "date": null
     },
@@ -918,24 +968,16 @@
      "date": null
     },
     {
-     "slug": "speech-319227",
-     "title": "Greg Hunt \u2014 2015-09-16",
+     "slug": "speech-256422",
+     "title": "Julia Gillard \u2014 2012-05-29",
      "speaker": null,
-     "party": "Liberal",
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-811102",
-     "title": "Joe Ludwig \u2014 Motions \u2014 2011-10-12",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-242711",
-     "title": "Greg Combet \u2014 2011-09-13",
+     "slug": "speech-317862",
+     "title": "Anthony Albanese \u2014 2015-09-09",
      "speaker": null,
      "party": "Labor",
      "state": "federal",

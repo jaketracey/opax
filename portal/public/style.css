@@ -1382,19 +1382,66 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 button.action-btn { background: none; cursor: pointer; font: 600 0.875rem/1.3 var(--sans); }
 button.action-btn[data-explain] { width:100%; min-height:44px; justify-content:flex-start; text-align:left; }
 a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top: 1.6rem; }
-.tile .tile-source { display: block; margin-top: 0.35rem; font-size: 0.75rem; color: var(--ink-faint); }
+.tile .tile-source { display: block; margin-top: 0.35rem; font-size: 0.8125rem; line-height: 1.45; color: var(--ink-faint); }
 .tile .tile-source a { color: var(--ink-faint); }
 .position-list { list-style: none; margin: 0; padding: 0; }
-.position-list li { margin: 0; padding: var(--row-gap) 0; max-width: 78ch; }
+.position-list { border-top: 1px solid var(--line); }
+.position-list li { margin: 0; padding: var(--space-4) 0; max-width: 78ch; border-bottom: 1px solid var(--line); }
 .position-party { margin-right: 0.35rem; }
-.position-text { font-size: 0.9375rem; }
+.position-text { font-size: 1rem; line-height: 1.65; }
 .position-list .source-meta { margin-top: var(--space-1); }
+
+/* The report reading list is one continuous editorial sequence. Speech
+   boundaries come from hairlines and whitespace, never nested cards. */
+.report-reading-note { margin: var(--space-2) 0 var(--space-4); max-width: 62ch; }
+.report-reading-list { max-width: 76ch; border-top: 1px solid var(--line); }
+.report-reading-item { padding: var(--space-5) 0; border-bottom: 1px solid var(--line); }
+.report-speech-title { margin: 0 0 var(--space-3); max-width: 62ch; font: 600 1.3rem/1.35 var(--serif); }
+.report-speech-byline { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
+.report-speech-byline .meta-portrait { width: 44px; height: 44px; flex: 0 0 44px; }
+.report-speech-byline .meta-portrait img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; display: block; }
+.report-speech-identity { min-width: 0; }
+.report-speech-name-line { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-3); }
+.report-speech-name-line > a { display: inline-flex; align-items: center; min-height: 44px; }
+.report-speech-speaker { font: 650 0.9375rem/1.35 var(--sans); text-underline-offset: 3px; }
+.report-speech-name-line .meta-party { text-decoration: none; }
+.report-speech-meta { margin: -0.25rem 0 0; color: var(--ink-faint); font: 400 0.8125rem/1.45 var(--sans); }
+.report-speech-brief { margin: var(--space-4) 0 var(--space-2); max-width: 68ch; font: 400 1.0625rem/1.72 var(--serif); }
+.report-speech-link { display: inline-flex; align-items: center; min-height: 44px; font: 650 0.9375rem/1.3 var(--sans); text-underline-offset: 4px; }
+
+#report-view .tile-source a,
+#report-view .position-list .source-meta a,
+#report-view .barrow-name,
+#report-view button.link.source-title { display: inline-flex; align-items: center; min-height: 44px; }
+#report-view button.link.source-title { text-align: left; }
+#report-view .barrow { min-height: 44px; }
+#report-view .section-tools .action-btn,
+#report-view .report-download-btn { min-height: 44px; }
 
 /* A report's body sections are headed by a serif h3, which already reads as
    a break, so they take the middle step rather than the full section gap. */
 .report-section { margin-top: var(--sub-gap); }
 .report-section h3 { font: 600 1.25rem/1.3 var(--serif); margin: 0 0 var(--space-4); }
 .section-tools { margin: 0.5rem 0 0; }
+#report-moments:not(:empty) + #report-sections .report-section:first-child { margin-top: var(--section-gap); }
+
+@media (max-width: 640px) {
+  #report-view h2 { font-size: clamp(1.7rem, 8vw, 2rem); line-height: 1.15; }
+  .report-blurb { font-size: 1.0625rem; }
+  .report-meta { line-height: 1.55; }
+  #report-figures .tiles { gap: var(--space-4); }
+  #report-figures .tile { min-width: 140px; flex-basis: 140px; }
+  .report-speech-title { font-size: 1.2rem; }
+  .report-speech-brief { font-size: 1.075rem; line-height: 1.7; }
+  .position-text { font-size: 1rem; }
+  .section-tools { display: grid; grid-template-columns: 1fr; }
+  .section-tools .action-btn,
+  #report-download .report-download-btn { width: 100%; justify-content: center; }
+  #report-stats .barrow { grid-template-columns: minmax(0, 1fr) auto; gap: 0 var(--space-3); margin: var(--space-2) 0 var(--space-4); }
+  #report-stats .barrow-name { grid-column: 1; white-space: normal; overflow: visible; text-overflow: clip; }
+  #report-stats .barrow-value { grid-column: 2; }
+  #report-stats .barrow-track { grid-column: 1 / -1; grid-row: 2; width: 100%; }
+}
 
 /* ---- document page ------------------------------------------------------ */
 

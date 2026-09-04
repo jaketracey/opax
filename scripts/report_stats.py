@@ -10,6 +10,7 @@ chars); donation stats cover the full AEC dataset with industry classification.
 """
 
 import json
+import re
 import sqlite3
 import sys
 
@@ -32,11 +33,43 @@ TOPIC_MAP = {
     "media": (["media"], ["media"]),
 }
 
+# The legacy speech_topics table was populated with raw substring counts, so a
+# weak match such as "media" inside "immediately" can classify a speech. Top
+# speakers need a stricter test than the broad report totals: at least three
+# whole-word/phrase hits in the speech itself.
+TOP_SPEAKER_PATTERNS = {
+    "gambling": r"\b(gambling|poker machines?|pokies|betting|wagering|casino|lotteries?|gaming)\b",
+    "climate": r"\b(climate|emissions?|carbon|renewable|solar|wind energy|global warming|net zero|Paris Agreement)\b",
+    "housing": r"\b(housing|rents?|mortgages?|affordable housing|homelessness|property|tenants?|real estate|first home)\b",
+    "indigenous": r"\b(indigenous|aboriginal|Torres Strait|First Nations|Closing the Gap|native title|Uluru Statement|reconciliation|Voice)\b",
+    "immigration": r"\b(immigration|visas?|migration|refugees?|asylum|border|citizenship|multicultural|deportation)\b",
+    "media": r"\b(media|broadcasting|press|journalism|social media|misinformation|ABC|SBS|news|digital platforms)\b",
+}
+TOP_SPEAKER_MIN_HITS = 3
+SPEAKER_ALIASES = {
+    # Federal source files alternate between the surname and full name.
+    "Snowdon": "Warren Snowdon",
+}
+
 SPEECH_FILTER = "s.date >= '1993-03-13' AND LENGTH(s.text) >= 200"
+
+
+def aggregate_top_speakers(rows, limit=5):
+    """Normalize and merge source-name variants before taking the leaders."""
+    totals = {}
+    for raw_name, count in rows:
+        name = normalize_speaker(raw_name) or raw_name
+        name = SPEAKER_ALIASES.get(name, name)
+        totals[name] = totals.get(name, 0) + count
+    return sorted(totals.items(), key=lambda item: (-item[1], item[0]))[:limit]
 
 
 def main() -> None:
     db = sqlite3.connect(DB, uri=True)
+    db.create_function(
+        "TOPIC_HITS", 2,
+        lambda pattern, text: len(re.findall(pattern, text or "", re.IGNORECASE)),
+    )
     known_industries = {r[0] for r in db.execute(
         "SELECT DISTINCT industry FROM donations WHERE industry IS NOT NULL")}
 
@@ -57,18 +90,21 @@ def main() -> None:
             "GROUP BY y ORDER BY y", topic_names).fetchall()
         top_speakers = db.execute(
             f"SELECT s.speaker_name, COUNT(DISTINCT s.speech_id) AS c {base} "
+            "AND TOPIC_HITS(?, s.text) >= ? "
             "AND s.speaker_name IS NOT NULL AND s.speaker_name != '' "
             "AND UPPER(s.speaker_name) NOT LIKE '%SPEAKER%' "
             "AND UPPER(s.speaker_name) NOT LIKE '%PRESIDENT%' "
             "AND UPPER(s.speaker_name) NOT LIKE '%CHAIR%' "
             "AND s.speaker_name != 'stage direction' "
-            "GROUP BY s.speaker_name ORDER BY c DESC LIMIT 5", topic_names).fetchall()
+            "GROUP BY s.speaker_name ORDER BY c DESC LIMIT 50",
+            topic_names + [TOP_SPEAKER_PATTERNS[slug], TOP_SPEAKER_MIN_HITS],
+        ).fetchall()
 
         stats = {
             "speech_count": n,
             "unique_speakers": speakers,
             "timeline": [[y, c] for y, c in timeline],
-            "top_speakers": [[normalize_speaker(nm) or nm, c] for nm, c in top_speakers],
+            "top_speakers": [[nm, c] for nm, c in aggregate_top_speakers(top_speakers)],
         }
 
         live = [i for i in industries if i in known_industries]

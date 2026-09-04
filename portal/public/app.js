@@ -1971,6 +1971,63 @@ function sourceItem(s, num, passage = false) {
   return li;
 }
 
+function keySpeechItem(speech) {
+  const article = document.createElement("article");
+  article.className = "report-reading-item";
+
+  const title = document.createElement("h3");
+  title.className = "report-speech-title";
+  title.textContent = speech.title || displayTitle(speech);
+
+  const byline = document.createElement("div");
+  byline.className = "report-speech-byline";
+  if (speech.speaker) {
+    const portrait = document.createElement("span");
+    portrait.className = "meta-portrait";
+    portrait.dataset.speaker = speech.speaker;
+    byline.appendChild(portrait);
+  }
+  const identity = document.createElement("div");
+  identity.className = "report-speech-identity";
+  const nameLine = document.createElement("div");
+  nameLine.className = "report-speech-name-line";
+  if (speech.speaker) {
+    const speaker = document.createElement("a");
+    speaker.className = "report-speech-speaker";
+    speaker.href = subjectHash("person", speech.speaker);
+    speaker.textContent = speech.speaker;
+    nameLine.appendChild(speaker);
+  }
+  if (speech.party) {
+    const party = document.createElement("a");
+    party.className = "meta-party";
+    party.href = subjectHash("party", speech.party);
+    party.innerHTML = partyChipHTML(speech.party);
+    nameLine.appendChild(party);
+  }
+  const quiet = document.createElement("p");
+  quiet.className = "report-speech-meta";
+  const parliament = speech.state
+    ? `${STATE_NAMES[speech.state] || speech.state} Parliament`
+    : null;
+  quiet.textContent = [parliament, fmtDate(speech.date || "")].filter(Boolean).join(" · ");
+  identity.append(nameLine, quiet);
+  byline.appendChild(identity);
+
+  const brief = document.createElement("p");
+  brief.className = "report-speech-brief";
+  brief.textContent = speech.brief;
+
+  const link = document.createElement("a");
+  link.className = "report-speech-link";
+  link.href = `/doc/${speech.slug}`;
+  link.textContent = "Read the speech";
+
+  article.append(title, byline, brief, link);
+  decorateMetaPortraits(article);
+  return article;
+}
+
 // One engraved time scale for answers and searches. The geometry stays fixed
 // at the public corpus window, so a sparse answer and a busy search remain
 // directly comparable rather than each stretching to flatter its own dates.
@@ -8480,10 +8537,13 @@ function renderReportBrief(report) {
   const moments = $("report-moments");
   moments.replaceChildren();
   if (report.key_moments?.length) {
-    const ol = document.createElement("ol");
-    ol.className = "source-list";
-    ol.replaceChildren(...report.key_moments.map((m, i) => sourceItem(m, i + 1)));
-    moments.append(kicker("Start reading: key speeches"), ol);
+    const note = document.createElement("p");
+    note.className = "fineprint report-reading-note";
+    note.textContent = "Chosen from the labelled record: substantive speeches on the subject, one per speaker, across the years.";
+    const list = document.createElement("div");
+    list.className = "report-reading-list";
+    list.replaceChildren(...report.key_moments.map(keySpeechItem));
+    moments.append(kicker("Start reading: key speeches"), note, list);
   }
 }
 
@@ -8518,19 +8578,21 @@ async function openReport(slug, sectionNum, manageFocus) {
   $("report-blurb").textContent = report.blurb;
   $("report-meta").textContent =
     `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record · corpus v${corpusVersion()}`;
+  renderReportBrief(report);
   renderStats($("report-stats"), report.stats, report.title);
   {
     const st = report.stats;
     if (st) {
       const don = st.donations;
-      $("report-figures").insertAdjacentHTML("beforeend", `<div class="tiles">
+      const figures = $("report-figures");
+      const grid = figures.querySelector(".tiles") || figures.appendChild(document.createElement("div"));
+      grid.classList.add("tiles");
+      grid.insertAdjacentHTML("beforeend", `
         ${tile((st.speech_count ?? 0).toLocaleString(), "speeches on the record")}
         ${tile((st.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
-        ${don ? tile(fmtMoney(don.total ?? 0), `donations: ${fmtIndustries(don.industries || [])}`) : ""}
-      </div>`);
+        ${don ? tile(fmtMoney(don.total ?? 0), `donations: ${fmtIndustries(don.industries || [])}`) : ""}`);
     }
   }
-  renderReportBrief(report);
   $("report-download").innerHTML =
     `<a class="action-btn report-download-btn" href="/reports/${esc(slug)}.json">${iconSvg("download")}<span>Download the data behind this report</span></a>`;
 

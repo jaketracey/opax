@@ -128,23 +128,23 @@
   "top_speakers": [
    [
     "Philip Ruddock",
-    1201
+    712
    ],
    [
     "Scott Morrison",
-    856
+    486
    ],
    [
     "Peter Dutton",
-    619
-   ],
-   [
-    "Julia Gillard",
-    515
+    279
    ],
    [
     "Laurie Ferguson",
-    442
+    241
+   ],
+   [
+    "Gary Hardgrave",
+    217
    ]
   ]
  },
@@ -184,14 +184,6 @@
  ],
  "positions": [
   {
-   "party": "Labor",
-   "position": "Supports strong border protection and offshore detention, arguing its policies remain robust and legally valid, while also supporting an orderly migration program and addressing skill needs through migration places.",
-   "slug": "speech-326220",
-   "source_title": "Malcolm Turnbull \u2014 2016-02-03",
-   "speaker": "Malcolm Turnbull",
-   "date": "2016-02-03"
-  },
-  {
    "party": "Liberal",
    "position": "Supports maintaining the Howard government's border protection policies including excision, mandatory detention and offshore processing, and argues Labor's changes to border security failed and dismantled these protections.",
    "slug": "speech-797176",
@@ -218,58 +210,94 @@
  ],
  "key_moments": [
   {
-   "slug": "speech-1197211",
-   "title": "Anthony Chisholm \u2014 Bills \u2014 2025-09-03",
-   "speaker": "Anthony Chisholm",
+   "resource": "b1db267558ad4653a465a7d5ba6dcf2e",
+   "slug": "speech-777224",
+   "title": "Australian Citizenship Bill 2005; Australian Citizenship (Transitionals and Consequentials) Bill 2005",
+   "speaker": "Ian Campbell",
    "party": null,
    "state": "federal",
-   "date": "2025-09-03"
+   "chamber": "senate",
+   "date": "2006-11-30",
+   "brief": "The Australian Citizenship Bill 2005 was introduced to replace the 1948 Act, retaining citizenship as a privilege and adding a four-year lawful residence requirement (including 12 months as a permanent resident), mandatory refusal for security threats, identity verification, and new revocation grounds, with several recommendations from the Senate committee adopted. The companion Australian Citizenship (Transitionals and Consequentials) Bill 2005 implements transitional arrangements, including applying the new residence rules only to future permanent residents and registering adoptions under the Hague Convention.",
+   "why": "Australian Citizenship Bill 2005; Australian Citizenship (Transitionals\u2026, Federal, 2006",
+   "role": "speaker",
+   "length": 7881
   },
   {
-   "slug": "speech-1205729",
-   "title": "Katy Gallagher \u2014 Bills \u2014 2026-08-19",
-   "speaker": "Katy Gallagher",
-   "party": null,
-   "state": "federal",
-   "date": "2026-08-19"
-  },
-  {
-   "slug": "speech-1146082",
-   "title": "R.A. Simms \u2014 Mining (Prohibition of Mining in Mount Lofty Ranges Watershed) Amendment Bill \u2014 2022-02-09",
-   "speaker": "R.A. Simms",
-   "party": null,
-   "state": "sa",
-   "date": "2022-02-09"
-  },
-  {
-   "slug": "speech-774836",
-   "title": "Andrew Bartlett \u2014 Migration Legislation Amendment (End of Mandatory Detention) Bill 2006 \u2014 2006-09-07",
+   "resource": "6bd47488f2ee4b06a4f74daaa68c1a91",
+   "slug": "speech-783199",
+   "title": "MIGRATION AMENDMENT REGULATIONS 2007 (No. 7)",
    "speaker": "Andrew Bartlett",
    "party": "Australian Democrats",
    "state": "federal",
-   "date": "2006-09-07"
+   "chamber": "senate",
+   "date": "2007-09-20",
+   "brief": "Senator Andrew Bartlett moved to disallow four items in the Migration Amendment Regulations 2007 (No. 7), arguing they removed the 15-point family sponsorship concession for skilled migration visa subclass 138, contrary to the Birrell\u2013Hawthorne\u2013Richardson evaluation, and further skewed the migration program away from family reunion. The motion was negatived.",
+   "why": "MIGRATION AMENDMENT REGULATIONS 2007 (No. 7), Federal, 2007",
+   "role": "parliamentarian",
+   "length": 27223
   },
   {
-   "slug": "speech-794872",
-   "title": "Chris Evans \u2014 Higher Education Support Amendment (2009 Budget Measures) Bill 2009 \u2014 2009-08-19",
-   "speaker": "Chris Evans",
-   "party": null,
+   "resource": "73da0676143447ccb53f34f80632b79a",
+   "slug": "speech-803532",
+   "title": "Migration Amendment (Detention Reform and Procedural Fairness) Bill 2010",
+   "speaker": "Sarah Hanson-Young",
+   "party": "Greens",
    "state": "federal",
-   "date": "2009-08-19"
+   "chamber": "senate",
+   "date": "2010-11-18",
+   "brief": "The Migration Amendment (Detention Reform and Procedural Fairness) Bill 2010 was moved to end offshore processing and excision, make detention a last resort, end indefinite detention, and introduce judicial review of detention beyond 30 days, citing Australia's international obligations and a High Court ruling that asylum seekers on excised territory must receive procedural fairness.",
+   "why": "Second reading, Migration Amendment (Detention Reform and Procedural Fairness) Bill 2010, 2010",
+   "role": "bill mover",
+   "length": 6912
   },
   {
-   "slug": "speech-783075",
-   "title": "Steve Fielding \u2014 Alcohol Toll Reduction Bill 2007 \u2014 2007-09-19",
-   "speaker": "Steve Fielding",
-   "party": null,
+   "resource": "6be60d056f98497d813ef67287d671b2",
+   "slug": "speech-378141",
+   "title": "The Medevac law",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
    "state": "federal",
-   "date": "2007-09-19"
+   "chamber": "representatives",
+   "date": "2019-07-23",
+   "brief": "Labor opposed the Migration Amendment (Repairing Medical Transfers) Bill 2019, arguing the medevac regime is working and should not be repealed. The speaker cited that around 90 transfers were approved, 20 cases went to the Independent Health Advice Panel, and only seven transfers occurred without ministerial approval, while moving a second reading amendment criticising the Home Affairs Minister for mischaracterising the process.",
+   "why": "The Medevac law, Federal, 2019",
+   "role": "parliamentarian",
+   "length": 23222
+  },
+  {
+   "resource": "0d921a7f8f1f4a18b804daa566aa2569",
+   "slug": "speech-1166547",
+   "title": "Refugee Week",
+   "speaker": "T.T. Ngo",
+   "party": null,
+   "state": "sa",
+   "chamber": "sa_lc",
+   "date": "2022-09-08",
+   "brief": "The speaker highlighted the significance of Refugee Week, noting the Labor government's role in ending the Nadesalingam family's trauma and Fatima Payman's election as Australia's first hijab-wearing Muslim senator, while also citing refugee contributions to regional economies and announcing $99.5 million in military assistance to Ukraine.",
+   "why": "Refugee Week, South Australia, 2022",
+   "role": "parliamentarian",
+   "length": 5693
+  },
+  {
+   "resource": "1109462d50604e2aa2cd4b4900f16a23",
+   "slug": "speech-827046",
+   "title": "Regulations and Determinations",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "chamber": "representatives",
+   "date": "2023-02-07",
+   "brief": "The minister moved to approve the designation of Nauru as a regional processing country, arguing it is essential to deter people smugglers, prevent deaths at sea, and has bipartisan support and legal assurances.",
+   "why": "Regulations and Determinations, Federal, 2023",
+   "role": "parliamentarian",
+   "length": 62192
   }
  ],
  "sections": [
   {
    "question": "What positions have MPs taken on asylum seekers and offshore detention?",
-   "answer": "MPs in the context took a range of positions on asylum seekers and offshore detention.\n\n- Some MPs strongly opposed offshore detention and supported ending it, bringing asylum seekers to Australia. The Greens are described as committed to drastically improving Australia\u2019s approach and introduced bills to evacuate detainees from offshore centres. In a 2018 Senate vote on ending offshore detention, 9 senators voted in favour and 39 against, so a majority opposed ending it.\n- Several MPs spoke in favour of closing offshore detention: one urged the Morrison government to accept New Zealand\u2019s offer to resettle 150 asylum seekers and described detention as a failure of compassion; another doctor MP supported immediately ending indefinite offshore detention and bringing detainees to safety; Ms Leong condemned both Labor and Liberal governments for running offshore detention; and another MP promised to use their voice to end offshore detention, end mandatory indefinite detention, and increase Australia\u2019s humanitarian intake.\n- Other MPs defended offshore processing as a necessary deterrent and border-protection measure. One government-aligned speaker supported transferring asylum seekers to Nauru under regional processing arrangements and said detention capacity was needed for immigration management.\n- Another MP sought a compromise, proposing processing only in countries signed to the UN Refugee Convention, time limits, UNHCR-endorsed centres, and an increased refugee intake, while opposing the Malaysia arrangement.\n- A different MP defended offshore processing as a deterrent, argued Australia should control who it accepts, and opposed sending people to non-signatory countries.\n\nThus, MPs\u2019 positions ranged from immediately ending offshore detention and resettling asylum seekers in Australia to maintaining offshore processing and detention as deterrents.",
+   "answer": "The strongest finding is that offshore detention has been a deeply divisive issue, with a clear majority in the Senate voting against ending it (39\u20139 on 15 February 2018), while a vocal cross-party minority, led by The Greens, has persistently pushed for its abolition and for bringing detainees to Australia.\n\n**Positions in favour of ending offshore detention and bringing detainees to Australia:**\n- **The Greens** are the only party committed to drastically improving Australia's approach, with Senator Nick McKim introducing a bill to evacuate all asylum seekers from offshore detention centres and bring them to Australia until safe, long-term options exist.\n- **Independent MPs and crossbenchers** have strongly supported ending offshore detention. One MP (Kooyong) cited medical evidence, noting that \"no-one is well after 10 years in offshore detention,\" and referenced a study showing 62% of 208 refugees assessed had moderate or severe depression, with 46 deaths in Australian detention centres over the last decade, including 12 offshore.\n- **Ms Leong** condemned both Labor and Liberal governments for operating offshore detention on Manus Island and Nauru, calling conditions inhumane and contravening the UN refugee convention, and argued only The Greens support bringing all refugees to Australia.\n- **A petition of over 60,000 signatures** was presented to parliament calling for an end to offshore detention, and **502 medical professionals** signed an open letter tabled in parliament calling for all consenting refugees and asylum seekers on Nauru and Papua New Guinea to be brought immediately to Australia.\n- **The Refugee Protection Bill 2019** proposed abolishing mandatory detention and establishing a regional framework (APASS), criticising offshore detention as unlawful, inhumane, and costing $9.6 billion from 2013\u20132016.\n\n**Positions in favour of maintaining offshore detention or regional processing:**\n- **The government (Coalition)** defended offshore processing as a deterrent, citing the Houston report's 22 recommendations and passing legislation to establish offshore processing centres. A government speaker argued that detention capacity is needed for immigration management and that the vote was not about endorsing the Malaysia arrangement but about Migration Act amendments.\n- **A Coalition MP** strongly defended offshore processing, arguing Australia should control who gets refugee places, that the Labor Party's shift to sending people to non-signatories of the UN convention was \"morally contemptible,\" and that losing public confidence on border protection would be a \"terrible step backwards.\"\n- **The Senate majority (39 votes)** on 15 February 2018 voted against a motion to end offshore detention, including members of the Coalition, Labor, and crossbenchers such as Pauline Hanson, David Leyonhjelm, and Derryn Hinch.\n\n**Historical and ongoing context:**\n- In early 2019, parliament passed the \"medevac\" bill (with cross-party support and floor crossings) to evacuate critically sick detainees to Australia, but the previous Coalition government later repealed it.\n- As of January 2023, about 500 offshore detainees lacked a durable solution, with 159 remaining in PNG or Nauru.\n- A parliamentary question from November 2024 requesting a breakdown of asylum seekers transferred to Australia remained unanswered for one year and three months, indicating ongoing opacity.",
    "sources": [
     {
      "slug": "speech-244710",
@@ -419,7 +447,7 @@
   },
   {
    "question": "What has been said about immigration levels and skilled migration?",
-   "answer": "The context contains a range of often conflicting statements about immigration levels and skilled migration:\n\n- Some government figures say skilled migration is vital to productivity and economic growth, that skilled migrants are needed in regional areas, and that initiatives such as regional migration agreements, the Regional Sponsored Migration Scheme, and enterprise migration agreements help direct migrants where they are needed.\n- It is noted that skilled migration has been kept at over two-thirds of the total intake, and that the share of skilled migration rose from under 30% under the Keating government to almost 70% under the Howard government.\n- Some speakers say census data show immigration is not at record levels or out of control, and that Australia relies on immigration for services, businesses and regional communities.\n- Others say immigration levels should be capped or reduced, and that priority should go to Australian workers, apprenticeships and traineeships rather than skilled migration at the expense of local jobs.\n- One speaker says the skilled migration program was cut by 60% to 160,000 places and that the program prioritises Australian workers; another says the annual target was 190,000 but only 160,000 was reached.\n- A questioner claims that in 2025 only 20% of 301,000 net overseas migrants were skilled, and alleges the government is \u201cflooding\u201d Australia with 80% unskilled migration.\n- It is also mentioned that net overseas migration was 306,000 in 2024-25 and down from its post-COVID high, with the largest group being temporary students, and common skilled occupations including nurses, chefs and software programmers.\n- Some contributors argue skilled migration benefits the economy, while low-skilled migration can reduce wages for low-skilled workers. Others say only around 46% of the immigration intake finds jobs in skilled professions, and that this level may not be accepted by the Australian public.\n- There are criticisms of both sides: the Coalition is accused of poor management of temporary skilled migration and abuse of workers, while Labor is accused of bungling migration numbers and prioritising higher migration levels.\n\nOverall, there is no single agreed position; speakers differ on whether immigration levels are too high, appropriate, or too low, and on how much of the program should be skilled migration.",
+   "answer": "Immigration policy debates have centred on the balance between skilled and unskilled intake, with the government defending its approach as economically essential and the opposition criticising it as mismanaged and too high.\n\n**Government position:** The government argues skilled migration is vital for productivity and economic growth, particularly in regional areas. It highlights that skilled migrants now make up over two-thirds of the total intake, up from less than 30% under the Keating government. It points to a fourfold increase in skilled migrants settling in regional areas over the last decade and announces new measures like regional migration agreements and enterprise migration agreements. The government also notes it has increased English language requirements for skilled migrants and reduced the permanent migration program to 160,000 places, a 60% cut, to prioritise Australian workers. It rejects claims of record or uncontrolled immigration, citing census data, and stresses that migration is designed to produce unity, not division.\n\n**Opposition and crossbench criticism:** Critics argue the government has \"thrown the gates open\" and failed to manage migration properly. They claim that only 20% of net overseas migrants in 2025 were skilled, with 80% unskilled, and that the skilled list includes questionable occupations like dog handler and golfer. They accuse the government of prioritising higher migration levels over Australian jobs and of bungling the response to the global financial crisis, waiting nine months to adjust skilled migration numbers. Some argue that low-skilled arrivals reduce wages for low-skilled Australian workers, while others contend that migration should not be attacked for the government's failure to invest in domestic skills training. The opposition also criticises the government for not clearly stating its position, with the shadow minister for immigration remaining silent on key initiatives.\n\n**Independent and minor party views:** Some speakers defend skilled migration as an important component when administered properly, while warning against dangerous rhetoric that migrants take Australians' jobs. Others note that migration levels can be adjusted to economic circumstances and that a balanced intake is necessary for sustainable population levels.",
    "sources": [
     {
      "slug": "speech-1196866",

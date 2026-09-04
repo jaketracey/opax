@@ -282,6 +282,10 @@ class KbClient:
             "GET", self._rag(f"/slug/{slug}" + (f"?{qs}" if qs else "")), self._headers
         )
 
+    def get_resource_text(self, rid: str, field: str) -> dict:
+        """Read one text field without fetching the resource's other fields."""
+        return _request("GET", self._rag(f"/resource/{rid}/text/{field}"), self._headers)
+
     def counters(self) -> dict:
         return _request("GET", self._rag("/counters"), self._headers)
 
