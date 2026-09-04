@@ -288,7 +288,7 @@ function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = fal
   }
   if (item.speaker && !hideSpeaker) {
     bits.push(linkSpeaker
-      ? `<a href="${esc(subjectHash("person", item.speaker))}">${esc(item.speaker)}</a>`
+      ? `<a class="meta-speaker" href="${esc(subjectHash("person", item.speaker))}">${esc(item.speaker)}</a>`
       : esc(item.speaker));
   }
   if (item.state) bits.push(esc(STATE_NAMES[item.state] || item.state));
@@ -1966,7 +1966,7 @@ function sourceItem(s, num, passage = false) {
   // rather than the name twice and an ISO date in the title.
   const subject = titleSubject(s);
   const nameOnly = !subject && s.speaker;
-  btn.textContent = subject || (nameOnly ? String(s.speaker) : String(s.title || s.slug || ""));
+  btn.textContent = subject || String(s.title || s.slug || "");
   if (nameOnly) li.classList.add("source-name-only");
   btn.addEventListener("click", () => { goRoute(`/doc/${s.slug}`); });
   if (num) {
@@ -1975,13 +1975,15 @@ function sourceItem(s, num, passage = false) {
     numEl.textContent = `${num}.`;
     li.appendChild(numEl);
   }
-  li.appendChild(btn);
+  // A speaker-and-date record has no title to open: the byline leads, with
+  // the portrait, the speaker and the party opening their own pages, and a
+  // plain "Read the speech" link opens the record.
+  if (!nameOnly) li.appendChild(btn);
   if (passage) {
     li.dataset.resource = s.resource || s.slug;
     li.tabIndex = -1;
   }
-  // Speaker portrait, and the speaker and party open their own pages.
-  const meta = metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage, hideSpeaker: nameOnly });
+  const meta = metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage || nameOnly });
   if (meta) {
     const span = document.createElement("span");
     span.className = "source-meta";
@@ -1995,6 +1997,13 @@ function sourceItem(s, num, passage = false) {
     // Retrieval marks elided text with runs of ellipses; one is enough.
     quote.textContent = s.snippet.trim().replace(/\s+/g, " ").replace(/^(?:[…\.]{1,3}\s*){2,}/, "… ").replace(/(?:\s*…){2,}/g, " …");
     li.appendChild(quote);
+  }
+  if (nameOnly) {
+    const read = document.createElement("a");
+    read.className = "source-read";
+    read.href = `/doc/${s.slug}`;
+    read.textContent = "Read the speech";
+    li.appendChild(read);
   }
   return li;
 }
