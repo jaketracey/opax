@@ -108,6 +108,21 @@ type ResolvedFlow = {
   fits: Record<string, unknown> | null
 }
 
+type SceneLabel = {
+  text: string
+  position: THREE.Vector3
+  className?: string
+  align?: 'start' | 'middle' | 'end'
+  offsetX?: number
+  offsetY?: number
+}
+
+type SceneRow = {
+  label: string
+  total: number
+  colour: string
+}
+
 const STYLE_ID = 'opax-explain-style'
 const FIRST_YEAR = 1998
 const LAST_YEAR = 2025
@@ -147,11 +162,22 @@ function injectStyles() {
   color:var(--ink-soft); font:700 clamp(.78rem,1.4vw,.95rem)/1.35 var(--serif); }
 .explain-stage-label.from { left:1.6rem; text-align:left; }
 .explain-stage-label.to { right:1.6rem; text-align:right; }
-.explain-stage-year { position:absolute; z-index:2; left:50%; bottom:2.1rem; transform:translateX(-50%);
+.explain-stage-year { position:absolute; z-index:4; left:50%; top:3.35rem; bottom:auto; transform:translateX(-50%);
   margin:0; color:var(--bronze-ink); font:700 clamp(2.2rem,7vw,4.8rem)/1 var(--serif);
   font-variant-numeric:tabular-nums; text-shadow:0 1px var(--paper); }
 .explain-stage-year small { display:block; margin-top:.35rem; color:var(--ink-soft);
   font:600 .75rem/1.3 var(--sans); text-align:center; }
+.explain-stage-overlay { position:absolute; inset:0; z-index:3; overflow:hidden; pointer-events:none; }
+.explain-scene-label { position:absolute; max-width:10.5rem; padding:.08rem .22rem;
+  color:var(--ink-soft); background:color-mix(in srgb,var(--paper) 86%,transparent);
+  font:700 clamp(.58rem,1vw,.72rem)/1.2 var(--serif); letter-spacing:-.005em;
+  text-wrap:balance; text-shadow:0 1px var(--paper); white-space:nowrap; }
+.explain-scene-label.destination { max-width:8.5rem; white-space:normal; }
+.explain-scene-label.clock { color:var(--bronze-ink); font-size:.62rem; }
+.explain-scene-label.election { padding:0; color:var(--bronze-ink); background:transparent;
+  font-size:clamp(.5rem,.78vw,.61rem); font-weight:600; }
+.explain-scene-label.peak { color:var(--bronze-ink); border-bottom:1px solid var(--bronze-rule);
+  font-size:clamp(.6rem,.9vw,.7rem); }
 .explain-narrative { min-width:0; overflow:auto; padding:clamp(1.1rem,3vw,2.2rem); }
 .explain-title { margin:0; font:700 clamp(1.7rem,3.2vw,2.45rem)/1.12 var(--serif); letter-spacing:-.018em; }
 .explain-deck { margin:.55rem 0 1.25rem; color:var(--ink-soft); font:400 .93rem/1.55 var(--serif); }
@@ -206,7 +232,9 @@ function injectStyles() {
   .explain-narrative { overflow:visible; padding:1.1rem; }
   .explain-stage-label { max-width:39%; font-size:.76rem; }
   .explain-stage-label.from { left:1rem; }.explain-stage-label.to { right:1rem; }
-  .explain-stage-year { bottom:1.35rem; font-size:2.35rem; }
+  .explain-stage-year { top:3rem; bottom:auto; font-size:2.2rem; }
+  .explain-scene-label { max-width:6.7rem; font-size:.58rem; }
+  .explain-scene-label.destination { max-width:5.8rem; }
   .explain-title { font-size:1.65rem; }
   .explain-facts { grid-template-columns:1fr 1fr; }
 }
@@ -320,6 +348,15 @@ async function resolveFlow(detail: ExplainDetail, helpers: ExplainHelpers): Prom
 function labelForIndustry(value: string | null, helpers: ExplainHelpers) {
   if (!value) return 'Disclosed donors'
   return helpers.industryLabel ? helpers.industryLabel(value) : value.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase())
+}
+
+function stageShortLabel(value: string) {
+  const known: Record<string, string> = {
+    "Katter's Australian Party": "Katter's",
+    'United Australia Party': 'United Australia',
+    'Country Liberal Party': 'Country Liberal',
+  }
+  return known[value] || (value.length > 24 ? `${value.slice(0, 22).trim()}…` : value)
 }
 
 function titleFor(flow: ResolvedFlow, detail: ExplainDetail, helpers: ExplainHelpers) {
@@ -440,90 +477,124 @@ function sourceList(data: { citations?: Record<string, unknown>; sources?: AskSo
 
 class FlowScene {
   readonly canvas: HTMLCanvasElement
+  private readonly host: HTMLElement
   private readonly renderer: THREE.WebGLRenderer
   private readonly scene = new THREE.Scene()
   private readonly camera = new THREE.PerspectiveCamera(34, 1, .1, 100)
-  private readonly group = new THREE.Group()
+  private readonly root = new THREE.Group()
+  private readonly baseGroup = new THREE.Group()
+  private readonly whoGroup = new THREE.Group()
+  private readonly historyGroup = new THREE.Group()
+  private readonly giverGroup: THREE.Group
+  private readonly receiverGroup: THREE.Group
+  private readonly mainArc: THREE.Line
+  private readonly mainArrow: THREE.Mesh
   private readonly arcMaterial: THREE.LineBasicMaterial
-  private readonly particleMaterial: THREE.ShaderMaterial
-  private readonly particleGeometry: THREE.BufferGeometry
-  private readonly particles: THREE.Points
-  private readonly giverMaterial: THREE.MeshBasicMaterial
-  private readonly partyMaterial: THREE.MeshBasicMaterial
+  private readonly travellingMaterial: THREE.ShaderMaterial
+  private readonly travellingGeometry: THREE.BufferGeometry
+  private readonly travelling: THREE.Points
+  private readonly historyGeometry: THREE.BufferGeometry
+  private readonly historyPositions: Float32Array
+  private readonly historyTargets = new Float32Array(LAST_YEAR - FIRST_YEAR + 1)
+  private readonly labelLayer: HTMLDivElement
   private readonly resizeObserver: ResizeObserver
   private readonly motion = matchMedia('(prefers-reduced-motion: reduce)')
-  private readonly particlePositions = new Float32Array(72 * 3)
-  private raf = 0
-  private start = performance.now()
+  private readonly travellingPositions = new Float32Array(72 * 3)
+  private readonly flow: ResolvedFlow
+  private readonly detail: ExplainDetail
+  private readonly helpers: ExplainHelpers
+  private readonly giverColour: string
+  private readonly partyColour: string
+  private readonly giverPoint = new THREE.Vector3(-3.5, -.62, 0)
+  private readonly whoGiverPoint = new THREE.Vector3(-3.0, -.62, 0)
+  private readonly receiverPoint = new THREE.Vector3(3.5, -.62, 0)
+  private labels: Array<SceneLabel & { element: HTMLSpanElement }> = []
   private step = 0
   private year = LAST_YEAR
   private yearAmount = 0
   private maxYearAmount = 1
-  private years = new Map<number, YearCell>()
-  private baseTargetZ = 12
+  private baseTargetZ = 11.8
+  private targetZ = 11.8
+  private currentZ = 11.8
+  private targetCameraX = 0
+  private targetCameraY = .16
+  private currentCameraX = 0
+  private currentCameraY = .16
   private aspect = 1
-  private targetZ = 12
-  private currentZ = 12
+  private narrow = false
+  private raf = 0
+  private start = performance.now()
+  private lastPaint = 0
   private destroyed = false
   private visible = true
   onYear: ((year: number, amount: number) => void) | null = null
 
-  constructor(host: HTMLElement, giverColour: string, partyColour: string) {
+  constructor(
+    host: HTMLElement,
+    flow: ResolvedFlow,
+    detail: ExplainDetail,
+    giverColour: string,
+    partyColour: string,
+    helpers: ExplainHelpers,
+  ) {
+    this.host = host
+    this.flow = flow
+    this.detail = detail
+    this.helpers = helpers
+    this.giverColour = giverColour
+    this.partyColour = partyColour
     this.canvas = el('canvas', 'explain-canvas')
     this.canvas.setAttribute('aria-hidden', 'true')
     host.prepend(this.canvas)
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true, antialias: true, powerPreference: 'low-power' })
-    this.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5))
-    this.scene.add(this.group)
-    this.camera.position.set(0, .25, this.currentZ)
-
-    const arcPoints = []
-    for (let i = 0; i <= 72; i++) arcPoints.push(this.pointAt(i / 72))
-    this.arcMaterial = new THREE.LineBasicMaterial({ color: giverColour, transparent: true, opacity: .4 })
-    this.group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(arcPoints), this.arcMaterial))
-
-    const gridVertices: number[] = []
-    for (let year = FIRST_YEAR; year <= LAST_YEAR; year++) {
-      const x = -3.45 + ((year - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR)) * 6.9
-      const long = [1998, 2000, 2010, 2020, 2025].includes(year)
-      gridVertices.push(x, -1.72, -.45, x, long ? -1.42 : -1.57, -.45)
-    }
-    const grid = new THREE.LineSegments(
-      new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(gridVertices, 3)),
-      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .25 }),
-    )
-    this.group.add(grid)
-
-    const ring = new THREE.RingGeometry(.39, .46, 56)
-    this.giverMaterial = new THREE.MeshBasicMaterial({ color: giverColour, transparent: true, opacity: .9, side: THREE.DoubleSide })
-    this.partyMaterial = new THREE.MeshBasicMaterial({ color: partyColour, transparent: true, opacity: .92, side: THREE.DoubleSide })
-    const giver = new THREE.Mesh(ring, this.giverMaterial)
-    giver.position.set(-3.5, -1.05, 0)
-    const receiver = new THREE.Mesh(ring.clone(), this.partyMaterial)
-    receiver.position.set(3.5, -1.05, 0)
-    this.group.add(giver, receiver)
-
-    const arrowShape = new THREE.BufferGeometry()
-    const arrowAt = this.pointAt(.86)
-    arrowShape.setAttribute('position', new THREE.Float32BufferAttribute([
-      arrowAt.x + .16, arrowAt.y - .01, .01,
-      arrowAt.x - .08, arrowAt.y + .10, .01,
-      arrowAt.x - .05, arrowAt.y - .13, .01,
-    ], 3))
-    this.group.add(new THREE.Mesh(arrowShape, new THREE.MeshBasicMaterial({ color: giverColour, transparent: true, opacity: .5 })))
-
-    this.particleGeometry = new THREE.BufferGeometry()
-    this.particleGeometry.setAttribute('position', new THREE.BufferAttribute(this.particlePositions, 3))
-    this.particleGeometry.setDrawRange(0, 0)
-    this.particleMaterial = new THREE.ShaderMaterial({
-      transparent: true,
-      depthWrite: false,
-      uniforms: { uColour: { value: new THREE.Color(giverColour) }, uAlpha: { value: .34 } },
-      vertexShader: `void main(){vec4 mv=modelViewMatrix*vec4(position,1.0);gl_PointSize=5.0*(8.0/-mv.z);gl_Position=projectionMatrix*mv;}`,
-      fragmentShader: `uniform vec3 uColour;uniform float uAlpha;void main(){float d=length(gl_PointCoord-vec2(.5));float a=1.0-smoothstep(.22,.5,d);if(a<=.01)discard;gl_FragColor=vec4(uColour,uAlpha*a);}`,
+    this.labelLayer = el('div', 'explain-stage-overlay')
+    this.labelLayer.setAttribute('aria-hidden', 'true')
+    host.append(this.labelLayer)
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+      alpha: true,
+      antialias: true,
+      powerPreference: 'low-power',
     })
-    this.particles = new THREE.Points(this.particleGeometry, this.particleMaterial)
-    this.group.add(this.particles)
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5))
+    this.scene.add(this.root)
+    this.root.add(this.baseGroup, this.whoGroup, this.historyGroup)
+    this.camera.position.set(0, .16, this.currentZ)
+
+    const arcPoints = Array.from({ length: 73 }, (_, index) => this.pointAt(index / 72))
+    this.arcMaterial = new THREE.LineBasicMaterial({ color: giverColour, transparent: true, opacity: .42 })
+    this.mainArc = new THREE.Line(new THREE.BufferGeometry().setFromPoints(arcPoints), this.arcMaterial)
+    this.baseGroup.add(this.mainArc)
+    this.giverGroup = this.makeHatchedMedallion(giverColour, .48)
+    this.giverGroup.position.copy(this.giverPoint)
+    this.receiverGroup = this.makeHatchedMedallion(partyColour, .48, false)
+    this.receiverGroup.position.copy(this.receiverPoint)
+    this.baseGroup.add(this.giverGroup, this.receiverGroup)
+
+    const arrowAt = this.pointAt(.84)
+    const tangent = this.pointAt(.846).sub(this.pointAt(.834)).normalize()
+    const normal = new THREE.Vector3(-tangent.y, tangent.x, 0)
+    const arrowGeometry = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute([
+      arrowAt.x + tangent.x * .16, arrowAt.y + tangent.y * .16, .04,
+      arrowAt.x - tangent.x * .11 + normal.x * .11, arrowAt.y - tangent.y * .11 + normal.y * .11, .04,
+      arrowAt.x - tangent.x * .11 - normal.x * .11, arrowAt.y - tangent.y * .11 - normal.y * .11, .04,
+    ], 3))
+    this.mainArrow = new THREE.Mesh(arrowGeometry, new THREE.MeshBasicMaterial({
+      color: giverColour, transparent: true, opacity: .58, side: THREE.DoubleSide,
+    }))
+    this.baseGroup.add(this.mainArrow)
+
+    this.buildWhoGives()
+    const history = this.buildHistory()
+    this.historyGeometry = history.geometry
+    this.historyPositions = history.positions
+
+    this.travellingGeometry = new THREE.BufferGeometry()
+    this.travellingGeometry.setAttribute('position', new THREE.BufferAttribute(this.travellingPositions, 3))
+    this.travellingGeometry.setDrawRange(0, 0)
+    this.travellingMaterial = this.makePointMaterial(giverColour, .52, true)
+    this.travelling = new THREE.Points(this.travellingGeometry, this.travellingMaterial)
+    this.travelling.frustumCulled = false
+    this.baseGroup.add(this.travelling)
 
     this.resizeObserver = new ResizeObserver(() => this.resize())
     this.resizeObserver.observe(host)
@@ -533,22 +604,298 @@ class FlowScene {
     this.draw(performance.now())
   }
 
-  private pointAt(t: number) {
-    const x = -3.5 + 7 * t
-    const y = -1.05 + Math.sin(Math.PI * t) * 2.85
-    return new THREE.Vector3(x, y, 0)
+  private seeded(index: number, salt = 0) {
+    const value = Math.sin((index + 1) * 12.9898 + salt * 78.233) * 43758.5453
+    return value - Math.floor(value)
+  }
+
+  private makePointMaterial(colour: string, alpha: number, sized = false) {
+    return new THREE.ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      uniforms: { uColour: { value: new THREE.Color(colour) }, uAlpha: { value: alpha } },
+      vertexShader: `${sized ? 'attribute float aSize;' : ''}
+        void main(){vec4 mv=modelViewMatrix*vec4(position,1.0);
+        gl_PointSize=${sized ? 'aSize' : '3.0'}*(9.0/-mv.z);gl_Position=projectionMatrix*mv;}`,
+      fragmentShader: `uniform vec3 uColour;uniform float uAlpha;
+        void main(){float d=length(gl_PointCoord-vec2(.5));float a=1.0-smoothstep(.2,.5,d);
+        if(a<=.01)discard;gl_FragColor=vec4(uColour,uAlpha*a);}`,
+    })
+  }
+
+  private makeHatchedMedallion(colour: string, radius: number, hatch = true) {
+    const group = new THREE.Group()
+    group.add(new THREE.Mesh(
+      new THREE.CircleGeometry(radius * .84, 48),
+      new THREE.MeshBasicMaterial({ color: colour, transparent: true, opacity: .055, side: THREE.DoubleSide }),
+    ))
+    group.add(new THREE.Mesh(
+      new THREE.RingGeometry(radius * .84, radius, 56),
+      new THREE.MeshBasicMaterial({ color: colour, transparent: true, opacity: .9, side: THREE.DoubleSide }),
+    ))
+    if (hatch) {
+      const vertices: number[] = []
+      for (let y = -radius * .66; y <= radius * .66; y += radius * .19) {
+        const half = Math.sqrt(Math.max(0, radius * radius * .7 - y * y))
+        vertices.push(-half, y, .025, half, y, .025)
+      }
+      const lines = new THREE.LineSegments(
+        new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3)),
+        new THREE.LineBasicMaterial({ color: colour, transparent: true, opacity: .38 }),
+      )
+      lines.rotation.z = -.34
+      group.add(lines)
+    }
+    return group
+  }
+
+  private pointAt(t: number, from = this.giverPoint, to = this.receiverPoint, lift = 2.9) {
+    return new THREE.Vector3(
+      THREE.MathUtils.lerp(from.x, to.x, t),
+      THREE.MathUtils.lerp(from.y, to.y, t) + Math.sin(Math.PI * t) * lift,
+      THREE.MathUtils.lerp(from.z, to.z, t),
+    )
+  }
+
+  private partyRows(): SceneRow[] {
+    return this.flow.partyShares.map((row) => ({
+      label: row.node.label,
+      total: row.total,
+      colour: row.node.colour || this.partyColour,
+    }))
+  }
+
+  private industryRows(): SceneRow[] {
+    const donors = new Map(this.flow.graph.nodes.filter((node) => node.kind === 'donor').map((node) => [node.id, node]))
+    const totals = new Map<string, number>()
+    for (const edge of this.flow.contextEdges) {
+      const donor = donors.get(edge.source)
+      const group = donor?.group || donor?.industry || 'other'
+      totals.set(group, (totals.get(group) || 0) + (Number(edge.total) || 0))
+    }
+    return [...totals].map(([group, total]) => ({
+      label: labelForIndustry(group, this.helpers), total, colour: clusterColour(group).colour,
+    })).sort((a, b) => b.total - a.total)
+  }
+
+  private buildWhoGives() {
+    if (this.detail.kind === 'party') {
+      const rows = this.industryRows().slice(0, 7)
+      const max = Math.max(...rows.map((row) => row.total), 1)
+      const vertices: number[] = []
+      rows.forEach((row, index) => {
+        const y = rows.length === 1 ? -.55 : 1.45 - index * (2.95 / Math.max(1, rows.length - 1))
+        const position = new THREE.Vector3(-3.42 + (index % 2) * .22, y, 0)
+        const scale = .48 + .46 * Math.sqrt(row.total / max)
+        const medallion = this.makeHatchedMedallion(row.colour, .34)
+        medallion.position.copy(position)
+        medallion.scale.setScalar(scale)
+        this.whoGroup.add(medallion)
+        for (let point = 0; point < 18; point++) {
+          const curve = this.pointAt(point / 17, position, this.receiverPoint, 1.05 + index * .08)
+          vertices.push(curve.x, curve.y, -.03)
+          if (point > 0 && point < 17) vertices.push(curve.x, curve.y, -.03)
+        }
+      })
+      if (vertices.length) this.whoGroup.add(new THREE.LineSegments(
+        new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3)),
+        new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .18 }),
+      ))
+      return
+    }
+
+    const aggregate = sumEdges(this.flow.contextEdges)
+    const receiptCount = [...aggregate.years.values()].reduce((sum, cell) => sum + Math.max(0, Math.round(cell[1])), 0)
+    const positions = new Float32Array(receiptCount * 3)
+    const sizes = new Float32Array(receiptCount)
+    let cursor = 0
+    for (let year = FIRST_YEAR; year <= LAST_YEAR; year++) {
+      const cell = aggregate.years.get(year) || [0, 0]
+      const count = Math.max(0, Math.round(cell[1]))
+      const average = count ? cell[0] / count : 0
+      const yearAngle = Math.PI / 2 - ((year - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR + 1)) * Math.PI * 2
+      for (let index = 0; index < count; index++) {
+        const radial = .62 + this.seeded(cursor, 1) * .58
+        const angle = yearAngle + (this.seeded(cursor, 2) - .5) * .17
+        positions[cursor * 3] = this.whoGiverPoint.x + Math.cos(angle) * radial
+        positions[cursor * 3 + 1] = this.whoGiverPoint.y + Math.sin(angle) * radial
+        positions[cursor * 3 + 2] = -.04 + this.seeded(cursor, 3) * .07
+        sizes[cursor] = THREE.MathUtils.clamp(1.7 + Math.log10(average + 1) * .68, 2.2, 5.7)
+        cursor++
+      }
+    }
+    const seedGeometry = new THREE.BufferGeometry()
+    seedGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    seedGeometry.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1))
+    const seedPoints = new THREE.Points(seedGeometry, this.makePointMaterial(this.giverColour, .32, true))
+    seedPoints.frustumCulled = false
+    this.whoGroup.add(seedPoints)
+
+    const clockVertices: number[] = []
+    for (let year = FIRST_YEAR; year <= LAST_YEAR; year++) {
+      const angle = Math.PI / 2 - ((year - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR + 1)) * Math.PI * 2
+      const inner = year === FIRST_YEAR || year === LAST_YEAR ? 1.27 : 1.23
+      clockVertices.push(
+        this.whoGiverPoint.x + Math.cos(angle) * inner, this.whoGiverPoint.y + Math.sin(angle) * inner, -.08,
+        this.whoGiverPoint.x + Math.cos(angle) * 1.32, this.whoGiverPoint.y + Math.sin(angle) * 1.32, -.08,
+      )
+    }
+    this.whoGroup.add(new THREE.LineSegments(
+      new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(clockVertices, 3)),
+      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .28 }),
+    ))
+
+    const rows = this.partyRows().slice(0, 7)
+    const max = Math.max(...rows.map((row) => row.total), 1)
+    const branchVertices: number[] = []
+    rows.forEach((row, index) => {
+      const y = rows.length === 1 ? -.62 : 1.42 - index * (2.9 / Math.max(1, rows.length - 1))
+      const position = new THREE.Vector3(3.46 - (index % 2) * .18, y, 0)
+      const scale = .54 + .78 * Math.sqrt(row.total / max)
+      const medallion = this.makeHatchedMedallion(row.colour, .34, false)
+      medallion.position.copy(position)
+      medallion.scale.setScalar(scale)
+      this.whoGroup.add(medallion)
+      for (let point = 0; point < 18; point++) {
+        const curve = this.pointAt(point / 17, this.whoGiverPoint, position, 1.45 + index * .07)
+        branchVertices.push(curve.x, curve.y, -.06)
+        if (point > 0 && point < 17) branchVertices.push(curve.x, curve.y, -.06)
+      }
+    })
+    if (branchVertices.length) this.whoGroup.add(new THREE.LineSegments(
+      new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(branchVertices, 3)),
+      new THREE.LineBasicMaterial({ color: this.giverColour, transparent: true, opacity: .14 }),
+    ))
+  }
+
+  private buildHistory() {
+    const years = LAST_YEAR - FIRST_YEAR + 1
+    const elections = new Set(this.helpers.electionYears || [])
+    const staticSegments = 1 + years + elections.size
+    const positions = new Float32Array(staticSegments * 2 * 3)
+    const baselineY = -2.16
+    const xAt = (year: number) => -3.5 + ((year - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR)) * 7
+    const max = Math.max(...[...this.flow.years.values()].map((cell) => cell[0]), 1)
+    let offset = 0
+    for (let index = 0; index < years; index++) {
+      const year = FIRST_YEAR + index
+      this.historyTargets[index] = Math.sqrt((this.flow.years.get(year)?.[0] || 0) / max) * 1.08
+      positions[offset++] = xAt(year)
+      positions[offset++] = baselineY
+      positions[offset++] = 0
+      positions[offset++] = xAt(year)
+      positions[offset++] = baselineY
+      positions[offset++] = 0
+    }
+    positions[offset++] = -3.56
+    positions[offset++] = baselineY
+    positions[offset++] = -.02
+    positions[offset++] = 3.56
+    positions[offset++] = baselineY
+    positions[offset++] = -.02
+    for (const year of elections) {
+      if (year < FIRST_YEAR || year > LAST_YEAR) continue
+      positions[offset++] = xAt(year)
+      positions[offset++] = baselineY - .05
+      positions[offset++] = .02
+      positions[offset++] = xAt(year)
+      positions[offset++] = baselineY + .17
+      positions[offset++] = .02
+    }
+    const geometry = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    this.historyGroup.add(new THREE.LineSegments(
+      geometry,
+      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .54 }),
+    ))
+    return { geometry, positions }
+  }
+
+  private updateHistory(cutoff: number) {
+    const baselineY = -2.16
+    for (let index = 0; index < this.historyTargets.length; index++) {
+      const year = FIRST_YEAR + index
+      this.historyPositions[index * 6 + 4] = baselineY + (year <= cutoff ? this.historyTargets[index] : 0)
+    }
+    ;(this.historyGeometry.getAttribute('position') as THREE.BufferAttribute).needsUpdate = true
+  }
+
+  private setLabels(labels: SceneLabel[]) {
+    this.labelLayer.replaceChildren()
+    this.labels = labels.map((label) => {
+      const element = el('span', `explain-scene-label ${label.className || ''}`.trim(), label.text)
+      this.labelLayer.append(element)
+      return { ...label, element }
+    })
+    this.updateLabels()
+  }
+
+  private labelsForStep(step: number): SceneLabel[] {
+    if (step === 0) {
+      if (this.detail.kind === 'party') {
+        const rows = this.industryRows().slice(0, 7)
+        return rows.map((row, index) => ({
+          text: row.label,
+          position: new THREE.Vector3(-3.0 + (index % 2) * .2, rows.length === 1 ? -.55 : 1.45 - index * (2.95 / Math.max(1, rows.length - 1)), .08),
+          className: 'destination', align: 'start', offsetX: 5,
+        }))
+      }
+      const rows = this.partyRows().slice(0, 7)
+      return [
+        { text: '1998', position: new THREE.Vector3(this.whoGiverPoint.x, this.whoGiverPoint.y + 1.43, .08), className: 'clock', align: 'middle' },
+        ...rows.map((row, index) => ({
+          text: stageShortLabel(row.label),
+          position: new THREE.Vector3(3.02 - (index % 2) * .18, rows.length === 1 ? -.62 : 1.42 - index * (2.9 / Math.max(1, rows.length - 1)), .08),
+          className: 'destination', align: 'end' as const, offsetX: -5,
+        })),
+      ]
+    }
+    if (step === 1) {
+      const xAt = (year: number) => -3.5 + ((year - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR)) * 7
+      const elections = (this.helpers.electionYears || []).filter((year) => year >= FIRST_YEAR && year <= LAST_YEAR)
+      const peakHeight = this.flow.peakYear
+        ? this.historyTargets[this.flow.peakYear - FIRST_YEAR] || 0
+        : 0
+      return [
+        ...elections.map((year) => ({
+          text: String(year), position: new THREE.Vector3(xAt(year), -2.34, .05),
+          className: 'election', align: 'middle' as const,
+        })),
+        ...(this.flow.peakYear ? [{
+          text: `${this.flow.peakYear} · ${this.helpers.fmtMoney(this.flow.peakAmount)}`,
+          position: new THREE.Vector3(xAt(this.flow.peakYear), -2.16 + peakHeight + .18, .06),
+          className: 'peak', align: 'middle' as const,
+        }] : []),
+      ]
+    }
+    return []
+  }
+
+  private updateLabels() {
+    const width = this.host.clientWidth
+    const height = this.host.clientHeight
+    if (!width || !height) return
+    this.camera.updateMatrixWorld()
+    for (const label of this.labels) {
+      const projected = label.position.clone().project(this.camera)
+      const x = (projected.x * .5 + .5) * width + (label.offsetX || 0)
+      const y = (-projected.y * .5 + .5) * height + (label.offsetY || 0)
+      const translateX = label.align === 'start' ? '0%' : label.align === 'end' ? '-100%' : '-50%'
+      label.element.style.left = `${x.toFixed(1)}px`
+      label.element.style.top = `${y.toFixed(1)}px`
+      label.element.style.transform = `translate(${translateX},-50%)`
+      label.element.hidden = projected.z < -1 || projected.z > 1
+    }
   }
 
   private resize() {
-    const host = this.canvas.parentElement
-    if (!host) return
-    const width = Math.max(1, host.clientWidth)
-    const height = Math.max(1, host.clientHeight)
+    const width = Math.max(1, this.host.clientWidth)
+    const height = Math.max(1, this.host.clientHeight)
     this.renderer.setSize(width, height, false)
     this.aspect = width / height
+    this.narrow = width <= 700
     this.camera.aspect = this.aspect
     this.camera.updateProjectionMatrix()
-    this.targetZ = this.baseTargetZ * Math.max(1, 1.3 / this.aspect)
+    this.targetZ = this.baseTargetZ * Math.max(1, 1.26 / this.aspect)
     this.draw(performance.now())
   }
 
@@ -556,7 +903,8 @@ class FlowScene {
     this.start = performance.now()
     if (this.motion.matches) {
       this.year = LAST_YEAR
-      this.yearAmount = this.years.get(this.year)?.[0] || 0
+      this.yearAmount = this.flow.years.get(this.year)?.[0] || 0
+      this.updateHistory(LAST_YEAR)
       this.onYear?.(this.year, this.yearAmount)
     }
     this.ensureLoop()
@@ -569,25 +917,37 @@ class FlowScene {
     if (this.visible) this.ensureLoop()
   }
 
-  setStep(step: number, years: Map<number, YearCell>) {
+  setStep(step: number) {
     this.step = step
-    this.years = years
-    this.baseTargetZ = [11.5, 10.3, 11.2, 12, 12.5][step] || 12
-    this.targetZ = this.baseTargetZ * Math.max(1, 1.3 / this.aspect)
-    this.maxYearAmount = Math.max(...[...years.values()].map((cell) => cell[0]), 1)
+    this.host.dataset.explainStep = String(step)
+    this.baseTargetZ = [11.45, 10.65, 11.1, 11.9, 12.3][step] || 11.8
+    this.targetCameraX = [0, 0, .08, -.08, 0][step] || 0
+    this.targetCameraY = [.12, .02, .13, .2, .16][step] || .16
+    this.targetZ = this.baseTargetZ * Math.max(1, 1.26 / this.aspect)
+    this.maxYearAmount = Math.max(...[...this.flow.years.values()].map((cell) => cell[0]), 1)
+    this.start = performance.now()
+    this.whoGroup.visible = step === 0
+    this.mainArc.visible = step !== 0
+    this.mainArrow.visible = step !== 0
+    this.historyGroup.visible = step === 1
+    this.travelling.visible = step === 1 || step === 3 || step === 4
+    this.giverGroup.visible = step !== 0 || this.detail.kind !== 'party'
+    this.giverGroup.position.x = step === 0 && this.detail.kind !== 'party' ? this.whoGiverPoint.x : this.giverPoint.x
+    this.receiverGroup.visible = step !== 0 || this.detail.kind === 'party'
+    this.arcMaterial.opacity = step === 4 ? .16 : step === 3 ? .27 : step === 0 ? .26 : .46
+    this.travellingMaterial.uniforms.uAlpha.value = step === 1 ? .58 : .22
     if (step === 1) {
-      this.start = performance.now()
       this.year = this.motion.matches ? LAST_YEAR : FIRST_YEAR
-      this.yearAmount = this.years.get(this.year)?.[0] || 0
+      this.yearAmount = this.flow.years.get(this.year)?.[0] || 0
+      this.updateHistory(this.year)
       this.onYear?.(this.year, this.yearAmount)
-    }
-    else {
+    } else {
       this.year = LAST_YEAR
-      this.yearAmount = [...years.values()].reduce((sum, cell) => sum + cell[0], 0)
+      this.yearAmount = this.flow.years.get(LAST_YEAR)?.[0] || 0
+      this.updateHistory(LAST_YEAR)
       this.onYear?.(this.year, this.yearAmount)
     }
-    this.arcMaterial.opacity = step === 4 ? .2 : step === 3 ? .28 : .42
-    this.particleMaterial.uniforms.uAlpha.value = step === 1 ? .44 : .25
+    this.setLabels(this.labelsForStep(step))
     this.ensureLoop()
   }
 
@@ -603,38 +963,51 @@ class FlowScene {
   private frame = (now: number) => {
     this.raf = 0
     if (this.destroyed || !this.visible) return
-    this.draw(now)
+    if (!this.narrow || now - this.lastPaint >= 32) this.draw(now)
     this.raf = requestAnimationFrame(this.frame)
   }
 
   private draw(now: number) {
     if (this.destroyed) return
-    this.currentZ += (this.targetZ - this.currentZ) * (this.motion.matches ? 1 : .075)
-    this.camera.position.z = this.currentZ
+    this.lastPaint = now
+    const still = this.motion.matches
+    const ease = still ? 1 : .065
+    this.currentZ += (this.targetZ - this.currentZ) * ease
+    this.currentCameraX += (this.targetCameraX - this.currentCameraX) * ease
+    this.currentCameraY += (this.targetCameraY - this.currentCameraY) * ease
     const elapsed = (now - this.start) / 1000
-    if (this.step === 1 && !this.motion.matches) {
-      const progress = Math.min(1, elapsed / 7)
+    const drift = still ? 0 : Math.sin(now * .00012) * .035
+    this.camera.position.set(this.currentCameraX + drift, this.currentCameraY, this.currentZ)
+
+    let historyComplete = still
+    if (this.step === 1 && !still) {
+      const progress = Math.min(1, elapsed / 7.2)
+      historyComplete = progress >= 1
       const nextYear = Math.min(LAST_YEAR, FIRST_YEAR + Math.floor(progress * (LAST_YEAR - FIRST_YEAR + 1)))
       if (nextYear !== this.year) {
         this.year = nextYear
-        this.yearAmount = this.years.get(this.year)?.[0] || 0
+        this.yearAmount = this.flow.years.get(this.year)?.[0] || 0
+        this.updateHistory(this.year)
         this.onYear?.(this.year, this.yearAmount)
       }
     }
-    const flowT = this.motion.matches ? .84 : (elapsed % 7) / 7
+
+    const ratio = Math.max(0, this.yearAmount) / this.maxYearAmount
     const desired = this.step === 1
-      ? Math.max(1, Math.round(4 + 42 * Math.sqrt(Math.max(0, this.yearAmount) / this.maxYearAmount)))
-      : this.step === 4 ? 5 : 16
+      ? historyComplete ? 10 : Math.max(1, Math.round(2 + 58 * ratio))
+      : this.step === 4 ? 4 : this.step === 3 ? 10 : 0
     const count = Math.min(72, desired)
-    for (let i = 0; i < count; i++) {
-      const t = this.motion.matches ? Math.min(.88, .16 + i * .048) : (flowT + i / Math.max(count, 1)) % 1
+    const flowT = still ? .82 : (elapsed % (historyComplete ? 9 : 2.8)) / (historyComplete ? 9 : 2.8)
+    for (let index = 0; index < count; index++) {
+      const t = still ? Math.min(.88, .13 + index * .07) : (flowT + index / Math.max(count, 1)) % 1
       const point = this.pointAt(t)
-      this.particlePositions[i * 3] = point.x
-      this.particlePositions[i * 3 + 1] = point.y
-      this.particlePositions[i * 3 + 2] = .03
+      this.travellingPositions[index * 3] = point.x
+      this.travellingPositions[index * 3 + 1] = point.y
+      this.travellingPositions[index * 3 + 2] = .07
     }
-    ;(this.particleGeometry.getAttribute('position') as THREE.BufferAttribute).needsUpdate = true
-    this.particleGeometry.setDrawRange(0, count)
+    ;(this.travellingGeometry.getAttribute('position') as THREE.BufferAttribute).needsUpdate = true
+    this.travellingGeometry.setDrawRange(0, count)
+    this.updateLabels()
     this.renderer.render(this.scene, this.camera)
   }
 
@@ -649,12 +1022,17 @@ class FlowScene {
     this.motion.removeEventListener('change', this.motionChanged)
     document.removeEventListener('visibilitychange', this.visibilityChanged)
     this.scene.traverse((object) => {
-      const mesh = object as THREE.Mesh
-      mesh.geometry?.dispose?.()
-      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
-      for (const material of materials) material?.dispose?.()
+      const drawable = object as THREE.Mesh
+      drawable.geometry?.dispose?.()
+      const materials = Array.isArray(drawable.material) ? drawable.material : [drawable.material]
+      for (const material of materials) {
+        const map = (material as THREE.Material & { map?: THREE.Texture }).map
+        map?.dispose()
+        material?.dispose?.()
+      }
     })
     this.renderer.dispose()
+    this.labelLayer.remove()
     this.canvas.remove()
   }
 }
@@ -702,7 +1080,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       next.disabled = step === STEP_NAMES.length - 1
       next.textContent = step === STEP_NAMES.length - 2 ? 'Read the limits' : 'Next'
     }
-    scene?.setStep(step, flow.years)
+    scene?.setStep(step)
     if (yearLabel) yearLabel.hidden = step !== 1
 
     const heading = el('h2', '', STEP_NAMES[step])
@@ -888,7 +1266,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     // No WebGL (a locked-down browser, a failed context): the stage stays a
     // paper panel and the figures and the record below still tell the story.
     try {
-      scene = new FlowScene(stage, giverColour, partyColour)
+      scene = new FlowScene(stage, resolved, detail, giverColour, partyColour, helpers)
     } catch {
       scene = null
       stage.querySelector('canvas.explain-canvas')?.remove()
