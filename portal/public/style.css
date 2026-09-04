@@ -1055,7 +1055,18 @@ button.link.result-title:hover { color: var(--bronze-ink); }
     -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent); mask-image: linear-gradient(to bottom, #000 72%, transparent);
   }
   .search-answer.is-clamped .answer-readmore { display: inline-block; }
+  /* While the summary streams in, the folded box already stands at its full
+     height so the results below hold still; the skeleton marks the wait. */
+  .search-answer.is-loading .answer-compact { min-height: 9.9em; }
 }
+.answer-skeleton { display: grid; gap: 0.7em; padding-top: 0.35em; }
+.answer-skeleton i {
+  display: block; height: 0.8em; border-radius: 2px;
+  background: linear-gradient(100deg, var(--paper-sunken, #F1EFE8) 40%, var(--paper-raised) 50%, var(--paper-sunken, #F1EFE8) 60%);
+  background-size: 200% 100%; animation: answer-skeleton 1.6s linear infinite;
+}
+@keyframes answer-skeleton { from { background-position: 120% 0; } to { background-position: -80% 0; } }
+@media (prefers-reduced-motion: reduce) { .answer-skeleton i { animation: none; } }
 .answer-readmore {
   display: none; margin: 0.1rem 0 0.85rem; padding: 0; border: 0; background: none;
   font: inherit; font-size: 0.875rem; color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer;

@@ -6184,23 +6184,49 @@ let searchAnswerWanted = false; // an ask runs beside this search (there was a q
 const SEARCH_ANSWER_FOLD_QUERY = "(max-width: 1099px)";
 function resetSearchAnswerFold() {
   const box = $("search-answer");
+  const body = $("search-answer-body");
   const btn = $("search-answer-readmore");
-  box.classList.remove("is-clamped");
+  const narrow = window.matchMedia(SEARCH_ANSWER_FOLD_QUERY).matches;
+  // Phones: the card is clamped from the first character and holds its
+  // folded height while it waits (a hairline skeleton stands in), so the
+  // results underneath never move and nothing is shown whole then folded.
+  box.classList.toggle("is-clamped", narrow);
+  box.classList.toggle("is-loading", narrow);
+  if (narrow) {
+    const sk = document.createElement("div");
+    sk.className = "answer-skeleton";
+    sk.setAttribute("aria-hidden", "true");
+    sk.append(...[92, 100, 96, 60].map((w) => { const b = document.createElement("i"); b.style.width = `${w}%`; return b; }));
+    body.replaceChildren(sk);
+  }
   if (btn) { btn.hidden = true; btn.setAttribute("aria-expanded", "false"); }
 }
-function foldSearchAnswer() {
+function searchAnswerArrived() {
+  const box = $("search-answer");
+  box.classList.remove("is-loading");
+  $("search-answer-body").querySelector(".answer-skeleton")?.remove();
+}
+function offerSearchAnswerReadMore() {
   const box = $("search-answer");
   const body = $("search-answer-body");
   const btn = $("search-answer-readmore");
-  if (!btn || !window.matchMedia(SEARCH_ANSWER_FOLD_QUERY).matches) return;
-  box.classList.add("is-clamped");
-  if (body.scrollHeight <= body.clientHeight + 8) { box.classList.remove("is-clamped"); return; }
+  if (!btn || !box.classList.contains("is-clamped") || !btn.hidden) return;
+  if (body.scrollHeight <= body.clientHeight + 8) return;
   btn.hidden = false;
   btn.onclick = () => {
     box.classList.remove("is-clamped");
     btn.hidden = true;
     btn.setAttribute("aria-expanded", "true");
   };
+}
+function foldSearchAnswer() {
+  const box = $("search-answer");
+  const body = $("search-answer-body");
+  searchAnswerArrived();
+  if (!box.classList.contains("is-clamped")) return;
+  // A short summary needs no fold: let it stand whole.
+  if (body.scrollHeight <= body.clientHeight + 8) { box.classList.remove("is-clamped"); $("search-answer-readmore").hidden = true; return; }
+  offerSearchAnswerReadMore();
 }
 
 async function runSearchAnswer(q, f, mySeq) {
@@ -6247,8 +6273,10 @@ async function runSearchAnswer(q, f, mySeq) {
           clearTimeout(searchAnswerStill);
           hideLoader("search-answer-wombat");
           setStatus($("search-answer-status"), "");
+          searchAnswerArrived();
         }
         live.push(text);
+        offerSearchAnswerReadMore();
       },
       retry() {
         if (!mine()) return;
@@ -6260,7 +6288,7 @@ async function runSearchAnswer(q, f, mySeq) {
     live.stop();
     if (!mine()) return;
     const answer = (data.answer || "").trim();
-    if (!answer) { clearTimeout(searchAnswerStill); hideLoader("search-answer-wombat"); box.hidden = true; return; }
+    if (!answer) { clearTimeout(searchAnswerStill); hideLoader("search-answer-wombat"); searchAnswerArrived(); box.hidden = true; return; }
     clearTimeout(searchAnswerStill);
     hideLoader("search-answer-wombat");
     setStatus($("search-answer-status"), "");
