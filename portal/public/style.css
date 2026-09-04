@@ -2688,10 +2688,15 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   #ask-date-ruler .date-ruler-year { font-size: 24px; }
   #ask-date-ruler .date-ruler-key { font-size: 0.75rem; line-height: 1.5; }
 }
+/* The citation mark sits in the text as a true superscript; its 44px touch
+   area is an invisible halo drawn outside the flow, so the line never gaps. */
 #panel-ask .ask-citation, #panel-chat .ask-citation {
-  display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px;
-  padding: 0; border: 0; background: transparent; color: var(--bronze-ink);
-  font: 700 0.6875rem/1 var(--sans); font-variant-numeric: tabular-nums; cursor: pointer;
+  display: inline-block; position: relative; vertical-align: super; min-width: 0; min-height: 0;
+  margin: 0 0.05em 0 0.1em; padding: 0 0.15em; border: 0; background: transparent; color: var(--bronze-ink);
+  font: 700 0.6875rem/0 var(--sans); font-variant-numeric: tabular-nums; cursor: pointer;
+}
+#panel-ask .ask-citation::before, #panel-chat .ask-citation::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; transform: translate(-50%, -50%);
 }
 #panel-ask .source-list li, #panel-chat .source-list li { border-bottom: 1px solid var(--line); padding: 12px 0; scroll-margin-block: 90px; }
 #panel-ask .source-list .source-title, #panel-chat .source-list .source-title { min-height: 44px; text-align: left; }
