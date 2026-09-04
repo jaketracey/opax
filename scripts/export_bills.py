@@ -564,17 +564,22 @@ def act_key(title: str | None) -> str:
     return _TRAILING_YEAR.sub("", norm(title)).strip()
 
 
-def load_acts(db: sqlite3.Connection) -> dict[str, list[dict]]:
+def load_acts(db: sqlite3.Connection) -> tuple[dict[str, list[dict]], dict[str, dict]]:
+    """(base title -> candidates, act_id -> act). `bill_links` names an Act by
+    its FRL id, so the id map is what turns a link into a readable row."""
     idx: dict[str, list[dict]] = collections.defaultdict(list)
+    by_id: dict[str, dict] = {}
     for r in db.execute(
         "SELECT act_id, name, making_date, bill_code FROM ext_frl_acts WHERE name IS NOT NULL"
     ):
-        idx[act_key(r["name"])].append({
+        act = {
             "act_id": r["act_id"], "title": r["name"],
             "assent_date": r["making_date"], "bill_code": r["bill_code"],
             "frl_uri": f"https://www.legislation.gov.au/{r['act_id']}",
-        })
-    return idx
+        }
+        idx[act_key(r["name"])].append(act)
+        by_id[r["act_id"]] = act
+    return idx, by_id
 
 
 def acts_for_bill(bill: dict, act_index: dict[str, list[dict]]) -> list[dict]:
@@ -713,7 +718,7 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
     log(f"divisions: {len(divisions)} federal")
     speeches = load_speech_candidates(db)
     log(f"speech candidates: {len(speeches)}")
-    act_index = load_acts(db)
+    act_index, acts_by_id = load_acts(db)
     sources = load_sources(db, bills, legacy)
     summaries = load_summaries(db)
     links = load_links(db)
@@ -751,9 +756,15 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
         divs = sorted(bill_divisions.get(b["key"], []), key=lambda d: (d["date"] or "", d["key"]))
         spk = sorted(bill_speeches.get(b["key"], []), key=lambda s: (s["date"] or "", s["slug"]))
         acts = acts_for_bill(b, act_index)
-        if not acts and not legacy and links.get(b["key"], {}).get("act"):
-            acts = [{"title": t, "frl_uri": f"https://www.legislation.gov.au/{t}", "assent_date": b.get("assent")}
-                    for t in links[b["key"]]["act"]]
+        if not acts and not legacy:
+            # bill_links names an Act by its FRL id (C2013A00009), so read the
+            # title and the assent date off ext_frl_acts rather than printing
+            # the id where a title belongs.
+            acts = [
+                {"title": a["title"], "frl_uri": a["frl_uri"], "assent_date": a["assent_date"]}
+                for a in (acts_by_id.get(t) for t in links.get(b["key"], {}).get("act", []))
+                if a
+            ]
         summary = summaries.get(b["key"])
         docs.append({
             "key": b["key"],
