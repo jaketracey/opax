@@ -56,7 +56,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=f0d81bf82d">
+<link rel="stylesheet" href="/style.css?v=978f2c9839">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -296,6 +296,7 @@
         <p class="kicker">Answer</p>
         <article id="ask-answer" class="answer" tabindex="-1"></article>
         <p class="answer-stamp" id="ask-stamp"></p>
+        <div id="ask-date-ruler" class="date-ruler" hidden></div>
         <div class="action-row">
           <button type="button" class="action-btn" id="ask-continue"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 4.5h13v9h-7l-3.5 3v-3h-2.5z"/><path d="M7 8h6"/><path d="M7 10.8h4"/></svg><span>Keep asking about this</span></button>
           <button type="button" class="action-btn" id="ask-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link to this question</span></button>
@@ -517,6 +518,7 @@
           <button type="button" class="action-btn" id="search-export"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Export (CSV / BibTeX / RIS)</span></button>
         </span>
       </div>
+      <div id="search-date-ruler" class="date-ruler" hidden></div>
       <ul id="search-results" class="results" role="list"></ul>
       <!-- The band keeps its height whether or not there is a second page, so
            arriving at a short last page does not lift the footer. -->
@@ -914,6 +916,6 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/app.js?v=ef9b46f857" defer></script>
+<script src="/app.js?v=d0aba66a0e" defer></script>
 </body>
 </html>

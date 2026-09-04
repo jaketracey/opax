@@ -343,7 +343,10 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
         .filter(([k]) => !drop.includes(k))
         .sort(([a], [b]) => a.localeCompare(b)),
     ).toString()
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${keyParams(['nocache'])}`))
+  // The response schema includes a histogram of the whole cached retrieval
+  // window. Version the page key so pre-histogram pages cannot hide it for a
+  // cache lifetime after this change ships; the expensive window is reused.
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-v1\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
     await sha256Hex(`${env.CACHE_EPOCH}\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
@@ -379,6 +382,11 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   const pageCount = Math.max(1, Math.ceil(ordered.length / per))
   const clamped = Math.min(page, pageCount)
   const rows = ordered.slice((clamped - 1) * per, clamped * per)
+  const years: Record<string, number> = {}
+  for (const row of win.results) {
+    const year = row.date?.match(/^(\d{4})/)?.[1]
+    if (year && Number(year) >= 1993 && Number(year) <= 2026) years[year] = (years[year] ?? 0) + 1
+  }
   const out = json({
     query: q,
     mode,
@@ -391,6 +399,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     // `truncated` is true the record holds more; the UI must say so.
     total: ordered.length,
     truncated: win.truncated,
+    years,
     count: rows.length,
     results: rows,
   })

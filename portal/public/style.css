@@ -923,6 +923,40 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .results-actions { display: inline-flex; align-items: center; gap: 0.5rem 0.7rem; flex-wrap: wrap; }
 #results-count { font-variant-numeric: tabular-nums; }
 
+/* ---- the record in time ----------------------------------------------- */
+
+.date-ruler { margin: var(--space-5) 0 var(--space-4); max-width: 920px; }
+.date-ruler-heading {
+  margin: 0 0 var(--space-2); color: var(--ink);
+  font: 600 1rem/1.4 var(--serif); letter-spacing: 0; text-transform: none;
+}
+.date-ruler-frame { position: relative; width: 100%; }
+.date-ruler-svg { display: block; width: 100%; height: auto; min-height: 82px; }
+.date-ruler-axis { stroke: var(--line-strong); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.date-ruler-tick { vector-effect: non-scaling-stroke; }
+.date-ruler-tick.is-cited { stroke: var(--bronze-ink); stroke-width: 2; }
+.date-ruler-tick.is-retrieved { stroke: var(--ink-faint); stroke-width: 1; }
+.date-ruler-bar { fill: var(--chart-mark); }
+.date-ruler-year {
+  fill: var(--ink-faint); font: 11px var(--sans); font-variant-numeric: tabular-nums;
+}
+.date-ruler-hits { position: absolute; inset: 0; pointer-events: none; }
+.date-ruler-hit {
+  position: absolute; top: 4px; left: clamp(22px, var(--ruler-x), calc(100% - 22px));
+  width: 44px; height: 52px; transform: translateX(-50%); border-radius: 2px;
+  pointer-events: auto; text-decoration: none;
+}
+.date-ruler-hit:hover { background: var(--bronze-wash); }
+.date-ruler-hit:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: -3px; }
+.date-ruler-key {
+  display: flex; flex-wrap: wrap; gap: var(--space-4); margin: -0.2rem 0 0;
+  color: var(--ink-faint); font-size: 0.75rem;
+}
+.date-ruler-key span { display: inline-flex; align-items: center; gap: 0.45rem; }
+.date-ruler-key i { display: inline-block; width: 1px; height: 10px; background: var(--ink-faint); }
+.date-ruler-key i.is-cited { width: 2px; height: 18px; background: var(--bronze-ink); }
+.date-ruler .fineprint { margin-top: -0.15rem; }
+
 /* Active filters, said out loud under the search box and the ask box. Quieter
    than .chip (these are state, not suggestions), borrowing .map-chip's sunken
    pill. */
@@ -1859,7 +1893,8 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 /* ---- forced colors / high contrast -------------------------------------- */
 
 @media (forced-colors: active) {
-  .scorebar > i, .barrow-track i, .meter-track i { background: CanvasText; }
+  .scorebar > i, .barrow-track i, .meter-track i, .date-ruler-bar { background: CanvasText; fill: CanvasText; }
+  .date-ruler-axis, .date-ruler-tick { stroke: CanvasText; }
   /* Transparent inactive borders survive forced colors, so the active
      underline / left rule keep working; only the hover washes vanish. */
   .megamenu { border-top-width: 3px; }
@@ -1899,6 +1934,8 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   .query-line button.primary { flex: 0 0 auto; min-height: 52px; padding-inline: 1rem; }
   .query-line .ask-options-wrap { flex: 0 0 auto; }
   .chart { padding: 0.75rem; }
+  .date-ruler { margin-top: var(--space-4); }
+  .date-ruler-year { font-size: 10px; }
   .barrow { grid-template-columns: minmax(90px, 30%) 1fr auto; }
   .tile { min-width: 140px; flex-basis: 140px; }
   .tile b { font-size: 1.75rem; }

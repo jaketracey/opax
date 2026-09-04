@@ -15,7 +15,7 @@ let reportsIndex = null;
 // whether a run is a new result set or another page of the one on screen.
 let lastSearch = {
   key: "", query: "", filters: {}, sort: "relevance", results: [],
-  page: 1, perPage: 20, pageCount: 1, total: 0, truncated: false,
+  page: 1, perPage: 20, pageCount: 1, total: 0, truncated: false, years: {},
 };
 let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
@@ -1720,6 +1720,106 @@ function sourceItem(s, num) {
     decorateMetaPortraits(li);
   }
   return li;
+}
+
+// One engraved time scale for answers and searches. The geometry stays fixed
+// at the public corpus window, so a sparse answer and a busy search remain
+// directly comparable rather than each stretching to flatter its own dates.
+const RECORD_FIRST_YEAR = 1993;
+const RECORD_LAST_YEAR = 2026;
+const RULER_LEFT = 16;
+const RULER_RIGHT = 664;
+const RULER_WIDTH = RULER_RIGHT - RULER_LEFT;
+
+function rulerPoint(value) {
+  const m = String(value || "").match(/^(\d{4})(?:-(\d{2})-(\d{2}))?/);
+  if (!m) return null;
+  const year = Number(m[1]);
+  if (year < RECORD_FIRST_YEAR || year > RECORD_LAST_YEAR) return null;
+  const at = Date.UTC(year, Number(m[2] || 7) - 1, Number(m[3] || 1));
+  const start = Date.UTC(RECORD_FIRST_YEAR, 0, 1);
+  const end = Date.UTC(RECORD_LAST_YEAR, 11, 31);
+  const portion = Math.max(0, Math.min(1, (at - start) / (end - start)));
+  const x = RULER_LEFT + portion * RULER_WIDTH;
+  return { x, percent: (x / 680) * 100, year };
+}
+
+function rulerAxisHTML() {
+  return [RECORD_FIRST_YEAR, 2000, 2010, 2020, RECORD_LAST_YEAR].map((year) => {
+    const p = rulerPoint(`${year}-01-01`);
+    const anchor = year === RECORD_FIRST_YEAR ? "start" : year === RECORD_LAST_YEAR ? "end" : "middle";
+    return `<text class="date-ruler-year" x="${p.x.toFixed(2)}" y="73" text-anchor="${anchor}">${year}</text>`;
+  }).join("");
+}
+
+function dateRulerLink({ percent, href, label }) {
+  return `<a class="date-ruler-hit" style="--ruler-x:${percent.toFixed(3)}%" href="${esc(href)}"
+    aria-label="${esc(label)}" title="${esc(label)}"></a>`;
+}
+
+function renderAskDateRuler(sources, isCited) {
+  const box = $("ask-date-ruler");
+  if (!box) return;
+  const entries = (sources || []).map((source) => {
+    const point = rulerPoint(source.date);
+    return point && source.slug ? { source, point, cited: Boolean(isCited(source)) } : null;
+  }).filter(Boolean).sort((a, b) => Number(a.cited) - Number(b.cited));
+  if (!entries.length) { box.replaceChildren(); box.hidden = true; return; }
+  const ticks = entries.map(({ point, cited }) =>
+    `<line class="date-ruler-tick ${cited ? "is-cited" : "is-retrieved"}"
+      x1="${point.x.toFixed(2)}" x2="${point.x.toFixed(2)}" y1="${cited ? 12 : 33}" y2="52"/>`).join("");
+  const links = entries.map(({ source, point, cited }) => dateRulerLink({
+    percent: point.percent,
+    href: `/doc/${encodeURIComponent(source.slug)}`,
+    label: `${cited ? "Cited source" : "Retrieved source"}: ${displayTitle(source)}`,
+  })).join("");
+  box.innerHTML = `
+    <h3 class="date-ruler-heading">When the sources were spoken</h3>
+    <div class="date-ruler-frame">
+      <svg class="date-ruler-svg" viewBox="0 0 680 82" role="img" aria-label="Sources placed on a timeline from 1993 to 2026">
+        <line class="date-ruler-axis" x1="${RULER_LEFT}" x2="${RULER_RIGHT}" y1="52" y2="52"/>
+        ${ticks}${rulerAxisHTML()}
+      </svg>
+      <div class="date-ruler-hits">${links}</div>
+    </div>
+    <p class="date-ruler-key"><span><i class="is-cited"></i>Cited in the answer</span><span><i></i>Retrieved only</span></p>`;
+  box.hidden = false;
+}
+
+function renderSearchDateRuler(years, q, f) {
+  const box = $("search-date-ruler");
+  if (!box) return;
+  const counts = Object.entries(years || {})
+    .map(([year, count]) => [Number(year), Number(count)])
+    .filter(([year, count]) => year >= RECORD_FIRST_YEAR && year <= RECORD_LAST_YEAR && count > 0);
+  if (!counts.length) { box.replaceChildren(); box.hidden = true; return; }
+  const max = Math.max(...counts.map(([, count]) => count), 1);
+  const step = RULER_WIDTH / (RECORD_LAST_YEAR - RECORD_FIRST_YEAR + 1);
+  const bars = counts.map(([year, count]) => {
+    const point = rulerPoint(`${year}-07-01`);
+    const height = Math.max(2, (count / max) * 38);
+    return `<rect class="date-ruler-bar" x="${(point.x - step * 0.38).toFixed(2)}"
+      y="${(52 - height).toFixed(2)}" width="${(step * 0.76).toFixed(2)}" height="${height.toFixed(2)}"/>`;
+  }).join("");
+  const links = counts.map(([year, count]) => {
+    const point = rulerPoint(`${year}-07-01`);
+    return dateRulerLink({
+      percent: point.percent,
+      href: searchHash(q, { ...f, from: String(year), to: String(year) }, 1, lastSearch.sort),
+      label: `Filter to ${year}, ${count.toLocaleString()} ${count === 1 ? "match" : "matches"}`,
+    });
+  }).join("");
+  box.innerHTML = `
+    <h3 class="date-ruler-heading">When these matches were spoken</h3>
+    <div class="date-ruler-frame">
+      <svg class="date-ruler-svg" viewBox="0 0 680 82" role="img" aria-label="Retrieved matches by year from 1993 to 2026">
+        <line class="date-ruler-axis" x1="${RULER_LEFT}" x2="${RULER_RIGHT}" y1="52" y2="52"/>
+        ${bars}${rulerAxisHTML()}
+      </svg>
+      <div class="date-ruler-hits">${links}</div>
+    </div>
+    <p class="fineprint">The shape of the cached retrieval window, not every matching speech in the corpus. Choose a year to filter the search.</p>`;
+  box.hidden = false;
 }
 
 // --- scroll quote rail ------------------------------------------------------
@@ -5068,6 +5168,8 @@ async function runAsk(question) {
   btn.classList.add("btn-loading");
   btn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span>Asking…';
   $("ask-result").hidden = true;
+  $("ask-date-ruler").hidden = true;
+  $("ask-date-ruler").replaceChildren();
   $("ask-chips").hidden = true;
   setFrontPageHidden(true);
   setQuoteRail([]);
@@ -5180,6 +5282,7 @@ async function runAsk(question) {
       `Generated ${fmtDate(localISODate())} · corpus v${corpusVersion()}` +
       ((askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
         ? ` · filtered: ${askFilterSummary(askFilters()) || `${speakerFilter}'s speeches`}` : "");
+    renderAskDateRuler(sources, isCited);
     $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1)));
     $("ask-retrieved").hidden = !alsoList.length;
     $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null)));
@@ -5969,10 +6072,12 @@ function applySearchParams(params) {
 function clearSearchResults() {
   lastSearch = {
     key: "", query: "", filters: {}, sort: "relevance", results: [],
-    page: 1, perPage: SEARCH_PER_PAGE, pageCount: 1, total: 0, truncated: false,
+    page: 1, perPage: SEARCH_PER_PAGE, pageCount: 1, total: 0, truncated: false, years: {},
   };
   $("search-results").replaceChildren();
   $("results-bar").hidden = true;
+  $("search-date-ruler").hidden = true;
+  $("search-date-ruler").replaceChildren();
   $("search-pager").hidden = true;
   $("search-empty").hidden = true;
   $("search-answer").hidden = true;
@@ -6409,7 +6514,12 @@ async function runSearch(page = 1) {
   showLoader("search-wombat", fresh ? "Searching the record." : "Turning the page.");
   // Paging keeps the bar and the pager in place: only the list is swapped, so
   // the page does not collapse and rebuild under the reader.
-  if (fresh) { $("results-bar").hidden = true; $("search-pager").hidden = true; }
+  if (fresh) {
+    $("results-bar").hidden = true;
+    $("search-date-ruler").hidden = true;
+    $("search-date-ruler").replaceChildren();
+    $("search-pager").hidden = true;
+  }
   $("search-results").replaceChildren();
   $("search-chips").hidden = true; // the examples step aside once a search runs
   $("search-empty").hidden = true;
@@ -6424,12 +6534,14 @@ async function runSearch(page = 1) {
       pageCount: data.page_count || 1,
       total: data.total ?? results.length,
       truncated: !!data.truncated,
+      years: data.years || {},
     };
     if (!data.count) {
       hideLoader("search-wombat");
       setStatus($("search-status"), "No results from the record.");
       $("search-status").classList.add("visually-hidden"); // announced; the empty state carries the words
       $("results-bar").hidden = true;
+      $("search-date-ruler").hidden = true;
       $("search-pager").hidden = true;
       renderSearchEmpty(q, f);
       giveUpSearchAnswer();
@@ -6439,6 +6551,7 @@ async function runSearch(page = 1) {
       setStatus($("search-status"), "");
       $("results-count").textContent = resultsCountLine(lastSearch);
       $("results-bar").hidden = false;
+      renderSearchDateRuler(lastSearch.years, q, f);
       renderResults(results);
       renderPager();
       // A stale &page=9 past the end lands on the last real page; correct the
