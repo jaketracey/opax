@@ -1786,6 +1786,14 @@ a.ency-name:hover, a.ency-name:focus-visible {
   .dir-list li.dir-row-plain { grid-template-columns: minmax(0, 1fr); }
   .dir-list li.dir-row .dir-figs { grid-column: 1 / -1; justify-content: flex-start; text-align: left; }
   .dir-list li.dir-row:not(.dir-row-plain) .dir-figs { grid-column: 2; }
+  /* Phones: each entry gets air — taller rows, a breath between the name, the
+     meta line and the figures, and figures that do not crowd each other. */
+  .dir-list li.dir-row { padding: 1.1rem 0; row-gap: 0.55rem; }
+  .dir-name { font-size: 1.125rem; line-height: 1.3; }
+  .dir-main .result-meta { margin-top: 0.35rem; line-height: 1.7; }
+  .dir-main .dir-mark { margin: 0.2rem 0.35rem 0.2rem 0; }
+  .dir-list li.dir-row .dir-figs { gap: 0.55rem 1.5rem; margin-top: 0.2rem; }
+  .dir-fig b { font-size: 1.125rem; }
 }
 /* Declared interests (person pages): a hairline list of register buckets, each
    a chat-sources disclosure with its count at the right; rows are
