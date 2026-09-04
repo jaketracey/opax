@@ -27,6 +27,11 @@ written answer came back". Sent directly to OpenRouter, `reasoning: {enabled: fa
 on the preset (dashboard: presets → opax → add `"reasoning": {"enabled": false}` to the
 config; the presets API is read-only). Verify with a direct `@preset/opax` call:
 `completion_tokens_details.reasoning_tokens` must be 0.
+**Applied 2026-09-04 11:27Z** (preset version 2, edited in the dashboard; the change took
+about two minutes to propagate). After it: /ask ~5 s instead of 12-35 s, `reasoning`
+empty, output tokens 30-120 instead of 600-4,096, no empties in repeated probes. Answers
+read terser than the reasoning-mode ones — if that shows on the site, the lever is the
+ask prompt, not reasoning. `scripts/check_preset_reasoning.py` is the regression check.
 
 Applied via `scripts/arag_byok_openrouter.py`; **rollback is one command**
 (`--rollback` restores the previously pinned `gemini-2.5-flash-lite` and
