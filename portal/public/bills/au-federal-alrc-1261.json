@@ -1,0 +1,267 @@
+{
+ "key": "au-federal-alrc-1261",
+ "title": "Broadcasting Legislation Amendment (Digital Television) Bill 2006",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2006-09-14",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications, Information Technology and the Arts",
+ "status": "passed",
+ "status_as_of": "2006-11-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2006-09-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-09-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-10-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-10-11",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2006-10-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-10-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2006-10-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-10-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-10-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-10-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2006-11-04",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-775305",
+   "speaker": "Sandy Macdonald",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2006-09-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775306",
+   "speaker": "Sandy Macdonald",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2006-09-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775571",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-10-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775572",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-10-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775574",
+   "speaker": "Michael Ronaldson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775654",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-10-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775655",
+   "speaker": "Lyn Allison",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2006-10-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775696",
+   "speaker": "Helen Coonan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775697",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-10-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775698",
+   "speaker": "Helen Coonan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775784",
+   "speaker": "Ian Macdonald",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775867",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775869",
+   "speaker": "Stephen Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-10-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775930",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-10-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775931",
+   "speaker": "Wilson Tuckey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775965",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-10-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776033",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-10-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776034",
+   "speaker": "Peter Garrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-10-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776035",
+   "speaker": "Alex Somlyay",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-18",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Broadcasting Legislation Amendment (Digital Television) Act 2006",
+   "frl_uri": "https://www.legislation.gov.au/C2006A00128",
+   "assent_date": "2006-11-04"
+  }
+ ]
+}

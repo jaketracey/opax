@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-alrc-982",
+ "title": "Authorised Deposit-taking Institutions Supervisory Levy Imposition Amendment Bill 2005",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2004-12-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2005-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2004-12-09",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2004-12-09",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2005-02-08",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2005-02-08",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2005-02-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2005-02-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2005-02-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2005-02-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2005-02-22",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Authorised Deposit-taking Institutions Supervisory Levy Imposition Amendment Act 2005",
+   "frl_uri": "https://www.legislation.gov.au/C2005A00012",
+   "assent_date": "2005-02-22"
+  }
+ ]
+}

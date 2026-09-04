@@ -1,0 +1,273 @@
+{
+ "key": "au-federal-alrc-1716",
+ "title": "Access to Justice (Civil Litigation Reforms) Amendment Bill 2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-06-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2009-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-06-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-08-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-09",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-09-09",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-09-09",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-09-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-10-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-10-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-10-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-10-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2009-11-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2009-12-04",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-793713",
+   "speaker": "Robert McClelland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794308",
+   "speaker": "Roger Price",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795071",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-09-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795072",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-09-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795288",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795316",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795317",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795453",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795454",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795987",
+   "speaker": "Mark Furner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796460",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796461",
+   "speaker": "Steve Hutchins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796462",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796463",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796996",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797157",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797158",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-11-19",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Access to Justice (Civil Litigation Reforms) Amendment Act 2009",
+   "frl_uri": "https://www.legislation.gov.au/C2009A00117",
+   "assent_date": "2009-12-04"
+  }
+ ]
+}

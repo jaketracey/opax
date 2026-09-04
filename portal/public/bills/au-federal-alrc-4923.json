@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-alrc-4923",
+ "title": "Australian Capital Territory (Self-Government) Amendment (Disallowance and Amendment Power of the Commonwealth) Bill 2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-11-26",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2009-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-11-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-26",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-797752",
+   "speaker": "Bob Brown",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2009-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797753",
+   "speaker": "Bob Brown",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2009-11-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-alrc-4985",
+ "title": "Assisting Victims of Overseas Terrorism Bill 2010",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2010-11-26",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2010-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2010-11-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-11-26",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-804154",
+   "speaker": "George Brandis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-804155",
+   "speaker": "George Brandis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-11-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

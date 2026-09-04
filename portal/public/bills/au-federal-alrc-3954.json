@@ -1,0 +1,330 @@
+{
+ "key": "au-federal-alrc-3954",
+ "title": "Excise Tariff Amendment (Carbon Pollution Reduction Scheme) Bill 2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-05-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2009-08-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-03",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-06-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-23",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-11",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-13",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-792583",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793095",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793096",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793120",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793166",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793167",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793364",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793365",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793804",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793805",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2009-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793852",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793853",
+   "speaker": "Rachel Siewert",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2009-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793889",
+   "speaker": "Nigel Scullion",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2009-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793891",
+   "speaker": "Scott Ludlam",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2009-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794256",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794257",
+   "speaker": "John Williams",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794296",
+   "speaker": "Cory Bernardi",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794298",
+   "speaker": "Nick Minchin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794300",
+   "speaker": "Dana Wortley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794384",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794385",
+   "speaker": "Brett Mason",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-08-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794387",
+   "speaker": "Helen Kroger",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-08-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794429",
+   "speaker": "Julian McGauran",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2009-08-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794515",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-13",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

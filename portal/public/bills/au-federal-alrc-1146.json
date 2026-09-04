@@ -1,0 +1,873 @@
+{
+ "key": "au-federal-alrc-1146",
+ "title": "Electoral and Referendum Amendment (Electoral Integrity and Other Measures) Bill 2006",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2005-12-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Special Minister of State",
+ "status": "passed",
+ "status_as_of": "2006-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2005-12-08",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2005-12-08",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-05-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2006-05-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-05-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2006-06-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-06-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-06-21",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2006-06-22",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-2793",
+   "date": "2006-06-19",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Carr’s** ) be agreed to.",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 50,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-19/2"
+  },
+  {
+   "key": "federal-senate-2794",
+   "date": "2006-06-19",
+   "house": "senate",
+   "question": "That the bill be now read a second time.",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 51,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-19/3"
+  },
+  {
+   "key": "federal-senate-2795",
+   "date": "2006-06-19",
+   "house": "senate",
+   "question": "That schedule 1, item 14, stand as printed.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 50,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-19/4"
+  },
+  {
+   "key": "federal-senate-2796",
+   "date": "2006-06-19",
+   "house": "senate",
+   "question": "That schedule 1, items 53 and 54, stand as printed.",
+   "stage": "In committee",
+   "ayes": 50,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 46,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-19/5"
+  },
+  {
+   "key": "federal-senate-2797",
+   "date": "2006-06-20",
+   "house": "senate",
+   "question": "That schedule 1, item 79, stand as printed.",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 48,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-20/1"
+  },
+  {
+   "key": "federal-senate-2798",
+   "date": "2006-06-20",
+   "house": "senate",
+   "question": "Electoral and Referendum Amendment (Electoral Integrity and Other Measures) Bill 2006 - In Committee - Foreign donations & loans",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 48,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-20/2"
+  },
+  {
+   "key": "federal-senate-2804",
+   "date": "2006-06-20",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Milne’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 3,
+   "noes": 51,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 45,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-20/8"
+  },
+  {
+   "key": "federal-senate-2805",
+   "date": "2006-06-20",
+   "house": "senate",
+   "question": "Kim Carr The opposition oppose schedule 1 in the following terms: (1) Schedule 1, items 20, 24, 28, 39 to 45, 51, 52, 104 to 108, **TO BE OPPOSED**. (2) Schedule 1, items 17 to 19, 21 to 23, 25 to 27, 29 to 35, 100 and 101, **TO BE OPPOSED**. (3) Schedule 1, items 47 to 49, 71, 72, 90, 91, 112, 113, 131 and 132, **TO BE OPPOSED**. I will speak to all of those, although I seek to have them voted on separately. John Hogg The votes will be run quite separately as the questions will need to be put separately, Senator Carr. Kim Carr The first area we go to is the question of reducing the enrolment period before the closure of the roll to three days. This proposal is necessary to maintain the status quo. The opposition’s concerns with this legislation go to the fact that, in essence, this is a device by which the government is seeking to restrict the franchise. We say that the bill is aimed at restricting the capacity of Australians to participate in the political system and, as a consequence, it will have the effect of undermining the legitimacy of the electoral system. We argue that the net effect of the changes that restrict access to the roll, by reducing the period of time in which people can re-enrol, may well have the effect of disadvantaging some 430,000 people. Four hundred and thirty thousand Australians may lose their capacity to vote as a result of the actions of this government. Our concern is that, essentially, those are the people who need government the most: the homeless; people who are poor; people who are moving constantly, particularly renters; people who are migrants; people who live in distressed economic circumstances; people who tend to be least engaged in the political system. As a consequence of this government’s actions, their participation in the political system will be restricted. We also maintain that they are people who are most likely to vote Labor. That is the core of the government’s concern about this matter: they believe that this is a",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 48,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-20/9"
+  },
+  {
+   "key": "federal-senate-2806",
+   "date": "2006-06-20",
+   "house": "senate",
+   "question": "That schedule 1 items 17 to 19, 21 to 23, 25 to 27, 29 to 35, 100 and 101 stand as printed.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 48,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-20/10"
+  },
+  {
+   "key": "federal-senate-2807",
+   "date": "2006-06-20",
+   "house": "senate",
+   "question": "That schedule 1 items 47 to 49, 71, 72, 90, 91, 112, 113, 131 and 132 stand as printed.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 48,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-20/11"
+  },
+  {
+   "key": "federal-senate-2808",
+   "date": "2006-06-20",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Murray’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 48,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-20/12"
+  },
+  {
+   "key": "federal-senate-2809",
+   "date": "2006-06-21",
+   "house": "senate",
+   "question": "That the report from the committee be adopted. That the amendment ( **Senator Milne’s** ) be agreed to.",
+   "stage": "Adoption of Report",
+   "ayes": 8,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 45,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-21/1"
+  },
+  {
+   "key": "federal-senate-2810",
+   "date": "2006-06-21",
+   "house": "senate",
+   "question": "That this bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 48,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-21/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-772806",
+   "speaker": "Rod Kemp",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-06-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772807",
+   "speaker": "Rod Kemp",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-06-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773096",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773097",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773180",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773181",
+   "speaker": "Kerry O'Brien",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773218",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773219",
+   "speaker": "Andrew Murray",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2006-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773275",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2006-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773313",
+   "speaker": "Andrew Murray",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2006-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773400",
+   "speaker": "Bob Brown",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2006-06-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773401",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-06-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773402",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-06-21",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral and Referendum Amendment (Electoral Integrity and Other Measures) Act 2006",
+   "frl_uri": "https://www.legislation.gov.au/C2006A00065",
+   "assent_date": "2006-06-22"
+  }
+ ]
+}

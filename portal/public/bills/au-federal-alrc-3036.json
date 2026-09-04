@@ -1,0 +1,1499 @@
+{
+ "key": "au-federal-alrc-3036",
+ "title": "Marriage Amendment (Definition and Religious Freedoms) Bill 2017",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-11-15",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "passed",
+ "status_as_of": "2017-12-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-11-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2017-11-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2017-11-29",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-11-29",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-11-29",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-12-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-12-08",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4991",
+   "date": "2017-11-28",
+   "house": "senate",
+   "question": "Marriage Amendment (Definition and Religious Freedoms) Bill 2017 - in Committee - Religious and conscientious protection",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 6
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 40,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-28/1"
+  },
+  {
+   "key": "federal-senate-4992",
+   "date": "2017-11-28",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping particular parts of [schedule 1](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fbills%2Fs1099_first-senate%2F0001%22;rec=0) unchanged. In parliamentary jargon, they voted for \"*section 39DD and subsection 39DE(3) in item 8, and items 9 to 16 and 57, of schedule 1 [to] stand as printed.*\" This division took place after Liberal Senator [David Fawcett](https://theyvoteforyou.org.au/people/senate/sa/david_fawcett) moved that that parts [be opposed](http://www.openaustralia.org.au/senate/?gid=2017-11-28.16.1). These parts deal with the issue of religious marriage celebrants (including how to identify them), who are allowed to discriminate on the basis of their religious beliefs in certain circumstances. ### Why did some Liberals vote Yes and others No? The Liberal Party was split on this issue, with some voting Yes and others voting No. This split within the party is unusual but, given the nature of the subject matter of the vote, the Liberal Party decided to run this as a free vote, meaning that its members could vote however they chose rather than having to vote along party lines. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd054).",
+   "stage": "In committee",
+   "ayes": 42,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 13
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 40,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-28/2"
+  },
+  {
+   "key": "federal-senate-4994",
+   "date": "2017-11-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments](http://www.openaustralia.org.au/senate/?gid=2017-11-28.147.1) introduced by Liberal Senators [David Fawcett](https://theyvoteforyou.org.au/people/senate/sa/david_fawcett) and [James Paterson](https://theyvoteforyou.org.au/people/senate/victoria/james_paterson). ### What do these amendments do? Senator Paterson [explained three of the most significant amendments](http://www.openaustralia.org.au/senate/?gid=2017-11-28.147.1), which he described as being about freedom of speech, antidetriment and parental rights. ### Why did some Liberals vote Yes and others No? The Liberal Party was split on this issue, with some voting Yes and others voting No. This split within the party is unusual but, given the nature of the subject matter of the vote, the Liberal Party decided to run this as a free vote, meaning that its members could vote however they chose rather than having to vote along party lines. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd054).",
+   "stage": "In committee",
+   "ayes": 20,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 7
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 37,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-28/4"
+  },
+  {
+   "key": "federal-senate-4995",
+   "date": "2017-11-28",
+   "house": "senate",
+   "question": "Marriage Amendment (Definition and Religious Freedoms) Bill 2017 - in Committee - Defence chaplains",
+   "stage": "In committee",
+   "ayes": 20,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 6
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 38,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-28/5"
+  },
+  {
+   "key": "federal-senate-4996",
+   "date": "2017-11-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments](http://www.openaustralia.org.au/senate/?gid=2017-11-28.178.1) introduced by Liberal Senator [James Paterson](https://theyvoteforyou.org.au/people/senate/victoria/james_paterson) (Vic), who [explained](http://www.openaustralia.org.au/senate/?gid=2017-11-28.178.1) that the aim of his amendments is to: > *ensure that charities which are operating today, whether or not they receive public funding, can continue to operate as they do after this law changes. They can continue to seek public funding if they're eligible for it and they can continue to retain their tax status if they're already eligible for it.* ### Why did some Liberals vote Yes and others No? The Liberal Party was split on this issue, with some voting Yes and others voting No. This split within the party is unusual but, given the nature of the subject matter of the vote, the Liberal Party decided to run this as a free vote, meaning that its members could vote however they chose rather than having to vote along party lines. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd054).",
+   "stage": "In committee",
+   "ayes": 22,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 39,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-28/6"
+  },
+  {
+   "key": "federal-senate-4997",
+   "date": "2017-11-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments](http://www.openaustralia.org.au/senate/?gid=2017-11-28.199.1) related to religious organisations that were introduced by Liberal Senator [David Fawcett](https://theyvoteforyou.org.au/people/senate/sa/david_fawcett) (SA) also on behalf of Liberal Senator [James Paterson](https://theyvoteforyou.org.au/people/senate/victoria/james_paterson) (Vic). See Senator Fawcett's [explanation of the amendments](http://www.openaustralia.org.au/senate/?gid=2017-11-28.199.50) for more information. ### Why did some Liberals vote Yes and others No? The Liberal Party was split on this issue, with some voting Yes and others voting No. This split within the party is unusual but, given the nature of the subject matter of the vote, the Liberal Party decided to run this as a free vote, meaning that its members could vote however they chose rather than having to vote along party lines. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd054).",
+   "stage": "In committee",
+   "ayes": 23,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 6
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 39,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-28/7"
+  },
+  {
+   "key": "federal-senate-4998",
+   "date": "2017-11-28",
+   "house": "senate",
+   "question": "The majority voted against an [amendment (1) on sheet 8333](http://www.openaustralia.org.au/senate/?id=2017-11-28.146.2), which was introduced by Liberal Senator [George Brandis](https://theyvoteforyou.org.au/people/senate/queensland/george_brandis) (Qld) also on behalf of Liberal Senator [Matthew Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) (Qld). ### Amendment text > *(1) Page 3 (after line 5), after clause 3, insert:* > *4 Protection of religious freedom* > *Nothing in this Act limits or derogates from the right of any person, in a lawful manner, to manifest his or her religion or belief in worship, observance, practice and teaching.* ### Why did some Liberals vote Yes and others No? The Liberal Party was split on this issue, with some voting Yes and others voting No. This split within the party is unusual but, given the nature of the subject matter of the vote, the Liberal Party decided to run this as a free vote, meaning that its members could vote however they chose rather than having to vote along party lines. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd054).",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 39,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-28/8"
+  },
+  {
+   "key": "federal-senate-4999",
+   "date": "2017-11-28",
+   "house": "senate",
+   "question": "Marriage Amendment (Definition and Religious Freedoms) Bill 2017 - in Committee - Civil celebrants' right to refuse",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 3
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 40,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-28/9"
+  },
+  {
+   "key": "federal-senate-5000",
+   "date": "2017-11-29",
+   "house": "senate",
+   "question": "Marriage Amendment (Definition and Religious Freedoms) Bill 2017 - in Committee - Authorised marriage celebrant",
+   "stage": "In committee",
+   "ayes": 17,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 9,
+     "noes": 6
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 30,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-29/1"
+  },
+  {
+   "key": "federal-senate-5001",
+   "date": "2017-11-29",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping items 5, 8 to 17 and 64 and part 4 of schedule 1 unchanged. In parliamentary jargon, they voted for those items to *stand as printed*. These items were opposed by One Nation Senator [Pauline Hanson](https://theyvoteforyou.org.au/people/senate/queensland/pauline_hanson) (Qld) and they related to who counted as a religious marriage celebrant (as opposed to *civil* celebrant) and what that meant for the application of anti-discrimination laws. Senator Hanson [argued that](http://www.openaustralia.org.au/senate/?gid=2017-11-29.5.1): > *The difference in definition between religious marriage celebrants and civil marriage celebrants is unnecessary. If a marriage celebrant wants to refuse to solemnise a marriage, they should be entitled to do so without recrimination.* ### Why did some Liberals vote Yes and others No? The Liberal Party was split on this issue, with some voting Yes and others voting No. This split within the party is unusual but, given the nature of the subject matter of the vote, the Liberal Party decided to run this as a free vote, meaning that its members could vote however they chose rather than having to vote along party lines. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd054).",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 17,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 9
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 30,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-29/2"
+  },
+  {
+   "key": "federal-senate-5002",
+   "date": "2017-11-29",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](http://www.openaustralia.org.au/senate/?gid=2017-11-29.18.1) which would force state and territory officers to solemnise a marriage where there are no legal impediments (currently the Marriage Act uses the language that those officers *may* solemnise such a marriage). This amendment was introduced by Senator [David Leyonhjelm](https://theyvoteforyou.org.au/people/senate/nsw/david_leyonhjelm) (NSW). ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd054).",
+   "stage": "In committee",
+   "ayes": 3,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 6
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "member": 12,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-29/3"
+  },
+  {
+   "key": "federal-senate-5003",
+   "date": "2017-11-29",
+   "house": "senate",
+   "question": "Marriage Amendment (Definition and Religious Freedoms) Bill 2017 - in Committee - No obligation to solemnise marriage",
+   "stage": "In committee",
+   "ayes": 23,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 4
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 34,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-29/4"
+  },
+  {
+   "key": "federal-senate-5004",
+   "date": "2017-11-29",
+   "house": "senate",
+   "question": "The majority voted against a [amendment](http://www.openaustralia.org.au/senate/?gid=2017-11-29.30.1) introduced by Senator [David Leyonhjelm](https://theyvoteforyou.org.au/people/senate/nsw/david_leyonhjelm), which \"*allows, in a limited way, individuals to discriminate in the private sphere*\". This means the amendment failed. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd054).",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "member": 14,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-29/5"
+  },
+  {
+   "key": "federal-senate-5005",
+   "date": "2017-11-29",
+   "house": "senate",
+   "question": "Marriage Amendment (Definition and Religious Freedoms) Bill 2017 - in Committee - Discrimination based on religious beliefs",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 49,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 34,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-29/6"
+  },
+  {
+   "key": "federal-senate-5006",
+   "date": "2017-11-29",
+   "house": "senate",
+   "question": "Marriage Amendment (Definition and Religious Freedoms) Bill 2017 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 43,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 5
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 31,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-29/7"
+  },
+  {
+   "key": "federal-representatives-5063",
+   "date": "2017-12-06",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2017-12-06.6.1) to adjourn debate. In other words, they put off further discussion on this bill until the next sitting day. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd054).",
+   "stage": "Second reading",
+   "ayes": 73,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-12-06/1"
+  },
+  {
+   "key": "federal-representatives-5073",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "question": "Marriage Amendment (Definition and Religious Freedoms) Bill 2017 - Consideration in Detail - Def of marriage + conscientious protections",
+   "stage": "Consideration in detail",
+   "ayes": 44,
+   "noes": 97,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-12-07/1"
+  },
+  {
+   "key": "federal-representatives-5074",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2017-12-07.28.1) introduced by Liberal MP [Andrew Hastie](https://theyvoteforyou.org.au/people/representatives/canning/andrew_hastie), which means they failed. ### What are the amendments? Hastie MP explained that his amendments are important: > *because they seek to safeguard sincere Australians and entities that, for either conscientious or religion reasons, hold to a relevant marriage belief and directly associated beliefs on family structure, sexual relations and parenting. The amendments impose limitations on the expression of those marriage beliefs in that they must not constitute hate speech. They must not be harassing or threatening on the basis of sexual orientation, gender identity, intersex status or marital or relationship status. They do not give licence to sexual discrimination. They do not permit a person or entity to discriminate against other Australians, as prohibited under the [Sex Discrimination Act 1984](https://en.wikipedia.org/wiki/Sex_Discrimination_Act_1984).* > *These amendments, rather, are a shield for people and organisations that hold to a traditional view of marriage. They are not a sword to be wielded in the service of bigotry.* ### Why did some Coalition MPs vote Yes and others No? The Coalition was split on this issue, with some voting Yes and others voting No. This split within the party is unusual but, given the nature of the subject matter of the vote, the Coalition decided to run this as a free vote, meaning that its members could vote however they chose rather than having to vote along party lines. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse t",
+   "stage": "Consideration in detail",
+   "ayes": 56,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 43,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-12-07/2"
+  },
+  {
+   "key": "federal-representatives-5075",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "question": "Marriage Amendment (Definition and Religious Freedoms) Bill 2017 - Consideration in Detail - Defence appointed celebrants",
+   "stage": "Consideration in detail",
+   "ayes": 60,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 46,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-12-07/3"
+  },
+  {
+   "key": "federal-representatives-5076",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2017-12-07.50.1) introduced by Treasurer [Scott Morrison](https://theyvoteforyou.org.au/people/representatives/cook/scott_morrison), which means they failed. ### What are the amendments? Morrison MP [explained that](https://www.openaustralia.org.au/debate/?id=2017-12-07.50.1) his amendments would make sure that faith based and religious organisations: > *will be able to continue to simply do what they have been doing ... without any question or any doubt about their status, in particular their charitable status, or any doubt or question about their ability to receive public funding for the work that they do, or any doubt that could be expressed on that in terms of them continuing to hold a view about marriage in its traditional understanding. They are simply seeking for the status quo for them to be maintained and to have an assurance.* ### Why did some Coalition MPs vote Yes and others No? The Coalition was split on this issue, with some voting Yes and others voting No. This split within the party is unusual but, given the nature of the subject matter of the vote, the Coalition decided to run this as a free vote, meaning that its members could vote however they chose rather than having to vote along party lines. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bills di",
+   "stage": "Consideration in detail",
+   "ayes": 60,
+   "noes": 82,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 44,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-12-07/4"
+  },
+  {
+   "key": "federal-representatives-5077",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "question": "The majority voted against [amendments (1), (3), (5) and (6)](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1099_amend_8c46e64b-b4be-49de-9608-c3263c34c96a%22;rec=0) introduced by Nationals MP [Andrew Broad](https://theyvoteforyou.org.au/people/representatives/mallee/andrew_broad), which means they failed. ### What were these amendments? Broad MP [explained that](https://www.openaustralia.org.au/debate/?id=2017-12-07.125.1): > *Essentially, what you do in your own home is your own business and how you interpret your own beliefs in your own home is your own business. This, of course, broadens this principle across to a religious organisation that has facilities. What they do in their own facilities is their own business, and their beliefs should not be interpreted by a judge but should be consistent with the values they hold dear.* ### Why did some Coalition MPs vote Yes and others No? The Coalition was split on this issue, with some voting Yes and others voting No. This split within the party is unusual but, given the nature of the subject matter of the vote, the Coalition decided to run this as a free vote, meaning that its members could vote however they chose rather than having to vote along party lines. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bi",
+   "stage": "Consideration in detail",
+   "ayes": 53,
+   "noes": 86,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 39,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-12-07/5"
+  },
+  {
+   "key": "federal-representatives-5078",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2017-12-07.136.1) introduced by Nationals MP [Andrew Broad](https://theyvoteforyou.org.au/people/representatives/mallee/andrew_broad), which means they failed. ### What were the amendments? Broad MP [explained that](https://www.openaustralia.org.au/debate/?id=2017-12-07.136.30): > *This amendment simply seeks to broaden the act that allows faith based schools and faith based churches to determine that the people who are in their employment are consistent with their beliefs. It attempts to broaden that to faith based organisations. Any attempt to diminish the rights of faith based organisations ultimately diminishes society.* ### Why did some Coalition MPs vote Yes and others No? The Coalition was split on this issue, with some voting Yes and others voting No. This split within the party is unusual but, given the nature of the subject matter of the vote, the Coalition decided to run this as a free vote, meaning that its members could vote however they chose rather than having to vote along party lines. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd054).",
+   "stage": "Consideration in detail",
+   "ayes": 61,
+   "noes": 85,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 45,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-12-07/6"
+  },
+  {
+   "key": "federal-representatives-5079",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "question": "Marriage Amendment (Definition and Religious Freedoms) Bill 2017 - Consideration in Detail - Religion & right to refuse",
+   "stage": "Consideration in detail",
+   "ayes": 64,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 47,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-12-07/7"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Marriage Amendment (Definition and Religious Freedoms) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00129",
+   "assent_date": "2017-12-08"
+  }
+ ]
+}

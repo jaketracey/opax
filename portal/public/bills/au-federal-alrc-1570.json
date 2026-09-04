@@ -1,0 +1,388 @@
+{
+ "key": "au-federal-alrc-1570",
+ "title": "Safe Work Australia (Consequential and Transitional Provisions) Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-09-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2008-12-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-09-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-09-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-09-23",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-23",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-10-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-10-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-10-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-10-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2008-10-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-12-18",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-1528",
+   "date": "2008-10-13",
+   "house": "senate",
+   "question": "That the amendments ( **Senator Xenophon’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 56,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-10-13/2"
+  },
+  {
+   "key": "federal-senate-1529",
+   "date": "2008-10-13",
+   "house": "senate",
+   "question": "Rachel Siewert I move Greens amendment (1) on sheet 5593: (1) Clause 26, page 16 (lines 18 to 19), omit “Division 4 allows the Ministerial Council to direct Safe Work Australia to amend either of the final plans.” This amendment relates to strategic and operational plans. As I articulated in my contribution to the second reading debate, this legislation allows the ministerial council to direct changes to strategic and operational plans of Safe Work Australia. We do not believe it is appropriate that the ministerial council should be able to directly alter strategic and operational plans. The members of the ministerial council will have representation on Safe Work Australia and will be participating in the formulation of these plans. We believe that it is unnecessary for the Commonwealth, states and territories to have direct interference in these plans. We believe that it undermines both the independence and the tripartite nature of Safe Work Australia. This amendment should be read in conjunction with Greens amendment (2), which I will move later. It also deals with strategic and operational plans and their finalisation. Basically, it takes out division 4, which allows the ministerial council to direct Safe Work Australia to amend either of the final plans. As I said, we do not believe it is appropriate to allow the ministerial council this level of interference in the operation of SWA. As I said, it undermines both the independence and tripartite approach of SWA. I can already hear the minister thinking aloud that this amendment is contrary to the agreement that was made under the IGA. The same argument stands for me, and that is that the Commonwealth, states and territories have given themselves a nice little cosy arrangement whereby, even if these matters are approved by their representatives, the ministerial council can knock them off. We do not believe that that is an appropriate way to run occupational health and safety in this country and, therefore, we put",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 55,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-10-13/3"
+  },
+  {
+   "key": "federal-senate-1530",
+   "date": "2008-10-13",
+   "house": "senate",
+   "question": "Eric Abetz I indicate that the opposition opposes clause 38(2) and also clause 42(2) as on sheet 5611, in the following terms. They canvass the same matters: (7) Clause 38, page 28 (lines 21 to 29), subclause (2), **TO BE OPPOSED**. (8) Clause 42, page 31 (lines 15 to 29), subclause (2), **TO BE OPPOSED**. Clause 38(1) of the legislation says: At a meeting, a question is decided by a two-thirds majority of the votes of the voting members present and voting. In relation to this legislation we think it is important that there be a general consensus in relation to matters, and therefore a matter being decided by a two-thirds majority seems to have some merit. But the legislation then goes on to say: (2) However, if the question relates to the model OHS legislation or model OHS codes of practice, the question is decided by— the two-thirds majority that I referred to before, and— (b) a majority of the votes of all of the voting members who represent the Commonwealth, States and Territories. I am assuming in my numerical calculation that the chair is in fact deemed not to be a representative of the Commonwealth and I think that would be right. In those circumstances, you would have nine votes representing the Commonwealth, states and territories—that being six for the states, two for the territories and one for the Commonwealth—and a majority of that number would of course be five out of the nine. Therefore, in the event that you had six out of the nine voting against a proposal, you could in fact have six members out of the total 14 able to defeat a matter. We believe that that will potentially give too much power to those state Labor bureaucracies that have been part and parcel of the problem, for the past decade or so, of getting good OH&S legislation in this country. Moving briefly to clause 42 of the legislation, that deals with decisions without meetings, and a similar structure is suggested. The opposition’s view is that the provision ‘a majority of the votes of al",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 56,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-10-13/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-787280",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787776",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787777",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787883",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787884",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787907",
+   "speaker": "Jodie Campbell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787908",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788067",
+   "speaker": "Chris Evans",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788068",
+   "speaker": "Chris Evans",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788444",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788445",
+   "speaker": "Rachel Siewert",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2008-10-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788478",
+   "speaker": "Mary Fisher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-10-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788479",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788480",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-10-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788530",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788531",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-14",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Safe Work Australia (Consequential and Transitional Provisions) Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00157",
+   "assent_date": "2008-12-18"
+  }
+ ]
+}

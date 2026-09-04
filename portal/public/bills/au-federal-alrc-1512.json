@@ -1,0 +1,836 @@
+{
+ "key": "au-federal-alrc-1512",
+ "title": "Tax Laws Amendment (Luxury Car Tax) Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-05-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2008-10-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-05-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-01",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-09-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-09-23",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-09-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2008-09-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-10-03",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-474",
+   "date": "2008-05-28",
+   "house": "representatives",
+   "question": "That this bill be now read a second time. That the question be now put.",
+   "stage": "General) Amendment Bill 2008; a New Tax System (Luxury Car Tax Imposition",
+   "ayes": 69,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 6
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-05-28/1"
+  },
+  {
+   "key": "federal-senate-1474",
+   "date": "2008-06-18",
+   "house": "senate",
+   "question": "Alan Ferguson The question is that proposed reference No. 4 of the Tax Laws Amendment (Luxury Car Tax) Bill 2008 and associated bills be agreed to.",
+   "stage": "Referral to Committees",
+   "ayes": 38,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 56,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-06-18/5"
+  },
+  {
+   "key": "federal-senate-1500",
+   "date": "2008-09-03",
+   "house": "senate",
+   "question": "That these bills be now read a second time.",
+   "stage": "General) Amendment Bill 2008; a New Tax System (Luxury Car Tax Imposition",
+   "ayes": 33,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 55,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-03/5"
+  },
+  {
+   "key": "federal-senate-1501",
+   "date": "2008-09-04",
+   "house": "senate",
+   "question": "That the bills be now read a second time.",
+   "stage": "General) Amendment Bill 2008; a New Tax System (Luxury Car Tax Imposition",
+   "ayes": 32,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 58,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-04/1"
+  },
+  {
+   "key": "federal-senate-1510",
+   "date": "2008-09-22",
+   "house": "senate",
+   "question": "That the Tax Laws Amendment (Luxury Car Tax) Bill 2008, A New Tax System (Luxury Car Tax Imposition—General) Amendment Bill 2008, A New Tax System (Luxury Car Tax Imposition—Customs) Amendment Bill 2008 and A New Tax System (Luxury Car Tax Imposition—Excise) Amendment Bill 2008, be now read a second time. That these bills be now read a second time.",
+   "stage": "General) Amendment Bill 2008; a New Tax System (Luxury Car Tax Imposition",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 54,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-22/2"
+  },
+  {
+   "key": "federal-senate-1511",
+   "date": "2008-09-23",
+   "house": "senate",
+   "question": "That the requests ( **Senator Abetz’s** ) be agreed to.",
+   "stage": "General) Amendment Bill 2008; a New Tax System (Luxury Car Tax Imposition",
+   "ayes": 33,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 58,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-23/1"
+  },
+  {
+   "key": "federal-senate-1513",
+   "date": "2008-09-23",
+   "house": "senate",
+   "question": "That the request ( **Senator Conroy’s** ) be agreed to.",
+   "stage": "General) Amendment Bill 2008; a New Tax System (Luxury Car Tax Imposition",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 55,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-23/3"
+  },
+  {
+   "key": "federal-senate-1514",
+   "date": "2008-09-23",
+   "house": "senate",
+   "question": "That the House of Representatives be requested to make the following amendment: That the request ( **Senator Abetz’s** ) be agreed to.",
+   "stage": "General) Amendment Bill 2008; a New Tax System (Luxury Car Tax Imposition",
+   "ayes": 31,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 57,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-23/4"
+  },
+  {
+   "key": "federal-representatives-521",
+   "date": "2008-09-24",
+   "house": "representatives",
+   "question": "That the requested amendments be made. That the requested amendments be made.",
+   "stage": "Consideration of Senate message",
+   "ayes": 76,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 133,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-09-24/2"
+  },
+  {
+   "key": "federal-senate-1522",
+   "date": "2008-09-25",
+   "house": "senate",
+   "question": "That this bill be now read a third time. That this bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 54,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-25/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-785047",
+   "speaker": "Wayne Swan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785168",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785169",
+   "speaker": "Craig Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785170",
+   "speaker": "Tony Windsor",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2008-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785198",
+   "speaker": "Bruce Scott",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2008-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785690",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785691",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785787",
+   "speaker": "Chris Ellison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785859",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785860",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786928",
+   "speaker": "Kerry O'Brien",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787089",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787090",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787092",
+   "speaker": "Annette Hurley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787229",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787230",
+   "speaker": "David Bushby",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787273",
+   "speaker": "Jan McLucas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787371",
+   "speaker": "Chris Ellison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787385",
+   "speaker": "Mark Bishop",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787762",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787844",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787845",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2008-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787982",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787983",
+   "speaker": "Ron Boswell",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2008-09-22",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax Laws Amendment (Luxury Car Tax) Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00101",
+   "assent_date": "2008-10-03"
+  }
+ ]
+}

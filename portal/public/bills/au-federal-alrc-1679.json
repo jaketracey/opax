@@ -1,0 +1,444 @@
+{
+ "key": "au-federal-alrc-1679",
+ "title": "Appropriation Bill (No. 1) 2009-2010",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-05-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance and Deregulation",
+ "status": "passed",
+ "status_as_of": "2009-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-05-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-05-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-05-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-05-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-05-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-03",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-06-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-06-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-06-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-06-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-06-23",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-23",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2009-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2009-06-30",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-1683",
+   "date": "2009-06-25",
+   "house": "senate",
+   "question": "That these bills be now read a second time. That the amendment ( **Senator Bob Brown’s** ) be agreed to.",
+   "stage": "Second reading",
+   "ayes": 6,
+   "noes": 48,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "member": 1,
+    "dated": 50,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-06-25/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-792393",
+   "speaker": "Wayne Swan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-05-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792623",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792727",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-05-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792728",
+   "speaker": "Joe Hockey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-05-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792824",
+   "speaker": "Roger Price",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792827",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792828",
+   "speaker": "Kay Hull",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2009-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792909",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792910",
+   "speaker": "Mal Washer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792975",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792976",
+   "speaker": "Margaret May",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793045",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793046",
+   "speaker": "Robert Oakeshott",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2009-06-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793115",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793116",
+   "speaker": "Mike Symon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793162",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793222",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793223",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793290",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793291",
+   "speaker": "Yvette D'Ath",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793292",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793433",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793434",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793612",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-18",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 1) 2009-2010",
+   "frl_uri": "https://www.legislation.gov.au/C2009A00063",
+   "assent_date": "2009-06-30"
+  }
+ ]
+}

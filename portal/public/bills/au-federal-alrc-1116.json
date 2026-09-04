@@ -1,0 +1,309 @@
+{
+ "key": "au-federal-alrc-1116",
+ "title": "Aboriginal and Torres Strait Islander Heritage Protection Amendment Bill 2005 [2006]",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2005-10-12",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Heritage",
+ "status": "passed",
+ "status_as_of": "2006-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2005-10-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2005-10-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-08-08",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-08-08",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2006-08-09",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-08-09",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-11-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-11-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2006-12-07",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-2820",
+   "date": "2006-08-08",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Siewert’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 47,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-08-08/1"
+  },
+  {
+   "key": "federal-representatives-334",
+   "date": "2006-11-27",
+   "house": "representatives",
+   "question": "That this bill be now read a second time. That all words after “That” be omitted with a view to substituting the following words: “while not declining to give the bill a second reading, the House: (1) notes that on 20 August 2003, then Leader of the Government in the Senate, Senator Robert Hill, stated in relation to Indigenous heritage protection that the Government recognised the shortcomings in the existing system, that reform was long overdue and that the Government was anxious to have a new and better piece of legislation put in place as quickly as possible; (2) registers its concern that the Howard Government has failed to address the shortcomings in indigenous heritage protection; (3) expresses its concern that the Howard Government has failed to act on the recommendations of the 1996 Evatt Inquiry into the Commonwealth Aboriginal and Torres Strait Islander Heritage Protection Act 1984 ; (4) notes that it is now 10 years since the Evatt Inquiry reported, and calls for a comprehensive review of Indigenous heritage protection; and (5) calls on the Government to support the inclusion of a sunset exemption provision in the bill”. That the words proposed to be omitted ( **Mr Albanese’s** amendment) stand part of the question.",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 124
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-27/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-770460",
+   "speaker": "Jeannie Ferris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-02-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772168",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-05-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772169",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-05-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773688",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773689",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773690",
+   "speaker": "Bob Brown",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2006-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773691",
+   "speaker": "Rod Kemp",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773723",
+   "speaker": "Rachel Siewert",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2006-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775532",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775717",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-10-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775718",
+   "speaker": "Barry Wakelin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776508",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-11-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776509",
+   "speaker": "Barry Haase",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-11-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776830",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776831",
+   "speaker": "Peter Garrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776832",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-11-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aboriginal and Torres Strait Islander Heritage Protection Amendment Act 2006",
+   "frl_uri": "https://www.legislation.gov.au/C2006A00152",
+   "assent_date": "2006-12-07"
+  }
+ ]
+}

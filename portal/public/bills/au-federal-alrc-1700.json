@@ -1,0 +1,310 @@
+{
+ "key": "au-federal-alrc-1700",
+ "title": "Health Insurance Amendment (Extended Medicare Safety Net) Bill 2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-05-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Ageing",
+ "status": "passed",
+ "status_as_of": "2009-10-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-06-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-09-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-09-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2009-09-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2009-10-07",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-1706",
+   "date": "2009-09-09",
+   "house": "senate",
+   "question": "That this bill be now read a second time. That the amendment ( **Senator Cormann’s** ) be agreed to.",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 61,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-09-09/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-792915",
+   "speaker": "Nicola Roxon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793237",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793238",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793264",
+   "speaker": "Kay Hull",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793265",
+   "speaker": "Nicola Roxon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793473",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793474",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794980",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794981",
+   "speaker": "Rachel Siewert",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2009-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795327",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795328",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795814",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-09-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795815",
+   "speaker": "Mathias Cormann",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-09-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795816",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795869",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795870",
+   "speaker": "Nicola Roxon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-17",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Insurance Amendment (Extended Medicare Safety Net) Act 2009",
+   "frl_uri": "https://www.legislation.gov.au/C2009A00101",
+   "assent_date": "2009-10-07"
+  }
+ ]
+}

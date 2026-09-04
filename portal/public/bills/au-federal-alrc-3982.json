@@ -1,0 +1,414 @@
+{
+ "key": "au-federal-alrc-3982",
+ "title": "Carbon Pollution Reduction Scheme Amendment (Household Assistance) Bill 2009 [No. 2]",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-10-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Families, Housing, Community Services and Indigenous Affairs",
+ "status": "lapsed",
+ "status_as_of": "2009-12-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-10-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-10-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-10-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-10-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-11-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-11-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-23",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-11-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-11-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-11-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-11-30",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-12-01",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-12-02",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-1788",
+   "date": "2009-11-30",
+   "house": "senate",
+   "question": "Carbon Pollution Reduction Scheme (CPRS Fuel Credits) Bill 2009 [No. 2] and Carbon Pollution Reduction Scheme Amendment (Household Assistance) Bill 2009 [No. 2] - Third Reading - Read a third time",
+   "stage": "Third reading",
+   "ayes": 31,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 61,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-11-30/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-796266",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796522",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-10-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796523",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-10-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796631",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796632",
+   "speaker": "Peter Slipper",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796683",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796687",
+   "speaker": "Jon Sullivan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-11-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796720",
+   "speaker": "Harry Jenkins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-11-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796735",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-11-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796891",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-11-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797024",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797064",
+   "speaker": "Helen Kroger",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797153",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797154",
+   "speaker": "Kate Lundy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797317",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797318",
+   "speaker": "Stephen Parry",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-11-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797360",
+   "speaker": "Scott Ryan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-11-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797427",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797428",
+   "speaker": "Alan Ferguson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797465",
+   "speaker": "Christine Milne",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2009-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797563",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797564",
+   "speaker": "Steve Fielding",
+   "party": "Family First",
+   "state": "federal",
+   "date": "2009-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797614",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797692",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

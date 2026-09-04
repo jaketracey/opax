@@ -1,0 +1,41 @@
+{
+ "key": "au-federal-alrc-5013",
+ "title": "Government Investment Funds Amendment (Ethical Investments) Bill 2011",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2011-11-24",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2012-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2011-11-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-11-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2012-09-13",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

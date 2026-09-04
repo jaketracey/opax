@@ -1,0 +1,577 @@
+{
+ "key": "au-federal-alrc-1588",
+ "title": "Schools Assistance Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-09-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2008-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-09-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-10-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-11-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-11-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-02",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-02",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-12-02",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-12-02",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2008-12-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-12-11",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-538",
+   "date": "2008-10-21",
+   "house": "representatives",
+   "question": "That the words proposed to be omitted ( **Mr Pyne’s** amendment) stand part of the question.",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 127,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-10-21/1"
+  },
+  {
+   "key": "federal-representatives-539",
+   "date": "2008-10-21",
+   "house": "representatives",
+   "question": "That the amendments ( **Mr Pyne’s** ) be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 55,
+   "noes": 71,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 72
+    },
+    "Liberal": {
+     "ayes": 50,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-10-21/2"
+  },
+  {
+   "key": "federal-senate-1574",
+   "date": "2008-12-02",
+   "house": "senate",
+   "question": "Debate resumed. Helen Kroger I will resume from where I left off earlier on in the day in making some observations about the [Education Legislation Amendment Bill 2008](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/R3057) and the [Schools Assistance Bill 2008](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/R3093). I was referring to an article published in the _Canberra Times_ on 6 November 2008. The author was Rabbi Kennard, who is the Principal of Mount Scopus Memorial College in Melbourne—a very well known school. He made some very pertinent observations. He said: Does the “compulsory” nature of the curriculum mean that Australia will follow the (no doubt caricatured) French model, whereby the minister of education could look at his watch and know what each child throughout his country would be studying? Will it follow the English system, where teachers were told exactly how to spend each minute of the daily “Literacy Hour” and could expect school inspectors to check-up that the first 20 minutes was spent in direct teaching, followed by the correct amount of group work and summation? Or will the curriculum be closer to the Victorian system, which schools highly support? The Victorian Curriculum and Assessment Authority has devised the Victorian Essential Learning Standards, a “curriculum framework” which in detail describes the areas that students must be taught and the standards that they are expected to reach, while still allowing principals and teachers the right to exercise their professional judgment as to how best to achieve these results. Rabbi Kennard, may I proffer, is only one of many principals of independent schools that are mightily concerned about the Schools Assistance Bill 2008. Despite Minister Gillard’s claims of an education revolution in the last 12 months, I have to confess that I am an education revolution sceptic. What she has demonstrated in the la",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 1,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-12-02/1"
+  },
+  {
+   "key": "federal-senate-1575",
+   "date": "2008-12-02",
+   "house": "senate",
+   "question": "[EDUCATION LEGISLATION AMENDMENT BILL 2008](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/R3057) Bill—by leave—taken as a whole. Claire Moore The question is that the bill stand as printed. Question agreed to. [SCHOOLS ASSISTANCE BILL 2008](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/R3093) Bill—by leave—taken as a whole. Ian Macdonald Before we move to the bill, I see the advisers are not yet here. Kim Carr We will help you. Ian Macdonald Minister, you have already indicated that you will give me the assurances which I sought. I thought that if I could get those assurances and just understand on what basis those assurances are given then I will be out of the debate and will leave it to people who have a lot of amendments and other issues to raise. But, Minister, I would not accept you are well versed and competent to do it, and I will say a few things while your officials are getting here. I am very concerned, on advice from those involved, that this bill will mean a massive reduction in funding for Catholic boarding schools, particularly in the diocese of Townsville, which are the schools that educate the greatest number of Indigenous people in Australia. Whilst I do not assume bad faith on the part of the government, and I mentioned that in the debate—my contribution is not political, although the minister was clearly incapable of understanding that and could not help himself but pretend that we were back in the old bullyboy union days where you had to attack anyone who had a view that might be slightly different to yours; my contribution had nothing to do with that—my contribution is to try to assist the government to do what I do not think they meant to do, and that is to ensure that these Indigenous schools do not suffer with respect to funding. On the best advice available to me, the bill before the chamber will mean a substantial reduction in funding not only to Q",
+   "stage": "In committee",
+   "ayes": 4,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 1,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-12-02/2"
+  },
+  {
+   "key": "federal-senate-1576",
+   "date": "2008-12-02",
+   "house": "senate",
+   "question": "That the clause 22 stand as printed.",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 4,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-12-02/3"
+  },
+  {
+   "key": "federal-representatives-567",
+   "date": "2008-12-03",
+   "house": "representatives",
+   "question": "That Senate amendments Nos. 1 to 3 and 5 to 9 be agreed to. That Senate amendment No. 4 be disagreed to. That the question be now put.",
+   "stage": "Consideration of Senate message",
+   "ayes": 69,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-12-03/1"
+  },
+  {
+   "key": "federal-representatives-568",
+   "date": "2008-12-03",
+   "house": "representatives",
+   "question": "That amendment No. 4 be disagreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 69,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-12-03/2"
+  },
+  {
+   "key": "federal-representatives-569",
+   "date": "2008-12-03",
+   "house": "representatives",
+   "question": "That the reasons be adopted.",
+   "stage": "Consideration of Senate message",
+   "ayes": 70,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-12-03/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-788080",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788693",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788694",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-10-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788816",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788817",
+   "speaker": "Chris Trevor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788904",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788905",
+   "speaker": "Julia Irwin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788906",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788907",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788908",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-10-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788911",
+   "speaker": "Bruce Scott",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2008-10-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788912",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-10-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789167",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789168",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790215",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790216",
+   "speaker": "Brett Mason",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790254",
+   "speaker": "Helen Kroger",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790255",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790256",
+   "speaker": "Claire Moore",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790257",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790283",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790550",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Schools Assistance Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00153",
+   "assent_date": "2008-12-11"
+  }
+ ]
+}

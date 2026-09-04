@@ -1,0 +1,367 @@
+{
+ "key": "au-federal-alrc-3958",
+ "title": "Fairer Private Health Insurance Incentives Bill 2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2009-09-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-06-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-09",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-627",
+   "date": "2009-06-02",
+   "house": "representatives",
+   "question": "Fairer Private Health Insurance Incentives Bill 2009 - Second Reading - Keep the original motion unchanged",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-06-02/2"
+  },
+  {
+   "key": "federal-representatives-628",
+   "date": "2009-06-02",
+   "house": "representatives",
+   "question": "Fairer Private Health Insurance Incentives Bill 2009 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-06-02/3"
+  },
+  {
+   "key": "federal-representatives-629",
+   "date": "2009-06-02",
+   "house": "representatives",
+   "question": "Fairer Private Health Insurance Incentives Bill 2009 - Third Reading - Read a third time",
+   "stage": "Third reading",
+   "ayes": 71,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-06-02/4"
+  },
+  {
+   "key": "federal-senate-1709",
+   "date": "2009-09-09",
+   "house": "senate",
+   "question": "Fairer Private Health Insurance Incentives Bill 2009 and related bills - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 54,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-09-09/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-792853",
+   "speaker": "Nicola Roxon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793020",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793021",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-06-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793024",
+   "speaker": "Judi Moylan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-06-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793070",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793091",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793092",
+   "speaker": "Nicola Roxon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793364",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793365",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794715",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794716",
+   "speaker": "Mathias Cormann",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-08-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795376",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795377",
+   "speaker": "Mathias Cormann",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-799129",
+   "speaker": "Kerry O'Brien",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-03-10",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

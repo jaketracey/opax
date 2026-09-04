@@ -1,0 +1,429 @@
+{
+ "key": "au-federal-alrc-1993",
+ "title": "Family Law Legislation Amendment (Family Violence and Other Measures) Bill 2011",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2011-03-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2011-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2011-03-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-03-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-05-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2011-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2011-06-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-06-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-11-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-11-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2011-11-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2011-11-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2011-12-07",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-841",
+   "date": "2011-05-30",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](http://www.openaustralia.org/debate/?id=2011-05-30.50.1) introduced by Liberal MP [Michael Keenan](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Michael_Keenan&mpc=Stirling&house=representatives). This means that they were rejected. Mr Keenan explains that the amendments \"relate to the government's proposed repeal of the criteria misleadingly described as the 'friendly parent' provision.\" That provision \"requires family courts to consider the willingness of one parent towards facilitating the other to have a meaningful relationship with the child\" and has been criticised for potentially discouraging disclosures of family violence. Mr Keenan disputes this criticism and opposes the repeal of the provision.(Read Mr Keenan's full explanation and the related debate [here](http://www.openaustralia.org/debates/?id=2011-05-30.47.1), after 1:35 pm. ) _Background to the bill_ The bill aimed to protect children and families at risk of violence or abuse by amending the _Family Law Act 1975_. To do this, it introduced amendments such as: - prioritising the safety of children in parenting matters; - including harmful behaviour in the definitions of ‘abuse’ and ‘family violence’; - requiring family consultants, family counsellors, family dispute resolution practitioners and legal practitioners to prioritise the safety of children; and - placing additional reporting requirements on certain parties to provide evidence to courts.(Read more about the bill, including its explanatory memorandum, [here](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr4562%22). More information about the background to the bill is in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1011a/Copy_of_11bd001).)",
+   "stage": "Consideration in detail",
+   "ayes": 73,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 70
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2011-05-30/1"
+  },
+  {
+   "key": "federal-representatives-843",
+   "date": "2011-05-30",
+   "house": "representatives",
+   "question": "Michael Keenan by leave—I move amendments (9) and (10), as circulated in my name, together: (9) Schedule 1, item 40, page 14 (lines 14 and 15), omit the item. (10) Schedule 1, item 43, page 14 (lines 27 and 28), omit the item. The bill proposes to repeal section 117AB, which provides for mandatory cost orders, albeit that some such orders might cover only a portion of the costs where a party knowingly made a false allegation in a statement in proceedings. The explanatory memorandum cites the Australian Institute of Family Studies evaluation and the Family Law Council report as finding that the section operates as a disincentive for disclosing family violence. This is misleading. The Chisholm report alludes to practitioner concern as the basis for its recommendation for repeal, but neither of the major studies cited makes any substantive finding. The Family Law Council report in fact recommends that the provisions should be clarified with an explanatory note or with public education. The Australian Institute of Family Studies evaluation found that 67.7 per cent of respondents disagreed with the proposition that the prospect of an adverse costs order has discouraged allegations of violence or child abuse that are genuinely held and/or likely to be true. It should be noted that the test proposed in section 117AB is a stringent one. A mandatory costs order could only arise from the evidence that was not proffered in the circumstances or even was given recklessly or without belief. It only applies—and I think this is very important—to knowingly false evidence. If a court was prepared to make such a finding there is no reason why a costs order should not follow. Individual members of the judiciary have confirmed that such false accusations by no means are unknown and that sanctions must apply in such cases. The courts have provided guidance on the application of the existing provision. In Charles & Charles [2007] Justice Cronin said: There can be no room for misunderstand",
+   "stage": "Consideration in detail",
+   "ayes": 74,
+   "noes": 72,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2011-05-30/3"
+  },
+  {
+   "key": "federal-senate-2171",
+   "date": "2011-11-22",
+   "house": "senate",
+   "question": "Ian Macdonald On a point of order, Mr Deputy President. I raised some questions in the debate which related to Senator Ludwig. He is trying to answer them. I move: _That so much of standing orders be suspended as would prevent the Minister for Agriculture, Fisheries and Forestry (Senator Ludwig) responding to questions raised during the debate by Senator Macdonald._ Question put. The Senate divided [21:46] (The Deputy President-Senator Parry) Question negatived. Stephen Parry The question now is that the bill be read a second time. The Senate divided. [21:50] (The Deputy President-Senator Parry) Question agreed to. Bill read a second time. The question now is that amendments (1) to (6) on sheet BT208 circulated by the government be agreed to. _Government's circulated amendments_ _(1) Clause 2, page 2 (table item 2), omit the table item, substitute:_ _[commencement of Schedule 1]_ _(2) Schedule 1, item 17, page 7 (line 2), omit \"If there is any inconsistency in\", substitute \"In\"._ _[primary considerations]_ _(3) Schedule 1, item 19, page 7 (lines 18 and 19), omit paragraph 60CC (3)(k), substitute:_ _ (k) if a family violence order applies, or has applied, to the child or a member of the child's family-any relevant inferences that can be drawn from the order, taking into account the following:_ _ (i) the nature of the order;_ _ (ii) the circumstances in which the order was made;_ _ (iii) any evidence admitted in proceedings for the order;_ _ (iv) any findings made by the court in, or in proceedings for, the order;_ _ (v) any other relevant matter;_ _(4) Schedule 1, item 22, page 9 (line 21), omit \"if there is any inconsistency\"._ _(5) Schedule 1, item 45, page 15 (line 9), omit \"Subject to item 47, the\", substitute \"The\"._ _(6) Schedule 1, item 45, page 15 (line 11), omit \"whether instituted before,\", substitute \"instituted\"._ Question agreed to. The question now is that amendments (1) to (3) on sheet 7150 circulated by the Australian Greens be agreed to. _Greens_ _'_",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 62,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-11-22/4"
+  },
+  {
+   "key": "federal-senate-2172",
+   "date": "2011-11-22",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 62,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-11-22/5"
+  },
+  {
+   "key": "federal-senate-2173",
+   "date": "2011-11-22",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 62,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-11-22/6"
+  },
+  {
+   "key": "federal-senate-2174",
+   "date": "2011-11-22",
+   "house": "senate",
+   "question": "Stephen Parry The question now is that the remaining stages of the bill be agreed to and the bill be now passed. The Senate divided. [22:06] (The Deputy President—Senator Parry) Question agreed to. Bill read a third time.",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 62,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-11-22/7"
+  },
+  {
+   "key": "federal-representatives-957",
+   "date": "2011-11-24",
+   "house": "representatives",
+   "question": "Anthony Albanese I move: That the amendments be agreed to. Today this chamber considers amendments to the Family Law Legislation Amendment (Family Violence and Other Measures) Bill 2011 passed by the Senate last night. This government is unequivocally of the view that family violence and abuse of children are entirely unacceptable. The amendments respond to recommendations of the Senate Legal and Constitutional Affairs Legislation Committee. These amendments will simplify the bill, deliver certainty for litigants and ensure relevant information about the risk of family violence and abuse of children can be considered by the courts. Amendments (2) and (4) simplify the provisions outlining the relevant weighting to be given in assessing the primary considerations used to determine a child's best interests. They continue to support the principle that the protection of children from harm should be given the most weight in decision making. They do not alter the focus on the child having a meaningful relationship with both parents, particularly where there is no risk of harm to the child. Amendment (2) amends the provisions which govern how the family courts determine what is in the best interests of a child. Amendment (4) ensures that people who are resolving their parenting arrangements outside the family courts, who are the vast majority of parents, also receive clear and consistent advice about how they should determine their child's best interests. Amendment (3) provides for the courts to look, in appropriate cases, at both current and past family violence orders that apply to the children or members of their family. It also recognises that the relevant evidence to consider in assessing a child's best interests relates to the circumstances which led to the making of a family violence order rather than the mere existence of the order itself. Amendments (1), (5) and (6) will in combination deliver certainty to the litigants in the family law system about what law will",
+   "stage": "Consideration of Senate message",
+   "ayes": 72,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2011-11-24/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-805799",
+   "speaker": "Robert McClelland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2011-03-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Family Law Legislation Amendment (Family Violence and Other Measures) Act 2011",
+   "frl_uri": "https://www.legislation.gov.au/C2011A00189",
+   "assent_date": "2011-12-07"
+  }
+ ]
+}

@@ -1,0 +1,1316 @@
+{
+ "key": "au-federal-alrc-4233",
+ "title": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2]",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "lapsed",
+ "status_as_of": "2014-07-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-07-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-08",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-10",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3287",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 80,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-26/4"
+  },
+  {
+   "key": "federal-representatives-3288",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "question": "This division relates to the Policy _[For a carbon price](/policies/3)_. The majority voted against [amendments](http://www.openaustralia.org/debates/?id=2014-06-26.119.2) introduced by Labor MP [Mark Butler](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Mark_Butler&mpc=Port_Adelaide&house=representatives).(Read the amendments and the Government's response to them [here](http://www.openaustralia.org/debates/?id=2014-06-26.119.2). ) This means that they have been rejected. The amendments related to keeping an emissions trading scheme. _Background to the bills_ The [Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 (No. 2)](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5292) was introduced with a number of other related bills to remove the [carbon pricing mechanism](http://en.wikipedia.org/wiki/Carbon_pricing_in_Australia), which was introduced by the Australian Labor Party while in government. The Coalition described the mechanism as a “carbon tax” and removing it was a key policy platform during the 2013 election.(You can read more about the Coalition's policy to remove the carbon price [here](http://www.liberal.org.au/scrapping-carbon-tax-and-reducing-cost-living). ) The carbon pricing mechanism commenced on 1 July 2012.(For more information on the carbon pricing mechanism and how it works, please see the Clean Energy Regulator’s [website](http://www.cleanenergyregulator.gov.au/Carbon-Pricing-Mechanism/About-the-Mechanism/Pages/default.aspx). ) It is an emissions trading scheme that puts a price on carbon emissions. It applies to “liable entities” (a group that includes companies that emit a high level of greenhouse gases). Initially the price of carbon is fixed by the mechanism but from 1 July 2015 the price will be set by the market, though the Labor Government did announce plans to bring this forward to 1 July 2014 just before they were defeated by the Coalition in the 2013 election. This",
+   "stage": "Consideration in detail",
+   "ayes": 46,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-26/5"
+  },
+  {
+   "key": "federal-senate-3293",
+   "date": "2014-07-07",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills - First Reading - Proceed without formality",
+   "stage": "First Reading",
+   "ayes": 32,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 52,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-07/1"
+  },
+  {
+   "key": "federal-senate-3294",
+   "date": "2014-07-07",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills - First Reading - Consider bills together",
+   "stage": "First Reading",
+   "ayes": 32,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 52,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-07/2"
+  },
+  {
+   "key": "federal-senate-3301",
+   "date": "2014-07-09",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills - Declaration of Urgency - Consider these bills urgent",
+   "stage": "Declaration of Urgency",
+   "ayes": 36,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 54,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-09/1"
+  },
+  {
+   "key": "federal-senate-3302",
+   "date": "2014-07-09",
+   "house": "senate",
+   "question": "This division relates to the Policy _[For a carbon price](/policies/3)_. The majority voted against a [motion](http://www.openaustralia.org/senate/?gid=2014-07-09.20.14) moved by Senator [Lisa Singh](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Lisa_Singh&mpc=Senate&house=senate), which means that it was unsuccessful. The motion was an [amendment](http://www.openaustralia.org/senate/?gid=2014-07-07.166.1) to the original motion \"That these bills be now read a [second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html)\" and was the following: _At the end of the motion, add:_ _but the Senate notes_ _(a) the scientific and expert consensus regarding Climate Change;_ _(b) that in its first year, the Clean Energy Future Package:_ _(i) drove a 7% reduction in carbon pollution from electricity generation in the National Electricity Market;_ _(ii) saw renewable energy increase its share of the National Electricity Market by 25%;_ _(iii) delivered the household assistance package to compensate families and individuals for any impact of carbon pricing; and_ _(iv) supported continued economic growth, with over 160,000 jobs created in 2012-13 across the economy, including clean energy jobs;_ _(c) that since the 2013 election Australia's international reputation on climate change action has been damaged by becoming the first nation to move backwards on climate change while the rest of the world, including China and the US, is moving forward; and_ _(d) the need for the Government to pass an [Emissions Trading Scheme](http://en.wikipedia.org/wiki/Emissions_Trading_Scheme) to place a cap on carbon pollution and drive a clean energy future for Australia._ Background to the bills The [Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 (No. 2)](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5292) and related bills were introduced to remove the [carbon pricing mechanism](http://en.wikipedia.org/wi",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 57,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-09/2"
+  },
+  {
+   "key": "federal-senate-3303",
+   "date": "2014-07-09",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills - Second Reading - Reject the bills",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 64,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 56,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-09/3"
+  },
+  {
+   "key": "federal-senate-3304",
+   "date": "2014-07-09",
+   "house": "senate",
+   "question": "This division relates to the Policy _[For a carbon price](/policies/3)_. The same number of senators supported and opposed the idea of a review into the [National Electricity Rules](http://www.aemc.gov.au/Energy-Rules/National-electricity-rules) on how to set network prices. This means that the vote was unsuccessful because a majority didn't support it. ###Why should there be a review? Independent Senator [Nick Xenophon](https://theyvoteforyou.org.au/people/senate/sa/nick_xenophon) had [proposed](http://www.openaustralia.org/senate/?gid=2014-07-09.26.1) having a review because electricity prices have more than doubled for average households over the past six years and network charges are the cause of about two thirds of this increase. ###Liberal rebel Liberal Senator [Ian Macdonald](https://theyvoteforyou.org.au/people/senate/queensland/ian_macdonald) [crossed the floor](http://www.peo.gov.au/learning/fact-sheets/crossing-the-floor.html) to vote in favour of the idea of having a review (see [What are \"Rebel Voters\"?](https://theyvoteforyou.org.au/help/faq#rebel)). ###Background This vote took place during the debate on whether the senators agreed with the main idea of the [Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 (No. 2)](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5292) and related bills, which was to remove the [carbon pricing mechanism](http://en.wikipedia.org/wiki/Carbon_pricing_in_Australia). This is the second time the Coalition has introduced bills like these (the first time, the Senate [refused to pass](https://theyvoteforyou.org.au/divisions/senate/2014-03-20/2) the bills). The carbon price began on 1 July 2012 and is an [emissions trading scheme](http://en.wikipedia.org/wiki/Emissions_trading) that puts a price on [carbon emissions](http://en.wikipedia.org/wiki/Greenhouse_gas). To begin with, the price of carbon is fixed by the mechanism but from 1 July 2015 the price will be set by the mark",
+   "stage": "Second reading",
+   "ayes": 38,
+   "noes": 37,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 24
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 57,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-09/4"
+  },
+  {
+   "key": "federal-senate-3305",
+   "date": "2014-07-09",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 57,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-09/5"
+  },
+  {
+   "key": "federal-senate-3308",
+   "date": "2014-07-10",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills - Declaration of Urgency - Declare bills urgent",
+   "stage": "Declaration of Urgency",
+   "ayes": 35,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 50,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-10/1"
+  },
+  {
+   "key": "federal-senate-3309",
+   "date": "2014-07-10",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills - Declaration of Urgency - Put the question",
+   "stage": "Declaration of Urgency",
+   "ayes": 35,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 50,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-10/2"
+  },
+  {
+   "key": "federal-senate-3310",
+   "date": "2014-07-10",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills - Declaration of Urgency - Allocate time for debate",
+   "stage": "Declaration of Urgency",
+   "ayes": 35,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 46,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-10/3"
+  },
+  {
+   "key": "federal-senate-3311",
+   "date": "2014-07-10",
+   "house": "senate",
+   "question": "This division relates to the Policy _[For a carbon price](/policies/3)_. The majority voted against [amendment (3)](http://www.openaustralia.org/senate/?gid=2014-07-09.35.2) introduced by Senator [Lisa Singh](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Lisa_Singh&mpc=Senate&house=senate), which would have provided for the introduction of an [emissions trading scheme](http://en.wikipedia.org/wiki/Emissions_trading_scheme).(Read Senator Singh's explanation of the amendment [here](http://www.openaustralia.org/senate/?gid=2014-07-09.35.2). ) _Background to the bills_ The [Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 (No. 2)](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5292) and related bills were introduced to remove the [carbon pricing mechanism](http://en.wikipedia.org/wiki/Carbon_pricing_in_Australia), which was introduced by the Australian Labor Party while in government. The Coalition described the mechanism as a “carbon tax” and removing it was a key policy platform during the 2013 election.(You can read more about the Coalition's policy to remove the carbon price [here](http://www.liberal.org.au/scrapping-carbon-tax-and-reducing-cost-living). ) The carbon pricing mechanism commenced on 1 July 2012.(For more information on the carbon pricing mechanism and how it works, please see the Clean Energy Regulator’s [website](http://www.cleanenergyregulator.gov.au/Carbon-Pricing-Mechanism/About-the-Mechanism/Pages/default.aspx). ) It is an emissions trading scheme that puts a price on carbon emissions. It applies to “liable entities” (a group that includes companies that emit a high level of greenhouse gases). Initially the price of carbon is fixed by the mechanism but from 1 July 2015 the price will be set by the market, though the Labor Government did announce plans to bring this forward to 1 July 2014 just before they were defeated by the Coalition in the 2013 election. This is the seco",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 53,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-10/4"
+  },
+  {
+   "key": "federal-senate-3312",
+   "date": "2014-07-10",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] - In Committee - Schedules 2 to 5",
+   "stage": "In committee",
+   "ayes": 39,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 53,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-10/5"
+  },
+  {
+   "key": "federal-senate-3313",
+   "date": "2014-07-10",
+   "house": "senate",
+   "question": "This division relates to the Policy _[For a carbon price](/policies/3)_. The majority voted against [amendments (1) and (2)](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr5292_amend_43becfa1-6fc2-4c3f-be58-26ebeddd958a%22) introduced by Labor Senator [Lisa Singh](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Lisa_Singh&mpc=Senate&house=senate). The amendments related to introducing an emissions trading scheme and would have made the following changes: - _(1) Title, page 1 (line 1), omit “repeal”, substitute “amend”._ - _(2) Clause 2, page 1 (line 7) to page 2 (line 6), omit the clause, substitute: 2 Commencement; This Act commences on the day after this Act receives the Royal Assent._ _Background to the bills_ The [Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 (No. 2)](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5292) and related bills were introduced to remove the [carbon pricing mechanism](http://en.wikipedia.org/wiki/Carbon_pricing_in_Australia), which was introduced by the Australian Labor Party while in government. The Coalition described the mechanism as a “carbon tax” and removing it was a key policy platform during the 2013 election.(You can read more about the Coalition's policy to remove the carbon price [here](http://www.liberal.org.au/scrapping-carbon-tax-and-reducing-cost-living). ) The carbon pricing mechanism commenced on 1 July 2012.(For more information on the carbon pricing mechanism and how it works, please see the Clean Energy Regulator’s [website](http://www.cleanenergyregulator.gov.au/Carbon-Pricing-Mechanism/About-the-Mechanism/Pages/default.aspx). ) It is an emissions trading scheme that puts a price on carbon emissions. It applies to “liable entities” (a group that includes companies that emit a high level of greenhouse gases). Initially the price of carbon is fixed by the mechanism but from 1 July 2015 the p",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 55,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-10/6"
+  },
+  {
+   "key": "federal-senate-3314",
+   "date": "2014-07-10",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] - In Committee - Schedule 5",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 55,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-10/7"
+  },
+  {
+   "key": "federal-senate-3315",
+   "date": "2014-07-10",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills - In Committee - Agree to bills",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 55,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-10/8"
+  },
+  {
+   "key": "federal-senate-3316",
+   "date": "2014-07-10",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills - In Committee - Adopt the committee's report and so reject the bills",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 36,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 55,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-10/9"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

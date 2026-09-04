@@ -1,0 +1,279 @@
+{
+ "key": "au-federal-alrc-1654",
+ "title": "Appropriation Bill (No. 5) 2008-2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-02-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance and Deregulation",
+ "status": "passed",
+ "status_as_of": "2009-03-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-02-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-02-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-03-10",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-03-10",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-03-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-03-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-03-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-03-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-03-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-03-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-03-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2009-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2009-03-26",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-791381",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-02-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-791472",
+   "speaker": "Roger Price",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-03-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-791473",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-03-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-791474",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2009-03-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-791595",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-791596",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-791723",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-791724",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-791815",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-03-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-791835",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-03-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-791836",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-03-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792004",
+   "speaker": "Mark Arbib",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-03-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792005",
+   "speaker": "Mark Arbib",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-03-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792331",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792332",
+   "speaker": "Helen Coonan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792341",
+   "speaker": "Scott Ludlam",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2009-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792342",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-03-19",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 5) 2008-2009",
+   "frl_uri": "https://www.legislation.gov.au/C2009A00023",
+   "assent_date": "2009-03-26"
+  }
+ ]
+}

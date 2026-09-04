@@ -1,0 +1,375 @@
+{
+ "key": "au-federal-alrc-1832",
+ "title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2010-2011",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2010-05-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance and Deregulation",
+ "status": "passed",
+ "status_as_of": "2010-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2010-05-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-05-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-05-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2010-05-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-05-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-05-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-05-31",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-03",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2010-06-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2010-06-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2010-06-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2010-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2010-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2010-06-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-799912",
+   "speaker": "Lindsay Tanner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-05-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800275",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-05-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800297",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-05-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800362",
+   "speaker": "Roger Price",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-05-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800365",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-05-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800366",
+   "speaker": "Jon Sullivan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-05-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800464",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800519",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800520",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800571",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-05-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800572",
+   "speaker": "Patrick Secker",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-05-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800641",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800642",
+   "speaker": "Kay Hull",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2010-06-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800697",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800698",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800750",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800751",
+   "speaker": "Bronwyn Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801371",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801372",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801674",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801675",
+   "speaker": "Steve Fielding",
+   "party": "Family First",
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801676",
+   "speaker": "Steve Fielding",
+   "party": "Family First",
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801677",
+   "speaker": "Mark Arbib",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation (Parliamentary Departments) Act (No. 1) 2010-2011",
+   "frl_uri": "https://www.legislation.gov.au/C2010A00062",
+   "assent_date": "2010-06-28"
+  }
+ ]
+}

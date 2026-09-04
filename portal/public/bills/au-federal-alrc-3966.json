@@ -1,0 +1,610 @@
+{
+ "key": "au-federal-alrc-3966",
+ "title": "Social Security and Other Legislation Amendment (Income Support for Students) Bill 2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-09-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "lapsed",
+ "status_as_of": "2009-11-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-09-10",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-10",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-10-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-10-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-10-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-10-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-10-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-10-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-11-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-11-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-11-17",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-684",
+   "date": "2009-10-27",
+   "house": "representatives",
+   "question": "That the motion ( **Mr Pyne’s** ) be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 52,
+   "noes": 68,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 45,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 124
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-10-27/1"
+  },
+  {
+   "key": "federal-representatives-685",
+   "date": "2009-10-27",
+   "house": "representatives",
+   "question": "Judi Moylan The question is that the bill be agreed to. Question put.",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-10-27/2"
+  },
+  {
+   "key": "federal-senate-1745",
+   "date": "2009-11-17",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Hanson-Young’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 6,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 1,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-11-17/4"
+  },
+  {
+   "key": "federal-representatives-697",
+   "date": "2009-11-18",
+   "house": "representatives",
+   "question": "That Senate amendments Nos 1 and 2 be agreed to. That Senate amendments Nos 3 to 9 be disagreed to. That the motion ( **Ms Gillard’s** ) be agreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 72,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 127
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-11-18/1"
+  },
+  {
+   "key": "federal-senate-1758",
+   "date": "2009-11-24",
+   "house": "senate",
+   "question": "That the House has agreed to amendments Nos (1) and (2) made by the Senate and disagreed to amendments Nos (3) to (9), and requesting the reconsideration of those amendments disagreed to. That the committee does not insist on the Senate amendments to which the House has disagreed.",
+   "stage": "Consideration of House message",
+   "ayes": 33,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 61,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-11-24/3"
+  },
+  {
+   "key": "federal-senate-1759",
+   "date": "2009-11-24",
+   "house": "senate",
+   "question": "That the amendments ( **Senator Carr’s** ) be agreed to.",
+   "stage": "Consideration of House message",
+   "ayes": 32,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 59,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-11-24/4"
+  },
+  {
+   "key": "federal-senate-1760",
+   "date": "2009-11-24",
+   "house": "senate",
+   "question": "That the report from the committee be adopted. That the report from the committee be adopted.",
+   "stage": "Adoption of Report",
+   "ayes": 32,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 59,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-11-24/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-795385",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796177",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796178",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796325",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-10-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796326",
+   "speaker": "Sid Sidebottom",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-10-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796351",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-10-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796442",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796443",
+   "speaker": "Robert Oakeshott",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2009-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796444",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796445",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796611",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-10-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796612",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-10-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796807",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796808",
+   "speaker": "Brett Mason",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-11-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796844",
+   "speaker": "Michael Ronaldson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-11-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796892",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796893",
+   "speaker": "Ian Macdonald",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-11-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796920",
+   "speaker": "Alan Ferguson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-11-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796921",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-11-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796940",
+   "speaker": "Julian McGauran",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2009-11-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796959",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797466",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797467",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-797468",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-11-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

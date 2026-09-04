@@ -1,0 +1,319 @@
+{
+ "key": "au-federal-alrc-1459",
+ "title": "Workplace Relations Amendment (Transition to Forward with Fairness) Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2008-03-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-02-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-03-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-03-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-03-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-03-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-03-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-03-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-03-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-03-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-03-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-03-20",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-1452",
+   "date": "2008-03-18",
+   "house": "senate",
+   "question": "That Labor design an individual statutory employment agreement system as an alternative to individual common-law contracts, that has the following characteristics:",
+   "stage": "In committee",
+   "ayes": 7,
+   "noes": 49,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 51,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-03-18/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-783337",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-783665",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-02-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-783666",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-02-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784089",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784090",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784189",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-03-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784190",
+   "speaker": "Joanna Gash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-03-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784191",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-03-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784192",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-03-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784304",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-03-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784305",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-03-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784366",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784367",
+   "speaker": "Alan Ferguson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784368",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2008-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784401",
+   "speaker": "Steve Hutchins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784402",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784423",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-03-19",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Workplace Relations Amendment (Transition to Forward with Fairness) Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00008",
+   "assent_date": "2008-03-20"
+  }
+ ]
+}

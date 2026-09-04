@@ -1,0 +1,282 @@
+{
+ "key": "au-federal-alrc-1375",
+ "title": "Tax Laws Amendment (Small Business) Bill 2007",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2007-05-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2007-06-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2007-05-10",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-05-10",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2007-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2007-06-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-06-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-06-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2007-06-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2007-06-21",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:%22legislation/billhome/r2764%22",
+   "document_date": "2007-05-10",
+   "licence": "CC BY-NC-ND 4.0 (Parliament of Australia)"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-381",
+   "date": "2007-05-28",
+   "house": "representatives",
+   "question": "That the words proposed to be omitted ( **Dr Emerson’s** amendment) stand part of the question.",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2007-05-28/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-779892",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-05-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780213",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-05-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780214",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-05-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780239",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-05-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780240",
+   "speaker": "Kay Hull",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2007-05-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780319",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780320",
+   "speaker": "Simon Crean",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780326",
+   "speaker": "Ian Causley",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2007-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780327",
+   "speaker": "Craig Emerson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780328",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780623",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2007-06-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780630",
+   "speaker": "Nigel Scullion",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2007-06-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780631",
+   "speaker": "Nigel Scullion",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2007-06-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780643",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-06-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780716",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-06-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780717",
+   "speaker": "Andrew Murray",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2007-06-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780718",
+   "speaker": "Richard Colbeck",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-06-13",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax Laws Amendment (Small Business) Act 2007",
+   "frl_uri": "https://www.legislation.gov.au/C2007A00080",
+   "assent_date": "2007-06-21"
+  }
+ ]
+}

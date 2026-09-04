@@ -1,0 +1,298 @@
+{
+ "key": "au-federal-alrc-1399",
+ "title": "Australian Citizenship Amendment (Citizenship Testing) Bill 2007",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2007-05-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Citizenship",
+ "status": "passed",
+ "status_as_of": "2007-09-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2007-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-08-08",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2007-08-08",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2007-08-08",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-08-08",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-08-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2007-09-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2007-09-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2007-09-17",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:%22legislation/billhome/r2748%22",
+   "document_date": "2007-05-30",
+   "licence": "CC BY-NC-ND 4.0 (Parliament of Australia)"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-1382",
+   "date": "2007-08-13",
+   "house": "senate",
+   "question": "Australian Citizenship Amendment (Citizenship Testing) Bill 2007 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "earliest": 7,
+    "member": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-08-13/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-780401",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781329",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-06-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781578",
+   "speaker": "Kerry Nettle",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2007-08-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781584",
+   "speaker": "Fiona Nash",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2007-08-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781601",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781602",
+   "speaker": "Gavan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781603",
+   "speaker": "Ian Causley",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2007-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781711",
+   "speaker": "David Johnston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781712",
+   "speaker": "David Johnston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781933",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-08-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781934",
+   "speaker": "Kate Lundy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-08-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781967",
+   "speaker": "Linda Kirk",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-08-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782333",
+   "speaker": "Chris Ellison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-09-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782362",
+   "speaker": "Guy Barnett",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-09-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782363",
+   "speaker": "Chris Ellison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-09-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782514",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-09-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782515",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-09-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Citizenship Amendment (Citizenship Testing) Act 2007",
+   "frl_uri": "https://www.legislation.gov.au/C2007A00142",
+   "assent_date": "2007-09-17"
+  }
+ ]
+}

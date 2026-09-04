@@ -1,0 +1,428 @@
+{
+ "key": "au-federal-alrc-1710",
+ "title": "Renewable Energy (Electricity) Amendment Bill 2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-06-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change and Water",
+ "status": "passed",
+ "status_as_of": "2009-09-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-08-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-08-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-08-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-08-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-08-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-08-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2009-08-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2009-09-07",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-653",
+   "date": "2009-08-17",
+   "house": "representatives",
+   "question": "Renewable Energy (Electricity) Amendment Bill 2009 and related bills - Consideration in Detail - Coalition amendments",
+   "stage": "Consideration in detail",
+   "ayes": 58,
+   "noes": 71,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 72
+    },
+    "Liberal": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-08-17/1"
+  },
+  {
+   "key": "federal-senate-1697",
+   "date": "2009-08-19",
+   "house": "senate",
+   "question": "That the amendments ( **Senator Milne’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 4,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 2,
+    "dated": 40,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-08-19/2"
+  },
+  {
+   "key": "federal-senate-1698",
+   "date": "2009-08-19",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Bob Brown’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 4,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "member": 2,
+    "dated": 39,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-08-19/3"
+  },
+  {
+   "key": "federal-senate-1702",
+   "date": "2009-08-20",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Boswell’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 58,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-08-20/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-794561",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794562",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794591",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794592",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794744",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794745",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794832",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794833",
+   "speaker": "Ian Macdonald",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794834",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794874",
+   "speaker": "Gavin Marshall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794896",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794897",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794972",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794973",
+   "speaker": "Mark Bishop",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794974",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Renewable Energy (Electricity) Amendment Act 2009",
+   "frl_uri": "https://www.legislation.gov.au/C2009A00078",
+   "assent_date": "2009-09-07"
+  }
+ ]
+}

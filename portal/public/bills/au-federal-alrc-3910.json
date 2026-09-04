@@ -1,0 +1,411 @@
+{
+ "key": "au-federal-alrc-3910",
+ "title": "Tax Laws Amendment (2008 Measures No. 1) Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2008-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-02-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-02-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-02-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-03-11",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-03-11",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-06-26",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-433",
+   "date": "2008-02-21",
+   "house": "representatives",
+   "question": "That this bill be now read a second time. That the words proposed to be omitted ( **Mr Keenan’s** amendment) stand part of the question.",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 79,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-02-21/2"
+  },
+  {
+   "key": "federal-senate-1489",
+   "date": "2008-06-26",
+   "house": "senate",
+   "question": "That the amendments ( **Senator Milne’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 7,
+   "noes": 49,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "earliest": 7,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-06-26/2"
+  },
+  {
+   "key": "federal-senate-1490",
+   "date": "2008-06-26",
+   "house": "senate",
+   "question": "That this bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 27,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 52,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-06-26/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-783349",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-783704",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-02-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-783705",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-02-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-783742",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-02-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-783743",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-02-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-783744",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-02-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-783926",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-783927",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786249",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786250",
+   "speaker": "Helen Coonan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786295",
+   "speaker": "Christine Milne",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2008-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786297",
+   "speaker": "Christine Milne",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2008-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786298",
+   "speaker": "Stephen Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786389",
+   "speaker": "Claire Moore",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786391",
+   "speaker": "Gavin Marshall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786545",
+   "speaker": "Steve Hutchins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786564",
+   "speaker": "Gavin Marshall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786583",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2008-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786584",
+   "speaker": "Stephen Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786585",
+   "speaker": "Stephen Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,425 @@
+{
+ "key": "au-federal-alrc-1465",
+ "title": "Higher Education Support Amendment (Removal of the Higher Education Workplace Relations Requirements and National Governance Protocols Requirements and Other Matters) Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2008-09-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-05-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-08-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-08-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-09-02",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-09-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-09-20",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-461",
+   "date": "2008-05-14",
+   "house": "representatives",
+   "question": "That the amendments ( **Mr Anthony Smith’s** ) be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 60,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Labor": {
+     "ayes": 0,
+     "noes": 77
+    },
+    "Liberal": {
+     "ayes": 53,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-05-14/1"
+  },
+  {
+   "key": "federal-representatives-462",
+   "date": "2008-05-14",
+   "house": "representatives",
+   "question": "That the bill be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 75,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Labor": {
+     "ayes": 77,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-05-14/2"
+  },
+  {
+   "key": "federal-representatives-463",
+   "date": "2008-05-14",
+   "house": "representatives",
+   "question": "That this bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 73,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Labor": {
+     "ayes": 75,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-05-14/3"
+  },
+  {
+   "key": "federal-senate-1502",
+   "date": "2008-09-04",
+   "house": "senate",
+   "question": "That the amendments ( **Senator Mason’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 57,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-04/2"
+  },
+  {
+   "key": "federal-senate-1503",
+   "date": "2008-09-04",
+   "house": "senate",
+   "question": "That this bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 57,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-04/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-783339",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784779",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784780",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784799",
+   "speaker": "Darren Cheeseman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784800",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784801",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784975",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784976",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786770",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786771",
+   "speaker": "Brett Mason",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786773",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2008-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787166",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787167",
+   "speaker": "Christine Milne",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2008-09-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787394",
+   "speaker": "Brett Mason",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787395",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Support Amendment (Removal of the Higher Education Workplace Relations Requirements and National Governance Protocols Requirements and Other Matters) Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00089",
+   "assent_date": "2008-09-20"
+  }
+ ]
+}

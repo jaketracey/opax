@@ -1,0 +1,276 @@
+{
+ "key": "au-federal-alrc-1807",
+ "title": "Healthcare Identifiers (Consequential Amendments) Bill 2010",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2010-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Ageing",
+ "status": "passed",
+ "status_as_of": "2010-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2010-02-10",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-02-10",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-03-10",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-03-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-03-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2010-03-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2010-03-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-03-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2010-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2010-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2010-06-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2010-06-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-798329",
+   "speaker": "Nicola Roxon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-799102",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-03-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-799103",
+   "speaker": "Andrew Southcott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-03-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-799165",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-799166",
+   "speaker": "Yvette D'Ath",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-799167",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-799168",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-799169",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-799435",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-03-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-799436",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-03-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801608",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801609",
+   "speaker": "Nicola Roxon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801742",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801743",
+   "speaker": "Concetta Fierravanti-Wells",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801744",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801745",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801750",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801751",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Healthcare Identifiers (Consequential Amendments) Act 2010",
+   "frl_uri": "https://www.legislation.gov.au/C2010A00073",
+   "assent_date": "2010-06-28"
+  }
+ ]
+}

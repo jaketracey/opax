@@ -1,0 +1,318 @@
+{
+ "key": "au-federal-alrc-1584",
+ "title": "National Rental Affordability Scheme (Consequential Amendments) Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-09-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2008-11-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-09-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-10-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-10-23",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-10-23",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-10-23",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-11-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-11-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-11-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-11-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-11-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-11-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-11-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2008-11-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-11-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-788082",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788589",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788590",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-10-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788591",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788738",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788739",
+   "speaker": "Wilson Tuckey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-10-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788931",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788932",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788992",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788993",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789031",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789167",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789168",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789508",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789509",
+   "speaker": "Marise Payne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789579",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789580",
+   "speaker": "John Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789603",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789604",
+   "speaker": "Marise Payne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789637",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789638",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789639",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Rental Affordability Scheme (Consequential Amendments) Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00130",
+   "assent_date": "2008-11-28"
+  }
+ ]
+}

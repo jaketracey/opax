@@ -1,0 +1,414 @@
+{
+ "key": "au-federal-alrc-1732",
+ "title": "Corporations Amendment (Improving Accountability on Termination Payments) Bill 2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2009-11-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-06-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-09",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-09",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-09-09",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-09-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-10-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-10-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-10-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2009-11-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2009-11-23",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-664",
+   "date": "2009-09-09",
+   "house": "representatives",
+   "question": "That the amendments ( **Mr Pearce’s** ) be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 53,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 46,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-09-09/1"
+  },
+  {
+   "key": "federal-senate-3470",
+   "date": "2009-10-26",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Bob Brown’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 1,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-10-26/1"
+  },
+  {
+   "key": "federal-senate-3471",
+   "date": "2009-10-26",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Fielding’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 6,
+   "noes": 59,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 56,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-10-26/2"
+  },
+  {
+   "key": "federal-senate-3472",
+   "date": "2009-10-26",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Xenophon’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 55,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-10-26/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-793908",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795259",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795260",
+   "speaker": "Chris Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795293",
+   "speaker": "Peter Slipper",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795294",
+   "speaker": "Chris Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795295",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795484",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795485",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795991",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795992",
+   "speaker": "Helen Coonan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796003",
+   "speaker": "David Bushby",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796629",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796630",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796805",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-11-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-796806",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-11-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Corporations Amendment (Improving Accountability on Termination Payments) Act 2009",
+   "frl_uri": "https://www.legislation.gov.au/C2009A00115",
+   "assent_date": "2009-11-23"
+  }
+ ]
+}
