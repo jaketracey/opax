@@ -19,6 +19,8 @@
  *                                         scripts/generate_years.py) and the
  *                                         voices tally (speakers and parties
  *                                         across the year's retrieved windows)
+ *   GET /years/pictures.json              freely licensed event photographs,
+ *                                         with per-image credits and sources
  *   GET /reports/index.json               the six tracked topic reports
  *   GET /reports/{slug}.json              stats.timeline + stats.donations
  *   GET /api/stats + /corpus.json         indexing progress (honesty strip)
@@ -400,11 +402,29 @@ const CSS = `
   font-size: 0.95rem; color: var(--ink-faint, #6F7468); margin-bottom: -0.1rem;
 }
 .tm-hero-row { display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
+.tm-year-lockup { position: relative; display: flex; flex-direction: column; align-items: center; }
 .tm-year {
   font-family: var(--serif, Merriweather, Georgia, serif); font-weight: 900;
   font-size: clamp(3.4rem, 14vw, 6rem); line-height: 1.05;
   color: var(--navy, #142A43); font-variant-numeric: tabular-nums;
   min-width: 4ch; text-align: center;
+}
+.tm-pictures-open {
+  min-height: 44px; padding: 0 0.7rem; border: 1px solid var(--bronze-rule, rgba(160,118,27,0.55));
+  border-radius: 4px; background: transparent; color: var(--bronze-ink, #8A5A12); cursor: pointer;
+  font: 600 0.82rem/1.25 var(--serif, Merriweather, Georgia, serif);
+  text-decoration: none; white-space: nowrap;
+}
+.tm-pictures-open:hover { border-color: var(--bronze-ink, #8A5A12); }
+.tm-pictures-open:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+@media (min-width: 761px) {
+  .tm-pictures-open {
+    position: absolute; left: calc(100% + 3.8rem); top: 50%; transform: translateY(-50%);
+    min-height: 44px; padding: 0 0.2rem; border: 0; border-radius: 0;
+    font-weight: 400; text-decoration: underline;
+    text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.24em;
+  }
+  .tm-pictures-open:hover { text-decoration-color: currentColor; }
 }
 .tm-step {
   font: inherit; font-size: 1.35rem; line-height: 1;
@@ -596,6 +616,25 @@ const CSS = `
 .tm-linkbtn:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
 
 /* The year in brief (machine-written, sources one tap away) ------------- */
+.tm-filmstrip {
+  display: flex; gap: 0.45rem; margin: 0 0 0.8rem; padding: 1px 1px 0.2rem;
+  overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none;
+}
+.tm-filmstrip::-webkit-scrollbar { display: none; }
+.tm-filmstrip-button {
+  flex: 0 0 clamp(78px, 24vw, 112px); height: 70px; padding: 3px;
+  border: 1px solid var(--line-strong, #8D897B); border-radius: 0;
+  background: var(--paper-raised, #fff); cursor: pointer;
+}
+.tm-filmstrip-button img {
+  display: block; width: 100%; height: 100%; object-fit: contain; filter: saturate(0.88) contrast(0.98);
+}
+.tm-filmstrip-button:hover { border-color: var(--bronze-ink, #8A5A12); }
+.tm-filmstrip-button:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+@media (min-width: 761px) {
+  .tm-filmstrip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; gap: 0.5rem; }
+  .tm-filmstrip-button { width: 100%; height: 76px; }
+}
 .tm-brief-body p { font-size: 0.92rem; line-height: 1.6; color: var(--ink, #23271F); margin: 0 0 0.7rem; }
 .tm-brief-toggle { margin: -0.3rem 0 0.4rem; }
 @media (min-width: 761px) {
@@ -644,6 +683,88 @@ const CSS = `
 .tm-spark { margin-top: 0.4rem; }
 .tm-spark svg { display: block; width: 100%; height: 2.2rem; }
 .tm-spark-caption { font-size: 0.7rem; color: var(--ink-faint, #6F7468); margin-top: 0.15rem; }
+
+/* Year in pictures: a focus-managed panel inside the Time Machine dialog. */
+.tm-gallery { min-height: 32rem; padding: 0.15rem 0 1rem; }
+.tm-gallery-head {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1rem;
+  padding-bottom: 0.65rem; border-bottom: 1px solid var(--line, #DFDCD2);
+}
+.tm-gallery-title {
+  margin: 0; color: var(--ink, #23271F);
+  font: 700 clamp(1.2rem, 3vw, 1.65rem)/1.25 var(--serif, Merriweather, Georgia, serif);
+}
+.tm-gallery-count { display: block; margin-top: 0.2rem; color: var(--ink-faint, #6F7468); font-size: 0.76rem; }
+.tm-gallery-close {
+  min-width: 44px; min-height: 44px; padding: 0 0.35rem; border: 0; background: transparent;
+  color: var(--bronze-ink, #8A5A12); cursor: pointer; font: 600 0.8rem/1 var(--sans, system-ui, sans-serif);
+  text-decoration: underline; text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.22em;
+}
+.tm-gallery-close:hover { text-decoration-color: currentColor; }
+.tm-gallery-close:focus-visible, .tm-gallery-nav:focus-visible, .tm-gallery-thumb:focus-visible, .tm-gallery-dot:focus-visible {
+  outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px;
+}
+.tm-gallery-stage {
+  display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; gap: 0.75rem;
+  align-items: center; margin-top: 0.8rem;
+}
+.tm-gallery-nav {
+  display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+  border: 1px solid var(--line-strong, #8D897B); border-radius: 50%;
+  background: var(--paper, #FAF9F6); color: var(--ink, #23271F); cursor: pointer;
+  font: 400 1.45rem/1 var(--serif, Merriweather, Georgia, serif);
+}
+.tm-gallery-nav:hover { border-color: var(--bronze-ink, #8A5A12); color: var(--bronze-ink, #8A5A12); }
+.tm-gallery-figure { min-width: 0; margin: 0; touch-action: pan-y; }
+.tm-picture-mat {
+  display: flex; align-items: center; justify-content: center; width: 100%; height: min(56vh, 530px); min-height: 250px;
+  padding: clamp(0.55rem, 2vw, 1.1rem); overflow: hidden;
+  border: 1px solid var(--line-strong, #8D897B); background: var(--paper-raised, #fff);
+}
+.tm-gallery-image {
+  display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; min-width: 0; min-height: 0;
+  object-fit: contain; user-select: none; -webkit-user-drag: none;
+}
+.tm-gallery-caption {
+  margin: 0.72rem 0 0; color: var(--ink, #23271F);
+  font: 400 0.93rem/1.55 var(--serif, Merriweather, Georgia, serif);
+}
+.tm-gallery-credit { margin: 0.28rem 0 0; color: var(--ink-faint, #6F7468); font-size: 0.7rem; line-height: 1.5; }
+.tm-gallery-credit a {
+  color: inherit; text-decoration: underline;
+  text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.18em;
+}
+.tm-gallery-credit a:hover { color: var(--bronze-ink, #8A5A12); }
+.tm-gallery-thumbs { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0.45rem; margin: 0.85rem 3.5rem 0; }
+.tm-gallery-thumb {
+  height: 58px; min-width: 0; padding: 3px; border: 1px solid var(--line, #DFDCD2);
+  border-radius: 0; background: var(--paper-raised, #fff); cursor: pointer;
+}
+.tm-gallery-thumb[aria-current="true"] { border-color: var(--bronze-ink, #8A5A12); box-shadow: inset 0 0 0 1px var(--bronze-ink, #8A5A12); }
+.tm-gallery-thumb img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.tm-gallery-dots { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .tm-gallery-figure.tm-picture-next { animation: tm-picture-next 180ms ease-out; }
+  .tm-gallery-figure.tm-picture-prev { animation: tm-picture-prev 180ms ease-out; }
+}
+@keyframes tm-picture-next { from { opacity: 0.2; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+@keyframes tm-picture-prev { from { opacity: 0.2; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
+@media (max-width: 760px) {
+  .tm-gallery { padding-top: 0; }
+  .tm-gallery-stage { grid-template-columns: 1fr; gap: 0.55rem; }
+  .tm-picture-mat { height: min(48vh, 390px); min-height: 220px; padding: 0.55rem; }
+  .tm-gallery-figure { grid-row: 1; }
+  .tm-gallery-nav { grid-row: 2; }
+  .tm-gallery-prev { justify-self: start; }
+  .tm-gallery-next { justify-self: end; margin-top: -3.3rem; }
+  .tm-gallery-thumbs { display: none; }
+  .tm-gallery-dots { display: flex; justify-content: center; gap: 0; margin-top: -2.7rem; min-height: 44px; align-items: center; }
+  .tm-gallery-dot {
+    display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer;
+  }
+  .tm-gallery-dot::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--line-strong, #8D897B); }
+  .tm-gallery-dot[aria-current="true"]::before { width: 7px; height: 7px; background: var(--bronze-ink, #8A5A12); }
+}
 
 /* Footer honesty strip ---------------------------------------------------- */
 .tm-footer {
@@ -838,11 +959,15 @@ export function mountTimeMachine(container, opts = {}) {
   // ---- static chrome (no user/API data goes through this template) --------
   const root = el('section', 'tm-root', { 'aria-label': 'Time Machine: explore the parliamentary record by year' })
   root.innerHTML = `
+    <div class="tm-machine">
     <div class="tm-hero">
       <div class="tm-hero-kicker" aria-hidden="true">Parliament in</div>
       <div class="tm-hero-row">
         <button type="button" class="tm-step tm-step-back" aria-label="Previous year">‹</button>
-        <div class="tm-year" aria-hidden="true"></div>
+        <div class="tm-year-lockup">
+          <div class="tm-year" aria-hidden="true"></div>
+          <button type="button" class="tm-pictures-open" hidden></button>
+        </div>
         <button type="button" class="tm-step tm-step-fwd" aria-label="Next year">›</button>
       </div>
     </div>
@@ -871,6 +996,7 @@ export function mountTimeMachine(container, opts = {}) {
       <div class="tm-col tm-col-main">
         <section class="tm-sec tm-sec-brief" aria-label="The year in brief" hidden>
           <h2 class="tm-h2">The year <span>in brief</span></h2>
+          <div class="tm-filmstrip" aria-label="Pictures from this year" hidden></div>
           <div class="tm-yearbrief"></div>
         </section>
         <section class="tm-sec tm-sec-debates" aria-label="What they were arguing about">
@@ -897,6 +1023,32 @@ export function mountTimeMachine(container, opts = {}) {
     </div>
 
     <div class="tm-footer"></div>
+    </div>
+
+    <section class="tm-gallery" role="dialog" aria-modal="true" aria-labelledby="tm-gallery-title" tabindex="-1" hidden>
+      <div class="tm-gallery-head">
+        <div>
+          <h2 class="tm-gallery-title" id="tm-gallery-title"></h2>
+          <span class="tm-gallery-count" aria-live="polite"></span>
+        </div>
+        <button type="button" class="tm-gallery-close">Back to the year</button>
+      </div>
+      <div class="tm-gallery-stage">
+        <button type="button" class="tm-gallery-nav tm-gallery-prev" aria-label="Previous photograph">‹</button>
+        <figure class="tm-gallery-figure">
+          <div class="tm-picture-mat">
+            <img class="tm-gallery-image" alt="" loading="eager" decoding="async" fetchpriority="high">
+          </div>
+          <figcaption>
+            <p class="tm-gallery-caption"></p>
+            <p class="tm-gallery-credit"></p>
+          </figcaption>
+        </figure>
+        <button type="button" class="tm-gallery-nav tm-gallery-next" aria-label="Next photograph">›</button>
+      </div>
+      <nav class="tm-gallery-thumbs" aria-label="Photographs in this year"></nav>
+      <nav class="tm-gallery-dots" aria-label="Photographs in this year"></nav>
+    </section>
   `
 
   const $ = (sel) => root.querySelector(sel)
@@ -916,6 +1068,21 @@ export function mountTimeMachine(container, opts = {}) {
   const briefEl = $('.tm-yearbrief')
   const voicesSec = $('.tm-sec-voices')
   const voicesEl = $('.tm-voices')
+  const machineEl = $('.tm-machine')
+  const picturesOpen = $('.tm-pictures-open')
+  const filmstripEl = $('.tm-filmstrip')
+  const galleryEl = $('.tm-gallery')
+  const galleryTitle = $('.tm-gallery-title')
+  const galleryCount = $('.tm-gallery-count')
+  const galleryClose = $('.tm-gallery-close')
+  const galleryFigure = $('.tm-gallery-figure')
+  const galleryImage = $('.tm-gallery-image')
+  const galleryCaption = $('.tm-gallery-caption')
+  const galleryCredit = $('.tm-gallery-credit')
+  const galleryPrev = $('.tm-gallery-prev')
+  const galleryNext = $('.tm-gallery-next')
+  const galleryThumbs = $('.tm-gallery-thumbs')
+  const galleryDots = $('.tm-gallery-dots')
 
   // Options via textContent (never innerHTML), matching the module's rule for
   // everything that renders. "All topics" is the default: the curated per-year
@@ -986,6 +1153,13 @@ export function mountTimeMachine(container, opts = {}) {
   const mountAbort = new AbortController()
   const yearCache = new Map()  // year → /years/{year}.json (or null)
   let yearIndexPromise = null
+  let picturesData = {}
+  let yearHasBrief = false
+  let galleryOpen = false
+  let galleryIndex = 0
+  let galleryReturnFocus = null
+  let swipeStart = null
+  const outerDialog = container.closest('dialog')
 
   // ---- rendering ----------------------------------------------------------
 
@@ -1004,6 +1178,210 @@ export function mountTimeMachine(container, opts = {}) {
       requestAnimationFrame(() => requestAnimationFrame(() => yearEl.classList.remove('tm-tick')))
     }
   }
+
+  function picturesFor(y = year) {
+    const pictures = picturesData?.[String(y)]
+    return Array.isArray(pictures) ? pictures : []
+  }
+
+  function pictureUrl(picture, pictureYear = year) {
+    const file = String(picture?.file || '').replace(/^\/+/, '')
+    if (file.startsWith('years/')) return '/' + file
+    if (file.startsWith('pictures/')) return '/years/' + file
+    return `/years/pictures/${pictureYear}/${file}`
+  }
+
+  function syncBriefVisibility() {
+    briefSec.hidden = !yearHasBrief && picturesFor().length === 0
+  }
+
+  function pictureButton(picture, index, className, onActivate = null) {
+    const button = el('button', className, {
+      type: 'button',
+      'aria-label': `Open photograph ${index + 1}: ${picture.caption}`,
+    })
+    const image = el('img')
+    image.src = pictureUrl(picture)
+    image.alt = picture.caption
+    image.loading = 'lazy'
+    image.decoding = 'async'
+    if (Number(picture.width) > 0) image.width = Number(picture.width)
+    if (Number(picture.height) > 0) image.height = Number(picture.height)
+    button.appendChild(image)
+    button.addEventListener('click', () => {
+      if (onActivate) onActivate()
+      else openGallery(index, button)
+    })
+    return button
+  }
+
+  function renderYearPictures() {
+    const pictures = picturesFor()
+    picturesOpen.hidden = pictures.length === 0
+    picturesOpen.textContent = pictures.length ? `The year in pictures · ${pictures.length}` : ''
+    picturesOpen.setAttribute('aria-label', pictures.length
+      ? `The year in pictures for ${year}, ${pictures.length} photographs`
+      : 'The year in pictures')
+
+    filmstripEl.replaceChildren()
+    filmstripEl.hidden = pictures.length === 0
+    for (const [index, picture] of pictures.slice(0, 4).entries()) {
+      filmstripEl.appendChild(pictureButton(picture, index, 'tm-filmstrip-button'))
+    }
+    syncBriefVisibility()
+  }
+
+  function renderGallery(direction = '') {
+    const pictures = picturesFor()
+    if (!pictures.length) return
+    galleryIndex = ((galleryIndex % pictures.length) + pictures.length) % pictures.length
+    const picture = pictures[galleryIndex]
+
+    galleryTitle.textContent = `The year in pictures, ${year}`
+    galleryCount.textContent = `Photograph ${galleryIndex + 1} of ${pictures.length}`
+    galleryImage.src = pictureUrl(picture)
+    galleryImage.alt = picture.caption
+    if (Number(picture.width) > 0) galleryImage.width = Number(picture.width)
+    else galleryImage.removeAttribute('width')
+    if (Number(picture.height) > 0) galleryImage.height = Number(picture.height)
+    else galleryImage.removeAttribute('height')
+    galleryCaption.textContent = picture.caption
+
+    galleryCredit.replaceChildren(document.createTextNode(`Photo: ${picture.author}`))
+    if (picture.licence) {
+      galleryCredit.appendChild(document.createTextNode(' · '))
+      if (picture.licence_url) {
+        const licence = el('a', '', { href: picture.licence_url, target: '_blank', rel: 'noopener' })
+        licence.textContent = picture.licence
+        galleryCredit.appendChild(licence)
+      } else {
+        galleryCredit.appendChild(document.createTextNode(picture.licence))
+      }
+    }
+    if (picture.source_url) {
+      galleryCredit.appendChild(document.createTextNode(' · '))
+      const source = el('a', '', { href: picture.source_url, target: '_blank', rel: 'noopener' })
+      source.textContent = /commons\.wikimedia\.org/i.test(picture.source_url) ? 'Wikimedia Commons' : 'Source'
+      galleryCredit.appendChild(source)
+    }
+
+    galleryPrev.hidden = pictures.length < 2
+    galleryNext.hidden = pictures.length < 2
+    if (galleryThumbs.dataset.year !== String(year) || galleryThumbs.children.length !== pictures.length) {
+      galleryThumbs.replaceChildren()
+      galleryDots.replaceChildren()
+      galleryThumbs.dataset.year = String(year)
+      pictures.forEach((item, index) => {
+        const thumb = pictureButton(
+          item,
+          index,
+          'tm-gallery-thumb',
+          () => showGalleryIndex(index, index < galleryIndex ? 'prev' : 'next'),
+        )
+        galleryThumbs.appendChild(thumb)
+
+        const dot = el('button', 'tm-gallery-dot', {
+          type: 'button',
+          'aria-label': `Show photograph ${index + 1}: ${item.caption}`,
+        })
+        dot.addEventListener('click', () => showGalleryIndex(index, index < galleryIndex ? 'prev' : 'next'))
+        galleryDots.appendChild(dot)
+      })
+    }
+    for (const [index, thumb] of [...galleryThumbs.children].entries()) {
+      thumb.setAttribute('aria-current', String(index === galleryIndex))
+    }
+    for (const [index, dot] of [...galleryDots.children].entries()) {
+      dot.setAttribute('aria-current', String(index === galleryIndex))
+    }
+
+    galleryFigure.classList.remove('tm-picture-next', 'tm-picture-prev')
+    if (direction && !reducedMotion.matches) {
+      requestAnimationFrame(() => galleryFigure.classList.add(`tm-picture-${direction}`))
+    }
+  }
+
+  function showGalleryIndex(index, direction) {
+    const pictures = picturesFor()
+    if (!pictures.length) return
+    galleryIndex = ((index % pictures.length) + pictures.length) % pictures.length
+    renderGallery(direction)
+  }
+
+  function openGallery(index = 0, trigger = null) {
+    if (!picturesFor().length) return
+    galleryOpen = true
+    galleryIndex = index
+    galleryReturnFocus = trigger || document.activeElement
+    machineEl.hidden = true
+    galleryEl.hidden = false
+    if (outerDialog) outerDialog.scrollTop = 0
+    renderGallery()
+    galleryClose.focus({ preventScroll: true })
+  }
+
+  function closeGallery(restoreFocus = true) {
+    if (!galleryOpen) return
+    galleryOpen = false
+    galleryEl.hidden = true
+    machineEl.hidden = false
+    galleryImage.removeAttribute('src')
+    if (restoreFocus && galleryReturnFocus?.isConnected) galleryReturnFocus.focus({ preventScroll: true })
+    galleryReturnFocus = null
+  }
+
+  function onGalleryKeyDown(event) {
+    if (!galleryOpen) return
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      event.stopPropagation()
+      closeGallery()
+      return
+    }
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault()
+      event.stopPropagation()
+      showGalleryIndex(galleryIndex + (event.key === 'ArrowLeft' ? -1 : 1), event.key === 'ArrowLeft' ? 'prev' : 'next')
+      return
+    }
+    if (event.key !== 'Tab') return
+    const focusable = [...galleryEl.querySelectorAll('button:not([hidden]):not([disabled]), a[href]')]
+      .filter((node) => node.getClientRects().length)
+    if (!focusable.length) return
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault()
+      last.focus()
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault()
+      first.focus()
+    }
+  }
+
+  function onGalleryTouchStart(event) {
+    const touch = event.changedTouches?.[0]
+    swipeStart = touch ? { x: touch.clientX, y: touch.clientY } : null
+  }
+
+  function onGalleryTouchEnd(event) {
+    const touch = event.changedTouches?.[0]
+    if (!touch || !swipeStart) return
+    const dx = touch.clientX - swipeStart.x
+    const dy = touch.clientY - swipeStart.y
+    swipeStart = null
+    if (Math.abs(dx) < 48 || Math.abs(dx) <= Math.abs(dy) * 1.25) return
+    event.preventDefault()
+    showGalleryIndex(galleryIndex + (dx < 0 ? 1 : -1), dx < 0 ? 'next' : 'prev')
+  }
+
+  function onOuterDialogCancel(event) {
+    if (!galleryOpen) return
+    event.preventDefault()
+    closeGallery()
+  }
+
+  const onOuterDialogClose = () => closeGallery(false)
 
   function renderSkeletons() {
     cardsEl.replaceChildren()
@@ -1160,7 +1538,8 @@ export function mountTimeMachine(container, opts = {}) {
     const brief = data?.brief
     const paras = briefParagraphs(brief?.answer)
     briefEl.replaceChildren()
-    briefSec.hidden = !paras.length
+    yearHasBrief = paras.length > 0
+    syncBriefVisibility()
     if (!paras.length) return
 
     // On a phone the opening sentences carry the year; the rest of the
@@ -1482,8 +1861,11 @@ export function mountTimeMachine(container, opts = {}) {
     const next = clampYear(y)
     if (next === year && !immediate) return
     year = next
+    yearHasBrief = false
+    briefEl.replaceChildren()
     renderScrubber()
     renderStats()
+    renderYearPictures()
     clearTimeout(searchTimer)
     // Debounce while scrubbing so we don't strafe the API; fire promptly on
     // discrete jumps (keyboard steps still coalesce via the short delay).
@@ -1565,6 +1947,20 @@ export function mountTimeMachine(container, opts = {}) {
   btnBack.addEventListener('click', onBack)
   btnFwd.addEventListener('click', onFwd)
   btnRandom.addEventListener('click', onRandom)
+  const onPicturesOpen = () => openGallery(0, picturesOpen)
+  const onGalleryPrev = () => showGalleryIndex(galleryIndex - 1, 'prev')
+  const onGalleryNext = () => showGalleryIndex(galleryIndex + 1, 'next')
+  picturesOpen.addEventListener('click', onPicturesOpen)
+  galleryClose.addEventListener('click', closeGallery)
+  galleryPrev.addEventListener('click', onGalleryPrev)
+  galleryNext.addEventListener('click', onGalleryNext)
+  galleryFigure.addEventListener('touchstart', onGalleryTouchStart, { passive: true })
+  galleryFigure.addEventListener('touchend', onGalleryTouchEnd, { passive: false })
+  document.addEventListener('keydown', onGalleryKeyDown, true)
+  if (outerDialog) {
+    outerDialog.addEventListener('cancel', onOuterDialogCancel)
+    outerDialog.addEventListener('close', onOuterDialogClose)
+  }
 
   // ---- boot ---------------------------------------------------------------
 
@@ -1573,6 +1969,14 @@ export function mountTimeMachine(container, opts = {}) {
   layoutTickLabels()
   renderFooter()
   renderSkeletons()
+  renderYearPictures()
+
+  fetchJSON('/years/pictures.json', mountAbort.signal)
+    .then((data) => {
+      picturesData = data && typeof data === 'object' ? data : {}
+      renderYearPictures()
+    })
+    .catch(() => { /* absent or unreachable picture data leaves the controls hidden */ })
 
   loadStaticData(mountAbort.signal)
     .then((data) => {
@@ -1602,6 +2006,17 @@ export function mountTimeMachine(container, opts = {}) {
       btnBack.removeEventListener('click', onBack)
       btnFwd.removeEventListener('click', onFwd)
       btnRandom.removeEventListener('click', onRandom)
+      picturesOpen.removeEventListener('click', onPicturesOpen)
+      galleryClose.removeEventListener('click', closeGallery)
+      galleryPrev.removeEventListener('click', onGalleryPrev)
+      galleryNext.removeEventListener('click', onGalleryNext)
+      galleryFigure.removeEventListener('touchstart', onGalleryTouchStart)
+      galleryFigure.removeEventListener('touchend', onGalleryTouchEnd)
+      document.removeEventListener('keydown', onGalleryKeyDown, true)
+      if (outerDialog) {
+        outerDialog.removeEventListener('cancel', onOuterDialogCancel)
+        outerDialog.removeEventListener('close', onOuterDialogClose)
+      }
       topicSel.removeEventListener('change', onTopicChange)
       root.remove()
     },
