@@ -126,6 +126,7 @@ type SceneRow = {
 const STYLE_ID = 'opax-explain-style'
 const FIRST_YEAR = 1998
 const LAST_YEAR = 2025
+const NARROW_FRAME_INTERVAL = 1000 / 30
 const STEP_NAMES = [
   'Who gives',
   'How much, and when',
@@ -238,17 +239,32 @@ function injectStyles() {
 @media (max-width:700px) {
   .explain-dialog { width:calc(100vw - .5rem); max-height:calc(100dvh - .5rem); }
   .explain-shell { display:block; height:auto; min-height:0; overflow:visible; }
-  .explain-stage { position:sticky; top:44px; z-index:1; height:42vh; min-height:260px; max-height:390px;
+  .explain-stage { position:sticky; top:44px; z-index:1; height:clamp(276px,38dvh,350px); min-height:0; max-height:350px;
     border-right:0; border-bottom:1px solid var(--line); }
   .explain-narrative { overflow:visible; padding:1.1rem; }
   .explain-stage-label { max-width:39%; font-size:.76rem; }
   .explain-stage-label.from { left:1rem; }.explain-stage-label.to { right:1rem; }
   .explain-stage-year { top:3.15rem; bottom:auto; font-size:1.85rem; }
   .explain-stage-year[data-zero] { opacity:.68; }
+  .explain-stage-year[data-peak-summary] { font-size:1.6rem; }
+  .explain-stage-year[data-peak-summary] small { margin-top:.25rem; }
   .explain-scene-label { max-width:6.7rem; font-size:.58rem; }
-  .explain-scene-label.destination { max-width:5.8rem; }
+  .explain-scene-label.destination { max-width:6.35rem; background:color-mix(in srgb,var(--paper) 97%,transparent);
+    font-size:.6875rem; line-height:1.25; }
+  .explain-scene-label.gauge { font-size:.6875rem; }
+  .explain-scene-label.clock,.explain-scene-label.election,.explain-scene-label.peak,
+  .explain-scene-label.citation { font-size:.6875rem; line-height:1.25; }
+  .explain-scene-label.citation { padding:.08rem .2rem; background:color-mix(in srgb,var(--paper) 98%,transparent); }
+  .explain-scene-label.limit,.explain-scene-label.limit-note { font-size:.6875rem; line-height:1.25; }
+  .explain-scene-label.limit-note { max-width:7.5rem; background:color-mix(in srgb,var(--paper) 97%,transparent); }
+  .explain-scene-label.destination-summary { color:var(--bronze-ink); font-family:var(--sans); font-weight:650; }
+  .explain-scene-label.stage-caption { max-width:11rem; padding:.2rem .38rem; }
   .explain-title { font-size:1.65rem; }
   .explain-facts { grid-template-columns:1fr 1fr; }
+  .explain-parties a,.explain-source-copy a { min-width:44px; min-height:44px; display:flex; align-items:center; }
+}
+@media (max-width:370px) {
+  .explain-stage-label.from { max-width:37%; }
 }
 @media (prefers-reduced-motion:reduce) { .explain-step-copy { animation:none; } }
 `
@@ -516,7 +532,8 @@ class FlowScene {
   private readonly historyGeometry: THREE.BufferGeometry
   private readonly historyPositions: Float32Array
   private readonly historyTargets = new Float32Array(LAST_YEAR - FIRST_YEAR + 1)
-  private readonly historyMaterial: THREE.LineBasicMaterial
+  private readonly historyMaterial: THREE.MeshBasicMaterial
+  private readonly historyGuideMaterial: THREE.LineBasicMaterial
   private readonly labelLayer: HTMLDivElement
   private readonly resizeObserver: ResizeObserver
   private readonly motion = matchMedia('(prefers-reduced-motion: reduce)')
@@ -556,9 +573,10 @@ class FlowScene {
   private raf = 0
   private start = performance.now()
   private lastPaint = 0
+  private historyCompleteShown = false
   private destroyed = false
   private visible = true
-  onYear: ((year: number, amount: number) => void) | null = null
+  onYear: ((year: number, amount: number, complete: boolean) => void) | null = null
 
   constructor(
     host: HTMLElement,
@@ -626,6 +644,7 @@ class FlowScene {
     this.historyGeometry = history.geometry
     this.historyPositions = history.positions
     this.historyMaterial = history.material
+    this.historyGuideMaterial = history.guideMaterial
     this.buildDestinations()
     this.buildCitationTimeline()
     this.buildLimits()
@@ -861,45 +880,42 @@ class FlowScene {
 
   private buildHistory() {
     const years = LAST_YEAR - FIRST_YEAR + 1
-    const elections = new Set(this.helpers.electionYears || [])
-    const staticSegments = 1 + years + elections.size
-    const positions = new Float32Array(staticSegments * 2 * 3)
+    const elections = new Set((this.helpers.electionYears || []).filter((year) => year >= FIRST_YEAR && year <= LAST_YEAR))
+    const guidePositions = new Float32Array((1 + elections.size) * 2 * 3)
+    const positions = new Float32Array(years * 6 * 3)
     const baselineY = -2.16
     const xAt = (year: number) => -3.5 + ((year - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR)) * 7
     const max = Math.max(...[...this.flow.years.values()].map((cell) => cell[0]), 1)
-    let offset = 0
     for (let index = 0; index < years; index++) {
       const year = FIRST_YEAR + index
       this.historyTargets[index] = Math.sqrt((this.flow.years.get(year)?.[0] || 0) / max) * 1.08
-      positions[offset++] = xAt(year)
-      positions[offset++] = baselineY
-      positions[offset++] = 0
-      positions[offset++] = xAt(year)
-      positions[offset++] = baselineY
-      positions[offset++] = 0
     }
-    positions[offset++] = -3.56
-    positions[offset++] = baselineY
-    positions[offset++] = -.02
-    positions[offset++] = 3.56
-    positions[offset++] = baselineY
-    positions[offset++] = -.02
+    let offset = 0
+    guidePositions[offset++] = -3.56
+    guidePositions[offset++] = baselineY
+    guidePositions[offset++] = -.02
+    guidePositions[offset++] = 3.56
+    guidePositions[offset++] = baselineY
+    guidePositions[offset++] = -.02
     for (const year of elections) {
-      if (year < FIRST_YEAR || year > LAST_YEAR) continue
-      positions[offset++] = xAt(year)
-      positions[offset++] = baselineY - .05
-      positions[offset++] = .02
-      positions[offset++] = xAt(year)
-      positions[offset++] = baselineY + .17
-      positions[offset++] = .02
+      guidePositions[offset++] = xAt(year)
+      guidePositions[offset++] = baselineY - .05
+      guidePositions[offset++] = .02
+      guidePositions[offset++] = xAt(year)
+      guidePositions[offset++] = baselineY + .17
+      guidePositions[offset++] = .02
     }
     const geometry = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(positions, 3))
-    const material = new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .54 })
-    this.historyGroup.add(new THREE.LineSegments(
-      geometry,
-      material,
-    ))
-    return { geometry, positions, material }
+    const material = new THREE.MeshBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .58, side: THREE.DoubleSide })
+    const guideMaterial = new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .5 })
+    this.historyGroup.add(
+      new THREE.LineSegments(
+        new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(guidePositions, 3)),
+        guideMaterial,
+      ),
+      new THREE.Mesh(geometry, material),
+    )
+    return { geometry, positions, material, guideMaterial }
   }
 
   private makeRibbonField(rows: Array<{
@@ -1110,12 +1126,14 @@ class FlowScene {
       source, sourceIndex, time: this.citationTime(source.date),
     })).filter((row) => row.time >= 1993 && row.time <= 2026).slice(0, 6)
     const laneLastX = Array.from({ length: 6 }, () => Number.NEGATIVE_INFINITY)
+    const laneGap = this.narrow ? .54 : .36
+    const laneStart = this.narrow ? -1.72 : -1.65
     this.citationCards = dated.map((row, index) => {
       const x = this.timelineX(row.time)
       let lane = laneLastX.findIndex((lastX) => Math.abs(x - lastX) >= .78)
       if (lane < 0) lane = index % laneLastX.length
       laneLastX[lane] = x
-      return { x, y: -1.65 + lane * .36, source: row.source, sourceIndex: row.sourceIndex }
+      return { x, y: laneStart + lane * laneGap, source: row.source, sourceIndex: row.sourceIndex }
     })
     this.citationArrival = performance.now()
     this.activeCitation = null
@@ -1124,13 +1142,15 @@ class FlowScene {
       if (this.step === 3) this.setLabels(this.labelsForStep(3))
       return
     }
+    const cardWidth = this.narrow ? 1.72 : .72
+    const cardHeight = this.narrow ? .46 : .32
     this.citationEdge = new THREE.InstancedMesh(
-      new THREE.PlaneGeometry(.72, .32),
+      new THREE.PlaneGeometry(cardWidth, cardHeight),
       new THREE.MeshBasicMaterial({ transparent: true, opacity: .82, side: THREE.DoubleSide }),
       this.citationCards.length,
     )
     this.citationFill = new THREE.InstancedMesh(
-      new THREE.PlaneGeometry(.65, .25),
+      new THREE.PlaneGeometry(cardWidth - .07, cardHeight - .07),
       new THREE.MeshBasicMaterial({ color: 0xfaf9f6, transparent: true, opacity: .96, side: THREE.DoubleSide }),
       this.citationCards.length,
     )
@@ -1208,9 +1228,17 @@ class FlowScene {
 
   private updateHistory(cutoff: number) {
     const baselineY = -2.16
+    const xAt = (year: number) => -3.5 + ((year - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR)) * 7
+    const halfWidth = this.narrow ? .029 : .018
+    const heightScale = this.narrow ? 1.58 : 1
     for (let index = 0; index < this.historyTargets.length; index++) {
       const year = FIRST_YEAR + index
-      this.historyPositions[index * 6 + 4] = baselineY + (year <= cutoff ? this.historyTargets[index] : 0)
+      const x = xAt(year)
+      const top = baselineY + (year <= cutoff ? this.historyTargets[index] * heightScale : 0)
+      this.historyPositions.set([
+        x - halfWidth, baselineY, 0, x + halfWidth, baselineY, 0, x + halfWidth, top, 0,
+        x - halfWidth, baselineY, 0, x + halfWidth, top, 0, x - halfWidth, top, 0,
+      ], index * 18)
     }
     ;(this.historyGeometry.getAttribute('position') as THREE.BufferAttribute).needsUpdate = true
   }
@@ -1229,27 +1257,41 @@ class FlowScene {
     if (step === 0) {
       if (this.detail.kind === 'party') {
         const rows = this.industryRows().slice(0, 7)
-        return rows.map((row, index) => ({
+        const visible = this.narrow && rows.length > 5 ? rows.slice(0, 5) : rows
+        const labels: SceneLabel[] = visible.map((row, index) => ({
           text: stageShortLabel(row.label),
           position: new THREE.Vector3(-3.0 + (index % 2) * .2, rows.length === 1 ? -.55 : 1.45 - index * (2.95 / Math.max(1, rows.length - 1)), .08),
           className: 'destination', align: 'start', offsetX: 5,
         }))
+        if (visible.length < rows.length) labels.push({
+          text: `+${rows.length - visible.length} smaller`,
+          position: new THREE.Vector3(-2.8, 1.45 - (rows.length - 1) * (2.95 / Math.max(1, rows.length - 1)), .08),
+          className: 'destination destination-summary', align: 'start', offsetX: 5,
+        })
+        return labels
       }
       const rows = this.partyRows().slice(0, 7)
-      return [
+      const visible = this.narrow && rows.length > 5 ? rows.slice(0, 5) : rows
+      const labels: SceneLabel[] = [
         { text: '1998', position: new THREE.Vector3(this.whoGiverPoint.x, this.whoGiverPoint.y + 1.43, .08), className: 'clock', align: 'middle' },
-        ...rows.map((row, index) => ({
+        ...visible.map((row, index) => ({
           text: stageShortLabel(row.label),
           position: new THREE.Vector3(3.02 - (index % 2) * .18, rows.length === 1 ? -.62 : 1.42 - index * (2.9 / Math.max(1, rows.length - 1)), .08),
           className: 'destination', align: 'end' as const, offsetX: -5,
         })),
       ]
+      if (visible.length < rows.length) labels.push({
+        text: `+${rows.length - visible.length} smaller`,
+        position: new THREE.Vector3(2.84, 1.42 - (rows.length - 1) * (2.9 / Math.max(1, rows.length - 1)), .08),
+        className: 'destination destination-summary', align: 'end', offsetX: -5,
+      })
+      return labels
     }
     if (step === 1) {
       const xAt = (year: number) => -3.5 + ((year - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR)) * 7
       const elections = (this.helpers.electionYears || []).filter((year) => year >= FIRST_YEAR && year <= LAST_YEAR)
       const peakHeight = this.flow.peakYear
-        ? this.historyTargets[this.flow.peakYear - FIRST_YEAR] || 0
+        ? (this.historyTargets[this.flow.peakYear - FIRST_YEAR] || 0) * (this.narrow ? 1.58 : 1)
         : 0
       return [
         ...elections.map((year) => ({
@@ -1264,7 +1306,10 @@ class FlowScene {
       ]
     }
     if (step === 2) {
-      const labels: SceneLabel[] = this.destinationRows.map((row, index) => {
+      const visible = this.narrow && this.destinationRows.length > 5
+        ? this.destinationRows.slice(0, 5)
+        : this.destinationRows
+      const labels: SceneLabel[] = visible.map((row, index) => {
         return {
           text: stageShortLabel(row.label),
           position: this.destinationPositions[index].clone().add(new THREE.Vector3(this.destinationSide === 'left' ? .42 : -.42, 0, .08)),
@@ -1273,14 +1318,26 @@ class FlowScene {
           offsetX: this.destinationSide === 'left' ? 5 : -5,
         }
       })
+      if (visible.length < this.destinationRows.length) {
+        const index = this.destinationRows.length - 1
+        const position = this.destinationPositions[index].clone().add(new THREE.Vector3(this.destinationSide === 'left' ? .42 : -.42, 0, .08))
+        labels.push({
+          text: `+${this.destinationRows.length - visible.length} smaller`, position,
+          className: 'destination destination-summary',
+          align: (this.destinationSide === 'left' ? 'start' : 'end') as 'start' | 'end',
+          offsetX: this.destinationSide === 'left' ? 5 : -5,
+        })
+      }
       const partyName = stageShortLabel(this.flow.party?.label || 'party')
-      const gaugeAnchor = this.detail.kind === 'party'
-        ? this.receiverPoint.clone().add(new THREE.Vector3(-1.12, .5, .08))
-        : (this.destinationPositions[this.destinationGaugeIndex] || this.receiverPoint).clone().add(new THREE.Vector3(-1.28, -.02, .08))
+      const gaugeAnchor = this.narrow
+        ? new THREE.Vector3(0, -2.5, .08)
+        : this.detail.kind === 'party'
+          ? this.receiverPoint.clone().add(new THREE.Vector3(-1.12, .5, .08))
+          : (this.destinationPositions[this.destinationGaugeIndex] || this.receiverPoint).clone().add(new THREE.Vector3(-1.28, -.02, .08))
       if (this.detail.kind !== 'party' && this.destinationGaugeIndex >= 0) labels.splice(this.destinationGaugeIndex, 1)
       labels.push({
         text: `${(this.destinationGaugeShare * 100).toFixed(1)}% of ${partyName} receipts`,
-        position: gaugeAnchor, className: 'gauge', align: 'middle',
+        position: gaugeAnchor, className: `gauge${this.narrow ? ' stage-caption' : ''}`, align: 'middle',
         offsetX: 0,
       })
       return labels
@@ -1292,20 +1349,21 @@ class FlowScene {
         { text: '2026', position: new THREE.Vector3(this.timelineX(2026), -2.27, .06), className: 'election', align: 'middle' },
         ...this.citationCards.map((card) => ({
           text: String(card.source.date || '').slice(0, 10),
-          position: new THREE.Vector3(card.x, card.y + .24, .08),
+          position: new THREE.Vector3(card.x, card.y + (this.narrow ? .3 : .24), .08),
           className: 'citation', align: 'middle' as const,
         })),
       ]
     }
     if (step === 4) {
+      const crossed = this.pointAt(.62, this.giverPoint, this.receiverPoint, 2.08)
       return [
         {
           text: 'below the disclosure threshold: not reported',
           position: new THREE.Vector3(0, -1.49, .08), className: 'limit', align: 'middle',
         },
         {
-          text: 'state + federal totals remain separate',
-          position: new THREE.Vector3(.9, 1.26, .08), className: 'limit-note', align: 'start', offsetX: 7,
+          text: '× state + federal totals stay separate',
+          position: crossed.add(new THREE.Vector3(.24, .04, .08)), className: 'limit-note', align: 'start', offsetX: 4,
         },
       ]
     }
@@ -1318,6 +1376,14 @@ class FlowScene {
     if (!width || !height) return
     this.camera.updateMatrixWorld()
     for (const label of this.labels) {
+      if (label.className?.includes('stage-caption')) {
+        label.element.style.left = '50%'
+        label.element.style.top = 'auto'
+        label.element.style.bottom = '1.05rem'
+        label.element.style.transform = 'translateX(-50%)'
+        label.element.hidden = false
+        continue
+      }
       const projected = label.position.clone().project(this.camera)
       const x = (projected.x * .5 + .5) * width + (label.offsetX || 0)
       const y = (-projected.y * .5 + .5) * height + (label.offsetY || 0)
@@ -1337,7 +1403,9 @@ class FlowScene {
     this.narrow = width <= 700
     this.camera.aspect = this.aspect
     this.camera.updateProjectionMatrix()
-    this.targetZ = this.baseTargetZ * Math.max(1, 1.26 / this.aspect)
+    this.targetZ = this.baseTargetZ * Math.max(1, (this.narrow ? 1.22 : 1.26) / this.aspect)
+    this.updateHistory(this.year)
+    if (this.labels.length) this.setLabels(this.labelsForStep(this.step))
     this.draw(performance.now())
   }
 
@@ -1347,7 +1415,14 @@ class FlowScene {
       this.year = LAST_YEAR
       this.yearAmount = this.flow.years.get(this.year)?.[0] || 0
       this.updateHistory(LAST_YEAR)
-      this.onYear?.(this.year, this.yearAmount)
+      this.historyCompleteShown = true
+      this.onYear?.(this.flow.peakYear || this.year, this.flow.peakYear ? this.flow.peakAmount : this.yearAmount, true)
+    } else if (this.step === 1) {
+      this.historyCompleteShown = false
+      this.year = FIRST_YEAR
+      this.yearAmount = this.flow.years.get(this.year)?.[0] || 0
+      this.updateHistory(this.year)
+      this.onYear?.(this.year, this.yearAmount, false)
     }
     this.ensureLoop()
   }
@@ -1365,8 +1440,9 @@ class FlowScene {
     this.baseTargetZ = [11.45, 10.65, 11.1, 11.9, 12.3][step] || 11.8
     this.targetCameraX = [0, 0, .08, -.08, 0][step] || 0
     this.targetCameraY = [.12, .02, .13, .2, .16][step] || .16
-    this.targetZ = this.baseTargetZ * Math.max(1, 1.26 / this.aspect)
+    this.targetZ = this.baseTargetZ * Math.max(1, (this.narrow ? 1.22 : 1.26) / this.aspect)
     this.maxYearAmount = Math.max(...[...this.flow.years.values()].map((cell) => cell[0]), 1)
+    this.historyCompleteShown = false
     this.start = performance.now()
     this.baseGroup.visible = step !== 2
     this.whoGroup.visible = step === 0
@@ -1377,6 +1453,7 @@ class FlowScene {
     this.mainArrow.visible = step !== 0 && step !== 2
     this.historyGroup.visible = step === 1 || step === 4
     this.historyMaterial.opacity = step === 4 ? .13 : .54
+    this.historyGuideMaterial.opacity = step === 4 ? .13 : .5
     this.travelling.visible = step === 1
     this.giverGroup.visible = step !== 0 || this.detail.kind !== 'party'
     this.giverGroup.position.x = step === 0 && this.detail.kind !== 'party' ? this.whoGiverPoint.x : this.giverPoint.x
@@ -1387,12 +1464,17 @@ class FlowScene {
       this.year = this.motion.matches ? LAST_YEAR : FIRST_YEAR
       this.yearAmount = this.flow.years.get(this.year)?.[0] || 0
       this.updateHistory(this.year)
-      this.onYear?.(this.year, this.yearAmount)
+      if (this.motion.matches) {
+        this.historyCompleteShown = true
+        this.onYear?.(this.flow.peakYear || this.year, this.flow.peakYear ? this.flow.peakAmount : this.yearAmount, true)
+      } else {
+        this.onYear?.(this.year, this.yearAmount, false)
+      }
     } else {
       this.year = LAST_YEAR
       this.yearAmount = this.flow.years.get(LAST_YEAR)?.[0] || 0
       this.updateHistory(LAST_YEAR)
-      this.onYear?.(this.year, this.yearAmount)
+      this.onYear?.(this.year, this.yearAmount, false)
     }
     this.setLabels(this.labelsForStep(step))
     this.updateCitationCards(performance.now())
@@ -1411,7 +1493,7 @@ class FlowScene {
   private frame = (now: number) => {
     this.raf = 0
     if (this.destroyed || !this.visible) return
-    if (!this.narrow || now - this.lastPaint >= 32) this.draw(now)
+    if (!this.narrow || now - this.lastPaint >= NARROW_FRAME_INTERVAL) this.draw(now)
     this.raf = requestAnimationFrame(this.frame)
   }
 
@@ -1436,8 +1518,12 @@ class FlowScene {
         this.year = nextYear
         this.yearAmount = this.flow.years.get(this.year)?.[0] || 0
         this.updateHistory(this.year)
-        this.onYear?.(this.year, this.yearAmount)
+        this.onYear?.(this.year, this.yearAmount, false)
       }
+    }
+    if (this.step === 1 && historyComplete && !this.historyCompleteShown) {
+      this.historyCompleteShown = true
+      this.onYear?.(this.flow.peakYear || this.year, this.flow.peakYear ? this.flow.peakAmount : this.yearAmount, true)
     }
 
     const ratio = Math.max(0, this.yearAmount) / this.maxYearAmount
@@ -1460,10 +1546,6 @@ class FlowScene {
     this.renderer.render(this.scene, this.camera)
   }
 
-  updateYearAmount(amount: number) {
-    this.yearAmount = amount
-  }
-
   destroy() {
     this.destroyed = true
     if (this.raf) cancelAnimationFrame(this.raf)
@@ -1475,7 +1557,7 @@ class FlowScene {
       drawable.geometry?.dispose?.()
       const materials = Array.isArray(drawable.material) ? drawable.material : [drawable.material]
       for (const material of materials) {
-        const map = (material as THREE.Material & { map?: THREE.Texture }).map
+        const map = (material as (THREE.Material & { map?: THREE.Texture }) | undefined)?.map
         map?.dispose()
         material?.dispose?.()
       }
@@ -1724,12 +1806,14 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       stage.classList.add('explain-stage-static')
       stage.append(el('p', 'explain-status', 'The animated flow needs WebGL, which this browser does not offer; the figures and the record are below.'))
     }
-    if (scene) scene.onYear = (year) => {
+    if (scene) scene.onYear = (year, amount, complete) => {
       if (!flow || !yearLabel) return
-      const amount = flow.years.get(year)?.[0] || 0
-      scene?.updateYearAmount(amount)
-      yearLabel.toggleAttribute('data-zero', amount <= 0)
-      yearLabel.replaceChildren(document.createTextNode(String(year)), el('small', '', `${helpers.fmtMoney(amount)} disclosed`))
+      yearLabel.toggleAttribute('data-zero', !complete && amount <= 0)
+      yearLabel.toggleAttribute('data-peak-summary', complete)
+      yearLabel.replaceChildren(
+        document.createTextNode(String(year)),
+        el('small', '', complete ? `peak · ${helpers.fmtMoney(amount)} disclosed` : `${helpers.fmtMoney(amount)} disclosed`),
+      )
     }
 
     narrative.append(el('h1', 'explain-title', titleFor(resolved, detail, helpers)))

@@ -1543,7 +1543,7 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 #dialog-explain .game-dialog-head .game-close:active { transform: translate(-0.6rem, 0.6rem) scale(0.94); }
 @media (max-width: 700px) {
   #dialog-explain .explain-stage { top: 0; }
-  #dialog-explain .explain-stage-label.to { right: 4.2rem; }
+  #dialog-explain .explain-stage-label.to { right: 4.5rem; }
   #dialog-explain .explain-controls {
     position: sticky; bottom: 0; z-index: 3; margin: 1.25rem -1.1rem 0; padding: 0.7rem 1.1rem;
     background: var(--paper); border-top: 1px solid var(--line);
