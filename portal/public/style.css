@@ -403,10 +403,11 @@ main { flex: 1; padding: 2.75rem 0 3rem; }
   /* Inner pages: air between the breadcrumb strip and the page's own kicker
      (the home page's headline carries its own margin). */
   main.compact { padding-top: 1.1rem; }
-  /* Narrow screens: the query takes its own line; the submit and the filter
-     icon share the next one instead of the icon orphaning onto a third. */
-  .query-line > input, .ask-row > input { flex-basis: 100%; }
-  .query-line button.primary, .ask-row button.primary { flex: 1 1 auto; }
+  /* Narrow screens: the ask question takes its own line; the submit and the
+     options icon share the next one. (The search row stays on one line — see
+     the mobile block at the end of the file.) */
+  .ask-row > input { flex-basis: 100%; }
+  .ask-row button.primary { flex: 1 1 auto; }
 }
 main:focus { outline: none; }
 
@@ -852,7 +853,7 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 
 
 .search-grid { display: grid; gap: 0.8rem; }
-.query-line { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.query-line { display: flex; gap: 0.6rem; flex-wrap: wrap; min-width: 0; } /* a grid item: without min-width 0 the search-grid column grows to the row's min-content and the input never shrinks */
 .query-line > input { flex: 1 1 280px; min-height: 48px; }
 .filter-rail { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: end; }
 .filter-item { display: inline-flex; flex-direction: column; gap: 0.2rem; }
@@ -1802,8 +1803,13 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   /* Ask stretches, the options icon rides at its right on the same line. */
   .ask-row button.primary { flex: 1 1 auto; min-height: 52px; }
   #ask-options-btn, #search-options-btn { min-height: 52px; width: 52px; }
-  /* Same pattern on search: the submit stretches, the filter icon beside it. */
-  .query-line button.primary { flex: 1 1 auto; min-height: 52px; }
+  /* Search stays on ONE line: the query shrinks as far as it must, the
+     submit keeps its natural width and the filter icon rides at the right —
+     no second line for the button, no third for the icon. */
+  .query-line { flex-wrap: nowrap; }
+  .query-line > input { flex: 1 1 0; min-width: 0; min-height: 52px; }
+  .query-line button.primary { flex: 0 0 auto; min-height: 52px; padding-inline: 1rem; }
+  .query-line .ask-options-wrap { flex: 0 0 auto; }
   .chart { padding: 0.75rem; }
   .barrow { grid-template-columns: minmax(90px, 30%) 1fr auto; }
   .tile { min-width: 140px; flex-basis: 140px; }
