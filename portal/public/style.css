@@ -2532,3 +2532,30 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-doc #doc-similar-panel .subject-section-title { margin: 0 0 0.5rem; }
 #panel-doc .doc-head:has(.doc-topic-long) > .doc-toolbar { grid-row: 6; }
 #panel-doc .doc-head:has(.doc-topic-long) > .doc-topics { grid-row: 4; }
+
+#panel-doc .doc-brief-head .subject-section-title { margin: 0; font: 600 1.125rem/1.4 var(--serif); }
+#panel-doc .doc-brief-tag { border: 0; background: none; padding: 0; font: 400 0.8125rem/1.4 var(--sans); text-transform: none; letter-spacing: normal; color: var(--ink-soft); }
+#panel-doc .doc-brief-note { font-size: 0.875rem; color: var(--ink-soft); }
+#panel-doc .doc-record-head { margin: 1.5rem 0 0.75rem; font: 600 1.125rem/1.4 var(--serif); }
+#panel-doc .doc-related-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 1rem; margin-top: 0.5rem; }
+#panel-doc .doc-related-actions .doc-search-all { margin-top: 0; }
+#panel-doc .action-btn { min-height: 44px; }
+#panel-doc .doc-meta a { display: inline-flex; align-items: center; min-height: 44px; }
+#panel-doc :is(a, button):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
+#panel-doc :is(.doc-meta, .doc-text, .doc-brief, .doc-similar-list, .cite-panel) { font-variant-numeric: tabular-nums; }
+#panel-doc :is(.doc-topic, .doc-meta, .doc-similar-list, .doc-brief) { overflow-wrap: anywhere; }
+#panel-doc :is(#doc-cite-panel, #doc-similar-panel, #doc-text, #doc-brief) { scroll-margin-top: calc(var(--header-h) + 1rem); }
+@media (prefers-reduced-motion: reduce) {
+  #panel-doc *, #panel-doc *::before, #panel-doc *::after { animation: none !important; transition: none !important; scroll-behavior: auto; }
+}
+#panel-doc .doc-head { container-type: inline-size; }
+@container (max-width: 12rem) {
+  #panel-doc .doc-head:has(.doc-portrait) > .doc-topic,
+  #panel-doc .doc-head:has(.doc-portrait) > .doc-meta { grid-column: 1 / -1; }
+  #panel-doc .doc-head:has(.doc-portrait) > .doc-portrait { grid-row: 2; }
+}
+@media (max-width: 699px) {
+  #panel-doc .doc-toolbar-btns { display: flex; flex-wrap: wrap; }
+  #panel-doc .doc-toolbar-btns .action-btn { flex: 1 0 calc(20% - 6px); min-width: max(44px, 4em); }
+  #panel-doc .doc-toolbar-btns #doc-ask { flex-basis: 100%; }
+}

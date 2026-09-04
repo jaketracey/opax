@@ -7539,7 +7539,8 @@ function citePanelHTML(doc) {
     <p class="fineprint">For AGLC-compliant page references, use the official record via the source link. OPAX never invents Hansard page numbers.</p>
     <h3>APA 7</h3><pre>${esc(apa)}</pre>
     <h3>BibTeX</h3><pre>${esc(bibtexFor(src))}</pre>
-    <h3>RIS</h3><pre>${esc(risFor(src))}</pre>`;
+    <h3>RIS</h3><pre>${esc(risFor(src))}</pre>
+    <button type="button" class="action-btn" data-doc-close="doc-cite">Close citations</button>`;
 }
 
 async function openDocPage(slug, manageFocus) {
@@ -7704,6 +7705,7 @@ function renderDocText(doc) {
     for (const match of line.matchAll(calls)) {
       const start = match.index + match[0].length - match[1].length;
       if (start < offset) continue;
+      if (identity(match[1].replace(/:\s*$/, "")) === identity(doc.speaker)) continue;
       const bodyStart = start + match[1].length;
       const tail = line.slice(bodyStart);
       const endings = [...tail.matchAll(/[.!?](?=\s|$)/g)];
@@ -7746,11 +7748,12 @@ async function renderDocSimilar(doc) {
         const label = titleSubject(row) === query && row.speaker ? row.speaker
           : title.length > 110 ? `${title.slice(0, 110).replace(/\s+\S*$/, "")}…` : title;
         return `<li><a href="/doc/${encodeURIComponent(row.slug)}" title="${esc(title)}">${esc(label)}</a>
-          <p class="doc-related-meta">${esc([row.speaker, fmtDate(row.date)].filter(Boolean).join(" · "))}</p>
+          <p class="doc-related-meta">${esc([label === row.speaker ? "" : row.speaker, fmtDate(row.date)].filter(Boolean).join(" · "))}</p>
           <p>${esc(excerpt(brief || row.snippet || "No passage available."))}</p>
           <p class="doc-related-meta">${brief ? "Machine summary · not part of the record" : "Passage from the record"}</p></li>`;
       }).join("")}</ul>` : '<p>No related speeches found for this subject.</p>') +
-      `<a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject ↗</a>`;
+      `<div class="doc-related-actions"><a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject ↗</a>
+        <button type="button" class="action-btn" data-doc-close="doc-similar">Close similar</button></div>`;
   } catch {
     if (currentDoc !== doc) return;
     panel.innerHTML = '<h3 class="subject-section-title">Similar speeches</h3><p role="status">Related speeches could not be loaded.</p><button type="button" class="action-btn">Try again</button>';
@@ -7758,6 +7761,13 @@ async function renderDocSimilar(doc) {
   } finally {
     if (currentDoc === doc) panel.removeAttribute("aria-busy");
   }
+}
+
+function closeDocPanel(triggerId) {
+  const trigger = $(triggerId);
+  $(trigger.getAttribute("aria-controls")).hidden = true;
+  trigger.setAttribute("aria-expanded", "false");
+  trigger.focus();
 }
 
 // Toolbar buttons: labels live in the markup; wrap them with the house icons.
@@ -7768,6 +7778,22 @@ for (const [id, icon] of [
   const btn = $(id);
   btn.innerHTML = `${iconSvg(icon)}<span>${esc(btn.textContent)}</span>`;
 }
+$("panel-doc").addEventListener("click", (event) => {
+  const close = event.target.closest("[data-doc-close]");
+  if (close) closeDocPanel(close.dataset.docClose);
+});
+$("panel-doc").addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  for (const id of ["doc-cite", "doc-similar"]) {
+    const trigger = $(id);
+    const panel = $(trigger.getAttribute("aria-controls"));
+    if (!panel.hidden && (panel.contains(event.target) || trigger === event.target)) {
+      closeDocPanel(id);
+      event.preventDefault();
+      break;
+    }
+  }
+});
 $("doc-cite").addEventListener("click", () => {
   const panel = $("doc-cite-panel");
   panel.hidden = !panel.hidden;
