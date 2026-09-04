@@ -690,7 +690,7 @@ const CSS = `
 .tm-spark-caption { font-size: 0.7rem; color: var(--ink-faint, #6F7468); margin-top: 0.15rem; }
 
 /* Year in pictures: a focus-managed panel inside the Time Machine dialog. */
-.tm-gallery { min-height: 32rem; padding: 0.15rem 0 1rem; }
+.tm-gallery { min-height: 32rem; padding: 0.15rem 0 1rem; touch-action: pan-y; }
 /* The heading block is for assistive tech only: the sticky head carries the
    year and the way back. */
 .tm-gallery-head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -766,7 +766,7 @@ const CSS = `
 @keyframes tm-picture-next { from { opacity: 0.2; transform: translateX(12px); } to { opacity: 1; transform: none; } }
 @keyframes tm-picture-prev { from { opacity: 0.2; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
 @media (max-width: 760px) {
-  .tm-gallery { padding-top: 0; }
+  .tm-gallery { padding-top: 0; min-height: 0; }
   /* Phone: the photograph on its own, at its own shape, then one row of
      previous · dots · next beneath the caption and credit. */
   .tm-gallery-stage {
@@ -1339,8 +1339,35 @@ export function mountTimeMachine(container, opts = {}) {
     head.insertBefore(galleryClose, head.querySelector('.game-close'))
   }
 
+  // The host dialog sizes to its content; switching between the year and the
+  // gallery would snap between two heights. Measure before and after, and let
+  // max-height carry the change over a short curve.
+  function settleDialogHeight(before) {
+    if (!outerDialog || !Number.isFinite(before)) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    requestAnimationFrame(() => {
+      const after = outerDialog.offsetHeight
+      if (!after || Math.abs(after - before) < 8) return
+      outerDialog.style.transition = 'none'
+      outerDialog.style.maxHeight = `${before}px`
+      void outerDialog.offsetHeight
+      outerDialog.style.transition = 'max-height 320ms cubic-bezier(0.22, 0.7, 0.3, 1)'
+      outerDialog.style.maxHeight = `${after}px`
+      let done = false
+      const finish = () => {
+        if (done) return
+        done = true
+        outerDialog.style.transition = ''
+        outerDialog.style.maxHeight = ''
+      }
+      outerDialog.addEventListener('transitionend', finish, { once: true })
+      setTimeout(finish, 420)
+    })
+  }
+
   function openGallery(index = 0, trigger = null) {
     if (!picturesFor().length) return
+    const before = outerDialog?.offsetHeight
     galleryOpen = true
     galleryIndex = index
     galleryReturnFocus = trigger || document.activeElement
@@ -1350,15 +1377,18 @@ export function mountTimeMachine(container, opts = {}) {
     galleryClose.hidden = false
     if (outerDialog) outerDialog.scrollTop = 0
     renderGallery()
+    settleDialogHeight(before)
     galleryClose.focus({ preventScroll: true })
   }
 
   function closeGallery(restoreFocus = true) {
     if (!galleryOpen) return
+    const before = outerDialog?.offsetHeight
     galleryOpen = false
     galleryClose.hidden = true
     galleryEl.hidden = true
     machineEl.hidden = false
+    settleDialogHeight(before)
     galleryImage.removeAttribute('src')
     if (restoreFocus && galleryReturnFocus?.isConnected) galleryReturnFocus.focus({ preventScroll: true })
     galleryReturnFocus = null
@@ -1404,7 +1434,7 @@ export function mountTimeMachine(container, opts = {}) {
     const dx = touch.clientX - swipeStart.x
     const dy = touch.clientY - swipeStart.y
     swipeStart = null
-    if (Math.abs(dx) < 48 || Math.abs(dx) <= Math.abs(dy) * 1.25) return
+    if (Math.abs(dx) < 36 || Math.abs(dx) <= Math.abs(dy) * 1.1) return
     event.preventDefault()
     showGalleryIndex(galleryIndex + (dx < 0 ? 1 : -1), dx < 0 ? 'next' : 'prev')
   }
@@ -1988,8 +2018,8 @@ export function mountTimeMachine(container, opts = {}) {
   galleryClose.addEventListener('click', closeGallery)
   galleryPrev.addEventListener('click', onGalleryPrev)
   galleryNext.addEventListener('click', onGalleryNext)
-  galleryFigure.addEventListener('touchstart', onGalleryTouchStart, { passive: true })
-  galleryFigure.addEventListener('touchend', onGalleryTouchEnd, { passive: false })
+  galleryEl.addEventListener('touchstart', onGalleryTouchStart, { passive: true })
+  galleryEl.addEventListener('touchend', onGalleryTouchEnd, { passive: false })
   document.addEventListener('keydown', onGalleryKeyDown, true)
   if (outerDialog) {
     outerDialog.addEventListener('cancel', onOuterDialogCancel)
@@ -2045,8 +2075,8 @@ export function mountTimeMachine(container, opts = {}) {
       galleryClose.removeEventListener('click', closeGallery)
       galleryPrev.removeEventListener('click', onGalleryPrev)
       galleryNext.removeEventListener('click', onGalleryNext)
-      galleryFigure.removeEventListener('touchstart', onGalleryTouchStart)
-      galleryFigure.removeEventListener('touchend', onGalleryTouchEnd)
+      galleryEl.removeEventListener('touchstart', onGalleryTouchStart)
+      galleryEl.removeEventListener('touchend', onGalleryTouchEnd)
       document.removeEventListener('keydown', onGalleryKeyDown, true)
       if (outerDialog) {
         outerDialog.removeEventListener('cancel', onOuterDialogCancel)
