@@ -13,6 +13,8 @@
 import * as THREE from 'three'
 import { clusterColour } from './palette.ts'
 
+const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString()} ${n === 1 ? one : many}`
+
 type ExplainKind = 'industry' | 'donor' | 'party'
 type ExplainDetail = {
   kind: ExplainKind
@@ -1643,19 +1645,19 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       let text = ''
       if (detail.kind === 'donor' && flow.donor) {
         text = `${flow.donor.label} is grouped with ${labelForIndustry(flow.donor.industry || flow.donor.group || '', helpers).toLowerCase()} donors. ` +
-          `The map holds ${helpers.fmtMoney(Number(flow.donor.total) || 0)} across ${(Number(flow.donor.count) || 0).toLocaleString()} disclosed receipts from ${yearsActive}. ` +
+          `The map holds ${helpers.fmtMoney(Number(flow.donor.total) || 0)} across ${plural(Number(flow.donor.count) || 0, 'disclosed receipt')} from ${yearsActive}. ` +
           `${flow.donorRank ? `That places it ${flow.donorRank === 1 ? 'first' : `at number ${flow.donorRank}`} among the ${flow.graph.nodes.filter((node) => node.kind === 'donor').length} leading donors shown.` : ''}`
       } else if (detail.kind === 'party' && flow.party) {
         text = `${flow.party.label} received money from ${flow.donors.length.toLocaleString()} leading donors shown on this map. ` +
-          `Together, these flows account for ${helpers.fmtMoney(flow.total)} across ${flow.count.toLocaleString()} disclosed receipts from ${yearsActive}.`
+          `Together, these flows account for ${helpers.fmtMoney(flow.total)} across ${plural(flow.count, 'disclosed receipt')} from ${yearsActive}.`
       } else {
         text = `${labelForIndustry(flow.industry, helpers)} contains ${flow.donors.length.toLocaleString()} leading donors shown on this map. ` +
-          `Their matching disclosed flows total ${helpers.fmtMoney(flow.total)} across ${flow.count.toLocaleString()} receipts from ${yearsActive}.`
+          `Their matching disclosed flows total ${helpers.fmtMoney(flow.total)} across ${plural(flow.count, 'receipt')} from ${yearsActive}.`
       }
       copy.append(el('p', '', text))
       copy.append(facts([
         [helpers.fmtMoney(flow.total), flow.party && detail.to ? `disclosed to ${flow.party.label}` : 'disclosed in this view'],
-        [flow.count.toLocaleString(), 'receipts in the flow'],
+        [flow.count.toLocaleString(), flow.count === 1 ? 'receipt in the flow' : 'receipts in the flow'],
         [yearsActive, 'dated activity'],
         [(detail.kind === 'party' ? flow.topDonors.length : flow.otherParties.length).toLocaleString(), detail.kind === 'party' ? 'leading donors shown' : 'other recipient parties'],
       ]))
