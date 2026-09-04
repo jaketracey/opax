@@ -1017,6 +1017,22 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   .search-results-grid { grid-template-columns: minmax(0, 1fr) 380px; }
   .search-answer { position: sticky; top: calc(var(--header-h) + 1rem); }
 }
+/* Below the two-column breakpoint the summary reads first, folded to a few
+   lines behind a "Read more"; the results follow. On wide screens it is the
+   sticky rail beside the results and never folds. */
+@media (max-width: 1099px) {
+  .search-answer { order: -1; }
+  .search-answer.is-clamped .answer-compact {
+    max-height: 9.9em; overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent); mask-image: linear-gradient(to bottom, #000 72%, transparent);
+  }
+  .search-answer.is-clamped .answer-readmore { display: inline-block; }
+}
+.answer-readmore {
+  display: none; margin: 0.1rem 0 0.85rem; padding: 0; border: 0; background: none;
+  font: inherit; font-size: 0.875rem; color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer;
+}
+.answer-readmore:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; }
 .search-answer {
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
   border-top: 3px solid var(--bronze); padding: 1rem 1.25rem;

@@ -6134,6 +6134,33 @@ let searchAnswerAbort = null;
 let searchAnswerStill = null;
 let searchAnswerWanted = false; // an ask runs beside this search (there was a query)
 
+
+// On phones the summary sits above the results (CSS order) and folds to a
+// few lines once it has finished streaming, so the first result is one
+// thumb-flick away rather than a screen of prose away. Wide screens keep the
+// full rail. The fold only applies when the text actually overflows.
+const SEARCH_ANSWER_FOLD_QUERY = "(max-width: 1099px)";
+function resetSearchAnswerFold() {
+  const box = $("search-answer");
+  const btn = $("search-answer-readmore");
+  box.classList.remove("is-clamped");
+  if (btn) { btn.hidden = true; btn.setAttribute("aria-expanded", "false"); }
+}
+function foldSearchAnswer() {
+  const box = $("search-answer");
+  const body = $("search-answer-body");
+  const btn = $("search-answer-readmore");
+  if (!btn || !window.matchMedia(SEARCH_ANSWER_FOLD_QUERY).matches) return;
+  box.classList.add("is-clamped");
+  if (body.scrollHeight <= body.clientHeight + 8) { box.classList.remove("is-clamped"); return; }
+  btn.hidden = false;
+  btn.onclick = () => {
+    box.classList.remove("is-clamped");
+    btn.hidden = true;
+    btn.setAttribute("aria-expanded", "true");
+  };
+}
+
 async function runSearchAnswer(q, f, mySeq) {
   const box = $("search-answer");
   if (!q) { box.hidden = true; return; }
@@ -6148,6 +6175,7 @@ async function runSearchAnswer(q, f, mySeq) {
   $("search-answer-fold").open = false;
   $("search-answer-more").textContent = "";
   setStatus($("search-answer-status"), "Reading the record…");
+  resetSearchAnswerFold();
   $("search-answer-status").classList.add("visually-hidden"); // announced; the loader shows it
   showLoader("search-answer-wombat", "");
   // Silent for the first ten seconds; then a small word so a long wait reads
@@ -6195,6 +6223,7 @@ async function runSearchAnswer(q, f, mySeq) {
     hideLoader("search-answer-wombat");
     setStatus($("search-answer-status"), "");
     renderAnswer($("search-answer-body"), answer);
+    foldSearchAnswer();
     const cited = (data.sources || []).filter((x) => x.cited).slice(0, 3);
     $("search-answer-sources").replaceChildren(...cited.map((x, i) => sourceItem(x, i + 1)));
     $("search-answer-sum").textContent = `Sources (${cited.length})`;
