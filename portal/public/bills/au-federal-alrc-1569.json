@@ -1,0 +1,342 @@
+{
+ "key": "au-federal-alrc-1569",
+ "title": "AusLink (National Land Transport) Amendment Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-08-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development and Local Government",
+ "status": "passed",
+ "status_as_of": "2008-10-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-08-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-08-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-09-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-23",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-09-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-09-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-09-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-09-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-10-18",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-786834",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787296",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787297",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2008-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787447",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787448",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2008-09-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787450",
+   "speaker": "Brett Raguse",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787468",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787469",
+   "speaker": "Roger Price",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787601",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787602",
+   "speaker": "Kay Hull",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2008-09-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787709",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787710",
+   "speaker": "Ian Macfarlane",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787817",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787818",
+   "speaker": "Roger Price",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788038",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788039",
+   "speaker": "Kirsten Livermore",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788095",
+   "speaker": "John Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788149",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788150",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788206",
+   "speaker": "Jan McLucas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788326",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788327",
+   "speaker": "Ian Macdonald",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "AusLink (National Land Transport) Amendment Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00106",
+   "assent_date": "2008-10-18"
+  }
+ ]
+}

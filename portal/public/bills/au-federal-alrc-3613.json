@@ -1,0 +1,95 @@
+{
+ "key": "au-federal-alrc-3613",
+ "title": "Road Vehicle Standards (Consequential and Transitional Provisions) Amendment Bill 2022",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-03-30",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development and Communications",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Road Vehicle Standards (Consequential and Transitional Provisions) Amendment Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00017",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

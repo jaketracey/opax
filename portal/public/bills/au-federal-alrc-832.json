@@ -1,0 +1,89 @@
+{
+ "key": "au-federal-alrc-832",
+ "title": "Norfolk Island Amendment Bill 2003 [2004]",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 40,
+ "introduced": "2003-12-04",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Local Government, Territories and Roads",
+ "status": "passed",
+ "status_as_of": "2004-03-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2003-12-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2003-12-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2004-03-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2004-03-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2004-03-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2004-03-03",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2004-03-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2004-03-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2004-03-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2004-03-10",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Norfolk Island Amendment Act 2004",
+   "frl_uri": "https://www.legislation.gov.au/C2004A01250",
+   "assent_date": "2004-03-10"
+  }
+ ]
+}

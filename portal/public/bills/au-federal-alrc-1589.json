@@ -1,0 +1,434 @@
+{
+ "key": "au-federal-alrc-1589",
+ "title": "Broadcasting Legislation Amendment (Digital Television Switch-over) Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-09-24",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Broadband, Communications and the Digital Economy",
+ "status": "passed",
+ "status_as_of": "2008-12-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-09-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-12-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-12-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-12-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-12-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-12-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2008-12-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-12-18",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-1578",
+   "date": "2008-12-03",
+   "house": "senate",
+   "question": "Bill—by leave—taken as a whole. Nick Minchin by leave—I move opposition amendments (1) to (3) on sheet 5665-revised together: (1) Schedule 2, page 4 (after line 13), after item 3, insert: 3A Clause 2 of Schedule 4 Insert: **_minimum analog switch-off readiness criteria_** has the meaning given by clause 5G. (2) Schedule 2, page 5 (after line 32), after item 4, insert: 4A At the end of Part 1 of Schedule 4 Add: 5G Minimum analog switch-off readiness criteria (1) The Minister must, by legislative instrument, determine **_minimum analog switch-off readiness criteria_**. (2) The Minister must make a determination under subclause (1) within 6 months of the day on which this Act receives the Royal Assent. (3) A determination made under subclause (1) must include criteria against which the television broadcasting services in each local market area can be objectively assessed, to determine whether the following objectives can be met: (a) that the transmission of broadcasting services should achieve the same level of coverage and potential reception quality after digital television switch-over as was achieved by the transmission of those service in that area prior to switch-over; and (b) that all households which received free to air television coverage in analog mode should be able to receive the same level of coverage after switch-over; and (c) that adequate measures have been taken to assist household readiness for analog switch-off, as indicated by household take-up of equipment capable of receiving digital terrestrial free to air television transmission and awareness of analog switch-off and of methods to convert to digital. Assessment against readiness criteria (4) In relation to each local market area determined under paragraph 5F(1)(a), the Minister must cause a report to be prepared assessing the local market area against the minimum analog switch-off readiness criteria. (5) The Minister must cause any report prepared in accordance with subsection (4) to be publishe",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "earliest": 6,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-12-03/1"
+  },
+  {
+   "key": "federal-representatives-573",
+   "date": "2008-12-04",
+   "house": "representatives",
+   "question": "Debate resumed. Anthony Albanese I move: That the question be now put. Question put.",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 39
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 117
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-12-04/4"
+  },
+  {
+   "key": "federal-representatives-574",
+   "date": "2008-12-04",
+   "house": "representatives",
+   "question": "That the amendments ( **Mr Albanese’s** ) be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 66,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 39
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 116
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-12-04/5"
+  },
+  {
+   "key": "federal-representatives-575",
+   "date": "2008-12-04",
+   "house": "representatives",
+   "question": "That the bill, as amended, be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 66,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 39
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 116
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-12-04/6"
+  },
+  {
+   "key": "federal-senate-1592",
+   "date": "2008-12-04",
+   "house": "senate",
+   "question": "That the committee agrees to the amendments made by the House of Representatives to the bill.",
+   "stage": "Consideration of House message",
+   "ayes": 27,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 2,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-12-04/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-788154",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788155",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789739",
+   "speaker": "Anne McEwen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790353",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790354",
+   "speaker": "Nick Minchin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790355",
+   "speaker": "Nick Minchin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790356",
+   "speaker": "Stephen Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790460",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790464",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790473",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790474",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790475",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790481",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790482",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790616",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790617",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Broadcasting Legislation Amendment (Digital Television Switch-over) Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00158",
+   "assent_date": "2008-12-18"
+  }
+ ]
+}

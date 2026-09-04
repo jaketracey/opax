@@ -1,0 +1,1396 @@
+{
+ "key": "au-federal-alrc-1270",
+ "title": "Medibank Private Sale Bill 2006",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2006-10-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance and Administration",
+ "status": "passed",
+ "status_as_of": "2006-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2006-10-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-10-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2006-11-06",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-11-06",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-11-30",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-12-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-12-05",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2006-12-11",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-312",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/debates/?id=2006-11-02.19.1) that the bill be considered an urgent bill, which was moved by Liberal MP [Tony Abbott](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Tony_Abbott&mpc=Warringah&house=representatives). This is a procedural motion known as \"the guillotine\"(Read more about these types of motions [here](http://www.aph.gov.au/About_Parliament/House_of_Representatives/Powers_practice_and_procedure/00_-_Infosheets/Infosheet_7_-_Making_laws). ) that speeds up the progress of the bill through parliament.(Read more about the stages that a bill must pass through in parliament [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) Since this motion was passed, the House will now vote on what times to allocate for the remaining stages of the bill.(See that division [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=3&house=representatives). ) _Background to the bill_ The bill was introduced to allow the federal government to sell its interest in [Medibank Private](http://en.wikipedia.org/wiki/Medibank_Private) Limited and allow Medibank to operate on a “for profit” basis. The Coalition Government plans to do this after the 2007 election, should it be re-elected.(Read more about this privatisation proposal on Wikipedia [here](http://en.wikipedia.org/wiki/Medibank_Private#Privatisation_proposals) and on the ABC's World Today program [here](http://www.abc.net.au/worldtoday/content/2006/s1739241.htm).)",
+   "stage": "Declaration of Urgency",
+   "ayes": 81,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/1"
+  },
+  {
+   "key": "federal-representatives-313",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "Medibank Private Sale Bill 2006 - Allotment of Time - Put the question",
+   "stage": "Allotment of Time",
+   "ayes": 81,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/2"
+  },
+  {
+   "key": "federal-representatives-314",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/debate/?id=2006-11-02.29.2) \"That the time allotted for the remaining stages of the bill be until 1.30 pm this day.\"(Read more about the stages that a bill must pass through [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) It was moved by Liberal MP [Tony Abbott](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Tony_Abbott&mpc=Warringah&house=representatives). This division follows Mr Abbott's previous motion that the bill be considered an urgent bill.(Read more about that division [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=1&dmp=21&house=representatives). ) _Background to the bill_ The bill was introduced to allow the federal government to sell its interest in [Medibank Private](http://en.wikipedia.org/wiki/Medibank_Private) Limited and allow Medibank to operate on a “for profit” basis. The Coalition Government plans to do this after the 2007 election, should it be re-elected.(Read more about this privatisation proposal on Wikipedia [here](http://en.wikipedia.org/wiki/Medibank_Private#Privatisation_proposals) and on the ABC's World Today program [here](http://www.abc.net.au/worldtoday/content/2006/s1739241.htm).)",
+   "stage": "Allotment of Time",
+   "ayes": 81,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/3"
+  },
+  {
+   "key": "federal-representatives-315",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "Medibank Private Sale Bill 2006 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/4"
+  },
+  {
+   "key": "federal-representatives-316",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "Medibank Private Sale Bill 2006 - Third Reading - Read a third time",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/5"
+  },
+  {
+   "key": "federal-representatives-317",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=5&house=representatives).",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/6"
+  },
+  {
+   "key": "federal-representatives-318",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=4&house=representatives).",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/7"
+  },
+  {
+   "key": "federal-representatives-319",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=5&house=representatives).",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/8"
+  },
+  {
+   "key": "federal-representatives-320",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=5&house=representatives).",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/9"
+  },
+  {
+   "key": "federal-representatives-321",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=2&house=representatives).",
+   "stage": "Allotment of Time",
+   "ayes": 81,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/10"
+  },
+  {
+   "key": "federal-representatives-322",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=3&house=representatives).",
+   "stage": "Allotment of Time",
+   "ayes": 81,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/11"
+  },
+  {
+   "key": "federal-representatives-323",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=4&house=representatives).",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/12"
+  },
+  {
+   "key": "federal-representatives-324",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=5&house=representatives).",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/13"
+  },
+  {
+   "key": "federal-representatives-325",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=5&house=representatives).",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/14"
+  },
+  {
+   "key": "federal-representatives-326",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=2&house=representatives).",
+   "stage": "Allotment of Time",
+   "ayes": 81,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/15"
+  },
+  {
+   "key": "federal-representatives-327",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=3&house=representatives).",
+   "stage": "Allotment of Time",
+   "ayes": 81,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/16"
+  },
+  {
+   "key": "federal-representatives-328",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=4&house=representatives).",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/17"
+  },
+  {
+   "key": "federal-representatives-329",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=5&house=representatives).",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/18"
+  },
+  {
+   "key": "federal-representatives-330",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=5&house=representatives).",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/19"
+  },
+  {
+   "key": "federal-representatives-331",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=4&house=representatives).",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/20"
+  },
+  {
+   "key": "federal-representatives-332",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=5&house=representatives).",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/21"
+  },
+  {
+   "key": "federal-representatives-333",
+   "date": "2006-11-02",
+   "house": "representatives",
+   "question": "This division is a duplicate of a division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-11-02&number=5&house=representatives).",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-11-02/22"
+  },
+  {
+   "key": "federal-senate-1213",
+   "date": "2006-12-04",
+   "house": "senate",
+   "question": "This division relates to the Policy _[For privatising government assets](/policies/21)_. The majority voted against a [motion](http://www.openaustralia.org/senate/?gid=2006-12-04.74.1) introduced by Greens Senator [Kerry Nettle](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Kerry_Nettle&mpc=Senate&house=senate). This means that it was rejected. The motion would have amended the [original motion](http://www.openaustralia.org/senate/?gid=2006-12-04.75.1) \"_That this bill be now read a second time_\" with the following: \"_At the end of the motion, add: “but the Senate is of the view that any funds raised by the sale of Medibank Private should be directed to public health care.”_\" Because this motion was unsuccessful, the original motion can now be put.(See that division [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-12-04&number=6&dmp=21&house=senate). ) _Background to the bill_ The bill was introduced to allow the federal government to sell its interest in [Medibank Private](http://en.wikipedia.org/wiki/Medibank_Private) Limited and allow Medibank to operate on a “for profit” basis. The Coalition Government plans to do this after the 2007 election, should it be re-elected.(Read more about this privatisation proposal on Wikipedia [here](http://en.wikipedia.org/wiki/Medibank_Private#Privatisation_proposals) and on the ABC's World Today program [here](http://www.abc.net.au/worldtoday/content/2006/s1739241.htm).)",
+   "stage": "Second reading",
+   "ayes": 6,
+   "noes": 45,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "earliest": 10,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-12-04/5"
+  },
+  {
+   "key": "federal-senate-1214",
+   "date": "2006-12-04",
+   "house": "senate",
+   "question": "Medibank Private Sale Bill 2006 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 45,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-12-04/6"
+  },
+  {
+   "key": "federal-senate-1215",
+   "date": "2006-12-05",
+   "house": "senate",
+   "question": "Medibank Private Sale Bill 2006 - In Committee - Abolish the private health insurance rebate",
+   "stage": "In committee",
+   "ayes": 3,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "earliest": 10,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-12-05/1"
+  },
+  {
+   "key": "federal-senate-1216",
+   "date": "2006-12-05",
+   "house": "senate",
+   "question": "Medibank Private Sale Bill 2006 - Third Reading - Read a third time",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 45,
+    "earliest": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-12-05/2"
+  },
+  {
+   "key": "federal-senate-1217",
+   "date": "2006-12-05",
+   "house": "senate",
+   "question": "This is a duplicate of an earlier division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-12-05&number=2&house=senate).",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 45,
+    "earliest": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-12-05/3"
+  },
+  {
+   "key": "federal-senate-1218",
+   "date": "2006-12-05",
+   "house": "senate",
+   "question": "This is a duplicate of an earlier division available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2006-12-05&number=2&house=senate).",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 45,
+    "earliest": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-12-05/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-776031",
+   "speaker": "Gary Nairn",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776449",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-11-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776450",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-11-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776474",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-11-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776502",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-11-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776503",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-11-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776504",
+   "speaker": "Tony Abbott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-11-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776505",
+   "speaker": "Tony Abbott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-11-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776506",
+   "speaker": "Gavan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-11-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776507",
+   "speaker": "Duncan Kerr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-11-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776605",
+   "speaker": "Santo Santoro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-11-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776606",
+   "speaker": "Santo Santoro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-11-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776880",
+   "speaker": "Julian McGauran",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2006-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777231",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-11-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777232",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-11-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777342",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777343",
+   "speaker": "Andrew Murray",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2006-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777376",
+   "speaker": "Lyn Allison",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2006-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777377",
+   "speaker": "Richard Colbeck",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777428",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2006-12-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777429",
+   "speaker": "Nick Minchin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-12-05",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Medibank Private Sale Act 2006",
+   "frl_uri": "https://www.legislation.gov.au/C2006A00160",
+   "assent_date": "2006-12-11"
+  }
+ ]
+}

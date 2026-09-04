@@ -1,0 +1,510 @@
+{
+ "key": "au-federal-alrc-1510",
+ "title": "Excise Tariff Amendment (Condensate) Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-05-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2008-10-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-09-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-09-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-10-18",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-483",
+   "date": "2008-06-02",
+   "house": "representatives",
+   "question": "That this bill be now read a second time. That all words after “That” be omitted with a view to substituting the following words: “while not declining to give the bill a second reading, the House expresses its concern that the Government’s decisions reflected in this bill have been made without consultation with business or other interested groups and calls on the Government to support reference of this bill and the Excise Legislation Amendment (Condensate) Bill 2008 to the Senate Economics Committee for inquiry so as to permit consultation with those with practical expertise and responsibility in this vital industry”. That the question be now put.",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-06-02/1"
+  },
+  {
+   "key": "federal-senate-1523",
+   "date": "2008-09-25",
+   "house": "senate",
+   "question": "That these bills be now read a second time. That the amendment ( **Senator Xenophon’s** ) be agreed to.",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 55,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-25/4"
+  },
+  {
+   "key": "federal-senate-1524",
+   "date": "2008-09-25",
+   "house": "senate",
+   "question": "That the motion ( **Senator Faulkner’s** ), as amended, be agreed to.",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 55,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-25/5"
+  },
+  {
+   "key": "federal-senate-1525",
+   "date": "2008-09-25",
+   "house": "senate",
+   "question": "That the House of Representatives be requested to make the following amendments: That the requests ( **Senator Conroy’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 56,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-25/6"
+  },
+  {
+   "key": "federal-senate-1526",
+   "date": "2008-09-25",
+   "house": "senate",
+   "question": "That these bills be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 27,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 50,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-09-25/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-784889",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785301",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785303",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785304",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785690",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785691",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785787",
+   "speaker": "Chris Ellison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785859",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785860",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786814",
+   "speaker": "Kerry O'Brien",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788211",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788212",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788269",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788270",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788322",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788323",
+   "speaker": "David Johnston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788325",
+   "speaker": "Gary Humphries",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788356",
+   "speaker": "Jan McLucas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Excise Tariff Amendment (Condensate) Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00109",
+   "assent_date": "2008-10-18"
+  }
+ ]
+}

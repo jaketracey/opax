@@ -1,0 +1,1326 @@
+{
+ "key": "au-federal-alrc-1916",
+ "title": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2010-10-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Broadband, Communications and the Digital Economy",
+ "status": "passed",
+ "status_as_of": "2010-12-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2010-10-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-10-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-11-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-11-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2010-11-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2010-11-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2010-11-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-11-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-11-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-11-23",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-11-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-11-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2010-11-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2010-11-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2010-11-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2010-11-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2010-11-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2010-12-15",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-778",
+   "date": "2010-11-15",
+   "house": "representatives",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — Second Reading — Read a second time",
+   "stage": "Second reading",
+   "ayes": 73,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2010-11-15/2"
+  },
+  {
+   "key": "federal-representatives-779",
+   "date": "2010-11-16",
+   "house": "representatives",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — Consideration in Detail — Disallowable instruments to limit Telstra",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 70
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2010-11-16/1"
+  },
+  {
+   "key": "federal-representatives-780",
+   "date": "2010-11-16",
+   "house": "representatives",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — Consideration in Detail — Disallowance of instruments and competition",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 72,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 69
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2010-11-16/2"
+  },
+  {
+   "key": "federal-representatives-781",
+   "date": "2010-11-16",
+   "house": "representatives",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — Consideration in Detail - Merit review and procedural fairness",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 71,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 69
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2010-11-16/3"
+  },
+  {
+   "key": "federal-senate-1909",
+   "date": "2010-11-24",
+   "house": "senate",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 57,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-24/1"
+  },
+  {
+   "key": "federal-representatives-3480",
+   "date": "2010-11-25",
+   "house": "representatives",
+   "question": "That the amendments be agreed to. That the amendment ( **Mr Turnbull’s** ) be agreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 55,
+   "noes": 58,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 117
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2010-11-25/5"
+  },
+  {
+   "key": "federal-representatives-3481",
+   "date": "2010-11-25",
+   "house": "representatives",
+   "question": "That the question be now put.",
+   "stage": "Consideration of Senate message",
+   "ayes": 55,
+   "noes": 58,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 117
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2010-11-25/6"
+  },
+  {
+   "key": "federal-senate-1926",
+   "date": "2010-11-25",
+   "house": "senate",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — In Committee - Spectrum and pay TV",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 56,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-25/12"
+  },
+  {
+   "key": "federal-senate-1927",
+   "date": "2010-11-25",
+   "house": "senate",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — In Committee — Keep items and divisions unchanged",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 56,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-25/13"
+  },
+  {
+   "key": "federal-senate-1928",
+   "date": "2010-11-25",
+   "house": "senate",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — In Committee — Transparency",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-25/14"
+  },
+  {
+   "key": "federal-senate-1929",
+   "date": "2010-11-25",
+   "house": "senate",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — In Committee - Competition and Consumer Act and ACCC to apply",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 56,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-25/15"
+  },
+  {
+   "key": "federal-senate-1930",
+   "date": "2010-11-26",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](http://www.openaustralia.org/senate/?gid=2010-11-25.231.1) introduced by Senator [Scott Ludlam](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Scott_Ludlam&mpc=Senate&house=senate), which means that it was successful. This was a technical amendment that related to the meaning of the term \"equivalence\".(Read more about the amendment [here](http://www.openaustralia.org/senate/?id=2010-11-25.118.2), after 9:58 pm. ) _Background to the bill_ This [bill](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r4479) was introduced following the lapse of the [Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2009](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r4212) and relates to the regulation of [consumer protection](http://en.wikipedia.org/wiki/Consumer_protection), [competition](http://en.wikipedia.org/wiki/Competition_law) and licensing in [telecommunications](http://en.wikipedia.org/wiki/Telecommunications) markets. According to the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1011a/11bd045), significant changes made by this bill include: - improving the conditions for competition in telecommunications markets by requiring [Telstra](http://en.wikipedia.org/wiki/Telstra) to be structurally or functionally separated - making the telecommunications access regime less susceptible to deliberate delay and obstruction - removing a technical impediment to the operation of the anti-competitive conduct regime applying to telecommunications markets - clarifying the [universal service](http://en.wikipedia.org/wiki/Universal_service_obligation) obligation (USO) and customer service guarantee (CSG) to make it more enforceable - extending the obligation to provide priority assistance to those with life threatening conditions to service providers other than T",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-26/1"
+  },
+  {
+   "key": "federal-senate-1931",
+   "date": "2010-11-26",
+   "house": "senate",
+   "question": "An equal number of senators voted in favour and against an [amendment](http://www.openaustralia.org/senate/?gid=2010-11-25.231.1) introduced by Greens Senator [Scott Ludlam](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Scott_Ludlam&mpc=Senate&house=senate), which means that it was unsuccessful because no majority was formed. The amendment was a technical one that related to the meaning of the term \"equivalence\".(Read more about the amendment [here](http://www.openaustralia.org/senate/?id=2010-11-25.118.2), after 9:58 pm. ) This division is the second time the amendment has been voted on.(See the first time this amendment was put to division [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2010-11-26&number=1&house=senate). ) Liberal Senator [Stephen Parry](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Stephen_Parry&mpc=Senate&house=senate) sought leave to recommit the vote (i.e. take the vote again) because his colleague, Senator [Michael Ronaldson](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Michael_Ronaldson&mpc=Senate&house=senate), was absent the first time round.(See that leave application [here](http://www.openaustralia.org/senate/?gid=2010-11-26.40.1). ) _Background to the bill_ This [bill](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r4479) was introduced following the lapse of the [Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2009](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r4212) and relates to the regulation of [consumer protection](http://en.wikipedia.org/wiki/Consumer_protection), [competition](http://en.wikipedia.org/wiki/Competition_law) and licensing in [telecommunications](http://en.wikipedia.org/wiki/Telecommunications) markets. According to the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legisla",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 2,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-26/2"
+  },
+  {
+   "key": "federal-senate-1932",
+   "date": "2010-11-26",
+   "house": "senate",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — In Committee - Merits review",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 2,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-26/3"
+  },
+  {
+   "key": "federal-senate-1933",
+   "date": "2010-11-26",
+   "house": "senate",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — In Committee — No—disadvantage test",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "earliest": 1,
+    "member": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-26/4"
+  },
+  {
+   "key": "federal-senate-1934",
+   "date": "2010-11-26",
+   "house": "senate",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — In Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 3,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-26/5"
+  },
+  {
+   "key": "federal-senate-1935",
+   "date": "2010-11-26",
+   "house": "senate",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — In Committee - Suspend standing orders",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 3,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-26/6"
+  },
+  {
+   "key": "federal-senate-1936",
+   "date": "2010-11-26",
+   "house": "senate",
+   "question": "The majority voted against [amendments](http://www.openaustralia.org/senate/?gid=2010-11-26.77.1) introduced by Liberal Senator [Simon Birmingham](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Simon_Birmingham&mpc=Senate&house=senate), which means that they were unsuccessful. The amendments related to requiring the [Productivity Commission](http://en.wikipedia.org/wiki/Productivity_Commission) to prepare [cost-benefit analysis](http://en.wikipedia.org/wiki/Cost-benefit_analysis) on the [National Broadband Network](http://en.wikipedia.org/wiki/National_Broadband_Network).(Read Senator Birmingham's explanation of the amendments and the related debate [here](http://www.openaustralia.org/senate/?id=2010-11-26.13.2), after 11:16 am. ) _Background to the bill_ This [bill](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r4479) was introduced following the lapse of the [Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2009](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r4212) and relates to the regulation of [consumer protection](http://en.wikipedia.org/wiki/Consumer_protection), [competition](http://en.wikipedia.org/wiki/Competition_law) and licensing in [telecommunications](http://en.wikipedia.org/wiki/Telecommunications) markets. According to the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1011a/11bd045), significant changes made by this bill include: - improving the conditions for competition in telecommunications markets by requiring [Telstra](http://en.wikipedia.org/wiki/Telstra) to be structurally or functionally separated - making the telecommunications access regime less susceptible to deliberate delay and obstruction - removing a technical impediment to the operation of the anti-competitive conduct regime applying to telecommunications markets - clarifying the [universal servic",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 3,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-26/7"
+  },
+  {
+   "key": "federal-senate-1937",
+   "date": "2010-11-26",
+   "house": "senate",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — Third Reading - Suspend standing orders",
+   "stage": "Third reading",
+   "ayes": 28,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 3,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-26/8"
+  },
+  {
+   "key": "federal-senate-1938",
+   "date": "2010-11-26",
+   "house": "senate",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — Third Reading — Suspend standing orders",
+   "stage": "Third reading",
+   "ayes": 27,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 3,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-26/9"
+  },
+  {
+   "key": "federal-senate-1939",
+   "date": "2010-11-26",
+   "house": "senate",
+   "question": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — Third Reading - Read a third time",
+   "stage": "Third reading",
+   "ayes": 29,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 3,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-11-26/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-802276",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803074",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-11-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803075",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-11-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803078",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-11-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803205",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-11-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803212",
+   "speaker": "Anna Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-11-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803213",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-11-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803429",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-11-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803430",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-11-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803711",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-11-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803712",
+   "speaker": "Simon Birmingham",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-11-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803745",
+   "speaker": "Dana Wortley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-11-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803817",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-11-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803818",
+   "speaker": "John Williams",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2010-11-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803859",
+   "speaker": "Cory Bernardi",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-11-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803963",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803964",
+   "speaker": "Mathias Cormann",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-803965",
+   "speaker": "Scott Ludlam",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2010-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-804137",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-804138",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-804148",
+   "speaker": "Alan Ferguson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-804150",
+   "speaker": "Kate Lundy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-804152",
+   "speaker": "Nick Xenophon",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2010-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-804159",
+   "speaker": "Trish Crossin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-11-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Act 2010",
+   "frl_uri": "https://www.legislation.gov.au/C2010A00140",
+   "assent_date": "2010-12-15"
+  }
+ ]
+}

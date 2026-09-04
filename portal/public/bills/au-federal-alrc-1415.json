@@ -1,0 +1,461 @@
+{
+ "key": "au-federal-alrc-1415",
+ "title": "Trade Practices Legislation Amendment Bill (No. 1) 2007",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2007-06-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2007-09-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2007-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-08-08",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2007-08-08",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2007-08-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-08-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-09-11",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-09-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2007-09-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2007-09-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2007-09-24",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:%22legislation/billhome/r2842%22",
+   "document_date": "2007-06-20",
+   "licence": "CC BY-NC-ND 4.0 (Parliament of Australia)"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-408",
+   "date": "2007-08-08",
+   "house": "representatives",
+   "question": "That the word proposed to be omitted ( **Mr Bowen’s amendment** ) stand part of the question.",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2007-08-08/3"
+  },
+  {
+   "key": "federal-representatives-409",
+   "date": "2007-08-08",
+   "house": "representatives",
+   "question": "That the amendment ( **Mr Bowen’s** ) be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 47,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 127
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2007-08-08/4"
+  },
+  {
+   "key": "federal-representatives-410",
+   "date": "2007-08-08",
+   "house": "representatives",
+   "question": "That the amendment ( **Mr Bowen’s** ) be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 46,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 48,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2007-08-08/5"
+  },
+  {
+   "key": "federal-senate-1427",
+   "date": "2007-09-17",
+   "house": "senate",
+   "question": "That this bill be now read a second time. That the amendment ( **Senator Stephens’s** ) be agreed to.",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "earliest": 6,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-09-17/1"
+  },
+  {
+   "key": "federal-senate-1432",
+   "date": "2007-09-17",
+   "house": "senate",
+   "question": "That the amendments ( **Senator Sherry’s** ) be agreed to.",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 48,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-09-17/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-781161",
+   "speaker": "Peter Costello",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781604",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781605",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781633",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781634",
+   "speaker": "Fran Bailey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781801",
+   "speaker": "Helen Coonan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-08-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782461",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-09-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782462",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-09-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782852",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782853",
+   "speaker": "Ron Boswell",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2007-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782854",
+   "speaker": "George Brandis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782886",
+   "speaker": "Grant Chapman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782928",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2007-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782929",
+   "speaker": "George Brandis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-783013",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-09-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-783014",
+   "speaker": "Chris Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-09-19",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Trade Practices Legislation Amendment Act (No. 1) 2007",
+   "frl_uri": "https://www.legislation.gov.au/C2007A00159",
+   "assent_date": "2007-09-24"
+  }
+ ]
+}

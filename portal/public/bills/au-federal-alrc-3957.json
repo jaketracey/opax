@@ -1,0 +1,571 @@
+{
+ "key": "au-federal-alrc-3957",
+ "title": "Carbon Pollution Reduction Scheme Bill 2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-05-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change and Water",
+ "status": "lapsed",
+ "status_as_of": "2009-08-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-03",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-06-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-23",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-11",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-13",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-632",
+   "date": "2009-06-04",
+   "house": "representatives",
+   "question": "Carbon Pollution Reduction Scheme Bill 2009 - Second Reading - Defer consideration",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-06-04/1"
+  },
+  {
+   "key": "federal-representatives-633",
+   "date": "2009-06-04",
+   "house": "representatives",
+   "question": "Carbon Pollution Reduction Scheme Bill 2009 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 72,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-06-04/2"
+  },
+  {
+   "key": "federal-representatives-634",
+   "date": "2009-06-04",
+   "house": "representatives",
+   "question": "Carbon Pollution Reduction Scheme Bill 2009 - Consideration in Detail - Put the question",
+   "stage": "Consideration in detail",
+   "ayes": 71,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-06-04/3"
+  },
+  {
+   "key": "federal-representatives-635",
+   "date": "2009-06-04",
+   "house": "representatives",
+   "question": "Carbon Pollution Reduction Scheme Bill 2009 - Consideration in Detail - Agree to the bill",
+   "stage": "Consideration in detail",
+   "ayes": 72,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-06-04/4"
+  },
+  {
+   "key": "federal-senate-1689",
+   "date": "2009-08-13",
+   "house": "senate",
+   "question": "Carbon Pollution Reduction Scheme Bill 2009 and related acts - Second Reading - Commit to reducing emissions",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 65,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 60,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-08-13/3"
+  },
+  {
+   "key": "federal-senate-1690",
+   "date": "2009-08-13",
+   "house": "senate",
+   "question": "Carbon Pollution Reduction Scheme Bill 2009 and related bills - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 60,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-08-13/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-792576",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792583",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-792584",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793095",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793096",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793120",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793166",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793167",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793168",
+   "speaker": "Robert Oakeshott",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2009-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793169",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793364",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793365",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793804",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793805",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2009-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793852",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793853",
+   "speaker": "Rachel Siewert",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2009-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793889",
+   "speaker": "Nigel Scullion",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2009-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793891",
+   "speaker": "Scott Ludlam",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2009-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794256",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794257",
+   "speaker": "John Williams",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794296",
+   "speaker": "Cory Bernardi",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794298",
+   "speaker": "Nick Minchin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794300",
+   "speaker": "Dana Wortley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794384",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

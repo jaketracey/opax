@@ -1,0 +1,557 @@
+{
+ "key": "au-federal-alrc-1527",
+ "title": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws—Superannuation) Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-05-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2008-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-10-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-10-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-11-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-11-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2008-11-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-12-04",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-490",
+   "date": "2008-06-04",
+   "house": "representatives",
+   "question": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws - Superannuation) Bill 2008 - Second Reading - Keep motion to read a second time unchanged",
+   "stage": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws",
+   "ayes": 71,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-06-04/6"
+  },
+  {
+   "key": "federal-senate-1470",
+   "date": "2008-06-18",
+   "house": "senate",
+   "question": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws - Superannuation) Bill 2008 - Referral to Committees - Report by 24 June 2008",
+   "stage": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws",
+   "ayes": 29,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 55,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-06-18/1"
+  },
+  {
+   "key": "federal-senate-1471",
+   "date": "2008-06-18",
+   "house": "senate",
+   "question": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws - Superannuation) Bill 2008 - Referral to Committees - Motion no. 1",
+   "stage": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 56,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-06-18/2"
+  },
+  {
+   "key": "federal-senate-1533",
+   "date": "2008-10-15",
+   "house": "senate",
+   "question": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws - Superannuation) Bill 2008 - Second Reading - Remove discrimination",
+   "stage": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws",
+   "ayes": 4,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "member": 2,
+    "dated": 46,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-10-15/1"
+  },
+  {
+   "key": "federal-senate-1547",
+   "date": "2008-11-12",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](http://www.openaustralia.org.au/senate/?gid=2008-11-12.91.1) introduced by Liberal Senator [George Brandis](https://theyvoteforyou.org.au/people/senate/queensland/george_brandis), who explained that: > *The purpose of the opposition’s amendment is to ensure that the provisions of this act, when it receives royal assent, come into effect retrospectively, as from 1 July 2008—in other words, the commencement of the current financial year—and that, in the event that there are some individuals who, as a result of the reference to the Senate committee, might have been prejudiced because of the death of a partner to whom the provisions of the bill would otherwise have applied, then the position of anybody in that unfortunate circumstance can be secured.* ### What does this bill do? This bill was introduced to amend the fourteen Acts governing and regulating [superannuation](http://en.wikipedia.org/wiki/Superannuation_in_Australia) schemes in order to increase coverage of same-sex couples and their children. It comes following [Human Rights and Equal Opportunity Commission's](http://en.wikipedia.org/wiki/Human_Rights_and_Equal_Opportunity_Commission) report [Same Sex: Same Entitlements](https://www.humanrights.gov.au/same-sex-same-entitlements). Read more about the bill in its [bills digest](http://parlinfo.aph.gov.au/parlInfo/download/legislation/billsdgs/86LR6/upload_binary/86lr66.pdf;fileType=application/pdf).",
+   "stage": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws",
+   "ayes": 36,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "earliest": 6,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-11-12/3"
+  },
+  {
+   "key": "federal-senate-1548",
+   "date": "2008-11-12",
+   "house": "senate",
+   "question": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws - Superannuation) Bill 2008 - In Committee - Private sector",
+   "stage": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws",
+   "ayes": 4,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "earliest": 2,
+    "member": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-11-12/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-785160",
+   "speaker": "Robert McClelland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785481",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785483",
+   "speaker": "Robert McClelland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785690",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785691",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785787",
+   "speaker": "Chris Ellison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785859",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785860",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788572",
+   "speaker": "Glenn Sterle",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788578",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788579",
+   "speaker": "George Brandis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-10-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788643",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788644",
+   "speaker": "Sarah Hanson-Young",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2008-10-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789393",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789569",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789570",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789642",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789675",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789855",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789856",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Same-Sex Relationships (Equal Treatment in Commonwealth Laws—Superannuation) Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00134",
+   "assent_date": "2008-12-04"
+  }
+ ]
+}

@@ -1,0 +1,1081 @@
+{
+ "key": "au-federal-alrc-2075",
+ "title": "Clean Energy Bill 2011",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2011-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change and Energy Efficiency",
+ "status": "passed",
+ "status_as_of": "2011-11-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2011-09-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-09-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-09-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-09-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-09-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-09-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-09-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-10-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-10-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2011-10-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2011-10-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2011-10-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2011-10-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-10-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-10-31",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-11-01",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-11-02",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-11-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2011-11-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2011-11-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2011-11-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2011-11-08",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2011-11-08",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2011-11-08",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2011-11-18",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-929",
+   "date": "2011-10-11",
+   "house": "representatives",
+   "question": "Clean Energy Bill 2011 and related bills - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 73,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2011-10-11/3"
+  },
+  {
+   "key": "federal-representatives-931",
+   "date": "2011-10-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of a motion to suspend Liberal MP [Sophie Mirabella](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Sophie_Mirabella&display=summary) from the service of the House, which was moved by Labor MP [Greg Combet](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Greg_Combet&display=summary). This means that MP Mirabella is suspended from the service of the House for 24 hours and has to leave the House for that time.(You can read more about orders to suspend from the service of the House [here](http://www.aph.gov.au/binaries/house/pubs/gtp/pdf/chapter7.pdf) (417 KB). ) _Background to the motion_ This motion occurred after MP Mirabella was warned by the Deputy Speaker for continuing to speak after her allotted time had expired.(You can see this debate [here](http://www.openaustralia.org/debates/?id=2011-10-11.81.1), starting from 10:09 pm.) References",
+   "stage": "Consideration in detail",
+   "ayes": 71,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2011-10-11/5"
+  },
+  {
+   "key": "federal-representatives-932",
+   "date": "2011-10-12",
+   "house": "representatives",
+   "question": "Clean Energy Bill 2011 and related bills - Consideration in Detail - Government amendments",
+   "stage": "Consideration in detail",
+   "ayes": 74,
+   "noes": 72,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2011-10-12/1"
+  },
+  {
+   "key": "federal-representatives-933",
+   "date": "2011-10-12",
+   "house": "representatives",
+   "question": "Clean Energy Bill 2011 and related bills - Consideration in Detail - Defer commencement of the carbon price",
+   "stage": "Consideration in detail",
+   "ayes": 72,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 70
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2011-10-12/2"
+  },
+  {
+   "key": "federal-representatives-935",
+   "date": "2011-10-12",
+   "house": "representatives",
+   "question": "Clean Energy Bill 2011 and related bills - Consideration in Detail - Agree to the bills",
+   "stage": "Consideration in detail",
+   "ayes": 74,
+   "noes": 72,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2011-10-12/4"
+  },
+  {
+   "key": "federal-representatives-937",
+   "date": "2011-10-12",
+   "house": "representatives",
+   "question": "Clean Energy Bill 2011 and related bills - Third Reading - Read a third time",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 72,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2011-10-12/6"
+  },
+  {
+   "key": "federal-senate-2102",
+   "date": "2011-10-12",
+   "house": "senate",
+   "question": "Clean Energy Bill 2011 and related bills - First Reading - Put the question",
+   "stage": "First Reading",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "earliest": 3,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-10-12/8"
+  },
+  {
+   "key": "federal-senate-2103",
+   "date": "2011-10-12",
+   "house": "senate",
+   "question": "Clean Energy Bill 2011 and related bills - First Reading - Proceed without formalities",
+   "stage": "First Reading",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "earliest": 3,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-10-12/9"
+  },
+  {
+   "key": "federal-senate-2104",
+   "date": "2011-10-12",
+   "house": "senate",
+   "question": "Clean Energy Bill 2011 and related bills - First Reading - Take the bills together",
+   "stage": "First Reading",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "earliest": 3,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-10-12/10"
+  },
+  {
+   "key": "federal-senate-2105",
+   "date": "2011-10-12",
+   "house": "senate",
+   "question": "Clean Energy Bill 2011 and related bills - First Reading - Read for a first time",
+   "stage": "First Reading",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 58,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-10-12/11"
+  },
+  {
+   "key": "federal-senate-2110",
+   "date": "2011-10-12",
+   "house": "senate",
+   "question": "Joe Ludwig I move: That these bills be now read a second time. I table the second reading speeches and move: That the debate be adjourned. Question put. _A division having been called and the bells being rung—_ Mitch Fifield Mr Acting Deputy President, I seek your guidance. Minister Ludwig moved several unrelated matters in the one motion. I seek your guidance as to whether that can be done—moving a motion to adjourn the house and other matters. Mark Bishop Senator Fifield, the motion was to adjourn the debate on the second reading. Mitch Fifield Sorry, Mr Acting Deputy President, he spoke very quickly. Ian Macdonald Mr Acting Deputy President, perhaps I could just clarify what you said. Admittedly Senator Ludwig spoke very softly and very quickly, but I thought he moved three particular motions at the same time. Could you just explain exactly which motion we are voting on at the moment? Mark Bishop The minister moved to table the second reading speeches, and he moved adjournment of the debate. That is the matter we are voting on: adjournment of the debate. The Senate divided. [19:09] (The Acting Deputy President—Senator Mark Bishop) _Senator Arbib did not vote_ _,_ _to compensate for the vacancy caused by the resignation of Senator Coonan._ Question agreed to.",
+   "stage": "General) Bill 2011, Clean Energy (Unit Issue Charge",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 60,
+    "earliest": 3,
+    "member": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-10-12/16"
+  },
+  {
+   "key": "federal-senate-2142",
+   "date": "2011-11-03",
+   "house": "senate",
+   "question": "Clean Energy Bill 2011 and related bills - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 60,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-11-03/2"
+  },
+  {
+   "key": "federal-senate-2143",
+   "date": "2011-11-07",
+   "house": "senate",
+   "question": "Clean Energy Bill 2011 and related bills - In Committee - Defer commencement of the carbon price",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 59,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-11-07/1"
+  },
+  {
+   "key": "federal-senate-2144",
+   "date": "2011-11-07",
+   "house": "senate",
+   "question": "This division relates to the Policy _[For a carbon price](/policies/3)_. The majority voted against an [amendment](http://www.openaustralia.org/senate/?gid=2011-11-07.313.1) that progress be reported,(See [[http://www.aph.gov.au/About\\_Parliament/Senate/Powers\\_practice\\_n\\_procedures/](http://www.aph.gov.au/About_Parliament/Senate/Powers_practice_n_procedures/)~/link.aspx?\\_id=DE8C9D42F0B74C93A8AA5C680A617E0C&\\_z=z here] for more information about these procedural motions. ) moved by Liberal Senator [Cory Bernardi](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Cory_Bernardi&mpc=Senate&house=senate). Senator Bernardi intended to subsequently seek leave to meet at a later hour so they could continue to debate the bills. He did this in order to extend the amount of time spent discussing the bills.(Read Senator Bernardi's reasoning for his motions [here](http://www.openaustralia.org/senate/?gid=2011-11-07.313.1).) The bills being debated were a package of eighteen bills to implement a carbon pricing mechanism, which is a key policy of the Australian Labor Party while in Government. The eighteen bills were: - [Clean Energy Bill 2011](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r4653) - [Clean Energy (Consequential Amendments) Bill 2011](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation%2Fbillhome%2Fr4655) - [Clean Energy (Income Tax Rates Amendments) Bill 2011](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr4647%22) - [Clean Energy (Household Assistance Amendments) Bill 2011](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation%2Fbillhome%2Fr4662) - [Clean Energy (Tax Laws Amendments) Bill 2011](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr4649%22) - [Clean Energy (Fuel Tax Legislation Amendment) Bill 2011](http://parlinfo.a",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 59,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-11-07/2"
+  },
+  {
+   "key": "federal-senate-2145",
+   "date": "2011-11-08",
+   "house": "senate",
+   "question": "Clean Energy Bill 2011 and related bills - In Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "member": 3,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-11-08/1"
+  },
+  {
+   "key": "federal-senate-2146",
+   "date": "2011-11-08",
+   "house": "senate",
+   "question": "This division relates to the Policy _[For a carbon price](/policies/3)_. The majority voted against a [motion](http://www.openaustralia.org/senate/?gid=2011-11-08.51.1) moved by Liberal Senator [Eric Abetz](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Eric_Abetz&mpc=Senate&house=senate) for an extension of time be agreed to. Senator Abetz moved this motion because he believed that the debate on the bills should continue for an extended period.(Read Senator Abetz's full reasoning for his motion and the associated discussion [here](http://www.openaustralia.org/senate/?id=2011-11-08.2.2). The relevant debate begins at 12:00 pm.) The bills being debated were a package of eighteen bills to implement a carbon pricing mechanism, which is a key policy of the Australian Labor Party while in Government. The eighteen bills were: - [Clean Energy Bill 2011](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r4653) - [Clean Energy (Consequential Amendments) Bill 2011](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation%2Fbillhome%2Fr4655) - [Clean Energy (Income Tax Rates Amendments) Bill 2011](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr4647%22) - [Clean Energy (Household Assistance Amendments) Bill 2011](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation%2Fbillhome%2Fr4662) - [Clean Energy (Tax Laws Amendments) Bill 2011](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr4649%22) - [Clean Energy (Fuel Tax Legislation Amendment) Bill 2011](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation%2Fbillhome%2Fr4651) - [Clean Energy (Customs Tariff Amendment) Bill 2011](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr4648%22) - [Clean Energy (Excise Tariff Legisl",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 59,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-11-08/2"
+  },
+  {
+   "key": "federal-senate-2147",
+   "date": "2011-11-08",
+   "house": "senate",
+   "question": "Clean Energy Bill 2011 - In Committee - When charge payable",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 59,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-11-08/3"
+  },
+  {
+   "key": "federal-senate-2148",
+   "date": "2011-11-08",
+   "house": "senate",
+   "question": "Clean Energy Bill 2011 and related bills - In committee - Agree to the bills",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 59,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-11-08/4"
+  },
+  {
+   "key": "federal-senate-2149",
+   "date": "2011-11-08",
+   "house": "senate",
+   "question": "Clean Energy Bill 2011 and related bills - Third Reading - Read a third time",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 59,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2011-11-08/5"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Clean Energy Act 2011",
+   "frl_uri": "https://www.legislation.gov.au/C2011A00131",
+   "assent_date": "2011-11-18"
+  }
+ ]
+}

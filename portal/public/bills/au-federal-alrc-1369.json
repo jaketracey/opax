@@ -1,0 +1,410 @@
+{
+ "key": "au-federal-alrc-1369",
+ "title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2007-2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2007-05-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance and Administration",
+ "status": "passed",
+ "status_as_of": "2007-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2007-05-08",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-05-08",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2007-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2007-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-06-21",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2007-06-21",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2007-06-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:%22legislation/billhome/r2777%22",
+   "document_date": "2007-05-08",
+   "licence": "CC BY-NC-ND 4.0 (Parliament of Australia)"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-1363",
+   "date": "2007-06-21",
+   "house": "senate",
+   "question": "That the House of Representatives be requested to make the following amendment: That the House of Representatives be requested to make the following amendment:",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 45,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-06-21/11"
+  },
+  {
+   "key": "federal-senate-1364",
+   "date": "2007-06-21",
+   "house": "senate",
+   "question": "John Hogg The question now is that the request for amendment on sheet 5309 moved by Senator Murray and Senator Wong be agreed to.",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 45,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-06-21/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-779762",
+   "speaker": "Gary Nairn",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-05-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780082",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-05-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780083",
+   "speaker": "Lindsay Tanner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-05-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780120",
+   "speaker": "Kerry Bartlett",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-05-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780121",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-05-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780122",
+   "speaker": "Alan Cadman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-05-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780196",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-05-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780197",
+   "speaker": "Andrew Southcott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-05-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780260",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-05-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780261",
+   "speaker": "Peter Lindsay",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-05-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780398",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780399",
+   "speaker": "Ian Causley",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2007-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780453",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780454",
+   "speaker": "Harry Jenkins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780509",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-05-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780510",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-05-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780582",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-06-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780583",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-06-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781143",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781144",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781483",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-06-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781484",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-06-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781485",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-06-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781486",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-06-21",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation (Parliamentary Departments) Act (No. 1) 2007-2008",
+   "frl_uri": "https://www.legislation.gov.au/C2007A00097",
+   "assent_date": "2007-06-28"
+  }
+ ]
+}

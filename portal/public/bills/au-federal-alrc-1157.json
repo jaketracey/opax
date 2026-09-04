@@ -1,0 +1,509 @@
+{
+ "key": "au-federal-alrc-1157",
+ "title": "Telecommunications (Interception) Amendment Bill 2006",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2006-02-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2006-05-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2006-02-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-02-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-03-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-03-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2006-03-01",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-03-01",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-03-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2006-03-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2006-03-29",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2006-03-30",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-03-30",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2006-05-03",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-2756",
+   "date": "2006-03-28",
+   "house": "senate",
+   "question": "Telecommunications (Interception) Amendment Bill 2006 — In Committee - Sunset clause and review",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 46,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-03-28/7"
+  },
+  {
+   "key": "federal-senate-2763",
+   "date": "2006-03-30",
+   "house": "senate",
+   "question": "Telecommunications (Interception) Amendment Bill 2006 — In Committee — B—party interceptions",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 45,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-03-30/1"
+  },
+  {
+   "key": "federal-senate-2764",
+   "date": "2006-03-30",
+   "house": "senate",
+   "question": "Telecommunications (Interception) Amendment Bill 2006 — In Committee — Schedule 2 (B—party interceptions)",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 45,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-03-30/2"
+  },
+  {
+   "key": "federal-senate-2765",
+   "date": "2006-03-30",
+   "house": "senate",
+   "question": "Telecommunications (Interception) Amendment Bill 2006 — In Committee — Schedule 2 (B—party interceptions)",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 45,
+    "earliest": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-03-30/3"
+  },
+  {
+   "key": "federal-senate-2766",
+   "date": "2006-03-30",
+   "house": "senate",
+   "question": "Telecommunications (Interception) Amendment Bill 2006 — In Committee - Schedule 3 (equipment based interception)",
+   "stage": "In committee",
+   "ayes": 45,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "earliest": 12,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-03-30/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-770772",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-02-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771003",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-02-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771004",
+   "speaker": "Nicola Roxon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-02-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771073",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-03-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771074",
+   "speaker": "Peter Garrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-03-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771075",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-03-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771190",
+   "speaker": "Rod Kemp",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-03-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771191",
+   "speaker": "Rod Kemp",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-03-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771415",
+   "speaker": "Alan Eggleston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-03-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771547",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-03-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771548",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-03-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771554",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2006-03-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771655",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-03-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771656",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-03-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771699",
+   "speaker": "Chris Ellison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-03-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771761",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-03-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771762",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-03-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771808",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2006-03-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-771809",
+   "speaker": "Chris Ellison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-03-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications (Interception) Amendment Act 2006",
+   "frl_uri": "https://www.legislation.gov.au/C2006A00040",
+   "assent_date": "2006-05-03"
+  }
+ ]
+}

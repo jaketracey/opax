@@ -1,0 +1,41 @@
+{
+ "key": "au-federal-alrc-5193",
+ "title": "Export Control Bill 2017",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-07",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "lapsed",
+ "status_as_of": "2018-02-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-05",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

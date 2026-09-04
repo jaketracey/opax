@@ -1,0 +1,346 @@
+{
+ "key": "au-federal-alrc-1860",
+ "title": "Electoral and Referendum Amendment (How-to-Vote Cards and Other Measures) Bill 2010",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2010-06-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Special Minister of State",
+ "status": "passed",
+ "status_as_of": "2010-07-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2010-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2010-06-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2010-06-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2010-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2010-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2010-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2010-06-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2010-07-14",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-755",
+   "date": "2010-06-16",
+   "house": "representatives",
+   "question": "That this bill be now read a second time. That the question be now put.",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2010-06-16/1"
+  },
+  {
+   "key": "federal-representatives-756",
+   "date": "2010-06-16",
+   "house": "representatives",
+   "question": "That this bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2010-06-16/2"
+  },
+  {
+   "key": "federal-representatives-759",
+   "date": "2010-06-16",
+   "house": "representatives",
+   "question": "That the amendments ( **Mr Robb’s** ) be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 50,
+   "noes": 71,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 72
+    },
+    "Liberal": {
+     "ayes": 41,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 125
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2010-06-16/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-800730",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800731",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800842",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800843",
+   "speaker": "Daryl Melham",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800844",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800847",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800935",
+   "speaker": "Mark Arbib",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800936",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801029",
+   "speaker": "Kerry O'Brien",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801592",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801593",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801667",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801668",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801669",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral and Referendum Amendment (How-to-Vote Cards and Other Measures) Act 2010",
+   "frl_uri": "https://www.legislation.gov.au/C2010A00108",
+   "assent_date": "2010-07-14"
+  }
+ ]
+}

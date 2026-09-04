@@ -1,0 +1,599 @@
+{
+ "key": "au-federal-alrc-1843",
+ "title": "Renewable Energy (Electricity) Amendment Bill 2010",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2010-05-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy Efficiency and Water",
+ "status": "passed",
+ "status_as_of": "2010-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2010-05-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-05-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-05-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2010-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2010-06-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-21",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2010-06-21",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2010-06-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2010-06-23",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2010-06-23",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2010-06-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2010-06-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-1859",
+   "date": "2010-06-21",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Milne’s** ) be agreed to.",
+   "stage": "Second reading",
+   "ayes": 3,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "earliest": 2,
+    "member": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-06-21/1"
+  },
+  {
+   "key": "federal-senate-1870",
+   "date": "2010-06-23",
+   "house": "senate",
+   "question": "Consideration resumed from 22 June. Scott Ludlam We are dealing with Greens amendments (4), (9) and (1) on sheet 6114. Christine Milne I rise to respond to Senator Colbeck’s analysis of these amendments to the [Renewable Energy (Electricity) Amendment Bill 2010](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/R4356) and related bills. These amendments are to remove any view that native forest biomass can be used to generate renewable energy certificates. Yesterday Senator Colbeck mentioned that WWF Australia supported biomass energy. The report on Forestry Tasmania’s website is a WWF report, but it refers to biomass in Europe not biomass in Australia and so WWF have put out a clarifying statement which says: ‘No support for biomass burning of native forests’. Let us make it very clear that the European situation is quite different from the situation here in Australia and WWF do not support burning of native forests for biomass in Australia. Senator Colbeck really let the cat out of the bag yesterday when he talked about the extent to which the Tasmanian logging industry is depending on getting renewable energy certificates as a lifeline for logging native forests. He said here that he would expect they would get something like 3,000 gigawatt hours, but in Forestry Tasmania’s own so-called fact sheet it says that it wants to build a 25-megawatt biomass plant at Southwood and that would generate 160,000 renewable energy certificates a year. So there is a full expectation that they would be getting RECs from their 25-megawatt biomass plant at Southwood. We have this ludicrous situation where we are logging native forests without the emissions from those native forests being counted because the Kyoto accounting does not require it. So they log the carbon stores, the most important carbon stores. If the government really wanted to move on climate change then it would protect the carbon stores and it would support this amendmen",
+   "stage": "In committee",
+   "ayes": 4,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 42,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-06-23/1"
+  },
+  {
+   "key": "federal-senate-1871",
+   "date": "2010-06-23",
+   "house": "senate",
+   "question": "Alan Ferguson I now put opposition amendments (1) and (2) on sheet 6158. The question is that those amendments be agreed to. Christine Milne On a point of order, Mr Chair, I just seek clarification: is this Senator Colbeck’s amendment? Alan Ferguson I am told yes. Christine Milne I have a concern because we had an arrangement with Senator Xenophon that—sorry? Alan Ferguson Senator Milne, I intend to make it another four-minute division if that may help you. Christine Milne Okay. Question put.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 59,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-06-23/2"
+  },
+  {
+   "key": "federal-senate-1872",
+   "date": "2010-06-23",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Birmingham’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 59,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-06-23/3"
+  },
+  {
+   "key": "federal-senate-1873",
+   "date": "2010-06-23",
+   "house": "senate",
+   "question": "That schedule 1 stand as printed.",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 58,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-06-23/4"
+  },
+  {
+   "key": "federal-senate-1874",
+   "date": "2010-06-23",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Xenophon’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 59,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-06-23/5"
+  },
+  {
+   "key": "federal-senate-1877",
+   "date": "2010-06-23",
+   "house": "senate",
+   "question": "That the amendments ( **Senator Birmingham’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 58,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2010-06-23/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-799975",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-05-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800414",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800415",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800443",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800445",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800469",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800470",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800471",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800807",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-800808",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801206",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801207",
+   "speaker": "Simon Birmingham",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2010-06-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801236",
+   "speaker": "Steve Fielding",
+   "party": "Family First",
+   "state": "federal",
+   "date": "2010-06-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801330",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2010-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801331",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2010-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801476",
+   "speaker": "Scott Ludlam",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2010-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-801511",
+   "speaker": "Julian McGauran",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2010-06-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Renewable Energy (Electricity) Amendment Act 2010",
+   "frl_uri": "https://www.legislation.gov.au/C2010A00069",
+   "assent_date": "2010-06-28"
+  }
+ ]
+}

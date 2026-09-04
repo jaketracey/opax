@@ -1,0 +1,307 @@
+{
+ "key": "au-federal-alrc-1432",
+ "title": "Appropriation (Northern Territory National Emergency Response) Bill (No. 1) 2007-2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2007-08-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance and Administration",
+ "status": "passed",
+ "status_as_of": "2007-08-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2007-08-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-08-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-08-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2007-08-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2007-08-08",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-08-08",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-08-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2007-08-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2007-08-17",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:%22legislation/billhome/r2849%22",
+   "document_date": "2007-08-07",
+   "licence": "CC BY-NC-ND 4.0 (Parliament of Australia)"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-781500",
+   "speaker": "Mal Brough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-08-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781502",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-08-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781534",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-08-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781539",
+   "speaker": "Mal Brough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-08-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781668",
+   "speaker": "Nigel Scullion",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2007-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781669",
+   "speaker": "Nigel Scullion",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2007-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781671",
+   "speaker": "Lyn Allison",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2007-08-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781968",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2007-08-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781969",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-08-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781970",
+   "speaker": "Bob Brown",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2007-08-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782044",
+   "speaker": "Stephen Parry",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-08-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782048",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-08-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782049",
+   "speaker": "Linda Kirk",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-08-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782050",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2007-08-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782133",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-08-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782134",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2007-08-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782174",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-08-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782175",
+   "speaker": "Michael Forshaw",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-08-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782178",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-08-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782179",
+   "speaker": "Rachel Siewert",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2007-08-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782181",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-08-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782182",
+   "speaker": "Claire Moore",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-08-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782297",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-08-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-782298",
+   "speaker": "Bob Brown",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2007-08-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation (Northern Territory National Emergency Response) Act (No. 1) 2007-2008",
+   "frl_uri": "https://www.legislation.gov.au/C2007A00126",
+   "assent_date": "2007-08-17"
+  }
+ ]
+}

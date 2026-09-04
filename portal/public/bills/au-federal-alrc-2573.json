@@ -1,0 +1,1117 @@
+{
+ "key": "au-federal-alrc-2573",
+ "title": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2014-09-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-09-01",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-02",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-02",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2014-09-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-09-05",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3393",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/debate/?id=2014-09-01.48.1) that \"so much of the [standing and sessional orders](http://www.peo.gov.au/learning/fact-sheets/standing-orders.html) be suspended as would prevent that standing order 43 be suspended for this sitting\", which was introduced by Liberal MP [Steven Ciobo](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?house=representatives&mpc=Moncrieff&mpn=Steven_Ciobo). (Standing order 43 was the following: \"At 1.45pm on Mondays, Wednesdays and Thursdays, the Speaker shall interrupt business and call on statements by Members. The Speaker may call a Member, but not a Minister (or Parliamentary Secretary), to make a statement for no longer than 90 seconds. The period allowed for these statements shall extend until 2pm.\" ) This motion means that standing order 43 will be suspended so that the discussion of the bill will not be interrupted by Members' statements, as usually occurs from 1:45pm to up until 2pm. Instead, the debate on the bill will continue without interruption. _Background to the bill_ This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query%3DId%3A%22legislation%2Fbillhome%2Fr5327%22;rec=0) was introduced following the [Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 (No. 2)](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5300) being laid aside because it could not \"be progressed in its current form\".(Read more about this bill being set aside [here](http://www.openaustralia.org/debates/?id=2014-09-01.34.2). The division which resulted in that bill being laid aside is available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2014-09-01&house=representatives&number=1). ) This bill repeals the [Minerals Resource Rent Tax](http://en.wikipedia.org/wiki/Minerals_Resource_Rent_Tax) as well as related measures such as the [low income superannuation",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-01/4"
+  },
+  {
+   "key": "federal-representatives-3394",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Second Reading — Put the motion",
+   "stage": "Second reading",
+   "ayes": 81,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-01/5"
+  },
+  {
+   "key": "federal-representatives-3395",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Second Reading — Read a second time",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-01/6"
+  },
+  {
+   "key": "federal-representatives-3396",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Consideration in Detail — Put the question (suspend standing orders)",
+   "stage": "Consideration in detail",
+   "ayes": 82,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-01/7"
+  },
+  {
+   "key": "federal-representatives-3397",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Consideration in Detail — Suspend standing and sessional orders",
+   "stage": "Consideration in detail",
+   "ayes": 57,
+   "noes": 82,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 53,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-01/8"
+  },
+  {
+   "key": "federal-representatives-3398",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Consideration in Detail — Put the question (agree to the bill)",
+   "stage": "Consideration in detail",
+   "ayes": 82,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-01/9"
+  },
+  {
+   "key": "federal-representatives-3399",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Consideration in Detail — Agree to the bill",
+   "stage": "Consideration in detail",
+   "ayes": 82,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-01/10"
+  },
+  {
+   "key": "federal-representatives-3400",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Third Reading — Put the question (read a third time)",
+   "stage": "Third reading",
+   "ayes": 83,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-01/11"
+  },
+  {
+   "key": "federal-representatives-3401",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Third Reading — Read a third time",
+   "stage": "Third reading",
+   "ayes": 85,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-01/12"
+  },
+  {
+   "key": "federal-representatives-3409",
+   "date": "2014-09-02",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Consideration of Senate Message — Put the question (agree to the amendments)",
+   "stage": "Consideration of Senate message",
+   "ayes": 84,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-02/2"
+  },
+  {
+   "key": "federal-representatives-3410",
+   "date": "2014-09-02",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 - Consideration of Senate Message - Agree to the amendments",
+   "stage": "Consideration of Senate message",
+   "ayes": 84,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-02/3"
+  },
+  {
+   "key": "federal-senate-3411",
+   "date": "2014-09-02",
+   "house": "senate",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Business — Suspend standing orders (Consideration of legislation)",
+   "stage": "Business",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "earliest": 5,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/1"
+  },
+  {
+   "key": "federal-senate-3412",
+   "date": "2014-09-02",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/senate/?gid=2014-09-02.13.1) introduced by Senator [Mathias Cormann](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?house=senate&mpc=WA&mpn=Mathias_Cormann). The motion was: _That-_ _(a) the [Minerals Resource Rent Tax Repeal and Other Measures Bill 2014](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query%3DId%3A%22legislation%2Fbillhome%2Fr5327%22;rec=0) be called on immediately, have precedence over all government business and be considered under a limitation of time;_ _(b) the question that the bill be now read a second time(Read more about the stages that a bill must pass through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) be put immediately after the bill is called on and that the time allotted for all remaining stages be until 1.40 pm;_ _(c) subject to paragraph (d), this order shall operate as a limitation of debate under standing order 142;(Standing order 142 provides the rules in relation to limiting the debate on bills. ) and_ _(d) at the expiration of time, the question shall be put on all circulated amendments._ This motion speeds up the consideration of the bill by limiting the time available to debate and vote on it. _Background to the bill_ This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query%3DId%3A%22legislation%2Fbillhome%2Fr5327%22;rec=0) was introduced following the [Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 (No. 2)](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5300) being laid aside because it could not \"be progressed in its current form\".(Read more about this bill being set aside [here](http://www.openaustralia.org/debates/?id=2014-09-01.34.2). The division which resulted in that bill being laid aside is available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2014-09-0",
+   "stage": "Business",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "earliest": 5,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/2"
+  },
+  {
+   "key": "federal-senate-3413",
+   "date": "2014-09-02",
+   "house": "senate",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Second Reading — Read a second time",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "earliest": 5,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/3"
+  },
+  {
+   "key": "federal-senate-3414",
+   "date": "2014-09-02",
+   "house": "senate",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Reference to Committee — Refer to Committee",
+   "stage": "Reference to Committee",
+   "ayes": 32,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "earliest": 5,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/4"
+  },
+  {
+   "key": "federal-senate-3415",
+   "date": "2014-09-02",
+   "house": "senate",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Reference to Committee — Adjustments to the changes made by the bill",
+   "stage": "Reference to Committee",
+   "ayes": 34,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "earliest": 5,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/5"
+  },
+  {
+   "key": "federal-senate-3416",
+   "date": "2014-09-02",
+   "house": "senate",
+   "question": "The majority voted against a motion introduced by Labor Senator [Penny Wong](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?house=senate&mpc=SA&mpn=Penny_Wong), which means that it was rejected. The motion was: \"That so much of [standing orders](http://www.peo.gov.au/learning/fact-sheets/standing-orders.html) be suspended as would prevent me from making such a statement.\" Senator Wong introduced this motion after she was refused leave to make a statement. _Background to the bill_ This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query%3DId%3A%22legislation%2Fbillhome%2Fr5327%22;rec=0) was introduced following the [Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 (No. 2)](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5300) being laid aside because it could not \"be progressed in its current form\".(Read more about this bill being set aside [here](http://www.openaustralia.org/debates/?id=2014-09-01.34.2). The division which resulted in that bill being laid aside is available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2014-09-01&house=representatives&number=1). ) This bill repeals the [Minerals Resource Rent Tax](http://en.wikipedia.org/wiki/Minerals_Resource_Rent_Tax) as well as related measures such as the [low income superannuation contribution](http://www.ato.gov.au/Individuals/Super/In-detail/Contributions/Low-income-super-contribution/), the [income support bonus](http://www.humanservices.gov.au/customer/services/centrelink/income-support-bonus) and the [schoolkids bonus](http://www.dss.gov.au/our-responsibilities/families-and-children/benefits-payments/schoolkids-bonus). The bill also revises the capital allowances for small business entities and the superannuation guarantee charge percentage increase.(Read more about the changes made in the bill in the [explanatory memorandum](http://parlinfo.aph.gov.au/parlInfo/search/displ",
+   "stage": "Motions",
+   "ayes": 34,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 51,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/6"
+  },
+  {
+   "key": "federal-senate-3417",
+   "date": "2014-09-02",
+   "house": "senate",
+   "question": "The majority voted in favour of a motion that schedules 6 to 9, as amended, be agreed to. This means that the majority agree with the changes that have been made to these schedules. The schedules relate to the following: - schedule 6 relates to changes to the [superannuation guarantee](http://en.wikipedia.org/wiki/Superannuation_in_Australia#Employer_contributions); - schedule 7 relates to the [low income superannuation contribution](http://www.ato.gov.au/Individuals/Super/In-detail/Contributions/Low-income-super-contribution/); - schedule 8 repeals the [income support bonus](http://www.humanservices.gov.au/customer/services/centrelink/income-support-bonus); and - schedule 9 repeals the [schoolkids bonus](http://www.dss.gov.au/our-responsibilities/families-and-children/benefits-payments/schoolkids-bonus).(Read the wording of the schedules, as passed in both houses, [here](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbills%2Fr5327_aspassed%2F0001%22;rec=0).) _Background to the bill_ This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query%3DId%3A%22legislation%2Fbillhome%2Fr5327%22;rec=0) was introduced following the [Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 (No. 2)](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5300) being laid aside because it could not \"be progressed in its current form\".(Read more about this bill being set aside [here](http://www.openaustralia.org/debates/?id=2014-09-01.34.2). The division which resulted in that bill being laid aside is available [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2014-09-01&house=representatives&number=1). ) This bill repeals the [Minerals Resource Rent Tax](http://en.wikipedia.org/wiki/Minerals_Resource_Rent_Tax) as well as related measures such as the [low income superannuation contribution](http://www.ato.gov.au/Individuals/Super/In-detail/Co",
+   "stage": "Motions",
+   "ayes": 36,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 51,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/7"
+  },
+  {
+   "key": "federal-senate-3418",
+   "date": "2014-09-02",
+   "house": "senate",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2014 — Third Reading — Read a third time",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 51,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/8"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Minerals Resource Rent Tax Repeal and Other Measures Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00096",
+   "assent_date": "2014-09-05"
+  }
+ ]
+}

@@ -1,0 +1,300 @@
+{
+ "key": "au-federal-alrc-1193",
+ "title": "Appropriation Bill (No. 2) 2006-2007",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2006-05-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance and Administration",
+ "status": "passed",
+ "status_as_of": "2006-06-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2006-05-09",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-05-09",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2006-06-21",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-06-21",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-06-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-06-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2006-06-23",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-771897",
+   "speaker": "Gary Nairn",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-05-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772258",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-05-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772259",
+   "speaker": "Stewart McArthur",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-05-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772303",
+   "speaker": "Kerry Bartlett",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-05-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772304",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-05-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772372",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-05-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772373",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-05-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772448",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-05-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772449",
+   "speaker": "Craig Emerson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-05-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772511",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772512",
+   "speaker": "Gavan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772564",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772565",
+   "speaker": "Anthony Byrne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772634",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-05-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772701",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-06-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772746",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-06-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772893",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-06-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772894",
+   "speaker": "Gary Nairn",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-06-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773447",
+   "speaker": "Chris Ellison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-06-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773448",
+   "speaker": "Chris Ellison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-06-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773643",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773644",
+   "speaker": "Andrew Murray",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2006-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773645",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773646",
+   "speaker": "Andrew Murray",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2006-06-22",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 2) 2006-2007",
+   "frl_uri": "https://www.legislation.gov.au/C2006A00067",
+   "assent_date": "2006-06-23"
+  }
+ ]
+}

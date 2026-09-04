@@ -1,0 +1,374 @@
+{
+ "key": "au-federal-alrc-1184",
+ "title": "Australian Nuclear Science and Technology Organisation Amendment Bill 2006",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2006-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Science and Training",
+ "status": "passed",
+ "status_as_of": "2006-12-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2006-03-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-03-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-09-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-09-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2006-09-11",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-09-11",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-11-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-11-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-11-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-11-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2006-12-06",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-2566",
+   "date": "2006-09-07",
+   "house": "representatives",
+   "question": "That the words proposed to be omitted ( **Ms Macklin’s** amendment) stand part of the question.",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-09-07/1"
+  },
+  {
+   "key": "federal-senate-1183",
+   "date": "2006-11-28",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Allison’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 49,
+    "earliest": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-11-28/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-771724",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-03-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772062",
+   "speaker": "Nigel Scullion",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2006-05-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-774572",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-09-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-774573",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-09-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-774630",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-09-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-774671",
+   "speaker": "Harry Jenkins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-09-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-774758",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-09-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-774761",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-09-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-774762",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-09-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775001",
+   "speaker": "Santo Santoro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-09-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775002",
+   "speaker": "Santo Santoro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-09-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775487",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-10-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775488",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-10-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775542",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-10-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775543",
+   "speaker": "Lyn Allison",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2006-10-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776886",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776887",
+   "speaker": "Michael Forshaw",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776888",
+   "speaker": "Lyn Allison",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2006-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776958",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2006-11-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776959",
+   "speaker": "Amanda Vanstone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-11-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776960",
+   "speaker": "Amanda Vanstone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-11-28",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Nuclear Science and Technology Organisation Amendment Act 2006",
+   "frl_uri": "https://www.legislation.gov.au/C2006A00145",
+   "assent_date": "2006-12-06"
+  }
+ ]
+}

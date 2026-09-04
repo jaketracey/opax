@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-alrc-4861",
+ "title": "Trade Practices (Creeping Acquisitions) Amendment Bill 2007 [2008]",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2007-09-20",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2007-09-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2007-09-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-09-20",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-783188",
+   "speaker": "Steve Fielding",
+   "party": "Family First",
+   "state": "federal",
+   "date": "2007-09-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-783189",
+   "speaker": "Steve Fielding",
+   "party": "Family First",
+   "state": "federal",
+   "date": "2007-09-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

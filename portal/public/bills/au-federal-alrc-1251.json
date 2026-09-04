@@ -1,0 +1,362 @@
+{
+ "key": "au-federal-alrc-1251",
+ "title": "Child Support Legislation Amendment (Reform of the Child Support Scheme—New Formula and Other Measures) Bill 2006",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2006-09-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Families, Community Services and Indigenous Affairs",
+ "status": "passed",
+ "status_as_of": "2006-12-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2006-09-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-09-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-10-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-10-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2006-10-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-10-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-10-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-11-08",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-11-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2006-11-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-11-09",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2006-12-06",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-279",
+   "date": "2006-10-12",
+   "house": "representatives",
+   "question": "That the words proposed to be omitted ( **Ms Plibersek’s** amendment) stand part of the question.",
+   "stage": "Child Support Legislation Amendment (Reform of the Child Support Scheme",
+   "ayes": 78,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-10-12/1"
+  },
+  {
+   "key": "federal-senate-1177",
+   "date": "2006-11-09",
+   "house": "senate",
+   "question": "That this bill be now read a second time. That the amendment ( **Senator Chris Evans’s** ) be agreed to.",
+   "stage": "Child Support Legislation Amendment (Reform of the Child Support Scheme",
+   "ayes": 29,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 46,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-11-09/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-775227",
+   "speaker": "Mal Brough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-09-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775570",
+   "speaker": "Nigel Scullion",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2006-10-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775711",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-10-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775712",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-10-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775715",
+   "speaker": "David Hawker",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775716",
+   "speaker": "Mal Brough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775907",
+   "speaker": "Santo Santoro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775908",
+   "speaker": "Santo Santoro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-10-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776113",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-10-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776114",
+   "speaker": "Chris Evans",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-10-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776652",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-11-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776653",
+   "speaker": "Rachel Siewert",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2006-11-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776693",
+   "speaker": "Glenn Sterle",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-11-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776716",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-11-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776717",
+   "speaker": "Claire Moore",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-11-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776718",
+   "speaker": "Rachel Siewert",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2006-11-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776719",
+   "speaker": "Rod Kemp",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-11-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776827",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776828",
+   "speaker": "Mal Brough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-11-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Child Support Legislation Amendment (Reform of the Child Support Scheme—New Formula and Other Measures) Act 2006",
+   "frl_uri": "https://www.legislation.gov.au/C2006A00146",
+   "assent_date": "2006-12-06"
+  }
+ ]
+}

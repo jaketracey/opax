@@ -1,0 +1,89 @@
+{
+ "key": "au-federal-alrc-698",
+ "title": "Medical Indemnity (Prudential Supervision and Product Standards) (Consequential Amendments) Bill 2003",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 40,
+ "introduced": "2002-12-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2003-05-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2002-12-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2002-12-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2003-03-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2003-03-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2003-03-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2003-03-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2003-03-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2003-03-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2003-03-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2003-05-02",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Medical Indemnity (Prudential Supervision and Product Standards) (Consequential Amendments) Act 2003",
+   "frl_uri": "https://www.legislation.gov.au/C2004A01120",
+   "assent_date": "2003-05-02"
+  }
+ ]
+}

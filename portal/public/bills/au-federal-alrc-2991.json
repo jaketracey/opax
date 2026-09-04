@@ -1,0 +1,1359 @@
+{
+ "key": "au-federal-alrc-2991",
+ "title": "Social Services Legislation Amendment (Welfare Reform) Bill 2017",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2018-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-09-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-12",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2017-12-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2018-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2018-03-21",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-03-27",
+   "house": "Assent",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-04-11",
+   "house": "representatives",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4813",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Welfare Reform) Bill 2017 - Second Reading - Disagree with bill",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-09-11/2"
+  },
+  {
+   "key": "federal-representatives-4814",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Welfare Reform) Bill 2017 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-09-11/3"
+  },
+  {
+   "key": "federal-representatives-4815",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Welfare Reform) Bill 2017 - Consideration in Detail - Agree to bill",
+   "stage": "Consideration in detail",
+   "ayes": 74,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-09-11/4"
+  },
+  {
+   "key": "federal-representatives-4816",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Welfare Reform) Bill 2017 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-09-11/5"
+  },
+  {
+   "key": "federal-senate-5084",
+   "date": "2017-12-07",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2017-12-07.199.1) introduced by Greens Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (WA), which means they were added to the bill. ### Motion text > *(2) Schedule 3, item 25, page 75 (after line 23) , after subsection 654(5) , insert:* >> *(5A) The woman’s wife pension transition rate during the period from the day after the transition day to the day before the day on which the transition rate is ceased (the transition period) is worked out using Pension Rate Calculator A at the end of section 1064 (see Part 3.2).* > *(3) Schedule 3, items 45 to 49, page 79 (line 20) to page 80 (line 4), to be opposed.* Senator Siewert [explained that](https://www.openaustralia.org.au/senate/?gid=2017-12-07.199.1): > *These amendments relate to the transition payments for wife pensioners. Amendment (2) provides for the transition rate for wife pensioners to be indexed. Amendment (3), which also relates to the transition rate of wife pension, seeks to oppose schedule 3, items 45 to 49 in the terms circulated.* ### What is the bill's main idea? The bill [was introduced to](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd032): * *create a single job seeker payment* * *establish a drug testing trial and* * *remove existing exemptions for jobseekers experiencing drug or alcohol dependence.*",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 15
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 14,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-12-07/5"
+  },
+  {
+   "key": "federal-senate-5085",
+   "date": "2017-12-07",
+   "house": "senate",
+   "question": "Social Services Legislation Amendment (Welfare Reform) Bill 2017 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 14,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-12-07/6"
+  },
+  {
+   "key": "federal-senate-5154",
+   "date": "2018-03-19",
+   "house": "senate",
+   "question": "The same number of senators voted for and against an [amendment](https://www.openaustralia.org.au/senate/?gid=2017-12-07.199.1) moved by West Australian Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens), which means it failed. ### Amendment text > *(2) Schedule 3, item 25, page 75 (after line 23) , after subsection 654(5) , insert:* > >> *(5A) The woman’s wife pension transition rate during the period from the day after the transition day to the day before the day on which the transition rate is ceased (the transition period) is worked out using Pension Rate Calculator A at the end of section 1064 (see Part 3.2).* ### What did this amendment do? Senator Siewert [explained that](https://www.openaustralia.org.au/senate/?gid=2017-12-07.199.1): > *These amendments relate to the transition payments for wife pensioners. Amendment (2) provides for the transition rate for wife pensioners to be indexed.*",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 34,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-19/3"
+  },
+  {
+   "key": "federal-senate-5155",
+   "date": "2018-03-19",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2018-03-19.191.1) introduced by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Labor), which means they will now be included in the bill. ### What do these amendments do? Senator Cash [explained that](https://www.openaustralia.org.au/senate/?gid=2018-03-19.191.1): > *Under this amendment the current intent-to-claim provisions will be retained so as to only apply to claimants who are in vulnerable circumstances. The amendment includes an instrument-making power to allow a legislative instrument to define a vulnerable claimant for the purposes of the intent-to-claim provisions. For all other claimants the date of the claim will be the date the claim is lodged rather than the date they initially contact the department. Vulnerable claimants will be those who have a genuine difficulty in collating their documentation. These difficulties will include but not be limited to being homeless, affected by a major disaster or family and domestic violence, a recent humanitarian entrant or recently released from prison or psychiatric confinement.* > > *Amendment (1) omits schedule 11, 'Removal of intent to claim provisions', and substitutes new schedule 11, 'Intent to claim provisions'. New schedule 11 retains and amends the current intent-to-claim provisions in the social security law. As I've stated, these provisions will now apply to a person in vulnerable circumstances, being a person who is included in the class of persons determined by the minister in a legislative instrument—and I've outline examples of that. This amendment will also remove the requirement for the secretary to give a person a written notice acknowledging the Department of Human Services has been contacted in relation to the making of a claim for a social security payment or concession card.*",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 33,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-19/4"
+  },
+  {
+   "key": "federal-senate-5156",
+   "date": "2018-03-19",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?gid=2018-03-19.252.1) that the following parts of the bill remain unchanged: schedules 3, 4 and 9 to 14; subsection 42AI(3) in item 1 of schedule 15; and schedule 17. This means the vote didn't pass. However, this vote was [later taken again](https://theyvoteforyou.org.au/divisions/senate/2018-03-19/7) to allow two other senators to take part in it.",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 36,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-19/5"
+  },
+  {
+   "key": "federal-senate-5157",
+   "date": "2018-03-19",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments (1) to (8), (17) to (31), and (33) to (38)](https://www.openaustralia.org.au/senate/?gid=2018-03-19.219.1), which were introduced by West Australian Senator [Louise Pratt](https://theyvoteforyou.org.au/people/senate/wa/louise_pratt) (Labor). ### What do the amendments do? Senator Pratt explained that: > *These amendments go to the substantive parts of this bill and the core reasons that Labor are opposed to it.* > > *Schedule 3 provides for the cessation of the wife pension. This is not something that Labor support. We note that, of the 7,750 recipients, there are many who would transfer under this provision to the age pension and the carers payment and would be no worse off. Indeed, it makes sense to simplify payments. But I have to say that we are not prepared to see many other vulnerable women on the wife pension go backwards in their access to income support. There are 3,100 women who will be worse off and 2,900 women transferring onto a jobseeker payment. This is not a new area of social security; this has been closed to new applicants since 1995. So you have 2,900 women who will have been out of the workforce for more than 20 years who will be transferred onto a jobseeker payment. This is a pretty extraordinary thing to do to women who have had very little, if any, exposure to the workforce.* > > *We are also very concerned about the 200 women living overseas who will no longer be able to access any income support other than the support that their spouse is eligible for. We can see that, overnight, they would be $670 worse off a fortnight. This is an incredibly perilous situation to put them into. We have here a group of low-income women who will be left with nothing to live on other than their partner's pension, many of them having been out of the workforce for a great many years. As I said before, they will have been receiving the wife pension for a minimum of 22 years.* > > *It seems reasonable to us, in the oppos",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 36,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-19/6"
+  },
+  {
+   "key": "federal-senate-5158",
+   "date": "2018-03-19",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping the following parts of the bill unchanged: * schedules 3, 4 and 9 to 14 * subsection 42AI(3) in item 1 of schedule 15, and * schedule 17. In parliamentary jargon, they voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-03-19.262.1) that those parts stand as printed. ### What is schedule 3? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd032): > *Schedule 3—Cessation of Wife Pension* > > *Quick guide to Schedule 3* > >> *Wife pension is a non-activity tested income support payment paid at Age Pension rates to female partners of Age Pensioners or Disability Support Pensioners who are not eligible for a pension in their own right.* >> >> *The amendments in Schedule 3 operate to cease the payment entirely. Transitional amendments will allow women who cease receiving Wife Pension to receive an alternative payment, where available.* ### What is schedule 4? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd032): > *Schedule 4—Cessation of Bereavement Allowance* > > *Quick guide to Schedule 4* > >> *The amendments in Schedule 4 operate so that a person who is qualified for Youth Allowance or Jobseeker Payment will be able to receive a one-off, higher payment if their partner dies, in addition to their regular fortnightly payments.* >> >> *In addition newly bereaved claimants for Youth Allowance or Jobseeker Payment will be entitled to certain exemptions from existing waiting period requirements.* ### What is schedule 9? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd032): > *Schedule 9—Changes to activity tests for persons aged 55–59* > > *Quick guide to Schedule 9* > >> *The amendments in Schedule 9 impose a new activity test on Newstart Allowance and certain Special Benefit recipients aged between 55 and 59.* >> >> *Und",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 37,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-19/7"
+  },
+  {
+   "key": "federal-senate-5159",
+   "date": "2018-03-19",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping items 1 and 2 on schedule 13 and section 42AB in item 1 of schedule 15 unchanged. In parliamentary jargon, they voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-03-19.267.1) \"*that items 1 and 2 on schedule 13 and section 42AB in item 1 of schedule 15 stand as printed.*\" ### Items 1 and 2 on schedule 13 According to the bills digest: > *Item 1 in Schedule 13 to the Bill inserts the definition of a declared program participant into the dictionary at subsection 23(1) of the SS Act. According to this definition, a declared program participant is a participant in an employment services program specified in a determination made under section 28C of the SS Act.* > > *Item 2 inserts proposed section 28C into the SS Act to allow the Secretary to make a determination, by legislative instrument, in relation to participants in a specified employment services program.* ### Section 42AB in item 1 of schedule 15 [Text of section 42AB](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr5927_first-reps%2F0015;query=Id%3A%22legislation%2Fbills%2Fr5927_first-reps%2F0000%22;rec=0): > *42AB Division not to apply to declared program participants* > > *This Division applies in relation to a person if the person is not a declared program participant.* According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd032#_ftnref213), a declared program participant is: > *a new category of income support recipient ... that is, someone who is a participant in an employment services program specified in a determination (an alcohol and/or other drug treatment program)*",
+   "stage": "In committee",
+   "ayes": 42,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 26,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-19/8"
+  },
+  {
+   "key": "federal-senate-5160",
+   "date": "2018-03-19",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) to (9)](https://www.openaustralia.org.au/senate/?gid=2018-03-19.270.1) introduced by WA Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens), which means they failed. ### What do the amendments do? Senator Siewert [explained that](https://www.openaustralia.org.au/senate/?gid=2018-03-19.270.1): > *These amendments relate to schedule 15, the schedule we've been talking a lot about tonight, which provides for the new compliance regime. The amendments specifically relate to financial hardship. As I articulated in this place in my previous amendments to the bill but also during the debate on other amendments that we've already dealt with, we are deeply concerned about the financial impact this schedule will have on the people who are going to be subject to the new compliance regime.*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 35,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-19/9"
+  },
+  {
+   "key": "federal-senate-5161",
+   "date": "2018-03-20",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-03-19.290.1) introduced by WA Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens), which means it failed. ### What does this amendment do? Senator Siewert [explained that](https://www.openaustralia.org.au/senate/?gid=2018-03-19.290.1): > *This amendment relates to additional requirements and a cap, and I have a couple of questions relating to this issue. This amendment relates to provisions for avoiding a reduction in or cancellation of a payment by undertaking a requirement and also addresses the cap of seven weeks, during which time a participant payment can be reduced or cancelled.* > > *The eight-week compliance penalty of the old compliance regime had a very significant impact and it happened all at once. So we can appreciate what the government is trying to do in having a one-week suspension, a two-week suspension and a four-week suspension. But by the time you get to a four-week suspension from payments you've already had a three-week non-payment period. By the time you get to four, that's seven. The concern is that somebody could go through a cycle of a number of weeks of suspension. People can be almost as badly off, potentially, as they were under the old regime. We want to apply a cap to this process so it's really clear.* ### Amendment text > *(1) Schedule 15 , item 1 , page 208 (line 3) , after section 42AP , insert:* > > *42APA Secretary may require person to comply with additional requirements* > >> *(1) The Secretary may require a person to comply with a requirement during a period in respect of which:* >> >>> *(a) the person’s participation payment is to be cancelled; or* >>> >>> *(b) instalments of the person’s participation payment are to be reduced.* >> >> *(2) Despite any other provision of this Subdivision, if the person complies with the requirement at any time during the period:* >> >>> *(a) the person’s par",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 35,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-20/1"
+  },
+  {
+   "key": "federal-senate-5165",
+   "date": "2018-03-20",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-03-20.289.1) introduced by WA Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert), which means it failed. ### What does the amendment do? Senator Siewert [explained that](https://www.openaustralia.org.au/senate/?gid=2018-03-20.289.1): > *This would amend item 1 of schedule 15 and provides for a review. I'm aware of the government's comments on review in 18 months of the legislation, and I want to come back to that, but this would be a quite detailed process. In relation to the compliance focused amendments of schedule 15, as you can see, there's a detailed outline of an independent review of the participation payment obligations compliance framework. That's one part of the amendment. The second part relates to independent annual reviews of the participation payment obligations compliance framework. Again, it goes into quite a bit of detail about how that independent review would be undertaken.*",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 35,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-20/5"
+  },
+  {
+   "key": "federal-senate-5166",
+   "date": "2018-03-20",
+   "house": "senate",
+   "question": "The majority voted in favour of leaving schedule 15 unchanged. In parliamentary jargon, they voted for a [motion](https://www.openaustralia.org.au/senate/?gid=2018-03-20.303.1) \"*that schedule 15 stand as printed.*\" ### What is schedule 15? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd032#_Toc492651060): > *Schedule 15 amends the SSA Act [Social Security (Administration) Act 1999], the Farm Household Support Act and the SS Act [Social Security Act 1991] to introduce a new two-phase job seeker compliance framework.* > > *In the first phase a payment suspension will be imposed to ensure re-engagement by the majority of job seekers.* > > *In the second phase, jobseekers who repeatedly fail to comply with their employment pathway plan requirements, with no underlying cause, will face stronger penalties with graduated loss of income support payments culminating in payment cancellation for four weeks for the most non-compliant jobseekers.*",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 35,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-20/6"
+  },
+  {
+   "key": "federal-senate-5167",
+   "date": "2018-03-21",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-03-21.14.1) introduced by WA Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens), which means it failed. ### What do the amendments do? Senator Siewert [explained that](https://www.openaustralia.org.au/senate/?gid=2018-03-21.14.1): > *We've had substantial discussion also around schedule 3 and there's already been rejection of our attempts to oppose schedule 3. Raised at the time of that debate were concerns around the women whose overseas portability of a wife pension will be affected, and this seeks to address this particular issue so that that group of around 200 women will not be affected by these changes. So this is to try to make this particular amendment to the changes to the income support system a bit fairer for those who are affected by the changes in this bill. It relates specifically to the overseas portability of the wife pension.* ### Amendment text > *(4) Schedule 3, item 98, page 85 (lines 24 to 26), omit the item, substitute:* > >> *(3) Subitem (3A) applies to a woman if, before the commencement of this item:* >> >>> *(a) the woman was receiving wife pension; and* >>> >>> *(b) Division 2 of Part 4.2 of the Social Security Act 1991 applied in relation to the payment of wife pension to the woman.* >> >> *(3A) Despite the amendments made by this Schedule, Parts 2.4 and 4.2 of the Social Security Act 1991, as in force immediately before the commencement of this item, and any other provision of that Act necessary to give effect to those Parts, continue to apply on and after that commencement in relation to the woman as if the amendments made by this Schedule had not been made.*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 33,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-21/1"
+  },
+  {
+   "key": "federal-senate-5168",
+   "date": "2018-03-21",
+   "house": "senate",
+   "question": "The majority voted in favour of leaving [schedule 4](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr5927_first-reps%2F0004;query=Id%3A%22legislation%2Fbills%2Fr5927_first-reps%2F0000%22;rec=0) unchanged. In parliamentary jargon, they voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-03-21.106.1) \"*that schedule 4 stand as printed.*\" ### What does schedule 4 do? Schedule 4 ends the bereavement allowance, which is paid to people whose partner has died and paid at a maximum of 14 weeks at the rate of the age pension. In its place, the Government has proposed a reduced rate to replace it. According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd032#_Toc492651060), it will be about 20% less than the current rate.",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 34,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-21/2"
+  },
+  {
+   "key": "federal-senate-5169",
+   "date": "2018-03-21",
+   "house": "senate",
+   "question": "Social Services Legislation Amendment (Welfare Reform) Bill 2017 - in Committee - Agree with bill",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 33,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-21/3"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

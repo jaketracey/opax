@@ -1,0 +1,304 @@
+{
+ "key": "au-federal-alrc-1167",
+ "title": "Fuel Tax (Consequential and Transitional Provisions) Bill 2006",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2006-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2006-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2006-03-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-03-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-06-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2006-06-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-06-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2006-06-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-06-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-06-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-06-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2006-06-26",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-2814",
+   "date": "2006-06-22",
+   "house": "senate",
+   "question": "Debate resumed. Ron Boswell We are debating the [Fuel Tax Bill 2006](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/R2518) today, which will bring into effect legislation that will remove excise from many fuels. It is designed to simplify the way tax credits for fuels are administered. It replaces and adds to the Energy Grants (Credits) Scheme. And what it effectively does is provide a mechanism to allow a greater number of businesses to claim back the fuel tax that has already been paid. There are a number of aspects of this bill which I am happy to commend. These include the provision to allow rebates on tax paid to all off-road fuel users. In effect, this allows fuel excise exemption for every farmer that has a petrol pump auger or for any petrol that is used off-road. That is going to be a great benefit to many regional and rural users of petrol on farms. I see Senator Scullion in the chamber today. He will be rejoicing on behalf of the fishing community, because it will also exempt all petrol used in outboard motors. As a former fisherman, and a very successful one at that, he knows it will make a huge difference to the fishing industry. This bill removes about $800 million in extra fuel tax credits to business right across Australia, whether it be fishing, forestry, mining or primary producers. This means any petrol or fuel that is used in those industries will have an excise exemption, and that is a big plus. It means a business will be able to operate more effectively as the level of tax for these businesses is being reduced. One aspect of the bill is to centralise a system of fuel tax credits through the Australian Taxation Office, rather than through a number of different departments and schemes as is currently the case. In practical terms, this means that rebates are to be processed through the Business Activity Statement rather than through the automatic claiming system that currently exists. That had certain",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 49,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-06-22/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-771575",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-03-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772711",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-06-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772712",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-06-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772831",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-06-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772832",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-06-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772833",
+   "speaker": "Harry Jenkins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-06-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772834",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-06-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772835",
+   "speaker": "Harry Jenkins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-06-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772836",
+   "speaker": "Harry Jenkins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-06-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772939",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-06-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-772940",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-06-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773064",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2006-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773580",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773581",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773613",
+   "speaker": "Ron Boswell",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2006-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773614",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773615",
+   "speaker": "Lyn Allison",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2006-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-773616",
+   "speaker": "Richard Colbeck",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-06-22",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fuel Tax (Consequential and Transitional Provisions) Act 2006",
+   "frl_uri": "https://www.legislation.gov.au/C2006A00073",
+   "assent_date": "2006-06-26"
+  }
+ ]
+}

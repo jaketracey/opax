@@ -1,0 +1,588 @@
+{
+ "key": "au-federal-alrc-1612",
+ "title": "Nation-building Funds Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-11-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance and Deregulation",
+ "status": "passed",
+ "status_as_of": "2008-12-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-11-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-11-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-11-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-11-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-11-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-11-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-11-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-12-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-12-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-12-01",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-12-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-12-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-12-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2008-12-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-12-18",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-571",
+   "date": "2008-12-04",
+   "house": "representatives",
+   "question": "That the amendments be disagreed to. That the amendments be disagreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 65,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 39
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 115
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-12-04/2"
+  },
+  {
+   "key": "federal-senate-1585",
+   "date": "2008-12-04",
+   "house": "senate",
+   "question": "Alan Ferguson The question is that opposition amendments (62) to (64) and (66) to (68) on sheet 5684 be agreed to.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 55,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-12-04/5"
+  },
+  {
+   "key": "federal-senate-1586",
+   "date": "2008-12-04",
+   "house": "senate",
+   "question": "Consideration resumed. Alan Ferguson The committee is considering the [Nation-building Funds Bill 2008](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/R3099) and Senator Milne’s amendment (1) on sheet 5645. The question is that Senator Milne’s amendments be agreed to. Nick Sherry The existing evaluation principles for the funds provide an appropriate framework for expenditure. They require projects to address national infrastructure priorities, demonstrate high benefits and effective use of resources, efficiently address infrastructure needs and demonstrate that they achieved established standards in the implementation of management. The principles enable environmental considerations to be assessed as appropriate, such as evaluating benefits and the costs of the projects. The bill provides for appropriate parliamentary scrutiny of the evaluation criteria for each fund, which will be tabled in parliament as disallowable legislative instruments. Therefore, on balance, we will not be supporting the Greens amendments. Nick Xenophon I am quite sympathetic to the Greens amendments. I understand what Senator Milne and the Greens are trying to achieve. I cannot support it, because I believe it is too prescriptive. But I urge the government to give a commitment that, when considering these nation-building funds and these projects, there will be clear criteria to achieve the goals of reducing greenhouse gases and to take climate change into account. If those criteria are not taken into account then these funds could be used for projects that are contrary to the goals that the government has espoused for dealing with carbon pollution. Nick Sherry Obviously, the evaluation of projects under the nation-building funds will conform to broader government policy. I think the most obvious area is the area of climate change. For example, we have seen the introduction of the carbon trading scheme. Obviously, the assessment of projects will",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 55,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-12-04/6"
+  },
+  {
+   "key": "federal-senate-1590",
+   "date": "2008-12-04",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/senate/?gid=2008-12-04.395.5) introduced by Labor MP [Nick Sherry](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Nick_Sherry&mpc=Senate&house=senate). The motion was: \"_that the committee does not insist on amendments Nos (3), (4), (5), (8) and (10) to (13)._\"(See [here](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr3099_sched_f32016d1-534a-4bf1-8cd8-da2f326aa9d1%22) for a schedule of the amendments made by the Senate to which the House of Representatives has disagreed. ) This motion was introduced after the House of Representatives rejected amendments that the Senate had agreed to while considering the bill.(Read more about the stages that a bill must pass through to become a law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). Compare these stages to the progress of this bill [here](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r3099). ) These amendments related to the transfer of the Communications Fund.(Read more about the amendments in the debate over this motion [here](http://www.openaustralia.org/senate/?id=2008-12-04.395.2). ) They opposed the proposal to transfer the balance of the Communications Fund to the [Building Australia Fund](http://www.finance.gov.au/investment-funds/NBF/BAF.html) to support the [National Broadband Network](http://en.wikipedia.org/wiki/National_Broadband_Network). One senator, Liberal Senator [Alan Eggleston](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Alan_Eggleston&mpc=Senate&house=senate), rebelled and crossed the floor to vote 'no'.(Read more about what it means to cross the floor in our [FAQ Section](http://publicwhip-rails.openaustraliafoundation.org.au/faq.php#rebelandfree).) Read more about the bill [here](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/R",
+   "stage": "Consideration of House message",
+   "ayes": 34,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 2,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-12-04/10"
+  },
+  {
+   "key": "federal-senate-1591",
+   "date": "2008-12-04",
+   "house": "senate",
+   "question": "Alan Ferguson The question now is that the Senate not insist on amendments (1), (39), (44), (45), (49), (50), (70), (71) and (78). Christine Milne I have already spoken on this. I will just explain to the chamber that these clauses are the package of clauses that were jointly supported by the coalition and the Greens. They pertain to the establishment of a joint house committee to oversee the disbursement of the funds and to insist that the recommendations of the advisory bodies be laid on the table of the parliament to facilitate that oversight. Bob Brown I would recognise that there are five Liberals here. From where I am, there are two on the left-hand side of the chamber and two on the right, three up the back and some 20 to 30 outside. There is a complete disarray here. This is an important oversight measure that the Greens are moving here, to keep an oversight, as Senator Milne explained, on the expenditure of this infrastructure fund. It is a gargantuan amount of public money and parliament should have particular scrutiny of it. I would call upon the Liberals to come back in here and support this oversight amendment. It was actually sponsored by them. It will not delay this legislation. There is no way the government will hold up this infrastructure legislation because some parliamentary oversight has been put to the chair. I have never ever seen such disarray from one of the major parties in this chamber as we are seeing right now. I cannot fathom what it is that has occurred with the Liberal Party here tonight, but it is enormously destructive. I say to the Liberal Party that they should come back in here and regain some ground by supporting this sensible oversight in the government’s legislation in the interests of this nation. Otherwise, the impression one gets is that in these last two weeks the Turnbull administration decided it would capitulate to everything that the government put forward. That is not healthy for democracy, it is not healthy for a bic",
+   "stage": "Consideration of House message",
+   "ayes": 33,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 2,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-12-04/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-789401",
+   "speaker": "Lindsay Tanner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789678",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789679",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789680",
+   "speaker": "Roger Price",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789705",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789812",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789878",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789879",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789881",
+   "speaker": "Sid Sidebottom",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790015",
+   "speaker": "Roger Price",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790053",
+   "speaker": "Martin Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790054",
+   "speaker": "Martin Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790081",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790082",
+   "speaker": "Kerry Rea",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790251",
+   "speaker": "Annette Hurley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790400",
+   "speaker": "Chris Evans",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790401",
+   "speaker": "Chris Evans",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790468",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790552",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790553",
+   "speaker": "Nick Minchin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790554",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790555",
+   "speaker": "Christine Milne",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790581",
+   "speaker": "Alan Ferguson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790582",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Nation-building Funds Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00154",
+   "assent_date": "2008-12-18"
+  }
+ ]
+}

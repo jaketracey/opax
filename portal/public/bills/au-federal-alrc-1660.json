@@ -1,0 +1,288 @@
+{
+ "key": "au-federal-alrc-1660",
+ "title": "National Greenhouse and Energy Reporting Amendment Bill 2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-03-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change and Water",
+ "status": "passed",
+ "status_as_of": "2009-09-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-03-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-03-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-23",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-08-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-08-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-08-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-09-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-09-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2009-09-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2009-09-18",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-792022",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793840",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-793841",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794058",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794059",
+   "speaker": "John Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794241",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794242",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794244",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794310",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794311",
+   "speaker": "Wilson Tuckey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-08-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794312",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794313",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794638",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794639",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795141",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-09-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795142",
+   "speaker": "David Johnston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-09-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795143",
+   "speaker": "Christine Milne",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2009-09-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795144",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-07",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Greenhouse and Energy Reporting Amendment Act 2009",
+   "frl_uri": "https://www.legislation.gov.au/C2009A00087",
+   "assent_date": "2009-09-18"
+  }
+ ]
+}

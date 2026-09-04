@@ -1,0 +1,351 @@
+{
+ "key": "au-federal-alrc-1531",
+ "title": "Families, Housing, Community Services and Indigenous Affairs and Other Legislation Amendment (2008 Budget and Other Measures) Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Families, Community Services and Indigenous Affairs",
+ "status": "passed",
+ "status_as_of": "2008-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-06-30",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-494",
+   "date": "2008-06-05",
+   "house": "representatives",
+   "question": "That the amendments ( **Mrs Bronwyn Bishop’s** ) be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 58,
+   "noes": 69,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 71
+    },
+    "Liberal": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-06-05/4"
+  },
+  {
+   "key": "federal-senate-1485",
+   "date": "2008-06-25",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Siewert’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 6,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 3,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-06-25/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-785273",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785515",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785516",
+   "speaker": "Tony Abbott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785517",
+   "speaker": "Bronwyn Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785518",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785690",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785691",
+   "speaker": "John Faulkner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786292",
+   "speaker": "Dana Wortley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786299",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786300",
+   "speaker": "Cory Bernardi",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786301",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786317",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786318",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786354",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786385",
+   "speaker": "Andrew Murray",
+   "party": "Australian Democrats",
+   "state": "federal",
+   "date": "2008-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786422",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786540",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786541",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Families, Housing, Community Services and Indigenous Affairs and Other Legislation Amendment (2008 Budget and Other Measures) Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00063",
+   "assent_date": "2008-06-30"
+  }
+ ]
+}

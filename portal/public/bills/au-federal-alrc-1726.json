@@ -1,0 +1,406 @@
+{
+ "key": "au-federal-alrc-1726",
+ "title": "Automotive Transformation Scheme Bill 2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2009-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Innovation, Industry, Science and Research",
+ "status": "passed",
+ "status_as_of": "2009-09-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2009-06-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-06-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-08-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-08-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-08-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2009-09-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-07",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2009-09-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2009-09-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2009-09-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2009-09-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2009-09-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-1717",
+   "date": "2009-09-14",
+   "house": "senate",
+   "question": "That these bills be now read a second time. That the amendment ( **Senator Milne’s** ) be agreed to.",
+   "stage": "Second reading",
+   "ayes": 4,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "member": 2,
+    "dated": 42,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-09-14/3"
+  },
+  {
+   "key": "federal-senate-1718",
+   "date": "2009-09-14",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Abetz’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 38,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 60,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2009-09-14/4"
+  },
+  {
+   "key": "federal-representatives-669",
+   "date": "2009-09-15",
+   "house": "representatives",
+   "question": "That the amendment be disagreed to. That the motion ( **Dr Emerson’s** ) be agreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 77,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 78,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2009-09-15/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-793911",
+   "speaker": "Craig Emerson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794768",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794769",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2009-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794804",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794887",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794888",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794889",
+   "speaker": "Craig Emerson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-794890",
+   "speaker": "Craig Emerson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795134",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795135",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795624",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-09-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795625",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-09-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795626",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2009-09-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795627",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795659",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-09-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795660",
+   "speaker": "Craig Emerson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795811",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2009-09-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-795812",
+   "speaker": "Kim Carr",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2009-09-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Automotive Transformation Scheme Act 2009",
+   "frl_uri": "https://www.legislation.gov.au/C2009A00093",
+   "assent_date": "2009-09-29"
+  }
+ ]
+}

@@ -1,0 +1,285 @@
+{
+ "key": "au-federal-alrc-1596",
+ "title": "Interstate Road Transport Charge Amendment Bill (No. 2) 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-09-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development and Local Government",
+ "status": "passed",
+ "status_as_of": "2008-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-09-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-10-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-10-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-10-23",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-10-23",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-11-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-11-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-12-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-12-03",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-12-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2008-12-04",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-12-11",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-788221",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788909",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788910",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2008-10-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788935",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788936",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788938",
+   "speaker": "Brett Raguse",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788966",
+   "speaker": "Harry Jenkins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789007",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789008",
+   "speaker": "Barry Haase",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789009",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789167",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789168",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790357",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790358",
+   "speaker": "Ian Macdonald",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790359",
+   "speaker": "Carol Brown",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790585",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790586",
+   "speaker": "Ian Macdonald",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790587",
+   "speaker": "Stephen Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-790588",
+   "speaker": "Stephen Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-12-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Interstate Road Transport Charge Amendment Act (No. 2) 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00147",
+   "assent_date": "2008-12-11"
+  }
+ ]
+}

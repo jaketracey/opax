@@ -1,0 +1,352 @@
+{
+ "key": "au-federal-alrc-1548",
+ "title": "Offshore Petroleum (Safety Levies) Amendment (Greenhouse Gas Storage) Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-06-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Resources, Energy and Tourism",
+ "status": "passed",
+ "status_as_of": "2008-11-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-09-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-09-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-22",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-10-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-10-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-11-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-11-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-11-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2008-11-10",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-11-21",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-1543",
+   "date": "2008-11-10",
+   "house": "senate",
+   "question": "Consideration resumed from 16 October. [OFFSHORE PETROLEUM AMENDMENT (GREENHOUSE GAS STORAGE) BILL 2008](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/R3030) Bill—by leave—taken as a whole. Penny Wong I table a supplementary explanatory memorandum relating to the government amendments to be moved to this bill. I am advised that the memorandum was circulated in the chamber on 14 October 2008. Christine Milne I move Australian Greens amendment (1) on sheet 5603 revised: (1) Schedule 1, item 2A, page 3 (after line 23), at the end of section 2A, add: (2) Another object of this Act is to ensure the full liability into the future for any adverse impact, including any leakage from carbon storage projects, is borne by the entities undertaking those projects. It is an additional subsection and the effect of this amendment is to include: Another object of this Act is to ensure the full liability into the future for any adverse impact, including any leakage from carbon storage projects, is borne by the entities undertaking those projects. The reason for this amendment is to make very clear in the objects of this legislation that the liability for leakage is borne by the entities that undertake the projects and cannot therefore be seen as being borne by the community. This is the most vexed issue of the whole thing around carbon capture and storage. Companies can go out and pump liquefied carbon dioxide into these cavities and get their closure certificate from the minister. But, as the current legislation stands, there is the question of liability. What if the liquefied carbon dioxide starts leaking out of these cavities 20 or 50 years later? You will then have massive volumes of carbon dioxide going into the atmosphere. There will be localised environmental impacts but the bigger picture impact is that every country has targets that it has to meet and, if you have large volumes of carbon dioxide bubbling to the surface and leakin",
+   "stage": "In committee",
+   "ayes": 3,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "earliest": 4,
+    "member": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-11-10/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-785796",
+   "speaker": "Martin Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787654",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787655",
+   "speaker": "Ian Macfarlane",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787684",
+   "speaker": "Tony Windsor",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2008-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787686",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787771",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787772",
+   "speaker": "Kevin Rudd",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787773",
+   "speaker": "Martin Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787774",
+   "speaker": "Martin Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787975",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787976",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788166",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788167",
+   "speaker": "David Johnston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788679",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788680",
+   "speaker": "Glenn Sterle",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788798",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-10-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-788799",
+   "speaker": "Glenn Sterle",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-10-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789138",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-11-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789139",
+   "speaker": "Don Farrell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789175",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-11-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789176",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789177",
+   "speaker": "Jan McLucas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-10",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Offshore Petroleum (Safety Levies) Amendment (Greenhouse Gas Storage) Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00120",
+   "assent_date": "2008-11-21"
+  }
+ ]
+}

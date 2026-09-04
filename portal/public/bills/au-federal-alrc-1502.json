@@ -1,0 +1,381 @@
+{
+ "key": "au-federal-alrc-1502",
+ "title": "Appropriation Bill (No. 1) 2008-2009",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance and Deregulation",
+ "status": "passed",
+ "status_as_of": "2008-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-05-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-02",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-03",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-06-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-23",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-06-30",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-784730",
+   "speaker": "Wayne Swan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-784925",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785059",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785121",
+   "speaker": "Roger Price",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785122",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785228",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2008-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785356",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785436",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785437",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785499",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785500",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785574",
+   "speaker": "Anna Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785628",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785748",
+   "speaker": "Simon Crean",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785856",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-785913",
+   "speaker": "Robert McClelland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786033",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786034",
+   "speaker": "Nick Sherry",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786184",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786185",
+   "speaker": "Claire Moore",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786596",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786597",
+   "speaker": "Julian McGauran",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2008-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786604",
+   "speaker": "Kerry O'Brien",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 1) 2008-2009",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00055",
+   "assent_date": "2008-06-30"
+  }
+ ]
+}

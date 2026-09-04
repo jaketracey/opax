@@ -1,0 +1,946 @@
+{
+ "key": "au-federal-alrc-1398",
+ "title": "Workplace Relations Amendment (A Stronger Safety Net) Bill 2007",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2007-05-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2007-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2007-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2007-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2007-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2007-06-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-06-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-06-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2007-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2007-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2007-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2007-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2007-06-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:%22legislation/billhome/r2809%22",
+   "document_date": "2007-05-28",
+   "licence": "CC BY-NC-ND 4.0 (Parliament of Australia)"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-385",
+   "date": "2007-05-30",
+   "house": "representatives",
+   "question": "Bill—by leave—taken as a whole. Harry Quick I understand that it is the wish of the House for the amendments proposed by the member for Calare and the opposition amendments to be debated in a series of groups and for the question on each group of amendments to be deferred. After the House has completed its consideration of the amendments, individual questions will be put on each group of amendments and on the government’s amendments as circulated. Peter Andren by leave—I move amendments (1) to (10) as circulated in my name: (1) Schedule 1, item 1, page 5 (lines 16-24), omit the definition of **_salary._** (2) Schedule 1, item 1, page 7 (line 13), omit paragraph (a), substitute: (a) the AWA was or is lodged on or after 27 March 2006; and (3) Schedule 1, item 1, page 7 (line 15) after ‘AWA’ insert ‘was or’. (4) Schedule 1, item 1, page 7 (lines 22-35), omit paragraph (c). (5) Schedule 1, item 1, page 8 (lines 31-32), omit paragraph (a), substitute (a) the variation of the AWA was or is lodged on or after 28 March 2006; and (6) Schedule 1, item 1, page 9 (lines 4-17), omit paragraph (c). (7) Schedule 1, item 1, page 8 (line 34) after ‘AWA’ insert ‘was or’. (8) Schedule 1, item 1, page 10 (line 3) to page 11 (line 3), omit proposed section 346G. (9) Schedule 1, item 1, page 14 (line 2), omit ‘paragraphs 346E(1)(a), (b) and (c)’, substitute: ‘paragraphs 346E(1)(a) and (b)’. (10) Schedule 1, item 1, page 14 (lines 14 and 15), omit ‘paragraphs 346E(1)(b) and (c)’, substitute ‘paragraph 346E(1)(b)’. I will be brief in order to comply, reluctantly, with the travesty of this guillotined debate. This process is a classic example of why our parliament so desperately needs a review, an amendment process, hopefully both here and in the Senate, after the next election. The effect of these 10 amendments is to, firstly, remove the income limit of $75,000 or less for the fairness test to be applied and, secondly, to apply the fairness test to all agreements made since Work Choices ca",
+   "stage": "Consideration in detail",
+   "ayes": 49,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2007-05-30/2"
+  },
+  {
+   "key": "federal-representatives-386",
+   "date": "2007-05-30",
+   "house": "representatives",
+   "question": "Ian Causley I now put the question that opposition amendments (6), (7) and (11) to (14) be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 54,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 54,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2007-05-30/3"
+  },
+  {
+   "key": "federal-representatives-387",
+   "date": "2007-05-30",
+   "house": "representatives",
+   "question": "Ian Causley I now put the question that opposition amendments (8) and (9) be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 54,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 54,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2007-05-30/4"
+  },
+  {
+   "key": "federal-representatives-388",
+   "date": "2007-05-30",
+   "house": "representatives",
+   "question": "Phillip Barresi I now put the question that opposition amendment (10) be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 54,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 54,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2007-05-30/5"
+  },
+  {
+   "key": "federal-senate-1340",
+   "date": "2007-06-19",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Abetz’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "earliest": 10,
+    "member": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-06-19/3"
+  },
+  {
+   "key": "federal-senate-1341",
+   "date": "2007-06-19",
+   "house": "senate",
+   "question": "Eric Abetz by leave—I move government amendments (7) and (8) on sheet PJ379 together: (7) Schedule 1, item 1, page 7 (lines 14 to 21), omit paragraph 346E(1)(b), substitute: (b) on the date of lodgment: (i) the employer bound by the AWA is bound by an award in respect of the terms and conditions of the kind of work performed or to be performed by the employee; or (ii) the employee whose employment is subject to the AWA is employed in an industry or occupation in which the terms and conditions of the kind of work performed or to be performed by the employee are usually regulated by an award, or would, but for a workplace agreement or another industrial instrument, usually be regulated by an award; and (8) Schedule 1, item 1, page 8 (lines 11 to 19), omit paragraph 346E(2)(b), substitute: (b) on the date of lodgment: (i) the employer bound by the collective agreement is bound by an award in respect of the terms and conditions of the kind of work performed or to be performed by the one or more of the employees; or (ii) one or more of the employees whose employment is subject to the collective agreement is employed in an industry or occupation in which the terms and conditions of the kind of work performed or to be performed by the employees are usually regulated by an award, or would, but for a workplace agreement or another industrial instrument, usually be regulated by an award; and These amendments would amend proposed section 346E of the bill as introduced to make clear that workplace agreements would be subject to the fairness test where, immediately before the date on which the agreement is lodged, the employer was actually bound by an award in respect of the kind of work performed by the employee. The amendment is necessary to avoid any suggestion that the fairness test would not apply where an employer is bound by an award but in circumstances where the employee is employed in an industry or occupation that is not usually regulated by an award. Question agreed",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 53,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-06-19/4"
+  },
+  {
+   "key": "federal-senate-1342",
+   "date": "2007-06-19",
+   "house": "senate",
+   "question": "That the amendments ( **Senator Wong’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 51,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-06-19/5"
+  },
+  {
+   "key": "federal-senate-1343",
+   "date": "2007-06-19",
+   "house": "senate",
+   "question": "Rachel Siewert by leave—I move Greens amendments (11), (14), (15), (16) and (17) on sheet 5285. (11) Schedule 1, item 1, page 15 (lines 27 and 28), omit “, on balance, the collective agreement provides fair compensation, in its overall effect on the employees”, substitute “the collective agreement provides fair compensation to each employee”. (14) Schedule 1, item 1, page 16 (lines 1 to 29), omit subsections 346M(2) to (5). (15) Schedule 1, item 1, page 16 (after line 35), after subsection 346M(6), insert: (6A) The employer, the employees and their representatives and the unions party to an agreement must be advised of and have the opportunity to verify or refute information provided to the Workplace Authority Director under subsection (6) in relation to the agreement that covers the employer, employees or would bind the union. (16) Schedule 1, item 1, page 16 (line 36) to page 17 (line 6), omit subsection 346M(7), substitute: (7) In this section: **_fair compensation_** , in relation to an employee, means the provision of an additional benefit or advantage that: (a) is of significant and immediate value (whether financial or otherwise) to the employee; and (b) fully compensates the employee for the exclusion or modification of the relevant conditions. (17) Schedule 1, item 1, page 17 (after line 6), after section 346M, insert: 346MA Workplace Authority Director to provide reasons for decisions (1) If the Workplace Authority Director makes a decision in accordance with section 346M, the Workplace Authority Director must provide a written statement of reasons for that decision to: (a) the employer in relation to the workplace agreement; (b) if the workplace agreement is an AWA—the employee whose employment is subject to the AWA; (c) if the agreement is a union collective agreement or a union greenfields agreement—the organisation or organisations bound by the agreement. (2) A party to a workplace agreement which has been subject to a decision made in accordance with",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 51,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-06-19/6"
+  },
+  {
+   "key": "federal-senate-1344",
+   "date": "2007-06-19",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Siewert’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 43,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-06-19/7"
+  },
+  {
+   "key": "federal-senate-1345",
+   "date": "2007-06-19",
+   "house": "senate",
+   "question": "Rachel Siewert by leave—I move Greens amendments (23), (24) and (25) from sheet 5285 together: (23) Schedule 1, item 1, page 29 (line 30), after paragraph 346ZF(1)(b), insert: or (c) treat an employee any less favourably; (24) Schedule 1, item 1, page 29 (lines 31 to 32), omit “the sole or dominant reason for the employer dismissing, or threatening to dismiss,”, substitute “one of the reasons for the employer dismissing, or threatening to dismiss or treating less favourably,”. (25) Schedule 1, item 1, page 30 (lines 7 to 10), omit subsection 346ZF(3). These amendments also relate to failure to pass the fairness test. They are designed to provide greater protection for people on AWAs. These amendments particularly relate to protection for people who are dismissed if their workplace agreement fails or may fail the fairness test. The amendments extend the protection to being treated unfairly as well as dismissal and provide that an agreement failing the test may be only one of the reasons for dismissal or unfavourable treatment rather than the sole or determinant reason. The problem with the sole determinant reason provision is that employers can get around it. This is another one of the issues that Professor Andrew Stewart brought up in his submission to the inquiry on the safety net bill where he pointed out a number of what he considered loopholes in the provisions within the bill. The Greens are seeking to close these loopholes and provide better protection for workers who may be dismissed if their workplace agreement fails or may fail the test. Question negatived. Penny Wong by leave—I move opposition amendments (31) and (32) together. (31) Schedule 1, page 36 (after line 3), after item 22, insert: 22A At the end of section 613 Add: (2) Notwithstanding the other factors set out in this section or a provision in a workplace agreement or an award, an employee who wishes to attend religious activities on Good Friday must be taken to have reasonable grounds for refusi",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 53,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-06-19/8"
+  },
+  {
+   "key": "federal-senate-1346",
+   "date": "2007-06-19",
+   "house": "senate",
+   "question": "That the amendment ( **Senator Wong’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 53,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-06-19/9"
+  },
+  {
+   "key": "federal-senate-1347",
+   "date": "2007-06-19",
+   "house": "senate",
+   "question": "Andrew Murray by leave—I move Australian Democrats amendments (1) and (3) on sheet 5266: (1) Schedule 1, page 4 (after line 4), before item 1, insert: 1A Paragraph 22(1)(a) After “conduct”, insert “annual”. (3) Schedule 1, page 4 (after line 4), before item 1, insert: 1C Paragraph 24(1)(a) Before “the”, insert “subject to paragraph 22(1)(a),”. Amendment (3) is simply consequential. Amendment (1) requires annual wage reviews by the Australian Fair Pay Commission. It is probably implicit in the functioning of the commission. I seek to make it explicit. It is one of those things that either you agree with or you do not. It is plain on the face of it. Question negatived. I move Australian Democrats amendment (2) on sheet 5266: (2) Schedule 1, page 4 (after line 4), before item 1, insert: 1B Section 23 Repeal the section, substitute: 23 AFPC’s wage-setting parameters (1) The objective of the AFPC in performing its wage-setting function is to ensure that a safety net of fair minimum wages and conditions of employment is established and maintained while promoting economic prosperity of the people of Australia, having regard to the following: (a) the need to provide fair minimum standards for employees in the context of living standards generally prevailing in the Australian community; (b) the capacity of the unemployed and low paid to obtain and remain in employment; (c) economic factors, including levels of productivity and inflation, desirability of attaining a high level of employment, employment and competitiveness across the economy; (d) relevant taxation and government transfer payments; (e) the needs of the low paid. (2) In performing its functions under this Part, the AFPC must have regard to the following: (a) the need for any alterations to wage relativities between awards to be based on skill, responsibility and the conditions under which work is performed; (b) the need to support training arrangements through appropriate trainee wage provisions; (c) the need, u",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 53,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-06-19/10"
+  },
+  {
+   "key": "federal-senate-1348",
+   "date": "2007-06-19",
+   "house": "senate",
+   "question": "That the amendments ( **Senator Siewert’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 54,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "earliest": 11,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2007-06-19/11"
+  },
+  {
+   "key": "federal-representatives-397",
+   "date": "2007-06-20",
+   "house": "representatives",
+   "question": "That so much of the standing and sessional orders be suspended as would prevent the amendments being considered together. That the question be now put.",
+   "stage": "Consideration of Senate message",
+   "ayes": 77,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2007-06-20/5"
+  },
+  {
+   "key": "federal-representatives-398",
+   "date": "2007-06-20",
+   "house": "representatives",
+   "question": "That the motion ( **Dr Stone’s** ) be agreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 77,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2007-06-20/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-780316",
+   "speaker": "Joe Hockey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780404",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780405",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780430",
+   "speaker": "Harry Jenkins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780432",
+   "speaker": "Phillip Barresi",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780767",
+   "speaker": "Richard Colbeck",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-06-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780768",
+   "speaker": "Richard Colbeck",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-06-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-780883",
+   "speaker": "Judith Troeth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-06-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781066",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781067",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781115",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781116",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2007-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781145",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781146",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781205",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2007-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781234",
+   "speaker": "Rachel Siewert",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2007-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-781235",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2007-06-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Workplace Relations Amendment (A Stronger Safety Net) Act 2007",
+   "frl_uri": "https://www.legislation.gov.au/C2007A00107",
+   "assent_date": "2007-06-28"
+  }
+ ]
+}

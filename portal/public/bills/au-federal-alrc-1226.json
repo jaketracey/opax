@@ -1,0 +1,896 @@
+{
+ "key": "au-federal-alrc-1226",
+ "title": "Workplace Relations Legislation Amendment (Independent Contractors) Bill 2006",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 41,
+ "introduced": "2006-06-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2006-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2006-06-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-06-22",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-09-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-09-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2006-09-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-09-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-11-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2006-11-29",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2006-12-01",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2006-12-01",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2006-12-11",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-2577",
+   "date": "2006-09-13",
+   "house": "representatives",
+   "question": "That this bill be now read a second time. That all words after “That” be omitted with a view to substituting the following words: “whilst not declining to give the bill a second reading, the House notes that this bill: (1) follows on from the Government’s extreme industrial relations changes which are a massive attack on living standards and living conditions, by removing rights, entitlements and conditions of Australian employees; (2) also removes rights, entitlements, conditions and protections afforded to Australians in the workplace, whether employees or independent contractors; (3) does this by allowing employees to be treated as “ independent contractors ”, thereby removing employee protections and entitlements and placing superannuation, tax, and workers’ compensation burdens on them; (4) does this by removing protections from independent contractors who are in a dependent contract position and as a consequence in an unequal bargaining position; (5) effects this by: (a) Continuing to use the common law definition of independent contractor as the basis of law without the guidance of statutory criteria. (b) Allowing employees to be treated as independent contractors in a sham way by ineffective anti-sham provisions. (c) Overriding State laws with employee deeming provisions. (d) Overriding State unfair contracts provisions which provide protection to employees, contractors and small business. (e) Overriding any future State and Territory owner-driver transport laws and putting existing State owner-driver transport laws at risk. (f) Failing to provide any genuine protections for outworkers through ineffective outworker provisions, significantly weakening outworker entitlements. (6) introduces even more complexity and confusion into Australia’s workplace laws. (7) treats the Senate Employment and Workplace Relations Committee reporting on these matters with contempt by dealing with the legislation prior to consideration of its report’. That the words proposed to",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-09-13/6"
+  },
+  {
+   "key": "federal-representatives-2578",
+   "date": "2006-09-13",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-09-13/7"
+  },
+  {
+   "key": "federal-representatives-2579",
+   "date": "2006-09-13",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-09-13/8"
+  },
+  {
+   "key": "federal-representatives-2580",
+   "date": "2006-09-13",
+   "house": "representatives",
+   "question": "That this bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-09-13/9"
+  },
+  {
+   "key": "federal-representatives-2581",
+   "date": "2006-09-13",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-09-13/10"
+  },
+  {
+   "key": "federal-senate-1191",
+   "date": "2006-11-29",
+   "house": "senate",
+   "question": "That these bills be now read a second time. That the amendment ( **Senator Murray’s** ) be agreed to.",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 49,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-11-29/1"
+  },
+  {
+   "key": "federal-senate-1192",
+   "date": "2006-11-29",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 49,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-11-29/2"
+  },
+  {
+   "key": "federal-senate-1203",
+   "date": "2006-12-01",
+   "house": "senate",
+   "question": "That the amendments ( **Senator Murray’s** ) be agreed to. That the amendments ( **Senator Murray’s** ) be agreed to.",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 46,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-12-01/1"
+  },
+  {
+   "key": "federal-senate-1204",
+   "date": "2006-12-01",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "earliest": 11,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-12-01/2"
+  },
+  {
+   "key": "federal-senate-1205",
+   "date": "2006-12-01",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 45,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-12-01/3"
+  },
+  {
+   "key": "federal-senate-1206",
+   "date": "2006-12-01",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 45,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-12-01/4"
+  },
+  {
+   "key": "federal-senate-1207",
+   "date": "2006-12-01",
+   "house": "senate",
+   "question": "That these bills be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 31,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 45,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-12-01/5"
+  },
+  {
+   "key": "federal-senate-1208",
+   "date": "2006-12-01",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "Third reading",
+   "ayes": 31,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 45,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2006-12-01/6"
+  },
+  {
+   "key": "federal-representatives-344",
+   "date": "2006-12-04",
+   "house": "representatives",
+   "question": "That the amendments be agreed to. That the amendments be agreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 79,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2006-12-04/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-773463",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-774303",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-774304",
+   "speaker": "Stephen Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-774340",
+   "speaker": "Ian Causley",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2006-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-774954",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-09-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-774955",
+   "speaker": "Sharon Grierson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-09-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775043",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-09-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775098",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-09-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775099",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-09-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775100",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-09-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775101",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-09-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775210",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-09-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-775211",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-09-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-776999",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-11-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777000",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2006-11-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777091",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-11-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777092",
+   "speaker": "Guy Barnett",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-11-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777263",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777264",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777265",
+   "speaker": "Eric Abetz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2006-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-777330",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2006-12-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Workplace Relations Legislation Amendment (Independent Contractors) Act 2006",
+   "frl_uri": "https://www.legislation.gov.au/C2006A00163",
+   "assent_date": "2006-12-11"
+  }
+ ]
+}

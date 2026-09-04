@@ -1,0 +1,388 @@
+{
+ "key": "au-federal-alrc-1551",
+ "title": "Great Barrier Reef Marine Park and Other Legislation Amendment Bill 2008",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 42,
+ "introduced": "2008-06-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment, Heritage and the Arts",
+ "status": "passed",
+ "status_as_of": "2008-11-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2008-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-06-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-08-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-08-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2008-08-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-08-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-08-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-01",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2008-09-01",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2008-11-11",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2008-11-11",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2008-11-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2008-11-25",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-1493",
+   "date": "2008-08-27",
+   "house": "senate",
+   "question": "Great Barrier Reef Marine Park and Other Legislation Amendment Bill 2008 - Referral to Committee",
+   "stage": "Referral to Committee",
+   "ayes": 33,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 48,
+    "earliest": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2008-08-27/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-785792",
+   "speaker": "Peter Garrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786319",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786320",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786353",
+   "speaker": "Yvette D'Ath",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786356",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786446",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786447",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786646",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-08-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786647",
+   "speaker": "Janelle Saffin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-08-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786648",
+   "speaker": "Peter Garrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-08-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786819",
+   "speaker": "Jan McLucas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786820",
+   "speaker": "Jan McLucas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786821",
+   "speaker": "Steve Fielding",
+   "party": "Family First",
+   "state": "federal",
+   "date": "2008-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-786947",
+   "speaker": "Ian Macdonald",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787051",
+   "speaker": "Stephen Parry",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787053",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787054",
+   "speaker": "Ron Boswell",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2008-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787542",
+   "speaker": "Jacinta Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-09-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-787867",
+   "speaker": "Stephen Parry",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-09-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789235",
+   "speaker": "Jan McLucas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789273",
+   "speaker": "Judith Troeth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2008-11-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789274",
+   "speaker": "Jan McLucas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789329",
+   "speaker": null,
+   "party": null,
+   "state": "federal",
+   "date": "2008-11-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-789330",
+   "speaker": "Anthony Byrne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2008-11-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Great Barrier Reef Marine Park and Other Legislation Amendment Act 2008",
+   "frl_uri": "https://www.legislation.gov.au/C2008A00125",
+   "assent_date": "2008-11-25"
+  }
+ ]
+}
