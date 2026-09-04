@@ -5781,19 +5781,27 @@ function wireDialogHeadYear(dialog, heroSelector) {
   label.setAttribute("aria-hidden", "true");
   head.insertBefore(label, head.firstChild);
   let hero = null;
+  let raf = 0;
   const sync = () => {
     hero = hero?.isConnected ? hero : dialog.querySelector(heroSelector);
-    head.classList.toggle("is-scrolled", dialog.scrollTop > 6);
+    const scrolled = dialog.scrollTop > 6;
+    if (head.classList.contains("is-scrolled") !== scrolled) head.classList.toggle("is-scrolled", scrolled);
     if (!hero) { head.classList.remove("is-past"); return; }
-    const r = hero.getBoundingClientRect();
-    const past = r.bottom < head.getBoundingClientRect().bottom + 8;
-    if (past) label.textContent = hero.textContent.trim();
-    head.classList.toggle("is-past", past);
+    const past = hero.getBoundingClientRect().bottom < head.getBoundingClientRect().bottom + 8;
+    // Write only on change: the label lives inside the dialog, and a write
+    // that re-triggers an observer would spin the page until the browser
+    // gave up (it did, on iOS).
+    const text = past ? hero.textContent.trim() : label.textContent;
+    if (label.textContent !== text) label.textContent = text;
+    if (head.classList.contains("is-past") !== past) head.classList.toggle("is-past", past);
   };
-  let raf = 0;
-  dialog.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; sync(); }); }, { passive: true });
-  new MutationObserver(() => { hero = null; sync(); }).observe(dialog, { childList: true, subtree: true, characterData: true });
-  sync();
+  const schedule = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; sync(); }); };
+  dialog.addEventListener("scroll", schedule, { passive: true });
+  // Watch the module's body only (never the head this writes into), and
+  // only for the hero being replaced, which is when the year changes.
+  const body = dialog.querySelector(".game-dialog-body") || dialog;
+  new MutationObserver(() => { hero = null; schedule(); }).observe(body, { childList: true, subtree: true });
+  schedule();
 }
 
 // Closing a game: the dialog settles out (see .game-dialog.is-closing) and
