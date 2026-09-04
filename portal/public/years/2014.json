@@ -1,0 +1,304 @@
+{
+ "year": 2014,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2014, and what positions did members and parties take? Debates that year included The budget fight, The GP co-payment, Data retention and Uni fee deregulation.",
+  "prompt": "year-brief-v1",
+  "answer": "The 2014 parliamentary year was dominated by the government's first budget, delivered in May, and the fierce opposition it provoked. Government speakers, such as the member for Eden-Monaro, defended the budget as a \"watershed\" necessary to repair what they called Labor's \"debt and deficit disaster,\" citing figures of $667 billion in gross debt and interest payments of $1 billion a month. They argued that tough decisions were needed to avoid worse ones later, and that health and education funding would continue to increase each year. In contrast, Labor members condemned the budget as unfair and a breach of election promises, with the member for Canberra reporting that constituents found it \"devastating\" and that it unfairly targeted young people, pensioners, and the sick. A censure motion against the Prime Minister over the budget's \"broken promises\" and new taxes was carried 86 votes to 51.\n\nThe most contentious single issue was the proposed $7 GP co-payment, part of the budget's health changes. Labor, led by members like the member for Scullin, who tabled petitions with 9,065 signatures against the measure, argued it was a \"GP tax\" that would destroy Medicare and universal health care, citing doctors reporting a 30 per cent drop in patient attendance and warnings from the AMA and other health bodies. The government, including the Prime Minister and the member for Bennelong, defended the co-payment as a \"modest contribution\" to make Medicare sustainable, pointing to a safety net for concession cardholders and children under 16 after 10 visits, and noting that Labor had introduced similar co-payments in the past. Labor's senators announced they would vote against the co-payment, and the opposition moved amendments to condemn the \"attack on universal health care.\"\n\nUniversity fee deregulation was also a major debate, with the House voting against a censure motion opposing the policy by 81 votes to 54. Government members argued deregulation would expand opportunities, including support for 80,000 more students in diploma courses by 2018, while opponents, including Labor, framed it as part of the budget's broader cuts to education and a broken promise. The budget debate also encompassed changes to pensions, foreign aid, and infrastructure spending, with the government arguing these were necessary for fiscal repair and Labor countering that they were unfair and would harm the most vulnerable.",
+  "sources": [
+   {
+    "slug": "division-federal-representatives-3641-p2",
+    "title": "House of Representatives division, 3 December 2014: Motions - Prime Minister; Attempted Censure - Against university fee deregulation (part 2 of 2)",
+    "speaker": "Alan Tudge",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "division-federal-representatives-3228",
+    "title": "House of Representatives division, 19 June 2014: Motions — Prime Minister; Attempted Censure (part 1 of 2)",
+    "speaker": "Alan Tudge",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-289486",
+    "title": "Peter Hendy — 2014-05-28",
+    "speaker": "Peter Hendy",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2014-05-28",
+    "cited": true
+   },
+   {
+    "slug": "speech-294625",
+    "title": "Nick Champion — 2014-07-15",
+    "speaker": "Nick Champion",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2014-07-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-296758",
+    "title": "Andrew Giles — 2014-09-03",
+    "speaker": "Andrew Giles",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2014-09-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-302713",
+    "title": "Andrew Giles — 2014-11-27",
+    "speaker": "Andrew Giles",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2014-11-27",
+    "cited": true
+   },
+   {
+    "slug": "speech-287010",
+    "title": "Tony Burke — 2014-03-26",
+    "speaker": "Tony Burke",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2014-03-26",
+    "cited": false
+   },
+   {
+    "slug": "speech-288186",
+    "title": "Christopher Pyne — 2014-05-15",
+    "speaker": "Christopher Pyne",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2014-05-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-288568",
+    "title": "Joe Hockey — 2014-05-26",
+    "speaker": "Joe Hockey",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2014-05-26",
+    "cited": false
+   },
+   {
+    "slug": "speech-289579",
+    "title": "Tony Abbott — 2014-05-29",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2014-05-29",
+    "cited": false
+   },
+   {
+    "slug": "speech-289583",
+    "title": "Tony Abbott — 2014-05-29",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2014-05-29",
+    "cited": false
+   },
+   {
+    "slug": "speech-290193",
+    "title": "Tony Abbott — 2014-06-03",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2014-06-03",
+    "cited": false
+   },
+   {
+    "slug": "speech-290671",
+    "title": "Josh Frydenberg — 2014-06-04",
+    "speaker": "Josh Frydenberg",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2014-06-04",
+    "cited": false
+   },
+   {
+    "slug": "speech-290602",
+    "title": "Andrew Leigh — 2014-06-04",
+    "speaker": "Andrew Leigh",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2014-06-04",
+    "cited": false
+   },
+   {
+    "slug": "speech-290669",
+    "title": "Josh Frydenberg — 2014-06-04",
+    "speaker": "Josh Frydenberg",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2014-06-04",
+    "cited": false
+   },
+   {
+    "slug": "speech-291505",
+    "title": "Gai Brodtmann — 2014-06-17",
+    "speaker": "Gai Brodtmann",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2014-06-17",
+    "cited": false
+   },
+   {
+    "slug": "speech-293945",
+    "title": "Alan Tudge — 2014-06-26",
+    "speaker": "Alan Tudge",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2014-06-26",
+    "cited": false
+   },
+   {
+    "slug": "speech-294670",
+    "title": "Julie Collins — 2014-07-15",
+    "speaker": "Julie Collins",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2014-07-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-295371",
+    "title": "Clive Palmer — 2014-08-26",
+    "speaker": "Clive Palmer",
+    "party": "United Australia Party",
+    "state": "federal",
+    "date": "2014-08-26",
+    "cited": false
+   },
+   {
+    "slug": "speech-297681",
+    "title": "Catherine King — 2014-09-23",
+    "speaker": "Catherine King",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2014-09-23",
+    "cited": false
+   }
+  ],
+  "cited_count": 6,
+  "seconds": 10.3,
+  "tokens": {
+   "input": 12591,
+   "output": 486
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2014; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2014 run through /api/search (hybrid retrieval, from=2014&to=2014, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "199 distinct speeches among the 200 strongest matches for the year's 4 debates - not every speech given in 2014, and the index is still loading.",
+  "probes": [
+   {
+    "q": "budget deficit levy spending cuts",
+    "label": "The budget fight",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "Medicare co-payment GP",
+    "label": "The GP co-payment",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "metadata data retention surveillance",
+    "label": "Data retention",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "university fee deregulation",
+    "label": "Uni fee deregulation",
+    "retrieved": 50,
+    "truncated": true
+   }
+  ],
+  "retrieved": 200,
+  "unique_speeches": 199,
+  "unlabelled_party": 0,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Bronwyn Bishop",
+   "John Hogg",
+   "Stephen Parry"
+  ],
+  "speakers": [
+   {
+    "name": "Tony Abbott",
+    "party": "Liberal",
+    "speeches": 30
+   },
+   {
+    "name": "Christopher Pyne",
+    "party": "Liberal",
+    "speeches": 14
+   },
+   {
+    "name": "Peter Dutton",
+    "party": "Liberal",
+    "speeches": 10
+   },
+   {
+    "name": "Steven Ciobo",
+    "party": "Liberal",
+    "speeches": 7
+   },
+   {
+    "name": "Lisa Chesters",
+    "party": "Labor",
+    "speeches": 6
+   },
+   {
+    "name": "Andrew Leigh",
+    "party": "Labor",
+    "speeches": 6
+   },
+   {
+    "name": "Joe Hockey",
+    "party": "Liberal",
+    "speeches": 4
+   },
+   {
+    "name": "Nick Champion",
+    "party": "Labor",
+    "speeches": 4
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 115
+   },
+   {
+    "party": "Labor",
+    "speeches": 68
+   },
+   {
+    "party": "Nationals",
+    "speeches": 11
+   },
+   {
+    "party": "Independent",
+    "speeches": 3
+   },
+   {
+    "party": "Country Liberal Party",
+    "speeches": 2
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:34+00:00",
+ "corpus_resources": 609644
+}

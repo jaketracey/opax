@@ -1,0 +1,294 @@
+{
+ "year": 1998,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 1998, and what positions did members and parties take? Debates that year included The waterfront dispute, A new tax called the GST, Native title and Selling Telstra.",
+  "prompt": "year-brief-v1",
+  "answer": "In 1998, the Australian parliament was dominated by the debate over the proposed sale of a further 16.6 per cent of Telstra, as outlined in the Telstra (Transition to Full Private Ownership) Bill 1998. Government speakers, such as the member for Moreton, argued that the sale was fiscally necessary to retire the $95 billion of debt accumulated by the previous Labor government, which was costing $9.1 billion a year in interest. They claimed that the proceeds would fund infrastructure and environmental projects, and that competition, not public ownership, would improve services. The member for Dawson, from the National Party, supported the sale, noting it would leave the government with 50.1 per cent ownership and that further sale would be conditional on an independent review of service standards.\n\nOpposition members, including the member for Blaxland and the shadow minister for finance, vehemently opposed the bill, arguing it was a step towards full privatisation by \"sleight of hand,\" as the bill would allow the sale of up to 49.9 per cent and then, after a \"sham inquiry,\" the remaining 50.1 per cent without further parliamentary approval. They contended that the sale would mean the loss of a growing dividend stream—which had increased by an average of 15.6 per cent since 1992—and would lead to job losses and declining service standards, particularly in rural and regional Australia. The member for Lowe highlighted that Telstra's workforce had fallen from approximately 76,500 in 1996 to 54,000, and that service indicators, such as faults cleared within one day in country areas, had dropped by 13 per cent compared to the previous year. Labor members also criticised the sale costs, noting that $200 million had already been paid in fees for the first float, and argued that the government was selling a vital national asset for short-term gain.",
+  "sources": [
+   {
+    "slug": "speech-5138",
+    "title": "Leo McLeay — 1998-04-02",
+    "speaker": "Leo McLeay",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1998-04-02",
+    "cited": true
+   },
+   {
+    "slug": "speech-13360",
+    "title": "John Howard — 1998-07-15",
+    "speaker": "John Howard",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1998-07-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-14459",
+    "title": "Brendan Nelson — 1998-11-23",
+    "speaker": "Brendan Nelson",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1998-11-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-14453",
+    "title": "Gary Hardgrave — 1998-11-23",
+    "speaker": "Gary Hardgrave",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1998-11-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-14458",
+    "title": "Graham Edwards — 1998-11-23",
+    "speaker": "Graham Edwards",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1998-11-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-14450",
+    "title": "Alex Somlyay — 1998-11-23",
+    "speaker": "Alex Somlyay",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1998-11-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-14425",
+    "title": "Frank Mossfield — 1998-11-23",
+    "speaker": "Frank Mossfield",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1998-11-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-15270",
+    "title": "John Murphy — 1998-11-26",
+    "speaker": "John Murphy",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1998-11-26",
+    "cited": true
+   },
+   {
+    "slug": "speech-15276",
+    "title": "Michael Hatton — 1998-11-26",
+    "speaker": "Michael Hatton",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1998-11-26",
+    "cited": true
+   },
+   {
+    "slug": "speech-15284",
+    "title": "Kelly Hoare — 1998-11-26",
+    "speaker": "Kelly Hoare",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1998-11-26",
+    "cited": true
+   },
+   {
+    "slug": "speech-17444",
+    "title": "Gary Hardgrave — 1998-12-10",
+    "speaker": "Gary Hardgrave",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1998-12-10",
+    "cited": true
+   },
+   {
+    "slug": "speech-4423",
+    "title": "Bob McMullan — 1998-03-31",
+    "speaker": "Bob McMullan",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1998-03-31",
+    "cited": false
+   },
+   {
+    "slug": "speech-5484",
+    "title": "Anthony Albanese — 1998-04-06",
+    "speaker": "Anthony Albanese",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1998-04-06",
+    "cited": false
+   },
+   {
+    "slug": "speech-6404",
+    "title": "Arch Bevis — 1998-04-08",
+    "speaker": "Arch Bevis",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1998-04-08",
+    "cited": false
+   },
+   {
+    "slug": "speech-7225",
+    "title": "Peter Slipper — 1998-05-13",
+    "speaker": "Peter Slipper",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1998-05-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-9643",
+    "title": "Ian Causley — 1998-06-01",
+    "speaker": "Ian Causley",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "1998-06-01",
+    "cited": false
+   },
+   {
+    "slug": "speech-14454",
+    "title": "Warren Snowdon — 1998-11-23",
+    "speaker": "Warren Snowdon",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1998-11-23",
+    "cited": false
+   },
+   {
+    "slug": "speech-14447",
+    "title": "Stephen Smith — 1998-11-23",
+    "speaker": "Stephen Smith",
+    "party": "Labor",
+    "state": "federal",
+    "date": "1998-11-23",
+    "cited": false
+   },
+   {
+    "slug": "speech-16778",
+    "title": "Peter Reith — 1998-12-09",
+    "speaker": "Peter Reith",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "1998-12-09",
+    "cited": false
+   }
+  ],
+  "cited_count": 11,
+  "seconds": 12.6,
+  "tokens": {
+   "input": 20147,
+   "output": 390
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 19 strongest passages the knowledge box retrieved for 1998; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 1998 run through /api/search (hybrid retrieval, from=1998&to=1998, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "182 distinct speeches among the 182 strongest matches for the year's 4 debates - not every speech given in 1998, and the index is still loading.",
+  "probes": [
+   {
+    "q": "waterfront dispute Patrick stevedores",
+    "label": "The waterfront dispute",
+    "retrieved": 47,
+    "truncated": true
+   },
+   {
+    "q": "goods and services tax GST",
+    "label": "A new tax called the GST",
+    "retrieved": 49,
+    "truncated": true
+   },
+   {
+    "q": "native title Wik amendment",
+    "label": "Native title",
+    "retrieved": 40,
+    "truncated": true
+   },
+   {
+    "q": "Telstra sale privatisation",
+    "label": "Selling Telstra",
+    "retrieved": 46,
+    "truncated": true
+   }
+  ],
+  "retrieved": 182,
+  "unique_speeches": 182,
+  "unlabelled_party": 1,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Margaret Reid",
+   "Neil Andrew"
+  ],
+  "speakers": [
+   {
+    "name": "Simon Crean",
+    "party": "Labor",
+    "speeches": 15
+   },
+   {
+    "name": "Peter Reith",
+    "party": "Liberal",
+    "speeches": 12
+   },
+   {
+    "name": "John Howard",
+    "party": "Liberal",
+    "speeches": 9
+   },
+   {
+    "name": "Stephen Smith",
+    "party": "Labor",
+    "speeches": 7
+   },
+   {
+    "name": "Stephen Martin",
+    "party": "Labor",
+    "speeches": 6
+   },
+   {
+    "name": "Kim Beazley",
+    "party": "Labor",
+    "speeches": 6
+   },
+   {
+    "name": "Lindsay Tanner",
+    "party": "Labor",
+    "speeches": 6
+   },
+   {
+    "name": "Peter Costello",
+    "party": "Liberal",
+    "speeches": 6
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 103
+   },
+   {
+    "party": "Liberal",
+    "speeches": 60
+   },
+   {
+    "party": "Nationals",
+    "speeches": 12
+   },
+   {
+    "party": "Independent",
+    "speeches": 3
+   },
+   {
+    "party": "Country Liberal Party",
+    "speeches": 3
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:56:41+00:00",
+ "corpus_resources": 609644
+}

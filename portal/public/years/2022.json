@@ -1,0 +1,304 @@
+{
+ "year": 2022,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2022, and what positions did members and parties take? Debates that year included The cost of living, An integrity commission, The climate bill and The floods.",
+  "prompt": "year-brief-v1",
+  "answer": "The Climate Change Bill 2022 and its companion legislation dominated the early parliamentary year, with the Albanese Labor government framing them as a decisive end to a decade of policy inaction. Labor speakers argued the bills were among the most important to come before the House, committing Australia to a 43% reduction in greenhouse gas emissions from 2005 levels by 2030 and net zero by 2050. They linked this to the Powering Australia plan, citing 604,000 jobs, $76 billion in investment, community battery installations for up to 100,000 households, and electric vehicle tax exemptions. Government MPs repeatedly accused the Coalition of politicising climate change, recalling the former Prime Minister bringing a lump of coal into parliament, and argued that inaction had driven up energy prices by deterring investment in renewables. The House passed the bill by a vote of 89 to 57, with the noes including 57 named Coalition members.\n\nOpposition speakers countered that the bill, by adopting Greens policy, risked national security in the Pacific and restricted bodies like Infrastructure Australia and the Northern Australia Infrastructure Facility, potentially hindering critical minerals processing and clean energy development. They claimed Labor had broken a promise to reduce power bills by $275, and noted the Coalition had previously reduced emissions by over 20% below 2005 levels while cutting household power prices by 8%. Some government speakers acknowledged the 43% target was a floor, with one saying they would have preferred 50%, while citing recent bushfires and floods costing over $8 billion as evidence of urgent need. Another MP described climate change as the biggest health threat, causing at least 250,000 deaths and US$4 billion in costs annually.\n\nThe cost of living also featured prominently, particularly in December when the Senate divided on the Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022. An opposition amendment to refer the bill to a Select Committee on Cost of Living was defeated 25 to 26, with the noes including Labor, Greens, and crossbench senators, while the ayes included Coalition senators and independents David Pocock and Tammy Tyrrell. Earlier, a government speaker moved to suspend standing orders to rescind the resolution fixing debate on the Treasury Laws Amendment (Cost of Living Support and Other Measures) Bill 2022, adjourning it to a later hour. In broader debate, Labor MPs defended the government's first nine weeks, citing the minimum wage rise, Jobs and Skills Australia, and climate legislation, while accusing the previous Liberal-National government of nine years of neglect on housing, wages, and disaster support, including ignoring small businesses after floods.",
+  "sources": [
+   {
+    "slug": "division-federal-senate-7932",
+    "title": "Senate division, 15 December 2022: Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022 - Adoption of Report - Select Committee on Cost of Living",
+    "speaker": "Alex Antic",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "division-federal-representatives-7699-p2",
+    "title": "House of Representatives division, 4 August 2022: Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Consideration in Detail - Regional Australia (part 2 of 2)",
+    "speaker": "Aaron Violi",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-915267",
+    "title": "Halfpenny — Conservation, Forests and Lands Amendment Bill 2022 - Second reading — 2022-03-09",
+    "speaker": "Halfpenny",
+    "party": null,
+    "state": "vic",
+    "date": "2022-03-09",
+    "cited": true
+   },
+   {
+    "slug": "speech-421207",
+    "title": "Rebekha Sharkie — 2022-08-03",
+    "speaker": "Rebekha Sharkie",
+    "party": "Centre Alliance",
+    "state": "federal",
+    "date": "2022-08-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-421353",
+    "title": "David Smith — 2022-08-03",
+    "speaker": "David Smith",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2022-08-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-421212",
+    "title": "Libby Coker — 2022-08-03",
+    "speaker": "Libby Coker",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2022-08-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-421215",
+    "title": "Kate Thwaites — 2022-08-03",
+    "speaker": "Kate Thwaites",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2022-08-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-421216",
+    "title": "Ted O'Brien — 2022-08-03",
+    "speaker": "Ted O'Brien",
+    "party": "LNP",
+    "state": "federal",
+    "date": "2022-08-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-421208",
+    "title": "Matt Thistlethwaite — 2022-08-03",
+    "speaker": "Matt Thistlethwaite",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2022-08-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-418672",
+    "title": "Scott Morrison — 2022-02-15",
+    "speaker": "Scott Morrison",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2022-02-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-419021",
+    "title": "Jason Falinski — 2022-02-16",
+    "speaker": "Jason Falinski",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2022-02-16",
+    "cited": false
+   },
+   {
+    "slug": "speech-419557",
+    "title": "Paul Fletcher — 2022-03-30",
+    "speaker": "Paul Fletcher",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2022-03-30",
+    "cited": false
+   },
+   {
+    "slug": "speech-420201",
+    "title": "Julian Hill — 2022-07-27",
+    "speaker": "Julian Hill",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2022-07-27",
+    "cited": false
+   },
+   {
+    "slug": "speech-420568",
+    "title": "Fiona Phillips — 2022-07-28",
+    "speaker": "Fiona Phillips",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2022-07-28",
+    "cited": false
+   },
+   {
+    "slug": "speech-421351",
+    "title": "Steve Georganas — 2022-08-03",
+    "speaker": "Steve Georganas",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2022-08-03",
+    "cited": false
+   },
+   {
+    "slug": "speech-421356",
+    "title": "Mike Freelander — 2022-08-03",
+    "speaker": "Mike Freelander",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2022-08-03",
+    "cited": false
+   },
+   {
+    "slug": "speech-421510",
+    "title": "Peta Murphy — 2022-08-04",
+    "speaker": "Peta Murphy",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2022-08-04",
+    "cited": false
+   },
+   {
+    "slug": "speech-1184601",
+    "title": "Taylor Martin — National Volunteer Week — 2022-08-10",
+    "speaker": "Taylor Martin",
+    "party": null,
+    "state": "nsw",
+    "date": "2022-08-10",
+    "cited": false
+   },
+   {
+    "slug": "speech-422671",
+    "title": "Kate Chaney — 2022-09-08",
+    "speaker": "Kate Chaney",
+    "party": "Independent",
+    "state": "federal",
+    "date": "2022-09-08",
+    "cited": false
+   }
+  ],
+  "cited_count": 9,
+  "seconds": 9.8,
+  "tokens": {
+   "input": 3819,
+   "output": 535
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 19 strongest passages the knowledge box retrieved for 2022; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2022 run through /api/search (hybrid retrieval, from=2022&to=2022, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "168 distinct speeches among the 168 strongest matches for the year's 4 debates - not every speech given in 2022, and the index is still loading.",
+  "probes": [
+   {
+    "q": "cost of living inflation",
+    "label": "The cost of living",
+    "retrieved": 40,
+    "truncated": true
+   },
+   {
+    "q": "national anti-corruption commission integrity",
+    "label": "An integrity commission",
+    "retrieved": 42,
+    "truncated": true
+   },
+   {
+    "q": "climate change bill emissions target",
+    "label": "The climate bill",
+    "retrieved": 41,
+    "truncated": true
+   },
+   {
+    "q": "floods emergency response",
+    "label": "The floods",
+    "retrieved": 45,
+    "truncated": true
+   }
+  ],
+  "retrieved": 168,
+  "unique_speeches": 168,
+  "unlabelled_party": 85,
+  "bare_surnames_skipped": 10,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Andrew Wallace",
+   "Milton Dick",
+   "Slade Brockman",
+   "Sue Lines"
+  ],
+  "speakers": [
+   {
+    "name": "Mark Dreyfus",
+    "party": "Labor",
+    "speeches": 7
+   },
+   {
+    "name": "Jim Chalmers",
+    "party": "Labor",
+    "speeches": 5
+   },
+   {
+    "name": "Geoff Provest",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "P.B. Malinauskas",
+    "party": null,
+    "speeches": 4
+   },
+   {
+    "name": "Anthony Albanese",
+    "party": "Labor",
+    "speeches": 4
+   },
+   {
+    "name": "Scott Morrison",
+    "party": "Liberal",
+    "speeches": 4
+   },
+   {
+    "name": "Chris Bowen",
+    "party": "Labor",
+    "speeches": 4
+   },
+   {
+    "name": "James Stevens",
+    "party": "Liberal",
+    "speeches": 3
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 45
+   },
+   {
+    "party": "Liberal",
+    "speeches": 20
+   },
+   {
+    "party": "Independent",
+    "speeches": 11
+   },
+   {
+    "party": "LNP",
+    "speeches": 3
+   },
+   {
+    "party": "Greens",
+    "speeches": 2
+   },
+   {
+    "party": "Centre Alliance",
+    "speeches": 1
+   },
+   {
+    "party": "Nationals",
+    "speeches": 1
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:58:00+00:00",
+ "corpus_resources": 609644
+}

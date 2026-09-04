@@ -1,0 +1,294 @@
+{
+ "year": 2010,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2010, and what positions did members and parties take? Debates that year included The mining tax, The NBN, Boat arrivals and Hospital reform.",
+  "prompt": "year-brief-v1",
+  "answer": "In 2010, the Australian Parliament was dominated by several contentious debates. The mining tax was a major point of conflict, with the government arguing that the tax reform was necessary to deliver better superannuation for working families, reduce the company tax rate, and fund infrastructure. Government members accused the opposition of acting as \"mouthpieces\" for mining magnate Clive Palmer, who they claimed had contributed $800,000 to the Liberal National Party. The opposition, in turn, was portrayed as opposing the tax on behalf of the mining industry.\n\nThe National Broadband Network (NBN) was another central issue. Government senators defended the legislation, arguing it would fix the structure of the telecommunications industry and allow competition to thrive by addressing Telstra's market position. They accused the opposition of shallow rhetoric about creating a new monopoly. The opposition, however, criticized the government for refusing to submit the $50 billion NBN to a full cost-benefit analysis by the Productivity Commission, a move they said had the support of business leaders and the Reserve Bank Governor.\n\nBorder protection and boat arrivals were also fiercely debated. The opposition moved a motion calling on the Prime Minister to explain the government's failure to protect Australia's borders, citing the arrival of 53 boats and 2,750 people since she became Prime Minister. A Coalition speaker argued the government had failed on border protection, citing 110 boat arrivals and 5,523 people arriving by boat in 2010 alone, and criticized the opening of new detention centres at Northam and Inverbrackie. In contrast, a motion on boat arrivals moved by Senator Hanson-Young was defeated in the Senate on 12 May 2010, with six votes in favour and 35 against.",
+  "sources": [
+   {
+    "slug": "speech-797925",
+    "title": "Cory Bernardi — Committees — 2010-02-02",
+    "speaker": "Cory Bernardi",
+    "party": null,
+    "state": "federal",
+    "date": "2010-02-02",
+    "cited": true
+   },
+   {
+    "slug": "speech-221751",
+    "title": "Kevin Rudd — 2010-06-03",
+    "speaker": "Kevin Rudd",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2010-06-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-802564",
+    "title": "Michaelia Cash — Questions without Notice: Take Note of Answers — 2010-10-25",
+    "speaker": "Michaelia Cash",
+    "party": null,
+    "state": "federal",
+    "date": "2010-10-25",
+    "cited": true
+   },
+   {
+    "slug": "speech-803965",
+    "title": "Scott Ludlam — Telecommunications Legislation Amendment (Competition and Consumer Safeguards) Bill 2010 — 2010-11-24",
+    "speaker": "Scott Ludlam",
+    "party": "Greens",
+    "state": "federal",
+    "date": "2010-11-24",
+    "cited": true
+   },
+   {
+    "slug": "speech-228886",
+    "title": "Tony Abbott — 2010-11-25",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2010-11-25",
+    "cited": true
+   },
+   {
+    "slug": "division-federal-senate-1845",
+    "title": "Senate division, 12 May 2010: Boat Arrivals",
+    "speaker": "Anne McEwen",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "speech-800794",
+    "title": "Don Farrell — Committees — 2010-06-15",
+    "speaker": "Don Farrell",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2010-06-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-800810",
+    "title": "Ursula Stephens — Governance of Australian Government Superannuation Schemes Bill 2010; Comsuper Bill 2010; Superannuation Legislation (Consequential Amendments and Transitional Provisions) Bill 2010 — 2010-06-15",
+    "speaker": "Ursula Stephens",
+    "party": null,
+    "state": "federal",
+    "date": "2010-06-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-222809",
+    "title": "Kevin Rudd — 2010-06-21",
+    "speaker": "Kevin Rudd",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2010-06-21",
+    "cited": false
+   },
+   {
+    "slug": "speech-801394",
+    "title": "Trish Crossin — Adjournment — 2010-06-22",
+    "speaker": "Trish Crossin",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2010-06-22",
+    "cited": false
+   },
+   {
+    "slug": "speech-802582",
+    "title": "Nick Sherry — Carer Recognition Bill 2010; Civil Dispute Resolution Bill 2010; Food Standards Australia New Zealand Amendment Bill 2010; International Tax Agreements Amendment Bill (No. 2) 2010; National Health Amendment (Pharmaceutical Benefits Scheme) Bill 2010; Ozone Protection and Synthetic Greenhouse Gas Management Amendment Bill 2010; Primary Industries (Excise) Levies Amendment Bill 2010; Protection of the Sea Legislation Amendment Bill 2010; Superannuation Legislation Amendment Bill 2010; Telecommunications Interception and Intelligence Services Legislation Amendment Bill 2010; Tradex Scheme Amendment Bill 2010; Veterans’ Affairs and Other Legislation Amendment (Miscellaneous Measures) Bill 2010; National Security Legislation Amendment Bill 2010; Parliamentary Joint Committee on Law Enforcement Bill 2010; Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Miscellaneous Measures) Bill 2010; Offshore Petroleum and Greenhouse Gas Storage (Safety Levies) Amendment Bill 2010 — 2010-10-25",
+    "speaker": "Nick Sherry",
+    "party": null,
+    "state": "federal",
+    "date": "2010-10-25",
+    "cited": false
+   },
+   {
+    "slug": "speech-225675",
+    "title": "Michelle Rowland — 2010-10-25",
+    "speaker": "Michelle Rowland",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2010-10-25",
+    "cited": false
+   },
+   {
+    "slug": "speech-803170",
+    "title": "Julian McGauran — Governor-General’S Speech — 2010-11-15",
+    "speaker": "Julian McGauran",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2010-11-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-803261",
+    "title": "Mitch Fifield — Questions without Notice: Take Note of Answers — 2010-11-16",
+    "speaker": "Mitch Fifield",
+    "party": null,
+    "state": "federal",
+    "date": "2010-11-16",
+    "cited": false
+   },
+   {
+    "slug": "speech-803385",
+    "title": "Claire Moore — National Health Amendment (Pharmaceutical Benefits Scheme) Bill 2010 — 2010-11-17",
+    "speaker": "Claire Moore",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2010-11-17",
+    "cited": false
+   },
+   {
+    "slug": "speech-227870",
+    "title": "Julia Gillard — 2010-11-22",
+    "speaker": "Julia Gillard",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2010-11-22",
+    "cited": false
+   },
+   {
+    "slug": "speech-227864",
+    "title": "Paul Fletcher — 2010-11-22",
+    "speaker": "Paul Fletcher",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2010-11-22",
+    "cited": false
+   },
+   {
+    "slug": "speech-227820",
+    "title": "Julia Gillard — 2010-11-22",
+    "speaker": "Julia Gillard",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2010-11-22",
+    "cited": false
+   },
+   {
+    "slug": "speech-804010",
+    "title": "David Feeney — Committees — 2010-11-24",
+    "speaker": "David Feeney",
+    "party": null,
+    "state": "federal",
+    "date": "2010-11-24",
+    "cited": false
+   }
+  ],
+  "cited_count": 5,
+  "seconds": 7.2,
+  "tokens": {
+   "input": 2979,
+   "output": 347
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 19 strongest passages the knowledge box retrieved for 2010; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2010 run through /api/search (hybrid retrieval, from=2010&to=2010, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "138 distinct speeches among the 140 strongest matches for the year's 4 debates - not every speech given in 2010, and the index is still loading.",
+  "probes": [
+   {
+    "q": "mining super profits tax",
+    "label": "The mining tax",
+    "retrieved": 35,
+    "truncated": true
+   },
+   {
+    "q": "national broadband network NBN",
+    "label": "The NBN",
+    "retrieved": 40,
+    "truncated": true
+   },
+   {
+    "q": "asylum seekers boat arrivals",
+    "label": "Boat arrivals",
+    "retrieved": 31,
+    "truncated": true
+   },
+   {
+    "q": "hospitals health reform",
+    "label": "Hospital reform",
+    "retrieved": 34,
+    "truncated": true
+   }
+  ],
+  "retrieved": 140,
+  "unique_speeches": 138,
+  "unlabelled_party": 44,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Harry Jenkins",
+   "John Hogg"
+  ],
+  "speakers": [
+   {
+    "name": "Kevin Rudd",
+    "party": "Labor",
+    "speeches": 8
+   },
+   {
+    "name": "Michaelia Cash",
+    "party": "Liberal",
+    "speeches": 5
+   },
+   {
+    "name": "Eric Abetz",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "Mathias Cormann",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "Anthony Albanese",
+    "party": "Labor",
+    "speeches": 4
+   },
+   {
+    "name": "Gary Humphries",
+    "party": null,
+    "speeches": 4
+   },
+   {
+    "name": "Bruce Billson",
+    "party": "Liberal",
+    "speeches": 3
+   },
+   {
+    "name": "George Brandis",
+    "party": null,
+    "speeches": 3
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 53
+   },
+   {
+    "party": "Liberal",
+    "speeches": 32
+   },
+   {
+    "party": "Greens",
+    "speeches": 4
+   },
+   {
+    "party": "Nationals",
+    "speeches": 3
+   },
+   {
+    "party": "Independent",
+    "speeches": 2
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:21+00:00",
+ "corpus_resources": 609644
+}

@@ -1,0 +1,305 @@
+{
+ "year": 2021,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2021, and what positions did members and parties take? Debates that year included The vaccine rollout, AUKUS, Women’s safety and Net zero.",
+  "prompt": "year-brief-v1",
+  "answer": "The COVID-19 vaccine rollout dominated parliamentary debate in 2021. Government speakers highlighted their investment of $1.9 billion in the rollout, the securing of 170 million vaccine doses, and the administration of over 300,000 doses early in the year. They pointed to milestones such as 20 million Australians receiving their first vaccination and 71,000 aged-care residents vaccinated across 708 facilities. Opposition and crossbench members, however, heavily criticised the rollout's speed and management. Labor speakers argued the government had botched the rollout, noting that only 3% of Australians were vaccinated at one point and that Australia ranked around 110th globally in vaccination rates. They claimed the government rejected an offer of 40 million Pfizer doses in early 2021 due to cost and intellectual property disputes. Labor proposed a four-point plan including an effective vaccine rollout, national quarantine facilities, a public information campaign, and domestic mRNA vaccine manufacturing. The government defended its record, citing zero COVID-19 cases, zero ICU patients, and zero deaths on a particular day, and argued its containment strategies, including border closures, had saved 30,000 lives.\n\nThe government's economic management and the 2021-22 budget were also central points of contention. Government speakers argued Australia's economic recovery was underway, with nearly one million jobs added and GDP expected to grow by 5¼ per cent in 2021. They cited a $1.2 billion support package for tourism and aviation, including 200,000 half-price tickets, and a defence budget of 2 per cent of GDP with $575 billion in funding over a decade. Labor and other opposition members countered that the budget failed to protect the recovery by not accelerating the vaccine rollout or delivering new quarantine facilities, noting a $500 million allocation for Howard Springs with no construction progress. They also criticised the budget for failing to address structural gender inequalities, citing Australia's drop to 56th in the global Gender Inequality Index and insufficient funding for frontline domestic violence services. The government's net zero emissions by 2050 plan was another point of division, with opposition members noting internal coalition chaos over the policy and quoting the incoming Deputy Prime Minister as saying investing in renewables was \"insane and lemming-like\" and that the Nationals had always opposed a net zero target.",
+  "sources": [
+   {
+    "slug": "speech-401201",
+    "title": "Scott Morrison — 2021-02-02",
+    "speaker": "Scott Morrison",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2021-02-02",
+    "cited": true
+   },
+   {
+    "slug": "speech-1095506",
+    "title": "S.G. Wade — Vaccination — 2021-02-04",
+    "speaker": "S.G. Wade",
+    "party": null,
+    "state": "sa",
+    "date": "2021-02-04",
+    "cited": true
+   },
+   {
+    "slug": "speech-1098138",
+    "title": "S.S. Marshall — Unemployment Figures — 2021-02-18",
+    "speaker": "S.S. Marshall",
+    "party": null,
+    "state": "sa",
+    "date": "2021-02-18",
+    "cited": true
+   },
+   {
+    "slug": "speech-404533",
+    "title": "Greg Hunt — 2021-03-18",
+    "speaker": "Greg Hunt",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2021-03-18",
+    "cited": true
+   },
+   {
+    "slug": "speech-405536",
+    "title": "Kevin Hogan — 2021-03-25",
+    "speaker": "Kevin Hogan",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2021-03-25",
+    "cited": true
+   },
+   {
+    "slug": "speech-406868",
+    "title": "Angie Bell — 2021-05-25",
+    "speaker": "Angie Bell",
+    "party": "LNP",
+    "state": "federal",
+    "date": "2021-05-25",
+    "cited": true
+   },
+   {
+    "slug": "speech-407370",
+    "title": "Daniel Mulino — 2021-05-27",
+    "speaker": "Daniel Mulino",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2021-05-27",
+    "cited": true
+   },
+   {
+    "slug": "speech-409534",
+    "title": "Peta Murphy — 2021-06-22",
+    "speaker": "Peta Murphy",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2021-06-22",
+    "cited": true
+   },
+   {
+    "slug": "speech-410128",
+    "title": "Anthony Albanese — 2021-06-24",
+    "speaker": "Anthony Albanese",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2021-06-24",
+    "cited": true
+   },
+   {
+    "slug": "speech-410755",
+    "title": "Katrina Allen — 2021-08-05",
+    "speaker": "Katrina Allen",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2021-08-05",
+    "cited": true
+   },
+   {
+    "slug": "speech-414603",
+    "title": "Angie Bell — 2021-10-27",
+    "speaker": "Angie Bell",
+    "party": "LNP",
+    "state": "federal",
+    "date": "2021-10-27",
+    "cited": true
+   },
+   {
+    "slug": "speech-405499",
+    "title": "Greg Hunt — 2021-03-25",
+    "speaker": "Greg Hunt",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2021-03-25",
+    "cited": false
+   },
+   {
+    "slug": "speech-407554",
+    "title": "Sharon Claydon — 2021-06-01",
+    "speaker": "Sharon Claydon",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2021-06-01",
+    "cited": false
+   },
+   {
+    "slug": "speech-408790",
+    "title": "Linda Burney — 2021-06-17",
+    "speaker": "Linda Burney",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2021-06-17",
+    "cited": false
+   },
+   {
+    "slug": "speech-409161",
+    "title": "Anthony Albanese — 2021-06-21",
+    "speaker": "Anthony Albanese",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2021-06-21",
+    "cited": false
+   },
+   {
+    "slug": "speech-409488",
+    "title": "Anthony Albanese — 2021-06-22",
+    "speaker": "Anthony Albanese",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2021-06-22",
+    "cited": false
+   },
+   {
+    "slug": "speech-410831",
+    "title": "Peter Khalil — 2021-08-09",
+    "speaker": "Peter Khalil",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2021-08-09",
+    "cited": false
+   },
+   {
+    "slug": "speech-1126705",
+    "title": "S.G. Wade — COVID-19 Vaccination Rollout — 2021-09-07",
+    "speaker": "S.G. Wade",
+    "party": null,
+    "state": "sa",
+    "date": "2021-09-07",
+    "cited": false
+   },
+   {
+    "slug": "speech-414860",
+    "title": "Scott Morrison — 2021-10-28",
+    "speaker": "Scott Morrison",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2021-10-28",
+    "cited": false
+   },
+   {
+    "slug": "speech-417195",
+    "title": "Scott Morrison — 2021-12-02",
+    "speaker": "Scott Morrison",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2021-12-02",
+    "cited": false
+   }
+  ],
+  "cited_count": 11,
+  "seconds": 7.8,
+  "tokens": {
+   "input": 2276,
+   "output": 464
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2021; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2021 run through /api/search (hybrid retrieval, from=2021&to=2021, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "168 distinct speeches among the 168 strongest matches for the year's 4 debates - not every speech given in 2021, and the index is still loading.",
+  "probes": [
+   {
+    "q": "vaccine rollout COVID",
+    "label": "The vaccine rollout",
+    "retrieved": 47,
+    "truncated": true
+   },
+   {
+    "q": "AUKUS submarines defence",
+    "label": "AUKUS",
+    "retrieved": 31,
+    "truncated": true
+   },
+   {
+    "q": "women safety parliament respect",
+    "label": "Women’s safety",
+    "retrieved": 44,
+    "truncated": true
+   },
+   {
+    "q": "net zero 2050 emissions target",
+    "label": "Net zero",
+    "retrieved": 46,
+    "truncated": true
+   }
+  ],
+  "retrieved": 168,
+  "unique_speeches": 168,
+  "unlabelled_party": 55,
+  "bare_surnames_skipped": 12,
+  "presiding_rows_skipped": 1,
+  "presiding_excluded": [
+   "Andrew Wallace",
+   "Scott Ryan",
+   "Slade Brockman",
+   "Tony Smith"
+  ],
+  "speakers": [
+   {
+    "name": "Scott Morrison",
+    "party": "Liberal",
+    "speeches": 14
+   },
+   {
+    "name": "Anthony Albanese",
+    "party": "Labor",
+    "speeches": 8
+   },
+   {
+    "name": "Peter Craig Dutton",
+    "party": "Liberal",
+    "speeches": 6
+   },
+   {
+    "name": "Greg Hunt",
+    "party": "Liberal",
+    "speeches": 5
+   },
+   {
+    "name": "S.S. Marshall",
+    "party": null,
+    "speeches": 4
+   },
+   {
+    "name": "Sussan Ley",
+    "party": "Liberal",
+    "speeches": 4
+   },
+   {
+    "name": "Michael McCormack",
+    "party": "Nationals",
+    "speeches": 3
+   },
+   {
+    "name": "Katrina Allen",
+    "party": "Liberal",
+    "speeches": 3
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 65
+   },
+   {
+    "party": "Labor",
+    "speeches": 31
+   },
+   {
+    "party": "Nationals",
+    "speeches": 9
+   },
+   {
+    "party": "LNP",
+    "speeches": 5
+   },
+   {
+    "party": "Independent",
+    "speeches": 3
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:56+00:00",
+ "corpus_resources": 609644
+}

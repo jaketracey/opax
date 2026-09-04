@@ -1,0 +1,303 @@
+{
+ "year": 2016,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2016, and what positions did members and parties take? Debates that year included Negative gearing, The backpacker tax, The census outage and The marriage plebiscite.",
+  "prompt": "year-brief-v1",
+  "answer": "The marriage plebiscite dominated parliamentary debate in 2016. Coalition speakers, including Alan Tudge, argued for the Plebiscite (Same-Sex Marriage) Bill 2016, which proposed a national vote on 11 February 2017, saying the coalition had taken this policy to the election and won, and that Australians, not 226 politicians, should decide. They criticised Labor and the Greens for blocking the bill and for what they called a disdain for democracy. Some government members, such as the member for Canning, expressed personal support for marriage equality but backed the plebiscite process, while others opposed the bill, arguing Parliament should decide and that the vote would harm LGBTIQ Australians. The House of Representatives agreed to the bill’s second reading by 78 votes to 67, with Labor leader Bill Shorten and others voting against.\n\nTax policy was another major area of debate. Labor, under Bill Shorten, proposed cracking down on tax loopholes for multinationals, tightening superannuation concessions, and changing negative gearing so it would not be retrospective, applying only to new housing from 2017. Coalition speakers defended their record, arguing company tax cuts are ultimately taxed through income and accusing Labor of misrepresenting policies. The government also passed legislation on backpacker tax reforms, though opposition speakers called the backpacker tax a debacle harming regional Australia, agriculture, and tourism. Labor also criticised the government’s handling of Medicare, the census night failure, and the NBN, while coalition members accused Labor of running scare campaigns.",
+  "sources": [
+   {
+    "slug": "division-federal-representatives-4374",
+    "title": "House of Representatives division, 20 October 2016: Plebiscite (Same-Sex Marriage) Bill 2016 - Second Reading - Agree with bill's main idea (part 1 of 2)",
+    "speaker": "Alan Tudge",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "division-federal-representatives-4374-p2",
+    "title": "House of Representatives division, 20 October 2016: Plebiscite (Same-Sex Marriage) Bill 2016 - Second Reading - Agree with bill's main idea (part 2 of 2)",
+    "speaker": "Amanda Rishworth",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-328989",
+    "title": "Joanne Ryan — 2016-02-24",
+    "speaker": "Joanne Ryan",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2016-02-24",
+    "cited": true
+   },
+   {
+    "slug": "speech-335120",
+    "title": "Luke Howarth — 2016-10-13",
+    "speaker": "Luke Howarth",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2016-10-13",
+    "cited": true
+   },
+   {
+    "slug": "speech-335259",
+    "title": "Craig Kelly — 2016-10-13",
+    "speaker": "Craig Kelly",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2016-10-13",
+    "cited": true
+   },
+   {
+    "slug": "speech-336112",
+    "title": "Tim Wilson — 2016-10-19",
+    "speaker": "Tim Wilson",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2016-10-19",
+    "cited": true
+   },
+   {
+    "slug": "speech-336366",
+    "title": "Sarah Henderson — 2016-10-20",
+    "speaker": "Sarah Henderson",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2016-10-20",
+    "cited": true
+   },
+   {
+    "slug": "speech-336362",
+    "title": "Tony Pasin — 2016-10-20",
+    "speaker": "Tony Pasin",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2016-10-20",
+    "cited": true
+   },
+   {
+    "slug": "speech-336361",
+    "title": "Warren Snowdon — 2016-10-20",
+    "speaker": "Warren Snowdon",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2016-10-20",
+    "cited": true
+   },
+   {
+    "slug": "speech-337587",
+    "title": "Luke Howarth — 2016-11-10",
+    "speaker": "Luke Howarth",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2016-11-10",
+    "cited": true
+   },
+   {
+    "slug": "speech-328735",
+    "title": "Andrew Broad — 2016-02-23",
+    "speaker": "Andrew Broad",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2016-02-23",
+    "cited": false
+   },
+   {
+    "slug": "speech-328928",
+    "title": "Russell Broadbent — 2016-02-24",
+    "speaker": "Russell Broadbent",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2016-02-24",
+    "cited": false
+   },
+   {
+    "slug": "speech-329074",
+    "title": "Sharon Claydon — 2016-02-25",
+    "speaker": "Sharon Claydon",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2016-02-25",
+    "cited": false
+   },
+   {
+    "slug": "speech-329041",
+    "title": "Nick Champion — 2016-02-25",
+    "speaker": "Nick Champion",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2016-02-25",
+    "cited": false
+   },
+   {
+    "slug": "speech-332871",
+    "title": "Bill Shorten — 2016-08-31",
+    "speaker": "Bill Shorten",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2016-08-31",
+    "cited": false
+   },
+   {
+    "slug": "speech-334689",
+    "title": "Barnaby Joyce — 2016-10-11",
+    "speaker": "Barnaby Joyce",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2016-10-11",
+    "cited": false
+   },
+   {
+    "slug": "speech-336117",
+    "title": "David Littleproud — 2016-10-19",
+    "speaker": "David Littleproud",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2016-10-19",
+    "cited": false
+   },
+   {
+    "slug": "speech-336368",
+    "title": "Darren Chester — 2016-10-20",
+    "speaker": "Darren Chester",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2016-10-20",
+    "cited": false
+   },
+   {
+    "slug": "speech-336472",
+    "title": "Malcolm Turnbull — 2016-10-20",
+    "speaker": "Malcolm Turnbull",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2016-10-20",
+    "cited": false
+   },
+   {
+    "slug": "speech-339794",
+    "title": "Bill Shorten — 2016-12-01",
+    "speaker": "Bill Shorten",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2016-12-01",
+    "cited": false
+   }
+  ],
+  "cited_count": 10,
+  "seconds": 7.9,
+  "tokens": {
+   "input": 3788,
+   "output": 319
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2016; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2016 run through /api/search (hybrid retrieval, from=2016&to=2016, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "163 distinct speeches among the 163 strongest matches for the year's 4 debates - not every speech given in 2016, and the index is still loading.",
+  "probes": [
+   {
+    "q": "negative gearing housing affordability",
+    "label": "Negative gearing",
+    "retrieved": 40,
+    "truncated": true
+   },
+   {
+    "q": "backpacker tax working holiday",
+    "label": "The backpacker tax",
+    "retrieved": 38,
+    "truncated": true
+   },
+   {
+    "q": "census failure outage",
+    "label": "The census outage",
+    "retrieved": 40,
+    "truncated": true
+   },
+   {
+    "q": "marriage plebiscite",
+    "label": "The marriage plebiscite",
+    "retrieved": 45,
+    "truncated": true
+   }
+  ],
+  "retrieved": 163,
+  "unique_speeches": 163,
+  "unlabelled_party": 15,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Stephen Parry",
+   "Tony Smith"
+  ],
+  "speakers": [
+   {
+    "name": "Malcolm Turnbull",
+    "party": "Liberal",
+    "speeches": 20
+   },
+   {
+    "name": "Bill Shorten",
+    "party": "Labor",
+    "speeches": 7
+   },
+   {
+    "name": "Chris Bowen",
+    "party": "Labor",
+    "speeches": 6
+   },
+   {
+    "name": "Scott Morrison",
+    "party": "Liberal",
+    "speeches": 5
+   },
+   {
+    "name": "Andrew Hastie",
+    "party": "Liberal",
+    "speeches": 3
+   },
+   {
+    "name": "Melissa Price",
+    "party": "Liberal",
+    "speeches": 3
+   },
+   {
+    "name": "Rick Wilson",
+    "party": "Liberal",
+    "speeches": 3
+   },
+   {
+    "name": "Jim Chalmers",
+    "party": "Labor",
+    "speeches": 3
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 66
+   },
+   {
+    "party": "Liberal",
+    "speeches": 65
+   },
+   {
+    "party": "Nationals",
+    "speeches": 14
+   },
+   {
+    "party": "Independent",
+    "speeches": 2
+   },
+   {
+    "party": "Greens",
+    "speeches": 1
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:40+00:00",
+ "corpus_resources": 609644
+}

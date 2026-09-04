@@ -1,0 +1,298 @@
+{
+ "year": 2020,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2020, and what positions did members and parties take? Debates that year included COVID-19, JobKeeper, The Black Summer and China trade tensions.",
+  "prompt": "year-brief-v1",
+  "answer": "The Australian parliament’s 2020 sittings were dominated by the COVID-19 pandemic, with the government and its speakers defending their response while opposition members criticised specific policies. Government speakers, including the member for Berowra, praised measures such as JobKeeper, JobSeeker, JobMaker, and the instant asset write-off, arguing that Australia’s health and economic outcomes—citing a death rate of around 33 per million and a 7% GDP contraction—compared favourably to other nations. They also highlighted a record $5.7 billion investment in mental health and tax relief for 11.5 million people. In contrast, opposition speakers argued the government had neglected the economy before the crisis, with one member noting gross debt had risen from $280.3 billion in September 2013 to $568.1 billion by January 2020, and criticised the exclusion of some workers, such as 600 meatworkers at JBS, from JobKeeper. Another opposition speaker highlighted the impact on universities, citing 250,000 jobs at risk and a $4 billion loss from international students in 2020.\n\nDebates also covered the government’s handling of state responses, particularly Victoria’s second wave. Government speakers blamed the Andrews government’s failures in hotel quarantine and contact tracing for nearly all of Australia’s 800 COVID deaths, while also criticising $25 billion in cost blowouts on infrastructure projects. Opposition members, however, accused the government of downplaying the pandemic’s severity and of inconsistent policy positions, with one speaker noting the Opposition Leader’s plan announced in August should have been proposed in February. The budget itself was a major point of contention, with government members framing it as a necessary response to an unprecedented crisis, while opposition members pointed to a $213.7 billion deficit and cumulative deficits of $480 billion over the forward estimates, arguing it lacked a comprehensive plan for jobs.",
+  "sources": [
+   {
+    "slug": "speech-391075",
+    "title": "Joanne Ryan — 2020-05-13",
+    "speaker": "Joanne Ryan",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2020-05-13",
+    "cited": true
+   },
+   {
+    "slug": "speech-391425",
+    "title": "Emma McBride — 2020-05-14",
+    "speaker": "Emma McBride",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2020-05-14",
+    "cited": true
+   },
+   {
+    "slug": "speech-391735",
+    "title": "Gladys Liu — 2020-06-10",
+    "speaker": "Gladys Liu",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2020-06-10",
+    "cited": true
+   },
+   {
+    "slug": "speech-391690",
+    "title": "Elizabeth Coker — 2020-06-10",
+    "speaker": "Elizabeth Coker",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2020-06-10",
+    "cited": true
+   },
+   {
+    "slug": "speech-394843",
+    "title": "Scott Morrison — 2020-09-02",
+    "speaker": "Scott Morrison",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2020-09-02",
+    "cited": true
+   },
+   {
+    "slug": "speech-395107",
+    "title": "Scott Morrison — 2020-09-03",
+    "speaker": "Scott Morrison",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2020-09-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-396148",
+    "title": "Julian Simmonds — 2020-10-19",
+    "speaker": "Julian Simmonds",
+    "party": "LNP",
+    "state": "federal",
+    "date": "2020-10-19",
+    "cited": true
+   },
+   {
+    "slug": "speech-396630",
+    "title": "Julian Leeser — 2020-10-21",
+    "speaker": "Julian Leeser",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2020-10-21",
+    "cited": true
+   },
+   {
+    "slug": "speech-398615",
+    "title": "Kevin Hogan — 2020-11-11",
+    "speaker": "Kevin Hogan",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2020-11-11",
+    "cited": true
+   },
+   {
+    "slug": "speech-398822",
+    "title": "Scott Morrison — 2020-11-12",
+    "speaker": "Scott Morrison",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2020-11-12",
+    "cited": true
+   },
+   {
+    "slug": "speech-1022880",
+    "title": "Walsh — Appropriation (Parliament 2020–2021) Bill 2020 - Second reading — 2020-11-26",
+    "speaker": "Walsh",
+    "party": null,
+    "state": "vic",
+    "date": "2020-11-26",
+    "cited": true
+   },
+   {
+    "slug": "speech-1087795",
+    "title": "Order of Business — 2020-05-12",
+    "speaker": null,
+    "party": null,
+    "state": "nsw",
+    "date": "2020-05-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-391102",
+    "title": "Josh Frydenberg — 2020-05-13",
+    "speaker": "Josh Frydenberg",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2020-05-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-392965",
+    "title": "Fiona Martin — 2020-06-17",
+    "speaker": "Fiona Martin",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2020-06-17",
+    "cited": false
+   },
+   {
+    "slug": "speech-396393",
+    "title": "Dave Sharma — 2020-10-20",
+    "speaker": "Dave Sharma",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2020-10-20",
+    "cited": false
+   },
+   {
+    "slug": "speech-396631",
+    "title": "Shayne Neumann — 2020-10-21",
+    "speaker": "Shayne Neumann",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2020-10-21",
+    "cited": false
+   },
+   {
+    "slug": "speech-396557",
+    "title": "Scott Morrison — 2020-10-21",
+    "speaker": "Scott Morrison",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2020-10-21",
+    "cited": false
+   },
+   {
+    "slug": "speech-400187",
+    "title": "Peter Khalil — 2020-12-07",
+    "speaker": "Peter Khalil",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2020-12-07",
+    "cited": false
+   },
+   {
+    "slug": "speech-400358",
+    "title": "Scott Morrison — 2020-12-08",
+    "speaker": "Scott Morrison",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2020-12-08",
+    "cited": false
+   }
+  ],
+  "cited_count": 11,
+  "seconds": 8.4,
+  "tokens": {
+   "input": 5958,
+   "output": 391
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 19 strongest passages the knowledge box retrieved for 2020; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2020 run through /api/search (hybrid retrieval, from=2020&to=2020, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "159 distinct speeches among the 159 strongest matches for the year's 4 debates - not every speech given in 2020, and the index is still loading.",
+  "probes": [
+   {
+    "q": "COVID-19 coronavirus pandemic response",
+    "label": "COVID-19",
+    "retrieved": 49,
+    "truncated": true
+   },
+   {
+    "q": "JobKeeper wage subsidy",
+    "label": "JobKeeper",
+    "retrieved": 43,
+    "truncated": true
+   },
+   {
+    "q": "Black Summer bushfires royal commission",
+    "label": "The Black Summer",
+    "retrieved": 38,
+    "truncated": true
+   },
+   {
+    "q": "China trade barley wine tariffs",
+    "label": "China trade tensions",
+    "retrieved": 29,
+    "truncated": true
+   }
+  ],
+  "retrieved": 159,
+  "unique_speeches": 159,
+  "unlabelled_party": 51,
+  "bare_surnames_skipped": 19,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Scott Ryan",
+   "Tony Smith"
+  ],
+  "speakers": [
+   {
+    "name": "Scott Morrison",
+    "party": "Liberal",
+    "speeches": 14
+   },
+   {
+    "name": "Josh Frydenberg",
+    "party": "Liberal",
+    "speeches": 14
+   },
+   {
+    "name": "S.G. Wade",
+    "party": null,
+    "speeches": 6
+   },
+   {
+    "name": "Anthony Albanese",
+    "party": "Labor",
+    "speeches": 5
+   },
+   {
+    "name": "David Littleproud",
+    "party": "LNP",
+    "speeches": 4
+   },
+   {
+    "name": "Helen Haines",
+    "party": "Independent",
+    "speeches": 4
+   },
+   {
+    "name": "V.A. Chapman",
+    "party": null,
+    "speeches": 3
+   },
+   {
+    "name": "Mike Freelander",
+    "party": "Labor",
+    "speeches": 3
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 47
+   },
+   {
+    "party": "Labor",
+    "speeches": 34
+   },
+   {
+    "party": "LNP",
+    "speeches": 16
+   },
+   {
+    "party": "Nationals",
+    "speeches": 5
+   },
+   {
+    "party": "Independent",
+    "speeches": 4
+   },
+   {
+    "party": "Centre Alliance",
+    "speeches": 2
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:53+00:00",
+ "corpus_resources": 609644
+}

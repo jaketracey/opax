@@ -1,0 +1,263 @@
+{
+ "year": 2013,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2013, and what positions did members and parties take? Debates that year included Repealing the carbon tax, Sovereign Borders, The NBN and DisabilityCare.",
+  "prompt": "year-brief-v1",
+  "answer": "In 2013, the Australian Parliament was dominated by the coalition government's push to repeal the carbon tax, a policy it argued was the central issue of the 7 September 2013 election. Government speakers, including Senator Abetz and members from the coalition, argued that the election was a \"referendum on the carbon tax\" and that their victory provided a clear mandate to abolish it. They claimed the tax was a \"toxic tax\" and a \"job-destroying\" burden, citing Treasury modelling that its removal would lower the average household cost of living by $550 a year, reduce electricity bills by around $200, and gas bills by around $70. The government also argued the tax had failed to reduce emissions, with its own modelling showing emissions would rise, and that it imposed significant costs on businesses, with the Australian Industry Group survey of 485 businesses showing energy input costs increased by an average of 14.5 per cent. The coalition proposed to replace the tax with a Direct Action plan and an Emissions Reduction Fund.\n\nThe Australian Labor Party and the Australian Greens were accused by government senators of delaying the vote on the carbon tax repeal bills to deny the coalition its mandate. A motion to give the Senate precedence to debate the Clean Energy Finance Corporation (Abolition) Bill 2013 and the Climate Change Authority (Abolition) Bill 2013 over the carbon tax repeal bills was passed with 38 votes in favour, including those from Labor and Greens senators, against 27 votes from coalition senators. Government speakers criticised Labor for what they described as a broken promise on the carbon tax, noting that the former Prime Minister, Julia Gillard, had promised not to introduce one. The government also framed the repeal as the first of several economic reforms, including bills to repeal the mining tax and restore the Australian Building and Construction Commission.\n\nAnother significant debate concerned the funding of DisabilityCare Australia, with the government introducing a package of bills to increase the Medicare levy by half a percentage point. A motion was moved to suspend standing orders to allow for the resumption of debate on the Medicare Levy Amendment (DisabilityCare Australia) Bill 2013, the 11 related bills, and the National Disability Insurance Scheme Legislation Amendment Bill 2013. The government framed this as a long-overdue reform, with DisabilityCare Australia set to start in seven weeks.",
+  "sources": [
+   {
+    "slug": "division-federal-senate-3031",
+    "title": "Senate division, 2 December 2013: Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 - Second Reading - That debate on Clean Energy Finance Corp and Climate Change Authority have precedence over d",
+    "speaker": "Alan Eggleston",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-272257",
+    "title": "Mark Butler — 2013-05-15",
+    "speaker": "Mark Butler",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2013-05-15",
+    "cited": true
+   },
+   {
+    "slug": "speech-823467",
+    "title": "Jacinta Collins — Bills — 2013-05-16",
+    "speaker": "Jacinta Collins",
+    "party": null,
+    "state": "federal",
+    "date": "2013-05-16",
+    "cited": true
+   },
+   {
+    "slug": "speech-278867",
+    "title": "Scott Buchholz — 2013-11-19",
+    "speaker": "Scott Buchholz",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2013-11-19",
+    "cited": true
+   },
+   {
+    "slug": "speech-825987",
+    "title": "Mitch Fifield — Bills — 2013-12-02",
+    "speaker": "Mitch Fifield",
+    "party": null,
+    "state": "federal",
+    "date": "2013-12-02",
+    "cited": true
+   },
+   {
+    "slug": "speech-825991",
+    "title": "Mitch Fifield — Bills — 2013-12-02",
+    "speaker": "Mitch Fifield",
+    "party": null,
+    "state": "federal",
+    "date": "2013-12-02",
+    "cited": true
+   },
+   {
+    "slug": "speech-826200",
+    "title": "Bridget McKenzie — Questions without Notice — 2013-12-04",
+    "speaker": "Bridget McKenzie",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2013-12-04",
+    "cited": true
+   },
+   {
+    "slug": "speech-826659",
+    "title": "Sean Edwards — Questions without Notice — 2013-12-11",
+    "speaker": "Sean Edwards",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2013-12-11",
+    "cited": true
+   },
+   {
+    "slug": "speech-826673",
+    "title": "Mitch Fifield — Business — 2013-12-11",
+    "speaker": "Mitch Fifield",
+    "party": null,
+    "state": "federal",
+    "date": "2013-12-11",
+    "cited": true
+   },
+   {
+    "slug": "speech-278148",
+    "title": "Tony Abbott — 2013-11-13",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2013-11-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-825439",
+    "title": "Anne Ruston — Governor-General's Speech — 2013-11-13",
+    "speaker": "Anne Ruston",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2013-11-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-825553",
+    "title": "Mitch Fifield — Committees — 2013-11-14",
+    "speaker": "Mitch Fifield",
+    "party": null,
+    "state": "federal",
+    "date": "2013-11-14",
+    "cited": false
+   },
+   {
+    "slug": "speech-825994",
+    "title": "Mitch Fifield — Bills — 2013-12-02",
+    "speaker": "Mitch Fifield",
+    "party": null,
+    "state": "federal",
+    "date": "2013-12-02",
+    "cited": false
+   },
+   {
+    "slug": "speech-826453",
+    "title": "Sean Edwards — Questions without Notice — 2013-12-09",
+    "speaker": "Sean Edwards",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2013-12-09",
+    "cited": false
+   },
+   {
+    "slug": "speech-826856",
+    "title": "Eric Abetz — Business — 2013-12-12",
+    "speaker": "Eric Abetz",
+    "party": null,
+    "state": "federal",
+    "date": "2013-12-12",
+    "cited": false
+   }
+  ],
+  "cited_count": 9,
+  "seconds": 8.9,
+  "tokens": {
+   "input": 4961,
+   "output": 475
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 15 strongest passages the knowledge box retrieved for 2013; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2013 run through /api/search (hybrid retrieval, from=2013&to=2013, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "134 distinct speeches among the 135 strongest matches for the year's 4 debates - not every speech given in 2013, and the index is still loading.",
+  "probes": [
+   {
+    "q": "carbon tax repeal",
+    "label": "Repealing the carbon tax",
+    "retrieved": 27,
+    "truncated": true
+   },
+   {
+    "q": "Operation Sovereign Borders boats",
+    "label": "Sovereign Borders",
+    "retrieved": 39,
+    "truncated": true
+   },
+   {
+    "q": "national broadband network rollout",
+    "label": "The NBN",
+    "retrieved": 38,
+    "truncated": true
+   },
+   {
+    "q": "DisabilityCare NDIS launch",
+    "label": "DisabilityCare",
+    "retrieved": 31,
+    "truncated": true
+   }
+  ],
+  "retrieved": 135,
+  "unique_speeches": 134,
+  "unlabelled_party": 25,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 1,
+  "presiding_excluded": [
+   "Anna Burke",
+   "Bronwyn Bishop",
+   "John Hogg"
+  ],
+  "speakers": [
+   {
+    "name": "Scott Morrison",
+    "party": "Liberal",
+    "speeches": 13
+   },
+   {
+    "name": "Mitch Fifield",
+    "party": null,
+    "speeches": 8
+   },
+   {
+    "name": "Tony Abbott",
+    "party": "Liberal",
+    "speeches": 6
+   },
+   {
+    "name": "Sarah Hanson-Young",
+    "party": "Greens",
+    "speeches": 5
+   },
+   {
+    "name": "Robert Oakeshott",
+    "party": "Independent",
+    "speeches": 4
+   },
+   {
+    "name": "Anthony Albanese",
+    "party": "Labor",
+    "speeches": 4
+   },
+   {
+    "name": "John Williams",
+    "party": "Nationals",
+    "speeches": 3
+   },
+   {
+    "name": "Kate Lundy",
+    "party": "Labor",
+    "speeches": 3
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 45
+   },
+   {
+    "party": "Labor",
+    "speeches": 35
+   },
+   {
+    "party": "Nationals",
+    "speeches": 11
+   },
+   {
+    "party": "Greens",
+    "speeches": 10
+   },
+   {
+    "party": "Independent",
+    "speeches": 5
+   },
+   {
+    "party": "Country Liberal Party",
+    "speeches": 3
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:30+00:00",
+ "corpus_resources": 609644
+}

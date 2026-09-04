@@ -1,0 +1,308 @@
+{
+ "year": 2015,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2015, and what positions did members and parties take? Debates that year included Citizenship laws, Same-sex marriage, The China trade deal and Syrian refugees.",
+  "prompt": "year-brief-v1",
+  "answer": "The Australian Citizenship Amendment (Allegiance to Australia) Bill 2015 dominated much of the parliamentary year, with the government and opposition ultimately reaching a consensus after amendments. The opposition, led by its spokesperson, initially supported the bill’s aim to strip dual nationals of citizenship for terrorism-related conduct but raised concerns about creating “two classes of Australian citizens” and the bill’s constitutionality, noting the government refused to release the Solicitor-General’s advice. After the Parliamentary Joint Committee on Intelligence and Security made 26 recommendations, the opposition argued the revised package narrowed the bill’s scope from applying to “millions” of Australians down to “dozens,” limiting revocation to offshore conduct or cases where individuals had fled, and adding appeal rights to the Federal Court. Government speakers, including the member for Hinkler, strongly supported the bill, citing over 400 high-priority counter-terrorism investigations, about 110 Australians fighting with terrorist groups in Syria and Iraq, and 190 providing support, with some speakers also referencing the Paris attacks that killed 130 people.\n\nSame-sex marriage was another recurring debate, with speakers in the House of Representatives supporting the Marriage Legislation Amendment Bill 2015 on grounds of justice and equality, arguing that two-thirds of Australians support the change and opposing a plebiscite. One speaker stated that a Shorten Labor government would introduce a marriage equality bill within its first 100 days, while another noted that no church should be forced to marry same-sex couples. In New South Wales, a question without notice on 2 June 2015 received a response that the federal government has responsibility for marriage laws and that no state legislation was before the parliament.\n\nThe China-Australia Free Trade Agreement (ChAFTA) also featured prominently, with the Senate voting 37–10 to agree to the main idea of the Customs Amendment (China-Australia Free Trade Agreement Implementation) Bill 2015 and related bill. Supporters, including the member for Gilmore, accused unions of playing “silly games” and running “dodgy” campaigns against the deal, while the member for Gilmore said they could not attend union debates due to committee inquiries into bank loan contracts. The minister’s year-end review cited free trade agreements with China, Korea, Japan and the Trans-Pacific Partnership as key achievements.\n\nThe Syrian refugee crisis was debated alongside these issues, with the House agreeing to a motion noting that the first Syrian refugee family under the recent intake arrived on 17 November 2015, affirming Australia’s welcome of refugees. Trevor Khan noted the government’s commitment to taking 12,000 Syrian refugees, with arrivals beginning by the end of 2015 and expected to be in place by mid-2016, and argued that persecuted minorities in Syria include many groups beyond Turkmens, such as Alawites, Christians, Kurds, Druze, Shias, Sufis and Yazidis. The minister’s year-end review announced the permanent settlement of 12,000 Syrian refugees and $44 million in additional humanitarian aid, while another speaker noted Australia had already accepted 4,500 refugees from Syria and Iraq and contributed $155 million in aid since 2011.",
+  "sources": [
+   {
+    "slug": "speech-317341",
+    "title": "Tony Abbott — 2015-09-07",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-09-07",
+    "cited": true
+   },
+   {
+    "slug": "speech-323129",
+    "title": "Jason Wood — 2015-11-12",
+    "speaker": "Jason Wood",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-11-12",
+    "cited": true
+   },
+   {
+    "slug": "speech-323122",
+    "title": "Luke Simpkins — 2015-11-12",
+    "speaker": "Luke Simpkins",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-11-12",
+    "cited": true
+   },
+   {
+    "slug": "speech-854209",
+    "title": "Mehreen Faruqi — Syrian Refugees Arrival — 2015-11-18",
+    "speaker": "Mehreen Faruqi",
+    "party": null,
+    "state": "nsw",
+    "date": "2015-11-18",
+    "cited": true
+   },
+   {
+    "slug": "speech-323543",
+    "title": "Melissa Price — 2015-11-23",
+    "speaker": "Melissa Price",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-11-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-323602",
+    "title": "Gai Brodtmann — 2015-11-23",
+    "speaker": "Gai Brodtmann",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2015-11-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-323561",
+    "title": "Michael Sukkar — 2015-11-23",
+    "speaker": "Michael Sukkar",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-11-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-323560",
+    "title": "Keith Pitt — 2015-11-23",
+    "speaker": "Keith Pitt",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2015-11-23",
+    "cited": true
+   },
+   {
+    "slug": "speech-323769",
+    "title": "Steve Irons — 2015-11-24",
+    "speaker": "Steve Irons",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-11-24",
+    "cited": true
+   },
+   {
+    "slug": "speech-324702",
+    "title": "Steve Irons — 2015-11-30",
+    "speaker": "Steve Irons",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-11-30",
+    "cited": true
+   },
+   {
+    "slug": "speech-325425",
+    "title": "Julie Bishop — 2015-12-03",
+    "speaker": "Julie Bishop",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-12-03",
+    "cited": true
+   },
+   {
+    "slug": "division-federal-senate-3964",
+    "title": "Senate division, 9 November 2015: Customs Amendment (China-Australia Free Trade Agreement Implementation) Bill 2015 and related bill - Second Reading - Agree with bills' main idea",
+    "speaker": "Alex Gallacher",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "speech-315460",
+    "title": "Tony Abbott — 2015-08-11",
+    "speaker": "Tony Abbott",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-08-11",
+    "cited": false
+   },
+   {
+    "slug": "speech-833534",
+    "title": "Same-Sex Marriage — 2015-08-11",
+    "speaker": null,
+    "party": null,
+    "state": "nsw",
+    "date": "2015-08-11",
+    "cited": false
+   },
+   {
+    "slug": "speech-837865",
+    "title": "Trevor Khan — Syrian Refugee Crisis — 2015-09-09",
+    "speaker": "Trevor Khan",
+    "party": null,
+    "state": "nsw",
+    "date": "2015-09-09",
+    "cited": false
+   },
+   {
+    "slug": "speech-318349",
+    "title": "Brett Whiteley — 2015-09-10",
+    "speaker": "Brett Whiteley",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-09-10",
+    "cited": false
+   },
+   {
+    "slug": "speech-322030",
+    "title": "Ann Sudmalis — 2015-11-09",
+    "speaker": "Ann Sudmalis",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-11-09",
+    "cited": false
+   },
+   {
+    "slug": "speech-323103",
+    "title": "Richard Marles — 2015-11-12",
+    "speaker": "Richard Marles",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2015-11-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-324705",
+    "title": "Bob Baldwin — 2015-11-30",
+    "speaker": "Bob Baldwin",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-11-30",
+    "cited": false
+   },
+   {
+    "slug": "speech-325071",
+    "title": "David Coleman — 2015-12-01",
+    "speaker": "David Coleman",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2015-12-01",
+    "cited": false
+   }
+  ],
+  "cited_count": 11,
+  "seconds": 11.3,
+  "tokens": {
+   "input": 5681,
+   "output": 649
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2015; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2015 run through /api/search (hybrid retrieval, from=2015&to=2015, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "168 distinct speeches among the 168 strongest matches for the year's 4 debates - not every speech given in 2015, and the index is still loading.",
+  "probes": [
+   {
+    "q": "citizenship terrorism foreign fighters",
+    "label": "Citizenship laws",
+    "retrieved": 44,
+    "truncated": true
+   },
+   {
+    "q": "same-sex marriage plebiscite",
+    "label": "Same-sex marriage",
+    "retrieved": 38,
+    "truncated": true
+   },
+   {
+    "q": "China free trade agreement",
+    "label": "The China trade deal",
+    "retrieved": 46,
+    "truncated": true
+   },
+   {
+    "q": "Syrian refugees intake",
+    "label": "Syrian refugees",
+    "retrieved": 40,
+    "truncated": true
+   }
+  ],
+  "retrieved": 168,
+  "unique_speeches": 168,
+  "unlabelled_party": 15,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Bronwyn Bishop",
+   "Stephen Parry",
+   "Tony Smith"
+  ],
+  "speakers": [
+   {
+    "name": "Tony Abbott",
+    "party": "Liberal",
+    "speeches": 9
+   },
+   {
+    "name": "Julie Bishop",
+    "party": "Liberal",
+    "speeches": 9
+   },
+   {
+    "name": "Malcolm Turnbull",
+    "party": "Liberal",
+    "speeches": 7
+   },
+   {
+    "name": "Andrew Robb",
+    "party": "Liberal",
+    "speeches": 7
+   },
+   {
+    "name": "Bill Shorten",
+    "party": "Labor",
+    "speeches": 6
+   },
+   {
+    "name": "Andrew Wilkie",
+    "party": "Independent",
+    "speeches": 5
+   },
+   {
+    "name": "Tanya Plibersek",
+    "party": "Labor",
+    "speeches": 5
+   },
+   {
+    "name": "Peter Dutton",
+    "party": "Liberal",
+    "speeches": 4
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 97
+   },
+   {
+    "party": "Labor",
+    "speeches": 32
+   },
+   {
+    "party": "Nationals",
+    "speeches": 14
+   },
+   {
+    "party": "Independent",
+    "speeches": 5
+   },
+   {
+    "party": "Greens",
+    "speeches": 4
+   },
+   {
+    "party": "Country Liberal Party",
+    "speeches": 1
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:37+00:00",
+ "corpus_resources": 609644
+}

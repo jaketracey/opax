@@ -1,0 +1,302 @@
+{
+ "year": 2024,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2024, and what positions did members and parties take? Debates that year included The stage 3 tax cuts, The detention ruling, Supermarket prices and Gambling ads.",
+  "prompt": "year-brief-v1",
+  "answer": "The year’s parliamentary debates were dominated by cost-of-living measures, with the Treasury Laws Amendment (Cost of Living Tax Cuts) Bill 2024 a central focus. The government, led by Prime Minister Albanese, argued for revised stage 3 tax cuts to deliver help to middle Australia, with the bill reducing the lowest tax rate from 19% to 16% and delivering an average worker tax cut of over $1,500 per year. Treasurer Jim Chalmers defended the changes, accusing the opposition of preferring higher wages and inflation and wanting tax cuts skewed to the highest incomes. The Coalition, however, accused the government of lying about stage 3 tax cuts, with members like the member for Moncrieff claiming the government had broken promises on electricity prices, mortgages, and child care. The Senate passed a motion to bring on the tax cuts debate, with Liberal Senator Simon Birmingham noting the government needed Liberal and Greens support to pass the bill.\n\nSupermarket pricing and gambling advertising also sparked significant debate. In March, crossbench members including Bob Katter and Andrew Wilkie moved to suspend standing orders to address the \"Coles and Woolworths oligopoly,\" arguing it had an appalling impact on farmers and consumers, with Australians being overcharged punitively while farmers received below-cost prices. This motion was defeated 13–52, with Labor and most crossbenchers voting against. Later, in November, a motion to adjourn debate on gambling advertising passed 71–64, with Labor members voting in favour of the adjournment while the Coalition, Greens, and several independents voted against, indicating a split over how to proceed on restricting gambling ads. The Greens also criticised the Victorian state budget for failing to address cost-of-living crises, calling for supermarket price regulation and new taxes on big banks.\n\nThe Online Safety Amendment (Social Media Minimum Age) Bill 2024 passed its second reading 97–6 in November, with Liberal MP Bridget Archer crossing the floor to vote against her party, joining the Greens and independents in opposition. The Future Made in Australia (Production Tax Credits and Other Measures) Bill 2024 also saw debate adjourned 73–62. Additionally, the Treasury Laws Amendment (Tax Accountability and Fairness) Bill 2023 passed the Senate 31–26, with Labor and the Greens supporting it while the Coalition opposed.",
+  "sources": [
+   {
+    "slug": "division-federal-representatives-9427-p2",
+    "title": "House of Representatives division, 27 November 2024: Online Safety Amendment (Social Media Minimum Age) Bill 2024 - Second Reading - Agree with the bill's main idea (part 2 of 2)",
+    "speaker": "Adam Bandt",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-830121",
+    "title": "Jim Chalmers — Bills — 2024-02-06",
+    "speaker": "Jim Chalmers",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2024-02-06",
+    "cited": true
+   },
+   {
+    "slug": "division-federal-representatives-9025-p2",
+    "title": "House of Representatives division, 3 July 2024: Business - Suspension of Standing and Sessional Orders - Adjourn debate (part 2 of 2)",
+    "speaker": "Aaron Violi",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-senate-8929",
+    "title": "Senate division, 16 May 2024: Treasury Laws Amendment (Tax Accountability and Fairness) Bill 2023 - Third Reading - Pass the bill",
+    "speaker": "Alex Antic",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-9279",
+    "title": "House of Representatives division, 28 November 2024: Motions - Gambling Advertising - Adjourn debate (part 1 of 2)",
+    "speaker": "Alicia Payne",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-senate-8694",
+    "title": "Senate division, 27 February 2024: Business - Rearrangement - Treasury Laws Amendment (Cost of Living Tax Cuts) Bill 2024 and Treasury Laws Amendment (Cost of Living—Medicare Levy) Bill 2024",
+    "speaker": "Alex Antic",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-9280-p2",
+    "title": "House of Representatives division, 28 November 2024: Motions - Gambling Advertising - Adjourn debate (part 2 of 2)",
+    "speaker": "Aaron Violi",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-9281-p2",
+    "title": "House of Representatives division, 28 November 2024: Future Made in Australia (Production Tax Credits and Other Measures) Bill 2024 - Second Reading - Adjourn debate and recommence (part 2 of 2)",
+    "speaker": "Aaron Violi",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-8784",
+    "title": "House of Representatives division, 25 March 2024: Business — Rearrangement",
+    "speaker": "Adam Bandt",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-9279-p2",
+    "title": "House of Representatives division, 28 November 2024: Motions - Gambling Advertising - Adjourn debate (part 2 of 2)",
+    "speaker": "Aaron Violi",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "speech-830159",
+    "title": "Matt Burnell — Questions without Notice — 2024-02-06",
+    "speaker": "Matt Burnell",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2024-02-06",
+    "cited": false
+   },
+   {
+    "slug": "speech-830141",
+    "title": "Angie Bell — Statements by Members — 2024-02-06",
+    "speaker": "Angie Bell",
+    "party": "LNP",
+    "state": "federal",
+    "date": "2024-02-06",
+    "cited": false
+   },
+   {
+    "slug": "speech-866711",
+    "title": "Sam Hibbins — Commercial and Industrial Property Tax Reform Bill 2024 - Second reading — 2024-05-01",
+    "speaker": "Sam Hibbins",
+    "party": null,
+    "state": "vic",
+    "date": "2024-05-01",
+    "cited": false
+   },
+   {
+    "slug": "speech-866057",
+    "title": "Sam Hibbins — Appropriation (Parliament 2024–2025) Bill 2024 - Second reading — 2024-05-14",
+    "speaker": "Sam Hibbins",
+    "party": null,
+    "state": "vic",
+    "date": "2024-05-14",
+    "cited": false
+   },
+   {
+    "slug": "speech-865748",
+    "title": "Paul Hamer — State Taxation Amendment Bill 2024 - Second reading — 2024-05-15",
+    "speaker": "Paul Hamer",
+    "party": null,
+    "state": "vic",
+    "date": "2024-05-15",
+    "cited": false
+   },
+   {
+    "slug": "speech-865397",
+    "title": "Iwan Walters — Program — 2024-05-28",
+    "speaker": "Iwan Walters",
+    "party": null,
+    "state": "vic",
+    "date": "2024-05-28",
+    "cited": false
+   },
+   {
+    "slug": "speech-865396",
+    "title": "Martin Cameron — Program — 2024-05-28",
+    "speaker": "Martin Cameron",
+    "party": null,
+    "state": "vic",
+    "date": "2024-05-28",
+    "cited": false
+   },
+   {
+    "slug": "speech-1177531",
+    "title": "Aiv Puglielli — Supermarket prices — 2024-10-17",
+    "speaker": "Aiv Puglielli",
+    "party": null,
+    "state": "vic",
+    "date": "2024-10-17",
+    "cited": false
+   },
+   {
+    "slug": "speech-422865",
+    "title": "David Layzell — Legislation Review Committee — 2024-11-22",
+    "speaker": "David Layzell",
+    "party": null,
+    "state": "nsw",
+    "date": "2024-11-22",
+    "cited": false
+   }
+  ],
+  "cited_count": 2,
+  "seconds": 9.5,
+  "tokens": {
+   "input": 4310,
+   "output": 481
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 19 strongest passages the knowledge box retrieved for 2024; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2024 run through /api/search (hybrid retrieval, from=2024&to=2024, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "150 distinct speeches among the 150 strongest matches for the year's 4 debates - not every speech given in 2024, and the index is still loading.",
+  "probes": [
+   {
+    "q": "stage 3 tax cuts",
+    "label": "The stage 3 tax cuts",
+    "retrieved": 34,
+    "truncated": true
+   },
+   {
+    "q": "immigration detention High Court release",
+    "label": "The detention ruling",
+    "retrieved": 43,
+    "truncated": true
+   },
+   {
+    "q": "supermarket prices competition",
+    "label": "Supermarket prices",
+    "retrieved": 34,
+    "truncated": true
+   },
+   {
+    "q": "gambling advertising ban",
+    "label": "Gambling ads",
+    "retrieved": 39,
+    "truncated": true
+   }
+  ],
+  "retrieved": 150,
+  "unique_speeches": 150,
+  "unlabelled_party": 123,
+  "bare_surnames_skipped": 43,
+  "presiding_rows_skipped": 1,
+  "presiding_excluded": [
+   "Milton Dick",
+   "Sue Lines"
+  ],
+  "speakers": [
+   {
+    "name": "Aiv Puglielli",
+    "party": null,
+    "speeches": 10
+   },
+   {
+    "name": "Katherine Copsey",
+    "party": null,
+    "speeches": 9
+   },
+   {
+    "name": "Ellen Sandell",
+    "party": null,
+    "speeches": 4
+   },
+   {
+    "name": "Sam Hibbins",
+    "party": null,
+    "speeches": 4
+   },
+   {
+    "name": "Tim Read",
+    "party": null,
+    "speeches": 3
+   },
+   {
+    "name": "Mathew Hilakari",
+    "party": null,
+    "speeches": 3
+   },
+   {
+    "name": "Melissa Horne",
+    "party": null,
+    "speeches": 3
+   },
+   {
+    "name": "Jim Chalmers",
+    "party": "Labor",
+    "speeches": 2
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 12
+   },
+   {
+    "party": "LNP",
+    "speeches": 9
+   },
+   {
+    "party": "Independent",
+    "speeches": 2
+   },
+   {
+    "party": "Nationals",
+    "speeches": 1
+   },
+   {
+    "party": "Liberal",
+    "speeches": 1
+   },
+   {
+    "party": "Katter's Australian Party",
+    "speeches": 1
+   },
+   {
+    "party": "One Nation",
+    "speeches": 1
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:58:06+00:00",
+ "corpus_resources": 609644
+}

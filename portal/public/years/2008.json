@@ -1,0 +1,286 @@
+{
+ "year": 2008,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2008, and what positions did members and parties take? Debates that year included The Apology, The global financial crisis, Grocery and fuel bills and The alcopops tax.",
+  "prompt": "year-brief-v1",
+  "answer": "The Australian Parliament’s 2008 sittings were dominated by the global financial crisis and the government’s response to it. The Rudd government introduced an Economic Security Strategy, a $10.4 billion package of bills providing $4.8 billion in payments to pensioners, carers, senior health card holders and veterans, $3.9 billion for families, $1.5 billion for first home buyers, and $187 million for training. Government speakers argued the package was a swift, targeted and prudent response to a dramatic shift in Australia’s macroeconomic outlook, with payments to begin from 8 December 2008. Opposition members criticised the package and the government’s broader handling of the crisis, with one coalition speaker accusing the Prime Minister of declaring “war” on inflation, unemployment and other issues without delivering results, noting inflation had risen every quarter since the declaration. The same speaker argued the government’s bank guarantee announcements had dislocated the market, and that unemployment was projected to rise to nearly six per cent, with around 270,000 Australians having had their assets frozen.\n\nThe opposition also sought to force a debate on the crisis, with the House of Representatives voting 71 to 55 on 12 November 2008 to call on the business of the day for that debate. Government members accused the coalition of inconsistency, with one minister describing a “litany of different positions” from the opposition leader on the economic strategy, while another government senator said the opposition had spent time blocking budget bills earlier in the year. The government also noted the crisis had forced a downward revision of revenue by some $40 billion over the years 2008-09 to 2011-12, and that the budget surplus was reduced as a result. The debate extended to related legislation, including the Nation-building Funds Bill 2008, which established funds for infrastructure investment to address both immediate challenges from the crisis and longer-term needs.",
+  "sources": [
+   {
+    "slug": "speech-192424",
+    "title": "Damian Hale — 2008-10-20",
+    "speaker": "Damian Hale",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2008-10-20",
+    "cited": true
+   },
+   {
+    "slug": "speech-194009",
+    "title": "Craig Emerson — 2008-11-12",
+    "speaker": "Craig Emerson",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2008-11-12",
+    "cited": true
+   },
+   {
+    "slug": "speech-194094",
+    "title": "Christopher Pearce — 2008-11-13",
+    "speaker": "Christopher Pearce",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2008-11-13",
+    "cited": true
+   },
+   {
+    "slug": "speech-789632",
+    "title": "Ursula Stephens — Social Security and Other Legislation Amendment (Economic Security Strategy) Bill 2008; Appropriation (Economic Security Strategy) Bill (No. 1) 2008-2009; Appropriation (Economic Security Strategy) Bill (No. 2) 2008-2009 — 2008-11-24",
+    "speaker": "Ursula Stephens",
+    "party": null,
+    "state": "federal",
+    "date": "2008-11-24",
+    "cited": true
+   },
+   {
+    "slug": "speech-789633",
+    "title": "Ursula Stephens — Social Security and Other Legislation Amendment (Economic Security Strategy) Bill 2008; Appropriation (Economic Security Strategy) Bill (No. 1) 2008-2009; Appropriation (Economic Security Strategy) Bill (No. 2) 2008-2009 — 2008-11-24",
+    "speaker": "Ursula Stephens",
+    "party": null,
+    "state": "federal",
+    "date": "2008-11-24",
+    "cited": true
+   },
+   {
+    "slug": "speech-789717",
+    "title": "Annette Hurley — Questions without Notice — 2008-11-25",
+    "speaker": "Annette Hurley",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2008-11-25",
+    "cited": true
+   },
+   {
+    "slug": "speech-790401",
+    "title": "Chris Evans — Nation-Building Funds Bill 2008; Nation-Building Funds (Consequential Amendments) Bill 2008; Coag Reform Fund Bill 2008 — 2008-12-03",
+    "speaker": "Chris Evans",
+    "party": null,
+    "state": "federal",
+    "date": "2008-12-03",
+    "cited": true
+   },
+   {
+    "slug": "division-federal-representatives-560-p2",
+    "title": "House of Representatives division, 12 November 2008: Matters of Public Importance — Global Financial Crisis (part 2 of 2)",
+    "speaker": "Alby Schultz",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "speech-785757",
+    "title": "Helen Coonan — Tax Laws Amendment (2008 Measures No. 2) Bill 2008 — 2008-06-17",
+    "speaker": "Helen Coonan",
+    "party": null,
+    "state": "federal",
+    "date": "2008-06-17",
+    "cited": false
+   },
+   {
+    "slug": "speech-786604",
+    "title": "Kerry O'Brien — Appropriation (Parliamentary Departments) Bill (No. 1) 2008-2009; Appropriation Bill (No. 1) 2008-2009; Appropriation Bill (No. 2) 2008-2009 — 2008-06-26",
+    "speaker": "Kerry O'Brien",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2008-06-26",
+    "cited": false
+   },
+   {
+    "slug": "speech-786797",
+    "title": "Cory Bernardi — Questions without Notice: Take Note of Answers — 2008-08-27",
+    "speaker": "Cory Bernardi",
+    "party": null,
+    "state": "federal",
+    "date": "2008-08-27",
+    "cited": false
+   },
+   {
+    "slug": "speech-787397",
+    "title": "Richard Colbeck — Tax Laws Amendment (Medicare Levy Surcharge Thresholds) Bill 2008 — 2008-09-04",
+    "speaker": "Richard Colbeck",
+    "party": null,
+    "state": "federal",
+    "date": "2008-09-04",
+    "cited": false
+   },
+   {
+    "slug": "speech-788764",
+    "title": "Joe Ludwig — Financial System Legislation Amendment (Financial Claims Scheme and Other Measures) Bill 2008; Financial Claims Scheme (Adis) Levy Bill 2008; Financial Claims Scheme (General Insurers) Levy Bill 2008 — 2008-10-16",
+    "speaker": "Joe Ludwig",
+    "party": null,
+    "state": "federal",
+    "date": "2008-10-16",
+    "cited": false
+   },
+   {
+    "slug": "speech-789469",
+    "title": "Joe Ludwig — Business — 2008-11-13",
+    "speaker": "Joe Ludwig",
+    "party": null,
+    "state": "federal",
+    "date": "2008-11-13",
+    "cited": false
+   },
+   {
+    "slug": "speech-789721",
+    "title": "Eric Abetz — Questions without Notice: Take Note of Answers — 2008-11-25",
+    "speaker": "Eric Abetz",
+    "party": null,
+    "state": "federal",
+    "date": "2008-11-25",
+    "cited": false
+   },
+   {
+    "slug": "speech-194965",
+    "title": "Roger Price — 2008-11-26",
+    "speaker": "Roger Price",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2008-11-26",
+    "cited": false
+   },
+   {
+    "slug": "speech-790124",
+    "title": "Doug Cameron — Questions without Notice — 2008-12-01",
+    "speaker": "Doug Cameron",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2008-12-01",
+    "cited": false
+   },
+   {
+    "slug": "speech-195883",
+    "title": "Scott Morrison — 2008-12-02",
+    "speaker": "Scott Morrison",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2008-12-02",
+    "cited": false
+   }
+  ],
+  "cited_count": 7,
+  "seconds": 9.3,
+  "tokens": {
+   "input": 3811,
+   "output": 389
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 18 strongest passages the knowledge box retrieved for 2008; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2008 run through /api/search (hybrid retrieval, from=2008&to=2008, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "131 distinct speeches among the 131 strongest matches for the year's 4 debates - not every speech given in 2008, and the index is still loading.",
+  "probes": [
+   {
+    "q": "apology Stolen Generations",
+    "label": "The Apology",
+    "retrieved": 18,
+    "truncated": true
+   },
+   {
+    "q": "global financial crisis banks",
+    "label": "The global financial crisis",
+    "retrieved": 46,
+    "truncated": true
+   },
+   {
+    "q": "FuelWatch grocery prices cost of living",
+    "label": "Grocery and fuel bills",
+    "retrieved": 29,
+    "truncated": true
+   },
+   {
+    "q": "alcopops tax binge drinking",
+    "label": "The alcopops tax",
+    "retrieved": 38,
+    "truncated": true
+   }
+  ],
+  "retrieved": 131,
+  "unique_speeches": 131,
+  "unlabelled_party": 36,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 1,
+  "presiding_excluded": [
+   "Alan Ferguson",
+   "Harry Jenkins",
+   "John Hogg"
+  ],
+  "speakers": [
+   {
+    "name": "Kevin Rudd",
+    "party": "Labor",
+    "speeches": 16
+   },
+   {
+    "name": "Nicola Roxon",
+    "party": "Labor",
+    "speeches": 7
+   },
+   {
+    "name": "Wayne Swan",
+    "party": "Labor",
+    "speeches": 6
+   },
+   {
+    "name": "Joe Hockey",
+    "party": "Liberal",
+    "speeches": 6
+   },
+   {
+    "name": "Mitch Fifield",
+    "party": "Liberal",
+    "speeches": 5
+   },
+   {
+    "name": "Helen Coonan",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "Steve Fielding",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "Richard Colbeck",
+    "party": null,
+    "speeches": 5
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 58
+   },
+   {
+    "party": "Liberal",
+    "speeches": 26
+   },
+   {
+    "party": "Nationals",
+    "speeches": 7
+   },
+   {
+    "party": "Australian Democrats",
+    "speeches": 3
+   },
+   {
+    "party": "Greens",
+    "speeches": 1
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:14+00:00",
+ "corpus_resources": 609644
+}

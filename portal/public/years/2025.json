@@ -1,0 +1,293 @@
+{
+ "year": 2025,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2025, and what positions did members and parties take? Debates that year included The housing crisis, Cost of living, The under-16 social media ban and The energy transition.",
+  "prompt": "year-brief-v1",
+  "answer": "In 2025, the Australian parliament was dominated by debates over the cost-of-living and housing crises. Opposition members, including the Liberal and National parties, repeatedly argued that Australians were not better off under the Labor government, citing a \"cost-of-living crisis, a housing crisis and an energy bill crisis.\" They pointed to specific figures, such as housing construction falling from 250,000 per year to insufficient levels after 1.2 million immigrants arrived in two years, farm energy bills doubling from $1,200 to over $2,400, and 27,000 business insolvencies. They also highlighted falling GP bulk-billing rates in their electorates, with one member noting a drop from 93 per cent in 2019 to as low as 79 per cent under Labor, and another from 79 per cent to 69 per cent. Government speakers defended their record, citing 18 months of real wage growth, energy bill relief of $150, and solar battery discounts, while accusing the opposition of using migrants as scapegoats for housing crises and opposing measures like student debt cuts and cheaper medicines.\n\nThe government also advanced specific legislative responses. The Help to Buy (Commonwealth Powers) Bill 2025 was supported as a solution to the housing crisis, with criticism directed at opposition members for blocking innovative housing policies. A separate debate concerned the Housing Australia Investment Mandate Amendment (Delivering on Our 2025 Election Commitment) Direction 2025, which was moved to take note of, with debate adjourned. On social media, the parliament debated the Albanese government's ban on social media for under-16s, set to take effect from 10 December 2025. The government argued this world-leading action would protect young Australians from pressures and risks, giving them three more years to build resilience, with the ban applying to Australian residents and including reporting and appeals mechanisms. Opposition members, however, framed the broader context as one of crisis, with one speaker noting that cost of living had become the No. 1 issue in Mission Australia's annual youth survey for the first time in November 2024, with the percentage of young people worrying about it more than doubling in two years.",
+  "sources": [
+   {
+    "slug": "speech-422827",
+    "title": "Scott Buchholz — Statements by Members — 2025-02-10",
+    "speaker": "Scott Buchholz",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2025-02-10",
+    "cited": true
+   },
+   {
+    "slug": "speech-1194260",
+    "title": "Terry Young — Questions without Notice — 2025-02-11",
+    "speaker": "Terry Young",
+    "party": "LNP",
+    "state": "federal",
+    "date": "2025-02-11",
+    "cited": true
+   },
+   {
+    "slug": "speech-1194262",
+    "title": "James Stevens — Questions without Notice — 2025-02-11",
+    "speaker": "James Stevens",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2025-02-11",
+    "cited": true
+   },
+   {
+    "slug": "speech-1194422",
+    "title": "Ted O'Brien — Questions without Notice — 2025-02-12",
+    "speaker": "Ted O'Brien",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2025-02-12",
+    "cited": true
+   },
+   {
+    "slug": "speech-1194851",
+    "title": "Jim Chalmers — Bills — 2025-03-26",
+    "speaker": "Jim Chalmers",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2025-03-26",
+    "cited": true
+   },
+   {
+    "slug": "speech-1158142",
+    "title": "Ingrid Stitt — Help to Buy (Commonwealth Powers) Bill 2025 - Second reading — 2025-04-03",
+    "speaker": "Ingrid Stitt",
+    "party": null,
+    "state": "vic",
+    "date": "2025-04-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-1197141",
+    "title": "Penny Wong — Statements by Senators — 2025-09-03",
+    "speaker": "Penny Wong",
+    "party": null,
+    "state": "federal",
+    "date": "2025-09-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-1194416",
+    "title": "Angus Taylor — Questions without Notice — 2025-02-12",
+    "speaker": "Angus Taylor",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2025-02-12",
+    "cited": false
+   },
+   {
+    "slug": "speech-1194815",
+    "title": "Jess Walsh — Matters of Public Importance — 2025-03-25",
+    "speaker": "Jess Walsh",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2025-03-25",
+    "cited": false
+   },
+   {
+    "slug": "speech-1195455",
+    "title": "Gabriel Ng — Adjournment — 2025-07-28",
+    "speaker": "Gabriel Ng",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2025-07-28",
+    "cited": false
+   },
+   {
+    "slug": "speech-1195625",
+    "title": "Jo Briskey — Statements — 2025-07-29",
+    "speaker": "Jo Briskey",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2025-07-29",
+    "cited": false
+   },
+   {
+    "slug": "speech-1195798",
+    "title": "Karen Grogan — Bills — 2025-07-30",
+    "speaker": "Karen Grogan",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2025-07-30",
+    "cited": false
+   },
+   {
+    "slug": "speech-1196396",
+    "title": "Clare O'Neil — Ministerial Statements — 2025-08-27",
+    "speaker": "Clare O'Neil",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2025-08-27",
+    "cited": false
+   },
+   {
+    "slug": "speech-1196397",
+    "title": "Ged Kearney — Business — 2025-08-27",
+    "speaker": "Ged Kearney",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2025-08-27",
+    "cited": false
+   },
+   {
+    "slug": "speech-909680",
+    "title": "Good — Finance and Public Administration Legislation Committee - Finance and Public Administration Legislation Committee 07/10/2025 Estimates PRIME MINISTER AND CABINET PORTFOLIO Department of the Prime Minister and Cabinet — 2025-10-07",
+    "speaker": "Good",
+    "party": null,
+    "state": "federal",
+    "date": "2025-10-07",
+    "cited": false
+   },
+   {
+    "slug": "speech-1199232",
+    "title": "Milton Dick — Matters of Public Importance — 2025-11-27",
+    "speaker": "Milton Dick",
+    "party": null,
+    "state": "federal",
+    "date": "2025-11-27",
+    "cited": false
+   },
+   {
+    "slug": "speech-1199235",
+    "title": "Kate Chaney — Statements — 2025-11-27",
+    "speaker": "Kate Chaney",
+    "party": "Independent",
+    "state": "federal",
+    "date": "2025-11-27",
+    "cited": false
+   },
+   {
+    "slug": "speech-959466",
+    "title": "Inman Grant — Environment and Communications Legislation Committee - Environment and Communications Legislation Committee 02/12/2025 Estimates INFRASTRUCTURE, TRANSPORT, REGIONAL DEVELOPMENT, COMMUNICATIONS, SPORT AND THE ARTS PORTFOLIO Office of the eSafety Commissioner — 2025-12-02",
+    "speaker": "Inman Grant",
+    "party": null,
+    "state": "federal",
+    "date": "2025-12-02",
+    "cited": false
+   }
+  ],
+  "cited_count": 7,
+  "seconds": 7.8,
+  "tokens": {
+   "input": 2006,
+   "output": 446
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 18 strongest passages the knowledge box retrieved for 2025; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2025 run through /api/search (hybrid retrieval, from=2025&to=2025, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "164 distinct speeches among the 166 strongest matches for the year's 4 debates - not every speech given in 2025, and the index is still loading.",
+  "probes": [
+   {
+    "q": "housing crisis affordability",
+    "label": "The housing crisis",
+    "retrieved": 41,
+    "truncated": true
+   },
+   {
+    "q": "cost of living relief",
+    "label": "Cost of living",
+    "retrieved": 42,
+    "truncated": true
+   },
+   {
+    "q": "social media age ban children",
+    "label": "The under-16 social media ban",
+    "retrieved": 40,
+    "truncated": true
+   },
+   {
+    "q": "energy transition nuclear renewables",
+    "label": "The energy transition",
+    "retrieved": 43,
+    "truncated": true
+   }
+  ],
+  "retrieved": 166,
+  "unique_speeches": 164,
+  "unlabelled_party": 87,
+  "bare_surnames_skipped": 32,
+  "presiding_rows_skipped": 7,
+  "presiding_excluded": [
+   "Milton Dick",
+   "Sue Lines"
+  ],
+  "speakers": [
+   {
+    "name": "Inman Grant",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "Glenn Sterle",
+    "party": "Labor",
+    "speeches": 3
+   },
+   {
+    "name": "David Pocock",
+    "party": "Independent",
+    "speeches": 3
+   },
+   {
+    "name": "Matt Burnell",
+    "party": "Labor",
+    "speeches": 3
+   },
+   {
+    "name": "Andrew Bragg",
+    "party": null,
+    "speeches": 2
+   },
+   {
+    "name": "Marielle Smith",
+    "party": "Labor",
+    "speeches": 2
+   },
+   {
+    "name": "Louise Miller-Frost",
+    "party": "Labor",
+    "speeches": 2
+   },
+   {
+    "name": "Matt Fregon",
+    "party": null,
+    "speeches": 2
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 46
+   },
+   {
+    "party": "Liberal",
+    "speeches": 9
+   },
+   {
+    "party": "LNP",
+    "speeches": 7
+   },
+   {
+    "party": "Independent",
+    "speeches": 6
+   },
+   {
+    "party": "Nationals",
+    "speeches": 5
+   },
+   {
+    "party": "Greens",
+    "speeches": 3
+   },
+   {
+    "party": "United Australia Party",
+    "speeches": 1
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:58:09+00:00",
+ "corpus_resources": 609644
+}

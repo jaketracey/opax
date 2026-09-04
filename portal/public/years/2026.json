@@ -1,0 +1,315 @@
+{
+ "year": 2026,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2026, and what positions did members and parties take? Debates that year included Housing, Artificial intelligence, Cost of living and Climate targets.",
+  "prompt": "year-brief-v1",
+  "answer": "The parliamentary year was dominated by cost-of-living pressures, with the Opposition moving a motion in May noting the Government had \"repeatedly broken promises to Australians on cost of living, energy prices, and housing affordability.\" Government speakers defended their record, citing \"cost-of-living relief\" and a $45 billion housing agenda, while accusing the Liberal and National parties of \"opposing every practical measure\" and fighting progress on tax, child care, wages, energy, housing and superannuation. A related Opposition motion on energy costs claimed the Government's policies had seen \"a record number of Australians having an energy debt\" and facing a 24 per cent increase in electricity bills, while a Government speaker supported legislation mandating electricity distributors to publish network resilience plans, arguing the 95 per cent renewable energy target by 2035 was at risk without greater urgency.\n\nHousing was a central battleground. Government members championed the \"100,000 homes policy\" and structural tax reform to boost supply, while accusing the Opposition of trying to \"scrap Help to Buy\" and the Home Guarantee Scheme. Opposition and crossbench speakers criticised property investor tax breaks, with one citing ACOSS that the country spends more on those breaks than on social housing, homelessness services and rent assistance combined, and calling for the budget benefits of reform to be reinvested in new social and affordable homes. The Senate also scheduled disallowance debates on the Treasury Laws Amendment (Help to Buy Exemptions) Regulations 2025.\n\nArtificial intelligence was another significant area of debate. The Government thanked the Senate Select Committee for its inquiry into adopting AI, with terms of reference including identifying how technology and AI can support better public services. In estimates, the Department of Education noted a survey of young people found top issues including cost of living, mental health, climate change, housing affordability and education and training. The House voted 106–8 on 12 February to agree with the main idea of the Australian Security Intelligence Organisation Amendment Bill (No. 2) 2025, with named Government members among the ayes.",
+  "sources": [
+   {
+    "slug": "speech-1203376",
+    "title": "Sharon Claydon — Committees — 2026-06-03",
+    "speaker": "Sharon Claydon",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2026-06-03",
+    "cited": true
+   },
+   {
+    "slug": "speech-1274820",
+    "title": "Brighton — Education and Employment Legislation Committee - Education and Employment Legislation Committee 04/06/2026 Estimates EDUCATION PORTFOLIO Department of Education — 2026-06-04",
+    "speaker": "Brighton",
+    "party": null,
+    "state": "federal",
+    "date": "2026-06-04",
+    "cited": true
+   },
+   {
+    "slug": "speech-1203697",
+    "title": "David Pocock — Bills — 2026-06-22",
+    "speaker": "David Pocock",
+    "party": "Independent",
+    "state": "federal",
+    "date": "2026-06-22",
+    "cited": true
+   },
+   {
+    "slug": "division-federal-senate-10023",
+    "title": "Senate division, 10 March 2026: Business — Rearrangement",
+    "speaker": "Alex Antic",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-9910-p2",
+    "title": "House of Representatives division, 12 February 2026: Australian Security Intelligence Organisation Amendment Bill (No. 2) 2025 - Report from Federation Chamber - Agree with the bil (part 2 of 3)",
+    "speaker": "Kate Thwaites",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "speech-1199488",
+    "title": "Helen Polley — Questions without Notice — 2026-02-03",
+    "speaker": "Helen Polley",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2026-02-03",
+    "cited": false
+   },
+   {
+    "slug": "speech-1199595",
+    "title": "Matt Burnell — Questions without Notice — 2026-02-04",
+    "speaker": "Matt Burnell",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2026-02-04",
+    "cited": false
+   },
+   {
+    "slug": "speech-1199648",
+    "title": "Corinne Mulholland — Bills — 2026-02-04",
+    "speaker": "Corinne Mulholland",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2026-02-04",
+    "cited": false
+   },
+   {
+    "slug": "speech-1199542",
+    "title": "Milton Dick — Committees — 2026-02-04",
+    "speaker": "Milton Dick",
+    "party": null,
+    "state": "federal",
+    "date": "2026-02-04",
+    "cited": false
+   },
+   {
+    "slug": "speech-1199778",
+    "title": "Milton Dick — Matters of Public Importance — 2026-02-05",
+    "speaker": "Milton Dick",
+    "party": null,
+    "state": "federal",
+    "date": "2026-02-05",
+    "cited": false
+   },
+   {
+    "slug": "speech-1199974",
+    "title": "Allegra Spender — Private Members' Business — 2026-02-09",
+    "speaker": "Allegra Spender",
+    "party": "Independent",
+    "state": "federal",
+    "date": "2026-02-09",
+    "cited": false
+   },
+   {
+    "slug": "speech-1127972",
+    "title": "Sarah Mansfield — Energy and Other Legislation Amendment (Resilience Reforms and Other Matters) Bill 2026 - Second reading — 2026-03-04",
+    "speaker": "Sarah Mansfield",
+    "party": null,
+    "state": "vic",
+    "date": "2026-03-04",
+    "cited": false
+   },
+   {
+    "slug": "speech-1201213",
+    "title": "Helen Polley — Statements by Senators — 2026-03-11",
+    "speaker": "Helen Polley",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2026-03-11",
+    "cited": false
+   },
+   {
+    "slug": "speech-1201755",
+    "title": "Milton Dick — Committees — 2026-03-25",
+    "speaker": "Milton Dick",
+    "party": null,
+    "state": "federal",
+    "date": "2026-03-25",
+    "cited": false
+   },
+   {
+    "slug": "speech-1202508",
+    "title": "Katy Gallagher — Committees — 2026-04-01",
+    "speaker": "Katy Gallagher",
+    "party": null,
+    "state": "federal",
+    "date": "2026-04-01",
+    "cited": false
+   },
+   {
+    "slug": "speech-1202421",
+    "title": "Zali Steggall — Adjournment — 2026-04-01",
+    "speaker": "Zali Steggall",
+    "party": "Independent",
+    "state": "federal",
+    "date": "2026-04-01",
+    "cited": false
+   },
+   {
+    "slug": "speech-1203218",
+    "title": "Madonna Jarrett — Bills — 2026-05-27",
+    "speaker": "Madonna Jarrett",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2026-05-27",
+    "cited": false
+   },
+   {
+    "slug": "speech-1203449",
+    "title": "Andrew Hastie — Bills — 2026-06-03",
+    "speaker": "Andrew Hastie",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2026-06-03",
+    "cited": false
+   },
+   {
+    "slug": "speech-1203380",
+    "title": "Scott Buchholz — Bills — 2026-06-03",
+    "speaker": "Scott Buchholz",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2026-06-03",
+    "cited": false
+   },
+   {
+    "slug": "speech-1205065",
+    "title": "Colin Boyce — Committees — 2026-08-12",
+    "speaker": "Colin Boyce",
+    "party": "LNP",
+    "state": "federal",
+    "date": "2026-08-12",
+    "cited": false
+   }
+  ],
+  "cited_count": 3,
+  "seconds": 9.1,
+  "tokens": {
+   "input": 1959,
+   "output": 419
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2026; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2026 run through /api/search (hybrid retrieval, from=2026&to=2026, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "160 distinct speeches among the 163 strongest matches for the year's 4 debates - not every speech given in 2026, and the index is still loading.",
+  "probes": [
+   {
+    "q": "housing affordability supply",
+    "label": "Housing",
+    "retrieved": 43,
+    "truncated": true
+   },
+   {
+    "q": "artificial intelligence regulation",
+    "label": "Artificial intelligence",
+    "retrieved": 36,
+    "truncated": true
+   },
+   {
+    "q": "cost of living",
+    "label": "Cost of living",
+    "retrieved": 44,
+    "truncated": true
+   },
+   {
+    "q": "climate targets emissions",
+    "label": "Climate targets",
+    "retrieved": 40,
+    "truncated": true
+   }
+  ],
+  "retrieved": 163,
+  "unique_speeches": 160,
+  "unlabelled_party": 90,
+  "bare_surnames_skipped": 51,
+  "presiding_rows_skipped": 12,
+  "presiding_excluded": [
+   "Milton Dick",
+   "Sue Lines"
+  ],
+  "speakers": [
+   {
+    "name": "Helen Polley",
+    "party": "Labor",
+    "speeches": 3
+   },
+   {
+    "name": "David Pocock",
+    "party": "Independent",
+    "speeches": 3
+   },
+   {
+    "name": "Steve Georganas",
+    "party": "Labor",
+    "speeches": 3
+   },
+   {
+    "name": "Nicolette Boele",
+    "party": "Independent",
+    "speeches": 3
+   },
+   {
+    "name": "Cameron Caldwell",
+    "party": "LNP",
+    "speeches": 3
+   },
+   {
+    "name": "Leon Rebello",
+    "party": "LNP",
+    "speeches": 3
+   },
+   {
+    "name": "Katy Gallagher",
+    "party": null,
+    "speeches": 3
+   },
+   {
+    "name": "Barbara Pocock",
+    "party": "Greens",
+    "speeches": 2
+   }
+  ],
+  "parties": [
+   {
+    "party": "Labor",
+    "speeches": 29
+   },
+   {
+    "party": "Independent",
+    "speeches": 11
+   },
+   {
+    "party": "LNP",
+    "speeches": 10
+   },
+   {
+    "party": "Liberal",
+    "speeches": 8
+   },
+   {
+    "party": "Greens",
+    "speeches": 7
+   },
+   {
+    "party": "Nationals",
+    "speeches": 2
+   },
+   {
+    "party": "JLN",
+    "speeches": 2
+   },
+   {
+    "party": "Centre Alliance",
+    "speeches": 1
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:58:13+00:00",
+ "corpus_resources": 609644
+}

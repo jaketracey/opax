@@ -1,0 +1,299 @@
+{
+ "year": 2001,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2001, and what positions did members and parties take? Debates that year included The Tampa affair, September 11, The Ansett collapse and Poker machines.",
+  "prompt": "year-brief-v1",
+  "answer": "The collapse of Ansett Airlines dominated parliamentary debate in 2001, with the opposition Labor Party heavily criticising the Howard government's handling of the crisis. Labor speakers, including the member for Corio, argued that the government, particularly Deputy Prime Minister and Minister for Transport and Regional Services John Anderson, had failed in its responsibilities to protect Australian jobs and regional communities. They contrasted the government's inaction with the efforts of Qantas, Virgin and the armed forces in cleaning up the \"mess\" and highlighted the plight of Ansett employees and small businesses, such as the Manelys of Bathurst who lost their Hazelton Airlines turnaround business. The government, in turn, accused Labor of desperation and of deflecting attention from the reasons for Ansett's failure.\n\nThe government's Interactive Gambling Bill 2001 and its subsequent amendment also sparked significant debate. The government, led by ministers such as the one who summed up the bill, argued that a ban on interactive gambling services was necessary to prevent the escalation of harmful gambling, noting that states and territories had failed to agree on a national regulatory code. They rejected Labor's calls for a comprehensive regulatory regime, arguing that regulation would stimulate the growth of this form of gambling. The opposition, including the shadow minister who moved a second reading amendment, condemned the government's approach as \"unworkable, hypocritical and inconsistent,\" claiming it would drive Australians to offshore providers with links to organised crime and inadequate consumer protections. The debate also touched on the broader social harms of poker machines, with some members, like the member for Calwell, expressing concern about all forms of gambling.\n\nThe Tampa affair, involving a ship carrying asylum seekers, was another major issue, with the opposition leader, Kim Beazley, accusing the Prime Minister of a \"major breach of trust\" over the introduction of draconian legislation. Beazley argued that the government had failed to consult with Indonesia and had sought unnecessary powers, while offering bipartisan support for a solution that ensured the safety of those on board. The government, in response, framed the issue as one of national security and sovereignty. The year also saw bipartisan support for the Centenary of Federation celebrations, with the House agreeing to meet in Melbourne in May to mark the centenary of the first parliament.",
+  "sources": [
+   {
+    "slug": "speech-65404",
+    "title": "Warren Entsch — 2001-06-28",
+    "speaker": "Warren Entsch",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2001-06-28",
+    "cited": true
+   },
+   {
+    "slug": "speech-69249",
+    "title": "Martin Ferguson — 2001-09-18",
+    "speaker": "Martin Ferguson",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2001-09-18",
+    "cited": true
+   },
+   {
+    "slug": "speech-70324",
+    "title": "Ian Causley — 2001-09-25",
+    "speaker": "Ian Causley",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2001-09-25",
+    "cited": true
+   },
+   {
+    "slug": "speech-71084",
+    "title": "Peter Slipper — 2001-09-27",
+    "speaker": "Peter Slipper",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2001-09-27",
+    "cited": true
+   },
+   {
+    "slug": "speech-71067",
+    "title": "Stephen Smith — 2001-09-27",
+    "speaker": "Stephen Smith",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2001-09-27",
+    "cited": true
+   },
+   {
+    "slug": "speech-71082",
+    "title": "Peter Slipper — 2001-09-27",
+    "speaker": "Peter Slipper",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2001-09-27",
+    "cited": true
+   },
+   {
+    "slug": "speech-57251",
+    "title": "Peter McGauran — 2001-02-27",
+    "speaker": "Peter McGauran",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2001-02-27",
+    "cited": false
+   },
+   {
+    "slug": "speech-58316",
+    "title": "Mark Latham — 2001-03-06",
+    "speaker": "Mark Latham",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2001-03-06",
+    "cited": false
+   },
+   {
+    "slug": "speech-58114",
+    "title": "Kim Beazley — 2001-03-06",
+    "speaker": "Kim Beazley",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2001-03-06",
+    "cited": false
+   },
+   {
+    "slug": "speech-58445",
+    "title": "John Howard — 2001-03-07",
+    "speaker": "John Howard",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2001-03-07",
+    "cited": false
+   },
+   {
+    "slug": "speech-58447",
+    "title": "John Howard — 2001-03-07",
+    "speaker": "John Howard",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2001-03-07",
+    "cited": false
+   },
+   {
+    "slug": "speech-58444",
+    "title": "John Howard — 2001-03-07",
+    "speaker": "John Howard",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2001-03-07",
+    "cited": false
+   },
+   {
+    "slug": "speech-65453",
+    "title": "Julie Bishop — 2001-06-28",
+    "speaker": "Julie Bishop",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2001-06-28",
+    "cited": false
+   },
+   {
+    "slug": "speech-66302",
+    "title": "Michael Lee — 2001-08-08",
+    "speaker": "Michael Lee",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2001-08-08",
+    "cited": false
+   },
+   {
+    "slug": "speech-68290",
+    "title": "Peter Slipper — 2001-08-28",
+    "speaker": "Peter Slipper",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2001-08-28",
+    "cited": false
+   },
+   {
+    "slug": "speech-68523",
+    "title": "Kevin Andrews — 2001-08-29",
+    "speaker": "Kevin Andrews",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2001-08-29",
+    "cited": false
+   },
+   {
+    "slug": "speech-68794",
+    "title": "Kim Beazley — 2001-08-30",
+    "speaker": "Kim Beazley",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2001-08-30",
+    "cited": false
+   },
+   {
+    "slug": "speech-69393",
+    "title": "Kim Beazley — 2001-09-19",
+    "speaker": "Kim Beazley",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2001-09-19",
+    "cited": false
+   },
+   {
+    "slug": "speech-69703",
+    "title": "Jackie Kelly — 2001-09-20",
+    "speaker": "Jackie Kelly",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2001-09-20",
+    "cited": false
+   },
+   {
+    "slug": "speech-71078",
+    "title": "Andrew Theophanous — 2001-09-27",
+    "speaker": "Andrew Theophanous",
+    "party": "Independent",
+    "state": "federal",
+    "date": "2001-09-27",
+    "cited": false
+   }
+  ],
+  "cited_count": 6,
+  "seconds": 9.9,
+  "tokens": {
+   "input": 9380,
+   "output": 458
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 20 strongest passages the knowledge box retrieved for 2001; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2001 run through /api/search (hybrid retrieval, from=2001&to=2001, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "200 distinct speeches among the 200 strongest matches for the year's 4 debates - not every speech given in 2001, and the index is still loading.",
+  "probes": [
+   {
+    "q": "Tampa asylum seekers border protection",
+    "label": "The Tampa affair",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "September 11 terrorist attacks",
+    "label": "September 11",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "Ansett collapse airline",
+    "label": "The Ansett collapse",
+    "retrieved": 50,
+    "truncated": true
+   },
+   {
+    "q": "poker machines gambling",
+    "label": "Poker machines",
+    "retrieved": 50,
+    "truncated": true
+   }
+  ],
+  "retrieved": 200,
+  "unique_speeches": 200,
+  "unlabelled_party": 0,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Margaret Reid",
+   "Neil Andrew"
+  ],
+  "speakers": [
+   {
+    "name": "John Howard",
+    "party": "Liberal",
+    "speeches": 18
+   },
+   {
+    "name": "Kim Beazley",
+    "party": "Labor",
+    "speeches": 13
+   },
+   {
+    "name": "John Anderson",
+    "party": "Nationals",
+    "speeches": 9
+   },
+   {
+    "name": "Philip Ruddock",
+    "party": "Liberal",
+    "speeches": 8
+   },
+   {
+    "name": "Warren Snowdon",
+    "party": "Labor",
+    "speeches": 7
+   },
+   {
+    "name": "Andrew Theophanous",
+    "party": "Independent",
+    "speeches": 7
+   },
+   {
+    "name": "Alexander Downer",
+    "party": "Liberal",
+    "speeches": 7
+   },
+   {
+    "name": "Simon Crean",
+    "party": "Labor",
+    "speeches": 6
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 84
+   },
+   {
+    "party": "Labor",
+    "speeches": 79
+   },
+   {
+    "party": "Nationals",
+    "speeches": 28
+   },
+   {
+    "party": "Independent",
+    "speeches": 9
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:56:51+00:00",
+ "corpus_resources": 609644
+}

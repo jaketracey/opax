@@ -1,0 +1,282 @@
+{
+ "year": 2012,
+ "brief": {
+  "question": "What were the main debates in the Australian parliament in 2012, and what positions did members and parties take? Debates that year included The carbon tax begins, The NDIS, Offshore processing and The misogyny speech.",
+  "prompt": "year-brief-v1",
+  "answer": "The economy dominated parliamentary debate in 2012, with the government and opposition sharply divided. Prime Minister Julia Gillard framed the year's central contest as being about fundamental choices, arguing her government stood with working families through policies like Paid Parental Leave, tax cuts, and pension increases, while also building for the future with a clean energy economy, the National Broadband Network, and a new skills package. She characterised the opposition as standing still and favouring privileged interests. In contrast, the coalition, led by Tony Abbott, repeatedly attacked the government's carbon tax, arguing it would push up fuel and energy costs and weighed down the economy. The coalition moved several motions to suspend standing orders to force debates on the carbon tax's impact on fuel prices, all of which were defeated on party lines, with votes of 67 to 71 and 67 to 73. Coalition senators also criticised the government for guillotining debates on carbon tax-related bills, accusing the Labor Party and the Greens of denying proper parliamentary scrutiny.\n\nOffshore processing of asylum seekers was another major and contentious issue. The Migration Legislation Amendment (Offshore Processing and Other Measures) Bill 2011 was defeated in the House of Representatives on 15 August 2012 by a vote of 68 to 72, with Labor, Greens, and independent members voting against it. Following this, legislation to facilitate offshore processing on Manus Island and Nauru was passed on 16 August 2012. The Greens strongly opposed these deterrent policies, arguing they violated international law and the refugee convention and would not stop dangerous boat journeys. The coalition supported offshore processing, with Leader of the Opposition Tony Abbott outlining it as a priority. Some coalition members, including Dr Mal Washer, Russell Broadbent, and Judi Moylan, pushed for compromise and bipartisanship on the issue.",
+  "sources": [
+   {
+    "slug": "division-federal-representatives-2640",
+    "title": "House of Representatives division, 15 August 2012: Migration Legislation Amendment (Offshore Processing and Other Measures) Bill 2011 - Second Reading - Coalition's policies (part 1 of 2)",
+    "speaker": "Alan Tudge",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "division-federal-representatives-2640-p2",
+    "title": "House of Representatives division, 15 August 2012: Migration Legislation Amendment (Offshore Processing and Other Measures) Bill 2011 - Second Reading - Coalition's policies (part 2 of 2)",
+    "speaker": "Adam Bandt",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": true
+   },
+   {
+    "slug": "speech-248263",
+    "title": "Julia Gillard — 2012-02-07",
+    "speaker": "Julia Gillard",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2012-02-07",
+    "cited": true
+   },
+   {
+    "slug": "speech-816897",
+    "title": "Christine Milne — Questions without Notice — 2012-06-25",
+    "speaker": "Christine Milne",
+    "party": "Greens",
+    "state": "federal",
+    "date": "2012-06-25",
+    "cited": true
+   },
+   {
+    "slug": "division-federal-representatives-2645",
+    "title": "House of Representatives division, 16 August 2012: Motions — Carbon Pricing (part 1 of 2)",
+    "speaker": "Alan Tudge",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-2603",
+    "title": "House of Representatives division, 30 May 2012: Motions — Carbon Pricing (part 1 of 2)",
+    "speaker": "Alan Griffin",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-2604",
+    "title": "House of Representatives division, 30 May 2012: Motions — Carbon Pricing (part 1 of 2)",
+    "speaker": "Alan Griffin",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "division-federal-representatives-2645-p2",
+    "title": "House of Representatives division, 16 August 2012: Motions — Carbon Pricing (part 2 of 2)",
+    "speaker": "Adam Bandt",
+    "party": null,
+    "state": "federal",
+    "date": null,
+    "cited": false
+   },
+   {
+    "slug": "speech-813178",
+    "title": "Sean Edwards — Bills — 2012-02-09",
+    "speaker": "Sean Edwards",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2012-02-09",
+    "cited": false
+   },
+   {
+    "slug": "speech-249698",
+    "title": "Michael McCormack — 2012-02-14",
+    "speaker": "Michael McCormack",
+    "party": "Nationals",
+    "state": "federal",
+    "date": "2012-02-14",
+    "cited": false
+   },
+   {
+    "slug": "speech-816263",
+    "title": "Helen Polley — Committees — 2012-06-18",
+    "speaker": "Helen Polley",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2012-06-18",
+    "cited": false
+   },
+   {
+    "slug": "speech-816209",
+    "title": "Don Farrell — Bills — 2012-06-18",
+    "speaker": "Don Farrell",
+    "party": null,
+    "state": "federal",
+    "date": "2012-06-18",
+    "cited": false
+   },
+   {
+    "slug": "speech-816923",
+    "title": "Simon Birmingham — Bills — 2012-06-25",
+    "speaker": "Simon Birmingham",
+    "party": null,
+    "state": "federal",
+    "date": "2012-06-25",
+    "cited": false
+   },
+   {
+    "slug": "speech-817092",
+    "title": "Mathias Cormann — Bills — 2012-06-27",
+    "speaker": "Mathias Cormann",
+    "party": null,
+    "state": "federal",
+    "date": "2012-06-27",
+    "cited": false
+   },
+   {
+    "slug": "speech-817635",
+    "title": "Scott Ludlam — Bills — 2012-08-16",
+    "speaker": "Scott Ludlam",
+    "party": "Greens",
+    "state": "federal",
+    "date": "2012-08-16",
+    "cited": false
+   },
+   {
+    "slug": "speech-818373",
+    "title": "Sarah Hanson-Young — Bills — 2012-09-11",
+    "speaker": "Sarah Hanson-Young",
+    "party": "Greens",
+    "state": "federal",
+    "date": "2012-09-11",
+    "cited": false
+   },
+   {
+    "slug": "speech-820270",
+    "title": "Stephen Parry — Matters of Public Importance — 2012-11-19",
+    "speaker": "Stephen Parry",
+    "party": "Liberal",
+    "state": "federal",
+    "date": "2012-11-19",
+    "cited": false
+   },
+   {
+    "slug": "speech-820624",
+    "title": "Lisa Singh — Bills — 2012-11-26",
+    "speaker": "Lisa Singh",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2012-11-26",
+    "cited": false
+   }
+  ],
+  "cited_count": 4,
+  "seconds": 9.2,
+  "tokens": {
+   "input": 4439,
+   "output": 372
+  },
+  "model": "@preset/opax (deepseek-v4-flash via OpenRouter) through the knowledge box /ask",
+  "coverage": "Written from the 18 strongest passages the knowledge box retrieved for 2012; the index is still loading, so this is what the record shows so far."
+ },
+ "voices": {
+  "method": "The dialog's 4 curated probes for 2012 run through /api/search (hybrid retrieval, from=2012&to=2012, top_k=50), de-duplicated by speech, then tallied by speaker and party. Retrieval only: no model call.",
+  "coverage": "141 distinct speeches among the 142 strongest matches for the year's 4 debates - not every speech given in 2012, and the index is still loading.",
+  "probes": [
+   {
+    "q": "carbon tax begins compensation",
+    "label": "The carbon tax begins",
+    "retrieved": 40,
+    "truncated": true
+   },
+   {
+    "q": "national disability insurance scheme",
+    "label": "The NDIS",
+    "retrieved": 36,
+    "truncated": true
+   },
+   {
+    "q": "asylum seekers Nauru Manus offshore",
+    "label": "Offshore processing",
+    "retrieved": 28,
+    "truncated": true
+   },
+   {
+    "q": "misogyny sexism speech",
+    "label": "The misogyny speech",
+    "retrieved": 38,
+    "truncated": true
+   }
+  ],
+  "retrieved": 142,
+  "unique_speeches": 141,
+  "unlabelled_party": 44,
+  "bare_surnames_skipped": 0,
+  "presiding_rows_skipped": 0,
+  "presiding_excluded": [
+   "Anna Burke",
+   "John Hogg",
+   "Peter Slipper"
+  ],
+  "speakers": [
+   {
+    "name": "Julia Gillard",
+    "party": "Labor",
+    "speeches": 10
+   },
+   {
+    "name": "Mitch Fifield",
+    "party": null,
+    "speeches": 8
+   },
+   {
+    "name": "Tony Abbott",
+    "party": "Liberal",
+    "speeches": 7
+   },
+   {
+    "name": "Sarah Hanson-Young",
+    "party": "Greens",
+    "speeches": 6
+   },
+   {
+    "name": "Michaelia Cash",
+    "party": null,
+    "speeches": 6
+   },
+   {
+    "name": "Simon Birmingham",
+    "party": null,
+    "speeches": 5
+   },
+   {
+    "name": "Jenny Macklin",
+    "party": "Labor",
+    "speeches": 4
+   },
+   {
+    "name": "Marise Payne",
+    "party": null,
+    "speeches": 3
+   }
+  ],
+  "parties": [
+   {
+    "party": "Liberal",
+    "speeches": 42
+   },
+   {
+    "party": "Labor",
+    "speeches": 37
+   },
+   {
+    "party": "Greens",
+    "speeches": 12
+   },
+   {
+    "party": "Nationals",
+    "speeches": 6
+   }
+  ]
+ },
+ "generated_at": "2026-09-04T12:57:27+00:00",
+ "corpus_resources": 609644
+}
