@@ -1959,7 +1959,7 @@ function renderSearchDateRuler(years, q, f) {
       </svg>
       <div class="date-ruler-hits">${links}</div>
     </div>
-    <p class="fineprint">The shape of the cached retrieval window, not every matching speech in the corpus. Choose a year to filter the search.</p>`;
+`;
   box.hidden = false;
 }
 
