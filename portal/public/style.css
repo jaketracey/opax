@@ -1744,7 +1744,9 @@ a.ency-name:hover, a.ency-name:focus-visible {
 /* Parliamentarians / Parties / Donors: figures, a controls row (search first,
    then selects and the sort; wraps on phones), a hairline list whose rows
    are portrait | name and meta | figures, and a "Show more" button. */
-.dir-tiles { margin-bottom: 0.2rem; }
+/* A directory title stands on its own above the controls: no figures, no
+   sentence, just a breath of paper. */
+.dir-head { margin-bottom: 0.6rem; }
 .dir-controls { display: flex; flex-wrap: wrap; gap: 0.6rem 0.8rem; align-items: end; margin: var(--space-5) 0 var(--space-1); }
 .dir-controls input[type="search"] {
   flex: 1 1 240px; min-width: 0; min-height: 44px;

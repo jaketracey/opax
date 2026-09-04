@@ -3610,7 +3610,6 @@ let activeDirectory = null;
  * Render one directory into #subject-body.
  *   spec.kind      person | party | donor (the route and hash base)
  *   spec.title     serif heading; spec.lede: one sentence with the counts (HTML, optional)
- *   spec.tiles     [[value, label]] figures for the whole directory
  *   spec.items     rows; spec.text(item) is what the search box matches
  *   spec.filters   [{ key, label, options: [[value, label]], test(item, value) }]
  *                  or { key, label, check: true, test(item) } for a checkbox
@@ -3643,11 +3642,10 @@ function renderDirectory(spec) {
         </select></label>`;
   body.innerHTML = `
     <p class="kicker">Encyclopedia</p>
-    <div class="subject-head">
+    <div class="subject-head dir-head">
       <h2 id="subject-title" tabindex="-1">${esc(spec.title)}</h2>
       ${spec.lede ? `<p class="subject-tag"><span>${spec.lede}</span></p>` : ""}
     </div>
-    <div class="tiles tiles-compact dir-tiles">${spec.tiles.map(([v, l]) => tile(v, l)).join("")}</div>
     <form class="dir-controls" id="dir-controls" role="search" aria-label="Filter the list">
       <label class="visually-hidden" for="dir-q">Search ${esc(spec.title.toLowerCase())} by name</label>
       <input id="dir-q" type="search" autocomplete="off" spellcheck="false"
@@ -3835,8 +3833,6 @@ async function buildPeopleDirectory() {
   return {
     title: "Parliamentarians",
     lede: "",
-    tiles: [[num(items.length), "people listed"], [String(partyCounts.size), "parties"],
-      [String(stateCounts.size), "parliaments"], [num(speeches), "speeches in the corpus"], [num(withVotes), "with a voting record"]],
     items,
     text: (p) => `${p.name} ${p.full || ""} ${p.party || ""} ${(p.states || []).map((s) => STATE_NAMES[s] || s).join(" ")}`,
     filters: [
@@ -3933,8 +3929,6 @@ async function buildPartiesDirectory() {
   return {
     title: "Parties",
     lede: "",
-    tiles: [[num(items.length), "parties listed"], [num(live?.labelled), "speeches with a party label"],
-      [num(members), "directory members with a party"], [fmtMoney(aecTotal), "disclosed to the AEC, all parties"]],
     items,
     text: (p) => p.label,
     filters: [
@@ -4054,8 +4048,6 @@ async function buildDonorsDirectory() {
   return {
     title: "Donors",
     lede: "",
-    tiles: [[num(items.length), "donors listed"], [fmtMoney(aecTotal), "disclosed to the AEC"],
-      [String(partyCounts.size), "parties given to"], [num(withAccess), "with lobbyists or meetings"]],
     items,
     text: (d) => `${[...d.labels].join(" ")} ${d.industry || ""} ${d.group || ""} ${d._partyList.join(" ")}`,
     filters: [
@@ -4261,8 +4253,6 @@ async function buildCampaignersDirectory() {
     // The fourth tile counts the organisations naming NO party, not the ones
     // naming one. Most of the roster names none, and leading with that is what
     // keeps the party filter from reading as a map of who spends.
-    tiles: [[num(items.length), "organisations listed"], [fmtMoney(largest), CAMPAIGNER_PEAK_LABEL],
-      [num(returns), "annual returns covered"], [num(items.length - withParty), "naming no party at all"]],
     items,
     text: (e) => `${e.name} ${campaignerKindLabel(e.kind)} ${(e.return_types || []).join(" ")} ${e._parties.join(" ")}`,
     filters: [
@@ -4970,7 +4960,7 @@ function hideWombat() {
 // answer rail). One mount per slot, kept across shows; a hidden slot that
 // finishes loading late stays hidden.
 const loaders = new Map();
-async function showLoader(slotId, label) {
+async function showLoader(slotId, label, opts) {
   const slot = $(slotId);
   if (!slot) return;
   slot.hidden = false;
@@ -4979,7 +4969,7 @@ async function showLoader(slotId, label) {
   try {
     const mod = await import("/wombat.js");
     if (loaders.get(slotId)) return;
-    loaders.set(slotId, mod.mountWombat(slot, { label }));
+    loaders.set(slotId, mod.mountWombat(slot, { label, ...(opts || {}) }));
   } catch { /* the status text still carries the state */ }
 }
 function hideLoader(slotId) {
@@ -4988,9 +4978,12 @@ function hideLoader(slotId) {
 }
 // Loaders in slots a page rebuilds on every render: the controller cached
 // for the last visit points at a removed element, so it is dropped first.
+/* Page loaders wait a second or two, not a minute: the animal starts on stage
+   (see wombat.js `phase`) rather than walking on after the page has opened. */
+const PAGE_LOADER = { phase: -5.5 };
 function showPageLoader(slotId, label) {
   clearPageLoader(slotId);
-  return showLoader(slotId, label);
+  return showLoader(slotId, label, PAGE_LOADER);
 }
 function clearPageLoader(slotId) {
   loaders.get(slotId)?.destroy?.();

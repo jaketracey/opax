@@ -11,7 +11,8 @@
      w.destroy();
 
    Pass { animal: "wombat" | "echidna" | "platypus" | "emu" } to force one
-   (handy in tests); otherwise the pick is random.
+   (handy in tests); otherwise the pick is random. { phase: -5.5 } starts the
+   cycle that many seconds in, so a short wait opens with the animal on stage.
 
    The caller owns aria (role="status" on the container); the SVG is
    aria-hidden and the label is plain text. */
@@ -172,7 +173,7 @@ const ANIMALS = {
   56%, 100% { transform: rotate(0deg); }`,
     },
     extraCss: (name) => `
-.wb-a-${name} .wb-aux { transform-origin: 96% 45%; animation: wb-aux-${name} 16s ease-in-out infinite; }
+.wb-a-${name} .wb-aux { transform-origin: 96% 45%; animation: wb-aux-${name} 16s ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
 @keyframes wb-aux-${name} {
     ${gait(11, (even) => `transform: rotate(${even ? -2.5 : 2.5}deg)`, null, `transform: rotate(0deg)`)}
 }`,
@@ -262,10 +263,10 @@ function animalCss(name, a) {
   const legB = gait(a.step, swing(-a.legs), null, `transform: rotate(0deg)`);
 
   return `
-.wb-a-${name} .wb-beat { transform-origin: ${a.beat.origin}; animation: wb-beat-${name} 16s ease-in-out infinite; }
-.wb-a-${name} .wb-rock { animation: wb-rock-${name} 16s ease-in-out infinite; }
-.wb-a-${name} .wb-ph-a { animation: wb-lega-${name} 16s ease-in-out infinite; }
-.wb-a-${name} .wb-ph-b { animation: wb-legb-${name} 16s ease-in-out infinite; }
+.wb-a-${name} .wb-beat { transform-origin: ${a.beat.origin}; animation: wb-beat-${name} 16s ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
+.wb-a-${name} .wb-rock { animation: wb-rock-${name} 16s ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
+.wb-a-${name} .wb-ph-a { animation: wb-lega-${name} 16s ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
+.wb-a-${name} .wb-ph-b { animation: wb-legb-${name} 16s ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
 ${a.extraCss ? a.extraCss(name) : ""}
 @keyframes wb-beat-${name} {${a.beat.frames}
 }
@@ -303,7 +304,7 @@ function css() {
 .wb-trundle {
   position: absolute; bottom: 0; left: 0;
   width: 65px; height: 42px;
-  animation: wb-trundle 16s linear infinite;
+  animation: wb-trundle 16s linear infinite; animation-delay: var(--wb-phase, 0s);
 }
 .wb-svg { display: block; width: 100%; height: 100%; overflow: visible; }
 
@@ -380,7 +381,7 @@ function markup(name) {
   <p class="wb-label"><span class="wb-label-text"></span><span class="wb-dots" aria-hidden="true" hidden><i>.</i><i>.</i><i>.</i></span></p>`;
 }
 
-export function mountWombat(container, { label = "Checking the record. This can take up to a minute.", animal } = {}) {
+export function mountWombat(container, { label = "Checking the record. This can take up to a minute.", animal, phase } = {}) {
   if (!container) throw new TypeError("mountWombat: container is required");
   if (animal !== undefined && !Object.hasOwn(ANIMALS, animal)) {
     throw new TypeError(`mountWombat: unknown animal "${animal}"`);
@@ -389,6 +390,11 @@ export function mountWombat(container, { label = "Checking the record. This can 
   const kinds = Object.keys(ANIMALS);
   const wrap = document.createElement("div");
   wrap.className = "wb-wrap";
+  /* `phase`, in seconds, starts the 16s cycle part-way through: every part of
+     the animal shares the delay, so the gait stays in step with the walk. A
+     wait that lasts a second or two would otherwise end before the animal
+     had walked on; -5.5 puts it on stage mid-stride, a beat from its pause. */
+  if (typeof phase === "number" && Number.isFinite(phase)) wrap.style.setProperty("--wb-phase", `${phase}s`);
   wrap.innerHTML = markup(animal ?? kinds[Math.floor(Math.random() * kinds.length)]);
   const labelEl = wrap.querySelector(".wb-label-text");
   const dotsEl = wrap.querySelector(".wb-dots");
