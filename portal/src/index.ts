@@ -1483,6 +1483,45 @@ async function apiRecent(env: Env): Promise<Response> {
   return withCacheStatus(out, 'MISS')
 }
 
+/**
+ * Machine summaries for a handful of resources at once, for list cards that
+ * come from /find (which returns paragraphs, never the summary text field).
+ * One small per-field KB call per rid — GET /resource/{rid}/text/da-summary-t-body
+ * is ~500 bytes — never the whole resource. Rids without a summary (the pass
+ * has not reached them) are simply absent from the answer. Up to 24 rids;
+ * cached an hour on the sorted rid set.
+ */
+const BRIEF_MAX = 24
+const RID_RE = /^[0-9a-f]{32}$/
+async function apiBrief(url: URL, env: Env): Promise<Response> {
+  const rids = [...new Set((url.searchParams.get('rids') ?? '').split(',').map((r) => r.trim()).filter((r) => RID_RE.test(r)))]
+    .sort()
+    .slice(0, BRIEF_MAX)
+  if (!rids.length) return json({ briefs: {} })
+  const cache = caches.default
+  const cacheKey = new Request(`https://opax.com.au/api/brief?rids=${rids.join(',')}`)
+  const cached = await cache.match(cacheKey)
+  if (cached) return withCacheStatus(cached, 'HIT')
+  const briefs: Record<string, string> = {}
+  await Promise.all(
+    rids.map(async (rid) => {
+      try {
+        const res = await kbFetch(env, `/resource/${rid}/text/da-summary-t-body`)
+        if (!res.ok) return
+        const data = (await res.json()) as { value?: { body?: string } }
+        const body = data.value?.body?.trim()
+        if (body) briefs[rid] = body
+      } catch {
+        /* a missing brief is not an error */
+      }
+    }),
+  )
+  const out = json({ briefs })
+  out.headers.set('cache-control', 'public, max-age=3600')
+  await cache.put(cacheKey, out.clone())
+  return withCacheStatus(out, 'MISS')
+}
+
 // --- topic pages ------------------------------------------------------------
 // Live label counts from the enrichment pass. The labeller is MULTI-label and
 // still running, so per-topic facet counts must never be summed into "speeches
@@ -2844,6 +2883,9 @@ async function route(
       }
       if (url.pathname === '/api/recent' && request.method === 'GET') {
         return await apiRecent(env)
+      }
+      if (url.pathname === '/api/brief' && request.method === 'GET') {
+        return await apiBrief(url, env)
       }
       if (url.pathname === '/api/topics' && request.method === 'GET') {
         return await apiTopics(env)

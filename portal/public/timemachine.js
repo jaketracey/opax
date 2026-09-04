@@ -461,6 +461,13 @@ const CSS = `
   font-family: Merriweather, Georgia, serif; font-size: 0.85rem;
   color: var(--ink-soft, #575C52); line-height: 1.55; margin: 0;
 }
+.tm-card-brief {
+  font-size: 0.85rem; color: var(--ink-soft, #575C52); line-height: 1.55; margin: 0;
+}
+.tm-brief-kicker {
+  font: 600 0.65rem/1 var(--sans, system-ui, sans-serif); letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--bronze, #8A6A2B); margin-right: 0.5em;
+}
 
 /* Loading / empty states */
 .tm-skeleton {
@@ -911,6 +918,7 @@ export function mountTimeMachine(container, opts = {}) {
     const tail = [r.state, fmtDate(r.date)].filter(Boolean).join(' · ')
     if (tail) meta.appendChild(document.createTextNode((r.speaker || r.party ? ' · ' : '') + tail))
     fillPortrait(meta)
+    if (r.resource) card.dataset.rid = r.resource
     card.append(chip, title, meta)
     // A real passage only — frontier-year records sometimes index as title
     // stubs, and quoting "Jane Doe — 2005-02-14" back at the reader is silly.
@@ -921,6 +929,33 @@ export function mountTimeMachine(container, opts = {}) {
       card.appendChild(snip)
     }
     return card
+  }
+
+  // Machine summaries ("In brief" on the doc page) where the enrichment pass
+  // has reached a speech: swap the opening-words quote for the summary. One
+  // small /api/brief call per render; speeches the pass has not reached keep
+  // their quote, so the grid never waits on this.
+  async function applyBriefs(rids, seq, signal) {
+    if (!rids.length) return
+    let briefs = {}
+    try {
+      const data = await fetchJSON(`/api/brief?rids=${encodeURIComponent(rids.join(','))}`, signal)
+      briefs = data?.briefs || {}
+    } catch {
+      return
+    }
+    if (seq !== searchSeq) return
+    for (const card of cardsEl.querySelectorAll('.tm-card[data-rid]')) {
+      const text = briefs[card.dataset.rid]
+      if (!text) continue
+      const brief = el('p', 'tm-card-brief')
+      const kicker = el('span', 'tm-brief-kicker')
+      kicker.textContent = 'In brief'
+      brief.append(kicker, document.createTextNode(text))
+      const quote = card.querySelector('.tm-card-snippet')
+      if (quote) quote.replaceWith(brief)
+      else card.appendChild(brief)
+    }
   }
 
   // Under the topic lens an empty year has TWO possible causes (the archive
@@ -1061,6 +1096,7 @@ export function mountTimeMachine(container, opts = {}) {
     if (year > lastGoodYear) lastGoodYear = year
     cardsEl.replaceChildren()
     for (const { probe, r } of picks) cardsEl.appendChild(makeCard(probe.label, r))
+    applyBriefs(picks.map(({ r }) => r.resource).filter(Boolean), seq, signal)
 
     // A thin year means the machine is mid-shelving it, not that parliament
     // went quiet — say so. Under the topic lens the labelling pass is the
