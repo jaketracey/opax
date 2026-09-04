@@ -434,8 +434,11 @@ const CSS = `
     width: 14px; height: 14px; margin-top: 15px; }
   .mm-root[data-mm-chrome='full'] .mm-scrub input[type='range']::-moz-range-thumb {
     width: 14px; height: 14px; }
-  .mm-root[data-mm-chrome='full'] .mm-cpi { flex: none; width: 143px; margin: 0;
+  .mm-root[data-mm-chrome='full'] .mm-cpi { flex: none; width: auto; margin: 0;
     padding: 0 0 0 8px; border-top: 0; border-left: 1px solid #e4e1d8; }
+  .mm-root[data-mm-chrome='full'] .mm-cpi-name { font-size: 11px; white-space: nowrap; }
+  .mm-root[data-mm-chrome='full'] .mm-cpi-note { display: none; }
+  .mm-root[data-mm-chrome='full'] .mm-cpi-info { display: flex; }
   /* The compact scrub is small enough to keep on a phone; it moves to the
      top left, which mini chrome leaves empty, clear of the card's sheet. */
   .mm-scrub-mini { display: flex; top: 8px; left: 8px; bottom: auto; }
