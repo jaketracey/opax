@@ -13,7 +13,7 @@ manual; this is the account of the work and its limits.
 | 2 | Worker: `bill` kind, `/bill/<key>` route | done; `npx tsc --noEmit -p .` clean, route exercised under `wrangler dev` |
 | 3 | `scripts/publish_bills.py` | done; five real bills live in the box, create/update/unchanged all verified |
 | 4 | `docs/BILLS-EXPOSURE.md`, this report | done |
-| 5 | full-mode rerun and bulk publish | **not run**; neither ready marker exists |
+| 5 | full-mode rerun and bulk publish | **not run**; neither ready marker exists. Rehearsed dry end to end against the live registry: 2,969 files, all passing the shape test, 6 summaries, 6 would-create |
 
 ## The projection
 
@@ -117,13 +117,31 @@ are `POST /resources` and `PATCH /slug/<slug>`.
 ## Not done, and why
 
 **The full-mode rerun and the bulk publish.** Neither `bills_registry_ready` nor
-`bills_summaries_ready` exists. At the last check `bills_v2` held 2,760 rows and
-was still growing, `bill_links` was empty and `bill_summaries` did not exist, so
-there is not one bill with an `ok` summary to publish. The commands are in
-`docs/BILLS-EXPOSURE.md` section 4 and the run is a few minutes' work once the
-markers land.
+`bills_summaries_ready` exists, so both agents are still building and the real
+run waits on them. The commands are in `docs/BILLS-EXPOSURE.md` section 4.
 
-A trial against the half-built registry proves the switch works:
+It is no longer a run whose behaviour has to be guessed at. Measured
+2026-09-05 09:55, with the registry still growing:
+
+| Table | Rows |
+| --- | --- |
+| `bills_v2` | 2,969 |
+| `bill_events` | 31,377 |
+| `bill_sources` | 8,301 |
+| `bill_links` | 5,412 (3,777 division over 916 bills, 1,635 act, 0 speech) |
+| `bill_summaries` | 8, of which 6 `ok` and 2 `flagged` |
+
+A full registry-mode export over those tables ran clean in 6.4 seconds and wrote
+2,969 bill files, and **all 2,969 pass the contract shape test**. `bill_summaries`
+matches the reader column for column, and all 6 `ok` summaries project with the
+contract shape: three sentences, three to six changes, `basis`, `as_of` and the
+attribution line. The bulk publish command was then rehearsed against that output
+with `--with-summary-only --dry-run`: 6 bills to consider, 6 would-create, no
+writes. So the switch, the summaries path and the publish pass are all exercised
+end to end; what is missing is the data, not the code.
+
+An earlier trial against the half-built registry, kept because it is what the
+counts below were taken from:
 
 | | Legacy | Registry |
 | --- | --- | --- |
@@ -138,6 +156,12 @@ A trial against the half-built registry proves the switch works:
 Parliament's close carry the bare topic `Bills` with no title in them. Section 3
 records the same fall-off. Speeches on registry-mode bills stay at zero until
 `bill_links` supplies them or the Hansard debate hierarchy is recovered.
+
+`bill_links` has since filled and does not close this gap: 5,412 rows, none of
+them a speech link. The exporter reads them the moment they exist, so the gap
+belongs to the registry agent, and a registry-mode bill page will have no
+speeches until it is closed. That is the single largest known hole in what the
+full run would publish.
 
 ## For the other agents
 

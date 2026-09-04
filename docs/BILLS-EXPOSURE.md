@@ -264,6 +264,11 @@ it. Section 3 records the same fall-off. Speeches on registry-mode bills will
 stay at zero until `bill_links` supplies them or the Hansard debate hierarchy
 is recovered.
 
+`bill_links` has since filled, and it does not close this gap. As of 2026-09-05
+it holds 5,412 rows and not one is a speech link: 3,777 division links over 916
+bills, and 1,635 act links. The exporter reads speech links the moment they
+exist, so this stays with the registry agent.
+
 One shape mismatch to settle with the registry agent: the contract calls
 `aliases_json` a list of aliases, and the registry currently writes an object of
 listing extras (`listing_title`, `type`, `sponsor_aph_id`, `sponsor_party`,
@@ -280,11 +285,25 @@ Once `bills_v2`, `bill_links` and `bill_summaries` are in the database:
 scp scripts/export_bills.py desktop:/tmp/
 ssh desktop 'python3 /tmp/export_bills.py --out /tmp/bills'      # no --legacy
 rsync -a --delete desktop:/tmp/bills/ portal/public/bills/
+node portal/test/bills.test.mjs                                  # before committing
 python3 scripts/export_bills.py --fill-briefs portal/public/bills
 python3 scripts/publish_bills.py --with-summary-only --dry-run
 python3 scripts/publish_bills.py --with-summary-only
 python3 scripts/publish_bills.py --verify
 ```
+
+The shape test takes a directory, so a run can be checked where it lands before
+it is copied over the fixture: `node portal/test/bills.test.mjs /tmp/bills`.
+
+### The whole path was rehearsed dry, 2026-09-05
+
+Against the still-growing registry (2,969 `bills_v2` rows, 5,412 `bill_links`,
+8 `bill_summaries` of which 6 `ok`): the export ran in 6.4 seconds, wrote 2,969
+bill files, and every one passed the shape test. `bill_summaries` matches the
+reader column for column and all 6 `ok` summaries projected with the contract
+shape. `publish_bills.py --with-summary-only --dry-run` over that output
+reported 6 to consider and 6 would-create, with no writes. The remaining risk in
+section 4 is the data, not the code.
 
 The keys change from `au-federal-alrc-<id>` to `au-federal-r<billhome id>`, so
 the full run writes new files and leaves the legacy ones behind. Delete the

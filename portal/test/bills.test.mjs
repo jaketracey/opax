@@ -1,14 +1,17 @@
 // The bills projection against docs/BILLS-CONTRACT.md. The UI builds against
 // these files, so a shape change should fail here before it reaches a page.
-//   node portal/test/bills.test.mjs
+//   node portal/test/bills.test.mjs                 # the committed fixture
+//   node portal/test/bills.test.mjs /tmp/bills      # a run before you commit it
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const billsDir = join(here, "..", "public", "bills");
-assert.ok(existsSync(billsDir), "portal/public/bills exists");
+const billsDir = process.argv[2]
+  ? resolve(process.argv[2])
+  : join(here, "..", "public", "bills");
+assert.ok(existsSync(billsDir), `${billsDir} exists`);
 
 const INDEX_KEYS = [
   "key", "title", "short_title", "jurisdiction", "parliament", "introduced",
