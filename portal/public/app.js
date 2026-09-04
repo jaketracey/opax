@@ -6199,8 +6199,11 @@ function resetSearchAnswerFold() {
     sk.append(...[92, 100, 96, 60].map((w) => { const b = document.createElement("i"); b.style.width = `${w}%`; return b; }));
     body.replaceChildren(sk);
   }
-  if (btn) { btn.hidden = true; btn.setAttribute("aria-expanded", "false"); }
+  // Folded: the control is present but invisible (its line is reserved);
+  // unfolded (wide screens): absent.
+  if (btn) { btn.hidden = !narrow; btn.classList.remove("is-ready"); btn.setAttribute("aria-expanded", "false"); }
 }
+const searchAnswerFolds = () => window.matchMedia(SEARCH_ANSWER_FOLD_QUERY).matches;
 function searchAnswerArrived() {
   const box = $("search-answer");
   box.classList.remove("is-loading");
@@ -6210,9 +6213,9 @@ function offerSearchAnswerReadMore() {
   const box = $("search-answer");
   const body = $("search-answer-body");
   const btn = $("search-answer-readmore");
-  if (!btn || !box.classList.contains("is-clamped") || !btn.hidden) return;
+  if (!btn || !box.classList.contains("is-clamped") || btn.classList.contains("is-ready")) return;
   if (body.scrollHeight <= body.clientHeight + 8) return;
-  btn.hidden = false;
+  btn.classList.add("is-ready");
   btn.onclick = () => {
     box.classList.remove("is-clamped");
     btn.hidden = true;
@@ -6227,6 +6230,8 @@ function foldSearchAnswer() {
   // A short summary needs no fold: let it stand whole.
   if (body.scrollHeight <= body.clientHeight + 8) { box.classList.remove("is-clamped"); $("search-answer-readmore").hidden = true; return; }
   offerSearchAnswerReadMore();
+  // Overflowing but never offered (a rare race): offer it now.
+  if (!$("search-answer-readmore").classList.contains("is-ready")) { $("search-answer-readmore").classList.add("is-ready"); }
 }
 
 async function runSearchAnswer(q, f, mySeq) {
@@ -6241,11 +6246,11 @@ async function runSearchAnswer(q, f, mySeq) {
   $("search-answer-sources").replaceChildren();
   $("search-answer-fold").hidden = true;
   $("search-answer-fold").open = false;
-  $("search-answer-more").textContent = "";
+  $("search-answer-more").textContent = "Generating from the retrieved passages…";
   setStatus($("search-answer-status"), "Reading the record…");
   resetSearchAnswerFold();
   $("search-answer-status").classList.add("visually-hidden"); // announced; the loader shows it
-  showLoader("search-answer-wombat", "");
+  if (!searchAnswerFolds()) showLoader("search-answer-wombat", ""); // phones: the skeleton is the loader
   // Silent for the first ten seconds; then a small word so a long wait reads
   // as patience, not a stall.
   clearTimeout(searchAnswerStill);
@@ -6282,7 +6287,7 @@ async function runSearchAnswer(q, f, mySeq) {
         if (!mine()) return;
         streamed = false;
         live.reset();
-        showLoader("search-answer-wombat", "");
+        if (!searchAnswerFolds()) showLoader("search-answer-wombat", "");
       },
     });
     live.stop();

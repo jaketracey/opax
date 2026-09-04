@@ -1054,10 +1054,12 @@ button.link.result-title:hover { color: var(--bronze-ink); }
     max-height: 9.9em; overflow: hidden;
     -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent); mask-image: linear-gradient(to bottom, #000 72%, transparent);
   }
-  .search-answer.is-clamped .answer-readmore { display: inline-block; }
-  /* While the summary streams in, the folded box already stands at its full
-     height so the results below hold still; the skeleton marks the wait. */
-  .search-answer.is-loading .answer-compact { min-height: 9.9em; }
+  /* The folded box stands at its full height from the skeleton to the last
+     word, and the Read more line keeps its space before it is needed, so the
+     results below hold still throughout. */
+  .search-answer.is-clamped .answer-compact { min-height: 9.9em; }
+  .search-answer.is-clamped .answer-readmore { display: inline-block; visibility: hidden; }
+  .search-answer.is-clamped .answer-readmore.is-ready { visibility: visible; }
 }
 .answer-skeleton { display: grid; gap: 0.7em; padding-top: 0.35em; }
 .answer-skeleton i {
