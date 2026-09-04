@@ -2,8 +2,8 @@
  "slug": "media",
  "title": "Media Ownership",
  "blurb": "Concentration, regulation and the platforms: parliament on the press.",
- "generated_at": "2026-09-02T03:24:41+00:00",
- "corpus_resources": 536153,
+ "generated_at": "2026-09-04T11:05:42+00:00",
+ "corpus_resources": 609644,
  "stats": {
   "speech_count": 119509,
   "unique_speakers": 2883,
@@ -313,19 +313,19 @@
  },
  "brief": {
   "question": "What does the parliamentary record show about media ownership?",
-  "answer": "The parliamentary record shows Australian Labor Party members consistently argued that cross-media ownership rules, introduced in 1987\u201388 under Paul Keating, were essential to protect democracy and were under sustained attack by the Howard government. Speakers cited concentration statistics to justify retaining the rules: News Ltd controlled around two-thirds of capital city and national newspapers, three-quarters of Sunday newspapers and nearly half the suburban newspaper market, while Publishing and Broadcasting Ltd controlled the Nine network, three metropolitan and one regional television licence reaching more than half the potential audience, 65 magazines, and online operations including ninemsn. One speaker reported that 80 per cent of Australians opposed further concentration of media ownership, and that 88 per cent of Australians used free-to-air television, 76 per cent radio and 76 per cent newspapers as news sources, compared with only 10 per cent for pay TV and 11 per cent for the internet.\n\nThe debate shifted from the Broadcasting Services Amendment (Media Ownership) Bill 2002 to a further bill in 2006, but Labor's core critique remained the same: the government wanted to let one proprietor own newspapers, television and radio in the same market. In 2002, Senator Alston argued that \"ownership of media per se is irrelevant\" and that a \"plethora of sources\" made old rules redundant. By 2006, Senator Coonan was reported to have flagged allowing newspaper proprietors to own television, radio, monopoly pay TV and internet interests. Labor speakers quoted earlier statements by government frontbenchers\u2014including the member for Hinkler in 1995 and the member for Bradfield in 1997\u2014warning against media concentration, and accused those members of hypocrisy for supporting the later bills. Labor also suggested that rather than relaxing cross-media rules, the government should relax foreign ownership restrictions to bring in new competitors.\n\nThe sharpest disagreement was over whether ownership actually controls media content. Government spokesmen claimed that separate editorial processes could protect diversity and that ownership was not the key issue. Labor responded with the maxim \"he who pays the piper calls the tune,\" arguing that proprietors ultimately determine what is published or broadcast, and that an editorial separation test administered by the Australian Broadcasting Authority\u2014whose chairman, Professor David Flint, had argued that journalist independence outweighs ownership\u2014was inadequate. Speakers also accused the government of acting on behalf of Rupert Murdoch and Kerry Packer, with one Labor member calling the 2006 bill part of a \"dirty\" deal between Prime Minister Howard and Packer to destroy the cross-media laws, and describing the result as the most concentrated media ownership in Australian history.\n\nThe government's public promise was that the changes would preserve local news and separate editorial voices: the Prime Minister's answer to a question on notice said exemptions from cross-media rules would be granted if companies maintained existing levels of locally produced news and current affairs and put in place separate editorial processes. Opposition speakers dismissed this as nonsense, noting that the bill allowed a proprietor to own a dominant newspaper, television station and radio stations in the same market, and warning of scenarios where PBL could buy Fairfax or News Corp could take over a free-to-air network. Labor claimed the real outcome would be three huge conglomerates based around the commercial television networks, reduced newsroom independence and fewer journalists willing to criticise their employers, with one speaker warning that the legislation would hand media owners influence over future elections."
+  "answer": "The strongest and most decision-relevant finding in the record is that Labor speakers repeatedly argued that Australia already had a highly concentrated media market, dominated by Rupert Murdoch\u2019s News Ltd and the Packer family\u2019s Publishing and Broadcasting Ltd, and that the Howard government\u2019s proposed changes would make concentration worse. Labor quoted figures showing News Ltd controlled two-thirds of capital city and national newspapers, almost three-quarters of Sunday newspapers, almost half of suburban newspapers and a quarter of regional newspapers, with a quarter share in Foxtel. PBL was said to reach more than half the potential television audience, publish 65 magazines, and hold major online and pay-TV interests. Against this, one Labor speaker cited research that 80 per cent of Australians opposed further media concentration, and another cited Productivity Commission findings that a proprietor\u2019s business and editorial interests were likely to influence content and opinion. Cross-media rules introduced under the Keating government in the late 1980s were defended as preventing any one proprietor being both \u201cqueen of the screen\u201d and \u201cprince of print,\u201d and as preserving at least some diversity.\n\nThe debate shifted over time through repeated attempts at legislative change: the Broadcasting Services Amendment (Media Ownership) Bill 2002, a second 2002 bill, and the 2006 bill. The government\u2019s stated case, put by Senator Alston and others, was that ownership of media \u201cper se is irrelevant,\u201d that new media and the internet created a \u201cplethora of sources,\u201d and that separate editorial processes could protect diversity. Labor responded with evidence that most Australians still relied on traditional media\u201488 per cent used free-to-air television for news, 76 per cent used radio and 76 per cent used newspapers, while only 10 per cent used pay TV and 11 per cent used the internet\u2014and that the major internet news sites were owned by the same established media players. Labor also noted that the 2002 bill initially would have allowed one proprietor to own television, newspapers and radio in one market, and that after Senate lobbying the government signalled it might settle for two of the three, which Labor said exposed the real agenda.\n\nThe sharpest disagreement was over whether ownership itself determines media content and democratic influence. Labor speakers insisted that \u201che who pays the piper calls the tune\u201d and that no editorial separation test could protect the public when a proprietor can hire and fire journalists and set the ultimate direction. They rejected the idea that journalists\u2019 independence could be separated from their employer\u2019s commercial interests, and attacked Australian Broadcasting Authority chairman Professor David Flint for arguing ownership did not dominate content. Labor also accused the government of hypocrisy, noting that coalition backbenchers such as the member for Hinkler, the future Minister for Citizenship and Multicultural Affairs, and the Minister for Education, Science and Training had spoken strongly against concentration in the 1990s but were silent once on the front bench. The most incendiary charge came from the member for Lowe, who alleged a secret deal between Prime Minister Howard and Kerry Packer dating from 1995, called the 2006 bill a \u201cdisgraceful piece of chicanery,\u201d and claimed it would allow PBL to use a war chest of between $4\u00bd billion and $4\u00be billion\u2014or possibly $6 billion\u2014to buy more casino assets and dominate media, including acquiring Fairfax.\n\nOn promises versus outcomes, the record shows the government promised safeguards, but Labor said those promises were hollow. In answer to a question from the member for Lowe, the Prime Minister said the bill would use exemptions and undertakings to maintain existing levels of locally produced news and current affairs and to require separate editorial processes. Labor dismissed this as nonsense, noting it said nothing about dominant city markets and would entrench concentration rather than protect diversity. Labor also argued that the proposed editorial separation test would create unprecedented government interference in media operations, a position criticised by the Australian Press Council and Fairfax as well as by public-interest and industry groups. Despite the government\u2019s claims that its changes would enhance diversity, Labor concluded that the effect would be to create three huge conglomerates, allow Packer to buy Fairfax, and allow Murdoch to take a free-to-air network, leaving Australia with greater concentration, fewer independent newsrooms, and a diminished capacity for the media to hold governments accountable."
  },
  "key_stats": [
   {
    "value": "64.2%",
    "label": "Murdoch titles' metropolitan circulation share",
-   "detail": "Murdoch-owned titles account for 64.2% of metropolitan circulation, cited in a 2017 debate on the two-out-of-three rule.",
+   "detail": "Murdoch-owned titles account for 64.2% of metropolitan circulation, cited by Brian Mitchell in 2017.",
    "slug": "speech-349886",
    "source_title": "Brian Mitchell \u2014 2017-06-21"
   },
   {
-   "value": "75 per cent",
-   "label": "Reach rule threshold",
+   "value": "75 per cent reach rule",
+   "label": "Broadcast reach rule",
    "detail": "Labor supported repealing the 75 per cent reach rule but opposed removing the two-out-of-three cross-media ownership rule.",
    "slug": "speech-339331",
    "source_title": "Stephen Jones \u2014 2016-11-30"
@@ -334,61 +334,61 @@
  "positions": [
   {
    "party": "Labor",
-   "position": "Opposes further concentration of power in television and newspapers, arguing democracy works best with a strong and diverse media. Supports an independent view on diversity of voices in one of the most concentrated media markets in the world, and opposed removing the two-out-of-three cross-media ownership rule warning it would increase media concentration.",
-   "slug": "speech-771696",
-   "source_title": "Stephen Conroy \u2014 Committees \u2014 2006-03-29",
-   "speaker": "Stephen Conroy",
-   "date": "2006-03-29"
+   "position": "Opposes further concentration of media ownership, supporting safeguards like the two-out-of-three rule and an independent view on diversity of voices; opposed removing the two-out-of-three cross-media ownership rule while supporting repeal of the 75% reach rule.",
+   "slug": "speech-270930",
+   "source_title": "Julia Gillard \u2014 2013-03-18",
+   "speaker": "Julia Gillard",
+   "date": "2013-03-18"
   },
   {
    "party": "Australian Democrats",
-   "position": "Supports a 'two out of three' rule for media mergers in metropolitan and regional areas as an additional safeguard against undue media concentration.",
+   "position": "Supported amending the bill to include a 'two out of three' rule for media mergers in metropolitan and regional areas as a safeguard against undue media concentration.",
    "slug": "speech-775655",
    "source_title": "Lyn Allison \u2014 Broadcasting Services Amendment (Media Ownership) Bill 2006; Broadcasting Legislation Amendment (Digital Television) Bill 2006; Communications Legislation Amendment (Enforcement Powers) Bill 2006; Television Licence Fees Amendment Bill 2006 \u2014 2006-10-11",
    "speaker": "Lyn Allison",
    "date": "2006-10-11"
   },
   {
-   "party": "Liberal",
-   "position": "Argues that traditional media platforms are being pressured and that some regulation currently restraining them should be freed up to enable these platforms to adapt to change.",
-   "slug": "speech-775574",
-   "source_title": "Michael Ronaldson \u2014 Broadcasting Services Amendment (Media Ownership) Bill 2006; Broadcasting Legislation Amendment (Digital Television) Bill 2006 \u2014 2006-10-10",
-   "speaker": "Michael Ronaldson",
-   "date": "2006-10-10"
-  },
-  {
    "party": "Nationals",
-   "position": "Acknowledged a discussion paper on media reform was released, indicating engagement with media ownership reform proposals.",
+   "position": "Responded that a discussion paper on media reform had been provided, indicating engagement with media reform proposals.",
    "slug": "speech-150514",
    "source_title": "Peter McGauran \u2014 2006-05-30",
    "speaker": "Peter McGauran",
    "date": "2006-05-30"
   },
   {
+   "party": "Liberal",
+   "position": "Criticised the government's media reforms as ill thought out and rushed, and questioned the need for the legislation, noting the government could not provide an example of the problem it sought to solve.",
+   "slug": "speech-270932",
+   "source_title": "Malcolm Turnbull \u2014 2013-03-18",
+   "speaker": "Malcolm Turnbull",
+   "date": "2013-03-18"
+  },
+  {
    "party": "Independent",
-   "position": "The media wields enormous influence and that power must be wielded responsibly, noting misuse of that power during the last federal election.",
+   "position": "Noted the media wields enormous influence and that power must be wielded responsibly, citing misuse of that power during the last federal election.",
    "slug": "speech-803129",
    "source_title": "Nick Xenophon \u2014 Evidence Amendment (Journalists\u2019 Privilege) Bill 2010 \u2014 2010-11-15",
    "speaker": "Nick Xenophon",
    "date": "2010-11-15"
+  },
+  {
+   "party": "Greens",
+   "position": "Raised concerns about delegation of power in a bill, allowing expansion of 'on the papers' reviews by regulation rather than legislation, which could limit oral hearings by executive decision.",
+   "slug": "speech-1199650",
+   "source_title": "David Shoebridge \u2014 Bills \u2014 2026-02-04",
+   "speaker": "David Shoebridge",
+   "date": "2026-02-04"
   }
  ],
  "key_moments": [
   {
-   "slug": "speech-796612",
-   "title": "John Faulkner \u2014 Social Security and Other Legislation Amendment (Income Support for Students) Bill 2009 \u2014 2009-10-28",
-   "speaker": "John Faulkner",
+   "slug": "speech-1146082",
+   "title": "R.A. Simms \u2014 Mining (Prohibition of Mining in Mount Lofty Ranges Watershed) Amendment Bill \u2014 2022-02-09",
+   "speaker": "R.A. Simms",
    "party": null,
-   "state": "federal",
-   "date": "2009-10-28"
-  },
-  {
-   "slug": "speech-99683",
-   "title": "John Murphy \u2014 2003-06-26",
-   "speaker": "John Murphy",
-   "party": "Labor",
-   "state": "federal",
-   "date": "2003-06-26"
+   "state": "sa",
+   "date": "2022-02-09"
   },
   {
    "slug": "speech-775352",
@@ -399,20 +399,12 @@
    "date": "2006-09-14"
   },
   {
-   "slug": "speech-29765",
-   "title": "Larry Anthony \u2014 1999-08-30",
-   "speaker": "Larry Anthony",
-   "party": "Nationals",
+   "slug": "speech-796612",
+   "title": "John Faulkner \u2014 Social Security and Other Legislation Amendment (Income Support for Students) Bill 2009 \u2014 2009-10-28",
+   "speaker": "John Faulkner",
+   "party": null,
    "state": "federal",
-   "date": "1999-08-30"
-  },
-  {
-   "slug": "speech-339516",
-   "title": "Paul Fletcher \u2014 2016-11-30",
-   "speaker": "Paul Fletcher",
-   "party": "Liberal",
-   "state": "federal",
-   "date": "2016-11-30"
+   "date": "2009-10-28"
   },
   {
    "slug": "division-federal-representatives-293",
@@ -421,12 +413,28 @@
    "party": null,
    "state": "federal",
    "date": null
+  },
+  {
+   "slug": "division-federal-representatives-293-p2",
+   "title": "House of Representatives division, 18 October 2006: Broadcasting Services Amendment (Media Ownership) Bill 2006 - Second Reading - Agree with the bill's main idea (part 2 of 2)",
+   "speaker": "Alan Griffin",
+   "party": null,
+   "state": "federal",
+   "date": null
+  },
+  {
+   "slug": "speech-29765",
+   "title": "Larry Anthony \u2014 1999-08-30",
+   "speaker": "Larry Anthony",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "1999-08-30"
   }
  ],
  "sections": [
   {
    "question": "What have MPs said about media ownership concentration in Australia?",
-   "answer": "MPs\u2014mainly from the opposition and crossbench\u2014have strongly criticized media ownership concentration in Australia, saying it threatens democracy and the public interest. They argued that further concentration would reduce media diversity, stifle competition, and give too much power to major proprietors like Rupert Murdoch and James Packer. They also noted that Australia has one of the most concentrated media landscapes in the Western world, with News Limited and Fairfax dominating the news industry. Some MPs accused government frontbenchers of hypocrisy, saying those MPs had opposed concentration when they were backbenchers but later supported or remained silent on bills that would allow greater concentration. They also highlighted specific risks, such as allowing one company to own television, radio, and newspapers in the same market, and called for retaining cross-media ownership rules to protect democracy.",
+   "answer": "Based on the context, MPs said that further concentration of media ownership in Australia is a serious threat to democracy and the public interest. They argued that allowing media proprietors to own more than one type of media in the same market\u2014such as television, newspapers, and radio\u2014would reduce diversity, stifle competition, and concentrate too much power in the hands of big media companies like News Limited and PBL. They also criticized the government of the day for trying to relax cross-media ownership rules, and accused some government frontbenchers of hypocrisy because they had previously spoken out against media concentration when they were backbenchers. MPs also noted that Australia has very concentrated media ownership, and expressed concern that the public interest was being sacrificed for commercial media interests.",
    "sources": [
     {
      "slug": "speech-775655",
@@ -576,13 +584,21 @@
   },
   {
    "question": "What was said about the news media bargaining code and tech platforms?",
-   "answer": "Based on the provided context, the news media bargaining code was described as a world-first mandatory code to address bargaining power imbalances between major digital platforms\u2014such as Google and Facebook\u2014and Australian news media businesses. It was established to ensure digital platforms pay Australian news media for using their content, especially public interest journalism. The code's framework includes good-faith bargaining, compulsory arbitration, notification of algorithm changes, non-differentiation, allowing commercial deals outside the code, and standard offers. It also uses a negotiate-arbitrate model, with the Treasurer able to designate platforms based on ACCC advice, and includes provisions for small and regional publishers. The need for the code was based on ACCC findings that digital platforms had substantial bargaining power over news businesses. There was bipartisan support in principle, but also criticism of government delays and concerns about impacts on small businesses, media diversity, and uncertainty about designations. Recent commercial deals between Google and companies like Seven, Nine, News Corp, and Junkee Media were cited as evidence the code was encouraging commercial negotiations.",
+   "answer": "The context says the news media bargaining code was introduced to address the bargaining power imbalance between large digital platforms\u2014such as Google and Meta/Facebook\u2014and Australian news businesses. It requires those platforms to contribute to Australian journalism if they derive significant value from news content. The code encourages commercial deals, uses a negotiate-arbitrate model, and includes minimum standards, good faith bargaining, final-offer arbitration, and protections for smaller news outlets.\n\nIt was described as world-leading legislation that helped secure around 30 commercial agreements reportedly worth about $250 million annually to Australian news organisations. However, weaknesses were noted: platforms could avoid obligations by removing news from their services, and Meta announced in 2024 that it would not renew its commercial agreements with Australian news companies, effectively walking away from the code.",
    "sources": [
     {
-     "slug": "speech-402484",
-     "title": "Kevin Hogan \u2014 2021-02-17",
+     "slug": "speech-400585",
+     "title": "Josh Frydenberg \u2014 2020-12-09",
      "speaker": null,
-     "party": "Nationals",
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-1205184",
+     "title": "Daniel Mulino \u2014 Bills \u2014 2026-08-13",
+     "speaker": null,
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
@@ -595,64 +611,8 @@
      "date": null
     },
     {
-     "slug": "speech-402494",
-     "title": "Matt Keogh \u2014 2021-02-17",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-402486",
-     "title": "Dave Sharma \u2014 2021-02-17",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-402481",
-     "title": "Michelle Rowland \u2014 2021-02-17",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-1029357",
-     "title": "Payman \u2014 Environment and Communications Legislation Committee - Environment and Communications Legislation Committee 25/02/2025 Estimates INFRASTRUCTURE, TRANSPORT, REGIONAL DEVELOPMENT, COMMUNICATIONS AND THE ARTS PORTFOLIO Australian Communications and Media Authority \u2014 2025-02-25",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-402488",
-     "title": "Craig Kelly \u2014 2021-02-17",
-     "speaker": null,
-     "party": "Independent",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-402504",
-     "title": "Michelle Rowland \u2014 2021-02-17",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-402495",
-     "title": "Paul Fletcher \u2014 2021-02-17",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-403195",
-     "title": "Paul Fletcher \u2014 2021-02-23",
+     "slug": "speech-1205532",
+     "title": "Melissa McIntosh \u2014 Bills \u2014 2026-08-18",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
@@ -667,10 +627,18 @@
      "date": null
     },
     {
-     "slug": "speech-402659",
-     "title": "Paul Fletcher \u2014 2021-02-18",
+     "slug": "speech-402495",
+     "title": "Paul Fletcher \u2014 2021-02-17",
      "speaker": null,
      "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "division-federal-senate-7634",
+     "title": "Senate division, 24 February 2021: Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2021 - in Committee - Big tech; Audits, review & penalty",
+     "speaker": null,
+     "party": null,
      "state": "federal",
      "date": null
     },
@@ -683,16 +651,56 @@
      "date": null
     },
     {
-     "slug": "speech-402487",
-     "title": "Tim Watts \u2014 2021-02-17",
+     "slug": "speech-1205902",
+     "title": "Murray Watt \u2014 Bills \u2014 2026-08-20",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-402494",
+     "title": "Matt Keogh \u2014 2021-02-17",
      "speaker": null,
      "party": "Labor",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-400585",
-     "title": "Josh Frydenberg \u2014 2020-12-09",
+     "slug": "speech-1205539",
+     "title": "Carina Garland \u2014 Bills \u2014 2026-08-18",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-402486",
+     "title": "Dave Sharma \u2014 2021-02-17",
+     "speaker": null,
+     "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-1205637",
+     "title": "Anthony Albanese \u2014 Bills \u2014 2026-08-19",
+     "speaker": null,
+     "party": "Labor",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-402484",
+     "title": "Kevin Hogan \u2014 2021-02-17",
+     "speaker": null,
+     "party": "Nationals",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-403195",
+     "title": "Paul Fletcher \u2014 2021-02-23",
      "speaker": null,
      "party": "Liberal",
      "state": "federal",

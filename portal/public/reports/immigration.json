@@ -2,8 +2,8 @@
  "slug": "immigration",
  "title": "Immigration",
  "blurb": "Border policy, offshore detention and migration levels across the decades.",
- "generated_at": "2026-09-02T03:23:56+00:00",
- "corpus_resources": 536153,
+ "generated_at": "2026-09-04T11:04:54+00:00",
+ "corpus_resources": 609644,
  "stats": {
   "speech_count": 49867,
   "unique_speakers": 2351,
@@ -150,170 +150,140 @@
  },
  "brief": {
   "question": "What does the parliamentary record show about immigration?",
-  "answer": "The parliamentary record shows that immigration debates in Australia are dominated by sharply opposing numerical claims about border control, detention and visa enforcement. A coalition speaker under the Morrison government asserted that when John Howard left office there were only four illegal maritime arrivals in detention, while Labor allowed more than 50,000 arrivals and left more than 10,000 people in detention, including nearly 2,000 children; that government claimed it had cut boat arrivals from 800 under Labor to 34 interceptions, closed 19 detention centres and removed all children from detention. By contrast, a Labor-aligned speaker cited 3,722 unauthorised boat arrivals in 1999, 8,459 over the following two years, and only 304 unauthorised arrivals in detention as of May 2009, arguing that fluctuations were caused by external factors such as conflict and natural disaster rather than by Australian policy, and that Australia received only about 1.5 per cent of global asylum claims over two decades.\n\nOn the composition of the migration program, the record shows a major shift towards skilled migration: according to a coalition senator, the skilled share of the intake rose from roughly 30 per cent after 1996 to around 70 per cent, with about 102,500 skilled migrants in one year. That same senator praised Australia's humanitarian record as second only to Canada's, noting more than 100,000 refugees and humanitarian entrants welcomed over 11 years and an offshore humanitarian program increased from 12,000 to 13,000 places. A later coalition speaker cited growth in the humanitarian program from 13,750 refugees in 2013-14 to 18,750 in 2018-19, plus an additional 12,000 refugees from Syria and Iraq. But other speakers argued high immigration is hurting Australians: one criticised a record-high intake of 650,000 people over two years as worsening the housing and rental crisis, citing a 22 per cent rise in Queensland homelessness over five years, a shortfall of almost 700,000 homes, and a target of 30,000 homes in five years as inadequate. Another claimed migrants were given housing only to be evicted when subsequent arrivals needed it, while a Labor MP defended diversity, citing 83 per cent of Australians viewing it positively and the 1973 removal of race from immigration policy.\n\nThe sharpest disagreements concern whether border enforcement works and whether it has been humane. Coalition speakers credited their policies with restoring integrity, citing 5,023 visa cancellations of foreign criminals under section 501 between December 2014 and December 2019, compared with 643 cancellations under Labor between 2008 and 2013, and criticised Labor and the Greens for blocking legislation to cancel visas of those convicted of violent crimes and sex offences. Labor speakers, in turn, called claims that the Howard government \"stopped the boats\" incorrect, citing departmental evidence on push and pull factors, and criticised the punitive effect of detention policies, noting a joint parliamentary committee had unanimously recommended scrapping detention debt because collection cost almost as much as it raised. One MP criticised the Coalition and Greens for blocking the Malaysia agreement after a Christmas Island tragedy, saying 689 people lost their lives at sea as a result, and accused a Treasurer of rank hypocrisy for claiming \"there are no children floating in the ocean\" after opposing that deal.\n\nPromises have often been measured against reported outcomes. The Rudd government was elected on a platform of maintaining strong border protection and promised a \"new and more humane, just, rational and effective policy\"; a 2008 report, New directions for detention policy, was endorsed by a joint committee and by the then shadow immigration minister, who said \"Labor is very much echoing what we did.\" Later coalition speakers claimed their government had taken back control of borders and restored integrity, making the larger humanitarian intake possible. Critics, however, pointed to an Information Commissioner report into the immigration department's handling of FOI requests under Labor as exposing \"a culture of cover-up and interference,\" saying the Prime Minister's promise to \"let the sunshine in\" was hollow. The record also includes expressions of regret that an ASEAN parliamentary delegation witnessed what a speaker called the immigration minister's offensive statements about immigrants, alongside arguments that immigration is nation-building and that diversity makes Australia stronger."
+  "answer": "The most decision-relevant numbers in the record are about border control and visa enforcement. A government MP said Labor allowed more than 50,000 unauthorised boat arrivals, while John Howard left office with only four illegal maritime arrivals in detention; the same MP said the coalition then took back control, closed 19 detention centres, removed all children from detention, and saw boat arrivals fall from 800 under Labor to 34 interceptions under the Morrison government. Another coalition speaker contrasted visa cancellations of foreign criminals: 643 under Labor between 2008 and 2013 versus 5,023 under the coalition\u2019s strengthened section 501 between December 2014 and December 2019. On the humanitarian side, a coalition senator claimed Australia\u2019s refugee record was second only to Canada, with more than 100,000 refugees welcomed over 11 years, while a later government MP noted the offshore refugee program had been increased from 13,750 in 2013-14 to 18,750 in 2018-19, plus a special intake of 12,000 people fleeing Syria and Iraq.\n\nThe parliamentary record also tracks the composition and scale of migration. A coalition senator documented that skilled migration had grown from about 30 per cent of the intake after 1996 to around 70 per cent, with roughly 102,500 skilled places in the latest year, and argued this was important for the economy. Labor speakers, by contrast, said skilled migration should not be supported at the expense of apprenticeships and jobs for Australians. Opposition questioners more recently claimed record immigration is outpacing investment, driving declining productivity and exacerbating record homelessness, and criticised Labor for population growth while housing deals are announced.\n\nOver time, the debate has shifted from bipartisan support for more humane detention policy to sharp partisan attacks and then back to claims of restored integrity. A committee report in December 2008, signed by the coalition shadow immigration minister, implicitly endorsed the Rudd government\u2019s detention changes; a Labor senator said the committee found no evidence that detention policy deterred unlawful arrivals, noting only 304 unauthorised boat arrivals were in detention as of May 2009 and that Australia\u2019s share of global asylum claims had averaged about 1.5 per cent over two decades. By 2009, opposition senators were instead citing UNHCR figures that Australian asylum applications rose over 25 per cent in nine months while global applications rose only five per cent, accusing Labor of an open-door policy. The coalition later framed its own record as restoring integrity to a \u201cbroken\u201d system, arguing that strong borders were what allowed a bigger humanitarian program.\n\nThe sharpest disagreement is over cause and effect: Labor senators blamed \u201cexternal factors such as natural disaster and conflict\u201d for pushing boats and said the previous government\u2019s detention policies were not a deterrent, while coalition members insisted Labor\u2019s policy created \u201cpull factors.\u201d There is also a stark divide over transparency. A coalition MP said a 2012 Information Commissioner report into the immigration department under Labor exposed a \u201cculture of cover-up and interference,\u201d making the Prime Minister\u2019s \u201clet the sunshine in\u201d promise hollow \u2014 even as government members accused the opposition of playing politics rather than governing.\n\nOn promises versus outcomes, the record contains a direct accusation against the Albanese government: before taking office it promised to cut immigration but instead delivered a record net migration result of more than 500,000 people a year, and only slowly wound it back toward a claimed target of 250,000. The government\u2019s rebuttal, also in the record, is that the most recent data put net overseas migration around 17,000 below Treasury\u2019s forecast for the first three quarters of 2024-25, that annual net migration had fallen for six consecutive quarters, and that it was over 40 per cent below its peak \u2014 because it was fixing a \u201cbroken, discredited, corrupted\u201d system inherited from the coalition."
  },
  "key_stats": [
   {
-   "value": "20,000",
+   "value": "6-1 majority",
+   "label": "High Court offshore detention ruling",
+   "detail": "Malcolm Turnbull cited a High Court ruling that upheld offshore detention by a 6-1 majority.",
+   "slug": "speech-326220",
+   "source_title": "Malcolm Turnbull \u2014 2016-02-03"
+  },
+  {
+   "value": "20,000 migration places",
    "label": "Migration places announced",
    "detail": "Kevin Rudd announced a decision on 20,000 migration places to address future skill needs.",
    "slug": "speech-215656",
    "source_title": "Kevin Rudd \u2014 2010-02-08"
   },
   {
-   "value": "almost 2,500",
-   "label": "Offshore detention under Labor",
-   "detail": "Peter Dutton said the government reduced offshore detention from almost 2,500 under Labor.",
-   "slug": "speech-378597",
-   "source_title": "Peter Dutton \u2014 2019-07-25"
-  },
-  {
-   "value": "740",
-   "label": "Offshore detention reduced to",
-   "detail": "Peter Dutton said offshore detention was reduced to 740.",
-   "slug": "speech-378597",
-   "source_title": "Peter Dutton \u2014 2019-07-25"
-  },
-  {
-   "value": "585",
-   "label": "People resettled in the US",
-   "detail": "Peter Dutton said 585 people were resettled in the United States.",
-   "slug": "speech-378597",
-   "source_title": "Peter Dutton \u2014 2019-07-25"
-  },
-  {
-   "value": "398",
+   "value": "398 boats",
    "label": "Boats arrived under member for McMahon",
    "detail": "Peter Dutton named the member for McMahon under whom 398 boats arrived.",
    "slug": "speech-375738",
    "source_title": "Peter Dutton \u2014 2019-02-19"
   },
   {
-   "value": "6-1",
-   "label": "High Court majority upholding offshore detention",
-   "detail": "Malcolm Turnbull cited a High Court ruling that upheld offshore detention by a 6-1 majority.",
-   "slug": "speech-326220",
-   "source_title": "Malcolm Turnbull \u2014 2016-02-03"
+   "value": "4,000",
+   "label": "People arrived under member for McMahon",
+   "detail": "Peter Dutton stated 4,000 people arrived under the member for McMahon.",
+   "slug": "speech-375738",
+   "source_title": "Peter Dutton \u2014 2019-02-19"
   }
  ],
  "positions": [
   {
    "party": "Labor",
-   "position": "Supports orderly migration processing and strong border security, maintaining immigration detention as part of orderly processing while arguing there is no weakening of border protection policy. Also supports measures like mandatory reporting of child abuse in detention facilities and increasing migration places for skill needs.",
-   "slug": "speech-794295",
-   "source_title": "Kim Carr \u2014 Migration Amendment (Abolishing Detention Debt) Bill 2009 \u2014 2009-08-11",
-   "speaker": "Kim Carr",
-   "date": "2009-08-11"
-  },
-  {
-   "party": "Greens",
-   "position": "Opposes offshore detention and processing, advocating for the immediate transfer of all those in offshore detention to Australia and arguing that offshore detention constitutes torture and a humanitarian calamity.",
-   "slug": "speech-827408",
-   "source_title": "Max Chandler-Mather \u2014 Constituency Statements \u2014 2023-02-09",
-   "speaker": "Max Chandler-Mather",
-   "date": "2023-02-09"
+   "position": "Supports strong border protection and offshore detention, arguing its policies remain robust and legally valid, while also supporting an orderly migration program and addressing skill needs through migration places.",
+   "slug": "speech-326220",
+   "source_title": "Malcolm Turnbull \u2014 2016-02-03",
+   "speaker": "Malcolm Turnbull",
+   "date": "2016-02-03"
   },
   {
    "party": "Liberal",
-   "position": "Supports strong border protection policies including excision, mandatory detention, and offshore processing, and criticises Labor for dismantling the Howard government's border protection framework.",
+   "position": "Supports maintaining the Howard government's border protection policies including excision, mandatory detention and offshore processing, and argues Labor's changes to border security failed and dismantled these protections.",
    "slug": "speech-797176",
    "source_title": "Michaelia Cash \u2014 Asylum Seekers \u2014 2009-11-19",
    "speaker": "Michaelia Cash",
    "date": "2009-11-19"
   },
   {
+   "party": "Greens",
+   "position": "Opposes offshore processing and detention, arguing it constitutes torture and a humanitarian calamity, and supports ending offshore processing and compelling the government to evacuate those in offshore detention to Australia.",
+   "slug": "speech-803532",
+   "source_title": "Sarah Hanson-Young \u2014 Migration Amendment (Detention Reform and Procedural Fairness) Bill 2010 \u2014 2010-11-18",
+   "speaker": "Sarah Hanson-Young",
+   "date": "2010-11-18"
+  },
+  {
    "party": "LNP",
-   "position": "Argues that Labor's border protection policy is a disaster, claiming it allowed people of bad character and people smugglers, and highlights reductions in offshore detention numbers under its own government.",
-   "slug": "speech-378597",
-   "source_title": "Peter Dutton \u2014 2019-07-25",
+   "position": "Argues Labor's border protection policy is a disaster, allowing people of bad character and people smugglers while closing offshore detention centres.",
+   "slug": "speech-375738",
+   "source_title": "Peter Dutton \u2014 2019-02-19",
    "speaker": "Peter Dutton",
-   "date": "2019-07-25"
+   "date": "2019-02-19"
   }
  ],
  "key_moments": [
   {
-   "slug": "speech-796612",
-   "title": "John Faulkner \u2014 Social Security and Other Legislation Amendment (Income Support for Students) Bill 2009 \u2014 2009-10-28",
-   "speaker": "John Faulkner",
+   "slug": "speech-1197211",
+   "title": "Anthony Chisholm \u2014 Bills \u2014 2025-09-03",
+   "speaker": "Anthony Chisholm",
    "party": null,
    "state": "federal",
-   "date": "2009-10-28"
+   "date": "2025-09-03"
   },
   {
-   "slug": "speech-794295",
-   "title": "Kim Carr \u2014 Migration Amendment (Abolishing Detention Debt) Bill 2009 \u2014 2009-08-11",
-   "speaker": "Kim Carr",
+   "slug": "speech-1205729",
+   "title": "Katy Gallagher \u2014 Bills \u2014 2026-08-19",
+   "speaker": "Katy Gallagher",
    "party": null,
    "state": "federal",
-   "date": "2009-08-11"
+   "date": "2026-08-19"
   },
   {
-   "slug": "speech-298160",
-   "title": "Scott Morrison \u2014 2014-09-25",
-   "speaker": "Scott Morrison",
-   "party": "Liberal",
+   "slug": "speech-1146082",
+   "title": "R.A. Simms \u2014 Mining (Prohibition of Mining in Mount Lofty Ranges Watershed) Amendment Bill \u2014 2022-02-09",
+   "speaker": "R.A. Simms",
+   "party": null,
+   "state": "sa",
+   "date": "2022-02-09"
+  },
+  {
+   "slug": "speech-774836",
+   "title": "Andrew Bartlett \u2014 Migration Legislation Amendment (End of Mandatory Detention) Bill 2006 \u2014 2006-09-07",
+   "speaker": "Andrew Bartlett",
+   "party": "Australian Democrats",
    "state": "federal",
-   "date": "2014-09-25"
+   "date": "2006-09-07"
   },
   {
-   "slug": "speech-786935",
-   "title": "Steve Hutchins \u2014 Migration Legislation Amendment Bill (No. 1) 2008 \u2014 2008-08-28",
-   "speaker": "Steve Hutchins",
-   "party": "Labor",
-   "state": "federal",
-   "date": "2008-08-28"
-  },
-  {
-   "slug": "speech-774533",
-   "title": "Joe Ludwig \u2014 Migration Amendment (Employer Sanctions) Bill 2006 \u2014 2006-09-04",
-   "speaker": "Joe Ludwig",
+   "slug": "speech-794872",
+   "title": "Chris Evans \u2014 Higher Education Support Amendment (2009 Budget Measures) Bill 2009 \u2014 2009-08-19",
+   "speaker": "Chris Evans",
    "party": null,
    "state": "federal",
-   "date": "2006-09-04"
+   "date": "2009-08-19"
   },
   {
-   "slug": "speech-779717",
-   "title": "Concetta Fierravanti-Wells \u2014 Migration Amendment (Review Provisions) Bill 2006 [2007]; Migration Amendment (Border Integrity) Bill 2007 \u2014 2007-03-29",
-   "speaker": "Concetta Fierravanti-Wells",
-   "party": "Liberal",
+   "slug": "speech-783075",
+   "title": "Steve Fielding \u2014 Alcohol Toll Reduction Bill 2007 \u2014 2007-09-19",
+   "speaker": "Steve Fielding",
+   "party": null,
    "state": "federal",
-   "date": "2007-03-29"
+   "date": "2007-09-19"
   }
  ],
  "sections": [
   {
    "question": "What positions have MPs taken on asylum seekers and offshore detention?",
-   "answer": "Based only on the provided context, MPs took several different positions on asylum seekers and offshore detention:\n\n- **Support for ending offshore detention and bringing asylum seekers to Australia:** This was a core Greens position. For example, Greens senator Nick McKim introduced a bill to evacuate all asylum seekers in offshore detention to Australia. A Senate motion to \u201cEnd offshore detention\u201d received 9 Ayes, all from crossbench/Greens senators. Some non-Greens MPs also spoke in favour of ending indefinite offshore detention and bringing detained people to Australia, including one MP who supported the medevac bill and appealed to \u201cother doctors\u201d like Dr Sophie Scamps to join the call. Ms Leong also condemned both Labor and Liberal governments for offshore detention and argued that only the Greens support bringing all refugees to Australia.\n\n- **Support for offshore processing and detention:** The Coalition government is described as supporting offshore processing centres, with a minister calling on the Senate to approve transfers to Nauru and defending detention capacity. The context also notes that Labor joined the Liberals in supporting offshore detention and boat turnbacks, and that a 2018 motion to end offshore detention was defeated 9\u201339.\n\n- **Support for regional processing through the UN or other countries:** One MP argued against both Labor and Liberal approaches and proposed expanding refugee intake and regional processing through the UN in Indonesia and Malaysia. Another speaker supported a compromise involving processing only in countries that are signatories to the UN Refugee Convention, with safeguards such as a 12-month processing limit, UNHCR endorsement of centres, increased refugee intake, and a multiparty working group.\n\n- **Support for abolishing mandatory detention and establishing new regional frameworks:** The Refugee Protection Bill 2019 was introduced to abolish mandatory detention and establish the Asia-Pacific Asylum Seeker Solution (APASS). Another MP said they would use their voice to advocate for a clear path to permanency, ending offshore detention, ending mandatory indefinite detention, and increasing Australia\u2019s humanitarian intake.\n\n- **Support for accepting New Zealand\u2019s offer:** One speaker urged the Morrison government to accept New Zealand\u2019s offer to take up to 150 asylum seekers from PNG and Manus Island.\n\n- **Criticism of those who oppose mandatory detention:** One passage describes a politician being criticised for saying she was uncomfortable with mandatory detention, would release asylum seekers into the community, did not believe in offshore processing deterrence, and voted to dismantle the Pacific solution.\n\nOverall, the context shows a split: some MPs strongly opposed offshore detention and wanted asylum seekers brought to Australia, while others defended or supported offshore processing and detention, and still others advocated middle-ground regional processing solutions.",
+   "answer": "MPs in the context took a range of positions on asylum seekers and offshore detention.\n\n- Some MPs strongly opposed offshore detention and supported ending it, bringing asylum seekers to Australia. The Greens are described as committed to drastically improving Australia\u2019s approach and introduced bills to evacuate detainees from offshore centres. In a 2018 Senate vote on ending offshore detention, 9 senators voted in favour and 39 against, so a majority opposed ending it.\n- Several MPs spoke in favour of closing offshore detention: one urged the Morrison government to accept New Zealand\u2019s offer to resettle 150 asylum seekers and described detention as a failure of compassion; another doctor MP supported immediately ending indefinite offshore detention and bringing detainees to safety; Ms Leong condemned both Labor and Liberal governments for running offshore detention; and another MP promised to use their voice to end offshore detention, end mandatory indefinite detention, and increase Australia\u2019s humanitarian intake.\n- Other MPs defended offshore processing as a necessary deterrent and border-protection measure. One government-aligned speaker supported transferring asylum seekers to Nauru under regional processing arrangements and said detention capacity was needed for immigration management.\n- Another MP sought a compromise, proposing processing only in countries signed to the UN Refugee Convention, time limits, UNHCR-endorsed centres, and an increased refugee intake, while opposing the Malaysia arrangement.\n- A different MP defended offshore processing as a deterrent, argued Australia should control who it accepts, and opposed sending people to non-signatory countries.\n\nThus, MPs\u2019 positions ranged from immediately ending offshore detention and resettling asylum seekers in Australia to maintaining offshore processing and detention as deterrents.",
    "sources": [
     {
-     "slug": "speech-243310",
-     "title": "Julia Gillard \u2014 2011-09-15",
+     "slug": "speech-244710",
+     "title": "Jamie Briggs \u2014 2011-09-22",
      "speaker": null,
-     "party": "Labor",
+     "party": "Liberal",
      "state": "federal",
      "date": null
     },
     {
-     "slug": "speech-818336",
-     "title": "Kate Lundy \u2014 Motions \u2014 2012-09-11",
+     "slug": "speech-259837",
+     "title": "Judi Moylan \u2014 2012-06-27",
      "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-413980",
-     "title": "Ken O'Dowd \u2014 2021-10-25",
-     "speaker": null,
-     "party": "LNP",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-385556",
-     "title": "Llew O'Brien \u2014 2019-12-02",
-     "speaker": null,
-     "party": "LNP",
+     "party": "Liberal",
      "state": "federal",
      "date": null
     },
@@ -326,82 +296,10 @@
      "date": null
     },
     {
-     "slug": "speech-383283",
-     "title": "Andrew Wilkie \u2014 2019-10-21",
+     "slug": "speech-297948",
+     "title": "Bill Shorten \u2014 2014-09-24",
      "speaker": null,
-     "party": "Independent",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-827056",
-     "title": "Kate Chaney \u2014 Constituency Statements \u2014 2023-02-07",
-     "speaker": null,
-     "party": "Independent",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-823195",
-     "title": "Helen Kroger \u2014 Adjournment \u2014 2013-05-14",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "division-federal-senate-5143",
-     "title": "Senate division, 15 February 2018: Motions - Asylum Seekers - End offshore detention",
-     "speaker": null,
-     "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-397588",
-     "title": "Zali Steggall \u2014 2020-10-28",
-     "speaker": null,
-     "party": "Independent",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-886898",
-     "title": "Jenny Leong \u2014 Asylum Seekers \u2014 2017-11-21",
-     "speaker": null,
-     "party": null,
-     "state": "nsw",
-     "date": null
-    },
-    {
-     "slug": "speech-259837",
-     "title": "Judi Moylan \u2014 2012-06-27",
-     "speaker": null,
-     "party": "Liberal",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-367297",
-     "title": "Adam Bandt \u2014 2018-08-16",
-     "speaker": null,
-     "party": "Greens",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-828144",
-     "title": "Nick McKim \u2014 Documents \u2014 2023-03-07",
-     "speaker": null,
-     "party": "Greens",
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-827124",
-     "title": "Nick McKim \u2014 Bills \u2014 2023-02-07",
-     "speaker": null,
-     "party": "Greens",
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
@@ -414,10 +312,58 @@
      "date": null
     },
     {
+     "slug": "division-federal-senate-5143",
+     "title": "Senate division, 15 February 2018: Motions - Asylum Seekers - End offshore detention",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-818336",
+     "title": "Kate Lundy \u2014 Motions \u2014 2012-09-11",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-827124",
+     "title": "Nick McKim \u2014 Bills \u2014 2023-02-07",
+     "speaker": null,
+     "party": "Greens",
+     "state": "federal",
+     "date": null
+    },
+    {
      "slug": "speech-421335",
      "title": "Monique Ryan \u2014 2022-08-03",
      "speaker": null,
      "party": "Independent",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-397588",
+     "title": "Zali Steggall \u2014 2020-10-28",
+     "speaker": null,
+     "party": "Independent",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-383283",
+     "title": "Andrew Wilkie \u2014 2019-10-21",
+     "speaker": null,
+     "party": "Independent",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-243310",
+     "title": "Julia Gillard \u2014 2011-09-15",
+     "speaker": null,
+     "party": "Labor",
      "state": "federal",
      "date": null
     },
@@ -428,13 +374,69 @@
      "party": "Independent",
      "state": "federal",
      "date": null
+    },
+    {
+     "slug": "speech-385556",
+     "title": "Llew O'Brien \u2014 2019-12-02",
+     "speaker": null,
+     "party": "LNP",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-828144",
+     "title": "Nick McKim \u2014 Documents \u2014 2023-03-07",
+     "speaker": null,
+     "party": "Greens",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-886898",
+     "title": "Jenny Leong \u2014 Asylum Seekers \u2014 2017-11-21",
+     "speaker": null,
+     "party": null,
+     "state": "nsw",
+     "date": null
+    },
+    {
+     "slug": "speech-827056",
+     "title": "Kate Chaney \u2014 Constituency Statements \u2014 2023-02-07",
+     "speaker": null,
+     "party": "Independent",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-1202971",
+     "title": "Andrew Wilkie \u2014 Bills \u2014 2026-05-25",
+     "speaker": null,
+     "party": "Independent",
+     "state": "federal",
+     "date": null
     }
    ]
   },
   {
    "question": "What has been said about immigration levels and skilled migration?",
-   "answer": "The context contains a range of statements about immigration levels and skilled migration:\n\n- Skilled migration is described as vital to Australia\u2019s productivity, economic growth, and regional development. A \u201csensible increase\u201d in the skilled migration intake was announced, along with measures to direct more migrants to regional areas, including regional migration agreements and 16,000 skilled places for regional areas through the Regional Sponsored Migration Scheme.\n- The share of skilled migration in the total intake was said to have risen from under 30% under the Keating government to almost 70% under the Howard government, and was maintained at over two-thirds by the later government.\n- Immigration levels were described as adjustable according to economic circumstances. One speaker noted a cabinet decision to cut the skilled migration rate because of the worsening economic situation; another cited a 60% reduction in the permanent migration program to 160,000 places.\n- Specific figures mentioned include: an annual target of 190,000 but only 160,000 reached; skilled migration growing from 125,755 places in 2011-12 to 128,973 in 2012-13; and the program being more than five times its 1995-96 size of 24,100.\n- Some argued skilled migration helps create jobs and lower unemployment, pointing to unemployment falling from 8.2% in 1996 to 4.8% and 1.9 million new jobs since 1996.\n- Others cautioned that skilled migration should not come at the expense of training Australians, and that priority should be given to jobs for Australians.\n- A committee report found Australia\u2019s skilled migration program was second only to Canada as a proportion of the workforce, but noted issues such as recognition of overseas qualifications, settlement concentration in New South Wales and Victoria, and the need for better data and targeting of regional areas.\n- English language requirements for skilled migrants were increased, and there were comments criticising the previous government\u2019s handling of temporary skilled migration and employer abuse.\n\nOverall, the context presents both support for and criticism of skilled migration levels, with particular emphasis on balancing economic needs, regional settlement, and Australian workforce priorities.",
+   "answer": "The context contains a range of often conflicting statements about immigration levels and skilled migration:\n\n- Some government figures say skilled migration is vital to productivity and economic growth, that skilled migrants are needed in regional areas, and that initiatives such as regional migration agreements, the Regional Sponsored Migration Scheme, and enterprise migration agreements help direct migrants where they are needed.\n- It is noted that skilled migration has been kept at over two-thirds of the total intake, and that the share of skilled migration rose from under 30% under the Keating government to almost 70% under the Howard government.\n- Some speakers say census data show immigration is not at record levels or out of control, and that Australia relies on immigration for services, businesses and regional communities.\n- Others say immigration levels should be capped or reduced, and that priority should go to Australian workers, apprenticeships and traineeships rather than skilled migration at the expense of local jobs.\n- One speaker says the skilled migration program was cut by 60% to 160,000 places and that the program prioritises Australian workers; another says the annual target was 190,000 but only 160,000 was reached.\n- A questioner claims that in 2025 only 20% of 301,000 net overseas migrants were skilled, and alleges the government is \u201cflooding\u201d Australia with 80% unskilled migration.\n- It is also mentioned that net overseas migration was 306,000 in 2024-25 and down from its post-COVID high, with the largest group being temporary students, and common skilled occupations including nurses, chefs and software programmers.\n- Some contributors argue skilled migration benefits the economy, while low-skilled migration can reduce wages for low-skilled workers. Others say only around 46% of the immigration intake finds jobs in skilled professions, and that this level may not be accepted by the Australian public.\n- There are criticisms of both sides: the Coalition is accused of poor management of temporary skilled migration and abuse of workers, while Labor is accused of bungling migration numbers and prioritising higher migration levels.\n\nOverall, there is no single agreed position; speakers differ on whether immigration levels are too high, appropriate, or too low, and on how much of the program should be skilled migration.",
    "sources": [
+    {
+     "slug": "speech-1196866",
+     "title": "Malcolm Roberts \u2014 Committees \u2014 2025-09-01",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-1203670",
+     "title": "Pauline Hanson \u2014 Questions without Notice \u2014 2026-06-22",
+     "speaker": null,
+     "party": null,
+     "state": "federal",
+     "date": null
+    },
     {
      "slug": "speech-791893",
      "title": "Concetta Fierravanti-Wells \u2014 Questions without Notice: Take Note of Answers \u2014 2009-03-16",
@@ -448,6 +450,14 @@
      "title": "Scott Morrison \u2014 2014-09-22",
      "speaker": null,
      "party": "Liberal",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-1199898",
+     "title": "Zali Steggall \u2014 Private Members' Business \u2014 2026-02-09",
+     "speaker": null,
+     "party": "Independent",
      "state": "federal",
      "date": null
     },
@@ -468,14 +478,6 @@
      "date": null
     },
     {
-     "slug": "speech-308528",
-     "title": "Kelvin Thomson \u2014 2015-03-23",
-     "speaker": null,
-     "party": "Labor",
-     "state": "federal",
-     "date": null
-    },
-    {
      "slug": "speech-345332",
      "title": "Trevor Evans \u2014 2017-03-30",
      "speaker": null,
@@ -484,10 +486,10 @@
      "date": null
     },
     {
-     "slug": "speech-215705",
-     "title": "Andrew Laming \u2014 2010-02-08",
+     "slug": "speech-1198427",
+     "title": "Dave Sharma \u2014 Questions without Notice: Take Note of Answers \u2014 2025-11-05",
      "speaker": null,
-     "party": "Liberal",
+     "party": null,
      "state": "federal",
      "date": null
     },
@@ -508,10 +510,10 @@
      "date": null
     },
     {
-     "slug": "speech-114175",
-     "title": "Bernie Ripoll \u2014 2004-03-29",
+     "slug": "speech-215705",
+     "title": "Andrew Laming \u2014 2010-02-08",
      "speaker": null,
-     "party": "Labor",
+     "party": "Liberal",
      "state": "federal",
      "date": null
     },
@@ -520,6 +522,14 @@
      "title": "Julian McGauran \u2014 Questions without Notice \u2014 2006-10-18",
      "speaker": null,
      "party": "Nationals",
+     "state": "federal",
+     "date": null
+    },
+    {
+     "slug": "speech-1200060",
+     "title": "Milton Dick \u2014 Matters of Public Importance \u2014 2026-02-10",
+     "speaker": null,
+     "party": null,
      "state": "federal",
      "date": null
     },
@@ -552,14 +562,6 @@
      "title": "John Hogg \u2014 Matters of Public Importance \u2014 2006-10-18",
      "speaker": null,
      "party": null,
-     "state": "federal",
-     "date": null
-    },
-    {
-     "slug": "speech-790694",
-     "title": "Annette Hurley \u2014 Documents \u2014 2009-02-03",
-     "speaker": null,
-     "party": "Labor",
      "state": "federal",
      "date": null
     }
