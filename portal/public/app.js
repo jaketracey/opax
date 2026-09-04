@@ -5802,7 +5802,9 @@ async function openGame(which) {
         displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, coverageRuleHTML,
       });
     }
-    if (which === "tm") wireDialogHeadYear($(game.dialog), ".tm-year");
+    // Every Explore dialog carries its hero into the sticky head once it
+    // scrolls past: the Time Machine's big year, the others' own title.
+    wireDialogHeadYear($(game.dialog), which === "tm" ? ".tm-year" : ".game-dialog-body h1, .game-dialog-body h2");
   } catch (err) {
     $(game.body).innerHTML =
       `<p class="status">This could not load (${esc(String(err.message || err))}). Try again shortly.</p>`;
