@@ -654,6 +654,8 @@ function showPanel(name) {
     if (t.tagName !== "A") continue; // aria-current marks pages, not disclosure buttons
     if (active) t.setAttribute("aria-current", "page");
     else t.removeAttribute("aria-current");
+    // The drawer's sections fold; the one holding the current page opens.
+    if (active) { const group = t.closest("details.drawer-group"); if (group) group.open = true; }
   }
   for (const p of PANELS) $(`panel-${p}`).hidden = p !== name;
   document.querySelector("main").classList.toggle("compact", name !== "ask");
@@ -1364,6 +1366,15 @@ window.addEventListener("resize", () => { if (openNavMenu) placeNavMenu(openNavM
   });
   drawer.addEventListener("close", () => toggle.setAttribute("aria-expanded", "false"));
   $("drawer-close").addEventListener("click", () => drawer.close());
+  // A search typed into the drawer lands on the Search page with the query.
+  $("drawer-search").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const q = $("drawer-q").value.trim();
+    if (!q) return;
+    drawer.close();
+    $("drawer-q").value = "";
+    goRoute(`/search?q=${encodeURIComponent(q)}`);
+  });
   drawer.addEventListener("click", (e) => {
     // A link tap navigates (the hash does the routing) and dismisses the drawer.
     if (e.target.closest("a")) { drawer.close(); return; }

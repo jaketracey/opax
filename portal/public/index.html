@@ -154,47 +154,60 @@
 
 <dialog class="nav-drawer" id="nav-drawer" aria-label="Menu">
   <div class="drawer-head">
-    <p class="kicker">OPAX</p>
+    <p class="drawer-name">Open Parliamentary Accountability eXchange</p>
     <button type="button" class="drawer-close" id="drawer-close" aria-label="Close menu">✕</button>
   </div>
+  <form class="drawer-search" id="drawer-search" role="search">
+    <label for="drawer-q" class="visually-hidden">Search the record</label>
+    <svg class="drawer-search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
+    <input id="drawer-q" type="search" autocomplete="off" placeholder="Search the record…" enterkeyhint="search">
+  </form>
   <nav aria-label="Primary">
     <ul class="drawer-list">
       <li><a class="drawer-link" data-panel="ask" href="/">Ask</a></li>
       <li><a class="drawer-link" data-panel="search" href="/search">Search</a></li>
       <li><a class="drawer-link" data-panel="money" href="/money">Money map</a></li>
     </ul>
-    <p class="drawer-kicker kicker">Reports</p>
-    <ul class="drawer-list">
-      <li><a class="drawer-link" data-panel="reports" href="/reports">All reports</a></li>
-      <li><a class="drawer-sub" href="/reports/climate">Climate &amp; Energy</a></li>
-      <li><a class="drawer-sub" href="/reports/gambling">Gambling</a></li>
-      <li><a class="drawer-sub" href="/reports/housing">Housing</a></li>
-      <li><a class="drawer-sub" href="/reports/immigration">Immigration</a></li>
-      <li><a class="drawer-sub" href="/reports/indigenous">First Nations</a></li>
-      <li><a class="drawer-sub" href="/reports/media">Media Ownership</a></li>
-    </ul>
-    <p class="drawer-kicker kicker">Explore</p>
-    <ul class="drawer-list">
-      <li><a class="drawer-link" data-panel="explore" href="/explore">Explore</a></li>
-      <li><a class="drawer-sub" href="/explore" data-game="tm">Time machine</a></li>
-      <li><a class="drawer-sub" href="/explore" data-game="quiz">The record quiz</a></li>
-      <li><a class="drawer-sub" href="/explore" data-game="ledger">The ledger</a></li>
-    </ul>
-    <p class="drawer-kicker kicker">Encyclopedia</p>
-    <ul class="drawer-list">
-      <li><a class="drawer-sub" href="/subject/person">Parliamentarians</a></li>
-      <li><a class="drawer-sub" href="/subject/party">Parties</a></li>
-      <li><a class="drawer-sub" href="/subject/donor">Donors</a></li>
-      <li><a class="drawer-sub" href="/subject/campaigner">Campaigners &amp; third parties</a></li>
-      <li><a class="drawer-sub" href="/subject/topic">Topics A-Z</a></li>
-    </ul>
-    <p class="drawer-kicker kicker">About</p>
-    <ul class="drawer-list">
-      <li><a class="drawer-link" data-panel="about" href="/about">About OPAX</a></li>
-      <li><a class="drawer-sub" data-panel="methods" href="/methods">Methods &amp; how to cite</a></li>
-      <li><a class="drawer-sub" data-panel="stats" href="/stats">Corpus stats</a></li>
-      <li><a class="drawer-sub" data-panel="expenses" href="/expenses">Expense categories</a></li>
-    </ul>
+    <details class="drawer-group" id="drawer-group-reports">
+      <summary class="drawer-kicker kicker">Reports</summary>
+      <ul class="drawer-list">
+        <li><a class="drawer-link" data-panel="reports" href="/reports">All reports</a></li>
+        <li><a class="drawer-sub" href="/reports/climate">Climate &amp; Energy</a></li>
+        <li><a class="drawer-sub" href="/reports/gambling">Gambling</a></li>
+        <li><a class="drawer-sub" href="/reports/housing">Housing</a></li>
+        <li><a class="drawer-sub" href="/reports/immigration">Immigration</a></li>
+        <li><a class="drawer-sub" href="/reports/indigenous">First Nations</a></li>
+        <li><a class="drawer-sub" href="/reports/media">Media Ownership</a></li>
+      </ul>
+    </details>
+    <details class="drawer-group" id="drawer-group-explore">
+      <summary class="drawer-kicker kicker">Explore</summary>
+      <ul class="drawer-list">
+        <li><a class="drawer-link" data-panel="explore" href="/explore">Explore</a></li>
+        <li><a class="drawer-sub" href="/explore" data-game="tm">Time machine</a></li>
+        <li><a class="drawer-sub" href="/explore" data-game="quiz">The record quiz</a></li>
+        <li><a class="drawer-sub" href="/explore" data-game="ledger">The ledger</a></li>
+      </ul>
+    </details>
+    <details class="drawer-group" id="drawer-group-encyclopedia">
+      <summary class="drawer-kicker kicker">Encyclopedia</summary>
+      <ul class="drawer-list">
+        <li><a class="drawer-sub" href="/subject/person">Parliamentarians</a></li>
+        <li><a class="drawer-sub" href="/subject/party">Parties</a></li>
+        <li><a class="drawer-sub" href="/subject/donor">Donors</a></li>
+        <li><a class="drawer-sub" href="/subject/campaigner">Campaigners &amp; third parties</a></li>
+        <li><a class="drawer-sub" href="/subject/topic">Topics A-Z</a></li>
+      </ul>
+    </details>
+    <details class="drawer-group" id="drawer-group-about">
+      <summary class="drawer-kicker kicker">About</summary>
+      <ul class="drawer-list">
+        <li><a class="drawer-link" data-panel="about" href="/about">About OPAX</a></li>
+        <li><a class="drawer-sub" data-panel="methods" href="/methods">Methods &amp; how to cite</a></li>
+        <li><a class="drawer-sub" data-panel="stats" href="/stats">Corpus stats</a></li>
+        <li><a class="drawer-sub" data-panel="expenses" href="/expenses">Expense categories</a></li>
+      </ul>
+    </details>
   </nav>
 </dialog>
 

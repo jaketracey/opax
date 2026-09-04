@@ -351,8 +351,34 @@ header :focus-visible { outline-color: var(--bronze-bright); }
     from { transform: translateX(100%); }
   }
 }
-.drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; }
+.drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.2rem; gap: 0.5rem; }
 .drawer-head .kicker { margin: 0; }
+.drawer-name { margin: 0; font: 400 0.8125rem/1.3 var(--sans); color: var(--ink-soft); }
+/* A search of the record at the top of the drawer, the icon engraved in the field. */
+.drawer-search { position: relative; margin: 0.35rem 0 0.6rem; }
+.drawer-search-icon { position: absolute; left: 0.7rem; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); color: var(--ink-faint); pointer-events: none; }
+.drawer-search input {
+  width: 100%; min-height: 44px; padding-left: 2.3rem; font-size: 1rem;
+  -webkit-appearance: none; appearance: none;
+}
+.drawer-search input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+/* Each section folds behind its kicker; the chevron turns when it is open. */
+.drawer-group { border-top: 1px solid var(--line); }
+.drawer-group summary.drawer-kicker {
+  display: flex; align-items: center; justify-content: space-between; list-style: none; cursor: pointer;
+  margin: 0; padding: 0.85rem 0; min-height: 44px; border-top: 0;
+}
+.drawer-group summary::-webkit-details-marker { display: none; }
+.drawer-group summary::after {
+  content: ""; width: 9px; height: 9px; margin-right: 0.35rem;
+  border-right: 1.5px solid var(--bronze-ink); border-bottom: 1.5px solid var(--bronze-ink);
+  transform: rotate(45deg) translateY(-2px); transition: transform 160ms ease;
+}
+.drawer-group[open] summary::after { transform: rotate(-135deg) translateY(-1px); }
+.drawer-group summary:hover { color: var(--ink); }
+.drawer-group summary:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; }
+.drawer-group .drawer-list { padding-bottom: 0.6rem; }
+@media (prefers-reduced-motion: reduce) { .drawer-group summary::after { transition: none; } }
 .drawer-close {
   background: none; border: none; cursor: pointer; color: var(--ink-soft);
   font-size: 1.1rem; min-width: 44px; min-height: 44px; border-radius: 4px; margin-right: -0.6rem;
