@@ -51,6 +51,8 @@ STOP_FILE = DEFAULT_DB.with_name("labels_stop")
 STALE_CLAIM_S = 45 * 60
 MAX_LABELS = 4
 TEXT_HEAD, TEXT_TAIL = 1800, 400
+PACE_S = 0.25          # seconds between a worker's requests
+POOL = 4               # parallel requests per worker
 
 
 def env() -> dict[str, str]:
@@ -69,8 +71,9 @@ class Kb:
         self.base = f"https://{e['ARAG_ZONE']}.rag.progress.cloud/api/v1/kb/{e['ARAG_KB_ID']}"
         self.headers = {"x-nuclia-serviceaccount": f"Bearer {e['ARAG_KB_TOKEN']}", "content-type": "application/json"}
 
-    def call(self, method: str, path: str, body: dict | None = None, tries: int = 5) -> dict:
+    def call(self, method: str, path: str, body: dict | None = None, tries: int = 6) -> dict:
         data = None if body is None else json.dumps(body).encode()
+        time.sleep(PACE_S)  # many workers share one account: keep each one's requests spaced
         for attempt in range(tries):
             req = urllib.request.Request(self.base + path, data=data, headers=self.headers, method=method)
             try:
@@ -167,7 +170,7 @@ def cmd_next(a: argparse.Namespace) -> None:
     kb = Kb()
     items: list[dict] = []
     errors: list[tuple[str, str]] = []
-    with ThreadPoolExecutor(max_workers=12) as pool:
+    with ThreadPoolExecutor(max_workers=POOL) as pool:
         for rid, res in zip(rids, pool.map(lambda r: _safe(fetch_item, kb, r), rids)):
             if isinstance(res, Exception):
                 errors.append((rid, str(res)[:200]))
@@ -224,7 +227,7 @@ def cmd_submit(a: argparse.Namespace) -> None:
         return rid, clean
 
     done, failed = 0, 0
-    with ThreadPoolExecutor(max_workers=12) as pool:
+    with ThreadPoolExecutor(max_workers=POOL) as pool:
         for job, res in zip(jobs, pool.map(lambda j: _safe(write, j), jobs)):
             rid = job[0]
             with con:
@@ -294,7 +297,7 @@ def cmd_sample(a: argparse.Namespace) -> None:
             break
     rids = list(picked)[: a.n]
     items, answers = [], {}
-    with ThreadPoolExecutor(max_workers=12) as pool:
+    with ThreadPoolExecutor(max_workers=POOL) as pool:
         for rid, d in zip(rids, pool.map(lambda r: _safe(kb.resource, r), rids)):
             if isinstance(d, Exception):
                 continue
