@@ -417,6 +417,8 @@ const CSS = `
 }
 .tm-pictures-open:hover { border-color: var(--bronze-ink, #8A5A12); }
 .tm-pictures-open:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+/* The filmstrip under the brief is the way in; the button under the year is retired. */
+.tm-pictures-open, .tm-pictures-open[hidden] { display: none !important; }
 @media (min-width: 761px) {
   .tm-pictures-open {
     position: absolute; left: calc(100% + 3.8rem); top: 50%; transform: translateY(-50%);
