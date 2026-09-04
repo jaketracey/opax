@@ -3326,4 +3326,5 @@ html[data-panel="chat"] footer { display: none; }
 
 /* ==== explain: no step dots; Previous and Next carry the sequence ==== */
 #dialog-explain .explain-steps { display: none; }
+#dialog-explain .explain-deck { display: none; }
 
