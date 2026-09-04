@@ -2617,8 +2617,8 @@ async function renderDonorStateMoney(name, sections) {
 }
 
 // --- parliamentary expenses (IPEA) ------------------------------------------
-// Per-person totals, category split, per-year series and the five largest
-// lines, exported by scripts/export_expenses.py from the IPEA quarterly
+// Per-person totals, category split and per-year series, exported by
+// scripts/export_expenses.py from the IPEA quarterly
 // reports and served static. Keyed by person_id, with a name index for the
 // people who have no portrait entry; fetched only when a person page opens.
 let expensesData = null;
@@ -2633,6 +2633,73 @@ const IPEA_NOTE =
   "Independent Parliamentary Expenses Authority quarterly reports, CC BY 4.0. Figures are as " +
   "published; IPEA corrects prior quarters, so treat totals as indicative.";
 
+let expenseBenchmarks = null;
+function median(values) {
+  const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
+  if (!sorted.length) return 0;
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
+/** Annualised category baselines from long-running people still present in
+ *  the latest IPEA year. The export has years, rather than a sitting flag, so
+ *  `to === latestYear` is the deliberately plain proxy used by the memo. */
+function getExpenseBenchmarks() {
+  if (expenseBenchmarks || !expensesData?.people) return expenseBenchmarks;
+  const latestQuarter = String(expensesData.meta?.to || "");
+  const latestYear = Number(latestQuarter.slice(0, 4)) || Math.max(...Object.values(expensesData.people).map((p) => Number(p.to) || 0));
+  const fromCutoff = latestYear - 3;
+  const cohort = Object.values(expensesData.people).filter((p) => Number(p.to) === latestYear && Number(p.from) <= fromCutoff);
+  const categories = new Map();
+  const totals = [];
+  for (const person of cohort) {
+    const years = Math.max((Number(person.to) || latestYear) - (Number(person.from) || latestYear) + 1, 1);
+    totals.push((Number(person.total) || 0) / years);
+    for (const [category, total] of person.by_category || []) {
+      if (!categories.has(category)) categories.set(category, []);
+      categories.get(category).push((Number(total) || 0) / years);
+    }
+  }
+  const byCategory = new Map([...categories].map(([category, values]) => {
+    const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
+    return [category, {
+      median: median(sorted),
+      p90: sorted[Math.max(0, Math.ceil(sorted.length * 0.9) - 1)] || 0,
+      count: sorted.length,
+    }];
+  }));
+  expenseBenchmarks = {
+    latestQuarter, latestYear, fromCutoff, count: cohort.length,
+    totalMedian: median(totals), byCategory,
+  };
+  return expenseBenchmarks;
+}
+
+function expenseComparisonHTML(person, benchmark, source) {
+  const years = Math.max(Number(person.to) - Number(person.from) + 1, 1);
+  const rows = (person.by_category || []).map(([category, total]) => ({
+    category, total: Number(total) || 0, annual: (Number(total) || 0) / years,
+    baseline: benchmark.byCategory.get(category) || { median: 0, p90: 0, count: 0 },
+  }));
+  if (!rows.length) return "";
+  const scale = Math.max(...rows.flatMap((r) => [r.annual, r.baseline.median]), 1);
+  const amount = (value, label) => source
+    ? `<a href="${esc(source)}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(fmtMoney(value))}</a>`
+    : esc(fmtMoney(value));
+  return `<section class="expense-comparison" aria-labelledby="expense-comparison-heading">
+    <h3 class="subject-section-title" id="expense-comparison-heading">By category, a year, against the chamber</h3>
+    <div class="expense-rows">${rows.map((r, i) => {
+      const term = expenseTermKey(r.category);
+      const title = `${r.category}: ${fmtMoney(r.total)} over ${years} years, about ${fmtMoney(r.annual)} a year; median of ${r.baseline.count} parliamentarians ${fmtMoney(r.baseline.median)} a year${r.baseline.p90 ? `, ninetieth percentile ${fmtMoney(r.baseline.p90)}` : ""}`;
+      return `<div class="expense-row" title="${esc(title)}">
+        ${term ? `<button type="button" class="expense-name barrow-term" data-term="${esc(term)}">${esc(r.category)}</button>` : `<span class="expense-name">${esc(r.category)}</span>`}
+        <span class="expense-track" aria-hidden="true"><i class="expense-bar" style="width:${Math.max((r.annual / scale) * 100, r.annual ? 1 : 0).toFixed(1)}%"></i><i class="expense-median" style="left:${Math.min((r.baseline.median / scale) * 100, 100).toFixed(1)}%">${i === 0 ? "<em>median</em>" : ""}</i></span>
+        <span class="expense-value"><b>${amount(r.annual, `${r.category}, this parliamentarian ${fmtMoney(r.annual)} a year, IPEA source`)}</b> a year<small>median ${amount(r.baseline.median, `${r.category}, chamber median ${fmtMoney(r.baseline.median)} a year, IPEA source`)} · total ${amount(r.total, `${r.category}, total ${fmtMoney(r.total)}, IPEA source`)}</small></span>
+      </div>`;
+    }).join("")}</div>
+  </section>`;
+}
+
 /** "Parliamentary expenses" on a person page plus the infobox quick fact.
  *  Silent when the person has no IPEA entry (state MPs, pre-2017 members). */
 async function renderPersonExpenses(name, personId, sections) {
@@ -2643,28 +2710,25 @@ async function renderPersonExpenses(name, personId, sections) {
   const pid = personId || photoMap?.[nameKey] || expensesData.names?.[nameKey];
   const e = pid && expensesData.people[pid];
   if (!e) return;
-  const fmtDollars = (n) => `$${Math.round(n).toLocaleString()}`;
   const span = e.from === e.to ? `in ${e.from}` : `${e.from} to ${e.to}`;
   const lines = Number(e.lines || 0);
-  const items = (e.top || []).map((t) => `
-    <li class="barrow" style="grid-template-columns:auto minmax(0,1fr) auto">
-      <span class="barrow-value">${esc(fmtDate(t.date))}</span>
-      <span class="barrow-name" title="${esc(t.description ? `${t.category}: ${t.description}` : t.category)}">${esc(t.category)}${t.description ? ` · ${esc(t.description)}` : ""}</span>
-      <b class="barrow-value">${esc(fmtDollars(t.amount))}</b>
-    </li>`).join("");
   const src = safeUrl(expensesData.meta?.source_url);
+  const benchmark = getExpenseBenchmarks();
+  const years = Math.max(Number(e.to) - Number(e.from) + 1, 1);
+  const annual = (Number(e.total) || 0) / years;
+  const sourceAmount = (value, label) => src
+    ? `<a href="${esc(src)}" rel="noopener" target="_blank" aria-label="${esc(label)}"><b>${esc(fmtMoney(value))}</b></a>`
+    : `<b>${esc(fmtMoney(value))}</b>`;
   sections.insertAdjacentHTML("beforeend", `
     <p class="kicker">Parliamentary expenses</p>
-    <p style="margin:0.2rem 0 0.6rem"><b>${esc(fmtMoney(e.total))}</b> claimed, ${esc(span)},
-      across ${lines.toLocaleString()} published line${lines === 1 ? "" : "s"}.</p>
-    ${e.by_category?.length ? barList(e.by_category, { fmt: fmtMoney, heading: "By category", term: expenseTermKey }) : ""}
+    <p style="margin:0.2rem 0 0.6rem">${sourceAmount(e.total, `${fmtMoney(e.total)} claimed expenses, IPEA source`)} claimed, ${esc(span)},
+      across ${lines.toLocaleString()} published line${lines === 1 ? "" : "s"}${benchmark ? `: about ${sourceAmount(annual, `${fmtMoney(annual)} a year, IPEA source`)} a year against a median of ${sourceAmount(benchmark.totalMedian, `${fmtMoney(benchmark.totalMedian)} chamber median a year, IPEA source`)}` : ""}.</p>
+    ${benchmark ? expenseComparisonHTML(e, benchmark, src) : ""}
     ${e.by_year?.length > 1 ? columnChart(e.by_year, {
       fmt: fmtMoney, heading: "Claimed per year",
       note: "Summed by reporting quarter. IPEA data starts in April 2017 and runs to the latest published quarter, so the first and last years can be partial.",
     }) : ""}
-    ${items ? `<figure class="chart"><figcaption>Five largest line items</figcaption>
-      <ul class="subject-list" role="list" style="margin:0">${items}</ul></figure>` : ""}
-    <p class="fineprint">${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗︎</a>` : ""}</p>`);
+    ${benchmark ? `<p class="fineprint">Bronze is this member's average year; the ink tick is the median year of ${benchmark.count.toLocaleString()} parliamentarians claiming in ${benchmark.latestYear} who have claimed since ${benchmark.fromCutoff} or earlier. Office costs follow electorate size and travel follows portfolio, so a bar past its tick is a fact, not a finding. Per-year figures divide each total by the ${years} calendar ${years === 1 ? "year" : "years"} claimed; the first and last are partial. Source: ${src ? `<a href="${esc(src)}" rel="noopener" target="_blank">IPEA quarterly expenditure reports, CC BY 4.0, to ${esc(benchmark.latestQuarter)} ↗︎</a>` : "IPEA quarterly expenditure reports, CC BY 4.0"}. IPEA corrects prior quarters, so treat totals as indicative. <a href="/expenses">What the categories mean</a>.</p>` : `<p class="fineprint">${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗︎</a>` : ""}</p>`}`);
   $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Claimed expenses</dt><dd><b>${esc(fmtMoney(e.total))}</b></dd>`);
 }
