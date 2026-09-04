@@ -176,6 +176,22 @@ Two rules keep the cache honest:
 what the harness wants when it is measuring the live model, and what makes a
 `BYPASS` run leave the cache warm behind it.
 
+### Slow-platform guard (2026-09-04)
+The platform's retrieval step normally lands in 4-6 s, but on 2026-09-04 a
+chat follow-up sat for 100 s and came back as a 524 while a labelling task was
+loading the index. The Worker no longer waits that out:
+- **Stall:** an ask that has produced no NDJSON item at all within 25 s is
+  aborted and re-asked once with lighter retrieval (`reranker: noop`,
+  `top_k: 12`), announced to the reader as `event: retry {reason: "slow"}`.
+  The lighter attempt gets 50 s. Non-OK upstream statuses take the same path.
+- **Refusal retry is bounded:** the silent second ask on a "not enough data"
+  answer only happens when the first attempt took under 20 s; an empty
+  answer is still always retried.
+- **Synchronous `/api/ask`** carries a 40 s `AbortSignal.timeout` per attempt
+  with the same lighter retry, answering 504 rather than hanging.
+Measured after reasoning was switched off on the OpenRouter preset: plain
+asks 3.4-7 s, the reranker ~1 s of that.
+
 ### Replaying a cached answer as a stream
 
 A `HIT` on `/api/ask?stream=1` goes to `replayCachedAsk()`, which writes the

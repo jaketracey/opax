@@ -117,7 +117,7 @@ const ragBase = (env: Env) =>
 async function kbFetch(
   env: Env,
   path: string,
-  init?: { method?: string; body?: unknown; headers?: Record<string, string> },
+  init?: { method?: string; body?: unknown; headers?: Record<string, string>; signal?: AbortSignal },
 ): Promise<Response> {
   return fetch(`${ragBase(env)}${path}`, {
     method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
@@ -127,8 +127,23 @@ async function kbFetch(
       ...init?.headers,
     },
     body: init?.body === undefined ? undefined : JSON.stringify(init.body),
+    signal: init?.signal,
   })
 }
+
+// --- slow-platform guard -------------------------------------------------------
+// The platform's retrieval step normally lands in 4-6 s but has stalled past
+// Cloudflare's 100 s origin limit (a 524 on 2026-09-04 while a labelling task
+// was loading the index). Waiting that out is the worst outcome: the reader
+// sees "still digging" for two minutes and then an error. So an ask that has
+// produced nothing at all within ASK_STALL_MS is abandoned and asked once more
+// with lighter retrieval (no reranker, fewer passages) — a slightly plainer
+// answer beats no answer. The refusal retry is bounded the same way: a
+// second full ask is only worth it when the first one was quick.
+const ASK_STALL_MS = 25_000
+const ASK_SYNC_TIMEOUT_MS = 40_000
+const ASK_RETRY_BUDGET_MS = 20_000
+const lighterAsk = (body: Record<string, unknown>): Record<string, unknown> => ({ ...body, reranker: 'noop', top_k: 12 })
 
 /** Snap a snippet window start back to the nearest preceding space. */
 function lower_bound(text: string, at: number): number {
@@ -770,15 +785,22 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   }
   if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status })
 
-  const askOnce = async (): Promise<AskAnswer | Response> => {
-    const res = await kbFetch(env, '/ask', { body, headers: { 'x-synchronous': 'true' } })
-    if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
-    return (await res.json()) as AskAnswer
+  const askOnce = async (b: Record<string, unknown>, timeoutMs: number): Promise<AskAnswer | Response> => {
+    try {
+      const res = await kbFetch(env, '/ask', { body: b, headers: { 'x-synchronous': 'true' }, signal: AbortSignal.timeout(timeoutMs) })
+      if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
+      return (await res.json()) as AskAnswer
+    } catch (err) {
+      return json({ error: `ask failed (${err instanceof Error ? err.name : 'error'})` }, 504)
+    }
   }
-  let answer = await askOnce()
+  const t0 = Date.now()
+  let answer = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
+  // A stall or an upstream error gets one lighter attempt before the reader hears about it.
+  if (answer instanceof Response) answer = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
   if (answer instanceof Response) return answer
-  if (isRefusal(answer) && healthyRetrieval(answer)) {
-    const again = await askOnce()
+  if (isRefusal(answer) && healthyRetrieval(answer) && Date.now() - t0 < ASK_RETRY_BUDGET_MS) {
+    const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
     if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
   const payload = askPayload(answer)
@@ -829,6 +851,7 @@ async function streamAskOnce(
   body: Record<string, unknown>,
   send: SseSend,
   signal: AbortSignal,
+  onProgress?: () => void,
 ): Promise<AskAnswer> {
   const res = await fetch(`${ragBase(env)}/ask`, {
     method: 'POST',
@@ -858,6 +881,7 @@ async function streamAskOnce(
       return // a torn line is the platform's problem, not a reason to drop the answer
     }
     if (!item) return
+    onProgress?.()
     switch (item.type) {
       case 'answer': {
         const text = typeof item.text === 'string' ? item.text : ''
@@ -921,6 +945,32 @@ async function streamAskOnce(
   return { answer, citations, retrieval_results: { resources } }
 }
 
+/** streamAskOnce under a stall timer: no item at all within stallMs aborts the attempt. */
+async function streamAskGuarded(
+  env: Env,
+  body: Record<string, unknown>,
+  send: SseSend,
+  parent: AbortSignal,
+  stallMs: number,
+): Promise<AskAnswer> {
+  const ac = new AbortController()
+  const onParentAbort = (): void => ac.abort()
+  parent.addEventListener('abort', onParentAbort)
+  let progressed = false
+  const timer = setTimeout(() => {
+    if (!progressed) ac.abort()
+  }, stallMs)
+  try {
+    return await streamAskOnce(env, body, send, ac.signal, () => {
+      progressed = true
+      clearTimeout(timer)
+    })
+  } finally {
+    clearTimeout(timer)
+    parent.removeEventListener('abort', onParentAbort)
+  }
+}
+
 function apiAskStream(
   body: Record<string, unknown>,
   env: Env,
@@ -947,10 +997,23 @@ function apiAskStream(
   ctx.waitUntil(
     (async () => {
       try {
-        let result = await streamAskOnce(env, body, send, upstream.signal)
+        const t0 = Date.now()
+        let result: AskAnswer
+        try {
+          result = await streamAskGuarded(env, body, send, upstream.signal, ASK_STALL_MS)
+        } catch (err) {
+          // The reader left: nothing to recover. Otherwise the platform stalled
+          // or answered with an error status — one lighter attempt.
+          if (clientGone || upstream.signal.aborted) throw err
+          await send('retry', { reason: 'slow' })
+          result = await streamAskGuarded(env, lighterAsk(body), send, upstream.signal, ASK_STALL_MS * 2)
+        }
         // An empty answer is a reasoning burn whatever the retrieval; a
-        // refusal is only retried over a healthy one (the sync rule).
-        if (isRefusal(result) && (healthyRetrieval(result) || !(result.answer ?? '').trim())) {
+        // refusal is only retried over a healthy one (the sync rule) — and
+        // only when the first attempt was quick enough that a second is
+        // not what tips the reader into a two-minute wait.
+        const quick = Date.now() - t0 < ASK_RETRY_BUDGET_MS
+        if (isRefusal(result) && (quick || !(result.answer ?? '').trim()) && (healthyRetrieval(result) || !(result.answer ?? '').trim())) {
           await send('retry', { reason: (result.answer ?? '').trim() ? 'refusal' : 'empty' })
           const again = await streamAskOnce(env, body, send, upstream.signal)
           if (!isRefusal(again)) result = again
