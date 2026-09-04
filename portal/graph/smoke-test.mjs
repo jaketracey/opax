@@ -5,7 +5,16 @@ import { readFile } from 'node:fs/promises'
 import assert from 'node:assert/strict'
 
 const bundle = await import('../public/money-map.js')
-const { buildGraph, clusterCentres3D, ForceSim3D, formatMoney, radiusFor, windowFigures } = bundle
+const {
+  buildGraph,
+  clusterCentres3D,
+  CPI_FINANCIAL_YEAR_INDEX,
+  cpiMultiplier,
+  ForceSim3D,
+  formatMoney,
+  radiusFor,
+  windowFigures,
+} = bundle
 assert.ok(typeof bundle.mountMoneyMap === 'function', 'mountMoneyMap exported')
 
 const raw = JSON.parse(await readFile(new URL('../public/graph/money.json', import.meta.url)))
@@ -61,6 +70,16 @@ checkCells(raw.edges, 'money')
     [...flow.byYear[year], year, year],
     'one-year window keeps that year',
   )
+  const adjusted = windowFigures(flow, year, year, true)
+  assert.equal(adjusted.count, one.count, 'CPI adjustment leaves disclosure counts alone')
+  assert.ok(
+    Math.abs(adjusted.total - one.total * cpiMultiplier(year)) < 0.001,
+    'CPI adjustment scales the selected financial-year cell before summing',
+  )
+  assert.ok(
+    Math.abs(adjusted.byYear[year][0] - flow.byYear[year][0] * cpiMultiplier(year)) < 0.001,
+    'adjusted per-year cells stay available to card breakdowns and peak calculations',
+  )
   const none = windowFigures(flow, 1900, 1901)
   assert.deepEqual([none.total, none.count, none.firstYear, none.lastYear], [0, 0, null, null])
   const all = windowFigures(flow, years[0], years[years.length - 1])
@@ -74,6 +93,11 @@ checkCells(raw.edges, 'money')
   const legacy = { total: 5, count: 1, firstYear: 2001, lastYear: 2001 }
   assert.equal(windowFigures(legacy, 1900, 1901), legacy, 'no cells: figures untouched')
 }
+
+assert.equal(Object.keys(CPI_FINANCIAL_YEAR_INDEX).length, 29, 'CPI covers 1997-98 to 2025-26')
+assert.equal(cpiMultiplier(2025), 1, '2025-26 is the CPI reference year')
+assert.equal(cpiMultiplier(1900), cpiMultiplier(1997), 'older cells use nearest CPI year')
+assert.equal(cpiMultiplier(2100), 1, 'newer cells use nearest CPI year')
 
 // Cluster centres: parties pinned to the origin, industries ringed clear of it.
 const counts = new Map()

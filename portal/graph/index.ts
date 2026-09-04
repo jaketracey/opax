@@ -25,11 +25,13 @@ import {
 import { type EngineData, KnowledgeMapEngine, webglAvailable } from './map3d-engine.ts'
 import { ACCENT, CLUSTER_COLOURS, clusterColour, SURFACE } from './palette.ts'
 import { mountWordsLayer } from './words.ts'
+import { cpiMultiplier } from './cpi.ts'
 
 // Re-exported so a Node smoke test can exercise the pure layout/data layer
 // without a DOM or a WebGL context.
 export { clusterCentres3D, ForceSim3D } from './force3d.ts'
 export { buildDegrees, formatMoney, radiusFor, shortLabel } from './map-types.ts'
+export { CPI_FINANCIAL_YEAR_INDEX, CPI_REFERENCE_YEAR, cpiIndexForYear, cpiMultiplier } from './cpi.ts'
 // The cluster palette, so a host can draw its own industry chips in the map's colours.
 export { CLUSTER_COLOURS, clusterColour } from './palette.ts'
 export { webglAvailable }
@@ -155,21 +157,29 @@ type YearFigures = {
  * span narrows to the years that actually carry something. An older export
  * without cells keeps its lifetime figures untouched. Pure, for the smoke test.
  */
-export function windowFigures<T extends YearFigures>(x: T, lo: number, hi: number): T {
+export function windowFigures<T extends YearFigures>(
+  x: T,
+  lo: number,
+  hi: number,
+  adjustForInflation = false,
+): T {
   if (!x.byYear) return x
   let total = x.undated?.[0] ?? 0
   let count = x.undated?.[1] ?? 0
   let firstYear: number | null = null
   let lastYear: number | null = null
+  const byYear: Record<string, YearCell> | undefined = adjustForInflation ? {} : undefined
   for (const [key, [dollars, n]] of Object.entries(x.byYear)) {
     const year = Number(key)
+    const scaledDollars = adjustForInflation ? dollars * cpiMultiplier(year) : dollars
+    if (byYear) byYear[key] = [scaledDollars, n]
     if (year < lo || year > hi) continue
-    total += dollars
+    total += scaledDollars
     count += n
     if (firstYear === null || year < firstYear) firstYear = year
     if (lastYear === null || year > lastYear) lastYear = year
   }
-  return { ...x, total, count, firstYear, lastYear }
+  return { ...x, total, count, firstYear, lastYear, ...(byYear ? { byYear } : {}) }
 }
 
 /**
@@ -289,6 +299,7 @@ const CSS = `
   letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; }
 .mm-card-total { font-size: 22px; font-weight: 700; color: #26251f; }
 .mm-card-sub { font-size: 12px; color: #8a8578; margin-bottom: 10px; }
+.mm-card-fine { margin: -4px 0 10px; font-size: 10.5px; line-height: 1.42; color: #8a8578; }
 .mm-card-close { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px;
   border: 0; border-radius: 8px; background: none; font-size: 16px; line-height: 1;
   color: #8a8578; cursor: pointer; }
@@ -335,38 +346,52 @@ const CSS = `
   padding: 5px 8px; border-radius: 6px; cursor: pointer; text-align: left; }
 .mm-find-list button:hover, .mm-find-list button:focus-visible { background: rgba(0,0,0,0.06); }
 .mm-root[data-mm-chrome='full'] .mm-card { top: 58px; max-height: calc(100% - 70px); }
-.mm-scrub { position: absolute; left: 12px; bottom: 12px; width: 250px;
+.mm-scrub { position: absolute; left: 12px; bottom: 12px; width: 270px;
   background: rgba(250, 249, 246, 0.88); backdrop-filter: blur(6px);
-  border: 1px solid #e4e1d8; border-radius: 10px; padding: 8px 12px 10px; }
+  border: 1px solid #e4e1d8; border-radius: 10px; padding: 8px 12px; }
 .mm-scrub-label { display: flex; justify-content: space-between; font-size: 11px;
   font-weight: 700; letter-spacing: 0.06em; color: #8a8578; margin-bottom: 2px; }
 .mm-scrub-years { font-variant-numeric: tabular-nums; color: #33322e; }
-.mm-scrub input[type='range'] { width: 100%; margin: 2px 0; accent-color: ${ACCENT}; }
-/* The same control on a small plate: one row, the window years as its label,
-   the two thumbs sharing a single engraved rail. */
-.mm-scrub-mini { width: auto; max-width: calc(100% - 24px); padding: 5px 10px;
-  display: flex; align-items: center; gap: 9px; }
-.mm-scrub-mini .mm-scrub-label { display: block; margin: 0; flex: none; }
-.mm-scrub-mini .mm-scrub-years { font-size: 11px; font-weight: 700; letter-spacing: 0.02em; }
-.mm-scrub-rail { position: relative; flex: none; width: 116px; height: 16px; }
-.mm-scrub-track { position: absolute; left: 7px; right: 7px; top: 50%; height: 2px;
+.mm-scrub-rail { position: relative; width: 100%; height: 28px; }
+.mm-scrub-track { position: absolute; left: 8px; right: 8px; top: 50%; height: 2px;
   margin-top: -1px; background: #d9d4c6; border-radius: 1px; }
 .mm-scrub-fill { position: absolute; top: 0; bottom: 0; background: ${ACCENT}; border-radius: 1px; }
 /* Only the thumbs take the pointer, so the two stacked inputs do not mask
    each other and a drag that starts off a thumb still reaches the canvas. */
-.mm-scrub-mini input[type='range'] { position: absolute; left: 0; top: 0; width: 100%;
-  height: 16px; margin: 0; background: none; pointer-events: none;
-  -webkit-appearance: none; appearance: none; }
-.mm-scrub-mini input[type='range']:focus-visible { outline: 2px solid ${ACCENT};
+.mm-scrub input[type='range'] { position: absolute; inset: 0; width: 100%; height: 28px;
+  margin: 0; background: none; pointer-events: none; -webkit-appearance: none; appearance: none; }
+.mm-scrub input[type='range']:focus-visible { outline: 2px solid ${ACCENT};
   outline-offset: 1px; border-radius: 8px; }
-.mm-scrub-mini input[type='range']::-webkit-slider-runnable-track { height: 16px; background: none; }
-.mm-scrub-mini input[type='range']::-moz-range-track { height: 16px; background: none; }
-.mm-scrub-mini input[type='range']::-webkit-slider-thumb { -webkit-appearance: none;
-  pointer-events: auto; width: 12px; height: 12px; margin-top: 2px; border-radius: 50%;
+.mm-scrub input[type='range']::-webkit-slider-runnable-track { height: 28px; background: none; }
+.mm-scrub input[type='range']::-moz-range-track { height: 28px; background: none; }
+.mm-scrub input[type='range']::-webkit-slider-thumb { -webkit-appearance: none;
+  pointer-events: auto; width: 16px; height: 16px; margin-top: 6px; border-radius: 50%;
   border: 1px solid #8a6a10; background: ${SURFACE}; box-sizing: border-box; cursor: ew-resize; }
-.mm-scrub-mini input[type='range']::-moz-range-thumb { pointer-events: auto;
-  width: 12px; height: 12px; border-radius: 50%; border: 1px solid #8a6a10;
+.mm-scrub input[type='range']::-moz-range-thumb { pointer-events: auto;
+  width: 16px; height: 16px; border-radius: 50%; border: 1px solid #8a6a10;
   background: ${SURFACE}; box-sizing: border-box; cursor: ew-resize; }
+.mm-cpi { display: grid; grid-template-columns: 18px minmax(0, 1fr); align-items: center;
+  column-gap: 8px; min-height: 44px; margin-top: 3px; padding-top: 4px;
+  border-top: 1px solid #e4e1d8; cursor: pointer; }
+.mm-cpi input { width: 18px; height: 18px; margin: 0; accent-color: ${ACCENT}; cursor: pointer; }
+.mm-cpi-copy { display: block; min-width: 0; }
+.mm-cpi-name { display: block; font-size: 12px; font-weight: 600; color: #33322e; }
+.mm-cpi-note { display: block; font-size: 10px; line-height: 1.25; color: #8a8578; }
+/* The same control on a small plate: one row, the window years as its label,
+   the two thumbs and inflation switch sharing one compact strip. */
+.mm-scrub-mini { width: auto; max-width: calc(100% - 24px); padding: 5px 10px;
+  display: flex; align-items: center; gap: 9px; }
+.mm-scrub-mini .mm-scrub-label { display: block; margin: 0; flex: none; }
+.mm-scrub-mini .mm-scrub-caption { display: none; }
+.mm-scrub-mini .mm-scrub-years { font-size: 11px; font-weight: 700; letter-spacing: 0.02em; }
+.mm-scrub-mini .mm-scrub-rail { flex: none; width: 104px; height: 44px; }
+.mm-scrub-mini input[type='range'] { height: 44px; }
+.mm-scrub-mini input[type='range']::-webkit-slider-runnable-track { height: 44px; }
+.mm-scrub-mini input[type='range']::-moz-range-track { height: 44px; }
+.mm-scrub-mini input[type='range']::-webkit-slider-thumb { width: 14px; height: 14px; margin-top: 15px; }
+.mm-scrub-mini input[type='range']::-moz-range-thumb { width: 14px; height: 14px; }
+.mm-scrub-mini .mm-cpi { flex: none; width: 143px; margin: 0; padding: 0 0 0 9px;
+  border-top: 0; border-left: 1px solid #e4e1d8; }
 .mm-fallback { display: flex; align-items: center; justify-content: center;
   height: 100%; padding: 24px; text-align: center; color: #57544a; }
 @media (prefers-reduced-motion: reduce) {
@@ -380,7 +405,22 @@ const CSS = `
   .mm-card { top: auto; right: 8px; left: 8px; bottom: 8px; width: auto;
     max-height: 55%; }
   .mm-root[data-mm-chrome='full'] .mm-card { top: auto; max-height: 55%; }
-  .mm-hint, .mm-find, .mm-scrub { display: none; }
+  .mm-hint, .mm-find { display: none; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub { display: flex; align-items: center; gap: 8px;
+    top: 60px; right: 8px; bottom: auto; left: 8px; width: auto; padding: 4px 8px; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub-label { display: block; flex: none; margin: 0; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub-caption { display: none; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub-years { font-size: 11px; letter-spacing: 0.02em; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub-rail { flex: 1 1 88px; min-width: 76px; height: 44px; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub input[type='range'] { height: 44px; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub input[type='range']::-webkit-slider-runnable-track { height: 44px; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub input[type='range']::-moz-range-track { height: 44px; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub input[type='range']::-webkit-slider-thumb {
+    width: 14px; height: 14px; margin-top: 15px; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub input[type='range']::-moz-range-thumb {
+    width: 14px; height: 14px; }
+  .mm-root[data-mm-chrome='full'] .mm-cpi { flex: none; width: 143px; margin: 0;
+    padding: 0 0 0 8px; border-top: 0; border-left: 1px solid #e4e1d8; }
   /* The compact scrub is small enough to keep on a phone; it moves to the
      top left, which mini chrome leaves empty, clear of the card's sheet. */
   .mm-scrub-mini { display: flex; top: 8px; left: 8px; bottom: auto; }
@@ -433,6 +473,7 @@ export async function mountMoneyMap(
   const graph = buildGraph(raw)
   const byId = new Map(raw.nodes.map((n) => [n.id, n]))
   const chrome = opts.chrome ?? 'full'
+  const full = chrome === 'full'
   container.dataset.mmChrome = chrome
   // The app serves real paths, so map links are plain paths too. They were
   // hash routes from before that change, which sent "Full profile" on /money to
@@ -451,6 +492,44 @@ export async function mountMoneyMap(
   }
   let yearLo = yearMin
   let yearHi = yearMax
+  let adjustForInflation = false
+  let yearsInUrl = false
+
+  // Full maps own these three query parameters. Mini maps are embedded in
+  // donor/party/front-page routes, so their scrub remains local to the embed.
+  if (full && typeof location !== 'undefined') {
+    const params = new URLSearchParams(location.search)
+    const readYear = (name: string): number | null => {
+      const rawYear = params.get(name)
+      if (!rawYear || !/^\d{4}$/.test(rawYear)) return null
+      return Math.max(yearMin, Math.min(yearMax, Number(rawYear)))
+    }
+    const from = readYear('from')
+    const to = readYear('to')
+    yearsInUrl = from !== null || to !== null
+    if (from !== null || to !== null) {
+      const a = from ?? yearMin
+      const b = to ?? yearMax
+      yearLo = Math.min(a, b)
+      yearHi = Math.max(a, b)
+    }
+    adjustForInflation = params.get('cpi') === '1'
+  }
+
+  const syncUrlState = () => {
+    if (!full || typeof location === 'undefined' || typeof history === 'undefined') return
+    const url = new URL(location.href)
+    if (yearsInUrl) {
+      url.searchParams.set('from', String(yearLo))
+      url.searchParams.set('to', String(yearHi))
+    } else {
+      url.searchParams.delete('from')
+      url.searchParams.delete('to')
+    }
+    if (adjustForInflation) url.searchParams.set('cpi', '1')
+    else url.searchParams.delete('cpi')
+    history.replaceState(history.state, '', `${url.pathname}${url.search}${url.hash}`)
+  }
 
   /**
    * The year window's reading of the file. Everything the reader can see -
@@ -475,7 +554,6 @@ export async function mountMoneyMap(
   const labels = el('div', 'mm-labels', container)
   labels.setAttribute('aria-hidden', 'true')
 
-  const full = chrome === 'full'
   const legend = full ? el('div', 'mm-legend', container) : null
   if (legend) {
     const legendTitle = el('div', 'mm-legend-title', legend)
@@ -579,11 +657,16 @@ export async function mountMoneyMap(
       (e.byYear
         ? e.total > 0
         : (e.firstYear ?? yearMin) <= yearHi && (e.lastYear ?? yearMax) >= yearLo)
-    const windowNodes = scrubbed ? raw.nodes.map((n) => windowFigures(n, yearLo, yearHi)) : raw.nodes
-    const windowEdges = (scrubbed ? raw.edges.map((e) => windowFigures(e, yearLo, yearHi)) : raw.edges)
+    const recalculated = scrubbed || adjustForInflation
+    const windowNodes = recalculated
+      ? raw.nodes.map((n) => windowFigures(n, yearLo, yearHi, adjustForInflation))
+      : raw.nodes
+    const windowEdges = (recalculated
+      ? raw.edges.map((e) => windowFigures(e, yearLo, yearHi, adjustForInflation))
+      : raw.edges)
       .filter(inWindow)
     view = {
-      nodes: scrubbed ? new Map(windowNodes.map((n) => [n.id, n])) : byId,
+      nodes: recalculated ? new Map(windowNodes.map((n) => [n.id, n])) : byId,
       edges: windowEdges,
       span: scrubbed ? yearSpan(yearLo, yearHi) : null,
     }
@@ -758,9 +841,8 @@ export async function mountMoneyMap(
 
   // --- Time scrub -------------------------------------------------------
   // One control in two dresses. Full chrome gets the labelled plate bottom
-  // left; mini chrome (an entry page's small map) gets the same two thumbs
-  // on a single compact row, so a reader can watch a party's donors change
-  // year to year there too. Both run the identical window logic below.
+  // left; mini chrome (and full chrome on a phone) gets the same two thumbs
+  // and CPI switch on one compact row. Both run the identical view logic.
   const compactScrub = !full
   const scrub = (opts.scrub ?? full) && yearMax > yearMin
     ? el('div', compactScrub ? 'mm-scrub mm-scrub-mini' : 'mm-scrub', container)
@@ -775,16 +857,12 @@ export async function mountMoneyMap(
     scrub.title = 'Financial years, by the year each begins: 2024 is 2024–25'
     const label = el('div', 'mm-scrub-label', scrub)
     if (!compactScrub) {
-      const caption = el('span', '', label)
+      const caption = el('span', 'mm-scrub-caption', label)
       caption.textContent = 'FINANCIAL YEARS'
     }
     const years = el('span', 'mm-scrub-years', label)
-    // Compact: both thumbs on one rail, with the window drawn between them.
-    // Full: one range under the other, on the browser's own tracks.
-    const rail = compactScrub ? el('div', 'mm-scrub-rail', scrub) : scrub
-    const fill = compactScrub
-      ? el('div', 'mm-scrub-fill', el('div', 'mm-scrub-track', rail))
-      : null
+    const rail = el('div', 'mm-scrub-rail', scrub)
+    const fill = el('div', 'mm-scrub-fill', el('div', 'mm-scrub-track', rail))
     const lo = el('input', '', rail)
     const hi = el('input', '', rail)
     for (const [input, name] of [[lo, 'from'], [hi, 'to']] as const) {
@@ -793,17 +871,26 @@ export async function mountMoneyMap(
       input.max = String(yearMax)
       input.setAttribute('aria-label', `Show flows ${name} year`)
     }
-    lo.value = String(yearMin)
-    hi.value = String(yearMax)
+    lo.value = String(yearLo)
+    hi.value = String(yearHi)
     const showYears = () => {
       years.textContent = yearLo === yearHi ? `${yearLo}` : `${yearLo} – ${yearHi}`
-      if (fill) {
-        const span = yearMax - yearMin
-        fill.style.left = `${((yearLo - yearMin) / span) * 100}%`
-        fill.style.right = `${((yearMax - yearHi) / span) * 100}%`
-      }
+      const span = yearMax - yearMin
+      fill.style.left = `${((yearLo - yearMin) / span) * 100}%`
+      fill.style.right = `${((yearMax - yearHi) / span) * 100}%`
     }
     showYears()
+
+    const cpi = el('label', 'mm-cpi', scrub)
+    const cpiInput = el('input', '', cpi)
+    cpiInput.type = 'checkbox'
+    cpiInput.checked = adjustForInflation
+    const cpiCopy = el('span', 'mm-cpi-copy', cpi)
+    const cpiName = el('span', 'mm-cpi-name', cpiCopy)
+    cpiName.textContent = 'Adjust for inflation'
+    const cpiNote = el('span', 'mm-cpi-note', cpiCopy)
+    cpiNote.textContent = 'in 2025–26 dollars, ABS CPI'
+
     let pending = 0
     const applyScrub = () => {
       // The two thumbs may cross; the window is always the ordered pair.
@@ -811,7 +898,9 @@ export async function mountMoneyMap(
       const b = Number(hi.value)
       yearLo = Math.min(a, b)
       yearHi = Math.max(a, b)
+      yearsInUrl = true
       showYears()
+      syncUrlState()
       if (pending) return
       pending = requestAnimationFrame(() => {
         pending = 0
@@ -820,6 +909,11 @@ export async function mountMoneyMap(
     }
     lo.addEventListener('input', applyScrub)
     hi.addEventListener('input', applyScrub)
+    cpiInput.addEventListener('change', () => {
+      adjustForInflation = cpiInput.checked
+      syncUrlState()
+      pushData({ keepFocus: true })
+    })
   }
 
   // --- Info card -------------------------------------------------------
@@ -862,6 +956,12 @@ export async function mountMoneyMap(
   const jurisdiction = typeof raw.meta?.jurisdiction === 'string'
     ? raw.meta.jurisdiction
     : 'federal'
+  const inflationFineprint = (parent: HTMLElement) => {
+    if (!adjustForInflation) return
+    const note = el('p', 'mm-card-fine', parent)
+    note.textContent = 'Adjusted to 2025–26 dollars with the ABS Consumer Price Index ' +
+      '(all groups, Australia, financial-year average). Nominal figures are on the returns.'
+  }
   /** Keep the map independent of the page shell: it only describes the held flow. */
   const explain = (parent: HTMLElement, detail: Record<string, string>) => {
     const button = el('button', 'mm-ask', parent)
@@ -925,6 +1025,7 @@ export async function mountMoneyMap(
       : node.kind === 'party'
         ? `received across ${node.count.toLocaleString()} receipts · ${span}`
         : `given across ${node.count.toLocaleString()} donations · ${span}`
+    inflationFineprint(card)
 
     const listTitle = el('div', 'mm-legend-title', card)
     const list = el('ul', 'mm-rows', card)
@@ -1021,6 +1122,7 @@ export async function mountMoneyMap(
     const donors = edge.count ?? 0
     sub.textContent = `from ${donors === 1 ? '1 donor' : `${donors.toLocaleString()} donors`} shown` +
       `${span ? ` · ${span}` : ''}`
+    inflationFineprint(card)
 
     const listTitle = el('div', 'mm-legend-title', card)
     listTitle.textContent = 'Largest donors in this flow'
@@ -1075,6 +1177,7 @@ export async function mountMoneyMap(
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
     sub.textContent =
       `across ${(edge.count ?? 0).toLocaleString()} donations${span ? ` · ${span}` : ''}`
+    inflationFineprint(card)
 
     const list = el('ul', 'mm-rows', card)
     row(list, donor.colour ?? clusterColour(donor.group).colour, donor.label,
@@ -1175,6 +1278,10 @@ export async function mountMoneyMap(
       renderEdgeCard(selectedEdge)
     }
     card.scrollTop = scrollTop
+    fitHostToCard()
+    requestAnimationFrame(() => {
+      if (!card.hidden) engine.setInsets(measureInsets())
+    })
   }
 
   /**
