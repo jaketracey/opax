@@ -3237,3 +3237,15 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .search-sheet-foot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); }
 #panel-search .search-sheet-foot button { min-width: 0; white-space: normal; height: auto; padding: 10px; }
 #panel-search .search-year-fields { grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); }
+
+/* ==== donor-side register rows on the Just declared convention ==== */
+.donor-ties-list { list-style: none; margin: var(--space-3) 0 0; padding: 0; }
+.donor-ties-list .declared-row { padding: 0.85rem 0; border-top: 1px solid var(--line); }
+.tie-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.35rem; }
+.tie-tag {
+  display: inline-flex; align-items: center; min-height: 26px; padding: 0.1rem 0.55rem; border-radius: 999px;
+  background: var(--bronze-wash); color: var(--bronze-ink); font: 600 0.75rem/1.2 var(--sans);
+}
+.tie-tag-holder { background: var(--paper-sunken); color: var(--ink-soft); }
+.donor-ties-list .declared-description { font-family: var(--serif); font-size: 1rem; line-height: 1.55; color: var(--ink); }
+

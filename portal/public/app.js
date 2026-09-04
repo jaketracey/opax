@@ -2945,16 +2945,22 @@ async function renderDonorInterests(name, sections) {
   slot.innerHTML = `
     <h3 class="subject-section-title">Named in members' registers</h3>
     <p class="interests-summary"><b>${byPerson.size}</b> ${byPerson.size === 1 ? "parliamentarian names" : "parliamentarians name"} ${esc(name)} in their current register.</p>
-    <ul class="subject-list donor-ties-list" role="list">${[...byPerson.values()].map((personRows) => {
-      const person = personRows[0];
-      const party = partyByName.get(String(person.name || "").toLowerCase());
-      const details = personRows.map((row) => {
-        const source = safeUrl(row.url);
-        const holder = row.holder && row.holder !== "unspecified" ? `, ${row.holder}` : "";
-        return `<span>${esc(categoryName[row.category] || row.category)}${esc(holder)}: “${esc(row.description || "")}”${source ? ` <a class="tie-source" href="${esc(source)}" rel="noopener" target="_blank">source ↗︎</a>` : ""}</span>`;
-      }).join("");
-      return `<li><div class="source-title"><a href="${esc(subjectHash("person", person.name))}">${esc(person.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}</div>
-        <div class="result-meta">${esc(chamberName[person.chamber] || person.chamber || "Register")}</div>${details}</li>`;
+    <ul class="declared-list donor-ties-list" role="list">${rows.map((row) => {
+      const party = partyByName.get(String(row.name || "").toLowerCase());
+      const photo = photoUrlFor(row.name);
+      const source = safeUrl(row.url);
+      const holder = row.holder && row.holder !== "unspecified" ? String(row.holder) : "";
+      const category = categoryName[row.category] || String(row.category || "").replace(/_/g, " ");
+      return `<li class="declared-row">
+        <span class="declared-portrait">${photo
+          ? `<img src="${esc(photo)}" width="48" height="48" loading="lazy" decoding="async" alt="">`
+          : `<span aria-hidden="true">${esc(String(row.name || "?").split(/\s+/).map((w) => w[0]).slice(0, 2).join(""))}</span>`}</span>
+        <div class="declared-entry">
+          <div class="declared-person"><a href="${esc(subjectHash("person", row.name))}">${esc(row.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}<span class="result-meta">${esc(chamberName[row.chamber] || row.chamber || "Register")}</span></div>
+          <div class="declared-kind tie-tags"><span class="tie-tag">${esc(category.charAt(0).toUpperCase() + category.slice(1))}</span>${holder ? `<span class="tie-tag tie-tag-holder">${esc(holder)}</span>` : ""}</div>
+          <p class="declared-description">“${esc(row.description || "")}”${source ? ` <a class="declared-source-link" href="${esc(source)}" rel="noopener" target="_blank">register ↗︎</a>` : ""}</p>
+        </div>
+      </li>`;
     }).join("")}</ul>
     <p class="fineprint">From the registers of members' and senators' interests (48th Parliament) and the Queensland Register of Members' Interests (58th Parliament), matched on the exact name. Entries as declared, not verified by OPAX.</p>`;
 }
