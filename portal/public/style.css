@@ -2525,3 +2525,23 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 .subject-person .tie-declaration { display: block; }
 .subject-person .tie-declaration .interests-holder { display: block; }
 .subject-person .tie-declaration .tie-source { display: flex; width: fit-content; }
+
+.subject-person .person-register-updates { margin: 0 0 .5rem; }
+.subject-person .person-register-updates a, .subject-person .person-more a { display: inline-flex; align-items: center; min-height: 44px; font: 500 .9375rem/1.5 var(--sans); color: var(--bronze-ink); }
+.subject-person .speech-rows li { display: block; padding: 0; }
+.subject-person .person-speech-link { display: grid; grid-template-columns: 6.75rem minmax(0, 1fr); gap: .35rem 1rem; padding: 1rem 0; text-decoration: none; color: var(--ink); }
+.subject-person .person-speech-body { display: block; min-width: 0; }
+.subject-person .person-speech-kind { display: block; margin: .55rem 0 .25rem; color: var(--ink-soft); font: 500 .8125rem/1.5 var(--sans); }
+.subject-person .person-speech-text { display: block; font: 400 1rem/1.65 var(--serif); color: var(--ink-soft); overflow-wrap: anywhere; }
+.subject-person .person-speech-link:hover .speech-debate { text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px; }
+.subject-person .ties-list .source-title { display: inline-block; min-height: 44px; font: 600 1rem/1.5 var(--serif); }
+.subject-person .tie-declaration, .subject-person .interests-desc { font-family: var(--serif); line-height: 1.65; }
+@media (max-width: 700px) {
+  .subject-person .person-speech-link { grid-template-columns: 1fr; }
+  .subject-person .person-topic-bars .barrow { padding-block: .15rem; }
+}
+.subject-person .person-speech-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
+.subject-person .person-speech-link .speech-debate { display: block; }
+.subject-person .person-jumps { gap: 0 .4rem; }
+.subject-person .person-jumps a { min-width: 44px; justify-content: center; }
+.subject-person .person-topic-legend[hidden] { display: none; }

@@ -2777,6 +2777,7 @@ async function renderPersonInterests(name, personId, sections) {
   slot.innerHTML = `
     ${tiesHTML}
     <h3 id="person-register" class="subject-section-title">Declared interests</h3>
+    <p class="person-register-updates"><a href="${esc(`/declared?person=${encodeURIComponent(data.name || name)}`)}">Just declared →</a></p>
     <p class="interests-summary"><b>${num(data.total)}</b> ${data.total === 1 ? "entry" : "entries"} across ${num(buckets.length)} ${buckets.length === 1 ? "category" : "categories"} · ${alterations}</p>
     <ul class="subject-list interests-list" role="list">${rows}</ul>
     <p class="fineprint">${esc(register)}; entries as declared, not verified by OPAX. One entry is one cell of the form, so a list typed in one cell counts once.${base ? ` <a href="${esc(base)}" rel="noopener" target="_blank">Open the register entry ↗︎</a>` : ""}</p>
@@ -3724,7 +3725,7 @@ async function renderPersonTopics(name, sections) {
       }) : `<p class="status">No topic-labelled speeches are held for this era yet.</p>`;
       slot.innerHTML = `
         <div class="person-topics-head">
-          <h3 class="subject-section-title">What they talk about <span>(labelled so far)</span></h3>
+          <h3 class="subject-section-title">What they talk about</h3>
           <div class="quiet-toggle" role="group" aria-label="Speech era">
             <button type="button" data-person-era="all" aria-pressed="${era === "all"}">All</button>
             <button type="button" data-person-era="then" aria-pressed="${era === "then"}">Then</button>
@@ -3732,12 +3733,13 @@ async function renderPersonTopics(name, sections) {
           </div>
         </div>
         ${chart}
-        <p class="person-topic-legend"><span><i></i>Their share of labelled speeches</span><span><b></b>Share across the whole labelled record</span></p>`;
+        <p class="person-topic-legend"${rows.length ? "" : " hidden"}><span><i></i>Their share of labelled speeches</span><span><b></b>Share across the whole labelled record</span></p>`;
       for (const button of slot.querySelectorAll("[data-person-era]")) {
         button.addEventListener("click", () => {
           if (button.dataset.personEra === era) return;
           era = button.dataset.personEra;
           paint();
+          slot.querySelector(`[data-person-era="${era}"]`)?.focus({ preventScroll: true });
         });
       }
     };
@@ -3940,31 +3942,7 @@ async function openSubject(kind, name, manageFocus) {
   renderPersonTopics(name, sections).then(() => refreshPersonJumps(sections));
   renderPersonVotes(name, photoMap?.[name.trim().toLowerCase()] ?? null, sections).then(() => refreshPersonJumps(sections));
   renderPersonInterests(name, null, sections).then(() => refreshPersonJumps(sections));
-  if (speeches.length) {
-    const newest = [...speeches].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 8);
-    // On the person's own page the name and party are known, so each row
-    // leads with the date and gives the debate title; when the title is only
-    // "Name — date" the passage itself carries the row.
-    const multiHouse = chambers.length > 1;
-    sections.insertAdjacentHTML("beforeend",
-      `<section id="person-speeches"><h3 class="subject-section-title">Latest indexed speeches</h3><ul class="speech-rows" role="list">${newest.map((r) => {
-        const debate = titleSubject(r);
-        const snip = String(r.snippet || "").trim();
-        const where = multiHouse && r.state ? ` <span class="speech-where">${esc(STATE_NAMES[r.state] || r.state)}</span>` : "";
-        // With a debate title the passage sits beneath it; without one the
-        // passage itself is the row and the link.
-        const body = debate
-          ? `<a class="speech-debate" href="/doc/${esc(r.slug)}">${esc(debate)}</a>${where}${snip ? `<p class="speech-snip">${esc(snip)}</p>` : ""}`
-          : `<a class="speech-passage" href="/doc/${esc(r.slug)}">${esc(snip || "Speech")}</a>${where}`;
-        return `<li><time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "")}</time>
-          <div>${body}</div></li>`;
-      }).join("")}</ul>
-      <p class="fineprint">Their newest indexed speeches, a sample rather than their full record.</p></section>`);
-  } else {
-    sections.insertAdjacentHTML("beforeend",
-      `<p class="status">No speeches by “${esc(name)}” in the indexed corpus yet. Names appear as in
-       Hansard, and the record is still loading. <a href="${esc(searchHash(name, {}))}">Search the record instead</a>.</p>`);
-  }
+  renderPersonSpeeches(name, speeches, chambers, sections).then(() => refreshPersonJumps(sections));
   renderPersonDiary(name, sections, chambers);
   const news = document.createElement("section");
   sections.appendChild(news);
@@ -3976,7 +3954,61 @@ async function openSubject(kind, name, manageFocus) {
     if (heading) heading.outerHTML = `<h3 class="subject-section-title">In the news</h3>`;
   }
   await renderPersonExpenses(name, photoMap?.[name.trim().toLowerCase()], sections);
+  if (currentSubjectKey !== key) return;
+  const mentions = document.createElement("section");
+  mentions.id = "person-mentions";
+  sections.appendChild(mentions);
+  await subjectMentions(name, mentions, "Mentions in parliament");
+  if (currentSubjectKey !== key) return;
+  const mentionHeading = mentions.querySelector(".kicker");
+  if (mentionHeading) mentionHeading.outerHTML = `<h3 class="subject-section-title">Mentions in parliament</h3>`;
+  else mentions.remove();
   refreshPersonJumps(sections);
+}
+
+async function renderPersonSpeeches(name, fallback, chambers, sections) {
+  const key = currentSubjectKey;
+  const slot = document.createElement("section");
+  slot.id = "person-speeches";
+  sections.appendChild(slot);
+  let newest = [];
+  let latest = true;
+  try {
+    const data = await api(`/api/search?${new URLSearchParams({ q: name, speaker: name, page: "1", per: "8", sort: "newest" })}`);
+    newest = data.results || [];
+  } catch {
+    latest = false;
+    newest = [...fallback].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 8);
+  }
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  if (!newest.length) { slot.remove(); return; }
+  const paint = (briefs) => {
+    slot.innerHTML = `<h3 class="subject-section-title">${latest ? "Latest indexed speeches" : "Indexed speeches"}</h3>
+      <ul class="speech-rows" role="list">${newest.map((r) => {
+        const brief = typeof briefs[r.resource] === "string" ? briefs[r.resource].trim() : "";
+        const text = brief || String(r.snippet || "").trim();
+        const where = chambers.length > 1 && r.state ? ` · ${STATE_NAMES[r.state] || r.state}` : "";
+        return `<li><a class="person-speech-link" href="/doc/${esc(r.slug)}">
+          <time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "Undated")}${esc(where)}</time>
+          <span class="person-speech-body"><span class="speech-debate">${esc(titleSubject(r) || "Speech")}</span>
+            <span class="person-speech-kind">${brief ? "Machine brief" : "Passage"}</span>
+            <span class="person-speech-text">${esc(text || "Open the speech to read the record.")}</span>
+          </span></a></li>`;
+      }).join("")}</ul>
+      <p class="fineprint">${latest ? "Newest results within the indexed retrieval window." : "Newest retrieval is unavailable; showing a sample of indexed matches."} Machine briefs are automated summaries; passages are extracts from the record.</p>
+      <p class="person-more"><a href="${esc(searchHash("", { speaker: name }, 1, "newest"))}">View all their speeches →</a></p>`;
+  };
+  paint({});
+  refreshPersonJumps(sections);
+  const briefs = await fetchBriefMap(newest);
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  // Preserve focus and scroll position while optional briefs arrive.
+  slot.querySelectorAll(".person-speech-link").forEach((link, index) => {
+    const brief = briefs[newest[index].resource];
+    if (typeof brief !== "string" || !brief.trim()) return;
+    link.querySelector(".person-speech-kind").textContent = "Machine brief";
+    link.querySelector(".person-speech-text").textContent = brief.trim();
+  });
 }
 
 function refreshPersonJumps(sections) {
