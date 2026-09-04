@@ -485,11 +485,11 @@ export async function mountMoneyMap(
   // which then clips or scrolls. While a card is up the host grows to hold it
   // with a band of map above, and gives the height back when it closes; the
   // engine's ResizeObserver refits the view either way.
-  let hostBaseHeight: string | null = null
+  let hostBase: { style: string; px: number } | null = null
   const releaseHost = () => {
-    if (hostBaseHeight === null) return
-    container.style.height = hostBaseHeight
-    hostBaseHeight = null
+    if (!hostBase) return
+    container.style.height = hostBase.style
+    hostBase = null
     container.classList.remove('mm-grown')
   }
   const fitHostToCard = () => {
@@ -500,9 +500,9 @@ export async function mountMoneyMap(
     card.style.maxHeight = prevMax
     const want = natural + 16 + 56
     const have = container.getBoundingClientRect().height
-    const base = hostBaseHeight === null ? have : parseFloat(hostBaseHeight) || have
+    const base = hostBase ? hostBase.px : have
     if (want <= base) { releaseHost(); return }
-    if (hostBaseHeight === null) hostBaseHeight = container.style.height
+    if (!hostBase) hostBase = { style: container.style.height, px: have }
     container.classList.add('mm-grown')
     container.style.height = `${Math.round(Math.min(want, window.innerHeight * 0.85))}px`
   }
