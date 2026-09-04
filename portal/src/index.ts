@@ -151,7 +151,7 @@ function lower_bound(text: string, at: number): number {
   return sp > 0 ? sp + 1 : at
 }
 
-/** Squash mixed-scale /find scores into 0..1 for the UI's relevance bar. */
+/** Squash mixed-scale /find scores into 0..1 so result ranking is comparable. */
 function calibrate(score: number, scoreType: string): number {
   if (scoreType === 'VECTOR' || scoreType === 'BOTH' || score <= 1) {
     return Math.min(Math.max(score, 0), 1)
@@ -2855,7 +2855,7 @@ const BASE_SECURITY_HEADERS: Record<string, string> = {
 // inventory). No 'unsafe-inline' and no 'unsafe-eval' for scripts: index.html
 // carries only <script src> tags, and nothing in the bundle eval()s. Styles
 // need 'unsafe-inline' because every module injects its own <style> element
-// and app.js sets style="" attributes on the relevance bars — neither is a
+// and app.js sets style="" attributes on chart and bar dimensions — neither is a
 // script-execution vector. Fonts are self-hosted, so no third-party origin.
 //
 // The googletagmanager/google-analytics origins are for Tag Manager container

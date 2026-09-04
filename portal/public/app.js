@@ -2722,36 +2722,19 @@ let termTipTrigger = null;
 let termTipTimer = 0;
 let termTipsWired = false;
 
-// Any element carrying one of these opens the card. `data-term` names a
-// category in expense-categories.json; `data-tip` names a kind of trigger that
-// describes itself from its own data attributes and needs no fetch.
-const TERM_TIP_TRIGGER = "[data-term], [data-tip]";
+// A `data-term` category name opens its definition card.
+const TERM_TIP_TRIGGER = "[data-term]";
 
 const EXPENSE_TIP_ACTION = { href: "/expenses", text: "What the categories mean" };
 
 /** The card's content for a trigger, as { name, text, note, action }, or null
- *  when nothing describes it (a category whose definitions have not landed
- *  yet, or a kind of trigger this build does not know). */
+ *  when nothing describes it (a category whose definitions have not landed yet). */
 function termTipDef(trigger) {
   if (trigger.dataset.term) {
     const def = expenseDefs?.byName?.[trigger.dataset.term];
     return def ? { ...def, action: EXPENSE_TIP_ACTION } : null;
   }
-  if (trigger.dataset.tip === "relevance") return relevanceTipDef(trigger.dataset.tipPct);
   return null;
-}
-
-/** The gold bar beside a search result. It is the retrieval engine's own score
- *  for the passage, and a reader who has never seen one reads it as a verdict,
- *  so the card says what it is and what it is not. */
-function relevanceTipDef(pct) {
-  const n = Number(pct);
-  if (!Number.isFinite(n)) return null;
-  return {
-    name: `Relevance ${n}%`,
-    text: "How strongly this passage matched your search, as scored by the retrieval engine.",
-    note: "That is match strength, not truth or importance. The words of the record are the evidence.",
-  };
 }
 
 function termTip() {
@@ -6365,13 +6348,9 @@ async function loadSearchBriefs(results, mySeq) {
 // not merely newest of the twenty in hand. Passages remain the default; Briefs
 // swaps in the optional machine summary without changing that ranking.
 function renderResults(results) {
-  initTermTips();
-  // A new page of results throws away the row the open card was parented to.
-  hideTermTip(false);
   $("search-results").replaceChildren(
     ...results.map((r) => {
       const li = document.createElement("li");
-      const pct = Math.round((r.score || 0) * 100);
       const brief = lastSearch.briefs[r.resource];
       const text = searchReadMode === "briefs"
         ? brief
@@ -6380,9 +6359,7 @@ function renderResults(results) {
         : `<p class="snippet">${highlightHTML(r.snippet, $("search-input").value)}</p>`;
       li.innerHTML = `
         <div>
-          <button type="button" class="link result-title">${esc(displayTitle(r))}</button><button
-            type="button" class="scorebar" data-tip="relevance" data-tip-pct="${pct}"
-            aria-label="Relevance ${pct}%"><i style="width:${pct}%"></i></button>
+          <button type="button" class="link result-title">${esc(displayTitle(r))}</button>
         </div>
         <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true, portrait: true })}</span>
         ${text}`;
