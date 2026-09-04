@@ -3650,10 +3650,9 @@ async function renderPersonTopics(name, sections) {
   sections.appendChild(slot);
   try {
     const nameQuery = new URLSearchParams({ name });
-    const [data, allTopics, tide] = await Promise.all([
+    const [data, allTopics] = await Promise.all([
       api(`/api/person-topics?${nameQuery}`),
       api("/api/topics"),
-      api("/api/tide?scope=all"),
     ]);
     if (currentSubjectKey !== key || !slot.isConnected) return;
     const baseline = new Map((allTopics.topics || []).map((topic) => [
@@ -3698,9 +3697,7 @@ async function renderPersonTopics(name, sections) {
           </div>
         </div>
         ${chart}
-        <p class="person-topic-legend"><span><i></i>Their share of labelled speeches</span><span><b></b>Share across the whole labelled record</span></p>
-        ${coverageRuleHTML(tide.decades)}
-        <p class="fineprint">${Number(data.profiles?.all?.labelled || 0).toLocaleString()} of their ${Number(data.indexed || 0).toLocaleString()} indexed speeches carry a topic label so far. A speech can carry more than one topic, so the bars do not sum to 100%. Names follow Hansard; a bare surname or another spelling can sit separately. Each row opens the speeches behind it.</p>`;
+        <p class="person-topic-legend"><span><i></i>Their share of labelled speeches</span><span><b></b>Share across the whole labelled record</span></p>`;
       for (const button of slot.querySelectorAll("[data-person-era]")) {
         button.addEventListener("click", () => {
           if (button.dataset.personEra === era) return;
