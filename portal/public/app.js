@@ -3592,7 +3592,7 @@ let activeDirectory = null;
 /**
  * Render one directory into #subject-body.
  *   spec.kind      person | party | donor (the route and hash base)
- *   spec.title     serif heading; spec.lede: one sentence with the counts (HTML)
+ *   spec.title     serif heading; spec.lede: one sentence with the counts (HTML, optional)
  *   spec.tiles     [[value, label]] figures for the whole directory
  *   spec.items     rows; spec.text(item) is what the search box matches
  *   spec.filters   [{ key, label, options: [[value, label]], test(item, value) }]
@@ -3628,7 +3628,7 @@ function renderDirectory(spec) {
     <p class="kicker">Encyclopedia</p>
     <div class="subject-head">
       <h2 id="subject-title" tabindex="-1">${esc(spec.title)}</h2>
-      <p class="subject-tag"><span>${spec.lede}</span></p>
+      ${spec.lede ? `<p class="subject-tag"><span>${spec.lede}</span></p>` : ""}
     </div>
     <div class="tiles tiles-compact dir-tiles">${spec.tiles.map(([v, l]) => tile(v, l)).join("")}</div>
     <form class="dir-controls" id="dir-controls" role="search" aria-label="Filter the list">
@@ -4242,10 +4242,8 @@ async function buildCampaignersDirectory() {
 
   return {
     title: DIRECTORY_KINDS.campaigner,
-    lede: `The <b>${num(items.length)}</b> organisations that lodge annual returns with the AEC as associated
-      entities, third parties, significant third parties or political campaigners${first && last
-        ? `, covering ${esc(first)} to ${esc(last)}` : ""}. This is money raised and spent on politics outside
-      the donation columns. Every name opens its entry.`,
+    // No lede: the tiles carry the counts and the span of years.
+    lede: "",
     // The fourth tile counts the organisations naming NO party, not the ones
     // naming one. Most of the roster names none, and leading with that is what
     // keeps the party filter from reading as a map of who spends.
