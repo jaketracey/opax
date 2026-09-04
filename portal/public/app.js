@@ -3493,30 +3493,28 @@ function partyReceiptsHTML(rows, registerURL) {
       branches: Number(r[4]) || 0,
       clamped: rawDonations + rawOther > receipts,
     };
-  }).filter((r) => r.year && r.receipts > 0).reverse();
+  }).filter((r) => r.year && r.receipts > 0).sort((a, b) => b.year.localeCompare(a.year));
   if (!series.length) return "";
   const latest = series[0];
   const max = Math.max(...series.map((r) => r.receipts), 1);
-  const peak = series.find((r) => r.receipts === max);
   const pct = (value, total) => total > 0 ? Math.round((value / total) * 100) : 0;
   const srcFigure = (value, label) => `<a class="fig-src" href="${esc(source)}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(value)}</a>`;
   const clamped = series.filter((r) => r.clamped).length;
-  const rowHTML = series.map((r) => {
+  const rowHTML = series.map((r, index) => {
     const donationPct = r.receipts ? (r.donations / r.receipts) * 100 : 0;
     const otherPct = r.receipts ? (r.other / r.receipts) * 100 : 0;
     const missingPct = r.receipts ? (r.notItemised / r.receipts) * 100 : 0;
-    const showPct = r === latest || r === peak;
     const detail = `${r.year}: receipts ${fmtMoney(r.receipts)}; itemised donations ${fmtMoney(r.donations)}; itemised other receipts ${fmtMoney(r.other)}; not itemised ${fmtMoney(r.notItemised)} (${pct(r.notItemised, r.receipts)}%)`;
-    return `<div class="receipts-row" title="${esc(detail)}">
+    return `<a class="receipts-row${index >= 10 ? " receipts-older" : ""}" href="${esc(source)}" rel="noopener" target="_blank" aria-label="${esc(detail)}, AEC source">
       <span class="receipts-year">${esc(r.year)}</span>
       <span class="receipts-track" aria-hidden="true"><span class="receipts-bar" style="width:${((r.receipts / max) * 100).toFixed(1)}%">
         <i class="receipts-donations" style="flex-basis:${donationPct.toFixed(1)}%"></i>
         <i class="receipts-other" style="flex-basis:${otherPct.toFixed(1)}%"></i>
         <i class="receipts-unitemised" style="flex-basis:${missingPct.toFixed(1)}%"></i>
       </span></span>
-      <span class="receipts-value">${srcFigure(fmtMoney(r.receipts), `${r.year} receipts ${fmtMoney(r.receipts)}, AEC source`)}</span>
-      <span class="receipts-pct">${showPct ? srcFigure(`${pct(r.notItemised, r.receipts)}%`, `${r.year}, ${pct(r.notItemised, r.receipts)} percent not itemised, AEC source`) : ""}</span>
-    </div>`;
+      <span class="receipts-value">${esc(fmtMoney(r.receipts))}</span>
+      <span class="receipts-pct">${pct(r.notItemised, r.receipts)}%<span class="receipts-pct-label"> not itemised</span></span>
+    </a>`;
   }).join("");
   const table = `<div class="visually-hidden"><table><caption>Receipts on the return</caption>
     <thead><tr><th scope="col">Year</th><th scope="col">Receipts</th><th scope="col">Itemised donations</th><th scope="col">Itemised other receipts</th><th scope="col">Not itemised</th></tr></thead>
@@ -3524,18 +3522,19 @@ function partyReceiptsHTML(rows, registerURL) {
   return `<section class="party-receipts" aria-labelledby="party-receipts-heading">
     <h3 class="subject-section-title" id="party-receipts-heading">Receipts on the return</h3>
     <div class="receipts-legend" aria-label="Receipt categories">
-      <span><i class="receipts-swatch receipts-donations" aria-hidden="true"></i>itemised as donations</span>
-      <span><i class="receipts-swatch receipts-other" aria-hidden="true"></i>itemised as other receipts</span>
-      <span><i class="receipts-swatch receipts-unitemised" aria-hidden="true"></i>not itemised on the return</span>
+      <span><i class="receipts-swatch receipts-donations" aria-hidden="true"></i>Donations</span>
+      <span><i class="receipts-swatch receipts-other" aria-hidden="true"></i>Other receipts</span>
+      <span><i class="receipts-swatch receipts-unitemised" aria-hidden="true"></i>Not itemised</span>
     </div>
     <div class="tiles receipts-tiles">
       <div class="tile"><b>${srcFigure(fmtMoney(latest.receipts), `${latest.year} receipts ${fmtMoney(latest.receipts)}, AEC source`)}</b><span>receipts on the ${esc(latest.year)} return${latest.branches > 1 ? `, ${latest.branches} branches summed` : ""}</span></div>
       <div class="tile"><b>${srcFigure(fmtMoney(latest.donations), `${latest.year} itemised donations ${fmtMoney(latest.donations)}, AEC source`)}</b><span>itemised as donations</span></div>
       <div class="tile"><b>${srcFigure(`${pct(latest.notItemised, latest.receipts)}%`, `${latest.year}, ${pct(latest.notItemised, latest.receipts)} percent not itemised, AEC source`)}</b><span>of receipts not itemised</span></div>
     </div>
-    <div class="receipts-rows">${rowHTML}</div>
+    ${series.length > 10 ? `<button type="button" class="secondary party-years-toggle" aria-expanded="false" aria-controls="party-receipts-rows" data-years="${series.length}">Show all ${series.length} years</button>` : ""}
+    <div class="receipts-rows" id="party-receipts-rows">${rowHTML}</div>
     ${table}
-    <p class="fineprint">Bars are scaled to the party's largest year shown. “Not itemised” is receipts minus the sums itemised as donations and as other receipts on the same return; the AEC does not require receipts under the disclosure threshold to be itemised. Public election funding is left where the return puts it.${clamped ? ` ${clamped} historic ${clamped === 1 ? "row reports" : "rows report"} itemised components above the headline receipts total; ${clamped === 1 ? "its bar is" : "their bars are"} clamped to that total.` : ""} Source: <a href="${esc(source)}" rel="noopener" target="_blank">AEC Transparency Register, annual returns, CC BY 4.0 ↗︎</a></p>
+    <p class="fineprint">Bars share one scale across all ${series.length} years, including older years. “Not itemised” is receipts minus the sums itemised as donations and as other receipts on the same return; the AEC does not require receipts under the disclosure threshold to be itemised. Public election funding is left where the return puts it.${clamped ? ` ${clamped} historic ${clamped === 1 ? "row reports" : "rows report"} itemised components above the headline receipts total; ${clamped === 1 ? "its bar is" : "their bars are"} clamped to that total.` : ""} Source: <a href="${esc(source)}" rel="noopener" target="_blank">AEC Transparency Register, annual returns, CC BY 4.0 ↗︎</a></p>
   </section>`;
 }
 
@@ -3588,6 +3587,13 @@ async function renderPartyDebts(label, sections) {
     annual returns, all branches summed: bank loans sit beside trade creditors and tax owed, and a balance is not new
     borrowing. Creditors under the disclosure threshold are not itemised. Source: AEC Transparency Register, CC BY 4.0.${reg ? ` <a href="${esc(reg)}" rel="noopener" target="_blank">Open the register ↗︎</a>` : ""}</p>`;
   slot.innerHTML = html;
+  const yearsToggle = slot.querySelector(".party-years-toggle");
+  yearsToggle?.addEventListener("click", () => {
+    const expanded = yearsToggle.getAttribute("aria-expanded") !== "true";
+    yearsToggle.setAttribute("aria-expanded", String(expanded));
+    yearsToggle.closest(".party-receipts").classList.toggle("party-years-expanded", expanded);
+    yearsToggle.textContent = expanded ? "Show newest 10 years" : `Show all ${yearsToggle.dataset.years} years`;
+  });
   if (returns.length) {
     const latest = returns[returns.length - 1];
     const receipts = Math.max(0, Number(latest[1]) || 0);
@@ -3856,6 +3862,7 @@ async function openSubject(kind, name, manageFocus) {
       fmt: fmtMoney,
       heading: isParty ? "Where it came from" : "Where the money went",
       linkTo: (nm) => subjectHash(isParty ? "donor" : "party", nm),
+      className: isParty ? "party-flow-bars" : "",
       partyDots: !isParty, // donor page rows are parties; party page rows are donors
     }));
     if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
