@@ -621,11 +621,12 @@
         <nav id="doc-topics" class="doc-topics" aria-label="Topics this speech is labelled with" hidden></nav>
         <div class="doc-toolbar" id="doc-actions" hidden>
           <div class="doc-toolbar-btns" role="group" aria-label="Document actions">
-            <button type="button" class="action-btn action-primary" id="doc-profile">Full profile</button>
+            <a class="action-btn action-primary" id="doc-ask" href="/ask">Ask the record about this</a>
+            <button type="button" class="action-btn" id="doc-profile" aria-label="Full profile">Profile</button>
             <button type="button" class="action-btn" id="doc-cite" aria-expanded="false" aria-controls="doc-cite-panel">Cite</button>
-            <button type="button" class="action-btn" id="doc-more">Their speeches</button>
-            <button type="button" class="action-btn" id="doc-similar">Find similar</button>
-            <button type="button" class="action-btn" id="doc-copylink">Copy link</button>
+            <button type="button" class="action-btn" id="doc-more" aria-label="Their speeches">More</button>
+            <button type="button" class="action-btn" id="doc-similar" aria-label="Find similar speeches" aria-expanded="false" aria-controls="doc-similar-panel">Similar</button>
+            <button type="button" class="action-btn" id="doc-copylink" aria-label="Copy link">Link</button>
           </div>
           <p id="doc-speaker-links" class="fineprint doc-speaker-links" hidden></p>
         </div>
@@ -633,6 +634,7 @@
       <div id="doc-cite-panel" class="cite-panel" hidden>
         <!-- injected -->
       </div>
+      <section id="doc-similar-panel" aria-label="Similar speeches" hidden></section>
       <hr class="ledger-rule doc-rule">
       <div id="doc-status" class="status" role="status"></div>
       <!-- The summary is OPAX's writing, the record below is parliament's. They
@@ -640,15 +642,15 @@
            between them, which is not a difference a reader should have to look
            for on a site whose whole claim is the record's own words. -->
       <aside id="doc-brief" class="doc-brief" aria-labelledby="doc-brief-head" hidden>
-        <p class="doc-brief-head">
-          <span class="kicker" id="doc-brief-head">In brief</span>
+        <div class="doc-brief-head">
+          <h3 class="subject-section-title" id="doc-brief-head">In brief</h3>
           <span class="doc-brief-tag">Machine summary</span>
-        </p>
+        </div>
         <p id="doc-brief-text"></p>
         <p class="doc-brief-note">Written from this speech by a model, not by a person, and not part of the record.</p>
       </aside>
-      <p class="kicker doc-record-head" id="doc-record-head" hidden>The speech itself</p>
-      <pre id="doc-text" class="doc-text"></pre>
+      <h3 class="subject-section-title doc-record-head" id="doc-record-head" hidden>The speech itself</h3>
+      <div id="doc-text" class="doc-text"></div>
       <p class="fineprint" id="doc-caveat" hidden></p>
     </section>
 
