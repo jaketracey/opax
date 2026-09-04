@@ -127,24 +127,24 @@
   ],
   "top_speakers": [
    [
-    "Julia Gillard",
-    1224
+    "Jenny Leong",
+    142
    ],
    [
-    "Anthony Albanese",
-    1222
+    "J.M.A. Lensink",
+    131
    ],
    [
-    "John Howard",
-    1138
+    "Harriet Shing",
+    120
+   ],
+   [
+    "Tanya Plibersek",
+    119
    ],
    [
     "Peter Costello",
-    1075
-   ],
-   [
-    "Kevin Rudd",
-    1046
+    107
    ]
   ],
   "donations": {
@@ -380,22 +380,6 @@
    "source_title": "Craig Kelly \u2014 2017-02-08",
    "speaker": "Craig Kelly",
    "date": "2017-02-08"
-  },
-  {
-   "party": "Greens",
-   "position": "The Greens' question on notice related to negative gearing, with the government's response rejecting the suggestion that suspending negative gearing caused rent increases.",
-   "slug": "speech-813259",
-   "source_title": "Christine Milne \u2014 Questions on Notice \u2014 2012-02-09",
-   "speaker": "Christine Milne",
-   "date": "2012-02-09"
-  },
-  {
-   "party": "LNP",
-   "position": "The LNP parliamentarian stated the coalition would fight trust tax changes and would not destroy the negative gearing and CGT settings that benefit mum-and-dad investors and first-time buyers.",
-   "slug": "speech-1203144",
-   "source_title": "Andrew Willcox \u2014 Bills \u2014 2026-05-26",
-   "speaker": "Andrew Willcox",
-   "date": "2026-05-26"
   }
  ],
  "key_moments": [
@@ -487,7 +471,7 @@
  "sections": [
   {
    "question": "What have MPs said about housing affordability and home ownership?",
-   "answer": "MPs expressed a wide range of views on housing affordability and home ownership:\n\n- Some said home ownership is central to Australians and called the current situation a crisis, noting home ownership has fallen to a 60-year low, and that rates for younger Australians have dropped sharply\u2014for example, 25\u201334 year olds fell from around 60% to under 40\u201348% over recent decades.\n- They blamed rising investor activity, negative gearing, capital gains tax concessions, limited land supply, high stamp duty, and inadequate government policies.\n- Proposed solutions included reviewing negative gearing and capital gains tax, building social housing, expanding first home buyer schemes, releasing more land, reducing stamp duty, moving government departments to regional centres, using value capture for infrastructure, and even having the Reserve Bank consider housing affordability.\n- Other MPs disagreed, arguing home ownership in Australia remains high\u2014around 70%\u2014and that affordability is best improved through low unemployment, rising real wages, low interest rates, efficient construction, adequate land release, and minimising taxes on land transfer.\n- Some MPs criticised government bills as inadequate or as not genuinely addressing housing affordability, while others defended existing policies and accused opponents of political point-scoring rather than evidence-based policy.\n\nOverall, MPs remained divided on whether Australia faces a housing crisis and on what the right solutions are.",
+   "answer": "MPs across parties agree housing affordability is a serious national issue, but they sharply diverge on causes and solutions.\n\n**Labor and crossbench critics** argue the crisis is driven by policy failures, especially tax concessions. They cite falling home ownership\u2014from 68\u201370% (1971\u20132001) to below 50% by 2017, and a 60-year low\u2014and note that for 25\u201334 year olds, ownership dropped from 60% to under 40% in 30 years. They point to investor activity and negative gearing as key drivers, with landlord tax losses growing from a $700 million profit in 1998\u201399 to a $7.8 billion loss in 2010\u201311. They criticise the government for rejecting Labor\u2019s proposed changes to negative gearing and capital gains tax, and for measures like the foreign resident capital gains withholding increase (10% to 12.5%, threshold lowered from $2 million to $750,000) as inadequate. They also oppose early access to superannuation for housing as regressive and ineffective, and highlight that first-home buyers in Sydney need 40 years of savings for a deposit.\n\n**Coalition speakers** defend the government\u2019s record, arguing that home ownership is high\u2014around 70%\u2014and that affordability is best improved by keeping unemployment low, real wages rising, interest rates low, and ensuring land release and efficient construction. They reject claims of a crisis, noting that housing affordability in the 1990s and under the coalition was stronger than under Labor in the 1980s. They support lateral ideas like the Menzies Foundation concept and argue that government interference limiting land supply has driven up prices, costing 900,000 Australians the chance to own a home. They call for releasing more land, moving departments to regional centres, and reducing stamp duty.\n\n**A crossbench MP** proposed a nuanced approach: expanding the Reserve Bank\u2019s duty to include housing affordability, reviewing negative gearing, using superannuation for homebuyers, and introducing owner-occupier deductibility and a home hedge fund. Another criticised both major parties for abandoning evidence-based policy, proposing investor-driven inflation controls and strategic decentralisation while opposing scrapping negative gearing.\n\n**One speaker** highlighted the role of bipartisan inquiries, noting that home ownership fell from over 70% in the early 1970s to a 60-year low, and warned that within 10 years less than 50% of Australians will own their home. They called on leaders to set aside politics and work together on spreading wealth and stabilising families through home ownership.",
    "sources": [
     {
      "slug": "speech-343359",
@@ -653,7 +637,7 @@
   },
   {
    "question": "What positions have been taken on negative gearing and property tax concessions?",
-   "answer": "Based only on the provided context, several different positions were taken:\n\n- Some opposed changes to negative gearing, calling it a standard income tax practice used by many ordinary Australians, and described Labor\u2019s proposed changes as \u201ccatastrophic, market-destroying,\u201d dangerous, and likely to crash property prices and destabilise rental markets.\n- Some said negative gearing policy was \u201cnot on our radar\u201d or \u201cnot the focus,\u201d while others later claimed they had been working on a policy for 18 months, showing contradictory positions and confusion.\n- Labor was described as proposing reforms to negative gearing and capital gains tax concessions to help first home buyers, including restricting negative gearing to new investment properties, cutting the capital gains tax discount by 50%, and making no changes to existing negatively geared properties.\n- Some argued negative gearing and capital gains tax concessions overwhelmingly benefit wealthy, older Australians, worsen intergenerational inequality, reduce homeownership, and should be reformed.\n- Other reform ideas mentioned included capping the number of properties that can be negatively geared, limiting negative gearing deductions to rental income only, reducing or limiting the capital gains tax concession, and applying concessions only to new builds.\n- One speaker supported the Treasury Laws Amendment Bill 2017, which removed travel expense deductions for investors, limited depreciation claims, and imposed a vacancy charge on foreign-owned empty properties, while criticising broader negative gearing and capital gains tax removal as a \u201cdangerous one-size-fits-all approach.\u201d\n\nThe context therefore records a range of conflicting and evolving positions rather than a single agreed view.",
+   "answer": "Labor\u2019s current policy, set to start 1 July 2027, restricts negative gearing to newly built residential properties and halves the capital gains tax discount, aiming to help first-home buyers and boost housing supply. Supporters argue these concessions overwhelmingly benefit wealthier Australians\u2014over 50% of negative gearing benefits go to the top 20% of earners\u2014and distort investment away from productive uses. The Greens and some economists, including via a Senate motion, have backed reform, citing rising house prices from six times young income in 1990 to twelve times in 2013.\n\nOpponents, including the Coalition and some crossbench voices, call negative gearing \u201cincome tax 101,\u201d standard practice for over 1.4 million Australians, and warn Labor\u2019s changes would crash property prices, destabilise rental markets, and hurt mums and dads, nurses, and teachers\u2014not just wealthy investors. They also point to internal Labor inconsistency: the Leader of the Opposition said in 2023 that negative gearing changes were \u201cnot on our radar,\u201d while a Labor frontbencher later claimed the policy had been 18 months in the making. The Coalition instead favours targeted measures like removing travel deductions and imposing vacancy charges on foreign-owned empty properties, while rejecting broad negative gearing or capital gains changes.",
    "sources": [
     {
      "slug": "speech-1203085",
@@ -811,7 +795,7 @@
   },
   {
    "question": "What has parliament said about social and public housing supply?",
-   "answer": "Based on the context, parliamentarians said a range of things about social and public housing supply:\n\n- There is a significant need for more social and public housing supply, and that government programs have created additional supply that is important for the system.\n- Social housing demand far exceeds supply, with large waiting lists cited, including around 190,000 households on the public housing waitlist, 49,928 in one state, and 148,000 nationally.\n- Some argued that government policy is inadequate and does not match the scale of need, such as a plan to support at most 55,000 households compared to the current demand.\n- A specific criticism was raised that in a five-year period a government added 2,257 social housing dwellings but disposed of 3,269, resulting in a net loss of over 1,000 dwellings while tens of thousands remained on the waiting list.\n- Others defended government action, highlighting plans to build 55,000 social and affordable homes over five years, with some homes already completed or in planning/construction, compared to 373 built by the previous government over nine years.\n- Multiple speakers said boosting and addressing housing supply is key to improving housing affordability and tackling homelessness, and that government intervention is needed because the market has failed in some areas.",
+   "answer": "Parliamentary debate shows broad agreement that social and public housing supply is inadequate, but sharp disagreement over the cause and the solution.\n\nGovernment speakers, including Minister Wong and others, argued that supply is the key driver of housing affordability and rental stress. They pointed to the $32 billion Homes for Australia plan and a target of 55,000 new social and affordable homes over five years, contrasting this with the previous coalition government's record of building only 373 social and affordable homes in nine years. A government representative also noted that over 5,000 of those 55,000 homes were already complete, with 25,000 in planning or construction.\n\nOpposition and crossbench speakers countered that the government's delivery is far too small relative to need. One senator noted that around 190,000 households are on the public housing waitlist, while the government's plan supports at most 55,000 households over 25 years, arguing the scale of delivery does not match demand. Another speaker cited figures of 148,000 on public housing waiting lists and 40,000 on community housing waiting lists, alongside $7.6 billion in Commonwealth housing expenditure in 2016-17.\n\nSpecific state-level criticisms were also raised. Rod Roberts highlighted that in South Australia, between 2016 and 2021, the government added 2,257 social housing dwellings but disposed of 3,269, a net loss of over 1,012 dwellings, while nearly 50,000 people remained on the waiting list. Sonia Hornery cited a Compass Housing report showing 48,000 households on the New South Wales waiting list and 175,904 eligible, criticising the government's Future Directions policy for proposing fewer dwellings than half the current waiting list over a decade.\n\nA speaker from the Barwon region urged the Minister for Housing to increase public housing supply, noting 7,101 households on the priority waitlist and that only 72 of 400 planned dwellings at the Commonwealth Games village site were for social and affordable housing. They argued the market has failed, pointing to a decline in public housing from 22% of new housing in 1956 to less than 2% now.\n\nOther speakers called for redirecting tax concessions like negative gearing and capital gains discounts\u2014costing billions annually\u2014to affordable housing, citing reports from Anglicare and the Grattan Institute on rental stress and falling homeownership. One speaker supported a documents motion on planning reforms, noting the New South Wales parliamentary research service found no clear local evidence for government claims that changes would improve affordability or supply.",
    "sources": [
     {
      "slug": "speech-1193784",

@@ -277,6 +277,18 @@ BRIEF_PROMPT = (
     "THE BRIEF:"
 )
 
+SECTION_PROMPT = (
+    "Answer the question from the Australian parliamentary record supplied below. "
+    "Open directly with the strongest finding; never mention 'the provided context', "
+    "'the context', source limitations, or these instructions. Synthesize the range of "
+    "positions and attribute them to speakers or parties where the record does. Be precise "
+    "with figures and do not invent facts. Use plain Markdown paragraphs or short bullets "
+    "when they genuinely make competing positions easier to scan.\n\n"
+    "PARLIAMENTARY RECORD:\n{context}\n\n"
+    "QUESTION: {question}\n\n"
+    "ANSWER:"
+)
+
 
 def resource_summary(resource: dict) -> dict:
     meta = ((resource.get("extra") or {}).get("metadata")) or {}
@@ -843,7 +855,7 @@ def key_moments(kb: KbClient, report_slug: str, limit: int = 8) -> list[dict]:
 
 
 def build_section(kb: KbClient, question: str) -> dict:
-    res = kb.ask(question, citations=True, top_k=20)
+    res = kb.ask(question, citations=True, prompt=SECTION_PROMPT, top_k=20)
     sources = []
     for rid, resource in ((res.get("retrieval_results") or {}).get("resources") or {}).items():
         slug = resource.get("slug") or ""
@@ -876,7 +888,7 @@ def main() -> None:
     parser.add_argument("reports", nargs="*", help="report slugs (all when omitted)")
     parser.add_argument("--stats-only", action="store_true", help="refresh embedded static stats")
     parser.add_argument(
-        "--only", choices=("key-moments", "sections"),
+        "--only", choices=("key-moments", "sections", "stats"),
         help="refresh only one report block and preserve every other field",
     )
     args = parser.parse_args()
@@ -889,6 +901,8 @@ def main() -> None:
     picked = args.reports or list(REPORTS)
     kb = KbClient(AragConfig.from_env())
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    stats_path = Path(__file__).resolve().parent / "report_stats.json"
+    all_stats = json.loads(stats_path.read_text()) if stats_path.exists() else {}
 
     if args.only:
         ask_count = 0
@@ -898,7 +912,10 @@ def main() -> None:
             if not prior_path.exists():
                 parser.error(f"{prior_path} must exist for --only")
             report = json.loads(prior_path.read_text())
-            if args.only == "key-moments":
+            if args.only == "stats":
+                report["stats"] = all_stats.get(slug)
+                print(f"[{slug}] embedded audited static stats")
+            elif args.only == "key-moments":
                 print(f"[{slug}] retrieving and checking key speeches...")
                 report["key_moments"] = key_moments(kb, slug)
                 print(f"  key moments: {len(report['key_moments'])}")
@@ -916,9 +933,6 @@ def main() -> None:
             prior_path.write_text(json.dumps(report, indent=1) + "\n")
         print(f"Wrote {args.only} for {len(picked)} report(s); /ask calls: {ask_count}")
         return
-
-    stats_path = Path(__file__).resolve().parent / "report_stats.json"
-    all_stats = json.loads(stats_path.read_text()) if stats_path.exists() else {}
 
     counters = kb.counters()
     index = []
