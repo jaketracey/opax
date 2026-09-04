@@ -1301,6 +1301,26 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFall
   });
   return { close, go };
 }
+// The ask and search fields are one-line textareas: Enter submits (a shift-
+// Enter keeps a newline while typing), the value is flattened on submit,
+// and on a touch screen the field opens on focus and settles on blur.
+for (const id of ["ask-input", "search-input"]) {
+  const field = $(id);
+  if (!field || field.tagName !== "TEXTAREA") continue;
+  const form = field.closest("form");
+  const fit = () => { field.style.height = "auto"; field.style.height = `${Math.min(field.scrollHeight, 260)}px`; };
+  field.classList.add("is-collapsed");
+  field.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      field.value = field.value.replace(/\s*\n\s*/g, " ").trim();
+      form?.requestSubmit ? form.requestSubmit() : form?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+    }
+  });
+  field.addEventListener("focus", () => { field.classList.remove("is-collapsed"); if (matchMedia("(hover: none) and (pointer: coarse)").matches) fit(); });
+  field.addEventListener("input", () => { if (document.activeElement === field && matchMedia("(hover: none) and (pointer: coarse)").matches) fit(); });
+  field.addEventListener("blur", () => { field.style.height = ""; field.classList.add("is-collapsed"); field.scrollTop = 0; });
+}
 attachQuickSearch($("mast-q"), $("mast-sugg"), { idPrefix: "ms" });
 attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: () => closeNavDrawer() });
 

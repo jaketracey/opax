@@ -235,7 +235,7 @@
     <section id="panel-ask" class="panel" aria-label="Ask the record">
       <form id="ask-form" class="ask-row">
         <label for="ask-input" class="visually-hidden">Ask a question of the parliamentary record</label>
-        <input id="ask-input" type="text" autocomplete="off">
+        <textarea id="ask-input" class="grow-field" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
         <button type="submit" class="primary" id="ask-submit">Ask the record</button>
         <div class="ask-options-wrap">
         <button type="button" class="action-btn" id="ask-options-btn" aria-expanded="false" aria-controls="ask-options-pop" aria-label="Ask options" title="Options">
@@ -447,7 +447,7 @@
       <form id="search-form" class="search-grid">
         <div class="query-line">
           <label for="search-input" class="visually-hidden">Search the corpus</label>
-          <input id="search-input" type="text" autocomplete="off" placeholder="Search half a million speeches…">
+          <textarea id="search-input" class="grow-field" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false" placeholder="Search half a million speeches…"></textarea>
           <button type="submit" class="primary">Search</button>
           <div class="ask-options-wrap">
           <button type="button" class="action-btn" id="search-options-btn" aria-expanded="false" aria-controls="search-options-pop" aria-label="Search filters" title="Filters">
