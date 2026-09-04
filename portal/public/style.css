@@ -1888,6 +1888,15 @@ a.ency-name:hover, a.ency-name:focus-visible {
   display: flex; flex-wrap: wrap; gap: 0.6rem 0.8rem; align-items: end; margin: var(--space-5) 0 var(--space-1);
   padding: 0.85rem 0.95rem 0.95rem; background: var(--paper-raised); border: 1px solid var(--line); border-radius: 6px;
 }
+/* The name box carries its own suggestion panel beneath it. */
+.dir-q-wrap { position: relative; flex: 1 1 240px; min-width: 0; }
+.dir-q-wrap input[type="search"] { width: 100%; }
+.dir-sugg {
+  position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 30;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 4px;
+  box-shadow: 0 14px 32px rgba(21, 27, 20, 0.18); padding: 0.3rem;
+}
+.dir-sugg .ms-row { min-height: 44px; font-size: 0.9375rem; }
 .dir-controls input[type="search"] {
   flex: 1 1 240px; min-width: 0; min-height: 44px;
   background: var(--paper-raised); color: var(--ink);
@@ -1934,7 +1943,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .dir-more-row { margin: 1rem 0 0; }
 .dir-empty { margin: 1.2rem 0 0; color: var(--ink-soft); font-size: 0.9375rem; display: flex; flex-wrap: wrap; gap: 0.7rem 1rem; align-items: center; }
 @media (max-width: 640px) {
-  .dir-controls input[type="search"] { flex-basis: 100%; }
+  .dir-controls input[type="search"], .dir-controls .dir-q-wrap { flex-basis: 100%; }
   .dir-field { flex: 1 1 42%; }
   .dir-checks { flex: 1 1 100%; gap: 0 1.2rem; }
   .dir-field select { width: 100%; max-width: 100%; }

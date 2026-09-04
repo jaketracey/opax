@@ -1178,7 +1178,10 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
 // parties, reports — plus a plain search of the record as the first row.
 // The masthead field and the drawer field share the engine; only where the
 // panel lives and what happens on the way out differ.
-function attachQuickSearch(input, panel, { idPrefix, beforeGo } = {}) {
+/* `source(q)` swaps the site-wide suggestions for a caller's own list (the
+   directories offer their entries); `enterFallback: null` leaves Enter to the
+   form when nothing is highlighted; `clearOnGo: false` keeps what was typed. */
+function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFallback = "search", clearOnGo = true } = {}) {
   if (!input || !panel) return;
   let items = [];
   let active = -1;
@@ -1192,7 +1195,7 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo } = {}) {
   };
   const go = (href) => {
     close();
-    input.value = "";
+    if (clearOnGo) input.value = "";
     input.blur();
     beforeGo?.();
     goRoute(href);
@@ -1223,6 +1226,14 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo } = {}) {
     const q = input.value.trim();
     const my = ++seq;
     if (q.length < 2) { items = []; render(); return; }
+    if (source) {
+      const own = await source(q);
+      if (my !== seq) return;
+      items = (own || []).slice(0, 10);
+      active = -1;
+      render();
+      return;
+    }
     const ql = q.toLowerCase();
     const out = [{ label: `Search the record for “${q}”`, type: "Search", href: searchHash(q, {}) }];
     try {
@@ -1263,7 +1274,8 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo } = {}) {
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (active >= 0 && items[active]) go(items[active].href);
-      else if (input.value.trim()) go(searchHash(input.value.trim(), {}));
+      else if (enterFallback === "search" && input.value.trim()) go(searchHash(input.value.trim(), {}));
+      else close();
     } else if (e.key === "Escape" && !panel.hidden) {
       e.stopPropagation(); close();
     }
@@ -4427,8 +4439,12 @@ function renderDirectory(spec) {
     </div>
     <form class="dir-controls" id="dir-controls" role="search" aria-label="Filter the list">
       <label class="visually-hidden" for="dir-q">Search ${esc(spec.title.toLowerCase())} by name</label>
-      <input id="dir-q" type="search" autocomplete="off" spellcheck="false"
-             placeholder="Search by name…" value="${esc(state.q)}">
+      <span class="dir-q-wrap">
+        <input id="dir-q" type="search" autocomplete="off" spellcheck="false"
+               placeholder="Search by name…" value="${esc(state.q)}"
+               role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="dir-sugg">
+        <div class="dir-sugg" id="dir-sugg" role="listbox" aria-label="Matching names" hidden></div>
+      </span>
       ${spec.filters.filter((f) => !f.check).map(filterHTML).join("")}
       <label class="dir-field"><span>Sort</span>
         <select id="dir-sort">${spec.sorts.map(([v, l]) => `<option value="${esc(v)}"${state.sort === v ? " selected" : ""}>${esc(l)}</option>`).join("")}</select></label>
@@ -4445,6 +4461,24 @@ function renderDirectory(spec) {
 
   const list = $("dir-list"), count = $("dir-count"), empty = $("dir-empty"), moreBtn = $("dir-more");
   const form = $("dir-controls"), input = $("dir-q"), sortSel = $("dir-sort");
+  // Typing a name also offers the entries themselves: the eight best name
+  // matches drop beneath the box (names that start with the words first) and
+  // open the entry directly; Enter with nothing chosen just filters the list.
+  attachQuickSearch(input, $("dir-sugg"), {
+    idPrefix: "dq", enterFallback: null, clearOnGo: false,
+    source: (q) => {
+      const terms = foldText(q).split(" ").filter(Boolean);
+      if (!terms.length) return [];
+      const starts = [], within = [];
+      for (const it of spec.items) {
+        if (!terms.every((t) => it._text.includes(t))) continue;
+        (foldText(spec.name(it)).startsWith(terms[0]) ? starts : within).push(it);
+        if (starts.length >= 8) break;
+      }
+      return [...starts, ...within].slice(0, 8)
+        .map((it) => ({ label: spec.name(it), type: spec.hint?.(it) || "", href: spec.href(it) }));
+    },
+  });
   const sortMap = new Map(spec.sorts.map(([v, , cmp]) => [v, cmp]));
   let matched = [], shown = 0;
   const noun = spec.title.toLowerCase();
@@ -4611,6 +4645,7 @@ async function buildPeopleDirectory() {
 
   return {
     title: "Parliamentarians",
+    name: (p) => p.name, href: (p) => subjectHash("person", p.name), hint: (p) => p.party || "",
     lede: "",
     items,
     text: (p) => `${p.name} ${p.full || ""} ${p.party || ""} ${(p.states || []).map((s) => STATE_NAMES[s] || s).join(" ")}`,
@@ -4707,6 +4742,7 @@ async function buildPartiesDirectory() {
 
   return {
     title: "Parties",
+    name: (p) => p.label, href: (p) => subjectHash("party", p.label), hint: () => "",
     lede: "",
     items,
     text: (p) => p.label,
@@ -4826,6 +4862,7 @@ async function buildDonorsDirectory() {
   const commissions = files.map(([j, d]) => d.meta?.commission || (j === "federal" ? "Australian Electoral Commission" : j));
   return {
     title: "Donors",
+    name: (d) => d.label, href: (d) => subjectHash("donor", d.label), hint: (d) => industryLabel?.(d.industry) || d.industry || "",
     lede: "",
     items,
     text: (d) => `${[...d.labels].join(" ")} ${d.industry || ""} ${d.group || ""} ${d._partyList.join(" ")}`,
@@ -5027,6 +5064,7 @@ async function buildCampaignersDirectory() {
 
   return {
     title: DIRECTORY_KINDS.campaigner,
+    name: (e) => e.name, href: (e) => subjectHash("campaigner", e.name), hint: () => "",
     // No lede: the tiles carry the counts and the span of years.
     lede: "",
     // The fourth tile counts the organisations naming NO party, not the ones
