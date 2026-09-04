@@ -1912,6 +1912,17 @@ function wireAskCitations(container, sources) {
         for (let parent = row.parentElement; parent && parent !== scope; parent = parent.parentElement) {
           if (parent.tagName === "DETAILS") parent.open = true;
         }
+        scope.querySelector(".ask-source-back")?.remove();
+        const back = document.createElement("button");
+        back.type = "button";
+        back.className = "link ask-source-back";
+        back.textContent = "Back to answer";
+        back.addEventListener("click", () => {
+          button.focus({ preventScroll: true });
+          button.scrollIntoView({ block: "center", behavior: "instant" });
+          back.remove();
+        });
+        row.appendChild(back);
         row.focus({ preventScroll: true });
         row.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
       });
@@ -1949,7 +1960,7 @@ function sourceItem(s, num, passage = false) {
     span.className = "source-meta";
     span.innerHTML = meta;
     li.appendChild(span);
-    decorateMetaPortraits(li);
+    if (!passage) decorateMetaPortraits(li);
   }
   if (passage && s.snippet?.trim()) {
     const quote = document.createElement("p");
@@ -2006,11 +2017,6 @@ function renderAskDateRuler(sources, isCited) {
   const ticks = entries.map(({ point, cited }) =>
     `<line class="date-ruler-tick ${cited ? "is-cited" : "is-retrieved"}"
       x1="${point.x.toFixed(2)}" x2="${point.x.toFixed(2)}" y1="${cited ? 12 : 33}" y2="52"/>`).join("");
-  const links = entries.map(({ source, point, cited }) => dateRulerLink({
-    percent: point.percent,
-    href: `/doc/${encodeURIComponent(source.slug)}`,
-    label: `${cited ? "Cited source" : "Retrieved source"}: ${displayTitle(source)}`,
-  })).join("");
   box.innerHTML = `
     <h3 class="date-ruler-heading">When the sources were spoken</h3>
     <div class="date-ruler-frame">
@@ -2018,7 +2024,6 @@ function renderAskDateRuler(sources, isCited) {
         <line class="date-ruler-axis" x1="${RULER_LEFT}" x2="${RULER_RIGHT}" y1="52" y2="52"/>
         ${ticks}${rulerAxisHTML()}
       </svg>
-      <div class="date-ruler-hits">${links}</div>
     </div>
     <p class="date-ruler-key"><span><i class="is-cited"></i>Cited in the answer</span><span><i></i>Retrieved only</span></p>`;
   box.hidden = false;
@@ -6162,6 +6167,7 @@ async function runAsk(question) {
     const answerText = (data.answer || "").trim();
     const sources = (data.sources || []).map((source) => ({
       ...source,
+      cited: source.cited ?? Object.keys(data.citations || {}).some((key) => key.split("/")[0] === source.resource),
       answerRanges: Object.entries(data.citations || {})
         .filter(([key]) => key.split("/")[0] === source.resource)
         .flatMap(([, ranges]) => Array.isArray(ranges) ? ranges : []),
@@ -6202,7 +6208,8 @@ async function runAsk(question) {
       $("ask-answer").replaceChildren(p, retry);
     }
     $("ask-stamp").textContent =
-      `Viewed ${fmtDate(localISODate())} · corpus v${corpusVersion()}` +
+      `Viewed ${fmtDate(localISODate())}` +
+      (corpusVersion() !== "unversioned" ? ` · corpus v${corpusVersion()}` : "") +
       ((askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
         ? ` · filtered: ${askFilterSummary(askFilters()) || `${speakerFilter}'s speeches`}` : "");
     renderAskDateRuler(sources, isCited);
@@ -6417,6 +6424,7 @@ function scrollChatToEnd() {
   });
 }
 function renderChatThread() {
+  syncAskChatViewport();
   const thread = $("chat-thread");
   thread.replaceChildren();
   if (!chatThread.length) {
@@ -6441,6 +6449,20 @@ function renderChatThread() {
   const next = document.createElement("div");
   next.id = "chat-next";
   thread.appendChild(next);
+}
+
+function syncAskChatViewport() {
+  const form = $("chat-form");
+  const viewport = window.visualViewport;
+  if (!viewport || form.askViewportBound) return;
+  form.askViewportBound = true;
+  const update = () => {
+    const covered = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+    form.style.setProperty("--ask-keyboard-bottom", `${covered}px`);
+  };
+  viewport.addEventListener("resize", update);
+  viewport.addEventListener("scroll", update);
+  update();
 }
 
 function chatAnswerEl(msg) {
@@ -6604,7 +6626,7 @@ async function sendChat(question, carry) {
   import("/wombat.js")
     .then((mod) => {
       if (chatAbort === myAbort && slot.isConnected) {
-        trundler = mod.mountWombat(slot, { label: "Checking the record." });
+        trundler = mod.mountWombat(slot, { label: "Checking the record.", ...PAGE_LOADER });
         slot.scrollIntoView({ block: "nearest" });
       }
     })
@@ -6615,12 +6637,12 @@ async function sendChat(question, carry) {
     const s = Math.round((Date.now() - started) / 1000);
     if (s >= 10 && trundler) trundler.setLabel(`Still digging (${s}s). Long questions can take a minute.`);
   }, 5000);
+  let live = null;
   try {
     const chatBody = JSON.stringify({ question: q, kind: chatKind, context });
     // The answer streams into a provisional turn beneath the loader's slot;
     // the finished thread re-renders from chatThread as before.
     let liveWrap = null;
-    let live = null;
     let streamed = false;
     const data = await askRecord(chatBody, myAbort.signal, {
       delta(text) {
@@ -6658,6 +6680,7 @@ async function sendChat(question, carry) {
       text: (data.answer || "").trim() || "(no answer)",
       sources: (data.sources || []).map((source) => ({
         ...source,
+        cited: source.cited ?? Object.keys(data.citations || {}).some((key) => key.split("/")[0] === source.resource),
         answerRanges: Object.entries(data.citations || {})
           .filter(([key]) => key.split("/")[0] === source.resource)
           .flatMap(([, ranges]) => Array.isArray(ranges) ? ranges : []),
@@ -6687,6 +6710,8 @@ async function sendChat(question, carry) {
       : `${err.message || err}. The record is still there; try again.`;
     $("chat-thread").appendChild(p);
   } finally {
+    live?.stop();
+    trundler?.destroy?.();
     if (chatAbort === myAbort) {
       clearInterval(chatTimer);
       $("chat-send").disabled = false;

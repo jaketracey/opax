@@ -2553,3 +2553,19 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 }
 #panel-ask .answer > *, #panel-chat .answer > * { scroll-margin-top: 84px; }
 #panel-ask .source-list li:focus, #panel-chat .source-list li:focus { outline: 2px solid var(--bronze-ink); outline-offset: 3px; background: var(--bronze-wash); }
+#ask-sources { max-width: 46rem; }
+#panel-ask .ask-source-passage, #panel-chat .ask-source-passage { max-width: 65ch; }
+#panel-ask .ask-options-pop { max-height: calc(100dvh - 180px); overflow-y: auto; overscroll-behavior: contain; }
+#panel-ask .ask-options-pop :is(input, select), #panel-ask .ask-scope { min-height: 44px; }
+#panel-ask .ask-options-pop input[type="checkbox"] { min-height: 20px; }
+#panel-ask .ask-citation:focus-visible, #panel-chat .ask-citation:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: -3px; border-radius: 2px; }
+#ask-date-ruler .date-ruler-year { font-variant-numeric: tabular-nums; }
+@media (max-width: 600px) {
+  #panel-ask .ask-options-pop { max-height: max(180px, calc(100dvh - 320px)); }
+  #panel-chat .chat-composer { bottom: var(--ask-keyboard-bottom, 0px); }
+}
+#panel-ask .ask-source-back, #panel-chat .ask-source-back {
+  grid-column: 2; justify-self: start; min-height: 44px; padding: 8px 0;
+  font: 600 0.8125rem/1.5 var(--sans); color: var(--bronze-ink);
+}
+#panel-ask .source-meta a, #panel-chat .source-meta a { min-width: 44px; }
