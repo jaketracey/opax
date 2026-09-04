@@ -2491,3 +2491,37 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 @media (max-width: 560px) {
   .term-tip { padding: 0.55rem 0.7rem 0.7rem; }
 }
+
+/* ==== page-home: The home page (/) ==== */
+#front-map, #front-page { font-variant-numeric: tabular-nums; }
+#front-map { margin-top: 2.5rem; }
+#front-page .front-mod { margin-bottom: 0; }
+#front-page, #front-page .front-main, #front-page .front-rail { gap: 2.5rem; }
+#front-page .front-mod > .subject-section-title,
+#front-map .subject-section-title { margin: 0 0 1rem; font-size: 1.4rem; line-height: 1.35; }
+#panel-ask:has(#front-page:not([hidden])) #chip-row { flex-wrap: wrap; gap: 0.5rem; mask-image: none; animation: none; }
+#panel-ask:has(#front-page:not([hidden])) #chip-row .chip {
+  display: inline-flex; align-items: center; min-height: 44px; white-space: normal;
+  text-align: left; line-height: 1.45; border-radius: 6px; height: auto;
+}
+#front-map .fineprint, #front-page .fineprint { font-size: 0.875rem; line-height: 1.6; }
+#front-map .map-chip { min-height: 44px; font-size: 0.8125rem; }
+#front-map .front-state-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+#front-map .front-map-foot .action-btn { min-height: 48px; }
+#front-map-root { height: 380px; max-height: none; }
+#front-statemap .sm-federal { min-height: 44px; }
+#front-statemap .sm-tip-actions a { min-height: 44px; display: flex; align-items: center; }
+@media (max-width: 700px) {
+  #front-map .front-map-half + .front-map-half { margin-top: 2.5rem; padding-top: 2rem; }
+  #front-statemap { height: 290px; }
+  #front-map-root { height: 320px; }
+  #front-map .front-map-foot { gap: 1rem; }
+  #front-map .front-map-foot .action-btn { align-self: flex-start; padding-inline: 1rem; }
+  #front-map-chips { margin-inline: 0; padding: 0 0 0.5rem; scrollbar-width: thin; }
+  #front-map-chips::-webkit-scrollbar { display: block; height: 4px; }
+}
+#front-map-root .mm-card-close { width: 44px; height: 44px; top: 4px; right: 4px; }
+#front-map-root .mm-card h2 { margin-right: 40px; font-family: var(--serif); line-height: 1.4; }
+#front-map-root .mm-card { overscroll-behavior: contain; scrollbar-gutter: stable; }
+#front-statemap .sm-tip-meta { font-size: 0.8125rem; line-height: 1.5; }
+#front-statemap .sm-tip-name { font-family: var(--serif); font-size: 1rem; }
