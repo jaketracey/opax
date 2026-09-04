@@ -220,7 +220,11 @@ const CSS = `
 .mm-root ::-webkit-scrollbar-thumb:hover { background: #a0761b; }
 .mm-root * { scrollbar-width: thin; scrollbar-color: #cfc9ba transparent; }
 .mm-root { position: relative; overflow: hidden; background: ${SURFACE};
-  font: 14px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif; color: #33322e; }
+  font: 14px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif; color: #33322e;
+  transition: height 360ms cubic-bezier(0.22, 0.7, 0.3, 1); }
+@media (prefers-reduced-motion: reduce) { .mm-root { transition: none; } }
+/* A host grown to hold its card (see fitHostToCard): the card may use the room. */
+.mm-root.mm-grown .mm-card { max-height: calc(100% - 64px); }
 .mm-canvas { display: block; width: 100%; height: 100%; cursor: grab;
   touch-action: none; user-select: none; -webkit-user-select: none; outline-offset: -3px; }
 .mm-canvas:focus-visible { outline: 2px solid ${ACCENT}; }
@@ -477,6 +481,31 @@ export async function mountMoneyMap(
   }
 
   const card = el('div', 'mm-card', container)
+  // A short host (the front page's box, any phone) is shorter than the card,
+  // which then clips or scrolls. While a card is up the host grows to hold it
+  // with a band of map above, and gives the height back when it closes; the
+  // engine's ResizeObserver refits the view either way.
+  let hostBaseHeight: string | null = null
+  const releaseHost = () => {
+    if (hostBaseHeight === null) return
+    container.style.height = hostBaseHeight
+    hostBaseHeight = null
+    container.classList.remove('mm-grown')
+  }
+  const fitHostToCard = () => {
+    if (card.hidden) { releaseHost(); return }
+    const prevMax = card.style.maxHeight
+    card.style.maxHeight = 'none'
+    const natural = card.scrollHeight
+    card.style.maxHeight = prevMax
+    const want = natural + 16 + 56
+    const have = container.getBoundingClientRect().height
+    const base = hostBaseHeight === null ? have : parseFloat(hostBaseHeight) || have
+    if (want <= base) { releaseHost(); return }
+    if (hostBaseHeight === null) hostBaseHeight = container.style.height
+    container.classList.add('mm-grown')
+    container.style.height = `${Math.round(Math.min(want, window.innerHeight * 0.85))}px`
+  }
   card.tabIndex = -1
   card.setAttribute('role', 'region')
   card.setAttribute('aria-label', 'Details for the selected node')
@@ -1135,6 +1164,7 @@ export async function mountMoneyMap(
     if (node) {
       renderCard(node)
       card.hidden = false
+      fitHostToCard()
       // Measure after layout, then move the view into the space the card
       // leaves free - the same insets protocol the React shell ran.
       requestAnimationFrame(() => {
@@ -1146,6 +1176,7 @@ export async function mountMoneyMap(
     } else {
       card.hidden = true
       card.innerHTML = ''
+      releaseHost()
       engine.setInsets(chromeInsets())
     }
     words.select(node, card, view)
@@ -1164,6 +1195,7 @@ export async function mountMoneyMap(
     if (edge) {
       renderEdgeCard(edge)
       card.hidden = false
+      fitHostToCard()
       requestAnimationFrame(() => {
         if (!card.hidden) engine.setInsets(measureInsets())
       })
@@ -1171,6 +1203,7 @@ export async function mountMoneyMap(
     } else {
       card.hidden = true
       card.innerHTML = ''
+      releaseHost()
       engine.setInsets(chromeInsets())
     }
     words.selectEdge(edge)
