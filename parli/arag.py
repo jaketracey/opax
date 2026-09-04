@@ -290,6 +290,12 @@ class KbClient:
         """Read one text field without fetching the resource's other fields."""
         return _request("GET", self._rag(f"/resource/{rid}/text/{field}"), self._headers)
 
+    def get_text_field_by_slug(self, slug: str, field_id: str) -> dict:
+        """Fetch one text field without serializing the complete resource."""
+        return _request(
+            "GET", self._rag(f"/slug/{slug}/text/{field_id}"), self._headers
+        )
+
     def counters(self) -> dict:
         return _request("GET", self._rag("/counters"), self._headers)
 

@@ -84,14 +84,18 @@ CREATE TABLE IF NOT EXISTS speeches (
     date           DATE NOT NULL,
     topic          TEXT,
     text           TEXT NOT NULL,
+    text_clean     TEXT,
+    text_clean_rules TEXT,
     word_count     INTEGER,
     source         TEXT,          -- 'zenodo', 'openaustralia', 'wragge_xml', 'nsw_hansard'
     state          TEXT DEFAULT 'federal',
+    speaker_name_clean TEXT,
+    party_canonical TEXT,
     -- Full-text search vector (replaces FTS5 virtual table)
     search_vector  tsvector GENERATED ALWAYS AS (
-        setweight(to_tsvector('english', coalesce(speaker_name, '')), 'A') ||
+        setweight(to_tsvector('english', coalesce(speaker_name_clean, speaker_name, '')), 'A') ||
         setweight(to_tsvector('english', coalesce(topic, '')), 'B') ||
-        setweight(to_tsvector('english', coalesce(text, '')), 'C')
+        setweight(to_tsvector('english', coalesce(text_clean, text, '')), 'C')
     ) STORED,
     -- pgvector embedding column (384-dim for all-MiniLM-L6-v2)
     embedding      vector(384)
