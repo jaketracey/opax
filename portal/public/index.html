@@ -309,14 +309,14 @@
         <p class="kicker">Answer</p>
         <article id="ask-answer" class="answer" tabindex="-1"></article>
         <p class="answer-stamp" id="ask-stamp"></p>
-        <div id="ask-date-ruler" class="date-ruler" hidden></div>
         <div class="action-row">
           <button type="button" class="action-btn" id="ask-continue"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 4.5h13v9h-7l-3.5 3v-3h-2.5z"/><path d="M7 8h6"/><path d="M7 10.8h4"/></svg><span>Keep asking about this</span></button>
-          <button type="button" class="action-btn" id="ask-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link to this question</span></button>
-          <button type="button" class="action-btn" id="ask-export"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Download sources (BibTeX / RIS / CSV)</span></button>
+          <button type="button" class="action-btn" id="ask-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link</span></button>
+          <button type="button" class="action-btn" id="ask-export"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Download sources</span></button>
         </div>
 <details id="ask-sources" class="chat-sources" hidden>
           <summary id="ask-sources-sum">Sources</summary>
+          <div id="ask-date-ruler" class="date-ruler" hidden></div>
           <ol id="ask-cited-list" class="source-list"></ol>
           <details id="ask-retrieved" hidden>
             <summary>Also retrieved, not cited in the answer</summary>
@@ -324,9 +324,10 @@
           </details>
           <p class="fineprint">Answers are written only from the passages retrieved above,
           and currently draw on the speech corpus. If the record is thin, the answer says so.
-          Answers are generated fresh each time, so cite the sources, not this text.
+          Answers may be cached. Cite the sources, not this text.
           <a href="/methods">How answers work</a></p>
         </details>
+        <section id="ask-followups" class="chat-next" aria-label="Suggested follow-up questions" hidden></section>
       </div>
       <!-- The figures follow the answer: the reader asked a question, so the
            answer is what they came for. The panel draws on local data and is
