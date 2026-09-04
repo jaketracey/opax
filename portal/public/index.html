@@ -965,6 +965,16 @@
   </div>
 </main>
 
+<!-- Lives outside the route panels because money explanations can open from
+     the map, an encyclopedia entry, or a topic page. The shared game-dialog
+     wiring supplies Escape, backdrop dismissal and the 44px close target. -->
+<dialog class="game-dialog explain-dialog" id="dialog-explain" aria-label="Explain this flow">
+  <div class="game-dialog-head">
+    <button type="button" class="game-close" data-close="dialog-explain" aria-label="Close">✕</button>
+  </div>
+  <div id="explain-body" class="game-dialog-body explain-dialog-body"></div>
+</dialog>
+
 <footer>
   <div class="wrap footer-lines">
     <p>OPAX is independent and open source (AGPL-3.0). It is not affiliated with any parliament,
