@@ -120,6 +120,90 @@ function partyDotHTML(party) {
   return `<span class="party party-${cls} party-dot-only"><i aria-hidden="true"></i></span>`;
 }
 
+const BALANCE_COALITION = new Set(["Liberal", "Nationals", "LNP", "Country Liberal Party"]);
+const BALANCE_ELECTION_YEARS = new Set([1998, 2001, 2004, 2007, 2010, 2013, 2016, 2019, 2022, 2025]);
+
+/** Print a donor's federal disclosure history as a two-sided ledger. */
+function donorBalanceHTML(flows) {
+  const source = "https://transparency.aec.gov.au/";
+  const byYear = new Map();
+  const totals = { coalition: 0, labor: 0, other: 0 };
+  const otherNames = new Set();
+
+  for (const edge of flows) {
+    const fallback = String(edge.target || "").replace(/^party:/, "");
+    const party = moneyData.nodes.find((n) => n.id === edge.target)?.label || fallback;
+    const group = BALANCE_COALITION.has(party) ? "coalition" : party === "Labor" ? "labor" : "other";
+    totals[group] += Number(edge.total) || 0;
+    if (group === "other") otherNames.add(party);
+    for (const [yearText, cell] of Object.entries(edge.byYear || {})) {
+      const year = Number(yearText);
+      const value = Math.max(0, Number(Array.isArray(cell) ? cell[0] : cell) || 0);
+      if (!Number.isFinite(year) || value <= 0) continue;
+      if (!byYear.has(year)) byYear.set(year, { year, coalition: 0, labor: 0, other: 0, otherNames: new Set() });
+      const row = byYear.get(year);
+      row[group] += value;
+      if (group === "other") row.otherNames.add(party);
+    }
+  }
+  const rows = [...byYear.values()].sort((a, b) => a.year - b.year);
+  if (!rows.length) return "";
+
+  const groups = ["coalition", "labor", "other"];
+  const peak = Object.fromEntries(groups.map((group) => [group,
+    rows.reduce((best, row) => row[group] > best[group] ? row : best, rows[0])]));
+  const scaleRow = rows.reduce((best, row) => {
+    const rowMax = Math.max(...groups.map((group) => row[group]));
+    const bestMax = Math.max(...groups.map((group) => best[group]));
+    return rowMax > bestMax ? row : best;
+  }, rows[0]);
+  const scaleGroup = groups.reduce((best, group) => scaleRow[group] > scaleRow[best] ? group : best, groups[0]);
+  const scale = Math.max(scaleRow[scaleGroup], 1);
+  const groupLabel = { coalition: "Coalition", labor: "Labor", other: "other parties" };
+  const srcFigure = (value, label) => `<a href="${source}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(value)}</a>`;
+  const width = (value) => Math.min(72, (value / scale) * 72).toFixed(1);
+  const peakLabel = (row, group) => row === peak[group] && row[group]
+    ? `<a class="balance-label" href="${source}" rel="noopener" target="_blank" aria-label="${esc(`${row.year}, ${groupLabel[group]} ${fmtMoney(row[group])}, AEC source`)}">${esc(fmtMoney(row[group]))}</a>`
+    : "";
+
+  const rowHTML = rows.map((row) => {
+    const election = BALANCE_ELECTION_YEARS.has(row.year);
+    const others = [...row.otherNames].sort().join(", ");
+    const detail = `${row.year}: Coalition ${fmtMoney(row.coalition)}, Labor ${fmtMoney(row.labor)}, other parties ${fmtMoney(row.other)}${others ? ` (${others})` : ""}${election ? " · federal election year" : ""}`;
+    return `<div class="balance-row${election ? " balance-election" : ""}" title="${esc(detail)}">
+      <span class="balance-year">${row.year}${election ? "<em>election</em>" : ""}</span>
+      <span class="balance-left">${peakLabel(row, "coalition")}<i class="balance-coalition" style="width:${width(row.coalition)}%" aria-hidden="true"></i></span>
+      <span class="balance-right">
+        <span><i class="balance-labor" style="width:${width(row.labor)}%" aria-hidden="true"></i>${peakLabel(row, "labor")}</span>
+        ${row.other ? `<span><i class="balance-other" style="width:${width(row.other)}%" aria-hidden="true"></i>${peakLabel(row, "other")}</span>` : ""}
+      </span>
+    </div>`;
+  }).join("");
+  const table = `<div class="visually-hidden"><table><caption>Disclosed money from this donor by year and party grouping</caption>
+    <thead><tr><th scope="col">Year</th><th scope="col">Coalition parties</th><th scope="col">Labor</th><th scope="col">Other parties</th></tr></thead>
+    <tbody>${rows.map((row) => `<tr><th scope="row"><a href="${source}" rel="noopener" target="_blank">${row.year}</a></th>${groups.map((group) => `<td><a href="${source}" rel="noopener" target="_blank">${esc(fmtMoney(row[group]))}</a></td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  const otherList = [...otherNames].sort();
+  const otherText = otherList.length
+    ? `; other parties here ${otherList.length === 1 ? "is" : "are"} ${otherList.map(esc).join(", ")}`
+    : "";
+
+  return `<section class="donor-balance" aria-labelledby="donor-balance-heading">
+    <h3 class="subject-section-title" id="donor-balance-heading">The balance, year by year</h3>
+    <div class="tiles balance-tiles">
+      <div class="tile"><b>${srcFigure(fmtMoney(totals.coalition), `Total to Coalition parties ${fmtMoney(totals.coalition)}, AEC source`)}</b><span>to Coalition parties</span></div>
+      <div class="tile"><b>${srcFigure(fmtMoney(totals.labor), `Total to Labor ${fmtMoney(totals.labor)}, AEC source`)}</b><span>to Labor</span></div>
+      <div class="tile"><b>${srcFigure(fmtMoney(totals.other), `Total to other parties ${fmtMoney(totals.other)}, AEC source`)}</b><span>to other parties</span></div>
+    </div>
+    <div class="balance-legend" aria-label="Party groupings">
+      <span><i class="balance-swatch balance-coalition" aria-hidden="true"></i>Coalition parties ${partyDotHTML("Liberal")}${partyDotHTML("Nationals")}${partyDotHTML("LNP")}</span>
+      <span><i class="balance-swatch balance-labor" aria-hidden="true"></i>Labor ${partyDotHTML("Labor")}</span>
+      <span><i class="balance-swatch balance-other" aria-hidden="true"></i>other parties</span>
+    </div>
+    <div class="balance-rows">${rowHTML}</div>${table}
+    <p class="fineprint">Bars are scaled to the largest single-side year for this donor (${esc(groupLabel[scaleGroup])}, ${scaleRow.year}). Coalition parties are the Liberal Party, the Nationals, the LNP and the Country Liberal Party summed${otherText}. Election years are marked. Source: <a href="${source}" rel="noopener" target="_blank">AEC disclosure returns as aggregated in the money map, CC BY 4.0 ↗︎</a>; totals are a floor.</p>
+  </section>`;
+}
+
 function samePartyLabel(a, b) {
   const la = PARTY_MAP[String(a).toLowerCase()]?.[1] || String(a);
   const lb = PARTY_MAP[String(b).toLowerCase()]?.[1] || String(b);
@@ -3369,6 +3453,7 @@ async function openSubject(kind, name, manageFocus) {
       linkTo: (nm) => subjectHash(isParty ? "donor" : "party", nm),
       partyDots: !isParty, // donor page rows are parties; party page rows are donors
     }));
+    if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
     sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
     if (!isParty) renderDonorInterests(node.label, sections);
