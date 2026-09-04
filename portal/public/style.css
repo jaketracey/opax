@@ -2595,3 +2595,47 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .search-passage-more { padding: 4px 0; background: none; border: 0; color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 3px; font: 400 .875rem/1.5 var(--sans); cursor: pointer; }
 #panel-search .search-passage-more[hidden] { display: none; }
 #panel-search #search-readbar { margin-top: 12px; margin-bottom: 0; }
+
+#panel-search .search-filter-word { display: none; }
+#panel-search .search-year-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+#panel-search .search-year-fields label { display: grid; gap: 6px; }
+#panel-search .search-years-heading { display: block; margin-bottom: 12px; color: var(--ink-soft); font: 400 .875rem/1.5 var(--sans); }
+#panel-search .search-years-heading b { margin-left: 8px; font: 700 1.25rem/1.5 var(--serif); color: var(--bronze-ink); font-variant-numeric: tabular-nums; }
+#panel-search .search-year-fields select, #panel-search time { font-variant-numeric: tabular-nums; }
+#panel-search :is(a, button, input, select, summary):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
+#panel-search .search-year-band:focus-visible { outline-offset: -2px; }
+#panel-search .search-result-topics a:hover { background: var(--bronze-wash); }
+#panel-search #search-answer-readmore { margin: 0; padding: 4px 0; min-width: 100px; text-align: left; }
+#panel-search #search-answer-more { margin-top: 4px; margin-bottom: 0; }
+#panel-search #search-answer-more a { display: inline-flex; min-height: 44px; align-items: center; }
+#panel-search #search-answer summary { min-height: 44px; align-content: center; }
+#panel-search .search-results-grid { gap: 20px 40px; }
+#panel-search #search-pager { margin-top: 20px; padding-top: 16px; }
+@media (max-width: 640px) {
+  #panel-search .query-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+  #panel-search #search-input { grid-column: 1 / -1; width: 100%; min-height: 48px; }
+  #panel-search .query-line button.primary { min-height: 44px; }
+  #panel-search #search-options-btn { width: auto; min-height: 44px; padding: 0 14px; gap: 8px; }
+  #panel-search .search-filter-word { display: inline; }
+  #panel-search .search-answer { padding: 14px 16px; }
+  #panel-search .search-answer.is-clamped .answer-compact { min-height: 6.6em; max-height: 6.6em; }
+  #panel-search #search-answer .kicker { margin-bottom: 8px; padding-bottom: 8px; }
+  #panel-search .search-results-grid { margin-top: 16px; }
+  #panel-search #search-date-ruler { margin: 16px 0 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #panel-search *, #panel-search *::before, #panel-search *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+@media (forced-colors: active) {
+  #panel-search .search-year-bars i { background: CanvasText; }
+  #panel-search .search-year-chart { border-color: CanvasText; }
+}
+#panel-search #search-answer-readmore.is-ready:not([hidden]) { display: inline-flex; align-items: center; visibility: visible; }
+
+#panel-search #search-answer-sources :is(a, button) { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+#panel-search #search-answer-sources .source-title { display: block; }
+#panel-search .fchip-clear { min-width: 44px; }
+#panel-search .search-year-band[aria-current] { box-shadow: inset 0 -2px var(--bronze-ink); }
+#panel-search .search-sheet-foot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); }
+#panel-search .search-sheet-foot button { min-width: 0; white-space: normal; height: auto; padding: 10px; }
+#panel-search .search-year-fields { grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); }

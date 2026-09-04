@@ -6684,10 +6684,20 @@ function searchQueryParams(q, f, page, sort) {
   const btn = $("search-options-btn");
   const pop = $("search-options-pop");
   const ids = ["f-speaker", "f-party", "f-state", "f-topic", "f-from", "f-to", "search-kind", "search-mode"];
+  for (const id of ["f-from", "f-to"]) {
+    const select = $(id);
+    for (let year = RECORD_FIRST_YEAR; year <= RECORD_LAST_YEAR; year++) select.add(new Option(String(year), String(year)));
+    select.value = String(id === "f-from" ? RECORD_FIRST_YEAR : RECORD_LAST_YEAR);
+  }
   let draftBefore = null;
   const close = (apply = false) => {
     if (!pop?.open) return;
     if (!apply && draftBefore) for (const id of ids) $(id).value = draftBefore[id];
+    if (apply && Number($("f-from").value) > Number($("f-to").value)) {
+      const from = $("f-from").value;
+      $("f-from").value = $("f-to").value;
+      $("f-to").value = from;
+    }
     updateSearchYearsLabel();
     pop.close();
     pop.hidden = true;
@@ -6695,7 +6705,7 @@ function searchQueryParams(q, f, page, sort) {
     btn.focus();
     if (apply) {
       searchFiltersChanged();
-      if (!lastSearch.key && $("search-input").value.trim()) $("search-form").requestSubmit();
+      if (!lastSearch.key && ($("search-input").value.trim() || currentFilters().speaker)) $("search-form").requestSubmit();
     }
   };
   btn?.addEventListener("click", () => {
@@ -6716,9 +6726,15 @@ function searchQueryParams(q, f, page, sort) {
     if (e.target === pop && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) close();
   });
   pop?.addEventListener("keydown", (e) => {
+    if (e.key === "Tab") {
+      const focusable = [...pop.querySelectorAll("button, input, select, a[href]")].filter((el) => !el.disabled && el.getClientRects().length);
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
+    }
     if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); close(true); }
   });
-  window.addEventListener("popstate", () => close());
+  window.addEventListener("popstate", () => close(), { capture: true });
   $("f-from")?.addEventListener("input", updateSearchYearsLabel);
   $("f-to")?.addEventListener("input", updateSearchYearsLabel);
 }
@@ -6880,39 +6896,32 @@ function applySearchParams(params) {
   const key = params.toString();
   if (key === searchApplied) return;
   searchApplied = key;
-  if (params.has("q") || params.has("speaker")) {
-    $("search-input").value = params.get("q") || "";
-    $("f-speaker").value = params.get("speaker") || "";
-    $("f-party").value = params.get("party") || "";
-    $("f-state").value = params.get("state") || "";
-    $("f-topic").value = params.get("topic") || "";
-    // Range inputs reset to their midpoint on "", so absent params pin the
-    // slider ends (which currentFilters reads back as "no year filter").
-    $("f-from").value = params.get("from") || "1993";
-    $("f-to").value = params.get("to") || "2026";
-    updateSearchYearsLabel();
-    $("search-kind").value = params.get("kind") || "speech";
-    $("search-mode").value = params.get("mode") || "hybrid";
-    $("search-sort").value = params.get("sort") === "newest" ? "newest" : "relevance";
-    renderFilterChips();
-    // The page rides in the hash, so back, forward and a pasted &page=3 all
-    // land on the same twenty results.
+  $("search-input").value = params.get("q") || "";
+  for (const name of ["speaker", "party", "state", "topic"]) $("f-" + name).value = params.get(name) || "";
+  for (const [name, fallback] of [["from", RECORD_FIRST_YEAR], ["to", RECORD_LAST_YEAR]]) {
+    const year = Number(params.get(name)) || fallback;
+    $("f-" + name).value = String(Math.min(RECORD_LAST_YEAR, Math.max(RECORD_FIRST_YEAR, Math.round(year))));
+  }
+  updateSearchYearsLabel();
+  $("search-kind").value = params.get("kind") || "speech";
+  $("search-mode").value = params.get("mode") || "hybrid";
+  if (!$("search-kind").value) $("search-kind").value = "speech";
+  if (!$("search-mode").value) $("search-mode").value = "hybrid";
+  $("search-sort").value = params.get("sort") === "newest" ? "newest" : "relevance";
+  renderFilterChips();
+  if ($("search-input").value.trim() || $("f-speaker").value.trim()) {
     runSearch(Number(params.get("page")) || 1);
-  } else if (params.has("state")) {
-    // A parliament alone (the home page's state map): preset the filter and
-    // say so; there is no query to run until the reader types one.
-    const state = params.get("state") || "";
-    $("f-state").value = state;
-    const name = STATE_NAMES[state] || state;
-    setStatus($("search-status"), name
-      ? `Filtered to the ${name} parliament. Type a question or a phrase to search its record.`
-      : "");
-    renderFilterChips();
-    renderSearchChips();
   } else {
-    // A bare search page: nothing asked yet, so offer somewhere to start.
+    // Clear pending ownership too: Back to a blank search must stay blank.
+    ++searchSeq;
+    searchAnswerAbort?.abort();
+    hideLoader("search-wombat");
     clearSearchResults();
-    renderFilterChips();
+    $("search-results").setAttribute("aria-busy", "false");
+    $("search-form").querySelector('button[type="submit"]').disabled = false;
+    $("search-status").classList.remove("visually-hidden");
+    const filters = activeFilterSummary(currentFilters());
+    setStatus($("search-status"), filters ? `Search with ${filters}. Enter a phrase to begin.` : "");
     renderSearchChips();
   }
 }
@@ -7265,7 +7274,7 @@ function resetSearchAnswerFold() {
   }
   // Folded: the control is present but invisible (its line is reserved);
   // unfolded (wide screens): absent.
-  if (btn) { btn.hidden = !narrow; btn.classList.remove("is-ready"); btn.setAttribute("aria-expanded", "false"); }
+  if (btn) { btn.textContent = "Read summary"; btn.hidden = !narrow; btn.classList.remove("is-ready"); btn.setAttribute("aria-expanded", "false"); }
 }
 const searchAnswerFolds = () => window.matchMedia(SEARCH_ANSWER_FOLD_QUERY).matches;
 function searchAnswerArrived() {
@@ -7281,9 +7290,10 @@ function offerSearchAnswerReadMore() {
   if (body.scrollHeight <= body.clientHeight + 8) return;
   btn.classList.add("is-ready");
   btn.onclick = () => {
-    box.classList.remove("is-clamped");
-    btn.hidden = true;
-    btn.setAttribute("aria-expanded", "true");
+    const expanded = btn.getAttribute("aria-expanded") !== "true";
+    box.classList.toggle("is-clamped", !expanded);
+    btn.setAttribute("aria-expanded", String(expanded));
+    btn.textContent = expanded ? "Show less" : "Read summary";
   };
 }
 function foldSearchAnswer() {
@@ -7298,6 +7308,21 @@ function foldSearchAnswer() {
   // Overflowing but never offered (a rare race): offer it now.
   if (!$("search-answer-readmore").classList.contains("is-ready")) { $("search-answer-readmore").classList.add("is-ready"); }
 }
+
+function refreshSearchLayout() {
+  if ($("panel-search").hidden) return;
+  refreshSearchPassageFolds();
+  const box = $("search-answer"), btn = $("search-answer-readmore");
+  if (box.hidden || box.classList.contains("is-loading")) return;
+  if (!searchAnswerFolds()) { box.classList.remove("is-clamped"); btn.hidden = true; return; }
+  if (btn.getAttribute("aria-expanded") === "true") { btn.hidden = false; return; }
+  box.classList.add("is-clamped");
+  btn.hidden = false;
+  btn.classList.remove("is-ready");
+  foldSearchAnswer();
+}
+window.addEventListener("resize", refreshSearchLayout);
+document.fonts?.ready.then(refreshSearchLayout);
 
 async function runSearchAnswer(q, f, mySeq) {
   const box = $("search-answer");
@@ -7405,6 +7430,7 @@ async function runSearch(page = 1) {
   }
   const btn = $("search-form").querySelector('button[type="submit"]');
   btn.disabled = true;
+  $("search-results").setAttribute("aria-busy", "true");
   setStatus($("search-status"), "Searching the record…");
   $("search-status").classList.add("visually-hidden"); // announced; the loader shows it
   showLoader("search-wombat", fresh ? "Searching the record." : "Turning the page.");
@@ -7475,9 +7501,10 @@ async function runSearch(page = 1) {
   } catch (err) {
     if (mySeq !== searchSeq) return;
     hideLoader("search-wombat");
+    $("search-status").classList.remove("visually-hidden");
     setStatus($("search-status"), String(err.message || err), true);
   } finally {
-    if (mySeq === searchSeq) { btn.disabled = false; searchScrollPending = false; }
+    if (mySeq === searchSeq) { btn.disabled = false; searchScrollPending = false; $("search-results").setAttribute("aria-busy", "false"); }
   }
 }
 
