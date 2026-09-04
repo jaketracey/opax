@@ -13,14 +13,23 @@
  *
  * Data sources (all same-origin):
  *   GET /api/search?q=&from=&to=&top_k=   live headline probes for the year
+ *   GET /api/brief?rids=                  machine summaries for those speeches
+ *   GET /years/index.json, /years/{y}.json the year in brief (one grounded,
+ *                                         cited ask per year, generated once by
+ *                                         scripts/generate_years.py) and the
+ *                                         voices tally (speakers and parties
+ *                                         across the year's retrieved windows)
  *   GET /reports/index.json               the six tracked topic reports
  *   GET /reports/{slug}.json              stats.timeline + stats.donations
  *   GET /api/stats + /corpus.json         indexing progress (honesty strip)
+ *   GET /photos/people.json               portraits
  *
  * Honesty rule: the search index is filling oldest-first. A silent year means
  * the machine hasn't reached it yet — never that parliament was quiet. The
  * report timelines come from the full historical dataset, so the numbers
- * panel works for every year even where live quotes don't.
+ * panel works for every year even where live quotes don't. Machine-written
+ * text (the year in brief, the per-speech summaries) is always labelled as
+ * such and never presented as the record; every claim links to a speech.
  */
 
 const YEAR_MIN = 1998
@@ -294,12 +303,66 @@ function fyEndYear(label) {
   return m ? Number(m[1]) + 1 : null
 }
 
-function trimSnippet(text, max = 200) {
+// The record's `state` label, as a reader would name the chamber's parliament.
+const PARLIAMENTS = {
+  federal: 'Federal parliament', nsw: 'NSW parliament', vic: 'Victorian parliament',
+  qld: 'Queensland parliament', sa: 'SA parliament', wa: 'WA parliament',
+  tas: 'Tasmanian parliament', nt: 'NT parliament', act: 'ACT parliament',
+}
+function parliamentName(state) {
+  if (!state) return ''
+  return PARLIAMENTS[String(state).toLowerCase()] || `${String(state).toUpperCase()} parliament`
+}
+
+/**
+ * An opening passage that stops where a sentence stops. The search window
+ * can begin mid-sentence (the Worker centres it on the matched words and
+ * marks the cut with an ellipsis): start at the next sentence when one
+ * begins soon enough, and end at the last full stop that fits the budget.
+ * Only when no sentence boundary falls inside the budget does a word-cut
+ * ellipsis remain.
+ */
+function passage(text, max = 260) {
+  let clean = String(text || '').replace(/\s+/g, ' ').trim()
+  if (/^(…|\.\.\.)/.test(clean)) {
+    clean = clean.replace(/^(…|\.\.\.)\s*/, '')
+    const m = /[.!?]["’”')\]]*\s+(?=[A-Z“"])/.exec(clean.slice(0, 160))
+    if (m && clean.length - (m.index + m[0].length) >= 120) clean = clean.slice(m.index + m[0].length)
+  }
+  if (clean.length <= max) return clean
+  // A sentence that runs a little past the budget beats a cut mid-thought.
+  const end = sentenceEnd(clean, 80, max + 60)
+  if (end > 0) return clean.slice(0, end)
+  const head = clean.slice(0, max + 1)
+  const cut = head.lastIndexOf(' ')
+  return (cut > 60 ? head.slice(0, cut) : head.slice(0, max)) + '…'
+}
+
+/** Index just past the last sentence end between `min` and `max`, or -1. */
+function sentenceEnd(text, min, max) {
+  const re = /[.!?]["’”')\]]*(?=\s|$)/g
+  let end = -1
+  let m
+  while ((m = re.exec(text.slice(0, max + 1)))) {
+    if (m.index + m[0].length >= min) end = m.index + m[0].length
+  }
+  return end
+}
+
+/** Clip a record heading to one quiet line. */
+function clipText(text, max = 56) {
   const clean = String(text || '').replace(/\s+/g, ' ').trim()
   if (clean.length <= max) return clean
-  const cut = clean.slice(0, max)
-  const at = cut.lastIndexOf(' ')
-  return (at > 60 ? cut.slice(0, at) : cut) + '…'
+  const cut = clean.slice(0, max).lastIndexOf(' ')
+  return clean.slice(0, cut > 24 ? cut : max) + '…'
+}
+
+/** Machine prose arrives as plain Markdown paragraphs; keep the words, drop the markup. */
+function briefParagraphs(answer) {
+  return String(answer || '')
+    .split(/\n\s*\n/)
+    .map((p) => p.replace(/\*\*/g, '').replace(/^\s*(#+|[-*•])\s+/, '').replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
 }
 
 /** el('div', 'tm-card', {attrs}) — tiny DOM builder; text goes in via textContent. */
@@ -317,42 +380,35 @@ function el(tag, className, attrs) {
 const STYLE_ID = 'tm-styles'
 const CSS = `
 .tm-root {
-  font-family: 'Public Sans', system-ui, sans-serif;
+  font-family: var(--sans, 'Public Sans', system-ui, sans-serif);
   color: var(--ink, #23271F);
   max-width: 62rem;
   margin: 0 auto;
-  padding: 1rem 1rem 2rem;
+  padding: 0.25rem 0 1.5rem;
 }
 .tm-root * { box-sizing: border-box; }
-
-/* Masthead ---------------------------------------------------------------- */
-.tm-random {
-  margin-top: 0.6rem;
-  font: inherit; font-size: 0.82rem; font-weight: 600;
-  color: var(--ink-soft, #575C52); background: none;
-  border: 1px solid var(--line-strong, #8D897B); border-radius: 999px;
-  padding: 0.45rem 1rem; cursor: pointer;
-  display: inline-flex; align-items: center; gap: 0.4rem;
-}
-.tm-random:hover { color: var(--bronze-ink, #8A5A12); border-color: var(--bronze-ink, #8A5A12); }
-.tm-random:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+.tm-root [hidden] { display: none !important; }
+@media (min-width: 761px) { .tm-root { padding: 0.75rem 1rem 2rem; } }
+/* The host's close button already has a 44px hit area; on a phone its glyph
+   reads small, so the module asks for a larger one while it is mounted. */
+#dialog-tm .game-close { font-size: 1.45rem; }
 
 /* Year hero --------------------------------------------------------------- */
-.tm-hero { text-align: center; margin: 0.5rem 0 0.25rem; }
-.tm-hero-eyebrow {
-  font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--ink-faint, #6F7468); margin-bottom: 0.1rem;
+.tm-hero { text-align: center; margin: 0; }
+.tm-hero-kicker {
+  font-family: var(--serif, Merriweather, Georgia, serif); font-style: italic;
+  font-size: 0.95rem; color: var(--ink-faint, #6F7468); margin-bottom: -0.1rem;
 }
-.tm-hero-row { display: flex; align-items: center; justify-content: center; gap: 1rem; }
+.tm-hero-row { display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
 .tm-year {
-  font-family: Merriweather, Georgia, serif; font-weight: 900;
-  font-size: clamp(3.5rem, 13vw, 6.5rem); line-height: 1;
+  font-family: var(--serif, Merriweather, Georgia, serif); font-weight: 900;
+  font-size: clamp(3.4rem, 14vw, 6rem); line-height: 1.05;
   color: var(--navy, #142A43); font-variant-numeric: tabular-nums;
   min-width: 4ch; text-align: center;
 }
 .tm-step {
-  font: inherit; font-size: 1.4rem; line-height: 1;
-  width: 2.4rem; height: 2.4rem; border-radius: 50%;
+  font: inherit; font-size: 1.35rem; line-height: 1;
+  width: 44px; height: 44px; border-radius: 50%; padding: 0;
   border: 1px solid var(--line-strong, #8D897B);
   background: var(--paper-raised, #fff); color: var(--ink, #23271F);
   cursor: pointer; flex: none;
@@ -366,142 +422,221 @@ const CSS = `
 }
 
 /* Scrubber ---------------------------------------------------------------- */
-.tm-scrubber { margin: 1rem 0 1.75rem; }
+/* Same idiom as the site's range sliders: a 3px rule, a 28px ringed thumb,
+   the navy double ring on focus. The scrubber pads itself by a thumb radius
+   so the thumb never leaves the box at either end. */
+.tm-scrubber { margin: 0.35rem 0 0; padding: 0 16px; }
 .tm-track {
-  position: relative; height: 3.4rem; cursor: pointer;
+  position: relative; height: 62px; cursor: pointer;
   touch-action: none; border-radius: 6px;
 }
-.tm-track:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 4px; }
+.tm-track:focus { outline: none; }
 .tm-rail {
-  position: absolute; left: 0; right: 0; top: 1.1rem; height: 6px;
-  background: var(--paper-sunken, #F1EFE8); border-radius: 3px;
-  border: 1px solid var(--line, #DFDCD2);
+  position: absolute; left: 0; right: 0; top: 22px; height: 3px;
+  background: var(--line-strong, #8D897B); border-radius: 2px;
 }
 .tm-fill {
-  position: absolute; left: 0; top: 1.1rem; height: 6px;
-  background: var(--bronze-wash, rgba(160,118,27,0.16)); border-radius: 3px 0 0 3px;
-  border: 1px solid var(--bronze, #A0761B); border-right: none;
+  position: absolute; left: 0; top: 22px; height: 3px;
+  background: var(--bronze, #A0761B); border-radius: 2px 0 0 2px;
 }
 .tm-ticks { position: absolute; inset: 0; pointer-events: none; }
-.tm-ticknode { position: absolute; top: 0.55rem; width: 1px; height: 0.5rem; background: var(--line, #DFDCD2); }
-.tm-ticknode.tm-major { height: 0.9rem; top: 0.15rem; background: var(--line-strong, #8D897B); }
+.tm-ticknode { position: absolute; top: 29px; width: 1px; height: 6px; background: var(--line, #DFDCD2); }
+.tm-ticknode.tm-major { height: 10px; background: var(--line-strong, #8D897B); }
 .tm-ticklabel {
-  position: absolute; top: 1.9rem; transform: translateX(-50%);
-  font-size: 0.7rem; color: var(--ink-faint, #6F7468);
-  font-variant-numeric: tabular-nums;
+  position: absolute; top: 43px; transform: translateX(-50%);
+  font-size: 0.72rem; line-height: 1.2; color: var(--ink-faint, #6F7468);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
 }
+.tm-ticklabel.tm-current { color: var(--ink, #23271F); font-weight: 600; }
 .tm-thumb {
-  position: absolute; top: 0.55rem; width: 1.35rem; height: 1.35rem;
+  position: absolute; top: 9.5px; width: 28px; height: 28px;
   transform: translateX(-50%); border-radius: 50%;
-  background: var(--bronze, #A0761B);
-  border: 3px solid var(--paper-raised, #fff);
-  box-shadow: 0 0 0 1px var(--bronze-ink, #8A5A12), 0 1px 3px rgba(0,0,0,0.25);
+  background: var(--paper-raised, #fff);
+  border: 2px solid var(--bronze-ink, #8A5A12);
+  box-shadow: 0 1px 2px rgba(20, 42, 67, 0.18),
+              inset 0 0 0 3px var(--paper-raised, #fff),
+              inset 0 0 0 5px var(--bronze-wash, rgba(160,118,27,0.16));
   pointer-events: none;
+}
+.tm-track:active .tm-thumb { transform: translateX(-50%) scale(1.08); }
+.tm-track:focus-visible .tm-thumb {
+  box-shadow: 0 0 0 3px var(--paper-raised, #fff), 0 0 0 6px var(--navy, #142A43), 0 1px 2px rgba(20, 42, 67, 0.18);
 }
 @media (prefers-reduced-motion: no-preference) {
   .tm-thumb, .tm-fill { transition: left 80ms linear, width 80ms linear; }
 }
-
-/* Topic lens -------------------------------------------------------------- */
-.tm-topic-row {
-  display: flex; align-items: center; justify-content: flex-end; gap: 0.45rem;
-  margin: -0.3rem 0 0.7rem; font-size: 0.78rem; color: var(--ink-faint, #6F7468);
+.tm-scrub-foot { display: flex; justify-content: center; margin: -0.2rem 0 0.9rem; }
+.tm-random {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  min-height: 44px; padding: 0 0.6rem;
+  font: 600 0.82rem/1 var(--sans, system-ui, sans-serif);
+  color: var(--bronze-ink, #8A5A12); background: none; border: none; cursor: pointer;
+  text-decoration: underline; text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55));
+  text-underline-offset: 0.22em;
 }
-.tm-topic {
-  font: inherit; font-size: 0.82rem; color: var(--ink, #23271F);
-  background: var(--paper-raised, #fff);
-  border: 1px solid var(--line-strong, #8D897B); border-radius: 6px;
-  padding: 0.3rem 0.45rem; max-width: 100%; min-width: 0;
-}
-.tm-topic:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
-@media (max-width: 480px) {
-  .tm-topic { flex: 1; }
-}
+.tm-random:hover { text-decoration-color: currentColor; }
+.tm-random:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; border-radius: 4px; }
 
 /* Panels ------------------------------------------------------------------ */
-.tm-panels { display: grid; grid-template-columns: 3fr 2fr; gap: 1.5rem; align-items: start; }
-@media (max-width: 760px) { .tm-panels { grid-template-columns: 1fr; } }
+/* Phone: one column, brief → voices → debates → numbers. Wide: the record
+   on the left (brief, debates), the tallies on the right (voices, numbers). */
+.tm-panels { display: flex; flex-direction: column; gap: 1.6rem; }
+.tm-col { display: contents; }
+.tm-sec-brief { order: 1; }
+.tm-sec-voices { order: 2; }
+.tm-sec-debates { order: 3; }
+.tm-sec-numbers { order: 4; }
+@media (min-width: 761px) {
+  .tm-panels { display: grid; grid-template-columns: 3fr 2fr; gap: 2rem; align-items: start; }
+  .tm-col { display: flex; flex-direction: column; gap: 1.6rem; min-width: 0; }
+}
+.tm-sec { min-width: 0; }
 .tm-h2 {
-  font-family: Merriweather, Georgia, serif; font-size: 1.05rem; font-weight: 700;
-  color: var(--ink, #23271F); margin: 0 0 0.75rem;
+  font-family: var(--serif, Merriweather, Georgia, serif); font-size: 1.05rem; font-weight: 700;
+  color: var(--ink, #23271F); margin: 0 0 0.7rem;
   padding-bottom: 0.35rem; border-bottom: 1px solid var(--line, #DFDCD2);
 }
 .tm-h2 span { color: var(--bronze-ink, #8A5A12); }
+.tm-sec-head {
+  display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap;
+  gap: 0.2rem 1rem; padding-bottom: 0.3rem; margin-bottom: 0.2rem;
+  border-bottom: 1px solid var(--line, #DFDCD2);
+}
+.tm-sec-head .tm-h2 { border: none; padding-bottom: 0; margin: 0; }
 
-/* Headline cards */
-.tm-cards { display: grid; gap: 0.7rem; }
-.tm-card {
-  display: block; color: inherit;
-  background: var(--paper-raised, #fff);
-  border: 1px solid var(--line, #DFDCD2); border-radius: 8px;
-  padding: 0.8rem 0.95rem;
+/* Topic lens: a quiet underlined control, not a form field. */
+.tm-topic-row {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  font-size: 0.78rem; color: var(--ink-faint, #6F7468);
 }
-.tm-card:hover { border-color: var(--bronze, #A0761B); }
-.tm-card a:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
-.tm-card-title { display: block; text-decoration: none; }
-.tm-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; }
-.tm-portrait img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; vertical-align: middle;
-  border: 1.5px solid var(--paper-raised, #fff); box-shadow: 0 0 0 1px var(--line, #DFDCD2); }
-.tm-portrait:empty { display: none; }
+.tm-topic-wrap { position: relative; display: inline-block; min-width: 0; }
+.tm-topic-wrap::after {
+  content: ''; position: absolute; right: 0.45rem; top: 50%; width: 7px; height: 7px;
+  border-right: 1.5px solid var(--ink-soft, #575C52); border-bottom: 1.5px solid var(--ink-soft, #575C52);
+  transform: translateY(-70%) rotate(45deg); pointer-events: none;
+}
+.tm-topic {
+  font: inherit; font-size: 0.85rem; color: var(--ink, #23271F);
+  background: transparent; -webkit-appearance: none; appearance: none;
+  border: none; border-bottom: 1px solid var(--line-strong, #8D897B); border-radius: 0;
+  min-height: 44px; padding: 0 1.5rem 0 0.2rem; max-width: 100%; min-width: 0; cursor: pointer;
+}
+.tm-topic:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+@media (max-width: 480px) {
+  .tm-topic-row { flex: 1 1 100%; }
+  .tm-topic-wrap { flex: 1; }
+  .tm-topic { width: 100%; }
+}
+
+/* Speech entries: a ruled list, one clean unit each --------------------- */
+.tm-cards { display: block; }
+.tm-card { display: block; padding: 0.85rem 0 0.35rem; }
+.tm-card + .tm-card { border-top: 1px solid var(--line, #DFDCD2); }
+.tm-card-who { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+.tm-portrait { flex: none; display: inline-block; width: 32px; height: 32px; }
+.tm-portrait img {
+  width: 32px; height: 32px; border-radius: 50%; object-fit: cover; display: block;
+  border: 1.5px solid var(--paper-raised, #fff); box-shadow: 0 0 0 1px var(--line, #DFDCD2);
+}
+.tm-portrait.tm-portrait-none {
+  border-radius: 50%; background: var(--paper-sunken, #F1EFE8);
+  box-shadow: inset 0 0 0 1px var(--line, #DFDCD2);
+}
+.tm-portrait.tm-portrait-sm, .tm-portrait.tm-portrait-sm img { width: 24px; height: 24px; }
+.tm-who-text { min-width: 0; line-height: 1.35; }
+.tm-who-line { font-size: 0.9rem; color: var(--ink-soft, #575C52); }
+.tm-name { font-weight: 600; color: var(--ink, #23271F); text-decoration: none; }
+.tm-name:hover, .tm-meta-link:hover { color: var(--bronze-ink, #8A5A12); }
 .tm-meta-link { color: inherit; text-decoration: none; }
-.tm-meta-link:hover { color: var(--bronze-ink, #8A5A12); }
-.tm-chip {
-  display: inline-block; font-size: 0.68rem; font-weight: 700;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--bronze-ink, #8A5A12); background: var(--bronze-wash, rgba(160,118,27,0.16));
-  border-radius: 4px; padding: 0.15rem 0.45rem; margin-bottom: 0.35rem;
+.tm-when { font-size: 0.76rem; color: var(--ink-faint, #6F7468); margin-top: 0.1rem; }
+.tm-debate {
+  font-family: var(--serif, Merriweather, Georgia, serif); font-style: italic;
+  font-size: 0.92rem; color: var(--ink-soft, #575C52); margin: 0.55rem 0 0.3rem;
 }
-.tm-card-title {
-  font-family: Merriweather, Georgia, serif; font-weight: 700; font-size: 0.98rem;
-  color: var(--navy, #142A43); line-height: 1.35; margin: 0 0 0.25rem;
-}
-.tm-card-title:hover { text-decoration: underline; }
-.tm-card-meta { font-size: 0.75rem; color: var(--ink-faint, #6F7468); margin-bottom: 0.35rem; }
 .tm-card-snippet {
-  font-family: Merriweather, Georgia, serif; font-size: 0.85rem;
+  font-family: var(--serif, Merriweather, Georgia, serif); font-size: 0.9rem;
   color: var(--ink-soft, #575C52); line-height: 1.55; margin: 0;
 }
-.tm-card-brief {
-  font-size: 0.85rem; color: var(--ink-soft, #575C52); line-height: 1.55; margin: 0;
+.tm-card-brief { font-size: 0.87rem; color: var(--ink-soft, #575C52); line-height: 1.55; margin: 0; }
+.tm-brief-tag { font-style: italic; color: var(--ink-faint, #6F7468); }
+.tm-brief-tag::after { content: ' · '; }
+.tm-read {
+  display: inline-flex; align-items: center; min-height: 40px;
+  font: 600 0.8rem/1 var(--sans, system-ui, sans-serif);
+  color: var(--bronze-ink, #8A5A12); text-decoration: underline;
+  text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.22em;
 }
-.tm-brief-kicker {
-  font: 600 0.65rem/1 var(--sans, system-ui, sans-serif); letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--bronze, #8A6A2B); margin-right: 0.5em;
-}
+.tm-read:hover { text-decoration-color: currentColor; }
+.tm-card a:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
 
 /* Loading / empty states */
 .tm-skeleton {
-  border-radius: 8px; border: 1px solid var(--line, #DFDCD2);
+  border-radius: 6px; border: 1px solid var(--line, #DFDCD2);
   background: linear-gradient(100deg, var(--paper-sunken, #F1EFE8) 40%, var(--paper-raised, #fff) 50%, var(--paper-sunken, #F1EFE8) 60%);
-  background-size: 200% 100%; height: 5.5rem;
+  background-size: 200% 100%; height: 5.5rem; margin-top: 0.7rem;
 }
 @media (prefers-reduced-motion: no-preference) {
   .tm-skeleton { animation: tm-shimmer 1.4s linear infinite; }
 }
 @keyframes tm-shimmer { to { background-position: -200% 0; } }
 .tm-empty {
-  background: var(--paper-sunken, #F1EFE8); border: 1px dashed var(--line-strong, #8D897B);
-  border-radius: 8px; padding: 1.1rem 1.2rem;
-  font-size: 0.9rem; line-height: 1.6; color: var(--ink-soft, #575C52);
+  background: var(--paper-sunken, #F1EFE8); border: 1px solid var(--line, #DFDCD2);
+  border-radius: 6px; padding: 1rem 1.1rem; margin-top: 0.7rem;
+  font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft, #575C52);
 }
-.tm-empty strong { color: var(--ink, #23271F); font-family: Merriweather, Georgia, serif; }
-.tm-empty-actions { margin-top: 0.6rem; }
+.tm-empty strong { color: var(--ink, #23271F); font-family: var(--serif, Merriweather, Georgia, serif); }
+.tm-empty-actions { margin-top: 0.4rem; }
 .tm-linkbtn {
-  font: inherit; font-size: 0.82rem; font-weight: 600;
+  font: inherit; font-size: 0.82rem; font-weight: 600; min-height: 40px;
   color: var(--bronze-ink, #8A5A12); background: none; border: none;
   padding: 0; cursor: pointer; text-decoration: underline;
+  text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.22em;
 }
+.tm-linkbtn:hover { text-decoration-color: currentColor; }
 .tm-linkbtn:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+
+/* The year in brief (machine-written, sources one tap away) ------------- */
+.tm-brief-body p { font-size: 0.92rem; line-height: 1.6; color: var(--ink, #23271F); margin: 0 0 0.7rem; }
+.tm-brief-toggle { margin: -0.3rem 0 0.4rem; }
+@media (min-width: 761px) {
+  .tm-brief-more[hidden] { display: block !important; }
+  .tm-brief-more-inline[hidden] { display: inline !important; }
+  .tm-brief-toggle { display: none; }
+}
+.tm-fineprint { font-size: 0.74rem; line-height: 1.5; color: var(--ink-faint, #6F7468); margin: 0.3rem 0 0; }
+.tm-sources { margin-top: 0.3rem; font-size: 0.8rem; }
+.tm-sources summary {
+  cursor: pointer; color: var(--bronze-ink, #8A5A12); font-weight: 600;
+  padding: 0.7rem 0; list-style-position: inside;
+}
+.tm-sources-list { margin: 0 0 0.3rem; padding-left: 1.25rem; display: grid; gap: 0.4rem; line-height: 1.45; }
+.tm-src-link { color: var(--ink, #23271F); text-decoration: underline; text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.18em; }
+.tm-src-tail { color: var(--ink-faint, #6F7468); }
+.tm-src-cited { margin-left: 0.4rem; font-size: 0.7rem; font-style: italic; color: var(--bronze-ink, #8A5A12); }
+
+/* Voices of the year: a short bar list --------------------------------- */
+.tm-voice-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+.tm-voice-row { display: flex; align-items: center; gap: 0.5rem; min-width: 0; font-size: 0.86rem; }
+.tm-voice-name {
+  font-weight: 600; color: var(--ink, #23271F); text-decoration: none;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+}
+.tm-voice-name:hover { color: var(--bronze-ink, #8A5A12); }
+.tm-voice-party { color: var(--ink-faint, #6F7468); font-size: 0.78rem; white-space: nowrap; }
+.tm-voice-n { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--ink-soft, #575C52); font-size: 0.8rem; }
+.tm-voice-bar { height: 5px; background: var(--paper-sunken, #F1EFE8); border-radius: 3px; margin-top: 0.3rem; overflow: hidden; }
+.tm-voice-fill { height: 100%; background: var(--bronze, #A0761B); border-radius: 3px; }
+.tm-voice-parties { font-size: 0.8rem; color: var(--ink-soft, #575C52); margin: 0.8rem 0 0; line-height: 1.5; }
 
 /* Numbers panel */
 .tm-stats { display: grid; gap: 0.9rem; }
 .tm-stat {
   background: var(--paper-raised, #fff); border: 1px solid var(--line, #DFDCD2);
-  border-left: 4px solid var(--bronze, #A0761B); border-radius: 0 8px 8px 0;
+  border-left: 3px solid var(--bronze, #A0761B); border-radius: 0 6px 6px 0;
   padding: 0.7rem 0.9rem;
 }
 .tm-stat-num {
-  font-family: Merriweather, Georgia, serif; font-weight: 900;
+  font-family: var(--serif, Merriweather, Georgia, serif); font-weight: 900;
   font-size: 1.6rem; color: var(--bronze-ink, #8A5A12); line-height: 1.1;
   font-variant-numeric: tabular-nums;
 }
@@ -512,11 +647,11 @@ const CSS = `
 
 /* Footer honesty strip ---------------------------------------------------- */
 .tm-footer {
-  margin-top: 1.75rem; padding: 0.7rem 1rem;
-  background: var(--paper-sunken, #F1EFE8); border-radius: 8px;
+  margin-top: 1.75rem; padding: 0.8rem 0 0;
+  border-top: 1px solid var(--line, #DFDCD2);
   font-size: 0.78rem; line-height: 1.55; color: var(--ink-faint, #6F7468);
-  display: flex; gap: 0.6rem; align-items: baseline;
 }
+.tm-footer p { margin: 0; }
 .tm-footer b { color: var(--ink-soft, #575C52); font-weight: 600; }
 `
 
@@ -591,7 +726,7 @@ async function loadStaticData(signal) {
 }
 
 // ---------------------------------------------------------------------------
-// Stat callouts — playful but precise, computed from the report timelines
+// Stat callouts — precise, computed from the report timelines
 // ---------------------------------------------------------------------------
 
 function buildCallouts(reports, year) {
@@ -618,7 +753,7 @@ function buildCallouts(reports, year) {
     })
     if (record && record.count >= 20) {
       callouts.push({
-        num: `⬆ ${year}`,
+        num: String(year),
         text: `was ${record.report.title}’s biggest year yet at that point: ${fmtInt(record.count)} speeches, more than any year before it.`,
       })
     }
@@ -637,22 +772,13 @@ function buildCallouts(reports, year) {
     })
   }
 
-  // 4. An airtime comparison between two topics.
+  // 4. The year's total across the tracked topics. (An airtime ratio between
+  //    two arbitrary tracked topics used to sit here; it is not a finding.)
   if (counts.length >= 2 && callouts.length < 4) {
-    const a = counts[0]
-    const b = counts[counts.length - 1]
-    const ratio = a.count / b.count
-    if (ratio >= 2) {
-      callouts.push({
-        num: `${Math.round(ratio)}×`,
-        text: `more airtime for ${a.report.title} than ${b.report.title} that year (${fmtInt(a.count)} speeches to ${fmtInt(b.count)}).`,
-      })
-    } else {
-      callouts.push({
-        num: fmtInt(counts.reduce((s, c) => s + c.count, 0)),
-        text: `speeches across all ${counts.length} tracked topics in ${year}.`,
-      })
-    }
+    callouts.push({
+      num: fmtInt(counts.reduce((s, c) => s + c.count, 0)),
+      text: `speeches across all ${counts.length} tracked topics in ${year}.`,
+    })
   }
 
   return callouts.slice(0, 4)
@@ -713,18 +839,12 @@ export function mountTimeMachine(container, opts = {}) {
   const root = el('section', 'tm-root', { 'aria-label': 'Time Machine: explore the parliamentary record by year' })
   root.innerHTML = `
     <div class="tm-hero">
-      <div class="tm-hero-eyebrow">Parliament in</div>
+      <div class="tm-hero-kicker" aria-hidden="true">Parliament in</div>
       <div class="tm-hero-row">
         <button type="button" class="tm-step tm-step-back" aria-label="Previous year">‹</button>
         <div class="tm-year" aria-hidden="true"></div>
         <button type="button" class="tm-step tm-step-fwd" aria-label="Next year">›</button>
       </div>
-      <button type="button" class="tm-random" aria-label="Take me to a random year">
-        <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M8 0l1.8 6.2L16 8l-6.2 1.8L8 16 6.2 9.8 0 8l6.2-1.8z" fill="currentColor"/>
-        </svg>
-        Take me somewhere
-      </button>
     </div>
 
     <div class="tm-scrubber">
@@ -737,21 +857,43 @@ export function mountTimeMachine(container, opts = {}) {
         <div class="tm-ticks"></div>
         <div class="tm-thumb"></div>
       </div>
+      <div class="tm-scrub-foot">
+        <button type="button" class="tm-random" aria-label="Take me to a random year">
+          <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 0l1.8 6.2L16 8l-6.2 1.8L8 16 6.2 9.8 0 8l6.2-1.8z" fill="currentColor"/>
+          </svg>
+          Take me somewhere
+        </button>
+      </div>
     </div>
 
     <div class="tm-panels">
-      <section aria-label="What they were arguing about">
-        <h2 class="tm-h2">What they were <span>arguing about</span></h2>
-        <label class="tm-topic-row">
-          <span>Topic</span>
-          <select class="tm-topic"></select>
-        </label>
-        <div class="tm-cards" aria-live="polite" aria-busy="false"></div>
-      </section>
-      <section aria-label="The year in numbers">
-        <h2 class="tm-h2">The year in <span>numbers</span></h2>
-        <div class="tm-stats"></div>
-      </section>
+      <div class="tm-col tm-col-main">
+        <section class="tm-sec tm-sec-brief" aria-label="The year in brief" hidden>
+          <h2 class="tm-h2">The year <span>in brief</span></h2>
+          <div class="tm-yearbrief"></div>
+        </section>
+        <section class="tm-sec tm-sec-debates" aria-label="What they were arguing about">
+          <div class="tm-sec-head">
+            <h2 class="tm-h2">What they were <span>arguing about</span></h2>
+            <label class="tm-topic-row">
+              <span>Topic</span>
+              <span class="tm-topic-wrap"><select class="tm-topic"></select></span>
+            </label>
+          </div>
+          <div class="tm-cards" aria-live="polite" aria-busy="false"></div>
+        </section>
+      </div>
+      <div class="tm-col tm-col-side">
+        <section class="tm-sec tm-sec-voices" aria-label="Voices of the year" hidden>
+          <h2 class="tm-h2">Voices of <span>the year</span></h2>
+          <div class="tm-voices"></div>
+        </section>
+        <section class="tm-sec tm-sec-numbers" aria-label="The year in numbers">
+          <h2 class="tm-h2">The year in <span>numbers</span></h2>
+          <div class="tm-stats"></div>
+        </section>
+      </div>
     </div>
 
     <footer class="tm-footer"></footer>
@@ -770,6 +912,10 @@ export function mountTimeMachine(container, opts = {}) {
   const btnBack = $('.tm-step-back')
   const btnFwd = $('.tm-step-fwd')
   const topicSel = $('.tm-topic')
+  const briefSec = $('.tm-sec-brief')
+  const briefEl = $('.tm-yearbrief')
+  const voicesSec = $('.tm-sec-voices')
+  const voicesEl = $('.tm-voices')
 
   // Options via textContent (never innerHTML), matching the module's rule for
   // everything that renders. "All topics" is the default: the curated per-year
@@ -787,20 +933,42 @@ export function mountTimeMachine(container, opts = {}) {
     }
   }
 
-  // ruler ticks: one per year, tall + labelled every 5 years and at the ends
+  // Ruler ticks: one per year, tall every 5 years and at the ends. Labels
+  // exist for every tall tick; which ones SHOW is decided by the track's
+  // width (layoutTickLabels) so they never collide on a phone.
+  const tickLabels = []
   for (let y = YEAR_MIN; y <= YEAR_MAX; y++) {
     const pct = ((y - YEAR_MIN) / (YEAR_MAX - YEAR_MIN)) * 100
     const major = y % 5 === 0 || y === YEAR_MIN || y === YEAR_MAX
     const t = el('div', 'tm-ticknode' + (major ? ' tm-major' : ''))
     t.style.left = pct + '%'
     ticks.appendChild(t)
-    if (major && Math.abs(y - YEAR_MIN) !== 1 && Math.abs(y - YEAR_MAX) !== 1) {
+    if (major) {
       const lab = el('div', 'tm-ticklabel')
       lab.style.left = pct + '%'
       lab.textContent = y
       ticks.appendChild(lab)
+      tickLabels.push({ y, node: lab })
     }
   }
+
+  // Both ends always show; a five-year label shows only when it clears every
+  // label already placed by a label's width. At 390px that is 1998, 2005 …
+  // 2020, 2026; on a desktop track all of them fit.
+  const LABEL_W = 36
+  function layoutTickLabels() {
+    const w = track.clientWidth
+    if (!w) return
+    const pxPerYear = w / (YEAR_MAX - YEAR_MIN)
+    const shown = [YEAR_MIN, YEAR_MAX]
+    for (const { y } of tickLabels) {
+      if (y === YEAR_MIN || y === YEAR_MAX) continue
+      if (shown.every((s) => Math.abs(y - s) * pxPerYear >= LABEL_W)) shown.push(y)
+    }
+    for (const { y, node } of tickLabels) node.hidden = !shown.includes(y)
+  }
+  const resizeObs = typeof ResizeObserver === 'function' ? new ResizeObserver(layoutTickLabels) : null
+  if (resizeObs) resizeObs.observe(track)
 
   // ---- state --------------------------------------------------------------
   let year = START_YEAR
@@ -809,12 +977,15 @@ export function mountTimeMachine(container, opts = {}) {
   let searchAbort = null       // in-flight headline probes
   let searchTimer = 0          // debounce while scrubbing
   let searchSeq = 0            // stale-response guard
+  let extrasSeq = 0            // stale-response guard for the year's static JSON
   let dragging = false
   // The newest year we've actually seen live results for this session; the
   // "take me somewhere ready" jump stays at or below it. Seeded conservatively
   // — the index has comfortably passed the early years.
   let lastGoodYear = 2002
   const mountAbort = new AbortController()
+  const yearCache = new Map()  // year → /years/{year}.json (or null)
+  let yearIndexPromise = null
 
   // ---- rendering ----------------------------------------------------------
 
@@ -825,6 +996,7 @@ export function mountTimeMachine(container, opts = {}) {
     track.setAttribute('aria-valuenow', String(year))
     track.setAttribute('aria-valuetext', `Parliament in ${year}`)
     yearEl.textContent = String(year)
+    for (const { y, node } of tickLabels) node.classList.toggle('tm-current', y === year)
     btnBack.disabled = year <= YEAR_MIN
     btnFwd.disabled = year >= YEAR_MAX
     if (!reducedMotion.matches) {
@@ -865,76 +1037,94 @@ export function mountTimeMachine(container, opts = {}) {
 
   function renderFooter() {
     footerEl.replaceChildren()
-    const icon = el('span')
-    icon.textContent = '📚'
-    icon.setAttribute('aria-hidden', 'true')
-    const p = el('span')
+    const p = el('p')
     const b = el('b')
     b.textContent = 'The archive is still being digitised, oldest first.'
     p.appendChild(b)
     const rest = staticData.progress
-      ? ` About ${staticData.progress.pct}% of ${fmtInt(staticData.progress.expected)} records are searchable so far, and more arrive every day. The numbers panel uses the complete historical index, so it works for every year. The quote machine catches up year by year.`
+      ? ` About ${staticData.progress.pct}% of ${fmtInt(staticData.progress.expected)} records are searchable so far, and more arrive every day. The numbers panel uses the complete historical dataset, so it works for every year; the live quotes, the year in brief and the voices catch up year by year.`
       : ' Live quotes appear as each year is shelved; the numbers panel already covers the whole record.'
     p.appendChild(document.createTextNode(rest))
-    footerEl.append(icon, p)
+    footerEl.appendChild(p)
   }
 
   let photoMapPromise = null
-  function fillPortrait (meta) {
+  function fillPortraits(scope) {
     photoMapPromise ??= fetch('/photos/people.json').then((r) => r.json()).catch(() => null)
     photoMapPromise.then((map) => {
-      const slot = meta.querySelector('.tm-portrait[data-speaker]')
-      if (!slot) return
-      const id = map && map[String(slot.dataset.speaker).trim().toLowerCase()]
-      if (!id) { slot.remove(); return }
-      const img = el('img', null, { src: `/photos/${id}.webp`, alt: '', width: '24', height: '24', loading: 'lazy' })
-      slot.appendChild(img)
+      for (const slot of scope.querySelectorAll('.tm-portrait[data-speaker]')) {
+        const id = map && map[String(slot.dataset.speaker).trim().toLowerCase()]
+        // No portrait on file: an empty ring holds the column so names align.
+        if (!id) { slot.classList.add('tm-portrait-none'); slot.removeAttribute('data-speaker'); continue }
+        const size = slot.classList.contains('tm-portrait-sm') ? '24' : '32'
+        const img = el('img', null, { src: `/photos/${id}.webp`, alt: '', width: size, height: size, loading: 'lazy' })
+        slot.appendChild(img)
+      }
     })
   }
 
+  /** The record's own heading for a speech ("Bills", "Housing"), if the title carries one. */
+  function subjectOf(r) {
+    const t = String(cardTitle(r) || '').trim()
+    if (!t || t === String(r.title || '').trim() || t === String(r.speaker || '').trim()) return ''
+    return clipText(t, 44)
+  }
+
+  // One clean unit per speech: who (portrait, name, party), when and where
+  // as a quiet second line, the debate in serif, then the summary or the
+  // opening passage, and a link to the speech itself. A container, not one
+  // big link: the name and party open their own pages (links cannot nest).
   function makeCard(topicLabel, r) {
-    // A container, not one big link: the title opens the speech, the speaker
-    // and party open their own pages (links cannot nest inside a link).
     const card = el('article', 'tm-card')
-    const chip = el('span', 'tm-chip')
-    chip.textContent = topicLabel
-    const title = el('a', 'tm-card-title', { href: `#/doc/${r.slug}` })
-    title.textContent = cardTitle(r) || 'Untitled speech'
-    const meta = el('div', 'tm-card-meta')
+    if (r.resource) card.dataset.rid = r.resource
+
+    const who = el('div', 'tm-card-who')
     if (r.speaker) {
       const slot = el('span', 'tm-portrait')
       slot.dataset.speaker = r.speaker
-      meta.appendChild(slot)
-      const who = el('a', 'tm-meta-link', { href: `#/subject/person/${encodeURIComponent(r.speaker)}` })
-      who.textContent = r.speaker
-      meta.appendChild(who)
+      who.appendChild(slot)
+    }
+    const text = el('div', 'tm-who-text')
+    const line1 = el('div', 'tm-who-line')
+    if (r.speaker) {
+      const name = el('a', 'tm-name', { href: `#/subject/person/${encodeURIComponent(r.speaker)}` })
+      name.textContent = r.speaker
+      line1.appendChild(name)
     }
     if (r.party) {
-      meta.appendChild(document.createTextNode(' · '))
+      if (r.speaker) line1.appendChild(document.createTextNode(' · '))
       const party = el('a', 'tm-meta-link', { href: `#/subject/party/${encodeURIComponent(r.party)}` })
       party.textContent = r.party
-      meta.appendChild(party)
+      line1.appendChild(party)
     }
-    const tail = [r.state, fmtDate(r.date)].filter(Boolean).join(' · ')
-    if (tail) meta.appendChild(document.createTextNode((r.speaker || r.party ? ' · ' : '') + tail))
-    fillPortrait(meta)
-    if (r.resource) card.dataset.rid = r.resource
-    card.append(chip, title, meta)
+    if (!line1.childNodes.length) line1.textContent = 'Speaker not recorded'
+    const line2 = el('div', 'tm-when')
+    line2.textContent = [fmtDate(r.date), parliamentName(r.state), subjectOf(r)].filter(Boolean).join(' · ')
+    text.append(line1, line2)
+    who.appendChild(text)
+
+    const debate = el('p', 'tm-debate')
+    debate.textContent = topicLabel
+    card.append(who, debate)
+
     // A real passage only — frontier-year records sometimes index as title
     // stubs, and quoting "Jane Doe — 2005-02-14" back at the reader is silly.
-    const snippet = trimSnippet(r.snippet)
-    if (snippet && snippet !== (r.title || '').trim() && snippet.length >= 40) {
+    const quote = passage(r.snippet)
+    if (quote && quote !== (r.title || '').trim() && quote.length >= 40) {
       const snip = el('p', 'tm-card-snippet')
-      snip.textContent = '“' + snippet + '”'
+      snip.textContent = '“' + quote + '”'
       card.appendChild(snip)
     }
+    const read = el('a', 'tm-read', { href: `#/doc/${r.slug}` })
+    read.textContent = 'Read the speech'
+    card.appendChild(read)
     return card
   }
 
   // Machine summaries ("In brief" on the doc page) where the enrichment pass
-  // has reached a speech: swap the opening-words quote for the summary. One
-  // small /api/brief call per render; speeches the pass has not reached keep
-  // their quote, so the grid never waits on this.
+  // has reached a speech: swap the opening passage for the summary, labelled
+  // as machine-written. One small /api/brief call per render; speeches the
+  // pass has not reached keep their passage, so the list never waits on this.
   async function applyBriefs(rids, seq, signal) {
     if (!rids.length) return
     let briefs = {}
@@ -949,13 +1139,177 @@ export function mountTimeMachine(container, opts = {}) {
       const text = briefs[card.dataset.rid]
       if (!text) continue
       const brief = el('p', 'tm-card-brief')
-      const kicker = el('span', 'tm-brief-kicker')
-      kicker.textContent = 'In brief'
-      brief.append(kicker, document.createTextNode(text))
+      const tag = el('span', 'tm-brief-tag')
+      tag.textContent = 'Machine summary'
+      brief.append(tag, document.createTextNode(text))
       const quote = card.querySelector('.tm-card-snippet')
       if (quote) quote.replaceWith(brief)
-      else card.appendChild(brief)
+      else card.insertBefore(brief, card.querySelector('.tm-read'))
     }
+  }
+
+  // ---- the year in brief + voices (static JSON, scripts/generate_years.py) --
+
+  function renderYearBrief(data) {
+    const brief = data?.brief
+    const paras = briefParagraphs(brief?.answer)
+    briefEl.replaceChildren()
+    briefSec.hidden = !paras.length
+    if (!paras.length) return
+
+    // On a phone the opening sentences carry the year; the rest of the
+    // first paragraph and every later one wait behind one tap. Wide screens
+    // show it all (CSS un-hides .tm-brief-more there).
+    const body = el('div', 'tm-brief-body')
+    const leadEnd = paras[0].length > 460 ? sentenceEnd(paras[0], 160, 400) : -1
+    let hasMore = paras.length > 1
+    paras.forEach((text, i) => {
+      const p = el('p')
+      if (i === 0 && leadEnd > 0 && leadEnd < text.length) {
+        p.appendChild(document.createTextNode(text.slice(0, leadEnd)))
+        const rest = el('span', 'tm-brief-more tm-brief-more-inline')
+        rest.textContent = ' ' + text.slice(leadEnd).trim()
+        rest.hidden = true
+        p.appendChild(rest)
+        hasMore = true
+      } else {
+        p.textContent = text
+        if (i > 0) { p.classList.add('tm-brief-more'); p.hidden = true }
+      }
+      body.appendChild(p)
+    })
+    briefEl.appendChild(body)
+    if (hasMore) {
+      // On a phone the first paragraph opens the year; the rest is one tap.
+      const more = el('button', 'tm-linkbtn tm-brief-toggle', { type: 'button', 'aria-expanded': 'false' })
+      more.textContent = 'Read the rest'
+      more.addEventListener('click', () => {
+        const open = more.getAttribute('aria-expanded') !== 'true'
+        more.setAttribute('aria-expanded', String(open))
+        more.textContent = open ? 'Show less' : 'Read the rest'
+        for (const p of body.querySelectorAll('.tm-brief-more')) p.hidden = !open
+      })
+      briefEl.appendChild(more)
+    }
+
+    const sources = Array.isArray(brief.sources) ? brief.sources : []
+    const cited = sources.filter((s) => s.cited).length
+    const fine = el('p', 'tm-fineprint')
+    fine.textContent = sources.length
+      ? `Machine-written from the ${sources.length} passages the knowledge box retrieved for ${data.year} so far, ${cited} of them cited. A reading aid, not the record: check any claim against the speeches.`
+      : `Machine-written from what the knowledge box had retrieved for ${data.year} so far. A reading aid, not the record.`
+    briefEl.appendChild(fine)
+
+    if (sources.length) {
+      const det = el('details', 'tm-sources')
+      const sum = el('summary')
+      sum.textContent = `The speeches it drew on (${sources.length})`
+      det.appendChild(sum)
+      const ol = el('ol', 'tm-sources-list')
+      for (const s of sources) {
+        if (!s.slug) continue
+        const li = el('li')
+        const a = el('a', 'tm-src-link', { href: `#/doc/${s.slug}` })
+        a.textContent = s.speaker || s.title || s.slug
+        li.appendChild(a)
+        const tail = [s.party, fmtDate(s.date), parliamentName(s.state)].filter(Boolean).join(' · ')
+        if (tail) {
+          const t = el('span', 'tm-src-tail')
+          t.textContent = ' · ' + tail
+          li.appendChild(t)
+        }
+        if (s.cited) {
+          const c = el('span', 'tm-src-cited')
+          c.textContent = 'cited'
+          li.appendChild(c)
+        }
+        ol.appendChild(li)
+      }
+      det.appendChild(ol)
+      briefEl.appendChild(det)
+    }
+  }
+
+  function renderVoices(data) {
+    const v = data?.voices
+    // A voice is a repeat appearance; fewer than three of them is not a list.
+    const speakers = (Array.isArray(v?.speakers) ? v.speakers : [])
+      .filter((s) => Number(s.speeches) >= 2)
+      .slice(0, 6)
+    voicesEl.replaceChildren()
+    voicesSec.hidden = speakers.length < 3
+    if (speakers.length < 3) return
+
+    const max = Math.max(...speakers.map((s) => Number(s.speeches) || 0), 1)
+    const ol = el('ol', 'tm-voice-list')
+    for (const s of speakers) {
+      const li = el('li', 'tm-voice')
+      const row = el('div', 'tm-voice-row')
+      const slot = el('span', 'tm-portrait tm-portrait-sm')
+      slot.dataset.speaker = s.name
+      row.appendChild(slot)
+      const name = el('a', 'tm-voice-name', { href: `#/subject/person/${encodeURIComponent(s.name)}` })
+      name.textContent = s.name
+      row.appendChild(name)
+      if (s.party) {
+        const p = el('span', 'tm-voice-party')
+        p.textContent = s.party
+        row.appendChild(p)
+      }
+      const n = el('span', 'tm-voice-n')
+      n.textContent = fmtInt(s.speeches)
+      n.setAttribute('aria-label', `${fmtInt(s.speeches)} speeches`)
+      row.appendChild(n)
+      const bar = el('div', 'tm-voice-bar', { 'aria-hidden': 'true' })
+      const fillEl = el('div', 'tm-voice-fill')
+      fillEl.style.width = Math.round(((Number(s.speeches) || 0) / max) * 100) + '%'
+      bar.appendChild(fillEl)
+      li.append(row, bar)
+      ol.appendChild(li)
+    }
+    voicesEl.appendChild(ol)
+    fillPortraits(voicesEl)
+
+    const parties = Array.isArray(v.parties) ? v.parties.slice(0, 5) : []
+    if (parties.length) {
+      const p = el('p', 'tm-voice-parties')
+      p.textContent = 'By party: ' + parties.map((x) => `${x.party} ${fmtInt(x.speeches)}`).join(' · ')
+      voicesEl.appendChild(p)
+    }
+    const fine = el('p', 'tm-fineprint')
+    const debates = Array.isArray(v.probes) && v.probes.length ? v.probes.length : 4
+    const total = Number(v.unique_speeches) || 0
+    const labelled = total - (Number(v.unlabelled_party) || 0)
+    const partyNote = total && labelled < total ? ` Party labels exist for ${fmtInt(labelled)} of them.` : ''
+    const chairNote = Number(v.presiding_rows_skipped) > 0 ? ' Rows the record attributes to the presiding officers are left out.' : ''
+    fine.textContent = `Speeches per speaker among the ${fmtInt(total)} strongest matches for ${data.year}’s ${debates} debates, so far.${partyNote}${chairNote} Who dominates those debates in the index, not who spoke most in parliament.`
+    voicesEl.appendChild(fine)
+  }
+
+  // The year's static enrichment (one file per year, generated once through
+  // the knowledge box). Missing or unreachable simply hides both sections.
+  async function loadYearExtras() {
+    const seq = ++extrasSeq
+    const y = year
+    const { signal } = mountAbort
+    yearIndexPromise ??= fetchJSON('/years/index.json', signal).catch(() => null)
+    let data = null
+    try {
+      const idx = await yearIndexPromise
+      if (seq !== extrasSeq) return
+      if (!idx || idx.years?.[String(y)]) {
+        if (yearCache.has(y)) data = yearCache.get(y)
+        else {
+          data = await fetchJSON(`/years/${y}.json`, signal).catch(() => null)
+          yearCache.set(y, data)
+        }
+      }
+    } catch {
+      data = null
+    }
+    if (seq !== extrasSeq) return
+    renderYearBrief(data)
+    renderVoices(data)
   }
 
   // Under the topic lens an empty year has TWO possible causes (the archive
@@ -980,7 +1334,7 @@ export function mountTimeMachine(container, opts = {}) {
 
     const actions = el('div', 'tm-empty-actions')
     const clear = el('button', 'tm-linkbtn', { type: 'button' })
-    clear.textContent = `Show all topics for ${year} →`
+    clear.textContent = `Show all topics for ${year}`
     clear.addEventListener('click', () => setTopic(''))
     actions.appendChild(clear)
     box.appendChild(actions)
@@ -996,7 +1350,7 @@ export function mountTimeMachine(container, opts = {}) {
     const box = el('div', 'tm-empty', { role: 'status' })
 
     const head = el('strong')
-    head.textContent = `The time machine hasn’t reached ${year} yet!`
+    head.textContent = `The time machine hasn’t reached ${year} yet.`
     box.appendChild(head)
 
     const tracked = staticData.reports.reduce((s, r) => s + (r.timeline.get(year) ?? 0), 0)
@@ -1004,13 +1358,13 @@ export function mountTimeMachine(container, opts = {}) {
     body.style.margin = '0.4rem 0 0'
     const pctNote = staticData.progress ? ` It’s about ${staticData.progress.pct}% of the way through.` : ''
     body.textContent = tracked > 0
-      ? `Parliament definitely wasn’t quiet: it gave ${fmtInt(tracked)} speeches in ${year} on our six tracked topics alone (see the numbers). Our librarians are shelving the record oldest-first, and the live quotes for this year are still on the trolley.${pctNote}`
-      : `Our librarians are shelving the record oldest-first, and the live quotes for this year are still on the trolley.${pctNote} Parliament wasn’t silent. We just haven’t caught up.`
+      ? `Parliament definitely wasn’t quiet: it gave ${fmtInt(tracked)} speeches in ${year} on our six tracked topics alone (see the numbers). The record is being shelved oldest-first, and the live quotes for this year are still on the trolley.${pctNote}`
+      : `The record is being shelved oldest-first, and the live quotes for this year are still on the trolley.${pctNote} Parliament wasn’t silent. We just haven’t caught up.`
     box.appendChild(body)
 
     const actions = el('div', 'tm-empty-actions')
     const jump = el('button', 'tm-linkbtn', { type: 'button' })
-    jump.textContent = 'Take me to an earlier year that’s ready →'
+    jump.textContent = 'Take me to an earlier year that’s ready'
     jump.addEventListener('click', () => {
       const span = Math.max(1, lastGoodYear - YEAR_MIN + 1)
       setYear(YEAR_MIN + Math.floor(Math.random() * span), true)
@@ -1075,7 +1429,7 @@ export function mountTimeMachine(container, opts = {}) {
 
     // Interleave: best unseen result from each probe, twice around, so every
     // debate gets a card before any debate gets two. The topic lens has one
-    // probe, so it gets enough rounds to fill the grid on its own.
+    // probe, so it gets enough rounds to fill the list on its own.
     const seen = new Set()
     const picks = []
     for (let round = 0; round < (filtered ? 6 : 2) && picks.length < 6; round++) {
@@ -1096,6 +1450,7 @@ export function mountTimeMachine(container, opts = {}) {
     if (year > lastGoodYear) lastGoodYear = year
     cardsEl.replaceChildren()
     for (const { probe, r } of picks) cardsEl.appendChild(makeCard(probe.label, r))
+    fillPortraits(cardsEl)
     applyBriefs(picks.map(({ r }) => r.resource).filter(Boolean), seq, signal)
 
     // A thin year means the machine is mid-shelving it, not that parliament
@@ -1112,6 +1467,11 @@ export function mountTimeMachine(container, opts = {}) {
 
   // ---- year changes -------------------------------------------------------
 
+  function loadYear() {
+    loadHeadlines()
+    loadYearExtras()
+  }
+
   function setYear(y, immediate = false) {
     const next = clampYear(y)
     if (next === year && !immediate) return
@@ -1121,7 +1481,7 @@ export function mountTimeMachine(container, opts = {}) {
     clearTimeout(searchTimer)
     // Debounce while scrubbing so we don't strafe the API; fire promptly on
     // discrete jumps (keyboard steps still coalesce via the short delay).
-    searchTimer = setTimeout(loadHeadlines, immediate ? 0 : 350)
+    searchTimer = setTimeout(loadYear, immediate ? 0 : 350)
   }
 
   // The topic lens changes the probes, not the year: numbers panel and
@@ -1204,6 +1564,7 @@ export function mountTimeMachine(container, opts = {}) {
 
   container.appendChild(root)
   renderScrubber()
+  layoutTickLabels()
   renderFooter()
   renderSkeletons()
 
@@ -1215,7 +1576,7 @@ export function mountTimeMachine(container, opts = {}) {
     })
     .catch(() => { /* aborted or offline — panels stay in fallback copy */ })
 
-  searchTimer = setTimeout(loadHeadlines, 0)
+  searchTimer = setTimeout(loadYear, 0)
 
   // ---- teardown -----------------------------------------------------------
 
@@ -1223,8 +1584,10 @@ export function mountTimeMachine(container, opts = {}) {
     destroy() {
       clearTimeout(searchTimer)
       searchSeq++ // orphan any in-flight probe handlers
+      extrasSeq++
       if (searchAbort) searchAbort.abort()
       mountAbort.abort()
+      if (resizeObs) resizeObs.disconnect()
       track.removeEventListener('pointerdown', onPointerDown)
       track.removeEventListener('pointermove', onPointerMove)
       track.removeEventListener('pointerup', onPointerUp)
