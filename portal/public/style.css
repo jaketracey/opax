@@ -1259,8 +1259,12 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 /* Bar names read as labels, not links: no underline, bronze on hover. */
 a.barrow-name { text-decoration: none; }
 a.barrow-name:hover { color: var(--bronze-ink); }
-.barrow-track { height: 8px; background: var(--paper-sunken); border-radius: 4px; overflow: hidden; }
+.barrow-track { position: relative; height: 8px; background: var(--paper-sunken); border-radius: 4px; overflow: hidden; }
 .barrow-track i { display: block; height: 100%; background: var(--chart-mark); border-radius: 4px; }
+.barrow-marker {
+  position: absolute; top: 50%; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--ink); border: 1px solid var(--paper-raised); transform: translate(-50%, -50%);
+}
 .barrow-value { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .barrow-value small { display: block; color: var(--ink-faint); font-size: 0.75rem; line-height: 1.25; }
 .topic-parliaments .barrow { min-height: 44px; }
@@ -1922,6 +1926,24 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .topic-tide-decade strong { color: var(--ink); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
 .topic-tide-decade small { color: var(--ink-faint); font-size: 0.6875rem; font-variant-numeric: tabular-nums; }
 .topic-tide .fineprint { margin-top: var(--space-2); }
+.person-topics { margin-top: var(--section-gap); max-width: 760px; }
+.person-topics-head {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap;
+}
+.person-topics-head h3, .person-topics > h3 { margin: 0; font: 600 1.25rem/1.35 var(--serif); }
+.person-topics-head h3 span { color: var(--ink-faint); font: 400 0.8125rem/1.3 var(--sans); }
+.person-topic-bars { margin-top: var(--space-4); }
+.person-topic-bars figcaption {
+  color: var(--ink); font: 600 0.9375rem/1.4 var(--serif); letter-spacing: 0; text-transform: none;
+}
+.person-topic-bars .barrow { min-height: 44px; }
+.person-topic-legend {
+  display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-5);
+  margin: var(--space-3) 0 0; color: var(--ink-faint); font-size: 0.75rem;
+}
+.person-topic-legend span { display: inline-flex; align-items: center; gap: var(--space-2); }
+.person-topic-legend i { display: inline-block; width: 24px; height: 7px; border-radius: 4px; background: var(--bronze); }
+.person-topic-legend b { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--ink); }
 @media (max-width: 900px) {
   .subject-grid { grid-template-columns: 1fr; }
   .infobox { position: static; }
@@ -2008,7 +2030,8 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 
 @media (forced-colors: active) {
   .scorebar > i, .barrow-track i, .meter-track i, .date-ruler-bar,
-  .coverage-band > i > b, .topic-tide-track i, .tide-decade i { background: CanvasText; fill: CanvasText; }
+  .coverage-band > i > b, .topic-tide-track i, .tide-decade i,
+  .barrow-marker, .person-topic-legend i, .person-topic-legend b { background: CanvasText; fill: CanvasText; }
   .date-ruler-axis, .date-ruler-tick { stroke: CanvasText; }
   /* Transparent inactive borders survive forced colors, so the active
      underline / left rule keep working; only the hover washes vanish. */
@@ -2057,6 +2080,10 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   .topic-arc-head .quiet-toggle button { flex: 1 1 50%; }
   .topic-arc-item { grid-template-columns: 2.7rem minmax(0, 1fr); column-gap: var(--space-2); }
   .topic-arc-entry { padding-left: var(--space-4); }
+  .person-topics-head { align-items: stretch; }
+  .person-topics-head .quiet-toggle { width: 100%; }
+  .person-topics-head .quiet-toggle button { flex: 1 1 33%; }
+  .person-topic-bars .barrow { grid-template-columns: minmax(100px, 34%) minmax(60px, 1fr) 4rem; gap: var(--space-2); }
   .topic-tide-decade { grid-template-rows: auto 64px auto auto; min-height: 132px; padding-inline: var(--space-1); }
   .topic-tide-track { height: 64px; }
   .coverage-band { font-size: 0.625rem; }

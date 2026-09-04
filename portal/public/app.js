@@ -3144,6 +3144,81 @@ async function renderPersonVotes(name, personId, sections) {
     ${tvfy ? `<p class="action-row">${tvfy}</p>` : ""}`;
 }
 
+async function renderPersonTopics(name, sections) {
+  const key = currentSubjectKey;
+  const slot = document.createElement("section");
+  slot.className = "person-topics";
+  slot.innerHTML = `<h3>What they talk about</h3><p class="status">Counting their labelled speeches…</p>`;
+  sections.appendChild(slot);
+  try {
+    const nameQuery = new URLSearchParams({ name });
+    const [data, allTopics, tide] = await Promise.all([
+      api(`/api/person-topics?${nameQuery}`),
+      api("/api/topics"),
+      api("/api/tide?scope=all"),
+    ]);
+    if (currentSubjectKey !== key || !slot.isConnected) return;
+    const baseline = new Map((allTopics.topics || []).map((topic) => [
+      topic.slug,
+      allTopics.labelled ? Number(topic.count || 0) / Number(allTopics.labelled) : 0,
+    ]));
+    let era = "all";
+    const paint = () => {
+      const profile = data.profiles?.[era];
+      if (!profile) return;
+      const rows = (profile.topics || []).slice(0, 8).map((topic) => [
+        TOPICS[topic.slug] || topic.slug, Number(topic.share) || 0, Number(topic.count) || 0, topic.slug,
+      ]);
+      const max = Math.max(
+        ...rows.flatMap((row) => [Number(row[1]) || 0, Number(baseline.get(row[3])) || 0]),
+        Number.EPSILON,
+      );
+      const from = era === "all" ? "" : String(profile.from);
+      const to = era === "all" ? "" : String(profile.to);
+      const chart = rows.length ? barList(rows, {
+        heading: `${profile.label} · ${Number(profile.labelled || 0).toLocaleString()} labelled speeches so far`,
+        fmt: (share) => `${(Number(share) * 100).toFixed(1)}%`,
+        detail: (_topic, _share, row) => `${Number(row[2]).toLocaleString()} speeches`,
+        linkTo: (_topic, _share, row) => searchHash("", { speaker: name, topic: row[3], from, to }),
+        maxValue: max,
+        marker: (_topic, _share, row) => {
+          const share = baseline.get(row[3]);
+          return Number.isFinite(share) ? {
+            value: share,
+            label: `Whole labelled record: ${(share * 100).toFixed(1)}%`,
+          } : null;
+        },
+        className: "person-topic-bars",
+      }) : `<p class="status">No topic-labelled speeches are held for this era yet.</p>`;
+      slot.innerHTML = `
+        <div class="person-topics-head">
+          <h3>What they talk about <span>(labelled so far)</span></h3>
+          <div class="quiet-toggle" role="group" aria-label="Speech era">
+            <button type="button" data-person-era="all" aria-pressed="${era === "all"}">All</button>
+            <button type="button" data-person-era="then" aria-pressed="${era === "then"}">Then</button>
+            <button type="button" data-person-era="now" aria-pressed="${era === "now"}">Now</button>
+          </div>
+        </div>
+        ${chart}
+        <p class="person-topic-legend"><span><i></i>Their share of labelled speeches</span><span><b></b>Share across the whole labelled record</span></p>
+        ${coverageRuleHTML(tide.decades)}
+        <p class="fineprint">${Number(data.profiles?.all?.labelled || 0).toLocaleString()} of their ${Number(data.indexed || 0).toLocaleString()} indexed speeches carry a topic label so far. A speech can carry more than one topic, so the bars do not sum to 100%. Names follow Hansard; a bare surname or another spelling can sit separately. Each row opens the speeches behind it.</p>`;
+      for (const button of slot.querySelectorAll("[data-person-era]")) {
+        button.addEventListener("click", () => {
+          if (button.dataset.personEra === era) return;
+          era = button.dataset.personEra;
+          paint();
+        });
+      }
+    };
+    paint();
+  } catch {
+    if (currentSubjectKey === key && slot.isConnected) {
+      slot.innerHTML = `<h3>What they talk about</h3><p class="status">Their topic profile could not be loaded. Their speeches below are still available.</p>`;
+    }
+  }
+}
+
 async function openSubject(kind, name, manageFocus) {
   let key = `${kind}:${name}`;
   if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
@@ -3324,6 +3399,7 @@ async function openSubject(kind, name, manageFocus) {
     if (topic) goRoute(askHash(`What did ${name} say about ${topic}?`));
   });
   // The structured record first; the speeches follow it.
+  renderPersonTopics(name, sections);
   renderPersonVotes(name, photoMap?.[name.trim().toLowerCase()] ?? null, sections);
   if (speeches.length) {
     const newest = [...speeches].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 8);
@@ -7013,7 +7089,7 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {
  *  reads as the category. Only used where nothing else claims the label. */
 function barList(rows, {
   fmt = String, heading, linkTo, partyDots = false, term = null, detail = null,
-  className = "", maxValue = null,
+  className = "", maxValue = null, marker = null,
 }) {
   const max = maxValue ?? Math.max(...rows.map(([, v]) => v), 1);
   const items = rows.map((row) => {
@@ -7021,6 +7097,12 @@ function barList(rows, {
     const key = linkTo ? null : term?.(name);
     const label = `${partyDots ? partyDotHTML(name) : ""}${esc(name)}`;
     const sub = detail?.(name, v, row);
+    const marked = marker?.(name, v, row);
+    const markerValue = Number(typeof marked === "object" ? marked?.value : marked);
+    const markerLabel = typeof marked === "object" ? marked?.label : "";
+    const markerHTML = Number.isFinite(markerValue)
+      ? `<b class="barrow-marker" style="left:${Math.max(0, Math.min(100, (markerValue / max) * 100)).toFixed(2)}%"${markerLabel ? ` title="${esc(markerLabel)}"` : ""}></b>`
+      : "";
     return `
     <div class="barrow">
       ${linkTo
@@ -7028,8 +7110,8 @@ function barList(rows, {
         : key
           ? `<button type="button" class="barrow-name barrow-term" data-term="${esc(key)}">${label}</button>`
           : `<span class="barrow-name" title="${esc(name)}">${label}</span>`}
-      <span class="barrow-track" aria-hidden="true"><i style="width:${Math.max((v / max) * 100, 1)}%"></i></span>
-      <span class="barrow-value">${esc(fmt(v))}${sub !== null && sub !== undefined ? `<small>${esc(sub)}</small>` : ""}</span>
+      <span class="barrow-track" aria-hidden="true"><i style="width:${Math.max((v / max) * 100, 1)}%"></i>${markerHTML}</span>
+      <span class="barrow-value">${esc(fmt(v))}${sub !== null && sub !== undefined ? `<small>${esc(sub)}</small>` : ""}${markerLabel ? `<span class="visually-hidden">; ${esc(markerLabel)}</span>` : ""}</span>
     </div>`;
   }).join("");
   return `<figure class="chart${className ? ` ${esc(className)}` : ""}"><figcaption>${esc(heading)}</figcaption>${items}</figure>`;

@@ -1786,6 +1786,59 @@ async function apiTide(url: URL, env: Env): Promise<Response> {
   })
 }
 
+/** A person's topic mix overall and in the two comparable recent decades. */
+async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
+  const raw = url.searchParams.get('name')?.trim() ?? ''
+  if (!raw || raw.length > MAX_SPEAKER_CHARS || !NAME_RE.test(raw)) {
+    return json({ error: 'bad name' }, 400)
+  }
+  const name = canonicalSpeaker(raw)
+  return cachedJson(`/api/person-topics?name=${encodeURIComponent(name)}`, async () => {
+    const collaborator = { prop: 'origin_collaborator', collaborator: name }
+    const topic = { prop: 'label', labelset: 'topic' }
+    const catalog = (clauses: Record<string, unknown>[], faceted = true) => kbFetch(env, '/catalog', {
+      body: {
+        filter_expression: { resource: clauses.length === 1 ? clauses[0] : { and: clauses } },
+        ...(faceted ? { faceted: [TOPIC_FILTER_PREFIX] } : {}),
+        page_size: 0,
+      },
+    })
+    const [indexedRes, allRes, thenRes, nowRes] = await Promise.all([
+      catalog([collaborator], false),
+      catalog([collaborator, topic]),
+      catalog([collaborator, topic, { prop: 'label', labelset: 'decade', label: '2010s' }]),
+      catalog([collaborator, topic, { prop: 'label', labelset: 'decade', label: '2020s' }]),
+    ])
+    if (![indexedRes, allRes, thenRes, nowRes].every((response) => response.ok)) {
+      return json({ error: 'catalog failed' }, 502)
+    }
+    const [indexed, all, then, now] = await Promise.all(
+      [indexedRes, allRes, thenRes, nowRes].map(async (response) => (await response.json()) as CatalogPage),
+    )
+    const profile = (page: CatalogPage, label: string, from: number, to: number) => {
+      const labelled = page.fulltext?.total ?? 0
+      const facets = page.fulltext?.facets?.[TOPIC_FILTER_PREFIX] ?? {}
+      const topics = [...TOPIC_SLUGS]
+        .map((slug) => {
+          const count = facets[`${TOPIC_FILTER_PREFIX}/${slug}`] ?? 0
+          return { slug, count, share: labelled > 0 ? count / labelled : 0 }
+        })
+        .filter((row) => row.count > 0)
+        .sort((a, b) => b.share - a.share || b.count - a.count || a.slug.localeCompare(b.slug))
+      return { label, from, to, labelled, topics }
+    }
+    return json({
+      name,
+      indexed: indexed.fulltext?.total ?? 0,
+      profiles: {
+        all: profile(all, 'All years', 1993, 2026),
+        then: profile(then, '2010s', 2010, 2019),
+        now: profile(now, '2020–26', 2020, 2026),
+      },
+    })
+  })
+}
+
 /**
  * Party × topic matrix ("who owns which debate"): one faceted-party call per
  * topic — the verified faceted+filters shape returns the party split AND the
@@ -3030,6 +3083,9 @@ async function route(
       }
       if (url.pathname === '/api/tide' && request.method === 'GET') {
         return await apiTide(url, env)
+      }
+      if (url.pathname === '/api/person-topics' && request.method === 'GET') {
+        return await apiPersonTopics(url, env)
       }
       if (url.pathname === '/api/matrix' && request.method === 'GET') {
         return await apiMatrix(env)
