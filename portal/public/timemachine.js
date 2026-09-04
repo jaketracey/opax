@@ -621,19 +621,24 @@ const CSS = `
   overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none;
 }
 .tm-filmstrip::-webkit-scrollbar { display: none; }
+/* Thumbnails as cropped tiles at one shape, edge to edge inside a hairline
+   frame, slightly quietened until the pointer or finger lands on them. */
 .tm-filmstrip-button {
-  flex: 0 0 clamp(78px, 24vw, 112px); height: 70px; padding: 3px;
-  border: 1px solid var(--line-strong, #8D897B); border-radius: 0;
-  background: var(--paper-raised, #fff); cursor: pointer;
+  flex: 0 0 clamp(96px, 30vw, 132px); aspect-ratio: 4 / 3; height: auto; padding: 0; overflow: hidden;
+  border: 1px solid var(--line, #DFDCD2); border-radius: 2px;
+  background: var(--paper-sunken, #F1EFE8); cursor: pointer;
 }
 .tm-filmstrip-button img {
-  display: block; width: 100%; height: 100%; object-fit: contain; filter: saturate(0.88) contrast(0.98);
+  display: block; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.82) contrast(0.98);
+  transition: filter 200ms ease, transform 300ms cubic-bezier(0.22, 0.7, 0.3, 1);
 }
 .tm-filmstrip-button:hover { border-color: var(--bronze-ink, #8A5A12); }
+.tm-filmstrip-button:hover img, .tm-filmstrip-button:focus-visible img { filter: none; transform: scale(1.03); }
+@media (prefers-reduced-motion: reduce) { .tm-filmstrip-button img { transition: none; transform: none; } }
 .tm-filmstrip-button:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
 @media (min-width: 761px) {
   .tm-filmstrip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; gap: 0.5rem; }
-  .tm-filmstrip-button { width: 100%; height: 76px; }
+  .tm-filmstrip-button { width: 100%; }
 }
 .tm-brief-body p { font-size: 0.92rem; line-height: 1.6; color: var(--ink, #23271F); margin: 0 0 0.7rem; }
 .tm-brief-toggle { margin: -0.3rem 0 0.4rem; }
