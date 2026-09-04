@@ -151,7 +151,7 @@ function lower_bound(text: string, at: number): number {
   return sp > 0 ? sp + 1 : at
 }
 
-/** Squash mixed-scale /find scores into 0..1 for the UI's relevance bar. */
+/** Squash mixed-scale /find scores into 0..1 so result ranking is comparable. */
 function calibrate(score: number, scoreType: string): number {
   if (scoreType === 'VECTOR' || scoreType === 'BOTH' || score <= 1) {
     return Math.min(Math.max(score, 0), 1)
@@ -343,7 +343,10 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
         .filter(([k]) => !drop.includes(k))
         .sort(([a], [b]) => a.localeCompare(b)),
     ).toString()
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${keyParams(['nocache'])}`))
+  // The response schema includes a histogram of the whole cached retrieval
+  // window. Version the page key so pre-histogram pages cannot hide it for a
+  // cache lifetime after this change ships; the expensive window is reused.
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-v1\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
     await sha256Hex(`${env.CACHE_EPOCH}\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
@@ -379,6 +382,11 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   const pageCount = Math.max(1, Math.ceil(ordered.length / per))
   const clamped = Math.min(page, pageCount)
   const rows = ordered.slice((clamped - 1) * per, clamped * per)
+  const years: Record<string, number> = {}
+  for (const row of win.results) {
+    const year = row.date?.match(/^(\d{4})/)?.[1]
+    if (year && Number(year) >= 1993 && Number(year) <= 2026) years[year] = (years[year] ?? 0) + 1
+  }
   const out = json({
     query: q,
     mode,
@@ -391,6 +399,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     // `truncated` is true the record holds more; the UI must say so.
     total: ordered.length,
     truncated: win.truncated,
+    years,
     count: rows.length,
     results: rows,
   })
@@ -1596,6 +1605,9 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
 
 const TOPIC_FILTER_PREFIX = '/classification.labels/topic'
 const PARTY_FACET = '/classification.labels/party'
+const STATE_FACET = '/classification.labels/state'
+const DECADE_FILTER_PREFIX = '/classification.labels/decade'
+const SPEECH_FILTER = '/classification.labels/kind/speech'
 
 interface CatalogRow extends FindResource {
   created?: string
@@ -1672,48 +1684,157 @@ async function apiParties(env: Env): Promise<Response> {
 /**
  * One topic: total labelled so far (the filtered call's own total), per-party
  * split (facet within the topic filter — one request covers both, cheaper than
- * a faceted call per party), and the newest labelled speeches to enter the
- * index (apiRecent's pattern; catalog rows carry no machine summary, so none
- * is served — the client must not fetch per-doc to fill the gap).
+ * a faceted call per party), the topic's share of each parliament's labelled
+ * record. Speech chronology comes from /find, whose metadata date is the
+ * speech date; catalog `created` is only index time and is never used here.
  */
 async function apiTopic(slug: string, env: Env): Promise<Response> {
   if (!TOPIC_SLUGS.has(slug)) return json({ error: 'unknown topic' }, 404)
   return cachedJson(`/api/topic/${slug}`, async () => {
     const filter = `filters=${TOPIC_FILTER_PREFIX}/${slug}`
-    const [partyRes, newestRes, anyRes] = await Promise.all([
+    const [partyRes, anyRes, stateRes, stateTotalsRes] = await Promise.all([
       kbFetch(env, `/catalog?faceted=${PARTY_FACET}&${filter}&page_size=0`),
-      kbFetch(
-        env,
-        `/catalog?${filter}&sort_field=created&sort_order=desc&page_size=12&show=basic&show=origin&show=extra`,
-      ),
       kbFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+      kbFetch(env, `/catalog?faceted=${STATE_FACET}&${filter}&page_size=0`),
+      kbFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
     ])
-    if (!partyRes.ok || !newestRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
+    if (!partyRes.ok || !anyRes.ok || !stateRes.ok || !stateTotalsRes.ok) {
+      return json({ error: 'catalog failed' }, 502)
+    }
     const byParty = (await partyRes.json()) as CatalogPage
-    const newest = (await newestRes.json()) as CatalogPage
     const any = (await anyRes.json()) as CatalogPage
+    const byState = (await stateRes.json()) as CatalogPage
+    const stateTotals = (await stateTotalsRes.json()) as CatalogPage
     const partyFacet = byParty.fulltext?.facets?.[PARTY_FACET] ?? {}
     const parties = Object.entries(partyFacet)
       .map(([path, n]): [string, number] => [path.slice(`${PARTY_FACET}/`.length), n])
       .sort((a, b) => b[1] - a[1])
-    const recent = Object.values(newest.resources ?? {})
-      .filter((r) => SLUG_RE.test(r.slug ?? ''))
-      .map((r) => ({
-        slug: r.slug,
-        title: r.title ?? r.slug,
-        speaker: r.origin?.collaborators?.[0] ?? null,
-        party: label(r, 'party'),
-        state: label(r, 'state'),
-        date: (r.extra?.metadata?.date as string) ?? null,
-        indexed: r.created ?? null,
-      }))
-      .slice(0, 8)
+    const labelledByState = stateTotals.fulltext?.facets?.[STATE_FACET] ?? {}
+    const states = Object.entries(byState.fulltext?.facets?.[STATE_FACET] ?? {})
+      .map(([path, count]): [string, number, number] => {
+        const state = path.slice(`${STATE_FACET}/`.length)
+        const labelled = labelledByState[`${STATE_FACET}/${state}`] ?? 0
+        return [state, count, labelled > 0 ? count / labelled : 0]
+      })
+      .filter(([state, count]) => Boolean(state) && count > 0)
+      .sort((a, b) => b[2] - a[2] || b[1] - a[1] || a[0].localeCompare(b[0]))
     return json({
       slug,
       count: byParty.fulltext?.total ?? 0,
       labelled: any.fulltext?.total ?? 0,
       parties,
-      recent,
+      states,
+    })
+  })
+}
+
+const TIDE_DECADES = [
+  { slug: '1990s', label: '1993–99', from: 1993, to: 1999 },
+  { slug: '2000s', label: '2000s', from: 2000, to: 2009 },
+  { slug: '2010s', label: '2010s', from: 2010, to: 2019 },
+  { slug: '2020s', label: '2020–26', from: 2020, to: 2026 },
+] as const
+
+/**
+ * Topic share and topic-label coverage by decade. Catalog `created` is index
+ * time, so this endpoint only uses the decade labels written from speech dates
+ * at ingest. Federal is the default comparable run; `scope=all` includes all
+ * five parliaments and keeps its unequal source windows visible in coverage.
+ */
+async function apiTide(url: URL, env: Env): Promise<Response> {
+  const scope = url.searchParams.get('scope') ?? 'federal'
+  if (scope !== 'federal' && scope !== 'all') return json({ error: 'bad scope' }, 400)
+  return cachedJson(`/api/tide?scope=${scope}`, async () => {
+    const state = scope === 'federal' ? `&filters=${STATE_FACET}/federal` : ''
+    const paths = TIDE_DECADES.flatMap((decade) => {
+      const shared = `filters=${DECADE_FILTER_PREFIX}/${decade.slug}&filters=${SPEECH_FILTER}${state}&page_size=0`
+      return [
+        `/catalog?faceted=${TOPIC_FILTER_PREFIX}&${shared}`,
+        `/catalog?filters=${TOPIC_FILTER_PREFIX}&${shared}`,
+      ]
+    })
+    const parseCatalog = async (path: string): Promise<CatalogPage> => {
+      const response = await kbFetch(env, path)
+      if (!response.ok) throw new Error(`catalog ${response.status}`)
+      return (await response.json()) as CatalogPage
+    }
+    const pages: CatalogPage[] = []
+    try {
+      // Fetch and consume in fives: an unread response holds one of the
+      // Worker's six upstream connection slots open.
+      for (let i = 0; i < paths.length; i += 5) {
+        pages.push(...(await Promise.all(paths.slice(i, i + 5).map(parseCatalog))))
+      }
+    } catch {
+      return json({ error: 'catalog failed' }, 502)
+    }
+    const decades = TIDE_DECADES.map((decade, i) => {
+      const total = pages[i * 2].fulltext?.total ?? 0
+      const labelled = pages[i * 2 + 1].fulltext?.total ?? 0
+      return { ...decade, total, labelled, coverage: total > 0 ? labelled / total : 0 }
+    })
+    const topics: Record<string, Array<{ decade: string; count: number; share: number }>> = {}
+    for (const slug of TOPIC_SLUGS) {
+      topics[slug] = TIDE_DECADES.map((decade, i) => {
+        const path = `${TOPIC_FILTER_PREFIX}/${slug}`
+        const count = pages[i * 2].fulltext?.facets?.[TOPIC_FILTER_PREFIX]?.[path] ?? 0
+        const labelled = decades[i].labelled
+        return { decade: decade.slug, count, share: labelled > 0 ? count / labelled : 0 }
+      })
+    }
+    return json({ scope, decades, topics })
+  })
+}
+
+/** A person's topic mix overall and in the two comparable recent decades. */
+async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
+  const raw = url.searchParams.get('name')?.trim() ?? ''
+  if (!raw || raw.length > MAX_SPEAKER_CHARS || !NAME_RE.test(raw)) {
+    return json({ error: 'bad name' }, 400)
+  }
+  const name = canonicalSpeaker(raw)
+  return cachedJson(`/api/person-topics?name=${encodeURIComponent(name)}`, async () => {
+    const collaborator = { prop: 'origin_collaborator', collaborator: name }
+    const topic = { prop: 'label', labelset: 'topic' }
+    const catalog = (clauses: Record<string, unknown>[], faceted = true) => kbFetch(env, '/catalog', {
+      body: {
+        filter_expression: { resource: clauses.length === 1 ? clauses[0] : { and: clauses } },
+        ...(faceted ? { faceted: [TOPIC_FILTER_PREFIX] } : {}),
+        page_size: 0,
+      },
+    })
+    const [indexedRes, allRes, thenRes, nowRes] = await Promise.all([
+      catalog([collaborator], false),
+      catalog([collaborator, topic]),
+      catalog([collaborator, topic, { prop: 'label', labelset: 'decade', label: '2010s' }]),
+      catalog([collaborator, topic, { prop: 'label', labelset: 'decade', label: '2020s' }]),
+    ])
+    if (![indexedRes, allRes, thenRes, nowRes].every((response) => response.ok)) {
+      return json({ error: 'catalog failed' }, 502)
+    }
+    const [indexed, all, then, now] = await Promise.all(
+      [indexedRes, allRes, thenRes, nowRes].map(async (response) => (await response.json()) as CatalogPage),
+    )
+    const profile = (page: CatalogPage, label: string, from: number, to: number) => {
+      const labelled = page.fulltext?.total ?? 0
+      const facets = page.fulltext?.facets?.[TOPIC_FILTER_PREFIX] ?? {}
+      const topics = [...TOPIC_SLUGS]
+        .map((slug) => {
+          const count = facets[`${TOPIC_FILTER_PREFIX}/${slug}`] ?? 0
+          return { slug, count, share: labelled > 0 ? count / labelled : 0 }
+        })
+        .filter((row) => row.count > 0)
+        .sort((a, b) => b.share - a.share || b.count - a.count || a.slug.localeCompare(b.slug))
+      return { label, from, to, labelled, topics }
+    }
+    return json({
+      name,
+      indexed: indexed.fulltext?.total ?? 0,
+      profiles: {
+        all: profile(all, 'All years', 1993, 2026),
+        then: profile(then, '2010s', 2010, 2019),
+        now: profile(now, '2020–26', 2020, 2026),
+      },
     })
   })
 }
@@ -2734,7 +2855,7 @@ const BASE_SECURITY_HEADERS: Record<string, string> = {
 // inventory). No 'unsafe-inline' and no 'unsafe-eval' for scripts: index.html
 // carries only <script src> tags, and nothing in the bundle eval()s. Styles
 // need 'unsafe-inline' because every module injects its own <style> element
-// and app.js sets style="" attributes on the relevance bars — neither is a
+// and app.js sets style="" attributes on chart and bar dimensions — neither is a
 // script-execution vector. Fonts are self-hosted, so no third-party origin.
 //
 // The googletagmanager/google-analytics origins are for Tag Manager container
@@ -2959,6 +3080,12 @@ async function route(
       const topicMatch = url.pathname.match(/^\/api\/topic\/([a-z][a-z-]*)$/)
       if (topicMatch && request.method === 'GET') {
         return await apiTopic(topicMatch[1], env)
+      }
+      if (url.pathname === '/api/tide' && request.method === 'GET') {
+        return await apiTide(url, env)
+      }
+      if (url.pathname === '/api/person-topics' && request.method === 'GET') {
+        return await apiPersonTopics(url, env)
       }
       if (url.pathname === '/api/matrix' && request.method === 'GET') {
         return await apiMatrix(env)

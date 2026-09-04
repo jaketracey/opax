@@ -15,8 +15,13 @@ let reportsIndex = null;
 // whether a run is a new result set or another page of the one on screen.
 let lastSearch = {
   key: "", query: "", filters: {}, sort: "relevance", results: [],
-  page: 1, perPage: 20, pageCount: 1, total: 0, truncated: false,
+  page: 1, perPage: 20, pageCount: 1, total: 0, truncated: false, years: {},
+  briefs: {}, briefsLoading: false,
 };
+let searchReadMode = "passages";
+try {
+  if (sessionStorage.getItem("opax-search-read") === "briefs") searchReadMode = "briefs";
+} catch { /* storage is a preference, never a prerequisite */ }
 let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
@@ -134,6 +139,9 @@ function partyChipHTML(party) {
 }
 
 const STATE_NAMES = { federal: "Federal", nsw: "NSW", vic: "VIC", sa: "SA", qld: "QLD" };
+const PARLIAMENT_NAMES = {
+  federal: "Federal", nsw: "NSW", vic: "Victoria", sa: "South Australia", qld: "Queensland",
+};
 // The 21-topic enrichment taxonomy (scripts/arag_enrich.py TOPICS is
 // canonical): slug → display name. Slugs are the ARAG label values.
 const TOPICS = {
@@ -230,6 +238,22 @@ async function api(path, options) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
   return data;
+}
+
+/** Read optional machine briefs without ever asking for whole resources. */
+async function fetchBriefMap(resources) {
+  const validRid = /^[0-9a-f]{32}$/;
+  const rids = [...new Set((resources || []).map((r) => r.resource).filter((rid) => validRid.test(rid)))];
+  const briefs = {};
+  // /api/brief deliberately caps a call at 24. Keep the groups serial so a
+  // long topic spine never fans out into dozens of simultaneous KB reads.
+  for (let i = 0; i < rids.length; i += 24) {
+    const query = new URLSearchParams({ rids: rids.slice(i, i + 24).join(",") });
+    try {
+      Object.assign(briefs, (await api(`/api/brief?${query}`)).briefs || {});
+    } catch { /* missing briefs leave their passages in place */ }
+  }
+  return briefs;
 }
 
 /* --- streamed asks -----------------------------------------------------------
@@ -1749,6 +1773,106 @@ function sourceItem(s, num) {
   return li;
 }
 
+// One engraved time scale for answers and searches. The geometry stays fixed
+// at the public corpus window, so a sparse answer and a busy search remain
+// directly comparable rather than each stretching to flatter its own dates.
+const RECORD_FIRST_YEAR = 1993;
+const RECORD_LAST_YEAR = 2026;
+const RULER_LEFT = 16;
+const RULER_RIGHT = 664;
+const RULER_WIDTH = RULER_RIGHT - RULER_LEFT;
+
+function rulerPoint(value) {
+  const m = String(value || "").match(/^(\d{4})(?:-(\d{2})-(\d{2}))?/);
+  if (!m) return null;
+  const year = Number(m[1]);
+  if (year < RECORD_FIRST_YEAR || year > RECORD_LAST_YEAR) return null;
+  const at = Date.UTC(year, Number(m[2] || 7) - 1, Number(m[3] || 1));
+  const start = Date.UTC(RECORD_FIRST_YEAR, 0, 1);
+  const end = Date.UTC(RECORD_LAST_YEAR, 11, 31);
+  const portion = Math.max(0, Math.min(1, (at - start) / (end - start)));
+  const x = RULER_LEFT + portion * RULER_WIDTH;
+  return { x, percent: (x / 680) * 100, year };
+}
+
+function rulerAxisHTML() {
+  return [RECORD_FIRST_YEAR, 2000, 2010, 2020, RECORD_LAST_YEAR].map((year) => {
+    const p = rulerPoint(`${year}-01-01`);
+    const anchor = year === RECORD_FIRST_YEAR ? "start" : year === RECORD_LAST_YEAR ? "end" : "middle";
+    return `<text class="date-ruler-year" x="${p.x.toFixed(2)}" y="73" text-anchor="${anchor}">${year}</text>`;
+  }).join("");
+}
+
+function dateRulerLink({ percent, href, label }) {
+  return `<a class="date-ruler-hit" style="--ruler-x:${percent.toFixed(3)}%" href="${esc(href)}"
+    aria-label="${esc(label)}" title="${esc(label)}"></a>`;
+}
+
+function renderAskDateRuler(sources, isCited) {
+  const box = $("ask-date-ruler");
+  if (!box) return;
+  const entries = (sources || []).map((source) => {
+    const point = rulerPoint(source.date);
+    return point && source.slug ? { source, point, cited: Boolean(isCited(source)) } : null;
+  }).filter(Boolean).sort((a, b) => Number(a.cited) - Number(b.cited));
+  if (!entries.length) { box.replaceChildren(); box.hidden = true; return; }
+  const ticks = entries.map(({ point, cited }) =>
+    `<line class="date-ruler-tick ${cited ? "is-cited" : "is-retrieved"}"
+      x1="${point.x.toFixed(2)}" x2="${point.x.toFixed(2)}" y1="${cited ? 12 : 33}" y2="52"/>`).join("");
+  const links = entries.map(({ source, point, cited }) => dateRulerLink({
+    percent: point.percent,
+    href: `/doc/${encodeURIComponent(source.slug)}`,
+    label: `${cited ? "Cited source" : "Retrieved source"}: ${displayTitle(source)}`,
+  })).join("");
+  box.innerHTML = `
+    <h3 class="date-ruler-heading">When the sources were spoken</h3>
+    <div class="date-ruler-frame">
+      <svg class="date-ruler-svg" viewBox="0 0 680 82" role="img" aria-label="Sources placed on a timeline from 1993 to 2026">
+        <line class="date-ruler-axis" x1="${RULER_LEFT}" x2="${RULER_RIGHT}" y1="52" y2="52"/>
+        ${ticks}${rulerAxisHTML()}
+      </svg>
+      <div class="date-ruler-hits">${links}</div>
+    </div>
+    <p class="date-ruler-key"><span><i class="is-cited"></i>Cited in the answer</span><span><i></i>Retrieved only</span></p>`;
+  box.hidden = false;
+}
+
+function renderSearchDateRuler(years, q, f) {
+  const box = $("search-date-ruler");
+  if (!box) return;
+  const counts = Object.entries(years || {})
+    .map(([year, count]) => [Number(year), Number(count)])
+    .filter(([year, count]) => year >= RECORD_FIRST_YEAR && year <= RECORD_LAST_YEAR && count > 0);
+  if (!counts.length) { box.replaceChildren(); box.hidden = true; return; }
+  const max = Math.max(...counts.map(([, count]) => count), 1);
+  const step = RULER_WIDTH / (RECORD_LAST_YEAR - RECORD_FIRST_YEAR + 1);
+  const bars = counts.map(([year, count]) => {
+    const point = rulerPoint(`${year}-07-01`);
+    const height = Math.max(2, (count / max) * 38);
+    return `<rect class="date-ruler-bar" x="${(point.x - step * 0.38).toFixed(2)}"
+      y="${(52 - height).toFixed(2)}" width="${(step * 0.76).toFixed(2)}" height="${height.toFixed(2)}"/>`;
+  }).join("");
+  const links = counts.map(([year, count]) => {
+    const point = rulerPoint(`${year}-07-01`);
+    return dateRulerLink({
+      percent: point.percent,
+      href: searchHash(q, { ...f, from: String(year), to: String(year) }, 1, lastSearch.sort),
+      label: `Filter to ${year}, ${count.toLocaleString()} ${count === 1 ? "match" : "matches"}`,
+    });
+  }).join("");
+  box.innerHTML = `
+    <h3 class="date-ruler-heading">When these matches were spoken</h3>
+    <div class="date-ruler-frame">
+      <svg class="date-ruler-svg" viewBox="0 0 680 82" role="img" aria-label="Retrieved matches by year from 1993 to 2026">
+        <line class="date-ruler-axis" x1="${RULER_LEFT}" x2="${RULER_RIGHT}" y1="52" y2="52"/>
+        ${bars}${rulerAxisHTML()}
+      </svg>
+      <div class="date-ruler-hits">${links}</div>
+    </div>
+    <p class="fineprint">The shape of the cached retrieval window, not every matching speech in the corpus. Choose a year to filter the search.</p>`;
+  box.hidden = false;
+}
+
 // --- scroll quote rail ------------------------------------------------------
 // As the reader scrolls the answer, the passage behind it fades up on the
 // right: reading progress maps onto the CITED sources in list order. The [n]
@@ -2644,36 +2768,19 @@ let termTipTrigger = null;
 let termTipTimer = 0;
 let termTipsWired = false;
 
-// Any element carrying one of these opens the card. `data-term` names a
-// category in expense-categories.json; `data-tip` names a kind of trigger that
-// describes itself from its own data attributes and needs no fetch.
-const TERM_TIP_TRIGGER = "[data-term], [data-tip]";
+// A `data-term` category name opens its definition card.
+const TERM_TIP_TRIGGER = "[data-term]";
 
 const EXPENSE_TIP_ACTION = { href: "/expenses", text: "What the categories mean" };
 
 /** The card's content for a trigger, as { name, text, note, action }, or null
- *  when nothing describes it (a category whose definitions have not landed
- *  yet, or a kind of trigger this build does not know). */
+ *  when nothing describes it (a category whose definitions have not landed yet). */
 function termTipDef(trigger) {
   if (trigger.dataset.term) {
     const def = expenseDefs?.byName?.[trigger.dataset.term];
     return def ? { ...def, action: EXPENSE_TIP_ACTION } : null;
   }
-  if (trigger.dataset.tip === "relevance") return relevanceTipDef(trigger.dataset.tipPct);
   return null;
-}
-
-/** The gold bar beside a search result. It is the retrieval engine's own score
- *  for the passage, and a reader who has never seen one reads it as a verdict,
- *  so the card says what it is and what it is not. */
-function relevanceTipDef(pct) {
-  const n = Number(pct);
-  if (!Number.isFinite(n)) return null;
-  return {
-    name: `Relevance ${n}%`,
-    text: "How strongly this passage matched your search, as scored by the retrieval engine.",
-    note: "That is match strength, not truth or importance. The words of the record are the evidence.",
-  };
 }
 
 function termTip() {
@@ -3071,6 +3178,81 @@ async function renderPersonVotes(name, personId, sections) {
     ${tvfy ? `<p class="action-row">${tvfy}</p>` : ""}`;
 }
 
+async function renderPersonTopics(name, sections) {
+  const key = currentSubjectKey;
+  const slot = document.createElement("section");
+  slot.className = "person-topics";
+  slot.innerHTML = `<h3>What they talk about</h3><p class="status">Counting their labelled speeches…</p>`;
+  sections.appendChild(slot);
+  try {
+    const nameQuery = new URLSearchParams({ name });
+    const [data, allTopics, tide] = await Promise.all([
+      api(`/api/person-topics?${nameQuery}`),
+      api("/api/topics"),
+      api("/api/tide?scope=all"),
+    ]);
+    if (currentSubjectKey !== key || !slot.isConnected) return;
+    const baseline = new Map((allTopics.topics || []).map((topic) => [
+      topic.slug,
+      allTopics.labelled ? Number(topic.count || 0) / Number(allTopics.labelled) : 0,
+    ]));
+    let era = "all";
+    const paint = () => {
+      const profile = data.profiles?.[era];
+      if (!profile) return;
+      const rows = (profile.topics || []).slice(0, 8).map((topic) => [
+        TOPICS[topic.slug] || topic.slug, Number(topic.share) || 0, Number(topic.count) || 0, topic.slug,
+      ]);
+      const max = Math.max(
+        ...rows.flatMap((row) => [Number(row[1]) || 0, Number(baseline.get(row[3])) || 0]),
+        Number.EPSILON,
+      );
+      const from = era === "all" ? "" : String(profile.from);
+      const to = era === "all" ? "" : String(profile.to);
+      const chart = rows.length ? barList(rows, {
+        heading: `${profile.label} · ${Number(profile.labelled || 0).toLocaleString()} labelled speeches so far`,
+        fmt: (share) => `${(Number(share) * 100).toFixed(1)}%`,
+        detail: (_topic, _share, row) => `${Number(row[2]).toLocaleString()} speeches`,
+        linkTo: (_topic, _share, row) => searchHash("", { speaker: name, topic: row[3], from, to }),
+        maxValue: max,
+        marker: (_topic, _share, row) => {
+          const share = baseline.get(row[3]);
+          return Number.isFinite(share) ? {
+            value: share,
+            label: `Whole labelled record: ${(share * 100).toFixed(1)}%`,
+          } : null;
+        },
+        className: "person-topic-bars",
+      }) : `<p class="status">No topic-labelled speeches are held for this era yet.</p>`;
+      slot.innerHTML = `
+        <div class="person-topics-head">
+          <h3>What they talk about <span>(labelled so far)</span></h3>
+          <div class="quiet-toggle" role="group" aria-label="Speech era">
+            <button type="button" data-person-era="all" aria-pressed="${era === "all"}">All</button>
+            <button type="button" data-person-era="then" aria-pressed="${era === "then"}">Then</button>
+            <button type="button" data-person-era="now" aria-pressed="${era === "now"}">Now</button>
+          </div>
+        </div>
+        ${chart}
+        <p class="person-topic-legend"><span><i></i>Their share of labelled speeches</span><span><b></b>Share across the whole labelled record</span></p>
+        ${coverageRuleHTML(tide.decades)}
+        <p class="fineprint">${Number(data.profiles?.all?.labelled || 0).toLocaleString()} of their ${Number(data.indexed || 0).toLocaleString()} indexed speeches carry a topic label so far. A speech can carry more than one topic, so the bars do not sum to 100%. Names follow Hansard; a bare surname or another spelling can sit separately. Each row opens the speeches behind it.</p>`;
+      for (const button of slot.querySelectorAll("[data-person-era]")) {
+        button.addEventListener("click", () => {
+          if (button.dataset.personEra === era) return;
+          era = button.dataset.personEra;
+          paint();
+        });
+      }
+    };
+    paint();
+  } catch {
+    if (currentSubjectKey === key && slot.isConnected) {
+      slot.innerHTML = `<h3>What they talk about</h3><p class="status">Their topic profile could not be loaded. Their speeches below are still available.</p>`;
+    }
+  }
+}
+
 async function openSubject(kind, name, manageFocus) {
   let key = `${kind}:${name}`;
   if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
@@ -3252,6 +3434,7 @@ async function openSubject(kind, name, manageFocus) {
     if (topic) goRoute(askHash(`What did ${name} say about ${topic}?`));
   });
   // The structured record first; the speeches follow it.
+  renderPersonTopics(name, sections);
   renderPersonVotes(name, photoMap?.[name.trim().toLowerCase()] ?? null, sections);
   if (speeches.length) {
     const newest = [...speeches].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 8);
@@ -3325,8 +3508,148 @@ function topicMoneyHTML(ind) {
     <p class="fineprint">${esc(AEC_NOTE)} <a href="/money">Explore on the money map</a></p>`;
 }
 
+/** Coverage windows are held in the corpus manifest, not repeated in topic data. */
+function topicParliamentCoverage() {
+  const matchers = {
+    federal: /^Federal Hansard:/,
+    nsw: /^NSW Parliament$/,
+    vic: /^Victorian Parliament$/,
+    sa: /^SA Parliament$/,
+    qld: /^QLD Parliament$/,
+  };
+  const spans = {};
+  for (const [state, re] of Object.entries(matchers)) {
+    const years = (corpusManifest?.sources || [])
+      .filter((source) => re.test(source.name || ""))
+      .map((source) => String(source.coverage || "").match(/(\d{4})\D+(\d{4})/))
+      .filter(Boolean)
+      .map((m) => [Number(m[1]), Number(m[2])]);
+    if (years.length) {
+      spans[state] = `${Math.min(...years.map(([from]) => from))}–${Math.max(...years.map(([, to]) => to))}`;
+    }
+  }
+  return spans;
+}
+
+/** The same denominator engraving sits beneath every time-based "so far" view. */
+function coverageRuleHTML(decades, caption = "How much of the indexed speech record carries a topic label") {
+  if (!decades?.length) return "";
+  const bands = decades.map((decade) => {
+    const coverage = Math.max(0, Math.min(1, Number(decade.coverage) || 0));
+    const pct = `${(coverage * 100).toFixed(1)}%`;
+    const years = `${decade.from}–${String(decade.to).slice(-2)}`;
+    const span = Math.max(1, Number(decade.to) - Number(decade.from) + 1);
+    return `<span class="coverage-band" style="--coverage:${(coverage * 100).toFixed(3)}%;--years:${span}"
+      title="${esc(`${years}: ${pct} labelled (${Number(decade.labelled || 0).toLocaleString()} of ${Number(decade.total || 0).toLocaleString()} indexed speeches)`)}">
+      <i aria-hidden="true"><b></b></i><span>${esc(decade.label)}</span><strong>${pct}</strong>
+    </span>`;
+  }).join("");
+  const spoken = decades.map((d) => `${d.label} ${(Number(d.coverage || 0) * 100).toFixed(1)}%`).join(", ");
+  return `<figure class="coverage-rule" aria-label="${esc(`${caption}: ${spoken}`)}">
+    <figcaption>${esc(caption)}</figcaption><div class="coverage-bands">${bands}</div>
+  </figure>`;
+}
+
+function topicTideHTML(data, slug, phrase) {
+  const series = data?.topics?.[slug] || [];
+  if (!series.length || !data?.decades?.length) return "";
+  const byDecade = new Map(data.decades.map((decade) => [decade.slug, decade]));
+  const max = Math.max(...series.map((point) => Number(point.share) || 0), Number.EPSILON);
+  const bars = series.map((point) => {
+    const decade = byDecade.get(point.decade);
+    if (!decade) return "";
+    const share = Number(point.share) || 0;
+    const pct = `${(share * 100).toFixed(1)}%`;
+    const height = Math.max(2, (share / max) * 100);
+    return `<a class="topic-tide-decade" href="${esc(searchHash(phrase, {
+      topic: slug, from: String(decade.from), to: String(decade.to),
+    }))}" aria-label="${esc(`${decade.label}: ${pct} of labelled speeches, ${Number(point.count || 0).toLocaleString()} speeches`)}">
+      <span class="topic-tide-label">${esc(decade.label)}</span>
+      <span class="topic-tide-track" aria-hidden="true"><i style="height:${height.toFixed(2)}%"></i></span>
+      <strong>${pct}</strong><small>${Number(point.count || 0).toLocaleString()}</small>
+    </a>`;
+  }).join("");
+  return `<section class="topic-tide">
+    <figure><figcaption>The share over time</figcaption><div class="topic-tide-bars">${bars}</div></figure>
+    ${coverageRuleHTML(data.decades)}
+    <p class="fineprint">Each bar is this topic's share of federal speeches carrying any topic label in that decade; the small figure is the count. Federal is the longest comparable run. Labels are applied so far, and each decade opens the speeches behind it.</p>
+  </section>`;
+}
+
+function topicArcItemHTML(item, brief) {
+  const date = String(item.date || "").slice(0, 10);
+  const year = date.slice(0, 4) || "—";
+  const passage = String(item.snippet || "").trim() || "Open the speech to read the passage.";
+  return `<li class="topic-arc-item">
+    <time class="topic-arc-year"${date ? ` datetime="${esc(date)}"` : ""}>${esc(year)}</time>
+    <div class="topic-arc-entry">
+      <a class="topic-arc-source" href="/doc/${encodeURIComponent(item.slug)}">${esc(displayTitle(item))}</a>
+      <span class="result-meta">${metaHTML(item, { linkSpeaker: true, linkParty: true })}</span>
+      ${brief
+        ? `<p class="topic-arc-brief">${esc(brief)}</p>`
+        : `<p class="topic-arc-passage"><span>Passage · no brief yet</span>${esc(passage)}</p>`}
+    </div>
+  </li>`;
+}
+
+async function renderTopicArc(slug, phrase, key, mount) {
+  mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3>
+    <p class="status">Reading the labelled speeches in date order…</p>`;
+  try {
+    const params = searchQueryParams(phrase, {
+      speaker: "", party: "", state: "", topic: slug, from: "", to: "",
+      kind: "speech", mode: "hybrid",
+    }, 1, "newest");
+    params.set("per", String(SEARCH_EXPORT_MAX));
+    const data = await api(`/api/search?${params}`);
+    if (currentSubjectKey !== key || !mount.isConnected) return;
+    const results = (data.results || []).filter((item) => item.slug);
+    if (!results.length) {
+      mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3>
+        <p class="status">No dated, labelled speeches are in the search window yet.</p>`;
+      return;
+    }
+    mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3>
+      <p class="status">Reading the available machine briefs…</p>`;
+    const briefs = await fetchBriefMap(results);
+    if (currentSubjectKey !== key || !mount.isConnected) return;
+    let order = "newest";
+    const paint = () => {
+      const sorted = [...results].sort((a, b) => {
+        if (!a.date) return b.date ? 1 : 0;
+        if (!b.date) return -1;
+        const byDate = String(a.date || "").localeCompare(String(b.date || ""));
+        return order === "oldest" ? byDate : -byDate;
+      });
+      const briefCount = sorted.filter((item) => briefs[item.resource]).length;
+      mount.innerHTML = `
+        <div class="topic-arc-head">
+          <h3 class="topic-arc-heading">The arc of this debate</h3>
+          <div class="quiet-toggle" role="group" aria-label="Debate chronology">
+            <button type="button" data-arc-order="newest" aria-pressed="${order === "newest"}">Newest</button>
+            <button type="button" data-arc-order="oldest" aria-pressed="${order === "oldest"}">Oldest</button>
+          </div>
+        </div>
+        <ol class="topic-arc-list">${sorted.map((item) => topicArcItemHTML(item, briefs[item.resource])).join("")}</ol>
+        <p class="fineprint">${briefCount.toLocaleString()} of these ${sorted.length.toLocaleString()} strongest labelled matches carry a machine brief so far. The rest retain their opening passage. Each entry opens the speech; <a href="${esc(searchHash(phrase, { topic: slug }, 1, "newest"))}">search the debate</a> for the full retrieval window.</p>`;
+      for (const button of mount.querySelectorAll("[data-arc-order]")) {
+        button.addEventListener("click", () => {
+          if (button.dataset.arcOrder === order) return;
+          order = button.dataset.arcOrder;
+          paint();
+        });
+      }
+    };
+    paint();
+  } catch {
+    if (currentSubjectKey === key && mount.isConnected) {
+      mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3>
+        <p class="status">The chronological view could not be loaded. <a href="${esc(searchHash(phrase, { topic: slug }, 1, "newest"))}">Search the labelled speeches instead</a>.</p>`;
+    }
+  }
+}
+
 async function openTopicPage(slug, manageFocus) {
-  let newestHTML = ""; // built with the counts, rendered last on the page
   const key = `topic:${slug}`;
   if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
   currentSubjectKey = key;
@@ -3347,10 +3670,18 @@ async function openTopicPage(slug, manageFocus) {
   box.hidden = true; // fills once the counts land
   const phrase = topicPhrase(slug);
   const searchTopic = searchHash(phrase, { topic: slug });
+  const tidePromise = api("/api/tide").catch(() => null);
 
   let data = null;
   try {
-    [data] = await Promise.all([api(`/api/topic/${encodeURIComponent(slug)}`), loadReportsIndex()]);
+    const [, , manifest] = await Promise.all([
+      api(`/api/topic/${encodeURIComponent(slug)}`).then((value) => { data = value; }),
+      loadReportsIndex(),
+      corpusManifest
+        ? Promise.resolve(corpusManifest)
+        : fetch("/corpus.json").then((r) => r.ok ? r.json() : null).catch(() => null),
+    ]);
+    if (!corpusManifest && manifest) corpusManifest = manifest;
   } catch { /* the ask and search actions below work without counts */ }
   if (currentSubjectKey !== key) return;
   const report = reportsIndex?.find((r) => r.slug === TOPIC_REPORT[slug]) || null;
@@ -3388,20 +3719,42 @@ async function openTopicPage(slug, manageFocus) {
         `<p class="fineprint">Party names open that party's labelled speeches on this topic.
          Some speeches carry no party label, so the bars can sum below the total.</p>`);
     }
-    if (data.recent?.length) {
-      newestHTML =
-        `<p class="kicker">Newest in the index with this label</p>
-         <ul class="subject-list" role="list">${data.recent.map((r) => `
-           <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(displayTitle(r))}</a>
-             <span class="result-meta">${metaHTML(r, { linkSpeaker: true })}</span></li>`).join("")}</ul>
-         <p class="fineprint">The newest labelled speeches to enter the index, not the newest
-         speeches on the subject. <a href="${esc(searchTopic)}">Search all of them</a></p>`;
-    } else if (count !== null) {
+    if (data.states?.length) {
+      const rows = data.states
+        .filter(([state]) => PARLIAMENT_NAMES[state])
+        .map(([state, stateCount, stateShare]) => [PARLIAMENT_NAMES[state], stateShare, stateCount, state]);
+      sections.insertAdjacentHTML("beforeend", barList(rows, {
+        heading: "Which parliament argues it (labelled so far)",
+        fmt: (value) => `${(Number(value) * 100).toFixed(2)}%`,
+        detail: (_name, _value, row) => Number(row[2]).toLocaleString(),
+        linkTo: (_name, _value, row) => searchHash(phrase, { topic: slug, state: row[3] }),
+        maxValue: Math.max(...rows.map(([, value]) => value), Number.EPSILON),
+        className: "topic-parliaments",
+      }));
+      const coverage = topicParliamentCoverage();
+      const order = ["federal", "nsw", "vic", "sa", "qld"];
+      const years = order.filter((state) => coverage[state])
+        .map((state) => `${PARLIAMENT_NAMES[state]} ${coverage[state]}`).join(" · ");
+      sections.insertAdjacentHTML("beforeend",
+        `<p class="fineprint">Share of that parliament's labelled record, then the count.${years
+          ? ` Years held: ${esc(years)}.` : ""} Each row opens the speeches behind it.</p>`);
+    }
+    if (count === 0) {
       sections.insertAdjacentHTML("beforeend",
         `<p class="status">The labelling pass has not reached this debate yet.
          <a href="${esc(searchHash(phrase, {}))}">Search the record for ${esc(phrase)} instead</a>.</p>`);
     }
   }
+
+  const tide = await tidePromise;
+  if (currentSubjectKey !== key) return;
+  const tideHTML = topicTideHTML(tide, slug, phrase);
+  if (tideHTML) sections.insertAdjacentHTML("beforeend", tideHTML);
+
+  const arc = document.createElement("section");
+  arc.className = "topic-arc";
+  sections.appendChild(arc);
+  const arcPromise = renderTopicArc(slug, phrase, key, arc);
 
   const moneyInd = detectMoneyIndustry(`who donates money to ${phrase}`);
   if (moneyInd) {
@@ -3411,35 +3764,7 @@ async function openTopicPage(slug, manageFocus) {
     if (html) sections.insertAdjacentHTML("beforeend", html);
   }
 
-  // "The latest, in brief": the machine summaries of the newest labelled
-  // speeches, stitched into a briefing under the sections above. The topic
-  // endpoint serves no summaries, so each comes from its own /api/resource
-  // fetch; speeches the summariser has not reached are skipped, and under
-  // two summaries the section stays out entirely rather than stand as a stub.
-  if ((data?.recent?.length ?? 0) >= 2) {
-    const docs = await Promise.all(data.recent.slice(0, 5).map(async (r) => {
-      try {
-        const doc = await api(`/api/resource/${encodeURIComponent(r.slug)}`);
-        return doc?.summary ? { ...r, summary: doc.summary } : null;
-      } catch { return null; }
-    }));
-    if (currentSubjectKey !== key) return;
-    const briefed = docs.filter(Boolean);
-    if (briefed.length >= 2) {
-      sections.insertAdjacentHTML("beforeend", `
-        <div class="topic-digest">
-          <p class="kicker">The latest, in brief</p>
-          ${briefed.map((d) => `
-            <div class="topic-digest-item">
-              <a class="topic-digest-source" href="/doc/${esc(d.slug)}">${partyDotHTML(d.party)}${esc(d.speaker || String(d.title || "").replace(/\s+—\s+\d{4}-\d{2}-\d{2}\s*$/, ""))}${d.date ? `, ${esc(fmtDate(d.date))}` : ""}</a>
-              <p class="topic-digest-text">${inlineHTML(d.summary)}</p>
-            </div>`).join("")}
-          <p class="fineprint">Machine summaries of the newest speeches to enter the index
-            with this label; each links to the full record.</p>
-        </div>`);
-    }
-  }
-  if (newestHTML && currentSubjectKey === key) sections.insertAdjacentHTML("beforeend", newestHTML);
+  await arcPromise;
 }
 
 async function openTopicsIndex(manageFocus) {
@@ -4418,10 +4743,11 @@ async function renderCampaignerEntry(name, key) {
 // Both are standalone lazy modules with a mount/destroy contract; the page
 // only owns the toggle. Modules are mounted once and kept alive per session.
 
-const explore = { tm: null, quiz: null, ledger: null, matrix: null, wd: null, tvn: null };
+const explore = { tm: null, tide: null, quiz: null, ledger: null, matrix: null, wd: null, tvn: null };
 
 const GAMES = {
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
+  tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js", mount: "mountLedger" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
@@ -4442,7 +4768,9 @@ async function openGame(which) {
       // The modules stay standalone (they carry their own fallbacks), but a
       // speech reads the same in here as it does in search because the shell
       // hands them its own title helper rather than each keeping a copy.
-      explore[which] = mod[game.mount]($(game.body), { displayTitle });
+      explore[which] = mod[game.mount]($(game.body), {
+        displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, coverageRuleHTML,
+      });
     }
   } catch (err) {
     $(game.body).innerHTML =
@@ -4451,6 +4779,7 @@ async function openGame(which) {
 }
 
 $("explore-tm-btn").addEventListener("click", () => openGame("tm"));
+$("explore-tide-btn").addEventListener("click", () => openGame("tide"));
 $("explore-quiz-btn").addEventListener("click", () => openGame("quiz"));
 $("explore-ledger-btn").addEventListener("click", () => openGame("ledger"));
 $("explore-matrix-btn").addEventListener("click", () => openGame("matrix"));
@@ -5048,6 +5377,8 @@ async function runAsk(question) {
   btn.classList.add("btn-loading");
   btn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span>Asking…';
   $("ask-result").hidden = true;
+  $("ask-date-ruler").hidden = true;
+  $("ask-date-ruler").replaceChildren();
   $("ask-chips").hidden = true;
   setFrontPageHidden(true);
   setQuoteRail([]);
@@ -5160,6 +5491,7 @@ async function runAsk(question) {
       `Generated ${fmtDate(localISODate())} · corpus v${corpusVersion()}` +
       ((askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
         ? ` · filtered: ${askFilterSummary(askFilters()) || `${speakerFilter}'s speeches`}` : "");
+    renderAskDateRuler(sources, isCited);
     $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1)));
     $("ask-retrieved").hidden = !alsoList.length;
     $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null)));
@@ -5949,10 +6281,14 @@ function applySearchParams(params) {
 function clearSearchResults() {
   lastSearch = {
     key: "", query: "", filters: {}, sort: "relevance", results: [],
-    page: 1, perPage: SEARCH_PER_PAGE, pageCount: 1, total: 0, truncated: false,
+    page: 1, perPage: SEARCH_PER_PAGE, pageCount: 1, total: 0, truncated: false, years: {},
+    briefs: {}, briefsLoading: false,
   };
   $("search-results").replaceChildren();
   $("results-bar").hidden = true;
+  $("search-date-ruler").hidden = true;
+  $("search-date-ruler").replaceChildren();
+  $("search-readbar").hidden = true;
   $("search-pager").hidden = true;
   $("search-empty").hidden = true;
   $("search-answer").hidden = true;
@@ -6005,28 +6341,61 @@ function activeFilterSummary(f) {
   return bits.join(", ");
 }
 
+function syncSearchReadBar() {
+  const bar = $("search-readbar");
+  if (!bar) return;
+  bar.hidden = !lastSearch.results.length;
+  $("search-read-passages").setAttribute("aria-pressed", String(searchReadMode === "passages"));
+  $("search-read-briefs").setAttribute("aria-pressed", String(searchReadMode === "briefs"));
+  const status = $("search-brief-status");
+  if (searchReadMode !== "briefs") status.textContent = "";
+  else if (lastSearch.briefsLoading) status.textContent = "Reading the available briefs…";
+  else {
+    const count = lastSearch.results.filter((result) => lastSearch.briefs[result.resource]).length;
+    status.textContent = `${count} of this page's ${lastSearch.results.length} ${lastSearch.results.length === 1 ? "result has" : "results have"} a brief so far.`;
+  }
+}
+
+function setSearchReadMode(mode) {
+  if (mode !== "passages" && mode !== "briefs") return;
+  searchReadMode = mode;
+  try { sessionStorage.setItem("opax-search-read", mode); } catch { /* optional preference */ }
+  syncSearchReadBar();
+  if (lastSearch.results.length) renderResults(lastSearch.results);
+}
+
+$("search-read-passages")?.addEventListener("click", () => setSearchReadMode("passages"));
+$("search-read-briefs")?.addEventListener("click", () => setSearchReadMode("briefs"));
+
+async function loadSearchBriefs(results, mySeq) {
+  const briefs = await fetchBriefMap(results);
+  if (mySeq !== searchSeq || lastSearch.results !== results) return;
+  lastSearch.briefs = briefs;
+  lastSearch.briefsLoading = false;
+  syncSearchReadBar();
+  if (searchReadMode === "briefs") renderResults(results);
+}
+
 // Sorting is the Worker's job now. It orders every retrieved match before it
 // slices the page, so "newest first" means newest of the whole result set and
-// not merely newest of the twenty in hand.
-// The gold bar is a button, not decoration: hovering, focusing or tapping it
-// opens the shared definition card (see initTermTips) with the score in words.
-// Its own label carries the number, so the row says it once.
+// not merely newest of the twenty in hand. Passages remain the default; Briefs
+// swaps in the optional machine summary without changing that ranking.
 function renderResults(results) {
-  initTermTips();
-  // A new page of results throws away the row the open card was parented to.
-  hideTermTip(false);
   $("search-results").replaceChildren(
     ...results.map((r) => {
       const li = document.createElement("li");
-      const pct = Math.round((r.score || 0) * 100);
+      const brief = lastSearch.briefs[r.resource];
+      const text = searchReadMode === "briefs"
+        ? brief
+          ? `<p class="search-result-brief">${esc(brief)}</p>`
+          : `<p class="snippet"><span class="search-passage-tag">Passage · ${lastSearch.briefsLoading ? "checking for a brief…" : "no brief yet"}</span>${highlightHTML(r.snippet, $("search-input").value)}</p>`
+        : `<p class="snippet">${highlightHTML(r.snippet, $("search-input").value)}</p>`;
       li.innerHTML = `
         <div>
-          <button type="button" class="link result-title">${esc(displayTitle(r))}</button><button
-            type="button" class="scorebar" data-tip="relevance" data-tip-pct="${pct}"
-            aria-label="Relevance ${pct}%"><i style="width:${pct}%"></i></button>
+          <button type="button" class="link result-title">${esc(displayTitle(r))}</button>
         </div>
         <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true, portrait: true })}</span>
-        <p class="snippet">${highlightHTML(r.snippet, $("search-input").value)}</p>`;
+        ${text}`;
       li.querySelector(".result-title").addEventListener("click", () => {
         goRoute(`/doc/${r.slug}`);
       });
@@ -6389,7 +6758,13 @@ async function runSearch(page = 1) {
   showLoader("search-wombat", fresh ? "Searching the record." : "Turning the page.");
   // Paging keeps the bar and the pager in place: only the list is swapped, so
   // the page does not collapse and rebuild under the reader.
-  if (fresh) { $("results-bar").hidden = true; $("search-pager").hidden = true; }
+  if (fresh) {
+    $("results-bar").hidden = true;
+    $("search-date-ruler").hidden = true;
+    $("search-date-ruler").replaceChildren();
+    $("search-readbar").hidden = true;
+    $("search-pager").hidden = true;
+  }
   $("search-results").replaceChildren();
   $("search-chips").hidden = true; // the examples step aside once a search runs
   $("search-empty").hidden = true;
@@ -6404,12 +6779,17 @@ async function runSearch(page = 1) {
       pageCount: data.page_count || 1,
       total: data.total ?? results.length,
       truncated: !!data.truncated,
+      years: data.years || {},
+      briefs: {},
+      briefsLoading: true,
     };
     if (!data.count) {
       hideLoader("search-wombat");
       setStatus($("search-status"), "No results from the record.");
       $("search-status").classList.add("visually-hidden"); // announced; the empty state carries the words
       $("results-bar").hidden = true;
+      $("search-date-ruler").hidden = true;
+      $("search-readbar").hidden = true;
       $("search-pager").hidden = true;
       renderSearchEmpty(q, f);
       giveUpSearchAnswer();
@@ -6419,8 +6799,11 @@ async function runSearch(page = 1) {
       setStatus($("search-status"), "");
       $("results-count").textContent = resultsCountLine(lastSearch);
       $("results-bar").hidden = false;
+      renderSearchDateRuler(lastSearch.years, q, f);
+      syncSearchReadBar();
       renderResults(results);
       renderPager();
+      loadSearchBriefs(results, mySeq);
       // A stale &page=9 past the end lands on the last real page; correct the
       // URL in place so the link the reader copies is the page they can see.
       if (lastSearch.page !== page) {
@@ -6766,23 +7149,34 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {
 /** `term(name)` turns a row label into a definition popover trigger (see
  *  initTermTips); the button's text is still the label, so its accessible name
  *  reads as the category. Only used where nothing else claims the label. */
-function barList(rows, { fmt = String, heading, linkTo, partyDots = false, term = null }) {
-  const max = Math.max(...rows.map(([, v]) => v), 1);
-  const items = rows.map(([name, v]) => {
+function barList(rows, {
+  fmt = String, heading, linkTo, partyDots = false, term = null, detail = null,
+  className = "", maxValue = null, marker = null,
+}) {
+  const max = maxValue ?? Math.max(...rows.map(([, v]) => v), 1);
+  const items = rows.map((row) => {
+    const [name, v] = row;
     const key = linkTo ? null : term?.(name);
     const label = `${partyDots ? partyDotHTML(name) : ""}${esc(name)}`;
+    const sub = detail?.(name, v, row);
+    const marked = marker?.(name, v, row);
+    const markerValue = Number(typeof marked === "object" ? marked?.value : marked);
+    const markerLabel = typeof marked === "object" ? marked?.label : "";
+    const markerHTML = Number.isFinite(markerValue)
+      ? `<b class="barrow-marker" style="left:${Math.max(0, Math.min(100, (markerValue / max) * 100)).toFixed(2)}%"${markerLabel ? ` title="${esc(markerLabel)}"` : ""}></b>`
+      : "";
     return `
     <div class="barrow">
       ${linkTo
-        ? `<a class="barrow-name" title="${esc(name)}" href="${esc(linkTo(name))}">${label}</a>`
+        ? `<a class="barrow-name" title="${esc(name)}" href="${esc(linkTo(name, v, row))}">${label}</a>`
         : key
           ? `<button type="button" class="barrow-name barrow-term" data-term="${esc(key)}">${label}</button>`
           : `<span class="barrow-name" title="${esc(name)}">${label}</span>`}
-      <span class="barrow-track" aria-hidden="true"><i style="width:${Math.max((v / max) * 100, 1)}%"></i></span>
-      <span class="barrow-value">${esc(fmt(v))}</span>
+      <span class="barrow-track" aria-hidden="true"><i style="width:${Math.max((v / max) * 100, 1)}%"></i>${markerHTML}</span>
+      <span class="barrow-value">${esc(fmt(v))}${sub !== null && sub !== undefined ? `<small>${esc(sub)}</small>` : ""}${markerLabel ? `<span class="visually-hidden">; ${esc(markerLabel)}</span>` : ""}</span>
     </div>`;
   }).join("");
-  return `<figure class="chart"><figcaption>${esc(heading)}</figcaption>${items}</figure>`;
+  return `<figure class="chart${className ? ` ${esc(className)}` : ""}"><figcaption>${esc(heading)}</figcaption>${items}</figure>`;
 }
 
 const fmtIndustries = (list) => list.map((i) => i.replace(/_/g, " ")).join(", ");
