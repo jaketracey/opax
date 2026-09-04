@@ -160,7 +160,9 @@
   <form class="drawer-search" id="drawer-search" role="search">
     <label for="drawer-q" class="visually-hidden">Search the record</label>
     <svg class="drawer-search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
-    <input id="drawer-q" type="search" autocomplete="off" placeholder="Search the record…" enterkeyhint="search">
+    <input id="drawer-q" type="search" autocomplete="off" placeholder="Search the record…" enterkeyhint="search"
+           role="combobox" aria-expanded="false" aria-controls="drawer-sugg" aria-autocomplete="list">
+    <div class="drawer-sugg" id="drawer-sugg" hidden role="listbox" aria-label="Suggestions"></div>
   </form>
   <nav aria-label="Primary">
     <ul class="drawer-list">
@@ -169,7 +171,7 @@
       <li><a class="drawer-link" data-panel="money" href="/money">Money map</a></li>
     </ul>
     <details class="drawer-group" id="drawer-group-reports">
-      <summary class="drawer-kicker kicker">Reports</summary>
+      <summary class="drawer-section">Reports</summary>
       <ul class="drawer-list">
         <li><a class="drawer-link" data-panel="reports" href="/reports">All reports</a></li>
         <li><a class="drawer-sub" href="/reports/climate">Climate &amp; Energy</a></li>
@@ -181,7 +183,7 @@
       </ul>
     </details>
     <details class="drawer-group" id="drawer-group-explore">
-      <summary class="drawer-kicker kicker">Explore</summary>
+      <summary class="drawer-section">Explore</summary>
       <ul class="drawer-list">
         <li><a class="drawer-link" data-panel="explore" href="/explore">Explore</a></li>
         <li><a class="drawer-sub" href="/explore" data-game="tm">Time machine</a></li>
@@ -190,7 +192,7 @@
       </ul>
     </details>
     <details class="drawer-group" id="drawer-group-encyclopedia">
-      <summary class="drawer-kicker kicker">Encyclopedia</summary>
+      <summary class="drawer-section">Encyclopedia</summary>
       <ul class="drawer-list">
         <li><a class="drawer-sub" href="/subject/person">Parliamentarians</a></li>
         <li><a class="drawer-sub" href="/subject/party">Parties</a></li>
@@ -200,7 +202,7 @@
       </ul>
     </details>
     <details class="drawer-group" id="drawer-group-about">
-      <summary class="drawer-kicker kicker">About</summary>
+      <summary class="drawer-section">About</summary>
       <ul class="drawer-list">
         <li><a class="drawer-link" data-panel="about" href="/about">About OPAX</a></li>
         <li><a class="drawer-sub" data-panel="methods" href="/methods">Methods &amp; how to cite</a></li>

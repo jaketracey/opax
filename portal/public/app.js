@@ -1059,16 +1059,18 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
   document.querySelector("main").focus();
 });
 
-// --- masthead quick search ---------------------------------------------------
+// --- quick search (masthead and drawer) -----------------------------------
 // One input over everything with a page: speakers, topics, donors and
 // parties, reports — plus a plain search of the record as the first row.
-{
-  const input = $("mast-q");
-  const panel = $("mast-sugg");
+// The masthead field and the drawer field share the engine; only where the
+// panel lives and what happens on the way out differ.
+function attachQuickSearch(input, panel, { idPrefix, beforeGo } = {}) {
+  if (!input || !panel) return;
   let items = [];
   let active = -1;
   let seq = 0;
   let debounce = null;
+  const prefix = idPrefix || "ms";
   const close = () => {
     panel.hidden = true;
     input.setAttribute("aria-expanded", "false");
@@ -1078,6 +1080,7 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
     close();
     input.value = "";
     input.blur();
+    beforeGo?.();
     goRoute(href);
   };
   const render = () => {
@@ -1086,7 +1089,7 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
       b.type = "button";
       b.className = "ms-row" + (i === active ? " ms-active" : "");
       b.setAttribute("role", "option");
-      b.id = `ms-opt-${i}`;
+      b.id = `${prefix}-opt-${i}`;
       b.setAttribute("aria-selected", String(i === active));
       const t = document.createElement("span");
       t.textContent = it.label;
@@ -1100,7 +1103,7 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
     }));
     panel.hidden = !items.length;
     input.setAttribute("aria-expanded", String(items.length > 0));
-    input.setAttribute("aria-activedescendant", active >= 0 ? `ms-opt-${active}` : "");
+    input.setAttribute("aria-activedescendant", active >= 0 ? `${prefix}-opt-${active}` : "");
   };
   const suggest = async () => {
     const q = input.value.trim();
@@ -1134,11 +1137,11 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
     active = -1;
     render();
   };
-  input?.addEventListener("input", () => {
+  input.addEventListener("input", () => {
     clearTimeout(debounce);
     debounce = setTimeout(suggest, 120);
   });
-  input?.addEventListener("keydown", (e) => {
+  input.addEventListener("keydown", (e) => {
     if (e.key === "ArrowDown" && items.length) {
       e.preventDefault(); active = (active + 1) % items.length; render();
     } else if (e.key === "ArrowUp" && items.length) {
@@ -1151,11 +1154,14 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
       e.stopPropagation(); close();
     }
   });
-  input?.addEventListener("focus", () => { if (items.length) { panel.hidden = false; input.setAttribute("aria-expanded", "true"); } });
+  input.addEventListener("focus", () => { if (items.length) { panel.hidden = false; input.setAttribute("aria-expanded", "true"); } });
   document.addEventListener("pointerdown", (e) => {
     if (!panel.hidden && !panel.contains(e.target) && e.target !== input) close();
   });
+  return { close, go };
 }
+attachQuickSearch($("mast-q"), $("mast-sugg"), { idPrefix: "ms" });
+attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: () => $("nav-drawer")?.close() });
 
 // --- the masthead constellation ---------------------------------------------
 // Every now and then two (sometimes three) of the seven federation stars
@@ -1373,6 +1379,7 @@ window.addEventListener("resize", () => { if (openNavMenu) placeNavMenu(openNavM
     if (!q) return;
     drawer.close();
     $("drawer-q").value = "";
+    $("drawer-sugg").hidden = true;
     goRoute(`/search?q=${encodeURIComponent(q)}`);
   });
   drawer.addEventListener("click", (e) => {
