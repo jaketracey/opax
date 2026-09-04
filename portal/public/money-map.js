@@ -4272,7 +4272,7 @@ void main() {
   white-space: nowrap; }
 .mm-row-amt { font-weight: 600; white-space: nowrap; }
 .mm-row-years { font-size: 11px; color: #8a8578; white-space: nowrap; }
-.mm-ask { display: block; box-sizing: border-box; width: 100%; min-height: 44px;
+.mm-ask { display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; min-height: 44px;
   margin-top: 12px; padding: 8px 12px; border: 0; border-radius: 9px;
   background: #142a43; color: #ffffff; font-size: 13px; font-weight: 600;
   font-family: inherit; line-height: 1.35; text-decoration: none; text-align: center;
