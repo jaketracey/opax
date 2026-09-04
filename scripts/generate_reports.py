@@ -565,10 +565,17 @@ def is_hollow_title(title: str | None) -> bool:
     return bool(committee_words and (len(compact) > 90 or uppercase_share > 0.45))
 
 
+# Above this the "speech" is a whole day's combined debate stored as one
+# record by an archival source (the 2008 Apology sits in one 132,000-character
+# item): a reading list wants one member's words, so those are skipped.
+MAX_KEY_SPEECH_CHARS = 45_000
+
+
 def is_hollow_speech(text: str | None, min_chars: int = 1500) -> bool:
-    """True for short, procedural or boilerplate speech fields."""
+    """True for short, procedural or boilerplate speech fields, and for
+    combined-debate records too long to be one speech."""
     compact = re.sub(r"\s+", " ", str(text or "")).strip()
-    if len(compact) < min_chars:
+    if len(compact) < min_chars or len(compact) > MAX_KEY_SPEECH_CHARS:
         return True
     opening = compact[:420]
     if re.search(

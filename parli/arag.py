@@ -121,8 +121,12 @@ def _request(
             time.sleep(wait)
             bp_waited += wait
             continue
-        if err.retryable and attempt < max_retries:
-            time.sleep(min(2 ** attempt, 60))
+        if (err.retryable or res.status_code == 429) and attempt < max_retries:
+            # A plain 429 (per-account rate limit, no backpressure hint) backs
+            # off harder than a 5xx: other jobs share the account.
+            retry_after = res.headers.get("Retry-After")
+            wait = float(retry_after) if retry_after and retry_after.isdigit() else min(3 * 2 ** attempt, 90)
+            time.sleep(wait if res.status_code == 429 else min(2 ** attempt, 60))
             attempt += 1
             continue
         raise err
