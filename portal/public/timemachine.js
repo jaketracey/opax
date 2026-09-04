@@ -2026,6 +2026,7 @@ export function mountTimeMachine(container, opts = {}) {
 
   return {
     destroy() {
+      galleryClose?.remove()  // it lives in the dialog head while mounted
       clearTimeout(searchTimer)
       searchSeq++ // orphan any in-flight probe handlers
       extrasSeq++
