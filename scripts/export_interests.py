@@ -31,6 +31,12 @@ Without --out the combined object is printed to stdout (handy for analysis).
                    {"holder": "self", "description": "Australian Ethical Investments",
                     "kind": "statement", "date": null, "page": 2}, ...]}, ...}}}
 
+  interests/recent.json
+  {"meta": {"generated": "2026-09-04", "rows": 300, "available": 1660},
+   "items": [{"id": 123, "person_id": "10007", "name": "Anthony Albanese",
+              "bucket": "gifts", "kind": "addition", "date": "2026-08-14",
+              "description": "...", "url": "https://...#page=12", "ties": [...]}, ...]}
+
 Federal members are keyed by members.person_id, the same id photos/people.json
 resolves a name to. Queensland members and the documents the loader could not
 match to `members` are keyed by a name slug ("n-jessica-pugh"): the qld_la rows
@@ -49,6 +55,9 @@ characters. The page link is built client-side as source_url + "#page=" +
 page; an item carries its own "url" only when it comes from a different
 document than the person's primary one. Senate rows have no page (the
 register is an HTML page). "ocr" is set on rows machine-read from a scan.
+The newest 300 dated additions and deletions across every person are written
+to recent.json without the six-per-bucket serving cap; a row also carries any
+exact organisation matches made for the ties join below.
 
 Every uncapped row in the eligible buckets is also compared with the names in
 the federal money map, the lobbying firms in access.json and the registrants in
@@ -71,6 +80,7 @@ from datetime import date
 
 DB = "file:/home/jake/.cache/autoresearch/parli.db?mode=ro"
 PER_BUCKET = 6
+RECENT_LIMIT = 300
 DESC_CHARS = 120
 
 BUCKETS = ["shareholdings", "real_estate", "trusts", "directorships", "gifts",
@@ -402,6 +412,7 @@ def main():
     n_rows = 0
     n_nil = 0
     reverse = defaultdict(list)
+    recent = []
     for r in con.execute(
             "SELECT id, doc_id, holder, category, kind, fields_json, description, date_declared, page, ocr "
             "FROM ext_interests ORDER BY id"):
@@ -431,6 +442,8 @@ def main():
             item["url"] = src
         p["_rows"][b].append((r["id"], item))
 
+        row_url = f"{src}#page={int(r['page'])}" if src and r["page"] else src
+        recent_ties = []
         if b in ELIGIBLE_TIE_BUCKETS:
             matches = match_tie(row_values(r["fields_json"], r["description"]), b, registries)
             grouped = defaultdict(list)
@@ -446,7 +459,6 @@ def main():
                 donor = next((org for kind, org in group if kind == "donor"), None)
                 organisation = (donor or primary).get("label") or (donor or primary).get("organisation")
                 kinds = list(dict.fromkeys(kind for kind, _ in group))
-                row_url = f"{src}#page={int(r['page'])}" if src and r["page"] else src
                 tie = {
                     "organisation": organisation,
                     "kind": primary_kind,
@@ -474,6 +486,17 @@ def main():
                         "industry": donor.get("industry"),
                         "flows": tie_flows.get(donor.get("id"), []),
                     })
+                recent_tie = {"organisation": organisation, "kind": primary_kind, "kinds": kinds}
+                if donor:
+                    recent_tie.update({
+                        "donor_id": donor.get("id"),
+                        "industry": donor.get("industry"),
+                    })
+                if tie.get("lobbyist_jurisdictions"):
+                    recent_tie["lobbyist_jurisdictions"] = tie["lobbyist_jurisdictions"]
+                if tie.get("fits_url"):
+                    recent_tie["fits_url"] = tie["fits_url"]
+                recent_ties.append(recent_tie)
                 p["ties"].append(tie)
                 if donor:
                     reverse[donor["label"]].append({
@@ -483,6 +506,36 @@ def main():
                         "description": tie["register"]["description"], "kind": r["kind"],
                         "date": r["date_declared"], "url": row_url,
                     })
+
+        if r["kind"] in {"addition", "deletion"} and r["date_declared"]:
+            recent_item = {
+                "id": r["id"], "person_id": d["key"], "name": p["name"],
+                "jurisdiction": p["jurisdiction"], "chamber": p["chamber"],
+                "parliament": p["parliament"], "holder": r["holder"] or "unspecified",
+                "bucket": b, "kind": r["kind"], "date": r["date_declared"],
+                "description": description(r["fields_json"], r["description"], None),
+                "url": row_url, "page": r["page"],
+            }
+            if r["ocr"]:
+                recent_item["ocr"] = 1
+            if recent_ties:
+                recent_item["ties"] = recent_ties
+            recent.append(recent_item)
+
+    # The source table retains some identical rows from successive document
+    # snapshots. They are one printed alteration, so the public ledger lists
+    # each person/date/category/text/source combination once.
+    recent.sort(key=lambda r: (r["date"], r["id"]), reverse=True)
+    recent_unique = []
+    recent_seen = set()
+    for item in recent:
+        marker = (item["person_id"], item["date"], item["kind"], item["bucket"],
+                  item["description"], item.get("url"))
+        if marker in recent_seen:
+            continue
+        recent_seen.add(marker)
+        recent_unique.append(item)
+    recent = recent_unique
 
     for p in people.values():
         for b in BUCKETS:
@@ -548,11 +601,24 @@ def main():
         }
         with open(os.path.join(out_dir, "ties-by-donor.json"), "w") as f:
             json.dump(ties_by_donor, f, **dump)
+        recent_export = {
+            "meta": {
+                "generated": date.today().isoformat(),
+                "rows": min(len(recent), RECENT_LIMIT),
+                "available": len(recent),
+                "limit": RECENT_LIMIT,
+                "source": "Registers of Members' and Senators' Interests, 48th Parliament, and Queensland Register of Members' Interests, 58th Parliament",
+            },
+            "items": recent[:RECENT_LIMIT],
+        }
+        with open(os.path.join(out_dir, "recent.json"), "w") as f:
+            json.dump(recent_export, f, **dump)
     else:
         json.dump({**index, "people": people}, sys.stdout, **dump)
     print(f"[export_interests] {n_rows} rows ({n_nil} nil dropped), {len(people)} people, "
           f"{len(by_name)} name keys, {sum(len(p.get('ties', [])) for p in people.values())} ties "
-          f"across {len(reverse)} donors" + (f" -> {out_dir}/" if out_dir else ""), file=sys.stderr)
+          f"across {len(reverse)} donors, {len(recent)} dated alterations" +
+          (f" -> {out_dir}/" if out_dir else ""), file=sys.stderr)
     for nk, kept, dropped in collisions:
         print(f"[export_interests] name collision: '{nk}' -> {kept} (also {dropped}, reachable only by id)", file=sys.stderr)
 

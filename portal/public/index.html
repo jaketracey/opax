@@ -362,6 +362,11 @@
           parliaments publish.</p>
           <p style="margin:0.6rem 0 0"><a class="action-btn search-everything" href="/search"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg><span>Search everything</span></a></p>
         </section>
+<section class="front-mod" aria-labelledby="h-declared" id="mod-declared" hidden>
+          <h2 class="kicker" id="h-declared">Just declared</h2>
+          <div id="front-declared"></div>
+          <p class="fineprint"><a href="/declared">All alterations since the statements, by week →</a></p>
+        </section>
 <section class="front-mod" aria-labelledby="h-reports" id="mod-reports" hidden>
           <h2 class="kicker" id="h-reports">Reports</h2>
           <p class="fineprint" style="margin:-0.2rem 0 0.6rem">Long-running investigations pairing
@@ -761,6 +766,26 @@
     <!-- ============================ SUBJECT ============================ -->
     <section id="panel-subject" class="panel" hidden aria-label="Subject entry">
       <div id="subject-body"><!-- entry injected --></div>
+    </section>
+
+    <!-- =========================== DECLARED =========================== -->
+    <section id="panel-declared" class="panel" hidden aria-label="Recent alterations to registers of interests">
+      <p class="kicker">Registers of interests</p>
+      <h2>Just declared</h2>
+      <p class="lede">The newest additions and deletions recorded in parliamentarians' registers of interests, in their own words.</p>
+      <form id="declared-filters" class="dir-controls" aria-label="Filter recent declarations">
+        <span class="dir-field">
+          <label for="declared-bucket">Category</label>
+          <select id="declared-bucket"><option value="">all categories</option></select>
+        </span>
+        <span class="dir-field">
+          <label for="declared-party">Party</label>
+          <select id="declared-party"><option value="">all parties</option></select>
+        </span>
+      </form>
+      <p class="interests-summary" id="declared-summary"></p>
+      <div id="declared-list"><p class="status">Opening the register ledger…</p></div>
+      <p class="fineprint declared-source">Sources: <a href="https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results/Registers_of_Interests" rel="noopener" target="_blank">Registers of Members' and Senators' Interests, 48th Parliament ↗︎</a>, entries as declared, not verified by OPAX; and the <a href="https://www.parliament.qld.gov.au/Members/Current-Members/Register-of-Interests" rel="noopener" target="_blank">Queensland Register of Members' Interests, 58th Parliament ↗︎</a>, facts and links only. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to <a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">AEC Transparency Register returns, CC BY 4.0 ↗︎</a>, the lobbyist registers and FITS use exact normalised names.</p>
     </section>
 
     <!-- ============================= ABOUT ============================= -->

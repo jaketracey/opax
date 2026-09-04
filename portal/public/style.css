@@ -1755,7 +1755,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .interests-holders li { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); column-gap: 0.6rem; }
 .interests-holder { color: var(--ink-faint); font-size: 0.8125rem; padding-top: 0.1rem; }
 .interests-holders .result-meta { grid-column: 2; }
-.interests-deleted .interests-desc { text-decoration: line-through; color: var(--ink-faint); }
+.interests-deleted .interests-desc, .interests-deleted .declared-description { text-decoration: line-through; color: var(--ink-faint); }
 .subject-section-title {
   font: 600 1.35rem/1.3 var(--serif); color: var(--ink); margin: var(--section-gap) 0 var(--space-2);
 }
@@ -1771,6 +1771,43 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .tie-flow { margin: 0.35rem 0 0; color: var(--ink-soft); font-size: 0.875rem; line-height: 1.55; }
 .tie-flow .party-dot-only { margin-right: 0.2rem; }
 .donor-ties-list li > span { display: block; margin-top: 0.25rem; font-size: 0.875rem; line-height: 1.5; }
+.front-declared-list { margin-top: -0.2rem; }
+.declared-row {
+  display: grid; grid-template-columns: 6.2rem 48px minmax(0, 1fr);
+  gap: 0.2rem 0.75rem; align-items: start;
+}
+.declared-row > time { padding-top: 0.1rem; color: var(--ink-faint); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
+.declared-portrait { grid-column: 2; grid-row: 1; width: 48px; height: 48px; display: grid; place-items: center; }
+.declared-portrait img {
+  width: 48px; height: 48px; border-radius: 50%; object-fit: cover; display: block;
+  border: 2px solid var(--paper-raised); box-shadow: 0 0 0 1px var(--line);
+}
+.declared-portrait > span {
+  width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--paper-sunken); color: var(--ink-soft); box-shadow: inset 0 0 0 1px var(--line);
+  font: 700 0.9375rem/1 var(--serif);
+}
+.declared-entry { grid-column: 3; min-width: 0; }
+.declared-person { font: 600 1rem/1.35 var(--serif); }
+.declared-person .party { margin-left: 0.35rem; vertical-align: 0.1em; }
+.declared-person .result-meta { margin-left: 0.35rem; font-family: var(--sans); font-weight: 400; }
+.declared-kind { margin-top: 0.15rem; color: var(--ink-faint); font-size: 0.75rem; }
+.declared-description {
+  margin: 0.25rem 0 0; color: var(--ink-soft); font-size: 0.9375rem; line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.declared-source-link { display: inline-flex; align-items: center; min-height: 44px; margin-left: 0.2rem; white-space: nowrap; }
+.declared-match { margin: 0.1rem 0 0; color: var(--ink-soft); font-size: 0.8125rem; line-height: 1.5; }
+.declared-match .result-meta { margin-left: 0.2rem; }
+#panel-declared { max-width: 920px; }
+#panel-declared .dir-controls { margin-top: var(--space-4); }
+.declared-source { margin-top: var(--space-5); }
+.declared-week { margin-top: var(--space-5); }
+.declared-week > h3 {
+  margin: 0; padding-bottom: 0.45rem; border-bottom: 1px solid var(--line-strong);
+  font: 600 1.35rem/1.3 var(--serif); color: var(--ink);
+}
+.declared-day > h4 { display: none; }
 .party-receipts { margin-top: var(--section-gap); max-width: 920px; }
 .party-receipts .subject-section-title { margin-top: 0; }
 .receipts-legend {
@@ -1860,6 +1897,16 @@ a.ency-name:hover, a.ency-name:focus-visible {
   .tie-declaration { grid-template-columns: 1fr; gap: 0.1rem; }
   .tie-declaration .interests-holder { padding-top: 0; }
   .tie-source { justify-self: start; }
+  .declared-row { grid-template-columns: 48px minmax(0, 1fr); gap: 0.2rem 0.65rem; }
+  .declared-row > time { grid-column: 1 / -1; grid-row: auto; padding-top: 0; }
+  .declared-portrait { grid-column: 1; grid-row: auto; }
+  .declared-entry { grid-column: 2; }
+  .declared-ledger .declared-row > time { display: none; }
+  .declared-day > h4 {
+    display: block; margin: 0; padding: 0.65rem 0 0.2rem; color: var(--ink-faint);
+    font: 500 0.75rem/1.3 var(--sans); font-variant-numeric: tabular-nums;
+  }
+  .declared-day + .declared-day { border-top: 1px solid var(--line); }
   .receipts-row { grid-template-columns: 3.7rem minmax(6rem, 1fr) 3.7rem 2.4rem; gap: 0.35rem; }
   .receipts-legend { gap: 0.35rem 0.7rem; }
   .balance-row { grid-template-columns: 3.7rem minmax(0, 1fr) minmax(0, 1fr); }

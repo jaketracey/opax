@@ -21,7 +21,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "about", "methods", "stats", "expenses"];
+const PANELS = ["ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses"];
 
 // --- helpers ----------------------------------------------------------------
 
@@ -758,6 +758,7 @@ const TITLES = {
   reports: "Reports · OPAX",
   doc: "From the record · OPAX",
   subject: "OPAX encyclopedia",
+  declared: "Just declared · OPAX",
   explore: "Explore · OPAX",
   about: "About · OPAX",
   methods: "Methods · OPAX",
@@ -1017,6 +1018,11 @@ function route() {
     document.title = `${DIRECTORY_KINDS[segs[1]]} · OPAX`;
     setCrumbs([{ label: DIRECTORY_KINDS[segs[1]] }]);
     openDirectory(segs[1], params, manageFocus);
+  } else if (view === "declared") {
+    showPanel("declared");
+    document.title = TITLES.declared;
+    setCrumbs([{ label: "Just declared" }]);
+    renderDeclaredPage(params, manageFocus);
   } else if (view === "doc" && segs[1]) {
     showPanel("doc");
     document.title = TITLES.doc;
@@ -2314,6 +2320,140 @@ function subjectHash(kind, label) {
   return `/subject/${kind}/${encodeURIComponent(label)}`;
 }
 
+const DECLARED_BUCKET_LABELS = {
+  shareholdings: "Shareholding", real_estate: "Real estate", trusts: "Trust",
+  directorships: "Directorship", gifts: "Gift", travel: "Sponsored travel or hospitality",
+  memberships: "Membership or office", liabilities: "Liability",
+  other: "Other interest",
+};
+let recentInterestsPromise = null;
+function loadRecentInterests() {
+  recentInterestsPromise ??= fetch("/interests/recent.json")
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return recentInterestsPromise;
+}
+
+function partyMapForRoster(roster) {
+  const map = new Map();
+  for (const p of roster?.people || []) {
+    const party = p.party_now || p.party;
+    if (!party) continue;
+    for (const name of [p.name, p.full]) {
+      if (name) map.set(String(name).toLowerCase(), party);
+    }
+  }
+  return map;
+}
+
+function declaredTieHTML(ties) {
+  if (!Array.isArray(ties) || !ties.length) return "";
+  return `<p class="declared-match">Name match: ${ties.map((tie) => {
+    const kinds = Array.isArray(tie.kinds) ? tie.kinds : [tie.kind];
+    const labels = [];
+    if (kinds.includes("donor")) labels.push(`AEC donor${tie.industry ? ` · ${industryLabel(tie.industry)}` : ""}`);
+    if (kinds.includes("lobbyist")) labels.push("registered lobbying firm");
+    if (kinds.includes("fits")) labels.push("FITS registrant");
+    const org = tie.donor_id
+      ? `<a href="${esc(subjectHash("donor", tie.organisation))}">${esc(tie.organisation)}</a>`
+      : safeUrl(tie.fits_url)
+        ? `<a href="${esc(tie.fits_url)}" rel="noopener" target="_blank">${esc(tie.organisation)} ↗︎</a>`
+        : `<span>${esc(tie.organisation)}</span>`;
+    return `${org}${labels.length ? ` <span class="result-meta">${esc(labels.join(" · "))}</span>` : ""}`;
+  }).join("; ")}. Exact names only; this identifies a shared name across public registers, not wrongdoing.</p>`;
+}
+
+function declaredRowHTML(item, partyByName, { showDate = true } = {}) {
+  const party = partyByName.get(String(item.name || "").toLowerCase());
+  const source = safeUrl(item.url);
+  const photo = photoUrlFor(item.name);
+  const chamber = item.chamber === "house" ? "House" : item.chamber === "senate" ? "Senate"
+    : item.chamber === "qld_la" ? "Queensland Legislative Assembly" : jurName(item.jurisdiction);
+  const category = DECLARED_BUCKET_LABELS[item.bucket] || String(item.bucket || "Interest").replace(/_/g, " ");
+  const kind = item.kind === "deletion" ? "Deletion" : "Addition";
+  const sourceText = item.page ? `page ${Number(item.page) || 1}` : "register";
+  return `<li class="declared-row${item.kind === "deletion" ? " interests-deleted" : ""}">
+    ${showDate ? `<time datetime="${esc(item.date)}">${esc(fmtDate(item.date))}</time>` : ""}
+    <span class="declared-portrait">${photo
+      ? `<img src="${esc(photo)}" width="48" height="48" loading="lazy" decoding="async" alt="">`
+      : `<span aria-hidden="true">${esc(String(item.name || "?").split(/\s+/).map((w) => w[0]).slice(0, 2).join(""))}</span>`}</span>
+    <div class="declared-entry">
+      <div class="declared-person"><a href="${esc(subjectHash("person", item.name))}">${esc(item.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}${chamber ? ` <span class="result-meta">${esc(chamber)}</span>` : ""}</div>
+      <div class="declared-kind">${esc(kind)} · ${esc(category)}${item.ocr ? ` <span class="result-meta">· machine-read from a scan</span>` : ""}</div>
+      <p class="declared-description">“${esc(item.description || "")}”${source ? ` <a class="declared-source-link" href="${esc(source)}" rel="noopener" target="_blank">${esc(sourceText)} ↗︎</a>` : ""}</p>
+      ${declaredTieHTML(item.ties)}
+    </div>
+  </li>`;
+}
+
+function weekStart(iso) {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
+  return d.toISOString().slice(0, 10);
+}
+
+function declaredLedgerHTML(items, partyByName) {
+  const weeks = new Map();
+  for (const item of items) {
+    const week = weekStart(item.date);
+    if (!weeks.has(week)) weeks.set(week, new Map());
+    const days = weeks.get(week);
+    if (!days.has(item.date)) days.set(item.date, []);
+    days.get(item.date).push(item);
+  }
+  return `<div class="declared-ledger">${[...weeks].map(([week, days]) => `
+    <section class="declared-week" aria-labelledby="declared-week-${week}">
+      <h3 id="declared-week-${week}">Week of ${esc(fmtDate(week))}</h3>
+      ${[...days].map(([day, rows]) => `<section class="declared-day">
+        <h4>${esc(fmtDate(day))}</h4>
+        <ul class="subject-list" role="list">${rows.map((item) => declaredRowHTML(item, partyByName)).join("")}</ul>
+      </section>`).join("")}
+    </section>`).join("")}</div>`;
+}
+
+async function renderDeclaredPage(params, manageFocus) {
+  const root = $("declared-list");
+  root.innerHTML = `<p class="status">Opening the register ledger…</p>`;
+  const [data, roster] = await Promise.all([loadRecentInterests(), loadParliamentarians(), loadPhotoMap()]);
+  const items = Array.isArray(data?.items) ? data.items : [];
+  if (!items.length) {
+    root.innerHTML = `<p class="status">No dated alterations are available in the current export.</p>`;
+    return;
+  }
+  const partyByName = partyMapForRoster(roster);
+  const bucket = params.get("category") || "";
+  const party = params.get("party") || "";
+  const person = params.get("person") || "";
+  const bucketSelect = $("declared-bucket");
+  const partySelect = $("declared-party");
+  const buckets = [...new Set(items.map((x) => x.bucket).filter(Boolean))]
+    .sort((a, b) => (DECLARED_BUCKET_LABELS[a] || a).localeCompare(DECLARED_BUCKET_LABELS[b] || b));
+  const parties = [...new Set(items.map((x) => partyByName.get(String(x.name || "").toLowerCase())).filter(Boolean))].sort();
+  bucketSelect.innerHTML = `<option value="">all categories</option>${buckets.map((b) => `<option value="${esc(b)}">${esc(DECLARED_BUCKET_LABELS[b] || b)}</option>`).join("")}`;
+  partySelect.innerHTML = `<option value="">all parties</option>${parties.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}`;
+  bucketSelect.value = buckets.includes(bucket) ? bucket : "";
+  partySelect.value = parties.includes(party) ? party : "";
+  const filtered = items.filter((item) => (!bucketSelect.value || item.bucket === bucketSelect.value) &&
+    (!partySelect.value || partyByName.get(String(item.name || "").toLowerCase()) === partySelect.value) &&
+    (!person || String(item.name || "").toLowerCase() === person.toLowerCase()));
+  const reg = "https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results/Registers_of_Interests";
+  $("declared-summary").innerHTML = `${person ? `For <a href="${esc(subjectHash("person", person))}">${esc(person)}</a> · ` : ""}` +
+    `<a href="${reg}" rel="noopener" target="_blank"><b>${filtered.length.toLocaleString()}</b> of the newest ${items.length.toLocaleString()} alterations shown` +
+    (Number(data.meta?.available) > items.length ? ` (${Number(data.meta.available).toLocaleString()} dated alterations in the source export)` : "") + `</a>` +
+    `${person ? ` · <a href="/declared">view everyone</a>` : ""}`;
+  root.innerHTML = filtered.length ? declaredLedgerHTML(filtered, partyByName) : `<p class="status">No alterations match these filters.</p>`;
+  const navigate = () => {
+    const next = new URLSearchParams();
+    if (bucketSelect.value) next.set("category", bucketSelect.value);
+    if (partySelect.value) next.set("party", partySelect.value);
+    if (person) next.set("person", person);
+    goRoute(`/declared${next.size ? `?${next}` : ""}`);
+  };
+  bucketSelect.onchange = navigate;
+  partySelect.onchange = navigate;
+  $("declared-filters").onsubmit = (event) => event.preventDefault();
+  if (manageFocus) $("panel-declared").querySelector("h2")?.focus?.({ preventScroll: true });
+}
+
 // Declared interests on person pages: the registers of members' interests
 // (House 48th, Senate 48th, QLD 58th) exported by scripts/export_interests.py
 // as /interests/index.json plus one file per person. Facts with a link to the
@@ -2445,7 +2585,7 @@ async function renderPersonInterests(name, personId, sections) {
   const deleted = Number(data.alterations?.deleted) || 0;
   const since = data.statement_date ? `since the statement of ${esc(fmtDate(data.statement_date))}` : "since the statement";
   const alterations = added || deleted
-    ? `+${num(added)} addition${added === 1 ? "" : "s"}, -${num(deleted)} deletion${deleted === 1 ? "" : "s"} ${since}`
+    ? `<a href="${esc(`/declared?person=${encodeURIComponent(data.name || name)}`)}">+${num(added)} addition${added === 1 ? "" : "s"}, -${num(deleted)} deletion${deleted === 1 ? "" : "s"} ${since}</a>`
     : `no alterations notified ${since}`;
   slot.innerHTML = `
     ${tiesHTML}
@@ -5098,6 +5238,18 @@ async function renderFrontAdded() {
   } catch { /* stays hidden */ }
 }
 
+async function renderFrontDeclared() {
+  try {
+    const [data, roster] = await Promise.all([loadRecentInterests(), loadParliamentarians(), loadPhotoMap()]);
+    const items = (data?.items || []).slice(0, 6);
+    if (!items.length) return;
+    const partyByName = partyMapForRoster(roster);
+    $("front-declared").innerHTML = `<ul class="subject-list front-declared-list" role="list">${items.map((item) => declaredRowHTML(item, partyByName)).join("")}</ul>
+      <p class="fineprint">Registers of Members' and Senators' Interests, 48th Parliament, and Queensland Register of Members' Interests, 58th Parliament; entries as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. AEC matches use <a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">Transparency Register returns, CC BY 4.0 ↗︎</a>.</p>`;
+    $("mod-declared").hidden = false;
+  } catch { /* stays hidden */ }
+}
+
 function renderFrontPage() {
   setFrontPageHidden(false);
   renderFrontNumbers();
@@ -5105,7 +5257,7 @@ function renderFrontPage() {
   if (frontRendered) return;
   frontRendered = true;
   renderFrontNews();
-  onIdle(() => { mountFrontMaps(); renderFrontTopic(); renderFrontAdded(); });
+  onIdle(() => { mountFrontMaps(); renderFrontTopic(); renderFrontAdded(); renderFrontDeclared(); });
 }
 
 // --- the home maps ----------------------------------------------------------
