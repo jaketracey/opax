@@ -420,7 +420,7 @@ const CSS = `
 @media (min-width: 761px) {
   .tm-pictures-open {
     position: absolute; left: calc(100% + 3.8rem); top: 50%; transform: translateY(-50%);
-    min-height: 40px; padding: 0 0.2rem; border: 0; border-radius: 0;
+    min-height: 44px; padding: 0 0.2rem; border: 0; border-radius: 0;
     font-weight: 400; text-decoration: underline;
     text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.24em;
   }
@@ -715,7 +715,7 @@ const CSS = `
   font: 400 1.45rem/1 var(--serif, Merriweather, Georgia, serif);
 }
 .tm-gallery-nav:hover { border-color: var(--bronze-ink, #8A5A12); color: var(--bronze-ink, #8A5A12); }
-.tm-gallery-figure { min-width: 0; margin: 0; }
+.tm-gallery-figure { min-width: 0; margin: 0; touch-action: pan-y; }
 .tm-picture-mat {
   display: grid; place-items: center; width: 100%; height: min(56vh, 530px); min-height: 250px;
   padding: clamp(0.55rem, 2vw, 1.1rem); overflow: hidden;
@@ -758,9 +758,9 @@ const CSS = `
   .tm-gallery-prev { justify-self: start; }
   .tm-gallery-next { justify-self: end; margin-top: -3.3rem; }
   .tm-gallery-thumbs { display: none; }
-  .tm-gallery-dots { display: flex; justify-content: center; gap: 0.35rem; margin-top: -2.7rem; min-height: 44px; align-items: center; }
+  .tm-gallery-dots { display: flex; justify-content: center; gap: 0; margin-top: -2.7rem; min-height: 44px; align-items: center; }
   .tm-gallery-dot {
-    display: grid; place-items: center; width: 22px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer;
+    display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer;
   }
   .tm-gallery-dot::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--line-strong, #8D897B); }
   .tm-gallery-dot[aria-current="true"]::before { width: 7px; height: 7px; background: var(--bronze-ink, #8A5A12); }
@@ -1267,26 +1267,33 @@ export function mountTimeMachine(container, opts = {}) {
 
     galleryPrev.hidden = pictures.length < 2
     galleryNext.hidden = pictures.length < 2
-    galleryThumbs.replaceChildren()
-    galleryDots.replaceChildren()
-    pictures.forEach((item, index) => {
-      const thumb = pictureButton(
-        item,
-        index,
-        'tm-gallery-thumb',
-        () => showGalleryIndex(index, index < galleryIndex ? 'prev' : 'next'),
-      )
-      thumb.setAttribute('aria-current', String(index === galleryIndex))
-      galleryThumbs.appendChild(thumb)
+    if (galleryThumbs.dataset.year !== String(year) || galleryThumbs.children.length !== pictures.length) {
+      galleryThumbs.replaceChildren()
+      galleryDots.replaceChildren()
+      galleryThumbs.dataset.year = String(year)
+      pictures.forEach((item, index) => {
+        const thumb = pictureButton(
+          item,
+          index,
+          'tm-gallery-thumb',
+          () => showGalleryIndex(index, index < galleryIndex ? 'prev' : 'next'),
+        )
+        galleryThumbs.appendChild(thumb)
 
-      const dot = el('button', 'tm-gallery-dot', {
-        type: 'button',
-        'aria-label': `Show photograph ${index + 1}: ${item.caption}`,
-        'aria-current': String(index === galleryIndex),
+        const dot = el('button', 'tm-gallery-dot', {
+          type: 'button',
+          'aria-label': `Show photograph ${index + 1}: ${item.caption}`,
+        })
+        dot.addEventListener('click', () => showGalleryIndex(index, index < galleryIndex ? 'prev' : 'next'))
+        galleryDots.appendChild(dot)
       })
-      dot.addEventListener('click', () => showGalleryIndex(index, index < galleryIndex ? 'prev' : 'next'))
-      galleryDots.appendChild(dot)
-    })
+    }
+    for (const [index, thumb] of [...galleryThumbs.children].entries()) {
+      thumb.setAttribute('aria-current', String(index === galleryIndex))
+    }
+    for (const [index, dot] of [...galleryDots.children].entries()) {
+      dot.setAttribute('aria-current', String(index === galleryIndex))
+    }
 
     galleryFigure.classList.remove('tm-picture-next', 'tm-picture-prev')
     if (direction && !reducedMotion.matches) {
