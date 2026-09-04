@@ -4066,7 +4066,7 @@ function topicTideHTML(data, slug, phrase) {
   }).join("");
   return `<section class="topic-tide">
     <figure><figcaption>The share over time</figcaption><div class="topic-tide-bars">${bars}</div></figure>
-    ${coverageRuleHTML(data.decades)}
+    ${coverageRuleHTML(data.decades, "Topic labels cover this share of each decade’s indexed speeches:")}
     <p class="fineprint">Each bar is this topic's share of federal speeches carrying any topic label in that decade; the small figure is the count. Federal is the longest comparable run. Labels are applied so far, and each decade opens the speeches behind it.</p>
   </section>`;
 }
@@ -4200,7 +4200,7 @@ async function openTopicPage(slug, manageFocus) {
   showPageLoader("subject-loader", "Counting the labelled record.");
   const sections = $("subject-sections");
   const box = $("subject-infobox");
-  box.hidden = true; // fills once the counts land
+  box.hidden = true; // topic actions live immediately below the counts
   const phrase = topicPhrase(slug);
   const searchTopic = searchHash(phrase, { topic: slug });
   const tidePromise = api("/api/tide").catch(() => null);
@@ -4208,8 +4208,8 @@ async function openTopicPage(slug, manageFocus) {
   let data = null;
   try {
     const [, , manifest] = await Promise.all([
-      api(`/api/topic/${encodeURIComponent(slug)}`).then((value) => { data = value; }),
-      loadReportsIndex(),
+      api(`/api/topic/${encodeURIComponent(slug)}`).then((value) => { data = value; }).catch(() => null),
+      loadReportsIndex().catch(() => null),
       corpusManifest
         ? Promise.resolve(corpusManifest)
         : fetch("/corpus.json").then((r) => r.ok ? r.json() : null).catch(() => null),
@@ -4227,7 +4227,6 @@ async function openTopicPage(slug, manageFocus) {
     : `<span>${esc(count.toLocaleString())} speeches carry this label so far, of
        ${esc(labelled.toLocaleString())} labelled to date. The labelling pass is still running.</span>`;
 
-  const share = count && labelled ? `${((count / labelled) * 100).toFixed(1)}%` : null;
   body.querySelector('.subject-head').insertAdjacentHTML('beforeend', `
     <div class="topic-reader-tools">
       <form class="topic-ask-form">
@@ -4242,16 +4241,6 @@ async function openTopicPage(slug, manageFocus) {
     if (question) goRoute(askHash(question));
   });
   box.hidden = true;
-  box.innerHTML = infoboxHTML([
-    ["Type", "Topic"],
-    count !== null && ["Labelled so far", `<b>${esc(count.toLocaleString())}</b> speeches`],
-    share && ["Of labelled speeches", esc(share)],
-    report && ["Standing report", `<a href="/reports/${esc(report.slug)}">${esc(report.title)}</a>`],
-  ], "", [
-    actionBtn("ask", askHash(`What has parliament said about ${phrase}?`), "Ask what parliament said", { primary: true }),
-    actionBtn("search", searchTopic, "Search this topic"),
-    ...(report ? [actionBtn("speeches", `/reports/${report.slug}`, `Read the ${report.title} report`)] : []),
-  ]);
 
   if (data) {
     if (data.parties?.length) {
@@ -4300,6 +4289,19 @@ async function openTopicPage(slug, manageFocus) {
   const arc = document.createElement("section");
   arc.className = "topic-arc";
   sections.appendChild(arc);
+  const addJump = (label, target) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'topic-section-jump';
+    button.textContent = label;
+    button.addEventListener('click', () => {
+      const heading = target.querySelector('h3');
+      if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+      target.scrollIntoView({ block: 'start', behavior: 'instant' });
+    });
+    body.querySelector('.topic-reader-links').appendChild(button);
+  };
+  addJump('Jump to the debate', arc);
   const arcPromise = renderTopicArc(slug, phrase, key, arc);
 
   const moneyInd = detectMoneyIndustry(`who donates money to ${phrase}`);
@@ -4307,7 +4309,10 @@ async function openTopicPage(slug, manageFocus) {
     await loadMoneyData();
     if (currentSubjectKey !== key) return;
     const html = topicMoneyHTML(moneyInd);
-    if (html) sections.insertAdjacentHTML("beforeend", `<section class="topic-money">${html}</section>`);
+    if (html) {
+      sections.insertAdjacentHTML("beforeend", `<section class="topic-money">${html}</section>`);
+      addJump('The money beside it', sections.querySelector('.topic-money'));
+    }
   }
 
   await arcPromise;
@@ -4358,7 +4363,7 @@ async function openTopicsIndex(manageFocus) {
   for (const spark of body.querySelectorAll('[data-topic-spark]')) {
     const series = tide.topics?.[spark.dataset.topicSpark] || [];
     const max = Math.max(...series.map((point) => Number(point.share) || 0), Number.EPSILON);
-    spark.innerHTML = series.map((point) => `<i style="height:${Math.max(2, (Number(point.share) || 0) / max * 24)}px"></i>`).join('');
+    spark.innerHTML = series.map((point) => `<i style="height:${Math.max(2, (Number(point.share) || 0) / max * 16)}px"></i>`).join('');
   }
   body.querySelector('.topic-index-list').insertAdjacentHTML('beforebegin', '<p class="fineprint">Counts are labelled speeches. Small bars show the federal share over time, scaled within each topic.</p>');
 }

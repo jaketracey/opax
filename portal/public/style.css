@@ -2550,3 +2550,27 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-subject .topic-index-spark { grid-column: 2; grid-row: 3; height: 16px; }
 #panel-subject .topic-index-spark i { max-height: 16px; }
 #panel-subject .topic-arc-item { scroll-margin-top: 100px; }
+
+#panel-subject .topic-index-row { grid-template-columns: minmax(0, 1fr) auto 30px; align-items: center; }
+#panel-subject .topic-index-spark { grid-column: 3; grid-row: 1; align-self: center; }
+#panel-subject .topic-index-count { grid-column: 2; grid-row: 1; }
+#panel-subject .topic-index-name { grid-column: 1; grid-row: 1; }
+#panel-subject .topic-reader-tools :is(button, textarea),
+#panel-subject .topic-arc-footer button { border: 1px solid var(--line-strong); border-radius: 2px; }
+#panel-subject .topic-ask-form button,
+#panel-subject .topic-arc-footer button { background: var(--bronze); color: var(--paper); padding: .5rem .8rem; font: 600 .9375rem/1.4 var(--sans); cursor: pointer; }
+#panel-subject .topic-arc .quiet-toggle button[aria-pressed="true"] { background: var(--bronze); color: var(--paper); }
+#panel-subject .topic-reader-links .topic-section-jump { display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: none; color: var(--bronze-ink); text-decoration: underline; text-underline-offset: .2em; font: inherit; cursor: pointer; }
+#panel-subject :is(.topic-arc, .topic-money) { scroll-margin-top: 100px; }
+#panel-subject .topic-page-grid .fineprint { max-width: 760px; font-size: .875rem; line-height: 1.55; }
+#panel-subject .topic-tide .coverage-rule { margin-top: .75rem; }
+#panel-subject .topic-money > p:first-of-type { font: 400 1rem/1.65 var(--serif); }
+#panel-subject :is(.topic-reader-tools, .topic-page-grid, .topic-index-list) :is(a, button, textarea):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
+#panel-subject .topic-page-grid .fineprint a { display: inline-flex; align-items: center; min-height: 44px; }
+@media (prefers-reduced-motion: reduce) {
+  #panel-subject :is(.topic-reader-tools, .topic-page-grid, .topic-index-list) * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+#panel-subject .topic-ask-form button,
+#panel-subject .topic-arc-footer button,
+#panel-subject .topic-arc .quiet-toggle button[aria-pressed="true"] { background: var(--bronze-ink); }
