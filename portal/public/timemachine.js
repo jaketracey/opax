@@ -751,14 +751,19 @@ const CSS = `
 @keyframes tm-picture-prev { from { opacity: 0.2; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
 @media (max-width: 760px) {
   .tm-gallery { padding-top: 0; }
-  .tm-gallery-stage { grid-template-columns: 1fr; gap: 0.55rem; }
-  .tm-picture-mat { height: min(48vh, 390px); min-height: 220px; padding: 0.55rem; }
-  .tm-gallery-figure { grid-row: 1; }
-  .tm-gallery-nav { grid-row: 2; }
-  .tm-gallery-prev { justify-self: start; }
-  .tm-gallery-next { justify-self: end; margin-top: -3.3rem; }
+  /* Phone: the photograph on its own, at its own shape, then one row of
+     previous · dots · next beneath the caption and credit. */
+  .tm-gallery-stage {
+    grid-template-columns: 44px minmax(0, 1fr) 44px; grid-template-areas: "figure figure figure" "prev dots next";
+    gap: 0.7rem 0.5rem; align-items: center;
+  }
+  .tm-gallery-figure { grid-area: figure; }
+  .tm-gallery-prev { grid-area: prev; margin: 0; }
+  .tm-gallery-next { grid-area: next; margin: 0; }
+  .tm-picture-mat { height: auto; min-height: 0; max-height: 56vh; padding: 0.5rem; }
+  .tm-gallery-image { max-height: calc(56vh - 1rem); }
   .tm-gallery-thumbs { display: none; }
-  .tm-gallery-dots { display: flex; justify-content: center; gap: 0; margin-top: -2.7rem; min-height: 44px; align-items: center; }
+  .tm-gallery-dots { grid-area: dots; display: flex; justify-content: center; gap: 0; margin: 0; min-height: 44px; align-items: center; }
   .tm-gallery-dot {
     display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer;
   }
@@ -1045,9 +1050,9 @@ export function mountTimeMachine(container, opts = {}) {
           </figcaption>
         </figure>
         <button type="button" class="tm-gallery-nav tm-gallery-next" aria-label="Next photograph">›</button>
+        <nav class="tm-gallery-dots" aria-label="Photographs in this year"></nav>
       </div>
       <nav class="tm-gallery-thumbs" aria-label="Photographs in this year"></nav>
-      <nav class="tm-gallery-dots" aria-label="Photographs in this year"></nav>
     </section>
   `
 
