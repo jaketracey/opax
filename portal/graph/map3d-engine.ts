@@ -209,10 +209,8 @@ type EdgeVisual = {
   key: string
   from: EdgeAnchor
   to: EdgeAnchor
-  mesh: THREE.Mesh
-  material: THREE.MeshBasicMaterial
-  cone: THREE.Mesh
-  coneMaterial: THREE.MeshBasicMaterial
+  /** Industry hue, written with per-flow opacity into the shared ribbon buffer. */
+  colour: THREE.Color
   width: number
   crossing: boolean
   /** Parallel relations between one pair fan sideways by this much. */
@@ -341,9 +339,9 @@ type PinchState = {
   midY: number
 }
 
-/** Edge weight -> tube radius, log scaled like the 2D stroke width. */
+/** Edge weight -> engraved ribbon half-width, quietly log-scaled by value. */
 function edgeRadius(weight: number): number {
-  return Math.max(0.6, Math.min(5, 0.55 + 1.2 * Math.log10(1 + Math.max(0, weight))))
+  return Math.max(0.24, Math.min(1.9, 0.2 + 0.42 * Math.log10(1 + Math.max(0, weight))))
 }
 
 /**
@@ -353,8 +351,62 @@ function edgeRadius(weight: number): number {
  */
 function flowResting(weight: number): number {
   const t = Math.max(0, Math.min(1, Math.log10(1 + Math.max(0, weight)) / 4))
-  return 0.2 + 0.28 * t
+  return 0.1 + 0.14 * t
 }
+
+function edgeValue(weight: number): number {
+  return Math.max(0, Math.min(1, Math.log10(1 + Math.max(0, weight)) / 4))
+}
+
+/**
+ * Every flow is one camera-facing ribbon plus a small arrowhead, merged into
+ * one BufferGeometry. The shader lays a single faint dash over each ribbon;
+ * `uPhase` takes seven seconds to cross source -> target. This keeps the map
+ * to one draw call for all lines, including the folded industry flows.
+ */
+const EDGE_VERTEX_SHADER = `
+attribute vec4 flowColor;
+attribute float flowT;
+attribute float flowSeed;
+attribute float flowKind;
+varying vec4 vFlowColor;
+varying float vFlowT;
+varying float vFlowSeed;
+varying float vFlowKind;
+void main() {
+  vFlowColor = flowColor;
+  vFlowT = flowT;
+  vFlowSeed = flowSeed;
+  vFlowKind = flowKind;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`
+
+const EDGE_FRAGMENT_SHADER = `
+uniform float uPhase;
+uniform float uReduced;
+varying vec4 vFlowColor;
+varying float vFlowT;
+varying float vFlowSeed;
+varying float vFlowKind;
+void main() {
+  float alpha = vFlowColor.a;
+  if (vFlowKind < 0.5) {
+    if (uReduced > 0.5) {
+      alpha *= mix(0.68, 1.0, vFlowT);
+    } else {
+      float cycle = fract(vFlowT - uPhase - vFlowSeed);
+      float distanceToDash = min(cycle, 1.0 - cycle);
+      float dash = 1.0 - smoothstep(0.035, 0.09, distanceToDash);
+      alpha *= 0.72 + 0.48 * dash;
+    }
+  } else {
+    alpha *= uReduced > 0.5 ? 0.78 : 0.2;
+  }
+  if (alpha < 0.003) discard;
+  gl_FragColor = vec4(vFlowColor.rgb, min(alpha, 0.82));
+}
+`
 
 /** How far each edge in a parallel bundle bows sideways - ported from buildCurves. */
 function buildLaterals(edges: MapEdge[]): number[] {
@@ -421,7 +473,6 @@ export class KnowledgeMapEngine {
   private scene = new THREE.Scene()
   private camera: THREE.PerspectiveCamera
   private nodeGroup = new THREE.Group()
-  private edgeGroup = new THREE.Group()
   private territoryGroup = new THREE.Group()
   private hemi: THREE.HemisphereLight
   private key: THREE.DirectionalLight
@@ -430,8 +481,18 @@ export class KnowledgeMapEngine {
 
   private sphereGeo = new THREE.SphereGeometry(1, 40, 24)
   private shellGeo = new THREE.SphereGeometry(1, 32, 18)
-  private tubeGeo = new THREE.CylinderGeometry(1, 1, 1, 7, 1, true)
-  private coneGeo = new THREE.ConeGeometry(1, 1, 10)
+  private edgeGeometry = new THREE.BufferGeometry()
+  private edgeUniforms = {
+    uPhase: { value: 0 },
+    uReduced: { value: 0 },
+  }
+  private edgeMaterial: THREE.ShaderMaterial
+  private edgeMesh: THREE.Mesh
+  private edgePositions = new Float32Array(0)
+  private edgeColours = new Float32Array(0)
+  private edgeTimes = new Float32Array(0)
+  private edgeSeeds = new Float32Array(0)
+  private edgeKinds = new Float32Array(0)
   private ringGeo = new THREE.RingGeometry(1.18, 1.32, 48)
   private territoryGeo = new THREE.SphereGeometry(1, 28, 18)
   /** Thinner than the selection ring: an engraved line, not a badge. */
@@ -500,7 +561,9 @@ export class KnowledgeMapEngine {
 
   private onReducedChange = (event: MediaQueryListEvent) => {
     this.reduced = event.matches
+    this.edgeUniforms.uReduced.value = event.matches ? 1 : 0
     if (event.matches) this.idleSpin = false
+    this.renderDirty = true
   }
   private viewOwnedFlag = false
   private focusOwnedFlag = false
@@ -518,6 +581,7 @@ export class KnowledgeMapEngine {
   private frameHandle: number | null = null
   private lastFrame = performance.now()
   private frameCount = 0
+  private lastFlowPaint = 0
   private renderDirty = true
   private paused = false
   private resizeObserver: ResizeObserver
@@ -549,11 +613,23 @@ export class KnowledgeMapEngine {
       ? globalThis.matchMedia('(prefers-reduced-motion: reduce)')
       : null
     this.reduced = this.reducedQuery?.matches ?? false
+    this.edgeUniforms.uReduced.value = this.reduced ? 1 : 0
     this.idleSpin = !this.reduced
     this.reducedQuery?.addEventListener('change', this.onReducedChange)
 
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false })
     this.renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio || 1, 2))
+    this.edgeMaterial = new THREE.ShaderMaterial({
+      uniforms: this.edgeUniforms,
+      vertexShader: EDGE_VERTEX_SHADER,
+      fragmentShader: EDGE_FRAGMENT_SHADER,
+      transparent: true,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    })
+    this.edgeMesh = new THREE.Mesh(this.edgeGeometry, this.edgeMaterial)
+    this.edgeMesh.frustumCulled = false
+    this.edgeMesh.raycast = () => undefined
 
     // The hover card - one pooled element, filled per node. DOM in the label
     // layer idiom: inert to the pointer, styled by the adapter's stylesheet.
@@ -578,7 +654,7 @@ export class KnowledgeMapEngine {
     this.fog = new THREE.Fog(this.palette.surface.clone(), 600, 2400)
     this.scene.fog = this.fog
     this.scene.add(this.territoryGroup)
-    this.scene.add(this.edgeGroup)
+    this.scene.add(this.edgeMesh)
     this.scene.add(this.nodeGroup)
     this.scene.add(this.hubGroup)
     this.scene.add(this.haloGroup)
@@ -673,36 +749,19 @@ export class KnowledgeMapEngine {
       (this.hoveredHub !== null ? this.hubs.get(this.hoveredHub)?.id ?? null : null)
   }
 
-  private focusColour(focus: string): THREE.Color {
-    const node = this.nodeVisuals.get(focus)
-    if (node) return node.colour
-    for (const hub of this.hubs.values()) if (hub.id === focus) return hub.anchor.colour
-    return this.palette.accent
-  }
-
   private applyEdgeColour(visual: EdgeVisual) {
     const onPath = this.pathEdgeKeys?.has(visual.key) ?? false
-    const focus = this.focusKey()
-    const touchesFocus = focus !== null &&
-      (visual.edge.source === focus || visual.edge.target === focus)
     if (onPath) {
-      visual.material.color.copy(this.palette.accent)
-      visual.coneMaterial.color.copy(this.palette.accent)
+      visual.colour.copy(this.palette.accent)
       return
     }
-    if (touchesFocus && focus !== null) {
-      const colour = this.focusColour(focus)
-      visual.material.color.copy(colour)
-      visual.coneMaterial.color.copy(colour)
-    } else {
-      const colour = visual.from.colour
-      visual.material.color.copy(colour)
-      visual.coneMaterial.color.copy(colour)
-    }
+    // A flow always keeps the giver's industry hue. Selection changes
+    // strength, not meaning (a selected party must not turn every industry
+    // line into the party's colour).
+    visual.colour.copy(visual.from.colour)
     const tint = this.edgeTintOf(visual)
     if (tint > 0) {
-      visual.material.color.lerp(this.palette.accent, tint)
-      visual.coneMaterial.color.lerp(this.palette.accent, tint)
+      visual.colour.lerp(this.palette.accent, tint)
     }
   }
 
@@ -906,31 +965,17 @@ export class KnowledgeMapEngine {
       const from = this.nodeVisuals.get(edge.source)
       const to = this.nodeVisuals.get(edge.target)
       if (!from || !to) return
-      const material = new THREE.MeshBasicMaterial({
-        transparent: true,
-        depthWrite: false,
-      })
-      const mesh = new THREE.Mesh(this.tubeGeo, material)
-      mesh.raycast = () => undefined
-      const coneMaterial = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false })
-      const cone = new THREE.Mesh(this.coneGeo, coneMaterial)
-      cone.raycast = () => undefined
-      cone.visible = false
-      this.edgeGroup.add(mesh, cone)
       const crossing = from.node.group !== to.node.group
       const visual: EdgeVisual = {
         edge,
         key: `${edge.source}|${edge.label}|${edge.target}`,
         from,
         to,
-        mesh,
-        material,
-        cone,
-        coneMaterial,
+        colour: from.colour.clone(),
         width: edgeRadius(edge.weight),
         crossing,
         lateral: laterals[index] ?? 0,
-        opacity: { current: 0, target: crossing ? 0.16 : 0.4 },
+        opacity: { current: 0, target: crossing ? 0.08 : 0.15 },
         emphasised: false,
         label: null,
         labelW: 0,
@@ -1100,24 +1145,12 @@ export class KnowledgeMapEngine {
             lastYear: agg.lastYear,
             hub: group,
           }
-          const flowMaterial = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false })
-          const flowMesh = new THREE.Mesh(this.tubeGeo, flowMaterial)
-          flowMesh.raycast = () => undefined
-          flowMesh.visible = false
-          const coneMaterial = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false })
-          const cone = new THREE.Mesh(this.coneGeo, coneMaterial)
-          cone.raycast = () => undefined
-          cone.visible = false
-          this.edgeGroup.add(flowMesh, cone)
           const flow: EdgeVisual = {
             edge: synthetic,
             key: `${synthetic.source}|${synthetic.label}|${synthetic.target}`,
             from: hub.anchor,
             to,
-            mesh: flowMesh,
-            material: flowMaterial,
-            cone,
-            coneMaterial,
+            colour: hub.anchor.colour.clone(),
             width: edgeRadius(agg.weight),
             crossing: true,
             lateral: 0,
@@ -1149,6 +1182,7 @@ export class KnowledgeMapEngine {
     // rendered frame - captions must never paint at a stale origin.
     this.updateTerritories()
     this.syncHalos()
+    this.rebuildEdgeBuffers()
     this.updateEmphasisSets()
     this.renderDirty = true
   }
@@ -1207,16 +1241,8 @@ export class KnowledgeMapEngine {
       visual.shellMaterial.dispose()
       visual.label.remove()
     }
-    for (const visual of this.edgeVisuals) {
-      visual.material.dispose()
-      visual.coneMaterial.dispose()
-      visual.label?.remove()
-    }
-    for (const visual of this.flowVisuals) {
-      visual.material.dispose()
-      visual.coneMaterial.dispose()
-      visual.label?.remove()
-    }
+    for (const visual of this.edgeVisuals) visual.label?.remove()
+    for (const visual of this.flowVisuals) visual.label?.remove()
     for (const hub of this.hubs.values()) {
       hub.material.dispose()
       hub.ringMaterial.dispose()
@@ -1226,7 +1252,7 @@ export class KnowledgeMapEngine {
       territory.caption.remove()
     }
     this.nodeGroup.clear()
-    this.edgeGroup.clear()
+    this.edgeGeometry.setDrawRange(0, 0)
     this.territoryGroup.clear()
     this.hubGroup.clear()
     this.nodeVisuals.clear()
@@ -1360,11 +1386,14 @@ export class KnowledgeMapEngine {
       visual.emphasised = emphasised
       // A tinted edge that nothing else is quietening comes forward with its
       // value, so the bronze reads even on the faint cross-cluster flows.
+      const value = edgeValue(visual.edge.weight)
       const base = visual.aggregate
         ? flowResting(visual.edge.weight)
-        : visual.crossing ? 0.16 : 0.4
-      const resting = Math.max(base, 0.16 + 0.6 * this.edgeTintOf(visual))
-      visual.opacity.target = dimmed ? 0.06 : emphasised ? 0.92 : resting
+        : (visual.crossing ? 0.055 : 0.09) + 0.085 * value
+      const resting = Math.max(base, 0.08 + 0.28 * this.edgeTintOf(visual))
+      visual.opacity.target = dimmed ? 0.012 + 0.008 * value
+        : emphasised ? 0.22 + 0.16 * value
+        : resting
       this.applyEdgeColour(visual)
     }
     for (const visual of this.edgeVisuals) emphasiseEdge(visual)
@@ -2503,6 +2532,17 @@ export class KnowledgeMapEngine {
       }
     }
 
+    // The travelling dash is intentionally capped at 24fps. It is a quiet
+    // directional cue, and repainting it at display refresh rate buys no
+    // legibility on a phone. Reduced motion leaves the static gradient and
+    // arrowheads in place without keeping the scene alive.
+    if (!this.reduced && this.edgeVisuals.length + this.flowVisuals.length > 0 &&
+      now - this.lastFlowPaint >= 42) {
+      this.lastFlowPaint = now
+      this.edgeUniforms.uPhase.value = (now % 7000) / 7000
+      this.renderDirty = true
+    }
+
     if (!this.renderDirty) return
 
     this.renderDirty = false
@@ -2604,17 +2644,60 @@ export class KnowledgeMapEngine {
   private edgeTmpDir = new THREE.Vector3()
   private edgeTmpSide = new THREE.Vector3()
   private edgeTmpMid = new THREE.Vector3()
-  private edgeTmpQuat = new THREE.Quaternion()
+  private edgeTmpView = new THREE.Vector3()
+  private edgeTmpStart = new THREE.Vector3()
+  private edgeTmpEnd = new THREE.Vector3()
+  private edgeTmpTip = new THREE.Vector3()
 
-  private updateEdgeMeshes() {
-    for (const visual of this.edgeVisuals) this.layoutEdge(visual)
-    for (const visual of this.flowVisuals) this.layoutEdge(visual)
+  /** Allocate one dynamic indexed buffer for every individual and folded flow. */
+  private rebuildEdgeBuffers() {
+    const count = this.edgeVisuals.length + this.flowVisuals.length
+    const vertices = count * 7
+    this.edgePositions = new Float32Array(vertices * 3)
+    this.edgeColours = new Float32Array(vertices * 4)
+    this.edgeTimes = new Float32Array(vertices)
+    this.edgeSeeds = new Float32Array(vertices)
+    this.edgeKinds = new Float32Array(vertices)
+    const IndexArray = vertices > 65_535 ? Uint32Array : Uint16Array
+    const indices = new IndexArray(count * 9)
+    for (let i = 0; i < count; i += 1) {
+      const v = i * 7
+      const j = i * 9
+      indices.set([v, v + 1, v + 2, v + 2, v + 1, v + 3, v + 4, v + 5, v + 6], j)
+      const seed = (i * 0.61803398875) % 1
+      for (let k = 0; k < 7; k += 1) this.edgeSeeds[v + k] = seed
+      this.edgeTimes.set([0, 0, 0.9, 0.9, 1, 0.88, 0.88], v)
+      this.edgeKinds.set([0, 0, 0, 0, 1, 1, 1], v)
+    }
+    const dynamic = (array: Float32Array, itemSize: number) =>
+      new THREE.BufferAttribute(array, itemSize).setUsage(THREE.DynamicDrawUsage)
+    this.edgeGeometry.setAttribute('position', dynamic(this.edgePositions, 3))
+    this.edgeGeometry.setAttribute('flowColor', dynamic(this.edgeColours, 4))
+    this.edgeGeometry.setAttribute('flowT', new THREE.BufferAttribute(this.edgeTimes, 1))
+    this.edgeGeometry.setAttribute('flowSeed', new THREE.BufferAttribute(this.edgeSeeds, 1))
+    this.edgeGeometry.setAttribute('flowKind', new THREE.BufferAttribute(this.edgeKinds, 1))
+    this.edgeGeometry.setIndex(new THREE.BufferAttribute(indices, 1))
+    this.edgeGeometry.setDrawRange(0, indices.length)
   }
 
-  private layoutEdge(visual: EdgeVisual) {
+  private updateEdgeMeshes() {
+    let index = 0
+    for (const visual of this.edgeVisuals) this.layoutEdge(visual, index++)
+    for (const visual of this.flowVisuals) this.layoutEdge(visual, index++)
+    const position = this.edgeGeometry.getAttribute('position')
+    const colour = this.edgeGeometry.getAttribute('flowColor')
+    if (position) position.needsUpdate = true
+    if (colour) colour.needsUpdate = true
+  }
+
+  private layoutEdge(visual: EdgeVisual, index: number) {
     const dir = this.edgeTmpDir
     const side = this.edgeTmpSide
     const mid = this.edgeTmpMid
+    const view = this.edgeTmpView
+    const start = this.edgeTmpStart
+    const end = this.edgeTmpEnd
+    const tip = this.edgeTmpTip
     const { from, to } = visual
     // Endpoints are the RENDERED positions, so a flow follows its donor into
     // the hub as the cluster folds instead of pointing at an empty spot.
@@ -2622,53 +2705,56 @@ export class KnowledgeMapEngine {
     const opacity = visual.opacity.current * fold
     dir.copy(to.pos).sub(from.pos)
     const len = dir.length()
-    if (len < 1 || opacity <= 0.01) {
-      visual.mesh.visible = false
-      visual.cone.visible = false
+    const vertex = index * 7
+    const colourOffset = vertex * 4
+    if (len < 1 || opacity <= 0.002) {
+      for (let i = 0; i < 7; i += 1) this.edgeColours[colourOffset + i * 4 + 3] = 0
       return
     }
     dir.multiplyScalar(1 / len)
     const rFrom = from.r * from.scale.current
     const rTo = to.r * to.scale.current
-    const arrow = visual.emphasised ? Math.max(4.5, visual.width * 3.2) : 0
-    // The tube runs rim to rim, not midpoint out: a hub-leaf pair centred
-    // on the geometric midpoint leaves a floating gap at the small end.
-    const startOffset = rFrom + 1
-    const endOffset = rTo + arrow + 1
-    const span = Math.max(1, len - startOffset - endOffset)
+    const width = visual.emphasised ? Math.max(visual.width, 0.72) : visual.width
+    const arrowLength = Math.max(3.2, width * 3.4)
+    const arrowWidth = Math.max(1.25, width * 1.8)
 
-    // A stable sideways direction for parallel relations to fan along.
-    side.set(dir.z, 0, -dir.x)
+    // Face the ribbon to the camera so its amount-encoded width survives a
+    // three-quarter orbit. A world-horizontal fallback handles a line that
+    // happens to point straight at the camera.
+    mid.copy(from.pos).add(to.pos).multiplyScalar(0.5)
+    view.copy(this.camera.position).sub(mid)
+    side.crossVectors(dir, view)
     if (side.lengthSq() < 0.01) side.set(1, 0, 0)
     side.normalize()
     const bow = visual.lateral * Math.min(12, len * 0.1)
 
-    const along = startOffset + span / 2
-    mid.set(
-      from.pos.x + dir.x * along + side.x * bow,
-      from.pos.y + dir.y * along + side.y * bow,
-      from.pos.z + dir.z * along + side.z * bow,
-    )
-    const width = visual.emphasised ? Math.max(visual.width, 1.5) : visual.width
-    visual.mesh.visible = true
-    visual.mesh.position.copy(mid)
-    visual.mesh.quaternion.copy(this.edgeTmpQuat.setFromUnitVectors(this.edgeUp, dir))
-    visual.mesh.scale.set(width, span, width)
-    visual.material.opacity = opacity
+    tip.copy(to.pos).addScaledVector(dir, -(rTo + 1)).addScaledVector(side, bow)
+    end.copy(tip).addScaledVector(dir, -arrowLength)
+    start.copy(from.pos).addScaledVector(dir, rFrom + 1).addScaledVector(side, bow)
+    if (start.distanceToSquared(end) < 1) start.copy(end).addScaledVector(dir, -1)
 
-    if (visual.emphasised) {
-      visual.cone.visible = true
-      visual.cone.position.set(
-        to.pos.x - dir.x * (rTo + arrow / 2 + 1),
-        to.pos.y - dir.y * (rTo + arrow / 2 + 1),
-        to.pos.z - dir.z * (rTo + arrow / 2 + 1),
-      )
-      visual.cone.quaternion.copy(this.edgeTmpQuat)
-      const coneW = Math.max(2.2, width * 2.1)
-      visual.cone.scale.set(coneW, arrow, coneW)
-      visual.coneMaterial.opacity = Math.min(1, opacity + 0.05)
-    } else {
-      visual.cone.visible = false
+    const p = this.edgePositions
+    const write = (slot: number, point: THREE.Vector3, across: number) => {
+      const offset = (vertex + slot) * 3
+      p[offset] = point.x + side.x * across
+      p[offset + 1] = point.y + side.y * across
+      p[offset + 2] = point.z + side.z * across
+    }
+    write(0, start, width)
+    write(1, start, -width)
+    write(2, end, width)
+    write(3, end, -width)
+    write(4, tip, 0)
+    write(5, end, arrowWidth)
+    write(6, end, -arrowWidth)
+
+    const c = this.edgeColours
+    for (let i = 0; i < 7; i += 1) {
+      const offset = colourOffset + i * 4
+      c[offset] = visual.colour.r
+      c[offset + 1] = visual.colour.g
+      c[offset + 2] = visual.colour.b
+      c[offset + 3] = opacity
     }
   }
 
@@ -3258,8 +3344,8 @@ export class KnowledgeMapEngine {
     this.popup.remove()
     this.sphereGeo.dispose()
     this.shellGeo.dispose()
-    this.tubeGeo.dispose()
-    this.coneGeo.dispose()
+    this.edgeGeometry.dispose()
+    this.edgeMaterial.dispose()
     this.ringGeo.dispose()
     this.haloGeo.dispose()
     this.territoryGeo.dispose()
