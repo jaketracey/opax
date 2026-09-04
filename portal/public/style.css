@@ -1761,6 +1761,26 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .interests-holder { color: var(--ink-faint); font-size: 0.8125rem; padding-top: 0.1rem; }
 .interests-holders .result-meta { grid-column: 2; }
 .interests-deleted .interests-desc { text-decoration: line-through; color: var(--ink-faint); }
+.subject-section-title {
+  font: 600 1.35rem/1.3 var(--serif); color: var(--ink); margin: var(--section-gap) 0 var(--space-2);
+}
+.declared-ties .subject-section-title { margin-top: 0; }
+.ties-list .source-title, .donor-ties-list .source-title { font-family: var(--serif); }
+.tie-declaration {
+  display: grid; grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+  gap: 0.25rem 0.6rem; align-items: start; margin: 0.45rem 0 0;
+  font-size: 0.9375rem; line-height: 1.5;
+}
+.tie-declaration.interests-deleted > span:nth-child(2) { text-decoration: line-through; color: var(--ink-faint); }
+.tie-source { display: inline-flex; align-items: center; min-height: 44px; font-size: 0.8125rem; white-space: nowrap; }
+.tie-flow { margin: 0.35rem 0 0; color: var(--ink-soft); font-size: 0.875rem; line-height: 1.55; }
+.tie-flow .party-dot-only { margin-right: 0.2rem; }
+.donor-ties-list li > span { display: block; margin-top: 0.25rem; font-size: 0.875rem; line-height: 1.5; }
+@media (max-width: 600px) {
+  .tie-declaration { grid-template-columns: 1fr; gap: 0.1rem; }
+  .tie-declaration .interests-holder { padding-top: 0; }
+  .tie-source { justify-self: start; }
+}
 .topic-digest { max-width: 68ch; }
 .topic-digest-item { border-top: 1px solid var(--line); padding: var(--row-gap) 0; }
 .topic-digest-item:first-of-type { border-top: none; padding-top: var(--space-1); }

@@ -2265,6 +2265,11 @@ async function renderPersonInterests(name, personId, sections) {
     memberships: "Memberships and offices", liabilities: "Liabilities",
     other: "Other (savings, income, assets, partnerships)",
   };
+  const TIE_LABELS = {
+    shareholdings: "Shareholding", real_estate: "Real estate", trusts: "Trust",
+    directorships: "Directorship", gifts: "Gift", travel: "Sponsored travel or hospitality",
+    memberships: "Membership or office",
+  };
   const HOLDER = { self: "Self", spouse: "Spouse", children: "Dependent" };
   const REGISTER = {
     house: "Register of Members' Interests", senate: "Register of Senators' Interests",
@@ -2275,6 +2280,65 @@ async function renderPersonInterests(name, personId, sections) {
   const base = safeUrl(data.source_url);
   const buckets = Object.keys(LABELS).filter((b) => data.buckets[b]?.count > 0);
   const hasHolders = buckets.some((b) => (data.buckets[b].items || []).some((it) => HOLDER[it.holder]));
+  const register = `${REGISTER[data.chamber] || "Register of interests"}${data.parliament ? `, ${ordinal(Number(data.parliament))} Parliament` : ""}${data.as_at ? `, as at ${esc(fmtDate(data.as_at))}` : ""}`;
+
+  const ties = Array.isArray(data.ties) ? data.ties : [];
+  const tiesByOrg = new Map();
+  for (const tie of ties) {
+    const org = String(tie.organisation || "").trim();
+    if (!org) continue;
+    if (!tiesByOrg.has(org)) tiesByOrg.set(org, []);
+    tiesByOrg.get(org).push(tie);
+  }
+  const aecRegister = "https://transparency.aec.gov.au/";
+  const tieKindLine = (tie) => {
+    const kinds = Array.isArray(tie.kinds) ? tie.kinds : [tie.kind];
+    const parts = [];
+    if (kinds.includes("donor")) parts.push(`AEC donor${tie.industry ? ` · ${industryLabel(tie.industry)}` : ""}`);
+    if (kinds.includes("lobbyist")) {
+      const where = (tie.lobbyist_jurisdictions || []).filter(Boolean).join(", ");
+      parts.push(`registered lobbying firm${where ? ` · ${where}` : ""}`);
+    }
+    if (kinds.includes("fits")) parts.push("FITS registrant");
+    return parts.join(" · ");
+  };
+  const tieFlowLine = (tie) => {
+    const flows = Array.isArray(tie.flows) ? tie.flows : [];
+    if (!flows.length) return "";
+    const shown = flows.slice(0, 4);
+    const years = flows.flatMap((f) => [Number(f.from), Number(f.to)]).filter(Number.isFinite);
+    return `<p class="tie-flow">gave ${shown.map((f) => `${partyDotHTML(f.party)}${esc(f.party)} ` +
+      `<a href="${aecRegister}" rel="noopener" target="_blank"><b>${esc(fmtMoney(f.total || 0))}</b></a>`).join(" · ")}` +
+      `${flows.length > shown.length ? ` · <span class="result-meta">and ${flows.length - shown.length} more</span>` : ""}` +
+      `${years.length ? ` <span class="result-meta">${Math.min(...years)}–${Math.max(...years)}</span>` : ""}</p>`;
+  };
+  const tiesHTML = tiesByOrg.size ? `
+    <section class="declared-ties" aria-labelledby="declared-ties-heading">
+      <h3 class="subject-section-title" id="declared-ties-heading">Declared ties to disclosed money</h3>
+      <p class="interests-summary">${base ? `<a href="${esc(base)}" rel="noopener" target="_blank"><b>${tiesByOrg.size}</b></a>` : `<b>${tiesByOrg.size}</b>`}
+        ${tiesByOrg.size === 1 ? "organisation named" : "organisations named"} in this register also ${tiesByOrg.size === 1 ? "appears" : "appear"} in an AEC donor return, on a lobbyist register or on the Foreign Influence Transparency Scheme register.</p>
+      <ul class="subject-list ties-list" role="list">${[...tiesByOrg].map(([org, orgTies]) => {
+        const sourceTie = orgTies.find((t) => t.kind === "donor") || orgTies[0];
+        const lead = { ...sourceTie, kinds: [...new Set(orgTies.flatMap((t) => t.kinds || [t.kind]))] };
+        const orgLabel = lead.donor_id
+          ? `<a class="source-title" href="${esc(subjectHash("donor", org))}">${esc(org)}</a>`
+          : `<span class="source-title">${esc(org)}</span>`;
+        const declarations = orgTies.map((tie) => {
+          const row = tie.register || {};
+          const source = safeUrl(row.url);
+          const changed = row.kind === "addition" ? `, added ${esc(fmtDate(row.date) || "later")}`
+            : row.kind === "deletion" ? `, deleted ${esc(fmtDate(row.date) || "later")}` : "";
+          return `<p class="tie-declaration${row.kind === "deletion" ? " interests-deleted" : ""}">` +
+            `${HOLDER[row.holder] ? `<span class="interests-holder">${esc(HOLDER[row.holder])}</span>` : ""}` +
+            `<span>${esc(TIE_LABELS[row.category] || row.category || "Interest")}${changed}, as declared: “${esc(row.description || "")}”</span>` +
+            `${source ? `<a class="tie-source" href="${esc(source)}" rel="noopener" target="_blank">${row.page ? `page ${esc(String(row.page))}` : "register"} ↗︎</a>` : ""}</p>`;
+        }).join("");
+        const fits = (lead.kinds || []).includes("fits") && safeUrl(lead.fits_url)
+          ? ` <a href="${esc(lead.fits_url)}" rel="noopener" target="_blank">register ↗︎</a>` : "";
+        return `<li><div>${orgLabel}</div><div class="result-meta">${esc(tieKindLine(lead))}${fits}</div>${declarations}${tieFlowLine(lead)}</li>`;
+      }).join("")}</ul>
+      <p class="fineprint">A name matches when the register spells it as the AEC or the lobbyist register does; subsidiaries, trading names and funds that hold the shares are not matched, so this list is a floor. Flows are that organisation's disclosed gifts to each party, 1998-99 to 2025-26, and say nothing about the member. Source: ${base ? `<a href="${esc(base)}" rel="noopener" target="_blank">${esc(register)} ↗︎</a>` : esc(register)}; <a href="${aecRegister}" rel="noopener" target="_blank">AEC disclosure returns, CC BY 4.0 ↗︎</a>.${ties.some((t) => (t.kinds || []).includes("fits")) ? " FITS registration is a disclosure required by law, not a finding of wrongdoing." : ""}</p>
+    </section>` : "";
 
   const itemHTML = (it) => {
     const src = safeUrl(it.url) || base;
@@ -2304,8 +2368,8 @@ async function renderPersonInterests(name, personId, sections) {
   const alterations = added || deleted
     ? `+${num(added)} addition${added === 1 ? "" : "s"}, -${num(deleted)} deletion${deleted === 1 ? "" : "s"} ${since}`
     : `no alterations notified ${since}`;
-  const register = `${REGISTER[data.chamber] || "Register of interests"}${data.parliament ? `, ${ordinal(Number(data.parliament))} Parliament` : ""}${data.as_at ? `, as at ${esc(fmtDate(data.as_at))}` : ""}`;
   slot.innerHTML = `
+    ${tiesHTML}
     <p class="kicker">Declared interests</p>
     <p class="interests-summary"><b>${num(data.total)}</b> ${data.total === 1 ? "entry" : "entries"} across ${num(buckets.length)} ${buckets.length === 1 ? "category" : "categories"} · ${alterations}</p>
     <ul class="subject-list interests-list" role="list">${rows}</ul>
@@ -2313,7 +2377,55 @@ async function renderPersonInterests(name, personId, sections) {
     ${data.ocr_rows > 0 ? `<p class="fineprint">${num(data.ocr_rows)} ${data.ocr_rows === 1 ? "entry comes" : "entries come"} from scanned pages and may contain recognition errors.</p>` : ""}
     ${data.unread_pages > 0 ? `<p class="fineprint">${num(data.unread_pages)} ${data.unread_pages === 1 ? "page" : "pages"} of the source could not be read by machine; the register itself is complete.</p>` : ""}`;
   $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
-    `<dt>Declared interests</dt><dd>${num(data.total)} ${data.total === 1 ? "entry" : "entries"}</dd>`);
+    `<dt>Declared interests</dt><dd>${num(data.total)} ${data.total === 1 ? "entry" : "entries"}</dd>` +
+    (tiesByOrg.size ? `<dt>Ties to disclosed money</dt><dd><b>${num(tiesByOrg.size)}</b> ${tiesByOrg.size === 1 ? "organisation" : "organisations"}</dd>` : ""));
+}
+
+let interestsTiesPromise = null;
+function loadInterestsTies() {
+  interestsTiesPromise ??= fetch("/interests/ties-by-donor.json")
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return interestsTiesPromise;
+}
+
+/** The donor-side mirror of the exact-name join made by export_interests.py. */
+async function renderDonorInterests(name, sections) {
+  const key = currentSubjectKey;
+  const slot = document.createElement("div");
+  slot.className = "donor-interests";
+  sections.appendChild(slot);
+  const [index, roster] = await Promise.all([loadInterestsTies(), loadParliamentarians()]);
+  if (currentSubjectKey !== key) return;
+  const rows = index?.donors?.[name];
+  if (!Array.isArray(rows) || !rows.length) { slot.remove(); return; }
+  const partyByName = new Map((roster?.people || []).map((p) => [String(p.name || "").toLowerCase(), p.party_now || p.party]));
+  const byPerson = new Map();
+  for (const row of rows) {
+    const personKey = row.id || row.name;
+    if (!byPerson.has(personKey)) byPerson.set(personKey, []);
+    byPerson.get(personKey).push(row);
+  }
+  const chamberName = { house: "House", senate: "Senate", qld_la: "Queensland Assembly" };
+  const categoryName = {
+    shareholdings: "shareholding", real_estate: "real estate", trusts: "trust",
+    directorships: "directorship", gifts: "gift", travel: "sponsored travel or hospitality",
+    memberships: "membership or office",
+  };
+  slot.innerHTML = `
+    <h3 class="subject-section-title">Named in members' registers</h3>
+    <p class="interests-summary"><b>${byPerson.size}</b> ${byPerson.size === 1 ? "parliamentarian names" : "parliamentarians name"} ${esc(name)} in their current register.</p>
+    <ul class="subject-list donor-ties-list" role="list">${[...byPerson.values()].map((personRows) => {
+      const person = personRows[0];
+      const party = partyByName.get(String(person.name || "").toLowerCase());
+      const details = personRows.map((row) => {
+        const source = safeUrl(row.url);
+        const holder = row.holder && row.holder !== "unspecified" ? `, ${row.holder}` : "";
+        return `<span>${esc(categoryName[row.category] || row.category)}${esc(holder)}: “${esc(row.description || "")}”${source ? ` <a class="tie-source" href="${esc(source)}" rel="noopener" target="_blank">source ↗︎</a>` : ""}</span>`;
+      }).join("");
+      return `<li><div class="source-title"><a href="${esc(subjectHash("person", person.name))}">${esc(person.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}</div>
+        <div class="result-meta">${esc(chamberName[person.chamber] || person.chamber || "Register")}</div>${details}</li>`;
+    }).join("")}</ul>
+    <p class="fineprint">From the registers of members' and senators' interests (48th Parliament) and the Queensland Register of Members' Interests (58th Parliament), matched on the exact name. Entries as declared, not verified by OPAX.</p>`;
 }
 
 function normName(x) {
@@ -3132,6 +3244,7 @@ async function openSubject(kind, name, manageFocus) {
     }));
     sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
+    if (!isParty) renderDonorInterests(node.label, sections);
     if (!isParty) renderDonorStateMoney(node.label, sections);
     if (isParty) renderPartyDebts(node.label, sections);
     renderDonorAccess(node.label, sections);
