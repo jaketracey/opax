@@ -120,6 +120,11 @@ function partyDotHTML(party) {
   return `<span class="party party-${cls} party-dot-only"><i aria-hidden="true"></i></span>`;
 }
 
+function samePartyLabel(a, b) {
+  const la = PARTY_MAP[String(a).toLowerCase()]?.[1] || String(a);
+  const lb = PARTY_MAP[String(b).toLowerCase()]?.[1] || String(b);
+  return la === lb;
+}
 function partyChipHTML(party) {
   if (!party) return "";
   const hit = PARTY_MAP[String(party).toLowerCase()];
@@ -1768,8 +1773,8 @@ function peopleCardHTML(people) {
   const rows = people.slice(0, PEOPLE_MAX).map((p) => {
     // Party where it is known; otherwise the parliament they sat in, which is
     // the only other thing a retrieved speech reliably says about a speaker.
-    const sub = p.party
-      ? partyChipHTML(p.party)
+    const sub = (p.party_now || p.party)
+      ? partyChipHTML(p.party_now || p.party)
       : (p.state ? esc(STATE_NAMES[p.state] || p.state) : "");
     return `<li>` +
       `<a class="people-row" href="${esc(subjectHash("person", p.name))}" tabindex="-1">` +
@@ -2166,9 +2171,32 @@ function loadPhotoMap() {
   return photoMapPromise;
 }
 
+function photoIdFor(name) {
+  return photoMap?.[String(name || "").trim().toLowerCase()] || null;
+}
 function photoUrlFor(name) {
-  const pid = photoMap?.[String(name || "").trim().toLowerCase()];
+  const pid = photoIdFor(name);
   return pid ? `/photos/${pid}.webp` : null;
+}
+
+// Portraits keyed "wd-<QID>" come from Wikimedia Commons under a per-file licence
+// (photos/credits.json, written by scripts/fetch_commons_portraits.py). The credit is
+// the licence condition, so it sits in the infobox beside the facts. Numeric keys are
+// the official APH portraits (via OpenAustralia) under the site-wide CC BY-NC-ND and
+// need no per-image line.
+let portraitCreditsPromise = null;
+async function renderPortraitCredit(name, key) {
+  const id = photoIdFor(name);
+  if (!id || !id.startsWith("wd-")) return;
+  portraitCreditsPromise ??= fetch("/photos/credits.json").then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  const c = (await portraitCreditsPromise)?.[id];
+  if (!c || currentSubjectKey !== key) return;
+  const who = c.artist || c.credit || "author not recorded";
+  const lic = c.licence ? (c.licence_url
+    ? `, <a href="${esc(c.licence_url)}" rel="noopener" target="_blank">${esc(c.licence)}</a>` : `, ${esc(c.licence)}`) : "";
+  const page = safeUrl(c.page);
+  $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
+    `<dt>Photo</dt><dd>${esc(who)}${lic}, via ${page ? `<a href="${esc(page)}" rel="noopener" target="_blank">Wikimedia Commons ↗︎</a>` : "Wikimedia Commons"}</dd>`);
 }
 
 // Voting records for the same 200 people, exported from the division tables
@@ -2392,11 +2420,17 @@ async function subjectNews(name, container) {
 
 async function subjectMentions(name, container, heading) {
   try {
-    const data = await api(`/api/search?${new URLSearchParams({ q: `"${name}"`, top_k: "6" })}`);
+    const [data, roster] = await Promise.all([
+      api(`/api/search?${new URLSearchParams({ q: `"${name}"`, top_k: "6" })}`), loadParliamentarians()]);
     if (!data.results?.length) return;
+    // Speeches made from the chair or a ministry carry an office string, not a party, so the
+    // chip goes missing (Michaelia Cash as Deputy Leader, Scott Ryan as President). The roster
+    // knows the party; today's party for sitting members, the speech-dominant one otherwise.
+    const byName = new Map((roster?.people || []).map((p) => [p.name.toLowerCase(), p.party_now || p.party]));
+    for (const r of data.results) if (!r.party && r.speaker) r.party = byName.get(String(r.speaker).toLowerCase()) || null;
     const items = data.results.slice(0, 5).map((r) => `
       <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(displayTitle(r))}</a>
-        <span class="result-meta">${metaHTML(r)}</span>
+        <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true })}</span>
         <p class="snippet">${esc((r.snippet || "").slice(0, 220))}</p></li>`).join("");
     container.insertAdjacentHTML("beforeend",
       `<p class="kicker">${esc(heading)}</p><ul class="subject-list" role="list">${items}</ul>
@@ -3102,8 +3136,9 @@ async function openSubject(kind, name, manageFocus) {
   loadPhotoMap().then(() => {
     if (currentSubjectKey !== key) return;
     const url = photoUrlFor(name);
+    const official = /^\d+$/.test(photoIdFor(name) || "");
     if (url) $("subject-title")?.insertAdjacentHTML("beforebegin",
-      `<img class="subject-portrait" src="${esc(url)}" alt="Official portrait of ${esc(name)}" width="112" height="112">`);
+      `<img class="subject-portrait" src="${esc(url)}" alt="${official ? "Official portrait" : "Portrait"} of ${esc(name)}" width="112" height="112">`);
   });
   let speeches = [];
   try {
@@ -3113,19 +3148,28 @@ async function openSubject(kind, name, manageFocus) {
   if (currentSubjectKey !== key) return;
   const partyCount = new Map();
   for (const r of speeches) if (r.party) partyCount.set(r.party, (partyCount.get(r.party) || 0) + 1);
-  const party = [...partyCount.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+  const spokeAs = [...partyCount.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+  // A sitting parliamentarian is shown under the party they sit for today (members table via
+  // parliamentarians.json "party_now", refreshed from the APH list); the speeches say which
+  // party they spoke for, so a defector reads "One Nation · formerly Nationals".
+  const roster = (await loadParliamentarians())?.people?.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
+  if (currentSubjectKey !== key) return;
+  const partyNow = roster?.party_now || null;
+  const party = partyNow || spokeAs;
+  const formerly = partyNow && spokeAs && !samePartyLabel(partyNow, spokeAs) ? spokeAs : null;
   const dates = speeches.map((r) => r.date).filter(Boolean).sort();
   const chambers = [...new Set(speeches.map((r) => STATE_NAMES[r.state] || r.state).filter(Boolean))];
   body.querySelector(".subject-tag").innerHTML = [
     party ? partyChipHTML(party) : "",
+    formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
     chambers.length ? `<span>${esc(chambers.join(" · "))} parliament</span>` : "",
   ].filter(Boolean).join(" · ") || "<span>From the parliamentary record</span>";
   const q = encodeURIComponent(name);
   const fits = await loadFits();
   if (currentSubjectKey !== key) return;
   box.innerHTML = infoboxHTML([
-    ["Type", "Parliamentarian"],
-    party && ["Party", partyChipHTML(party)],
+    ["Type", roster?.current ? "Sitting parliamentarian" : "Parliamentarian"],
+    party && ["Party", partyChipHTML(party) + (formerly ? ` <span class="fineprint" style="display:inline">formerly ${esc(formerly)}</span>` : "")],
     chambers.length && ["Parliament", esc(chambers.join(", "))],
     dates.length && ["Indexed speeches span", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
     fitsInfoRow(fits, "people", name),
@@ -3136,6 +3180,7 @@ async function openSubject(kind, name, manageFocus) {
     actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
     actionBtn("external", webSearchUrl(name), "Search the web", { external: true }),
   ]);
+  renderPortraitCredit(name, key);
   sections.insertAdjacentHTML("beforeend", `
     <form class="query-line" id="subject-ask-form" style="margin:0 0 0.4rem">
       <label class="visually-hidden" for="subject-ask-topic">Topic</label>

@@ -100,6 +100,13 @@ def main() -> None:
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8""").fetchall()
     members = {r[0]: (r[1], canon_party(r[2], r[3]))
                for r in db.execute("SELECT person_id, full_name, party, party_canonical FROM members")}
+    # Sitting federal parliamentarians and the party they sit for today (members.left_house is
+    # NULL only for the current 150 + 76 after the APH sweep of 2026-09-04). The speech-dominant
+    # "party" stays as the history; "party_now" is what the page should lead with.
+    current = {r[0]: (canon_party(r[2], r[1]) or r[1] or r[2], r[3]) for r in db.execute(
+        "SELECT person_id, party_canonical, party, chamber FROM members "
+        "WHERE left_house IS NULL AND chamber IN ('representatives', 'senate') "
+        "AND (person_id GLOB '[0-9]*' OR person_id LIKE 'aph_%')")}
     print(f"[export] {len(rows):,} speaker groups ({time.time() - t0:.0f}s)", file=sys.stderr)
 
     people = {}
@@ -159,6 +166,10 @@ def main() -> None:
             rec["first"], rec["last"] = min(p["years"]), max(p["years"])
         if top_pid and top_pid.isdigit():
             rec["pid"] = top_pid
+        if top_pid in current:
+            rec["current"] = True
+            if current[top_pid][0]:
+                rec["party_now"] = current[top_pid][0]
         # Surname-only prints ("Shoebridge"): the members table knows the person.
         if " " not in name and top_pid:
             full = members.get(top_pid, ("", None))[0] or ""
