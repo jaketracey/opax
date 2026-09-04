@@ -172,7 +172,7 @@ function injectStyles() {
   color:var(--ink-soft); background:color-mix(in srgb,var(--paper) 86%,transparent);
   font:700 clamp(.58rem,1vw,.72rem)/1.2 var(--serif); letter-spacing:-.005em;
   text-wrap:balance; text-shadow:0 1px var(--paper); white-space:nowrap; }
-.explain-scene-label.destination { max-width:8.5rem; white-space:normal; }
+.explain-scene-label.destination { max-width:8.5rem; white-space:nowrap; }
 .explain-scene-label.clock { color:var(--bronze-ink); font-size:.62rem; }
 .explain-scene-label.election { padding:0; color:var(--bronze-ink); background:transparent;
   font-size:clamp(.5rem,.78vw,.61rem); font-weight:600; }
@@ -184,11 +184,12 @@ function injectStyles() {
 .explain-scene-label.limit { max-width:15rem; padding:.25rem .45rem; color:var(--bronze-ink);
   border:1px solid var(--bronze-rule); background:color-mix(in srgb,var(--paper) 92%,transparent);
   white-space:normal; text-align:center; }
+.explain-scene-label.limit-note { max-width:8rem; color:var(--ink-soft); white-space:normal; }
 .explain-stage[data-explain-step="4"] .explain-canvas { opacity:.72; }
 .explain-sources [data-scene-citation] { transition:background-color .16s ease; }
 .explain-sources [data-scene-citation]:hover,.explain-sources [data-scene-citation]:focus-within {
   background:var(--bronze-wash); }
-.explain-narrative { min-width:0; overflow:auto; padding:clamp(1.1rem,3vw,2.2rem); }
+.explain-narrative { min-width:0; overflow:auto; overflow-x:hidden; padding:clamp(1.1rem,3vw,2.2rem); }
 .explain-title { margin:0; font:700 clamp(1.7rem,3.2vw,2.45rem)/1.12 var(--serif); letter-spacing:-.018em; }
 .explain-deck { margin:.55rem 0 1.25rem; color:var(--ink-soft); font:400 .93rem/1.55 var(--serif); }
 .explain-steps { display:flex; gap:.25rem; overflow:auto; margin:0 0 1.35rem; padding:0 0 .45rem;
@@ -242,7 +243,8 @@ function injectStyles() {
   .explain-narrative { overflow:visible; padding:1.1rem; }
   .explain-stage-label { max-width:39%; font-size:.76rem; }
   .explain-stage-label.from { left:1rem; }.explain-stage-label.to { right:1rem; }
-  .explain-stage-year { top:3rem; bottom:auto; font-size:2.2rem; }
+  .explain-stage-year { top:3.15rem; bottom:auto; font-size:1.85rem; }
+  .explain-stage-year[data-zero] { opacity:.68; }
   .explain-scene-label { max-width:6.7rem; font-size:.58rem; }
   .explain-scene-label.destination { max-width:5.8rem; }
   .explain-title { font-size:1.65rem; }
@@ -525,7 +527,7 @@ class FlowScene {
   private readonly giverColour: string
   private readonly partyColour: string
   private readonly giverPoint = new THREE.Vector3(-3.5, -.62, 0)
-  private readonly whoGiverPoint = new THREE.Vector3(-3.0, -.62, 0)
+  private readonly whoGiverPoint = new THREE.Vector3(-2.82, -.62, 0)
   private readonly receiverPoint = new THREE.Vector3(3.5, -.62, 0)
   private labels: Array<SceneLabel & { element: HTMLSpanElement }> = []
   private destinationRows: SceneRow[] = []
@@ -727,20 +729,44 @@ class FlowScene {
       const rows = this.industryRows().slice(0, 7)
       const max = Math.max(...rows.map((row) => row.total), 1)
       const vertices: number[] = []
+      const hatchVertices: number[] = []
+      const hatchColours: number[] = []
+      const ringPositions: THREE.Vector3[] = []
+      const radii: number[] = []
       rows.forEach((row, index) => {
         const y = rows.length === 1 ? -.55 : 1.45 - index * (2.95 / Math.max(1, rows.length - 1))
         const position = new THREE.Vector3(-3.42 + (index % 2) * .22, y, 0)
         const scale = .48 + .46 * Math.sqrt(row.total / max)
-        const medallion = this.makeHatchedMedallion(row.colour, .34)
-        medallion.position.copy(position)
-        medallion.scale.setScalar(scale)
-        this.whoGroup.add(medallion)
+        const radius = .34 * scale
+        ringPositions.push(position)
+        radii.push(radius)
+        const colour = new THREE.Color(row.colour)
+        for (let hatch = -2; hatch <= 2; hatch++) {
+          const localY = hatch * radius * .24
+          const half = Math.sqrt(Math.max(0, radius * radius * .7 - localY * localY))
+          const angle = -.34
+          const ax = -half * Math.cos(angle) - localY * Math.sin(angle)
+          const ay = -half * Math.sin(angle) + localY * Math.cos(angle)
+          const bx = half * Math.cos(angle) - localY * Math.sin(angle)
+          const by = half * Math.sin(angle) + localY * Math.cos(angle)
+          hatchVertices.push(position.x + ax, position.y + ay, .025, position.x + bx, position.y + by, .025)
+          hatchColours.push(colour.r, colour.g, colour.b, colour.r, colour.g, colour.b)
+        }
         for (let point = 0; point < 18; point++) {
           const curve = this.pointAt(point / 17, position, this.receiverPoint, 1.05 + index * .08)
           vertices.push(curve.x, curve.y, -.03)
           if (point > 0 && point < 17) vertices.push(curve.x, curve.y, -.03)
         }
       })
+      if (rows.length) {
+        this.whoGroup.add(this.makeInstancedRings(rows, ringPositions, radii))
+        this.whoGroup.add(new THREE.LineSegments(
+          new THREE.BufferGeometry()
+            .setAttribute('position', new THREE.Float32BufferAttribute(hatchVertices, 3))
+            .setAttribute('color', new THREE.Float32BufferAttribute(hatchColours, 3)),
+          new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: .38 }),
+        ))
+      }
       if (vertices.length) this.whoGroup.add(new THREE.LineSegments(
         new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3)),
         new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .18 }),
@@ -748,19 +774,39 @@ class FlowScene {
       return
     }
 
-    const aggregate = sumEdges(this.flow.contextEdges)
-    const receiptCount = [...aggregate.years.values()].reduce((sum, cell) => sum + Math.max(0, Math.round(cell[1])), 0)
+    // The public graph has receipt counts and dollars at edge/year granularity,
+    // not individual receipt rows. Preserve every disclosed receipt as a point
+    // and use its edge/year average for the log-scaled size; this keeps the
+    // variation between destinations instead of flattening a year to one mean.
+    const receiptCells: Array<{ year: number | null; amount: number; count: number; edge: number }> = []
+    this.flow.contextEdges.forEach((flowEdge, edge) => {
+      for (const [key, cell] of Object.entries(flowEdge.byYear || {})) {
+        const year = Number(key)
+        const count = Math.max(0, Math.round(Number(cell?.[1]) || 0))
+        if (Number.isFinite(year) && year >= FIRST_YEAR && year <= LAST_YEAR && count) {
+          receiptCells.push({ year, amount: Number(cell?.[0]) || 0, count, edge })
+        }
+      }
+      const undatedCount = Math.max(0, Math.round(Number(flowEdge.undated?.[1]) || 0))
+      if (undatedCount) receiptCells.push({ year: null, amount: Number(flowEdge.undated?.[0]) || 0, count: undatedCount, edge })
+    })
+    receiptCells.sort((a, b) => (a.year ?? LAST_YEAR + 1) - (b.year ?? LAST_YEAR + 1) || a.edge - b.edge)
+    const receiptCount = receiptCells.reduce((sum, cell) => sum + cell.count, 0)
     const positions = new Float32Array(receiptCount * 3)
     const sizes = new Float32Array(receiptCount)
     let cursor = 0
-    for (let year = FIRST_YEAR; year <= LAST_YEAR; year++) {
-      const cell = aggregate.years.get(year) || [0, 0]
-      const count = Math.max(0, Math.round(cell[1]))
-      const average = count ? cell[0] / count : 0
-      const yearAngle = Math.PI / 2 - ((year - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR + 1)) * Math.PI * 2
-      for (let index = 0; index < count; index++) {
-        const radial = .62 + this.seeded(cursor, 1) * .58
-        const angle = yearAngle + (this.seeded(cursor, 2) - .5) * .17
+    for (const cell of receiptCells) {
+      const average = cell.count ? cell.amount / cell.count : 0
+      const yearAngle = cell.year === null
+        ? -Math.PI / 2
+        : Math.PI / 2 - ((cell.year - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR + 1)) * Math.PI * 2
+      for (let index = 0; index < cell.count; index++) {
+        const radial = cell.year === null
+          ? .18 + this.seeded(cursor, 1) * .32
+          : .62 + this.seeded(cursor, 1) * .58
+        const angle = cell.year === null
+          ? this.seeded(cursor, 2) * Math.PI * 2
+          : yearAngle + (this.seeded(cursor, 2) - .5) * .17
         positions[cursor * 3] = this.whoGiverPoint.x + Math.cos(angle) * radial
         positions[cursor * 3 + 1] = this.whoGiverPoint.y + Math.sin(angle) * radial
         positions[cursor * 3 + 2] = -.04 + this.seeded(cursor, 3) * .07
@@ -786,26 +832,27 @@ class FlowScene {
     }
     this.whoGroup.add(new THREE.LineSegments(
       new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(clockVertices, 3)),
-      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .28 }),
+      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .26 }),
     ))
 
     const rows = this.partyRows().slice(0, 7)
     const max = Math.max(...rows.map((row) => row.total), 1)
     const branchVertices: number[] = []
+    const ringPositions: THREE.Vector3[] = []
+    const radii: number[] = []
     rows.forEach((row, index) => {
       const y = rows.length === 1 ? -.62 : 1.42 - index * (2.9 / Math.max(1, rows.length - 1))
       const position = new THREE.Vector3(3.46 - (index % 2) * .18, y, 0)
       const scale = .54 + .78 * Math.sqrt(row.total / max)
-      const medallion = this.makeHatchedMedallion(row.colour, .34, false)
-      medallion.position.copy(position)
-      medallion.scale.setScalar(scale)
-      this.whoGroup.add(medallion)
+      ringPositions.push(position)
+      radii.push(.34 * scale)
       for (let point = 0; point < 18; point++) {
         const curve = this.pointAt(point / 17, this.whoGiverPoint, position, 1.45 + index * .07)
         branchVertices.push(curve.x, curve.y, -.06)
         if (point > 0 && point < 17) branchVertices.push(curve.x, curve.y, -.06)
       }
     })
+    if (rows.length) this.whoGroup.add(this.makeInstancedRings(rows, ringPositions, radii))
     if (branchVertices.length) this.whoGroup.add(new THREE.LineSegments(
       new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(branchVertices, 3)),
       new THREE.LineBasicMaterial({ color: this.giverColour, transparent: true, opacity: .14 }),
@@ -1017,6 +1064,19 @@ class FlowScene {
     return -3.5 + ((year - 1993) / (2026 - 1993)) * 7
   }
 
+  private citationTime(value: string | undefined) {
+    const text = String(value || '')
+    const full = text.match(/((?:19|20)\d{2})-(\d{1,2})-(\d{1,2})/)
+    if (full) {
+      const year = Number(full[1])
+      const month = THREE.MathUtils.clamp(Number(full[2]), 1, 12)
+      const day = THREE.MathUtils.clamp(Number(full[3]), 1, 31)
+      return year + ((month - 1) + (day - 1) / 31) / 12
+    }
+    const year = Number(text.match(/(19|20)\d{2}/)?.[0])
+    return year
+  }
+
   private buildCitationTimeline() {
     const y = -2.04
     const vertices = [-3.55, y, 0, 3.55, y, 0]
@@ -1046,14 +1106,17 @@ class FlowScene {
       const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
       materials.forEach((material) => material.dispose())
     }
-    const dated = sources.map((source, sourceIndex) => {
-      const match = String(source.date || '').match(/(19|20)\d{2}/)
-      const year = Number(match?.[0])
-      return { source, sourceIndex, year }
-    }).filter((row) => row.year >= 1993 && row.year <= 2026).slice(0, 6)
-    this.citationCards = dated.map((row, index) => ({
-      x: this.timelineX(row.year), y: -1.65 + (index % 3) * .34, source: row.source, sourceIndex: row.sourceIndex,
-    }))
+    const dated = sources.map((source, sourceIndex) => ({
+      source, sourceIndex, time: this.citationTime(source.date),
+    })).filter((row) => row.time >= 1993 && row.time <= 2026).slice(0, 6)
+    const laneLastX = Array.from({ length: 6 }, () => Number.NEGATIVE_INFINITY)
+    this.citationCards = dated.map((row, index) => {
+      const x = this.timelineX(row.time)
+      let lane = laneLastX.findIndex((lastX) => Math.abs(x - lastX) >= .78)
+      if (lane < 0) lane = index % laneLastX.length
+      laneLastX[lane] = x
+      return { x, y: -1.65 + lane * .36, source: row.source, sourceIndex: row.sourceIndex }
+    })
     this.citationArrival = performance.now()
     this.activeCitation = null
     if (!this.citationCards.length) {
@@ -1125,7 +1188,7 @@ class FlowScene {
     hatch.push(-3.54, bottom, 0, 3.54, bottom, 0, -3.54, top, 0, 3.54, top, 0)
     this.limitsGroup.add(new THREE.LineSegments(
       new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(hatch, 3)),
-      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .28 }),
+      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .2 }),
     ))
     const secondArc = Array.from({ length: 61 }, (_, index) => this.pointAt(index / 60, this.giverPoint, this.receiverPoint, 2.08))
     this.limitsGroup.add(new THREE.Line(
@@ -1167,7 +1230,7 @@ class FlowScene {
       if (this.detail.kind === 'party') {
         const rows = this.industryRows().slice(0, 7)
         return rows.map((row, index) => ({
-          text: row.label,
+          text: stageShortLabel(row.label),
           position: new THREE.Vector3(-3.0 + (index % 2) * .2, rows.length === 1 ? -.55 : 1.45 - index * (2.95 / Math.max(1, rows.length - 1)), .08),
           className: 'destination', align: 'start', offsetX: 5,
         }))
@@ -1242,7 +1305,7 @@ class FlowScene {
         },
         {
           text: 'state + federal totals remain separate',
-          position: new THREE.Vector3(.9, 1.26, .08), className: 'destination', align: 'start', offsetX: 7,
+          position: new THREE.Vector3(.9, 1.26, .08), className: 'limit-note', align: 'start', offsetX: 7,
         },
       ]
     }
@@ -1382,7 +1445,7 @@ class FlowScene {
       ? historyComplete ? 10 : Math.max(1, Math.round(2 + 58 * ratio))
       : 0
     const count = Math.min(72, desired)
-    const flowT = still ? .82 : (elapsed % (historyComplete ? 9 : 2.8)) / (historyComplete ? 9 : 2.8)
+    const flowT = still ? .82 : (elapsed % (historyComplete ? 9 : 4.2)) / (historyComplete ? 9 : 4.2)
     for (let index = 0; index < count; index++) {
       const t = still ? Math.min(.88, .13 + index * .07) : (flowT + index / Math.max(count, 1)) % 1
       const point = this.pointAt(t)
@@ -1665,6 +1728,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       if (!flow || !yearLabel) return
       const amount = flow.years.get(year)?.[0] || 0
       scene?.updateYearAmount(amount)
+      yearLabel.toggleAttribute('data-zero', amount <= 0)
       yearLabel.replaceChildren(document.createTextNode(String(year)), el('small', '', `${helpers.fmtMoney(amount)} disclosed`))
     }
 
@@ -1674,13 +1738,20 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       : 'Federal disclosed-money data, read beside the parliamentary record.'
     narrative.append(el('p', 'explain-deck', String(deck)))
     const steps = el('ol', 'explain-steps')
+    const reframeStage = () => {
+      if (!matchMedia('(max-width:700px)').matches) return
+      requestAnimationFrame(() => {
+        const dialog = stage.closest<HTMLDialogElement>('dialog')
+        dialog?.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      })
+    }
     stepButtons = STEP_NAMES.map((name, index) => {
       const li = el('li')
       const button = el('button', 'explain-step', String(index + 1))
       button.type = 'button'
       button.title = name
       button.setAttribute('aria-label', `${index + 1}. ${name}`)
-      button.addEventListener('click', () => { step = index; renderStep() })
+      button.addEventListener('click', () => { step = index; renderStep(); reframeStage() })
       li.append(button)
       steps.append(li)
       return button
@@ -1712,8 +1783,8 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     prev = el('button', '', 'Previous')
     next = el('button', '', 'Next')
     prev.type = next.type = 'button'
-    prev.addEventListener('click', () => { if (step > 0) { step--; renderStep(); copy?.focus({ preventScroll: true }) } })
-    next.addEventListener('click', () => { if (step < STEP_NAMES.length - 1) { step++; renderStep(); copy?.focus({ preventScroll: true }) } })
+    prev.addEventListener('click', () => { if (step > 0) { step--; renderStep(); copy?.focus({ preventScroll: true }); reframeStage() } })
+    next.addEventListener('click', () => { if (step < STEP_NAMES.length - 1) { step++; renderStep(); copy?.focus({ preventScroll: true }); reframeStage() } })
     controls.append(prev, next)
     narrative.append(controls)
     shell.append(stage, narrative)
@@ -1727,6 +1798,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       event.preventDefault()
       step = target
       renderStep()
+      reframeStage()
     })
     renderStep()
   }).catch((error) => {
