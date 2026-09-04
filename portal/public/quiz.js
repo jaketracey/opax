@@ -197,7 +197,8 @@ const TEMPLATES = [
       if (!cands.length) return null;
       const [key, s] = pick(cands, rng);
       const peers = shuffled([...ctx.industries.entries()]
-        .filter(([other, row]) => other !== key && other !== "individual" && row.total > 0), rng)
+        .filter(([other, row]) => other !== key && other !== "individual" && row.total > 0 &&
+          Math.max(row.total, s.total) / Math.min(row.total, s.total) <= 8), rng)
         .slice(0, 3);
       if (peers.length < 3) return null;
       const options = shuffled([
@@ -302,10 +303,7 @@ const TEMPLATES = [
       pool.push({
         statement: "Every political donation in Australia appears in this data, no matter how small.",
         answer: false,
-        explanation:
-          "Only donations above the AEC's disclosure threshold ever have to be reported, so smaller " +
-          "donations are invisible. Every total you see here is a floor, not a ceiling: the real " +
-          "amounts can only be higher.",
+        explanation: "Donations below the AEC threshold are not reported, so every visible total remains a floor.",
         source: "AEC disclosure rules; OPAX's money data",
         link: METHODS_LINK,
       });
@@ -316,11 +314,10 @@ const TEMPLATES = [
             "Taxpayer money the AEC pays parties after each election (public electoral funding) is counted in these donation totals.",
           answer: false,
           explanation:
-            "Public electoral funding is deliberately left out" +
+            "The methodology leaves public electoral funding out" +
             (meta.rows_excluded_public_funding
               ? " (" + fmtCount(meta.rows_excluded_public_funding) + " rows excluded)"
-              : "") +
-            ", so the map shows only money that donors chose to give.",
+              : "") + ".",
           source: "OPAX money data methodology",
           link: METHODS_LINK,
         });
@@ -331,8 +328,8 @@ const TEMPLATES = [
           statement: "The OPAX money map shows every donor who has ever disclosed a donation.",
           answer: false,
           explanation:
-            "It shows the " + fmtCount(meta.donor_nodes) + " biggest donors by lifetime total. " +
-            "Thousands of smaller disclosed donors sit below that cut.",
+            "The map deliberately shows the " + fmtCount(meta.donor_nodes) +
+            " biggest donors by lifetime total, leaving smaller disclosed donors below the cut.",
           source: "OPAX money data methodology",
           link: METHODS_LINK,
         });
@@ -861,6 +858,7 @@ const CSS = `
   color: var(--qz-ink); font: 900 clamp(2.35rem, 7vw, 4.8rem)/0.99 var(--qz-serif);
   letter-spacing: -0.035em;
 }
+.qz-title:focus { outline: none; }
 .qz-lead {
   max-width: 66ch; margin: 0 0 clamp(1.35rem, 3vw, 2.2rem);
   color: var(--qz-soft); font: 400 clamp(1rem, 2vw, 1.16rem)/1.65 var(--qz-serif);
@@ -1021,9 +1019,11 @@ const CSS = `
 .qz-range:disabled { opacity: 0.7; cursor: default; }
 .qz-scale { display: flex; justify-content: space-between; gap: 1rem; color: var(--qz-faint); font-size: 0.72rem; }
 .qz-landing { position: relative; height: 4.1rem; margin: 0.2rem 0 0.9rem; border-top: 1px solid var(--qz-line-strong); }
-.qz-landing-mark { position: absolute; top: -0.35rem; transform: translateX(-50%); text-align: center; }
+.qz-landing-mark { position: absolute; top: -0.35rem; width: 0; text-align: center; }
 .qz-landing-mark::before { content: ""; display: block; width: 1px; height: 1.25rem; margin: 0 auto 0.15rem; background: currentColor; }
-.qz-landing-mark span { display: block; min-width: 6.5rem; color: inherit; font-size: 0.7rem; line-height: 1.3; }
+.qz-landing-mark span { display: block; width: 6.5rem; color: inherit; font-size: 0.7rem; line-height: 1.3; transform: translateX(-50%); }
+.qz-landing-mark.is-edge-start span { transform: none; text-align: left; }
+.qz-landing-mark.is-edge-end span { transform: translateX(-100%); text-align: right; }
 .qz-landing-mark--guess { top: 1.8rem; color: var(--qz-faint); }
 .qz-landing-mark--guess::before { height: 0.65rem; }
 .qz-landing-mark--answer { color: var(--qz-bronze-ink); font-weight: 700; }
@@ -1050,9 +1050,10 @@ const CSS = `
   .qz-stage.is-correct .qz-landing-mark--answer { animation: qz-land 420ms cubic-bezier(.2,.75,.25,1.15); }
   @keyframes qz-ring { from { opacity: 0.8; transform: scale(0.72); } to { opacity: 0; transform: scale(1.18); } }
   @keyframes qz-shake { 0%, 100% { transform: none; } 30% { transform: translateX(-5px); } 65% { transform: translateX(4px); } }
-  @keyframes qz-land { from { opacity: 0; transform: translate(-50%, -0.8rem); } to { opacity: 1; transform: translate(-50%, 0); } }
+  @keyframes qz-land { from { opacity: 0; transform: translateY(-0.8rem); } to { opacity: 1; transform: none; } }
 }
 .qz-result { max-width: 64rem; margin-inline: auto; }
+.qz-result:focus { outline: none; }
 .qz-result-head { display: grid; grid-template-columns: minmax(14rem, 0.38fr) 1fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: end; padding-bottom: clamp(1.2rem, 3vw, 2rem); border-bottom: 1px solid var(--qz-line-strong); }
 .qz-result-label { margin: 0 0 0.35rem; color: var(--qz-bronze-ink); font-size: 0.85rem; font-weight: 650; }
 .qz-result-score {
@@ -1074,7 +1075,8 @@ const CSS = `
 .qz-loading, .qz-error { max-width: 50rem; padding: 1rem 0 2rem; color: var(--qz-soft); }
 .qz-visually-hidden {
   position: absolute; width: 1px; height: 1px; margin: -1px;
-  padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+  white-space: normal; overflow-wrap: anywhere; contain: strict; border: 0;
 }
 @media (max-width: 720px) {
   .qz-setup { grid-template-columns: 1fr; gap: 1.3rem; }
@@ -1085,7 +1087,10 @@ const CSS = `
   .qz-root { padding-inline: 0; }
   .qz-title { max-width: 9ch; }
   .qz-decks { grid-template-columns: 1fr; }
-  .qz-deck { min-height: 0; }
+  .qz-deck { min-height: 52px; padding: 0.7rem 0.85rem; }
+  .qz-deck-name { margin: 0; }
+  .qz-deck-note { display: none; }
+  .qz-lead { font-size: 0.96rem; line-height: 1.55; }
   .qz-topbar { grid-template-columns: 1fr auto; }
   .qz-points { grid-column: 1; grid-row: 2; }
   .qz-multiplier { grid-column: 2; grid-row: 1 / span 2; }
@@ -1099,6 +1104,13 @@ const CSS = `
   .qz-actions .qz-btn { flex: 1 1 100%; }
   .qz-recap-item { grid-template-columns: 1.6rem minmax(0, 1fr); }
   .qz-recap-mark { grid-column: 2; }
+}
+@media (min-width: 800px) {
+  .qz-recap {
+    display: grid; grid-auto-flow: column; grid-template-rows: repeat(var(--qz-recap-rows), auto);
+    grid-auto-columns: minmax(0, 1fr); column-gap: 2.5rem; border-bottom: 0;
+  }
+  .qz-recap-item { grid-template-columns: 1.6rem minmax(0, 1fr) auto; }
 }
 @media (prefers-reduced-motion: reduce) {
   .qz-root *, .qz-root *::before, .qz-root *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
@@ -1235,6 +1247,21 @@ export function mountQuiz(container, helpers = {}) {
     }
   }
 
+  function scrollToQuizTop() {
+    const scroller = container.closest("dialog");
+    if (scroller) scroller.scrollTop = 0;
+  }
+
+  function proofAnchor(link, text) {
+    const anchor = h(doc, "a", { href: link.href, text: text || link.label });
+    anchor.addEventListener("click", (event) => {
+      if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+        container.closest("dialog")?.close();
+      }
+    });
+    return anchor;
+  }
+
   /* ----- screens ----- */
 
   function renderLoading() {
@@ -1263,7 +1290,7 @@ export function mountQuiz(container, helpers = {}) {
       ? approxCount(data.corpus.collected_speeches) : "hundreds of thousands of";
     const intro = h(doc, "div", { class: "qz-intro" });
     intro.appendChild(h(doc, "p", { class: "qz-edition", text: "A game from the public record" }));
-    intro.appendChild(h(doc, "h2", { class: "qz-title", tabindex: "-1", text: "The Record Quiz" }));
+    intro.appendChild(h(doc, "h2", { class: "qz-title", text: "The Record Quiz" }));
     intro.appendChild(h(doc, "p", {
       class: "qz-lead",
       text:
@@ -1316,7 +1343,7 @@ export function mountQuiz(container, helpers = {}) {
         "figures, so they remain a floor rather than a complete account of political funding.",
     }));
     stage.appendChild(intro);
-    intro.querySelector(".qz-title").focus();
+    scrollToQuizTop();
   }
 
   function renderQuestion() {
@@ -1358,7 +1385,8 @@ export function mountQuiz(container, helpers = {}) {
     else if (q.kind === "order") renderOrder(q, answerArea);
     else renderMeasure(q, answerArea);
 
-    heading.focus();
+    heading.focus({ preventScroll: true });
+    scrollToQuizTop();
   }
 
   function addConfirm(answerArea, enabled = false) {
@@ -1544,13 +1572,14 @@ export function mountQuiz(container, helpers = {}) {
         input.disabled = true;
         confirm.disabled = true;
         const landing = h(doc, "div", { class: "qz-landing", "aria-label": "Your guess and the answer" });
-        const guessPos = Math.max(2, Math.min(98, sliderPosition(q, guess)));
-        const answerPos = Math.max(2, Math.min(98, sliderPosition(q, q.answer)));
+        const guessPos = Math.max(0, Math.min(100, sliderPosition(q, guess)));
+        const answerPos = Math.max(0, Math.min(100, sliderPosition(q, q.answer)));
+        const edgeClass = (position) => position < 18 ? " is-edge-start" : position > 82 ? " is-edge-end" : "";
         landing.appendChild(h(doc, "div", {
-          class: "qz-landing-mark qz-landing-mark--answer", style: "left:" + answerPos + "%",
+          class: "qz-landing-mark qz-landing-mark--answer" + edgeClass(answerPos), style: "left:" + answerPos + "%",
         }, h(doc, "span", { text: "Answer " + formatQuestionValue(q, q.answer) })));
         landing.appendChild(h(doc, "div", {
-          class: "qz-landing-mark qz-landing-mark--guess", style: "left:" + guessPos + "%",
+          class: "qz-landing-mark qz-landing-mark--guess" + edgeClass(guessPos), style: "left:" + guessPos + "%",
         }, h(doc, "span", { text: "You " + formatQuestionValue(q, guess) })));
         measure.appendChild(landing);
       },
@@ -1619,7 +1648,7 @@ export function mountQuiz(container, helpers = {}) {
     const verdict = h(doc, "p", { class: "qz-verdict", text: result.detail + " +" + gained + " points" });
 
     const provenance = h(doc, "p", { class: "qz-provenance" }, "Source: " + q.source + ". ");
-    provenance.appendChild(h(doc, "a", { href: q.link.href, text: q.link.label }));
+    provenance.appendChild(proofAnchor(q.link));
 
     const isLast = state.i + 1 >= state.round.length;
     const nextBtn = h(doc, "button", {
@@ -1646,7 +1675,7 @@ export function mountQuiz(container, helpers = {}) {
     clearStage();
     const total = state.round.length;
     const rank = rankFor(state.correct, total);
-    const result = h(doc, "div", { class: "qz-result" });
+    const result = h(doc, "div", { class: "qz-result", tabindex: "-1" });
     const scoreBlock = h(doc, "div", {},
       h(doc, "p", { class: "qz-result-label", text: deckLabel(state.deck) + " · " + state.correct + " of " + total + " right" }),
       h(doc, "p", { class: "qz-result-score", text: fmtCount(state.points) }));
@@ -1658,14 +1687,16 @@ export function mountQuiz(container, helpers = {}) {
         h(doc, "span", { text: "Final score " + fmtCount(state.points) + " points" })));
     result.appendChild(h(doc, "div", { class: "qz-result-head" }, scoreBlock, rankBlock));
     result.appendChild(h(doc, "h3", { class: "qz-recap-title", text: "The answers on the record" }));
-    const recap = h(doc, "ol", { class: "qz-recap" });
+    const recap = h(doc, "ol", {
+      class: "qz-recap", style: "--qz-recap-rows:" + Math.ceil(state.attempts.length / 2),
+    });
     state.attempts.forEach((attempt, index) => {
       recap.appendChild(h(doc, "li", { class: "qz-recap-item" },
         h(doc, "span", { class: "qz-recap-no", text: String(index + 1) }),
         h(doc, "div", {},
           h(doc, "p", { class: "qz-recap-question", text: attempt.prompt }),
           h(doc, "p", { class: "qz-recap-answer" },
-            h(doc, "a", { href: attempt.link.href, text: attempt.answer }))),
+            proofAnchor(attempt.link, attempt.answer))),
         h(doc, "span", {
           class: "qz-recap-mark" + (attempt.correct ? "" : " is-wrong"),
           text: attempt.correct ? "+" + attempt.points : attempt.points ? "+" + attempt.points : "—",
@@ -1706,7 +1737,8 @@ export function mountQuiz(container, helpers = {}) {
     stage.appendChild(result);
 
     announce("You scored " + state.points + " points, with " + state.correct + " out of " + total + " right. Your rank: " + rank.name + ".");
-    again.focus();
+    result.focus({ preventScroll: true });
+    scrollToQuizTop();
   }
 
   function resultText(rank) {

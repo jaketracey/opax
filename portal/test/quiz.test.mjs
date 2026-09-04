@@ -56,6 +56,14 @@ for (const [id, question] of built) {
       assert.ok(existsSync(join(publicDir, option.photo)), id + " portrait exists: " + option.photo);
     }
   }
+  const figureOptions = (question.options || []).filter((option) => Number.isFinite(option.value));
+  if (figureOptions.some((option) => option.correct)) {
+    const answer = figureOptions.find((option) => option.correct).value;
+    for (const option of figureOptions) {
+      const ratio = Math.max(answer, option.value) / Math.min(answer, option.value);
+      assert.ok(ratio <= 10, id + " figure distractors stay within one order of magnitude");
+    }
+  }
 }
 
 for (const deck of ["money", "words", "mixed"]) {
