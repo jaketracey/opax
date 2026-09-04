@@ -1372,6 +1372,7 @@ a.barrow-name:hover { color: var(--bronze-ink); }
   #report-figures .tile { max-width: none; }
 }
 button.action-btn { background: none; cursor: pointer; font: 600 0.875rem/1.3 var(--sans); }
+button.action-btn[data-explain] { width:100%; min-height:44px; justify-content:flex-start; text-align:left; }
 a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top: 1.6rem; }
 .tile .tile-source { display: block; margin-top: 0.35rem; font-size: 0.75rem; color: var(--ink-faint); }
 .tile .tile-source a { color: var(--ink-faint); }

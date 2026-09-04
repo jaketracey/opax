@@ -299,9 +299,11 @@ const CSS = `
   white-space: nowrap; }
 .mm-row-amt { font-weight: 600; white-space: nowrap; }
 .mm-row-years { font-size: 11px; color: #8a8578; white-space: nowrap; }
-.mm-ask { display: block; margin-top: 12px; padding: 8px 12px; border-radius: 9px;
+.mm-ask { display: block; box-sizing: border-box; width: 100%; min-height: 44px;
+  margin-top: 12px; padding: 8px 12px; border: 0; border-radius: 9px;
   background: #142a43; color: #ffffff; font-size: 13px; font-weight: 600;
-  text-decoration: none; text-align: center; }
+  font-family: inherit; line-height: 1.35; text-decoration: none; text-align: center;
+  cursor: pointer; }
 .mm-ask:hover { background: #1d3a5c; color: #ffffff; }
 .mm-ask-quiet { background: none; color: #33322e !important; border: 1px solid #d5d1c4;
   margin-top: 8px; }
@@ -823,6 +825,21 @@ export async function mountMoneyMap(
   }
   const subjectUrl = (kind: 'donor' | 'party', label: string) =>
     `/subject/${kind}/${encodeURIComponent(label)}`
+  const jurisdiction = typeof raw.meta?.jurisdiction === 'string'
+    ? raw.meta.jurisdiction
+    : 'federal'
+  /** Keep the map independent of the page shell: it only describes the held flow. */
+  const explain = (parent: HTMLElement, detail: Record<string, string>) => {
+    const button = el('button', 'mm-ask', parent)
+    button.type = 'button'
+    button.textContent = 'Explain this flow'
+    button.addEventListener('click', () => {
+      container.dispatchEvent(new CustomEvent('opax:explain', {
+        bubbles: true,
+        detail: { ...detail, jurisdiction },
+      }))
+    })
+  }
 
   /** The industry that gave a party the most, for its ask-trigger. */
   const topIndustryOf = (partyId: string): string | null => {
@@ -904,6 +921,7 @@ export async function mountMoneyMap(
         `/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`,
         `What was said about ${shortName(node.label)}?`, true)
       trigger(card, subjectUrl('donor', node.label), 'Full profile', true)
+      explain(card, { kind: 'donor', from: node.label })
     } else {
       listTitle.textContent = 'Top donors shown on the map'
       const incoming = view.edges
@@ -931,6 +949,7 @@ export async function mountMoneyMap(
           `Ask what ${node.label} said about ${industry}`)
       }
       trigger(card, subjectUrl('party', node.label), 'Full profile', true)
+      explain(card, { kind: 'party', to: node.label })
     }
   }
 
@@ -985,6 +1004,7 @@ export async function mountMoneyMap(
     if (!['individuals', 'other'].includes(group)) {
       trigger(card, askUrl(group), `What has parliament said about ${group}?`)
     }
+    explain(card, { kind: 'industry', from: groupName, to: party.label })
     const open = el('button', 'mm-ask mm-ask-quiet', card)
     open.type = 'button'
     open.textContent = `Show only ${group} on the map`
@@ -1035,6 +1055,7 @@ export async function mountMoneyMap(
           `&from=${edge.firstYear}&to=${edge.lastYear}`,
         `What was said about ${industry} in ${span}?`)
     }
+    explain(card, { kind: 'donor', from: donor.label, to: party.label })
   }
 
   /**

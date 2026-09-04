@@ -2411,6 +2411,12 @@ function actionBtn(icon, href, label, { external = false, primary = false } = {}
     `${iconSvg(icon)}<span>${esc(label)}${external ? " ↗︎" : ""}</span></a>`;
 }
 
+/** One inert-looking page action, routed through the single delegated explain handler. */
+function explainBtn(detail, label, { primary = false } = {}) {
+  return `<button type="button" class="action-btn${primary ? " action-primary" : ""}" ` +
+    `data-explain="${esc(JSON.stringify(detail))}">${iconSvg("map")}<span>${esc(label)}</span></button>`;
+}
+
 
 // --- portraits & monograms ---------------------------------------------------
 // 200 self-hosted MP portraits (WebP, sourced from official APH/OpenAustralia
@@ -3806,13 +3812,19 @@ async function openSubject(kind, name, manageFocus) {
           `<span class="alias-list alias-rest">${a.slice(3).map(esc).join("; ")}</span></details>`;
       })()],
     ], "", [
+      explainBtn(
+        isParty
+          ? { kind: "party", to: node.label, jurisdiction: "federal" }
+          : { kind: "donor", from: node.label, jurisdiction: "federal" },
+        isParty ? "Explain where the money comes from" : "Explain this money",
+        { primary: true }),
       actionBtn("ask",
         askHash(isParty
           ? `What has parliament said about the ${node.label}?`
           : ["individual", "other", ""].includes(String(node.industry || "").toLowerCase())
             ? `What has parliament said about ${node.label}?`
             : `What has parliament said about ${industryLabel(node.industry)}?`),
-        `Ask what parliament said about ${isParty ? "them" : (["individual", "other", ""].includes(String(node.industry || "").toLowerCase()) ? "this donor" : "this industry")}`, { primary: true }),
+        `Ask what parliament said about ${isParty ? "them" : (["individual", "other", ""].includes(String(node.industry || "").toLowerCase()) ? "this donor" : "this industry")}`),
       actionBtn("search", searchHash(`"${node.label}"`, {}), "Search mentions in the record"),
       actionBtn("download", "/graph/money.json", "Download the data"),
     ]);
@@ -3961,6 +3973,9 @@ function topicMoneyHTML(ind) {
       interests disclosed <b>${esc(fmtMoney(total))}</b> in donations to political parties.</p>
     ${barList(donorRows, { fmt: fmtMoney, heading: `Largest ${industryLabel(ind)} donors`,
       linkTo: (nm) => subjectHash("donor", nm) })}
+    <p class="action-row">${explainBtn({
+      kind: "industry", from: industryLabel(ind), jurisdiction: "federal",
+    }, "Explain this flow", { primary: true })}</p>
     <p class="fineprint">${esc(AEC_NOTE)} <a href="/money">Explore on the money map</a></p>`;
 }
 
@@ -5200,6 +5215,76 @@ async function renderCampaignerEntry(name, key) {
 
 const explore = { tm: null, tide: null, quiz: null, ledger: null, matrix: null, wd: null, tvn: null };
 
+let explainInstance = null;
+let explainOpenSeq = 0;
+let explainReturnCrumbs = [];
+
+function readCrumbs() {
+  return [...document.querySelectorAll("#crumbs li")].slice(1).map((li) => {
+    const link = li.querySelector("a");
+    return { label: li.querySelector(".crumb-label")?.textContent || "", ...(link ? { href: link.getAttribute("href") } : {}) };
+  }).filter((item) => item.label);
+}
+
+/** The one shell entry point for map events and every data-explain button. */
+async function openExplain(detail) {
+  if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
+  const clean = {
+    kind: detail.kind,
+    ...(typeof detail.from === "string" && detail.from.trim() ? { from: detail.from.trim() } : {}),
+    ...(typeof detail.to === "string" && detail.to.trim() ? { to: detail.to.trim() } : {}),
+    jurisdiction: MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal",
+  };
+  const dialog = $("dialog-explain");
+  const body = $("explain-body");
+  const seq = ++explainOpenSeq;
+  explainInstance?.destroy?.();
+  explainInstance = null;
+  explainReturnCrumbs = readCrumbs();
+  setCrumbs([...explainReturnCrumbs, { label: "Explain this flow" }]);
+  body.replaceChildren();
+  if (!dialog.open) dialog.showModal();
+
+  let waiting = null;
+  try {
+    const explainModule = import("/explain.js");
+    const wombat = await import("/wombat.js");
+    if (seq !== explainOpenSeq || !dialog.open) return;
+    waiting = wombat.mountWombat(body, { label: "Tracing the disclosed money." });
+    const mod = await explainModule;
+    if (seq !== explainOpenSeq || !dialog.open) { waiting?.destroy?.(); return; }
+    waiting?.destroy?.();
+    body.replaceChildren();
+    explainInstance = mod.mountExplain(body, clean, {
+      displayTitle, searchHash, askHash, subjectHash, partyChipHTML, fmtMoney,
+      money: clean.jurisdiction === "federal" ? moneyData : null,
+      loadMoney: loadMoneyFile,
+      loadAccess,
+      loadFits,
+      askRecord,
+      renderAnswer,
+      normName,
+      industryLabel,
+      electionYears: [...BALANCE_ELECTION_YEARS],
+      aecNote: AEC_NOTE,
+      stateNotSummed: STATE_NOT_SUMMED,
+    });
+  } catch (err) {
+    waiting?.destroy?.();
+    if (seq !== explainOpenSeq || !dialog.open) return;
+    body.innerHTML = `<p class="status error">This explanation could not load (${esc(String(err.message || err))}). Try again shortly.</p>`;
+  }
+}
+
+// All page hook points carry plain JSON and converge here; the map sends the
+// same detail as a bubbling event so its bundle has no dependency on app.js.
+document.addEventListener("click", (e) => {
+  const button = e.target instanceof Element ? e.target.closest("[data-explain]") : null;
+  if (!button) return;
+  try { openExplain(JSON.parse(button.dataset.explain)); } catch { /* malformed markup is inert */ }
+});
+document.addEventListener("opax:explain", (e) => openExplain(e.detail));
+
 const GAMES = {
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
@@ -5248,9 +5333,24 @@ for (const dialog of document.querySelectorAll(".game-dialog")) {
   // Closed by any route (button, backdrop, Esc): the trail is Explore's again,
   // unless the page underneath has already moved on.
   dialog.addEventListener("close", () => {
+    if (dialog.id === "dialog-explain") {
+      explainOpenSeq++;
+      explainInstance?.destroy?.();
+      explainInstance = null;
+      if (explainReturnCrumbs) setCrumbs(explainReturnCrumbs);
+      explainReturnCrumbs = [];
+      return;
+    }
     if (parseHash().segs[0] === "explore") setCrumbs([{ label: "Explore" }]);
   });
   dialog.addEventListener("click", (e) => {
+    // An explanation's profile, search and cited-document links leave the
+    // modal before the shell router paints their destination underneath it.
+    if (dialog.id === "dialog-explain" && e.target instanceof Element && e.target.closest("a[href]")) {
+      explainReturnCrumbs = null;
+      dialog.close();
+      return;
+    }
     // Only the dialog itself is the backdrop; a click on anything inside it
     // is never a dismissal. Without this guard a keyboard-activated button
     // (Enter, or the quiz's 1/2/3 shortcuts calling click()) reports

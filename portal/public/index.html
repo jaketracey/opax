@@ -56,7 +56,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=06ead61552">
+<link rel="stylesheet" href="/style.css?v=35fca0ad96">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -965,6 +965,16 @@
   </div>
 </main>
 
+<!-- Lives outside the route panels because money explanations can open from
+     the map, an encyclopedia entry, or a topic page. The shared game-dialog
+     wiring supplies Escape, backdrop dismissal and the 44px close target. -->
+<dialog class="game-dialog explain-dialog" id="dialog-explain" aria-label="Explain this flow">
+  <div class="game-dialog-head">
+    <button type="button" class="game-close" data-close="dialog-explain" aria-label="Close">✕</button>
+  </div>
+  <div id="explain-body" class="game-dialog-body explain-dialog-body"></div>
+</dialog>
+
 <footer>
   <div class="wrap footer-lines">
     <p>OPAX is independent and open source (AGPL-3.0). It is not affiliated with any parliament,
@@ -981,6 +991,6 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/app.js?v=f2f1fbcce6" defer></script>
+<script src="/app.js?v=ae742a8c57" defer></script>
 </body>
 </html>
