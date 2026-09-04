@@ -7594,6 +7594,7 @@ async function openDocPage(slug, manageFocus) {
       (doc.speaker ? titleSubject(doc) : "");
     $("doc-topic").textContent = topic ? String(topic) : "";
     $("doc-topic").hidden = !topic;
+    $("doc-topic").classList.toggle("doc-topic-long", String(topic || "").length > 100);
     // One byline, each fact once: party · seat · chamber · date · source.
     const chamber = CHAMBER_NAMES[String(doc.labels?.chamber || "").toLowerCase()];
     const state = doc.labels?.state;
@@ -7626,9 +7627,9 @@ async function openDocPage(slug, manageFocus) {
       const q = encodeURIComponent(doc.speaker);
       const ext = (href, label) =>
         `<a href="${href}" rel="noopener" target="_blank">${label} ↗︎</a>`;
-      speakerLinks.innerHTML = `Research ${esc(doc.speaker)}: ` + [
-        ext(`https://theyvoteforyou.org.au/search?query=${q}`, "voting record"),
-        ext(`https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "parliamentary profile"),
+      speakerLinks.innerHTML = [
+        ext(`https://theyvoteforyou.org.au/search?query=${q}`, "Voting record"),
+        ext(`https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliament"),
         ext(`https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(`${doc.speaker} Australian politician`)}`, "Wikipedia"),
       ].join(" · ");
       speakerLinks.hidden = false;
@@ -7639,7 +7640,12 @@ async function openDocPage(slug, manageFocus) {
       // Only worth naming when something else stands above it.
       $("doc-record-head").hidden = false;
     }
-    $("doc-text").textContent = doc.text || "(no text)";
+    $("doc-text").replaceChildren(...String(doc.text || "(no text)").split(/\r\n|[\n\r]/).filter((line) => line.trim()).map((line) => {
+      const p = document.createElement("p");
+      p.textContent = line;
+      return p;
+    }));
+    $("doc-ask").href = askHash(`What has parliament said about ${topic || doc.title}?`);
     $("doc-actions").hidden = false;
     $("doc-profile").hidden = !doc.speaker;
     $("doc-more").hidden = !doc.speaker;
