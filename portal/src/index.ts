@@ -556,26 +556,17 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
   const turns: { author: string; text: string }[] = []
   // Hansard passages are first-person with no in-text attribution, so a
   // speaker-filtered ask ("What did X say about…") reads to the model as
-  // unattributed text and it refuses. One provenance turn fixes that
-  // (verified live: Wilkie/gambling went from refusal to a cited answer).
-  // Filtered retrieval returns a narrow, often mixed context (a speaker's
-  // gambling remarks beside their unrelated speeches); the model tends to
-  // refuse the whole set. Tell it to answer from the passages that do apply.
-  // Measured on Howard/gambling (8/20 passages on-topic): the softer wording
-  // still refused 2 of 3 runs; this wording answered 3/3 with 5-6 citations.
-  const filtered = [speaker, party, state, topic, from, to].some((v) => v?.trim())
-  const noteParts: string[] = []
-  if (speaker?.trim()) {
-    noteParts.push(
-      `Note: every passage in the context is from a speech delivered by ${speaker.trim()} in an Australian parliament; first-person passages are their own words.`,
-    )
-  }
-  if (filtered) {
-    noteParts.push(
-      'Some passages may be off-topic. Answer from the passages that do address the question, even if only a few do or they address it only in part; quote or closely paraphrase them and cite them. Say the record is thin only if no passage touches the subject at all. Passages that mention the subject DO count as data: if even one passage mentions it, you must not reply that there is not enough data; summarise what that passage says instead.',
-    )
-  }
-  if (noteParts.length) turns.push({ author: 'USER', text: noteParts.join(' ') })
+  // unattributed text and it refuses; a provenance line fixes that (verified
+  // live: Wilkie/gambling went from refusal to a cited answer). Filtered
+  // retrieval is also a narrow, mixed context the model tends to refuse
+  // whole, so the prompt tells it to answer from the passages that apply.
+  // Both used to travel as a guidance turn in `context`; with the custom
+  // prompt below that turn is worse than useless (measured 2026-09-04 on
+  // "hospitality", 1998-2006, 20/20 passages on topic: the prompt alone
+  // answered every time, the prompt plus the turn refused every time).
+  const provenance = speaker?.trim()
+    ? `Every passage is from a speech delivered by ${speaker.trim()} in an Australian parliament; first-person passages are their own words. `
+    : ''
   if (Array.isArray(context) && context.length > 0) {
     turns.push(
       ...context
@@ -603,10 +594,10 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
     system:
       'You are OPAX, a research assistant over the Australian parliamentary record. You answer strictly from the passages provided, citing them. You never invent facts.',
     user:
-      'Passages from the record (a speech is the named speaker\'s own words; first-person text is theirs):\n{context}\n\n' +
+      `${provenance}Passages from the record (a speech is the named speaker's own words; first-person text is theirs):\n{context}\n\n` +
       'Question: {question}\n\n' +
       'Instructions: Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
-      'Ignore passages that are off-topic. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
+      'Ignore passages that are off-topic; answer from the ones that apply even if only a few do or they address it only in part. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
       'Begin with the answer itself. Never open with a preamble such as "Based on the provided context", "According to the passages" or "The context shows": the reader knows the answer comes from the record. ' +
       'Do not explain how the passages are numbered, ordered or provided. ' +
       'Only if NO passage mentions the subject at all, reply exactly: The record retrieved for this question does not discuss it.',
