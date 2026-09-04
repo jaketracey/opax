@@ -1,9 +1,11 @@
 # Registers of members' interests — audit, source survey, parsers, accuracy, load, exposure design
 
-Status 2026-09-02: federal House (48th Parliament) and Queensland (58th) registers are
-parsed and **loaded into new `ext_interests*` tables on `desktop`**; the Senate parser is
-written and verified on two saved pages but the other 74 senators are not fetched (access
-decision below). **Nothing has been pushed to the KB**; every step that costs money or
+Status 2026-09-04: federal House (48th Parliament), **Senate (73 of 74)** and Queensland
+(58th) registers are parsed and **loaded into new `ext_interests*` tables on `desktop`** and **served on
+person pages** (`portal/public/interests/`, 317 people, export of 2026-09-04).
+The Senate was fetched on 2026-09-04 through the Firecrawl API with the user's approval
+(`scripts/fetch_senate_firecrawl.py`, ~80 credits); one senator (317026 Whitten) has no
+statement page on the site. **Nothing has been pushed to the KB**; every step that costs money or
 touches a third party's terms is marked **GATE (user decision)**.
 
 Recommendation in one paragraph: expose declared interests on person pages **now** from
@@ -11,10 +13,10 @@ Recommendation in one paragraph: expose declared interests on person pages **now
 PDF, with a measured **995 / 997 (99.8 %) entry-exact extraction** on a 26-member House
 sample and 262 / 272 (96.3 %) on QLD — and keep the register **out of the KB** for the moment (CC BY-NC-ND
 on aph.gov.au makes a re-rendered statement a derivative; the QLD terms could not be read
-past its WAF). The one access question worth a decision is the Senate: www.aph.gov.au's
-WAF blocks every non-browser client, so completing the 76 senators needs either a browser
-session that saves the pages, an explicit `--browser-ua` opt-in, or ~76 firecrawl credits.
-Of the other states only TAS and ACT are fetchable, and both publish copier scans (OCR).
+past its WAF). The Senate access question is settled: www.aph.gov.au's WAF blocks every non-browser
+client, robots.txt allows the paths (`Allow: /`, only the events calendar is disallowed),
+and the register is fetched through Firecrawl at 1 credit a page rather than by spoofing a
+browser. Of the other states only TAS and ACT are fetchable, and both publish copier scans (OCR).
 
 ---
 
@@ -62,7 +64,7 @@ drop it whenever convenient. The new tables supersede it.
   (same PDF host) — not fetched; the parser is parliament-agnostic (`PARLIAMENT` read from
   the cover page).
 
-### Federal — Senate (parser verified, fetch gated)
+### Federal — Senate (done 2026-09-04)
 
 * One server-rendered HTML page per senator:
   `https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/<id>`
@@ -70,11 +72,21 @@ drop it whenever convenient. The new tables supersede it.
   Same WAF as the index. Two saved pages (`16913` Ayres, `298839` Allman-Payne) parse
   exactly: 16 + 9 and 14 + 3 non-nil table rows / alteration items in the HTML vs 16 + 9 and
   14 + 3 parsed rows, per-section counts identical.
-* **GATE (user decision) — how to fetch the other 74:** (a) a browser session saves the
-  index and each senator page into a directory → `senate --senate-html-dir DIR`; (b) opt in
-  to `--browser-ua` (the module never spoofs by default because the WAF is an explicit
-  anti-bot control); (c) firecrawl at ~1 credit per page (that is how the previous session
-  obtained the two pages and the House index). robots.txt cannot be read from here.
+* **Fetch (user-approved 2026-09-04): Firecrawl.** `scripts/fetch_senate_firecrawl.py`
+  reads the API key from `FIRECRAWL_API_KEY` or the firecrawl MCP entry in `~/.claude.json`,
+  pulls the index and every senator page as raw HTML (basic proxy, 1 credit a page, all
+  200) into `~/.cache/autoresearch/conduct_interests/federal/senate/48p/pages/<id>.html`,
+  and skips pages already on disk. Two lessons: `waitFor: 3000` is required — without it 6
+  of 74 pages came back rendered without the interests blocks and had to be re-fetched;
+  and the index listed 74 senators (not 76) on the day. robots.txt (read through Firecrawl)
+  is `Allow: /` with four events-calendar disallows. Credits for the full run incl. retries
+  and two diagnostics: ~82.
+* **317026 Whitten (One Nation, WA; index says last updated 04/06/2026)**: the detail URL
+  renders the register *listing* instead of a statement page, on three attempts with waits
+  up to 5 s. That is the site, not the fetch — re-check on the next refresh.
+* Then `senate --senate-html-dir … --export-jsonl senate.jsonl --dry-run` (73 documents /
+  1,863 rows, every document matched to `members`), scp the JSONL to
+  `desktop:/tmp/opax_interests/`, and `load --jsonl` there against parli.db.
 
 ### Queensland — Legislative Assembly (done)
 
@@ -261,9 +273,9 @@ Loaded 2026-09-02 (`ext_ingest_log` ids 76–79; 79 is the idempotent QLD re-loa
 | source | documents | rows | matched to `members` |
 |---|---:|---:|---:|
 | `house-48` | 151 | 5,757 (statement 4,655 / addition 962 / deletion 140) | 149 — unmatched: Alison Byrnes (the aph index spells her "Brynes"), David Farley (not in `members`) |
-| `senate-48` | 2 | 42 | 2 |
+| `senate-48` | 73 | 1,863 (loaded 2026-09-04, `ext_ingest_log` ids 111–112; the two 2026-09-02 documents were replaced) | 73 — after a matcher fix: `members.left_house` carries 2023 exit dates for sitting senators Marielle Smith and Matt O'Sullivan, so the "prefer the current member" rule handed their registers to Dean Smith and former senator Barry O'Sullivan. `match_person_id` (parser 2026-09-04.1) now lets a first-name agreement beat the tenure flag when several people share a surname, unless that person left before 2019. Re-running the matcher over all 317 documents changed exactly those two. |
 | `qld_la-58` | 93 | 2,469 | 79 — 14 unmatched: `members.qld_la` rows are surname-only and dirty (`Mc Bailey`, no `de Brenni`, straight vs curly apostrophes in O'Connor/O'Shea, several 2024 entrants missing) |
-| **total** | **246** | **8,268** | 230 |
+| **total** | **317** | **10,089** | 301 |
 
 Rows by category across the load: memberships 1,803 · savings 971 · gifts 812 ·
 shareholdings 736 · real estate 708 · liabilities 620 · travel 564 · other assets 477 ·
@@ -324,8 +336,12 @@ deletions inline (it does); (3) **OCR rows** would enter the corpus as fact — 
 
 ## Open items and next steps
 
-1. **Senate fetch** — pick (a)/(b)/(c) above; the parser and loader are ready
-   (`senate --senate-html-dir`).
+1. **Senate refresh** — re-run `scripts/fetch_senate_firecrawl.py` after deleting the
+   pages whose index `Last updated` moved (the script skips pages on disk); retry 317026.
+1. **Re-match House and QLD against today's `members`** — the table has moved since the
+   2026-09-02 load: David Farley (House) and Hatcher / Richmond (QLD) now match, Weir (QLD)
+   no longer does. A `load --jsonl` of the cached House and QLD JSONL on desktop re-runs the
+   matcher; the export then keys them by id instead of name slug.
 2. **Refresh cadence** — House: re-read the index; a changed `rev` means a new PDF (cache
    compares it). QLD: the cover date; the PDF is republished roughly weekly. Loads are
    idempotent per `doc_id`.

@@ -57,7 +57,7 @@ HOUSE_INDEX_URL = "https://www.aph.gov.au/Senators_and_Members/Members/Register"
 SENATE_INDEX_URL = ("https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/"
                     "Senators_Interests/Senators_Interests_Register")
 PARLIAMENT = 48
-PARSER_VERSION = "2026-09-02.2"
+PARSER_VERSION = "2026-09-04.1"
 
 # chamber value on our documents -> members.chamber; state chambers share their own codes
 MEMBERS_CHAMBER = {"house": "representatives", "senate": "senate"}
@@ -936,6 +936,20 @@ def match_person_id(conn: sqlite3.Connection, doc: InterestDocument) -> str | No
             return e[0][0]
         if e:
             cur = e
+    # Several people share the surname: a first-name agreement beats the tenure flag, because
+    # `members.left_house` is dirty for sitting senators (Marielle Smith and Matt O'Sullivan carry
+    # 2023 exit dates) and the "current" rule then hands their register to Dean Smith / Barry
+    # O'Sullivan. A person who left before 2019 cannot hold a 48th-Parliament statement, so
+    # historic namesakes are still excluded.
+    first = parts[0].lower()
+    if len(cur) > 1:
+        agree = [r for r in cur if (r[2] or "").lower() == first and (not r[4] or r[4] >= "2019-01-01")]
+        if len(agree) == 1:
+            return agree[0][0]
+        if len(agree) > 1:
+            agree_current = [r for r in agree if not r[4]]
+            if len(agree_current) == 1:
+                return agree_current[0][0]
     current = [r for r in cur if not r[4]]
     if len(current) == 1:
         return current[0][0]

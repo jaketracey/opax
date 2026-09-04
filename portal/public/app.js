@@ -2197,7 +2197,7 @@ function subjectHash(kind, label) {
 }
 
 // Declared interests on person pages: the registers of members' interests
-// (House 48th, QLD 58th, a Senate sample) exported by scripts/export_interests.py
+// (House 48th, Senate 48th, QLD 58th) exported by scripts/export_interests.py
 // as /interests/index.json plus one file per person. Facts with a link to the
 // page of the source PDF, never the statement re-rendered (aph.gov.au is
 // CC BY-NC-ND). Federal people are keyed by the portrait id; QLD and unmatched
