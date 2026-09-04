@@ -46,6 +46,19 @@ class SpeechTextHygieneTests(unittest.TestCase):
             speaker_name="Bishop, Julie, MP",
         )
 
+    def test_dash_terminated_timestamp_is_removed_as_a_whole_real_74431(self):
+        before = (
+            "Mr ABBOTT (Warringah—Leader of the House) (16:58)—Papers are "
+            "tabled as listed in the schedule."
+        )
+        self.assert_rule(
+            "matching_speaker_banner",
+            before,
+            "Papers are tabled as listed in the schedule.",
+            source="zenodo",
+            speaker_name="Abbott, Tony MP",
+        )
+
     def test_matching_bracket_time_banner_real_taylor_835678(self):
         before = "The Hon. BRONNIE TAYLOR [10.45 a.m.]: I move: That this House notes her retirement."
         self.assert_rule(

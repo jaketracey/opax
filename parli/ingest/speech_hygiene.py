@@ -57,7 +57,7 @@ _PAREN_TIME_BANNER_RE = re.compile(
     rf"^[ \t]*(?P<name>{_HONORIFIC}[ \t]+[^():\n]{{1,100}}?)"
     r"[ \t]*(?:\([^()\n]{1,100}\)[ \t]*)+"
     r"\([ \t]*\d[\d \t]*:[ \t]*\d[\d \t]*(?::[ \t]*\d[\d \t]*)?[ \t]*\)"
-    r"[ \t]*:[ \t]*",
+    r"[ \t]*(?::|[—–-])[ \t]*",
     re.I,
 )
 _BRACKET_TIME_BANNER_RE = re.compile(
@@ -74,7 +74,7 @@ _ROLE_BANNER_RE = re.compile(
     re.I,
 )
 _SIMPLE_BANNER_RE = re.compile(
-    rf"^[ \t]*(?P<name>{_HONORIFIC}[ \t]+[^:\n]{{1,150}}?)[ \t]*:[ \t]*",
+    rf"^[ \t]*(?P<name>{_HONORIFIC}[ \t]+[^():\n]{{1,150}}?)[ \t]*:[ \t]*",
     re.I,
 )
 
