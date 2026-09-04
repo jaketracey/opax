@@ -464,3 +464,12 @@ coverage once the load completes.
   opax.com.au / www). The old EC2 A record and a stale Vercel CNAME were deleted
   from the zone (google-site-verification TXT kept). Rollback = re-point DNS.
   The site is live on the 25-speech sample until the bulk load runs.
+
+
+## News articles are not in the knowledge box (2026-09-04)
+
+The 14 `news-*` resources (a one-off `arag_sync.py --tables news_articles`
+trial) were deleted from the box on 2026-09-04: the home page's news rail
+reads the publishers' RSS feeds through `/api/news`, and news text was
+surfacing as `/doc/news-<id>` pages beside the record. `arag_sync.py` syncs
+speeches only by default; do not pass `news_articles` again.

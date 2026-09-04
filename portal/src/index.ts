@@ -591,23 +591,25 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
   const filters = filterExpression({ kind: kind ?? 'speech', speaker, party, state, topic, from, to })
   if (filters) body.filter_expression = filters
 
-  // Filtered asks own their prompt. The platform default's fallback line
-  // ("Not enough data to answer this.") fires on any mixed context even after
-  // guidance turns (measured: 2 in 3 refusals on 8/20 on-topic passages, still
-  // 1 in 5 with stronger guidance). A custom template states the retrieval
-  // contract plainly and reserves the refusal for a truly empty record.
-  if (filtered) {
-    body.prompt = {
-      system:
-        'You are OPAX, a research assistant over the Australian parliamentary record. You answer strictly from the passages provided, citing them. You never invent facts.',
-      user:
-        'Passages from the record (each is a speech by the named speaker; first-person text is their own words):\n{context}\n\n' +
-        'Question: {question}\n\n' +
-        'Instructions: Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
-        'Ignore passages that are off-topic. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
-        'Begin with the answer itself: do not explain how the passages are numbered, ordered or provided. ' +
-        'Only if NO passage mentions the subject at all, reply exactly: The record retrieved for this question does not discuss it.',
-    }
+  // Every ask owns its prompt. The platform default's fallback line ("Not
+  // enough data to answer this.") fires on any mixed context even after
+  // guidance turns (measured on filtered asks: 2 in 3 refusals on 8/20
+  // on-topic passages, still 1 in 5 with stronger guidance), and its answers
+  // open with "Based on the provided context", which the portal never wants
+  // in front of a reader. A custom template states the retrieval contract
+  // plainly, reserves the refusal for a truly empty record, and starts with
+  // the substance.
+  body.prompt = {
+    system:
+      'You are OPAX, a research assistant over the Australian parliamentary record. You answer strictly from the passages provided, citing them. You never invent facts.',
+    user:
+      'Passages from the record (a speech is the named speaker\'s own words; first-person text is theirs):\n{context}\n\n' +
+      'Question: {question}\n\n' +
+      'Instructions: Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
+      'Ignore passages that are off-topic. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
+      'Begin with the answer itself. Never open with a preamble such as "Based on the provided context", "According to the passages" or "The context shows": the reader knows the answer comes from the record. ' +
+      'Do not explain how the passages are numbered, ordered or provided. ' +
+      'Only if NO passage mentions the subject at all, reply exactly: The record retrieved for this question does not discuss it.',
   }
   return body
 }
