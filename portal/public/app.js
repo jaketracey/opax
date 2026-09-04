@@ -5527,6 +5527,7 @@ function readCrumbs() {
 }
 
 /** The one shell entry point for map events and every data-explain button. */
+document.getElementById("dialog-explain")?.addEventListener("opax:explain-close", () => closeGame($("dialog-explain")));
 async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const clean = {
@@ -5565,6 +5566,7 @@ async function openExplain(detail) {
       renderAnswer,
       normName,
       industryLabel,
+      portraitFor: async (name) => { await loadPhotoMap(); return photoUrlFor(name) || null; },
       electionYears: [...BALANCE_ELECTION_YEARS],
       aecNote: AEC_NOTE,
       stateNotSummed: STATE_NOT_SUMMED,

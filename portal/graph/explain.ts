@@ -78,6 +78,7 @@ type ExplainHelpers = {
   renderAnswer: (container: HTMLElement, answer: string) => void
   normName?: (name: string) => string
   industryLabel?: (industry: string) => string
+  portraitFor?: (name: string) => Promise<string | null>
   electionYears?: number[]
   aecNote?: string
   stateNotSummed?: string
@@ -214,8 +215,13 @@ function injectStyles() {
   display:flex; justify-content:space-between; gap:.8rem; align-items:baseline; }
 .explain-parties a,.explain-sources a { color:var(--ink); text-decoration-color:var(--bronze-rule); }
 .explain-parties b { white-space:nowrap; font-size:.85rem; }
-.explain-source-copy { min-width:0; }
-.explain-source-copy a { display:block; font:700 .9rem/1.35 var(--serif); }
+.explain-sources li { display:flex; gap:.65rem; align-items:flex-start; }
+.explain-source-face { flex:none; width:40px; height:40px; border-radius:50%; background:var(--paper-sunken); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
+.explain-source-face img { display:block; width:40px; height:40px; object-fit:cover; }
+.explain-source-copy { min-width:0; flex:1 1 auto; }
+.explain-source-copy a { display:block; font:700 .9rem/1.35 var(--serif); text-decoration:none; }
+.explain-source-copy a:hover { color:var(--bronze-ink); }
+.explain-source-copy small a.explain-source-party { display:inline; font:inherit; text-decoration:none; }
 .explain-source-copy small { display:block; margin-top:.2rem; color:var(--ink-soft); font:.76rem/1.4 var(--sans); }
 .explain-answer { min-height:6rem; }
 .explain-answer p,.explain-answer li { font-size:.93rem; }
@@ -479,6 +485,18 @@ function sourceList(data: { citations?: Record<string, unknown>; sources?: AskSo
   shown.forEach((source, index) => {
     const li = el('li')
     li.dataset.sceneCitation = String(index)
+    // The speaker's portrait, when the site holds one, resolved after the row
+    // is on screen so the list never waits on the photo map.
+    if (source.speaker && helpers.portraitFor) {
+      const face = el('span', 'explain-source-face')
+      li.append(face)
+      helpers.portraitFor(String(source.speaker)).then((url) => {
+        if (!url || !face.isConnected) return
+        const img = el('img') as HTMLImageElement
+        img.src = url; img.alt = ''; img.width = 40; img.height = 40; img.loading = 'lazy'
+        face.append(img)
+      }).catch(() => undefined)
+    }
     const copy = el('span', 'explain-source-copy')
     const link = el('a')
     link.href = `/doc/${encodeURIComponent(String(source.slug))}`
@@ -487,7 +505,8 @@ function sourceList(data: { citations?: Record<string, unknown>; sources?: AskSo
     if (source.party || source.speaker || source.date) {
       const meta = el('small')
       if (source.party) {
-        const chip = el('span')
+        const chip = el('a', 'explain-source-party') as HTMLAnchorElement
+        chip.href = helpers.subjectHash('party', String(source.party))
         chip.innerHTML = helpers.partyChipHTML(source.party)
         meta.append(chip)
       }
@@ -1608,8 +1627,9 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     })
     if (prev) prev.disabled = step === 0
     if (next) {
-      next.disabled = step === STEP_NAMES.length - 1
-      next.textContent = step === STEP_NAMES.length - 2 ? 'Read the limits' : 'Next'
+      next.disabled = false
+      next.textContent = step === STEP_NAMES.length - 1 ? 'Close'
+        : step === STEP_NAMES.length - 2 ? 'Read the limits' : 'Next'
     }
     scene?.setStep(step)
     if (yearLabel) yearLabel.hidden = step !== 1
@@ -1868,7 +1888,11 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     next = el('button', '', 'Next')
     prev.type = next.type = 'button'
     prev.addEventListener('click', () => { if (step > 0) { step--; renderStep(); copy?.focus({ preventScroll: true }); reframeStage() } })
-    next.addEventListener('click', () => { if (step < STEP_NAMES.length - 1) { step++; renderStep(); copy?.focus({ preventScroll: true }); reframeStage() } })
+    next.addEventListener('click', () => {
+      if (step < STEP_NAMES.length - 1) { step++; renderStep(); copy?.focus({ preventScroll: true }); reframeStage(); return }
+      // The last step's control closes the explanation; the shell owns the dialog.
+      container.dispatchEvent(new CustomEvent('opax:explain-close', { bubbles: true }))
+    })
     controls.append(prev, next)
     narrative.append(controls)
     shell.append(stage, narrative)

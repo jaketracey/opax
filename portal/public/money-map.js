@@ -4253,16 +4253,16 @@ void main() {
   border: 1px solid #e4e1d8; border-radius: 12px; padding: 14px 16px;
   outline: none; }
 .mm-card:focus-visible { outline: 2px solid ${Ln}; }
-.mm-card h2 { margin: 0 24px 2px 0; font-size: 16px; line-height: 1.25; }
+.mm-card h2 { margin: 0 44px 2px 0; font-size: 16px; line-height: 1.25; }
 .mm-card-tag { display: inline-block; font-size: 11px; font-weight: 600;
   letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; }
 .mm-card-total { font-size: 22px; font-weight: 700; color: #26251f; }
 .mm-card-sub { font-size: 12px; color: #8a8578; margin-bottom: 10px; }
 .mm-card-fine { margin: -4px 0 10px; font-size: 10.5px; line-height: 1.42; color: #8a8578; }
-.mm-card-close { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px;
-  border: 0; border-radius: 8px; background: none; font-size: 16px; line-height: 1;
-  color: #8a8578; cursor: pointer; }
-.mm-card-close:hover { background: rgba(0, 0, 0, 0.06); color: #33322e; }
+.mm-card-close { position: absolute; top: 6px; right: 6px; width: 44px; height: 44px;
+  border: 0; border-radius: 50%; background: rgba(160, 118, 27, 0.14); font-size: 20px; line-height: 1;
+  color: #8a5a12; cursor: pointer; display: grid; place-items: center; }
+.mm-card-close:hover { background: rgba(160, 118, 27, 0.26); color: #33322e; }
 .mm-rows { margin: 0; padding: 0; list-style: none; }
 .mm-row { display: flex; align-items: baseline; gap: 8px; width: 100%;
   padding: 5px 6px; margin: 0 -6px; border: 0; background: none; font: inherit;
