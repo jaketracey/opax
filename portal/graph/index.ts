@@ -376,6 +376,7 @@ const CSS = `
 .mm-cpi input { width: 18px; height: 18px; margin: 0; accent-color: ${ACCENT}; cursor: pointer; }
 .mm-cpi-copy { display: block; min-width: 0; }
 .mm-cpi-name { display: block; font-size: 12px; font-weight: 600; color: #33322e; }
+.mm-cpi-short { display: none; }
 .mm-cpi-note { display: block; font-size: 10px; line-height: 1.25; color: #8a8578; }
 /* On the compact strip the note lives behind a small i: a 44px target drawing
    a 22px ring, and a paper popover beneath the strip. Hidden on the full plate,
@@ -405,6 +406,9 @@ const CSS = `
 .mm-scrub-mini .mm-cpi { flex: none; width: auto; margin: 0; padding: 0 0 0 9px;
   border-top: 0; border-left: 1px solid #e4e1d8; }
 .mm-scrub-mini .mm-cpi-name { font-size: 11px; white-space: nowrap; }
+.mm-scrub-mini .mm-cpi-long { display: none; }
+.mm-scrub-mini .mm-cpi-short { display: inline; }
+.mm-scrub-mini .mm-cpi-info { margin: 0 -6px 0 -4px; }
 .mm-scrub-mini .mm-cpi-note { display: none; }
 .mm-scrub-mini .mm-cpi-info { display: flex; }
 .mm-fallback { display: flex; align-items: center; justify-content: center;
@@ -422,11 +426,11 @@ const CSS = `
   .mm-root[data-mm-chrome='full'] .mm-card { top: auto; max-height: 55%; }
   .mm-hint, .mm-find { display: none; }
   .mm-root[data-mm-chrome='full'] .mm-scrub { display: flex; align-items: center; gap: 8px;
-    top: 60px; right: 8px; bottom: auto; left: 8px; width: auto; padding: 4px 8px; }
+    top: 60px; right: 8px; bottom: auto; left: 8px; width: auto; padding: 4px 8px; overflow: visible; }
   .mm-root[data-mm-chrome='full'] .mm-scrub-label { display: block; flex: none; margin: 0; }
   .mm-root[data-mm-chrome='full'] .mm-scrub-caption { display: none; }
   .mm-root[data-mm-chrome='full'] .mm-scrub-years { font-size: 11px; letter-spacing: 0.02em; }
-  .mm-root[data-mm-chrome='full'] .mm-scrub-rail { flex: 1 1 88px; min-width: 76px; height: 44px; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub-rail { flex: 1 1 88px; min-width: 60px; height: 44px; }
   .mm-root[data-mm-chrome='full'] .mm-scrub input[type='range'] { height: 44px; }
   .mm-root[data-mm-chrome='full'] .mm-scrub input[type='range']::-webkit-slider-runnable-track { height: 44px; }
   .mm-root[data-mm-chrome='full'] .mm-scrub input[type='range']::-moz-range-track { height: 44px; }
@@ -437,6 +441,9 @@ const CSS = `
   .mm-root[data-mm-chrome='full'] .mm-cpi { flex: none; width: auto; margin: 0;
     padding: 0 0 0 8px; border-top: 0; border-left: 1px solid #e4e1d8; }
   .mm-root[data-mm-chrome='full'] .mm-cpi-name { font-size: 11px; white-space: nowrap; }
+  .mm-root[data-mm-chrome='full'] .mm-cpi-long { display: none; }
+  .mm-root[data-mm-chrome='full'] .mm-cpi-short { display: inline; }
+  .mm-root[data-mm-chrome='full'] .mm-cpi-info { margin: 0 -6px 0 -4px; }
   .mm-root[data-mm-chrome='full'] .mm-cpi-note { display: none; }
   .mm-root[data-mm-chrome='full'] .mm-cpi-info { display: flex; }
   /* The compact scrub is small enough to keep on a phone; it moves to the
@@ -905,7 +912,8 @@ export async function mountMoneyMap(
     cpiInput.checked = adjustForInflation
     const cpiCopy = el('span', 'mm-cpi-copy', cpi)
     const cpiName = el('span', 'mm-cpi-name', cpiCopy)
-    cpiName.textContent = 'Adjust for inflation'
+    el('span', 'mm-cpi-long', cpiName).textContent = 'Adjust for inflation'
+    el('span', 'mm-cpi-short', cpiName).textContent = 'Inflation'  // the phone strip's one-word name
     const cpiNote = el('span', 'mm-cpi-note', cpiCopy)
     cpiNote.textContent = 'in 2025–26 dollars, ABS CPI'
     // The compact strip has no room for the note: a small i opens it as a
