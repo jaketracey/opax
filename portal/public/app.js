@@ -2089,36 +2089,28 @@ function renderAskDateRuler(sources, isCited) {
 function renderSearchDateRuler(years, q, f) {
   const box = $("search-date-ruler");
   if (!box) return;
-  const counts = Object.entries(years || {})
-    .map(([year, count]) => [Number(year), Number(count)])
-    .filter(([year, count]) => year >= RECORD_FIRST_YEAR && year <= RECORD_LAST_YEAR && count > 0);
+  const counts = Object.entries(years || {}).map(([y, n]) => [Number(y), Number(n)])
+    .filter(([y, n]) => y >= RECORD_FIRST_YEAR && y <= RECORD_LAST_YEAR && Number.isFinite(n) && n > 0);
   if (!counts.length) { box.replaceChildren(); box.hidden = true; return; }
-  const max = Math.max(...counts.map(([, count]) => count), 1);
-  const step = RULER_WIDTH / (RECORD_LAST_YEAR - RECORD_FIRST_YEAR + 1);
-  const bars = counts.map(([year, count]) => {
-    const point = rulerPoint(`${year}-07-01`);
-    const height = Math.max(2, (count / max) * 38);
-    return `<rect class="date-ruler-bar" x="${(point.x - step * 0.38).toFixed(2)}"
-      y="${(52 - height).toFixed(2)}" width="${(step * 0.76).toFixed(2)}" height="${height.toFixed(2)}"/>`;
-  }).join("");
-  const links = counts.map(([year, count]) => {
-    const point = rulerPoint(`${year}-07-01`);
-    return dateRulerLink({
-      percent: point.percent,
-      href: searchHash(q, { ...f, from: String(year), to: String(year) }, 1, lastSearch.sort),
-      label: `Filter to ${year}, ${count.toLocaleString()} ${count === 1 ? "match" : "matches"}`,
-    });
-  }).join("");
-  box.innerHTML = `
-    <h3 class="date-ruler-heading">When these matches were spoken</h3>
-    <div class="date-ruler-frame">
-      <svg class="date-ruler-svg" viewBox="0 0 680 82" role="img" aria-label="Retrieved matches by year from 1993 to 2026">
-        <line class="date-ruler-axis" x1="${RULER_LEFT}" x2="${RULER_RIGHT}" y1="52" y2="52"/>
-        ${bars}${rulerAxisHTML()}
-      </svg>
-      <div class="date-ruler-hits">${links}</div>
-    </div>
-`;
+  const max = Math.max(...counts.map(([, n]) => n));
+  const byYear = Object.fromEntries(counts);
+  // Annual bars retain their scale; five-year tap bands avoid overlapping
+  // 44px hit areas on a phone. The final band ends at the last record year.
+  const bands = [];
+  for (let from = RECORD_FIRST_YEAR; from <= RECORD_LAST_YEAR; from += 5) {
+    const to = Math.min(from + 4, RECORD_LAST_YEAR);
+    const annual = Array.from({ length: to - from + 1 }, (_, i) => [from + i, byYear[from + i] || 0]);
+    const total = annual.reduce((sum, [, n]) => sum + n, 0);
+    const active = Number(f.from) === from && Number(f.to) === to;
+    bands.push(`<a class="search-year-band" href="${esc(searchHash(q, { ...f, from: String(from), to: String(to) }, 1, lastSearch.sort))}"
+      aria-label="Filter to ${from}–${to}: ${total.toLocaleString()} retrieved matches"${active ? ' aria-current="true"' : ''}>
+      <span class="search-year-bars" aria-hidden="true">${annual.map(([year, n]) => `<i style="--year-height:${n / max * 100}%" title="${year}: ${n}"></i>`).join("")}</span>
+      <span class="search-year-label" aria-hidden="true">${from}<br>–${String(to).slice(-2)}</span></a>`);
+  }
+  box.innerHTML = `<h3 class="date-ruler-heading">Matches by year</h3>
+    <p class="search-year-hint">Tap a band to filter those years.</p>
+    <div class="search-year-scale"><span>${max.toLocaleString()} matches</span><span>0 at baseline</span></div>
+    <nav class="search-year-chart" aria-label="Filter search by year range">${bands.join("")}</nav>`;
   box.hidden = false;
 }
 
@@ -7182,37 +7174,64 @@ function searchQueryParams(q, f, page, sort) {
   return p;
 }
 
-// Search filters popover: same behavior as the ask page's options button.
+// Search filters are a draft until Apply; dismissing restores the last search.
 {
   const btn = $("search-options-btn");
   const pop = $("search-options-pop");
+  const ids = ["f-speaker", "f-party", "f-state", "f-topic", "f-from", "f-to", "search-kind", "search-mode"];
+  for (const id of ["f-from", "f-to"]) {
+    const select = $(id);
+    for (let year = RECORD_FIRST_YEAR; year <= RECORD_LAST_YEAR; year++) select.add(new Option(String(year), String(year)));
+    select.value = String(id === "f-from" ? RECORD_FIRST_YEAR : RECORD_LAST_YEAR);
+  }
+  let draftBefore = null;
+  const close = (apply = false) => {
+    if (!pop?.open) return;
+    if (!apply && draftBefore) for (const id of ids) $(id).value = draftBefore[id];
+    if (apply && Number($("f-from").value) > Number($("f-to").value)) {
+      const from = $("f-from").value;
+      $("f-from").value = $("f-to").value;
+      $("f-to").value = from;
+    }
+    updateSearchYearsLabel();
+    pop.close();
+    pop.hidden = true;
+    btn.setAttribute("aria-expanded", "false");
+    btn.focus();
+    if (apply) {
+      searchFiltersChanged();
+      if (!lastSearch.key && ($("search-input").value.trim() || currentFilters().speaker)) $("search-form").requestSubmit();
+    }
+  };
   btn?.addEventListener("click", () => {
-    pop.hidden = !pop.hidden;
-    btn.setAttribute("aria-expanded", String(!pop.hidden));
+    draftBefore = Object.fromEntries(ids.map((id) => [id, $(id).value]));
+    pop.hidden = false;
+    pop.showModal();
+    btn.setAttribute("aria-expanded", "true");
+    $("search-options-close").focus();
   });
-  document.addEventListener("pointerdown", (e) => {
-    if (!pop || pop.hidden) return;
-    if (!pop.contains(e.target) && !btn.contains(e.target)) {
-      pop.hidden = true;
-      btn.setAttribute("aria-expanded", "false");
+  $("search-options-close")?.addEventListener("click", () => close());
+  $("search-options-apply")?.addEventListener("click", () => close(true));
+  $("search-options-reset")?.addEventListener("click", () => {
+    for (const reset of Object.values(SEARCH_FILTER_RESETS)) reset();
+  });
+  pop?.addEventListener("cancel", (e) => { e.preventDefault(); close(); });
+  pop?.addEventListener("click", (e) => {
+    const r = pop.getBoundingClientRect();
+    if (e.target === pop && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) close();
+  });
+  pop?.addEventListener("keydown", (e) => {
+    if (e.key === "Tab") {
+      const focusable = [...pop.querySelectorAll("button, input, select, a[href]")].filter((el) => !el.disabled && el.getClientRects().length);
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
     }
+    if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); close(true); }
   });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && pop && !pop.hidden) {
-      pop.hidden = true;
-      btn.setAttribute("aria-expanded", "false");
-      btn.focus();
-    }
-  });
+  window.addEventListener("popstate", () => close(), { capture: true });
   $("f-from")?.addEventListener("input", updateSearchYearsLabel);
   $("f-to")?.addEventListener("input", updateSearchYearsLabel);
-  // Chips and popover in step both ways: a control changing re-draws the chips
-  // and, once something has been searched, re-runs at page one. Range inputs
-  // fire `change` on release, so dragging a year is one search, not thirty.
-  for (const id of ["f-speaker", "f-party", "f-state", "f-topic", "f-from", "f-to",
-    "search-kind", "search-mode"]) {
-    $(id)?.addEventListener("change", searchFiltersChanged);
-  }
 }
 
 // --- active filters, shown outside the popover that set them ----------------
@@ -7372,39 +7391,32 @@ function applySearchParams(params) {
   const key = params.toString();
   if (key === searchApplied) return;
   searchApplied = key;
-  if (params.has("q") || params.has("speaker")) {
-    $("search-input").value = params.get("q") || "";
-    $("f-speaker").value = params.get("speaker") || "";
-    $("f-party").value = params.get("party") || "";
-    $("f-state").value = params.get("state") || "";
-    $("f-topic").value = params.get("topic") || "";
-    // Range inputs reset to their midpoint on "", so absent params pin the
-    // slider ends (which currentFilters reads back as "no year filter").
-    $("f-from").value = params.get("from") || "1993";
-    $("f-to").value = params.get("to") || "2026";
-    updateSearchYearsLabel();
-    $("search-kind").value = params.get("kind") || "speech";
-    $("search-mode").value = params.get("mode") || "hybrid";
-    $("search-sort").value = params.get("sort") === "newest" ? "newest" : "relevance";
-    renderFilterChips();
-    // The page rides in the hash, so back, forward and a pasted &page=3 all
-    // land on the same twenty results.
+  $("search-input").value = params.get("q") || "";
+  for (const name of ["speaker", "party", "state", "topic"]) $("f-" + name).value = params.get(name) || "";
+  for (const [name, fallback] of [["from", RECORD_FIRST_YEAR], ["to", RECORD_LAST_YEAR]]) {
+    const year = Number(params.get(name)) || fallback;
+    $("f-" + name).value = String(Math.min(RECORD_LAST_YEAR, Math.max(RECORD_FIRST_YEAR, Math.round(year))));
+  }
+  updateSearchYearsLabel();
+  $("search-kind").value = params.get("kind") || "speech";
+  $("search-mode").value = params.get("mode") || "hybrid";
+  if (!$("search-kind").value) $("search-kind").value = "speech";
+  if (!$("search-mode").value) $("search-mode").value = "hybrid";
+  $("search-sort").value = params.get("sort") === "newest" ? "newest" : "relevance";
+  renderFilterChips();
+  if ($("search-input").value.trim() || $("f-speaker").value.trim()) {
     runSearch(Number(params.get("page")) || 1);
-  } else if (params.has("state")) {
-    // A parliament alone (the home page's state map): preset the filter and
-    // say so; there is no query to run until the reader types one.
-    const state = params.get("state") || "";
-    $("f-state").value = state;
-    const name = STATE_NAMES[state] || state;
-    setStatus($("search-status"), name
-      ? `Filtered to the ${name} parliament. Type a question or a phrase to search its record.`
-      : "");
-    renderFilterChips();
-    renderSearchChips();
   } else {
-    // A bare search page: nothing asked yet, so offer somewhere to start.
+    // Clear pending ownership too: Back to a blank search must stay blank.
+    ++searchSeq;
+    searchAnswerAbort?.abort();
+    hideLoader("search-wombat");
     clearSearchResults();
-    renderFilterChips();
+    $("search-results").setAttribute("aria-busy", "false");
+    $("search-form").querySelector('button[type="submit"]').disabled = false;
+    $("search-status").classList.remove("visually-hidden");
+    const filters = activeFilterSummary(currentFilters());
+    setStatus($("search-status"), filters ? `Search with ${filters}. Enter a phrase to begin.` : "");
     renderSearchChips();
   }
 }
@@ -7464,13 +7476,7 @@ function renderSearchChips() {
 }
 
 function activeFilterSummary(f) {
-  const bits = [];
-  if (f.speaker) bits.push(`speaker ${f.speaker}`);
-  if (f.party) bits.push(f.party);
-  if (f.state) bits.push(STATE_NAMES[f.state] || f.state);
-  if (f.topic) bits.push(TOPICS[f.topic] || f.topic);
-  if (f.from || f.to) bits.push(`${f.from || "…"}–${f.to || "…"}`);
-  return bits.join(", ");
+  return filterChipSpecs(f).map((s) => `${s.k.toLowerCase()}: ${s.v}`).join(", ");
 }
 
 function syncSearchReadBar() {
@@ -7484,7 +7490,7 @@ function syncSearchReadBar() {
   else if (lastSearch.briefsLoading) status.textContent = "Reading the available briefs…";
   else {
     const count = lastSearch.results.filter((result) => lastSearch.briefs[result.resource]).length;
-    status.textContent = `${count} of this page's ${lastSearch.results.length} ${lastSearch.results.length === 1 ? "result has" : "results have"} a brief so far.`;
+    status.textContent = `${count} of ${lastSearch.results.length} have briefs. Others show passages.`;
   }
 }
 
@@ -7514,27 +7520,45 @@ async function loadSearchBriefs(results, mySeq) {
 // swaps in the optional machine summary without changing that ranking.
 function renderResults(results) {
   $("search-results").replaceChildren(
-    ...results.map((r) => {
+    ...results.map((r, index) => {
       const li = document.createElement("li");
       const brief = lastSearch.briefs[r.resource];
-      const text = searchReadMode === "briefs"
-        ? brief
-          ? `<p class="search-result-brief">${esc(brief)}</p>`
-          : `<p class="snippet"><span class="search-passage-tag">Passage · ${lastSearch.briefsLoading ? "checking for a brief…" : "no brief yet"}</span>${highlightHTML(r.snippet, $("search-input").value)}</p>`
-        : `<p class="snippet">${highlightHTML(r.snippet, $("search-input").value)}</p>`;
-      li.innerHTML = `
-        <div>
-          <button type="button" class="link result-title">${esc(displayTitle(r))}</button>
-        </div>
-        <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true, portrait: true })}</span>
-        ${text}`;
-      li.querySelector(".result-title").addEventListener("click", () => {
-        goRoute(`/doc/${r.slug}`);
-      });
+      const text = searchReadMode === "briefs" && brief
+        ? `<p id="search-passage-${index}" class="search-result-text search-result-brief"><span class="search-passage-tag">Brief</span>${esc(brief)}</p>`
+        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="search-passage-tag">Passage · ${lastSearch.briefsLoading ? "checking for a brief…" : "no brief available"}</span>` : ""}${highlightHTML(r.snippet || "", lastSearch.query)}</p>`;
+      const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}` : displayTitle(r);
+      const meta = [
+        r.speaker ? `<a href="${esc(subjectHash("person", r.speaker))}">${esc(r.speaker)}</a>` : "",
+        r.party ? partyChipHTML(r.party) : "",
+        r.state ? esc(STATE_NAMES[r.state] || r.state) : "",
+        r.date ? `<time datetime="${esc(r.date)}">${esc(fmtDate(r.date))}</time>` : "",
+      ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
+      const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
+      li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="/doc/${encodeURIComponent(r.slug)}">${esc(title)}</a></h3>
+        <div class="result-meta">${meta}</div>${text}
+        <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>
+        ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a href="${esc(subjectHash("topic", topic))}">${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
       return li;
     }),
   );
-  decorateMetaPortraits($("search-results"));
+  requestAnimationFrame(refreshSearchPassageFolds);
+}
+
+// Full retrieved text stays available without forcing a whole screen per hit.
+function refreshSearchPassageFolds() {
+  for (const text of $("search-results").querySelectorAll(".search-result-text")) {
+    const btn = text.nextElementSibling;
+    if (!btn || btn.getAttribute("aria-expanded") === "true") continue;
+    text.classList.add("is-collapsed");
+    btn.hidden = text.scrollHeight <= text.clientHeight + 2;
+    if (btn.hidden) text.classList.remove("is-collapsed");
+    btn.onclick = () => {
+      const expanded = btn.getAttribute("aria-expanded") !== "true";
+      text.classList.toggle("is-collapsed", !expanded);
+      btn.setAttribute("aria-expanded", String(expanded));
+      btn.textContent = expanded ? "Show less" : "Read more";
+    };
+  }
 }
 
 /**
@@ -7745,7 +7769,7 @@ function resetSearchAnswerFold() {
   }
   // Folded: the control is present but invisible (its line is reserved);
   // unfolded (wide screens): absent.
-  if (btn) { btn.hidden = !narrow; btn.classList.remove("is-ready"); btn.setAttribute("aria-expanded", "false"); }
+  if (btn) { btn.textContent = "Read summary"; btn.hidden = !narrow; btn.classList.remove("is-ready"); btn.setAttribute("aria-expanded", "false"); }
 }
 const searchAnswerFolds = () => window.matchMedia(SEARCH_ANSWER_FOLD_QUERY).matches;
 function searchAnswerArrived() {
@@ -7761,15 +7785,17 @@ function offerSearchAnswerReadMore() {
   if (body.scrollHeight <= body.clientHeight + 8) return;
   btn.classList.add("is-ready");
   btn.onclick = () => {
-    box.classList.remove("is-clamped");
-    btn.hidden = true;
-    btn.setAttribute("aria-expanded", "true");
+    const expanded = btn.getAttribute("aria-expanded") !== "true";
+    box.classList.toggle("is-clamped", !expanded);
+    btn.setAttribute("aria-expanded", String(expanded));
+    btn.textContent = expanded ? "Show less" : "Read summary";
   };
 }
 function foldSearchAnswer() {
   const box = $("search-answer");
   const body = $("search-answer-body");
   searchAnswerArrived();
+  if (box.hidden) return; // Cached answers may arrive before the rail is measurable.
   if (!box.classList.contains("is-clamped")) return;
   // A short summary needs no fold: let it stand whole.
   if (body.scrollHeight <= body.clientHeight + 8) { box.classList.remove("is-clamped"); $("search-answer-readmore").hidden = true; return; }
@@ -7777,6 +7803,21 @@ function foldSearchAnswer() {
   // Overflowing but never offered (a rare race): offer it now.
   if (!$("search-answer-readmore").classList.contains("is-ready")) { $("search-answer-readmore").classList.add("is-ready"); }
 }
+
+function refreshSearchLayout() {
+  if ($("panel-search").hidden) return;
+  refreshSearchPassageFolds();
+  const box = $("search-answer"), btn = $("search-answer-readmore");
+  if (box.hidden || box.classList.contains("is-loading")) return;
+  if (!searchAnswerFolds()) { box.classList.remove("is-clamped"); btn.hidden = true; return; }
+  if (btn.getAttribute("aria-expanded") === "true") { btn.hidden = false; return; }
+  box.classList.add("is-clamped");
+  btn.hidden = false;
+  btn.classList.remove("is-ready");
+  foldSearchAnswer();
+}
+window.addEventListener("resize", refreshSearchLayout);
+document.fonts?.ready.then(refreshSearchLayout);
 
 async function runSearchAnswer(q, f, mySeq) {
   const box = $("search-answer");
@@ -7884,6 +7925,7 @@ async function runSearch(page = 1) {
   }
   const btn = $("search-form").querySelector('button[type="submit"]');
   btn.disabled = true;
+  $("search-results").setAttribute("aria-busy", "true");
   setStatus($("search-status"), "Searching the record…");
   $("search-status").classList.add("visually-hidden"); // announced; the loader shows it
   showLoader("search-wombat", fresh ? "Searching the record." : "Turning the page.");
@@ -7922,13 +7964,16 @@ async function runSearch(page = 1) {
       $("search-date-ruler").hidden = true;
       $("search-readbar").hidden = true;
       $("search-pager").hidden = true;
-      renderSearchEmpty(q, f);
+      renderSearchRecovery(q, f);
       giveUpSearchAnswer();
+      $("search-answer").hidden = true;
     } else {
       hideLoader("search-wombat");
       $("search-status").classList.remove("visually-hidden");
       setStatus($("search-status"), "");
-      $("results-count").textContent = resultsCountLine(lastSearch);
+      const first = (lastSearch.page - 1) * lastSearch.perPage + 1;
+      const last = Math.min(lastSearch.page * lastSearch.perPage, lastSearch.total);
+      $("results-count").innerHTML = `<span class="search-count-wide">${esc(resultsCountLine(lastSearch))}</span><span class="search-count-phone">${first}–${last} of ${lastSearch.total.toLocaleString()}${lastSearch.truncated ? " strongest matches" : " matches"}</span>`;
       $("results-bar").hidden = false;
       renderSearchDateRuler(lastSearch.years, q, f);
       syncSearchReadBar();
@@ -7942,16 +7987,38 @@ async function runSearch(page = 1) {
         searchApplied = fixed.replace(/^#\/search\?/, "");
         history.replaceState(null, "", fixed);
       }
-      if (searchAnswerWanted && fresh) $("search-answer").hidden = false; // the rail joins the results
+      if (searchAnswerWanted && fresh) {
+        $("search-answer").hidden = false; // the rail joins the results
+        if (!$("search-answer").classList.contains("is-loading")) foldSearchAnswer();
+      }
       if (searchScrollPending) scrollToResults();
     }
   } catch (err) {
     if (mySeq !== searchSeq) return;
     hideLoader("search-wombat");
+    $("search-status").classList.remove("visually-hidden");
     setStatus($("search-status"), String(err.message || err), true);
   } finally {
-    if (mySeq === searchSeq) { btn.disabled = false; searchScrollPending = false; }
+    if (mySeq === searchSeq) { btn.disabled = false; searchScrollPending = false; $("search-results").setAttribute("aria-busy", "false"); }
   }
+}
+
+function renderSearchRecovery(q, f) {
+  const box = $("search-empty");
+  const filters = activeFilterSummary(f);
+  const specs = filterChipSpecs(f);
+  const first = specs[0];
+  const topicHref = f.topic ? subjectHash("topic", f.topic) : "/subject/topic";
+  box.innerHTML = `<h2 class="empty-title">No matches for “${esc(q || f.speaker)}”</h2>
+    <p class="empty-lede">${filters ? `Searched with ${esc(filters)}. ` : ""}Try a broader phrase or a different part of the record.</p>
+    <div class="empty-actions"><button type="button" class="action-btn" id="search-recovery-edit">${first ? `Remove ${esc(first.k.toLowerCase())} filter` : "Try fewer words"}</button>
+    <a class="action-btn" href="${esc(askHash(q || f.speaker, f.kind))}">Try in Ask</a>
+    <a class="action-btn" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>`;
+  $("search-recovery-edit").addEventListener("click", () => {
+    if (first) clearSearchFilter(first.id);
+    else { $("search-input").focus(); $("search-input").select(); }
+  });
+  box.hidden = false;
 }
 
 $("search-form").addEventListener("submit", (e) => {

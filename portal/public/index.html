@@ -443,6 +443,7 @@
     </section>
 
     <section id="panel-search" class="panel" hidden aria-label="Search the record">
+      <h1 class="visually-hidden">Search the parliamentary record</h1>
       <form id="search-form" class="search-grid">
         <div class="query-line">
           <label for="search-input" class="visually-hidden">Search the corpus</label>
@@ -450,14 +451,14 @@
           <button type="submit" class="primary">Search</button>
           <div class="ask-options-wrap">
           <button type="button" class="action-btn" id="search-options-btn" aria-expanded="false" aria-controls="search-options-pop" aria-label="Search filters" title="Filters">
-            <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
+            <span class="search-filter-word">Filters</span><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
           </button>
-          <div class="ask-options-pop" id="search-options-pop" hidden>
+          <dialog class="ask-options-pop" id="search-options-pop" hidden aria-labelledby="search-options-title">
+            <div class="search-sheet-head"><h2 id="search-options-title" class="subject-section-title">Search filters</h2><button type="button" class="action-btn" id="search-options-close" aria-label="Close search filters">Close</button></div>
             <div class="filter-rail ask-pop-rail">
               <span class="filter-item filter-item-wide">
-                <label for="f-from">Years <b id="f-years-label">1993–2026</b></label>
-                <span class="range-row"><span class="range-cap" aria-hidden="true">From</span><input id="f-from" type="range" min="1993" max="2026" value="1993" aria-label="From year"></span>
-                <span class="range-row"><span class="range-cap" aria-hidden="true">To</span><input id="f-to" type="range" min="1993" max="2026" value="2026" aria-label="To year"></span>
+                <span class="search-years-heading">Years <b id="f-years-label">1993–2026</b></span>
+                <span class="search-year-fields"><label>From year<select id="f-from" aria-label="From year"></select></label><label>To year<select id="f-to" aria-label="To year"></select></label></span>
               </span>
               <span class="filter-item">
                 <label for="f-speaker">Speaker</label>
@@ -512,7 +513,8 @@
                 </select>
               </span>
             </div>
-          </div>
+            <div class="search-sheet-foot"><button type="button" class="action-btn" id="search-options-reset">Reset filters</button><button type="button" class="primary" id="search-options-apply">Apply filters</button></div>
+          </dialog>
           </div>
         </div>
       </form>
@@ -529,7 +531,7 @@
       <div class="search-results-main">
       <div id="search-empty" class="empty-state" hidden></div>
       <div class="results-bar" id="results-bar" hidden>
-        <span id="results-count"></span>
+        <span id="results-count" role="status" aria-live="polite" aria-atomic="true"></span>
         <span class="results-actions">
           <label for="search-sort" class="visually-hidden">Sort every retrieved match</label>
           <select id="search-sort" title="Sorts every page of the retrieved matches, not just this one.">

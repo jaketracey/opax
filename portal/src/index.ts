@@ -315,6 +315,7 @@ interface SearchResult {
   url: string | null
   snippet: string
   score: number
+  topics?: string[]
 }
 
 async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -343,13 +344,12 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
         .filter(([k]) => !drop.includes(k))
         .sort(([a], [b]) => a.localeCompare(b)),
     ).toString()
-  // The response schema includes a histogram of the whole cached retrieval
-  // window. Version the page key so pre-histogram pages cannot hide it for a
-  // cache lifetime after this change ships; the expensive window is reused.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-v1\n${keyParams(['nocache'])}`))
+  // Version only search caches for the added topics payload. Old windows lack
+  // classifications; rebuilding one is retrieval only. Answer caches stay intact.
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v2\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\ntopics-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -442,7 +442,9 @@ async function searchWindow(
   const res = await kbFetch(env, '/find', { body })
   if (!res.ok) return null
   const found = (await res.json()) as {
-    resources?: Record<string, FindResource>
+    resources?: Record<string, FindResource & {
+      computedmetadata?: { field_classifications?: { classifications?: { labelset: string; label: string }[] }[] }
+    }>
     best_matches?: unknown[]
   }
 
@@ -497,6 +499,12 @@ async function searchWindow(
       date: (meta.date as string) ?? (resource.origin as { created?: string } | undefined)?.created?.slice(0, 10) ?? null,
       url: resource.origin?.url || null, // official record, for exports/citations
       snippet: windowed,
+      // BASIC already includes resource and computed field classifications.
+      // Reuse them; never fetch each result separately just to draw its chips.
+      topics: [...new Set([
+        ...(resource.usermetadata?.classifications ?? []),
+        ...(resource.computedmetadata?.field_classifications ?? []).flatMap((field) => field.classifications ?? []),
+      ].filter((c) => c.labelset === 'topic' && c.label).map((c) => c.label))],
       score: Math.round(bestScore * 1000) / 1000, // already calibrated above
     }
   })
