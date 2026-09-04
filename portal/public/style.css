@@ -3565,3 +3565,22 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 @media (min-width: 561px) {
   .party-bill .party-bill-q { grid-column: 1; }
 }
+
+/* ---- loop 2 ------------------------------------------------------------- */
+
+/* A zero-length bar drawn with a minimum width reads as one or two votes, and
+   a zero-length bar drawn with no width reads as nothing at all. Both are
+   wrong: a party that cast no ayes has an empty track, and the track is what
+   says so. The bars sit in it at the division's own scale. */
+.bill-split-bars i {
+  min-width: 0; background: none; box-shadow: none; height: 6px; border-radius: 3px;
+  position: relative;
+}
+.bill-split-bar-track { display: block; height: 6px; border-radius: 3px; background: var(--paper-sunken); }
+.bill-split-bar-track > i { display: block; height: 6px; border-radius: 3px; }
+.bill-split-bars .bill-split-bar-track + .bill-split-bar-track { margin-top: 2px; }
+.bill-split-bar-track > i.bill-bar-aye { background: var(--bronze); }
+.bill-split-bar-track > i.bill-bar-no { background: var(--ink-faint); }
+/* The stage stands in as a division's name when the record left no motion;
+   set it apart from a real question so the two are never confused. */
+.bill-division-unnamed .bill-division-q { font-style: normal; color: var(--ink-soft); }

@@ -5823,18 +5823,37 @@ const billName = (b) => b?.short_title || b?.title || b?.key || "";
    "(s) BANDT, Adam, MP". Read back, it is the sponsor — which is otherwise
    null on every bill in this projection. Anything that does not fit the
    notation is left exactly as the register wrote it. */
+/** MCGOWAN → McGowan, O'BRIEN → O'Brien, HANSON-YOUNG → Hanson-Young. */
+function titleCaseName(surname) {
+  return String(surname || "").toLocaleLowerCase("en-AU")
+    .replace(/(^|[\s'’-])(\p{Ll})/gu, (_, sep, c) => sep + c.toLocaleUpperCase("en-AU"))
+    .replace(/\bMc(\p{Ll})/gu, (_, c) => `Mc${c.toLocaleUpperCase("en-AU")}`);
+}
+
+// The register runs co-sponsors together with no separator at all:
+// "(s) PHELPS, Kerryn, MPWILKIE, Andrew, MPBANDT, Adam, MP" is three members.
+const BILL_MEMBER = /([\p{Lu}][\p{Lu}'’\- ]*[\p{Lu}]),\s*([^,]+?),\s*(MP|Senator|Sen\.?)(?=\p{Lu}|$)/gu;
+
 function billSponsorFromPortfolio(portfolio) {
   const raw = String(portfolio || "").trim();
   if (!/^\(s\)\s*/i.test(raw)) return null;
   const rest = raw.replace(/^\(s\)\s*/i, "").trim();
-  const m = rest.match(/^([^,]+),\s*([^,]+?)(?:,\s*(.+))?$/);
-  if (!m) return { name: rest, suffix: "" };
-  const surname = m[1].trim().replace(/\p{Lu}[\p{Lu}'-]+/gu,
-    (w) => w[0] + w.slice(1).toLowerCase().replace(/(['-])(\p{Ll})/gu, (_, s, c) => s + c.toUpperCase()));
-  return { name: `${m[2].trim()} ${surname}`, suffix: (m[3] || "").trim() };
+  const found = [...rest.matchAll(BILL_MEMBER)]
+    .map((m) => ({ name: `${m[2].trim()} ${titleCaseName(m[1])}`, suffix: m[3].trim() }));
+  if (found.length) return found;
+  // Not the notation this expects: hand back the register's own words untouched.
+  return [{ name: rest, suffix: "" }];
 }
 /** What the portfolio slot should say: nothing when the field is really a sponsor. */
 const billPortfolio = (b) => (billSponsorFromPortfolio(b?.portfolio) ? "" : String(b?.portfolio || ""));
+/** "Kerryn Phelps MP", or "Andrew Wilkie MP and 2 others" — the rest are on the bill page. */
+function billMembersLabel(members, max = 1) {
+  if (!members?.length) return "";
+  const head = members.slice(0, max)
+    .map((m) => `${m.name}${m.suffix ? ` ${m.suffix}` : ""}`).join(", ");
+  const more = members.length - Math.min(max, members.length);
+  return more > 0 ? `${head} and ${more} other${more === 1 ? "" : "s"}` : head;
+}
 
 /** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
 function billStatusLine(b) {
@@ -5862,7 +5881,7 @@ function billSourcesHTML(sources) {
 /** The head of every bill list row: the name, then what it is and where it got to. */
 function billRowHTML(b) {
   const year = String(b.introduced || "").slice(0, 4);
-  const member = billSponsorFromPortfolio(b.portfolio);
+  const members = billSponsorFromPortfolio(b.portfolio);
   const figures = [
     Number(b.divisions) ? `${b.divisions} division${b.divisions === 1 ? "" : "s"}` : "",
     Number(b.speeches) ? `${b.speeches} speech${b.speeches === 1 ? "" : "es"}` : "",
@@ -5876,7 +5895,7 @@ function billRowHTML(b) {
       b.status ? `<b class="bill-row-status">${esc(sentenceCase(b.status))}</b>` : "",
       year ? esc(year) : "",
       b.sponsor_party ? partyChipHTML(b.sponsor_party) : "",
-      member ? `${esc(member.name)}${member.suffix ? ` ${esc(member.suffix)}` : ""}` : esc(billPortfolio(b)),
+      members ? esc(billMembersLabel(members)) : esc(billPortfolio(b)),
     ].filter(Boolean).join(" · ")}</span>
     ${b.short_title && b.short_title !== b.title ? `<p class="bill-row-long">${esc(b.title)}</p>` : ""}
     ${figures.length ? `<p class="bill-row-figures">${figures.join(" · ")}</p>` : ""}
@@ -6034,16 +6053,16 @@ function billSplitHTML(division) {
   const max = Math.max(...drawn.map((s) => Math.max(s.ayes, s.noes)), 1);
   const rows = drawn.map((s) => `
     <li class="bill-split">
-      <span class="bill-split-party">${partyDotHTML(s.party)}${esc(s.party)}</span>
+      <span class="bill-split-party">${partyDotHTML(s.party)}${esc(billParty(s.party))}</span>
       <span class="bill-split-bars" aria-hidden="true">
-        <i class="bill-bar-aye" style="width:${((s.ayes / max) * 100).toFixed(1)}%"></i>
-        <i class="bill-bar-no" style="width:${((s.noes / max) * 100).toFixed(1)}%"></i>
+        <span class="bill-split-bar-track"><i class="bill-bar-aye" style="width:${((s.ayes / max) * 100).toFixed(1)}%"></i></span>
+        <span class="bill-split-bar-track"><i class="bill-bar-no" style="width:${((s.noes / max) * 100).toFixed(1)}%"></i></span>
       </span>
       <span class="bill-split-n">${s.ayes}<span aria-hidden="true">–</span>${s.noes}<span class="visually-hidden"> ayes to noes</span></span>
     </li>`).join("");
   const rest = folded.length
     ? `<p class="fineprint bill-split-rest">Also ${esc(folded
-      .map((s) => `${s.party} ${s.ayes}–${s.noes}`).join(", "))}.</p>`
+      .map((s) => `${billParty(s.party)} ${s.ayes}–${s.noes}`).join(", "))}.</p>`
     : "";
   // What the attribution rests on, as a clause rather than a paragraph:
   // party_coverage counts the votes carried by a party observed on or before
@@ -6075,41 +6094,95 @@ function billDivisionHref(d) {
    available here." Set at heading size in the serif, a note reads as the
    motion the House divided on. The first sentence stands as the heading;
    whatever follows is a note and is set as one. Nothing is dropped. */
+/** Prose about a division rather than the motion put: it must not be set as a heading. */
+const BILL_DESCRIPTION = /^(this (is|division|motion|amendment)\b|the (majority|motion) )/i;
+
 function billQuestionParts(text) {
   const whole = billQuestion(text);
   if (!whole) return { head: "", note: "" };
+  if (BILL_DESCRIPTION.test(whole)) return { head: "", note: whole };
   if (whole.length <= 110) return { head: whole, note: "" };
   const cut = whole.slice(0, 160).search(/[.?!](\s|$)/);
   if (cut < 20) return { head: `${whole.slice(0, 105).trimEnd()}…`, note: whole };
   return { head: whole.slice(0, cut + 1), note: whole.slice(cut + 1).trim() };
 }
 
+/* TheyVoteForYou records the same division several times — the Medibank bill's
+   third reading appears ten times, nine of them saying so in the question
+   field. Copied straight out, the page shows ten third readings and a reader
+   counts ten. Rows identical in day, stage and counts are one division; the
+   one that carries the motion is kept and the section says this is happening. */
+function billDedupeDivisions(divisions) {
+  const groups = new Map();
+  for (const d of divisions || []) {
+    const k = [d.date, String(d.stage || "").toLowerCase(), d.ayes, d.noes].join("|");
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(d);
+  }
+  const kept = [];
+  let collapsed = 0;
+  for (const group of groups.values()) {
+    // Prefer a row whose question is the motion; then one that has a question at all.
+    const best = group.find((d) => billQuestionParts(d.question).head)
+      || group.find((d) => d.question) || group[0];
+    kept.push(best);
+    collapsed += group.length - 1;
+  }
+  kept.sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+  return { divisions: kept, collapsed };
+}
+
+/* On a party page the bill's name is already the row's link, and the record
+   writes its questions as "<Bill> - <Stage> - <Question>", so repeating the
+   title inside the question spends the row's width saying it twice. The
+   leading title segment comes off and the rest is clamped on a word. */
+function billQuestionShort(question, bill, max = 104) {
+  // From the whole cleaned question, not the bill page's heading: clipping
+  // first and stripping the title afterwards throws away the useful end.
+  let text = billQuestion(question);
+  const title = String(bill?.title || "");
+  if (title && text.toLowerCase().startsWith(title.toLowerCase())) {
+    text = text.slice(title.length).replace(/^\s*[-–—:]\s*/, "").trim();
+  }
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max).lastIndexOf(" ");
+  return `${text.slice(0, cut > 40 ? cut : max).trimEnd()}…`;
+}
+
+/** The register's own codes for who is not a party. */
+const BILL_PARTY_LABELS = { PRES: "Presiding officer", SPK: "Speaker", "": "Not recorded" };
+const billParty = (p) => BILL_PARTY_LABELS[String(p || "").trim()] || String(p || "");
+
 function billDivisionHTML(d) {
   const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
   const target = billDivisionHref(d);
   const { head, note } = billQuestionParts(d.question);
-  const question = head || "Question not recorded";
   const official = safeUrl(d.url);
-  return `<li class="bill-division">
+  const stage = billStage(d.stage);
+  // With no motion in the field there is no heading to write. The division's
+  // own facts lead — its stage is the closest thing the record gives to a
+  // name for it — and the record's prose follows as the note it is.
+  const title = head || stage || "Division";
+  const meta = [
+    head && stage ? esc(stage) : "",
+    billHouse(d.house) ? esc(billHouse(d.house)) : "",
+    d.date ? esc(fmtDate(d.date)) : "",
+  ].filter(Boolean).join(" · ");
+  return `<li class="bill-division${head ? "" : " bill-division-unnamed"}">
     ${target
-      ? `<a class="source-title bill-division-q" href="${esc(target)}">${esc(question)}</a>`
-      : `<span class="source-title bill-division-q">${esc(question)}</span>`}
-    ${note ? `<p class="bill-division-note">${esc(note)}</p>` : ""}
-    <span class="result-meta">${[
-      billStage(d.stage) ? esc(billStage(d.stage)) : "",
-      billHouse(d.house) ? esc(billHouse(d.house)) : "",
-      d.date ? esc(fmtDate(d.date)) : "",
-    ].filter(Boolean).join(" · ")}</span>
+      ? `<a class="source-title bill-division-q" href="${esc(target)}">${esc(title)}</a>`
+      : `<span class="source-title bill-division-q">${esc(title)}</span>`}
+    <span class="result-meta">${meta}</span>
     <p class="bill-division-out"><b>${esc(billOutcome(d.outcome) || "Outcome not recorded")}</b>
       <span>${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes</span>${
       official ? `<a class="bill-division-src" href="${esc(official)}" rel="noopener" target="_blank">The count ↗︎</a>` : ""}</p>
+    ${note ? `<p class="bill-division-note">${esc(note)}</p>` : ""}
     ${billSplitHTML(d)}
   </li>`;
 }
 
 function billDivisionsHTML(bill) {
-  const divs = (bill.divisions || []).slice()
-    .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+  const { divisions: divs, collapsed } = billDedupeDivisions(bill.divisions);
   if (!divs.length) {
     return `<section class="bill-section"><h3 class="subject-section-title">Divisions</h3>
       <p class="status">No divisions recorded.</p>
@@ -6124,7 +6197,9 @@ function billDivisionsHTML(bill) {
       data-rest="${esc(String(rest.length))}">Show more (${rest.length} more)</button></p>` : ""}
     <p class="fineprint">Ayes and noes are the division's own totals. Party is each member's recorded
       affiliation, not a reconstruction of who they sat with on the day, and a member the record does not
-      name is counted but not attributed. Only formal divisions leave a per-member record.</p>
+      name is counted but not attributed. Only formal divisions leave a per-member record.${collapsed
+        ? ` The source records some divisions more than once; ${collapsed} row${collapsed === 1 ? "" : "s"}
+            identical in day, stage and counts ${collapsed === 1 ? "is" : "are"} shown here once.` : ""}</p>
   </section>`;
 }
 
@@ -6247,12 +6322,16 @@ async function openBill(key, manageFocus) {
   const title = bill.title || bill.short_title || key;
   document.title = `${crumbLabel(billName(bill), 60)} · OPAX`;
   setCrumbs([{ label: "Bills", href: "/bills" }, { label: crumbLabel(billName(bill), 48) }]);
-  const member = billSponsorFromPortfolio(bill.portfolio);
-  const sponsorName = bill.sponsor || member?.name || null;
+  const members = billSponsorFromPortfolio(bill.portfolio);
+  // Each co-sponsor is a person with an entry of their own, so each is a link.
+  const sponsorLinks = bill.sponsor
+    ? [`<a href="${esc(subjectHash("person", bill.sponsor))}">${esc(bill.sponsor)}</a>`]
+    : (members || []).map((m) => `<a href="${esc(subjectHash("person", m.name))}">${esc(m.name)}</a>${
+      m.suffix ? ` ${esc(m.suffix)}` : ""}`);
   const sponsorBits = [
-    sponsorName
-      ? `Introduced by <a href="${esc(subjectHash("person", sponsorName))}">${esc(sponsorName)}</a>${
-        member?.suffix ? ` ${esc(member.suffix)}` : ""}`
+    sponsorLinks.length
+      ? `Introduced by ${sponsorLinks.slice(0, 3).join(", ")}${
+        sponsorLinks.length > 3 ? ` and ${sponsorLinks.length - 3} others` : ""}`
       : "Sponsor not recorded",
     bill.sponsor_party ? partyChipHTML(bill.sponsor_party) : "",
     billPortfolio(bill) ? esc(billPortfolio(bill)) : "",
@@ -6288,8 +6367,7 @@ async function openBill(key, manageFocus) {
     more.addEventListener("click", () => {
       const list = $("bill-divisions");
       const first = list.children.length;
-      const divs = (bill.divisions || []).slice()
-        .sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(6);
+      const divs = billDedupeDivisions(bill.divisions).divisions.slice(6);
       list.insertAdjacentHTML("beforeend", divs.map(billDivisionHTML).join(""));
       more.remove();
       list.children[first]?.querySelector("a, .bill-division-q")?.focus?.();
@@ -6393,7 +6471,9 @@ async function renderPartyBillDivisions(label, sections, key) {
   }
   const rows = [];
   for (const bill of files) {
-    for (const d of bill.divisions || []) {
+    // Same collapse as the bill page: a division the source recorded twice is
+    // one division, and listing it twice here would count it twice.
+    for (const d of billDedupeDivisions(bill.divisions).divisions) {
       const hit = Object.entries(d.party_splits || {})
         .find(([party]) => samePartyLabel(party, label));
       if (!hit) continue;
@@ -6419,11 +6499,11 @@ async function renderPartyBillDivisions(label, sections, key) {
       r.d.stage ? esc(billStage(r.d.stage)) : "", r.d.date ? esc(fmtDate(r.d.date)) : "",
       r.d.outcome ? `<b>${esc(billOutcome(r.d.outcome))}</b>` : "",
     ].filter(Boolean).join(" · ")}</span>
-    ${billQuestionParts(r.d.question).head
-      ? `<span class="party-bill-q">${esc(billQuestionParts(r.d.question).head)}</span>` : ""}
+    ${billQuestionShort(r.d.question, r.bill)
+      ? `<span class="party-bill-q">${esc(billQuestionShort(r.d.question, r.bill))}</span>` : ""}
     <span class="bill-split-bars party-bill-bars" aria-hidden="true">
-      <i class="bill-bar-aye" style="width:${((r.ayes / max) * 100).toFixed(1)}%"></i>
-      <i class="bill-bar-no" style="width:${((r.noes / max) * 100).toFixed(1)}%"></i>
+      <span class="bill-split-bar-track"><i class="bill-bar-aye" style="width:${((r.ayes / max) * 100).toFixed(1)}%"></i></span>
+      <span class="bill-split-bar-track"><i class="bill-bar-no" style="width:${((r.noes / max) * 100).toFixed(1)}%"></i></span>
     </span>
     <span class="bill-split-n party-bill-n">${r.ayes} for, ${r.noes} against</span>
   </li>`;
