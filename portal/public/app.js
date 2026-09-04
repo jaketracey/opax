@@ -165,7 +165,7 @@ function donorBalanceHTML(flows) {
   const scaleGroup = groups.reduce((best, group) => scaleRow[group] > scaleRow[best] ? group : best, groups[0]);
   const scale = Math.max(scaleRow[scaleGroup], 1);
   const groupLabel = { coalition: "Coalition", labor: "Labor", other: "other parties" };
-  const srcFigure = (value, label) => `<a href="${source}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(value)}</a>`;
+  const srcFigure = (value, label) => `<a class="fig-src" href="${source}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(value)}</a>`;
   const width = (value) => Math.min(72, (value / scale) * 72).toFixed(1);
   const peakLabel = (row, group) => row === peak[group] && row[group]
     ? `<a class="balance-label" href="${source}" rel="noopener" target="_blank" aria-label="${esc(`${row.year}, ${groupLabel[group]} ${fmtMoney(row[group])}, AEC source`)}">${esc(fmtMoney(row[group]))}</a>`
@@ -3466,7 +3466,7 @@ function partyReceiptsHTML(rows, registerURL) {
   const max = Math.max(...series.map((r) => r.receipts), 1);
   const peak = series.find((r) => r.receipts === max);
   const pct = (value, total) => total > 0 ? Math.round((value / total) * 100) : 0;
-  const srcFigure = (value, label) => `<a href="${esc(source)}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(value)}</a>`;
+  const srcFigure = (value, label) => `<a class="fig-src" href="${esc(source)}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(value)}</a>`;
   const clamped = series.filter((r) => r.clamped).length;
   const rowHTML = series.map((r) => {
     const donationPct = r.receipts ? (r.donations / r.receipts) * 100 : 0;

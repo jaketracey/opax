@@ -2014,6 +2014,14 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .receipts-value, .receipts-pct { text-align: right; color: var(--ink-soft); white-space: nowrap; }
 .receipts-pct { font-weight: 600; min-height: 1em; }
 .receipts-row a, .receipts-tiles a { font-variant-numeric: tabular-nums; }
+/* A figure that opens its AEC return: no underline, a small external mark in
+   bronze after it, the way the site's external actions are marked. */
+.fig-src { text-decoration: none; color: inherit; }
+.fig-src::after {
+  content: "\2197"; display: inline-block; margin-left: 0.28em; vertical-align: 0.55em;
+  font: 600 0.5em/1 var(--sans); color: var(--bronze-ink);
+}
+.fig-src:hover, .fig-src:focus-visible { color: var(--bronze-ink); }
 .donor-balance { margin-top: var(--space-5); max-width: 920px; position: relative; overflow: hidden; }
 .donor-balance .subject-section-title { margin: 0 0 var(--space-2); }
 .balance-tiles { margin-top: var(--space-2); }
