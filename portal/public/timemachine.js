@@ -717,12 +717,12 @@ const CSS = `
 .tm-gallery-nav:hover { border-color: var(--bronze-ink, #8A5A12); color: var(--bronze-ink, #8A5A12); }
 .tm-gallery-figure { min-width: 0; margin: 0; touch-action: pan-y; }
 .tm-picture-mat {
-  display: grid; place-items: center; width: 100%; height: min(56vh, 530px); min-height: 250px;
+  display: flex; align-items: center; justify-content: center; width: 100%; height: min(56vh, 530px); min-height: 250px;
   padding: clamp(0.55rem, 2vw, 1.1rem); overflow: hidden;
   border: 1px solid var(--line-strong, #8D897B); background: var(--paper-raised, #fff);
 }
 .tm-gallery-image {
-  display: block; width: 100%; height: 100%;
+  display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; min-width: 0; min-height: 0;
   object-fit: contain; user-select: none; -webkit-user-drag: none;
 }
 .tm-gallery-caption {

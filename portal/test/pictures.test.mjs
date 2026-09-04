@@ -72,8 +72,14 @@ for (let year = 1998; year <= 2026; year++) {
       assert.match(String(picture.date), new RegExp(`^${key}(?:-|$)`), label + " date belongs to its year");
     }
     assert.ok(String(picture.author || "").trim(), label + " credits an author");
+    assert.ok(Object.hasOwn(picture, "credit"), label + " records the Commons Credit field or null");
     assert.match(String(picture.licence || ""), allowedLicence, label + " has an allowed licence");
-    assert.match(String(picture.licence_url || ""), /^https:\/\//, label + " links the licence");
+    assert.ok(Object.hasOwn(picture, "licence_url"), label + " records the Commons licence URL or null");
+    if (picture.licence_url != null) {
+      assert.match(String(picture.licence_url), /^https:\/\//, label + " links the licence");
+    } else {
+      assert.equal(String(picture.licence).toLowerCase(), "public domain", label + " omits a URL only when Commons supplies none for public-domain status");
+    }
     assert.match(String(picture.source_url || ""), /^https:\/\/commons\.wikimedia\.org\//, label + " links a Commons file page");
     assert.match(String(picture.original_url || ""), /^https:\/\/upload\.wikimedia\.org\//, label + " links the Commons original");
     assert.ok(!sourceUrls.has(picture.source_url), label + " does not repeat another photograph");
