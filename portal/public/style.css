@@ -1597,10 +1597,6 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 @media (max-width: 700px) {
   #dialog-explain .explain-stage { top: 0; }
   #dialog-explain .explain-stage-label.to { right: 4.9rem; max-width: 46%; }
-  #dialog-explain .explain-controls {
-    position: sticky; bottom: 0; z-index: 3; margin: 1.25rem -1.1rem 0; padding: 0.7rem 1.1rem;
-    background: var(--paper); border-top: 1px solid var(--line);
-  }
 }
 /* A dialog's sticky head, once the reader has scrolled past its hero figure:
    the figure stands in the head, risen in, and a paper fade beneath the head

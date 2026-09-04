@@ -4117,10 +4117,10 @@ void main() {
 .explain-canvas { display:block; width:100%; height:100%; }
 .explain-stage::after { content:""; position:absolute; inset:14px; pointer-events:none;
   border:1px solid rgba(160,118,27,.24); box-shadow:inset 0 0 0 5px rgba(250,249,246,.16); }
-.explain-stage-label { position:absolute; z-index:2; top:1rem; max-width:42%; margin:0;
+.explain-stage-label { position:absolute; z-index:2; top:1.7rem; max-width:42%; margin:0;
   color:var(--ink-soft); font:700 clamp(.78rem,1.4vw,.95rem)/1.35 var(--serif); }
-.explain-stage-label.from { left:1.6rem; text-align:left; }
-.explain-stage-label.to { right:1.6rem; text-align:right; }
+.explain-stage-label.from { left:2rem; text-align:left; }
+.explain-stage-label.to { right:2rem; text-align:right; }
 .explain-stage-year { position:absolute; z-index:4; left:50%; top:3.35rem; bottom:auto; transform:translateX(-50%);
   margin:0; color:var(--bronze-ink); font:700 clamp(2.2rem,7vw,4.8rem)/1 var(--serif);
   font-variant-numeric:tabular-nums; text-shadow:0 1px var(--paper); }
@@ -4148,7 +4148,7 @@ void main() {
 .explain-sources [data-scene-citation] { transition:background-color .16s ease; }
 .explain-sources [data-scene-citation]:hover,.explain-sources [data-scene-citation]:focus-within {
   background:var(--bronze-wash); }
-.explain-narrative { min-width:0; overflow:auto; overflow-x:hidden; padding:clamp(1.1rem,3vw,2.2rem); }
+.explain-narrative { --explain-pad:clamp(1.1rem,3vw,2.2rem); min-width:0; overflow:auto; overflow-x:hidden; padding:var(--explain-pad); }
 .explain-title { margin:0; font:700 clamp(1.7rem,3.2vw,2.45rem)/1.12 var(--serif); letter-spacing:-.018em; }
 .explain-deck { margin:.55rem 0 1.25rem; color:var(--ink-soft); font:400 .93rem/1.55 var(--serif); }
 .explain-steps { display:flex; gap:.25rem; overflow:auto; margin:0 0 1.35rem; padding:0 0 .45rem;
@@ -4191,7 +4191,9 @@ void main() {
   position:relative; font:400 .92rem/1.55 var(--serif); }
 .explain-caveats li::before { content:""; position:absolute; left:0; top:1.35rem; width:6px;
   border-top:1px solid var(--bronze); }
-.explain-controls { display:flex; justify-content:space-between; gap:.6rem; margin-top:1.25rem; }
+.explain-controls { position:sticky; bottom:0; z-index:3; display:flex; justify-content:space-between; gap:.6rem;
+  margin:1.25rem calc(-1 * var(--explain-pad)) calc(-1 * var(--explain-pad)); padding:.7rem var(--explain-pad);
+  background:var(--paper); border-top:1px solid var(--line); }
 .explain-controls button { min-height:44px; border:1px solid var(--line-strong); border-radius:4px;
   padding:.55rem .9rem; background:transparent; color:var(--ink); cursor:pointer; font:600 .84rem/1.2 var(--sans); }
 .explain-controls button:last-child { margin-left:auto; background:var(--navy); border-color:var(--navy); color:var(--on-navy); }
@@ -4204,9 +4206,10 @@ void main() {
   .explain-shell { display:block; height:auto; min-height:0; overflow:visible; }
   .explain-stage { position:sticky; top:44px; z-index:1; height:clamp(276px,38dvh,350px); min-height:0; max-height:350px;
     border-right:0; border-bottom:1px solid var(--line); }
-  .explain-narrative { overflow:visible; padding:1.1rem; }
+  .explain-narrative { --explain-pad:1.1rem; overflow:visible; padding:var(--explain-pad); }
   .explain-stage-label { max-width:39%; font-size:.76rem; }
-  .explain-stage-label.from { left:1rem; }.explain-stage-label.to { right:1rem; }
+  .explain-stage-label { top:1.5rem; }
+  .explain-stage-label.from { left:1.4rem; }.explain-stage-label.to { right:1.4rem; }
   .explain-stage-year { top:3.15rem; bottom:auto; font-size:1.85rem; }
   .explain-stage-year[data-zero] { opacity:.68; }
   .explain-stage-year[data-peak-summary] { font-size:1.6rem; }
