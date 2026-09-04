@@ -7560,6 +7560,10 @@ async function openDocPage(slug, manageFocus) {
   $("doc-cite-panel").hidden = true;
   $("doc-cite").setAttribute("aria-expanded", "false");
   $("doc-actions").hidden = true;
+  $("doc-similar-panel").hidden = true;
+  $("doc-similar-panel").replaceChildren();
+  $("doc-similar-panel").removeAttribute("aria-busy");
+  $("doc-similar").setAttribute("aria-expanded", "false");
   setStatus($("doc-status"), "Fetching the document…");
   try {
     const doc = await api(`/api/resource/${encodeURIComponent(slug)}`);
@@ -7596,7 +7600,8 @@ async function openDocPage(slug, manageFocus) {
     $("doc-topic").hidden = !topic;
     $("doc-topic").classList.toggle("doc-topic-long", String(topic || "").length > 100);
     // One byline, each fact once: party · seat · chamber · date · source.
-    const chamber = CHAMBER_NAMES[String(doc.labels?.chamber || "").toLowerCase()];
+    const chamber = doc.labels?.chamber === "senate_committee" ? "Senate committees"
+      : CHAMBER_NAMES[String(doc.labels?.chamber || "").toLowerCase()];
     const state = doc.labels?.state;
     const stateName = state ? (STATE_NAMES[state] || state) : null;
     const house = chamber
@@ -7605,7 +7610,7 @@ async function openDocPage(slug, manageFocus) {
     const origin = safeUrl(doc.url);
     $("doc-meta").innerHTML = [
       doc.labels?.party ? partyChipHTML(doc.labels.party) : "",
-      doc.metadata?.electorate ? `Member for ${esc(doc.metadata.electorate)}` : "",
+      doc.metadata?.electorate ? `${doc.labels?.chamber === "representatives" || doc.labels?.chamber === "nsw_la" ? "Member for " : ""}${esc(doc.metadata.electorate)}` : "",
       house ? esc(house) : "",
       doc.metadata?.date ? esc(fmtDate(doc.metadata.date)) : "",
       origin ? `<a href="${esc(origin)}" rel="noopener" target="_blank">View original ↗︎</a>` : "",
@@ -7640,11 +7645,7 @@ async function openDocPage(slug, manageFocus) {
       // Only worth naming when something else stands above it.
       $("doc-record-head").hidden = false;
     }
-    $("doc-text").replaceChildren(...String(doc.text || "(no text)").split(/\r\n|[\n\r]/).filter((line) => line.trim()).map((line) => {
-      const p = document.createElement("p");
-      p.textContent = line;
-      return p;
-    }));
+    renderDocText(doc);
     $("doc-ask").href = askHash(`What has parliament said about ${topic || doc.title}?`);
     $("doc-actions").hidden = false;
     $("doc-profile").hidden = !doc.speaker;
@@ -7663,6 +7664,99 @@ async function openDocPage(slug, manageFocus) {
         ? "No document with this identifier. It may not be indexed yet."
         : String(err.message || err), true);
     $("doc-title").textContent = "Document unavailable";
+  }
+}
+
+// Preserve the source verbatim, including whitespace. Only presentation changes.
+function renderDocText(doc) {
+  let text = String(doc.text || "(no text)");
+  const nodes = [];
+  const paragraph = (value, className = "") => {
+    const p = document.createElement("p");
+    p.className = className;
+    p.textContent = value;
+    nodes.push(p);
+  };
+  // Require a timestamp and an exact normalised identity match. An unrelated
+  // speaker, a quoted banner or a bare time must stay in the record text.
+  const banner = text.match(/^\s*([^:\r\n()]{2,100})(?:\s*\([^()\r\n]{0,180}\))*?\s*\(\s*\d[\d \t]*:[\d \t]+(?::[\d \t]+)?\s*\)\s*:[ \t]*/);
+  const identity = (name) => String(name || "").toLocaleLowerCase("en-AU")
+    .replace(/^(?:(?:the|hon|mr|mrs|ms|miss|dr|professor|senator)\.?\s+)+/, "")
+    .replace(/[^\p{L}\p{N}]/gu, "");
+  if (banner && identity(banner[1]) && [doc.speaker, doc.metadata?.speaker_raw].some((name) => identity(name) === identity(banner[1]))) {
+    paragraph(banner[0], "doc-source-byline");
+    text = text.slice(banner[0].length);
+  }
+  // Committee records sometimes lead with the exact debate title in brackets.
+  // Keep those words visible as context, outside the spoken paragraph.
+  const context = text.match(/^\s*\[([^\]\r\n]+)\][ \t]*/);
+  const debate = doc.metadata?.topic || doc.metadata?.debate || titleSubject(doc);
+  if (context && doc.labels?.chamber === "senate_committee" && context[1] === debate) {
+    paragraph(context[0], "doc-source-context");
+    text = text.slice(context[0].length);
+  }
+  for (const line of text.split(/(\r\n|[\n\r])/)) {
+    if (!line.trim()) { nodes.push(document.createTextNode(line)); continue; }
+    // Only explicit capitalised speaker/office calls at sentence boundaries.
+    // Style one sentence; do not guess how much subsequent prose they own.
+    const calls = /(?:^|(?<=[.!?])[ \t]+)((?:(?:The )?(?:(?:ACTING |DEPUTY )?(?:PRESIDENT|SPEAKER)|CHAIR)|(?:Mr|Mrs|Ms|Dr|Senator|The Hon\.) [A-Z][A-Z’'\-]+(?: [A-Z][A-Z’'\-]+){0,4}):[ \t]+)/g;
+    let offset = 0;
+    for (const match of line.matchAll(calls)) {
+      const start = match.index + match[0].length - match[1].length;
+      if (start < offset) continue;
+      const bodyStart = start + match[1].length;
+      const tail = line.slice(bodyStart);
+      const endings = [...tail.matchAll(/[.!?](?=\s|$)/g)];
+      const endMark = endings.find((m) => !/\b(?:Mr|Mrs|Ms|Dr|Hon|Sen)\.$/.test(tail.slice(0, m.index + 1)));
+      const end = endMark ? bodyStart + endMark.index + 1 : line.length;
+      if (start > offset) paragraph(line.slice(offset, start));
+      paragraph(line.slice(start, end), "doc-interjection");
+      offset = end;
+    }
+    if (offset < line.length) paragraph(line.slice(offset));
+  }
+  $("doc-text").replaceChildren(...nodes);
+}
+
+async function renderDocSimilar(doc) {
+  const panel = $("doc-similar-panel");
+  panel.hidden = false;
+  panel.setAttribute("aria-busy", "true");
+  panel.innerHTML = '<h3 class="subject-section-title">Similar speeches</h3><p role="status">Finding related speeches…</p>';
+  $("doc-similar").setAttribute("aria-expanded", "true");
+  try {
+    const query = titleSubject(doc) || doc.title;
+    const params = new URLSearchParams({ q: query, kind: "speech", per: "6" });
+    const topic = (doc.topics || []).find((slug) => TOPICS[slug]);
+    if (topic) params.set("topic", topic);
+    const data = await api(`/api/search?${params}`);
+    const seen = new Set([doc.slug]);
+    const rows = (data.results || []).filter((row) => {
+      if (!row.slug || seen.has(row.slug)) return false;
+      seen.add(row.slug);
+      return true;
+    }).slice(0, 3);
+    const briefs = await fetchBriefMap(rows);
+    if (currentDoc !== doc) return;
+    const excerpt = (value) => value.length > 320 ? `${value.slice(0, 320).replace(/\s+\S*$/, "")}…` : value;
+    panel.innerHTML = '<h3 class="subject-section-title">Similar speeches</h3>' + (rows.length
+      ? `<ul class="doc-similar-list">${rows.map((row) => {
+        const brief = briefs[row.resource];
+        const title = displayTitle(row);
+        const label = titleSubject(row) === query && row.speaker ? row.speaker
+          : title.length > 110 ? `${title.slice(0, 110).replace(/\s+\S*$/, "")}…` : title;
+        return `<li><a href="/doc/${encodeURIComponent(row.slug)}" title="${esc(title)}">${esc(label)}</a>
+          <p class="doc-related-meta">${esc([row.speaker, fmtDate(row.date)].filter(Boolean).join(" · "))}</p>
+          <p>${esc(excerpt(brief || row.snippet || "No passage available."))}</p>
+          <p class="doc-related-meta">${brief ? "Machine summary · not part of the record" : "Passage from the record"}</p></li>`;
+      }).join("")}</ul>` : '<p>No related speeches found for this subject.</p>') +
+      `<a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject ↗</a>`;
+  } catch {
+    if (currentDoc !== doc) return;
+    panel.innerHTML = '<h3 class="subject-section-title">Similar speeches</h3><p role="status">Related speeches could not be loaded.</p><button type="button" class="action-btn">Try again</button>';
+    panel.querySelector("button").addEventListener("click", () => renderDocSimilar(doc));
+  } finally {
+    if (currentDoc === doc) panel.removeAttribute("aria-busy");
   }
 }
 
@@ -7685,9 +7779,16 @@ $("doc-copylink").addEventListener("click", () => {
 });
 $("doc-similar").addEventListener("click", () => {
   if (!currentDoc) return;
-  // Search the subject, not the speaker and not the date: those would find
-  // this speaker's other days rather than other speeches on this debate.
-  goRoute(searchHash(titleSubject(currentDoc) || currentDoc.title, {}));
+  const panel = $("doc-similar-panel");
+  if (!panel.hidden) {
+    panel.hidden = true;
+    $("doc-similar").setAttribute("aria-expanded", "false");
+  } else if (panel.childNodes.length) {
+    panel.hidden = false;
+    $("doc-similar").setAttribute("aria-expanded", "true");
+  } else {
+    renderDocSimilar(currentDoc);
+  }
 });
 $("doc-more").addEventListener("click", () => {
   if (!currentDoc?.speaker) return;

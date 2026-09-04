@@ -624,7 +624,7 @@
             <button type="button" class="action-btn" id="doc-profile" aria-label="Full profile">Profile</button>
             <button type="button" class="action-btn" id="doc-cite" aria-expanded="false" aria-controls="doc-cite-panel">Cite</button>
             <button type="button" class="action-btn" id="doc-more" aria-label="Their speeches">More</button>
-            <button type="button" class="action-btn" id="doc-similar" aria-label="Find similar speeches">Similar</button>
+            <button type="button" class="action-btn" id="doc-similar" aria-label="Find similar speeches" aria-expanded="false" aria-controls="doc-similar-panel">Similar</button>
             <button type="button" class="action-btn" id="doc-copylink" aria-label="Copy link">Link</button>
           </div>
           <p id="doc-speaker-links" class="fineprint doc-speaker-links" hidden></p>
@@ -633,6 +633,7 @@
       <div id="doc-cite-panel" class="cite-panel" hidden>
         <!-- injected -->
       </div>
+      <section id="doc-similar-panel" aria-label="Similar speeches" hidden></section>
       <hr class="ledger-rule doc-rule">
       <div id="doc-status" class="status" role="status"></div>
       <!-- The summary is OPAX's writing, the record below is parliament's. They

@@ -1,0 +1,13 @@
+# Loop 2 — source fidelity and related reading
+
+The renderer now preserves the complete source string, including whitespace, while using paragraphs for source lines. A leading timestamped banner is styled as a byline only when its normalised speaker identity exactly matches this document. Explicit uppercase office/name calls at sentence boundaries become indented italic sentences; ambiguous prose stays ordinary text. A committee's exact bracketed debate heading becomes quiet context, with every word retained.
+
+Similar opens an inline list of up to three distinct resources, retrieved with one search and one batch of stored briefs. Missing briefs fall back to labelled source passages. Requests are guarded against navigation races; reopening reuses the list, errors provide retry. Known topic labels narrow retrieval. Topics are sentence-case 44px chips. Senate committee metadata is named accurately, and senate affiliation text no longer gets the false “Member for” prefix.
+
+Reviewed 60 captures across the same three real documents and four viewports, including open citations and similar results. Zero horizontal page overflow and zero document targets below 44px in the final geometry checks. The byline now reads as metadata rather than the speech's first sentence. Federal paragraphs are distinct; the short committee intervention is much easier to locate below its context.
+
+Worst findings fixed before closing: enormous repeated committee titles drowned the similar briefs, and the shared section-heading margin wasted most of a phone screen above the results. Same-debate links now use the speaker, other long display titles are shortened with full titles retained, and the section has a local compact heading margin. Long debate titles were also restored before the toolbar in visual order.
+
+Remaining critique: the summary disclaimer is still too small, the machine-summary capsule is fussy, there is no close control at the bottom of a long open section, and visible focus needs a deliberate pass. Similar search is retrieval, not a guarantee of substantive agreement or chronological adjacency. The NSW source still has no paragraph structure to recover. Existing federal concatenation artefacts remain verbatim.
+
+Checks: JavaScript syntax and whitespace pass. The renderer regression probe checks source equality on all three live fixtures plus own/unrelated/quoted banners, CRLF/newlines, chair calls, abbreviations, markup and committee headings. No Worker change. Previous/next is skipped: the search endpoint returns relevance or date order and a truncated candidate window, with no guaranteed debate sequence. Numeric speech IDs are not evidence of adjacency.
