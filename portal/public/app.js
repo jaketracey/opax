@@ -3915,7 +3915,7 @@ async function openSubject(kind, name, manageFocus) {
         return `<li><time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "")}</time>
           <div>${body}</div></li>`;
       }).join("")}</ul>
-      <p class="fineprint">The corpus is still indexing: this is what has been loaded so far, not their full record.</p>`);
+      <p class="fineprint">Their newest indexed speeches, a sample rather than their full record.</p>`);
   } else {
     sections.insertAdjacentHTML("beforeend",
       `<p class="status">No speeches by “${esc(name)}” in the indexed corpus yet. Names appear as in

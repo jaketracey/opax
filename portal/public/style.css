@@ -1935,6 +1935,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .subject-section-title {
   font: 600 1.35rem/1.3 var(--serif); color: var(--ink); margin: var(--section-gap) 0 var(--space-2);
 }
+.declared-ties { margin-top: var(--section-gap); }
 .declared-ties .subject-section-title { margin-top: 0; }
 .ties-list .source-title, .donor-ties-list .source-title { font-family: var(--serif); }
 .tie-declaration {
