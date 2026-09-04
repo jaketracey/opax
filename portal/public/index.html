@@ -603,15 +603,22 @@
       <article id="report-view" hidden>
         <h2 id="report-title" tabindex="-1"></h2>
         <p id="report-blurb" class="report-blurb"></p>
+        <!-- v2 head: the lede in reading size, the window it covers, and the
+             two-stop nav. Empty and hidden for a v1 report. -->
+        <div id="report-head2" class="report-head2" hidden></div>
         <p id="report-meta" class="report-meta"></p>
-        <div class="report-lead">
+        <div class="report-lead" id="report-lead">
           <div id="report-brief"></div>
           <aside id="report-figures"></aside>
         </div>
+        <!-- v2 parts, in reading order, ahead of the money a v1 page also has. -->
+        <section id="report-now" class="report-part" hidden aria-labelledby="report-now-head"></section>
+        <section id="report-overtime" class="report-part" hidden aria-labelledby="report-overtime-head"></section>
         <div id="report-stats"></div>
         <div id="report-positions"></div>
         <div id="report-moments"></div>
         <div id="report-sections"></div>
+        <div id="report-allsources" hidden></div>
         <p class="fineprint" id="report-download"></p>
       </article>
     </section>
