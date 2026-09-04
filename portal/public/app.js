@@ -4026,8 +4026,7 @@ async function buildDonorsDirectory() {
       ...jurs.map((j) => `<span class="dir-fig"><b>${esc(fmtMoney(d.money[j].total))}</b>${esc(sourceShort[j] || j)}</span>`),
       `<span class="dir-fig"><b>${num(d._count)}</b>donation${d._count === 1 ? "" : "s"}</span>`,
     ].join("");
-    return `<li class="dir-row">
-      <span class="dir-mono dir-mono-ind" style="--pc:${esc(colour)}" aria-hidden="true">${esc(d.label.slice(0, 1))}</span>
+    return `<li class="dir-row dir-row-plain">
       <div class="dir-main">
         <a class="source-title dir-name" href="${esc(subjectHash("donor", d.label))}">${esc(d.label)}</a>
         <span class="result-meta">${meta}</span>
@@ -4223,8 +4222,7 @@ async function buildCampaignersDirectory() {
       ? `<span class="dir-parties">names ${shown.map((p) => `${anyPartyDotHTML(p)}${esc(p)}`).join(", ")}${more > 0 ? ` and ${more} more` : ""}</span>`
       : "";
     const metaLine = [campaignerKindChip(e.kind), e._span ? esc(e._span) : "", partiesHTML].filter(Boolean).join(" · ");
-    return `<li class="dir-row">
-      <span class="dir-mono" aria-hidden="true">${esc(String(e.name || "?").slice(0, 1))}</span>
+    return `<li class="dir-row dir-row-plain">
       <div class="dir-main">
         <a class="source-title dir-name" href="${esc(subjectHash("campaigner", e.name))}">${esc(e.name)}</a>
         <span class="result-meta">${metaLine}</span>
