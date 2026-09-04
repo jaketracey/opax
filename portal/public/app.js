@@ -3808,7 +3808,7 @@ async function buildPeopleDirectory() {
 
   const row = (p) => {
     const portrait = p._photo
-      ? `<span class="dir-portrait"><img src="${esc(p._photo)}" alt="" width="40" height="40" loading="lazy"></span>`
+      ? `<span class="dir-portrait"><img src="${esc(p._photo)}" alt="" width="64" height="64" loading="lazy"></span>`
       : `<span class="dir-mono" aria-hidden="true">${esc(p.name.slice(0, 1))}</span>`;
     const where = (p.states || []).map((s) => STATE_NAMES[s] || s).join(", ");
     const metaLine = [
