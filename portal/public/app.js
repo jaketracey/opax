@@ -5660,7 +5660,7 @@ async function renderFrontReports() {
       housing: "Affordability, tax and supply.",
       immigration: "Borders, detention and migration.",
       indigenous: "The Voice, treaty and native title.",
-      media: "Ownership, platforms and the press.",
+      media: "Press, platforms and ownership.",
     };
     $("front-reports").innerHTML = reportsIndex.map((report) => `<a class="report-card" href="/reports/${esc(report.slug)}">
       ${reportGlyph(report.slug, "card-glyph")}<span class="card-title">${esc(report.title)}</span>
@@ -5806,7 +5806,9 @@ async function renderFrontDeclared() {
       <h3 id="front-declared-${esc(date)}"><time datetime="${esc(date)}">${esc(fmtDate(date))}</time></h3>
       <ul class="subject-list front-declared-list" role="list">${rows.map((item) => declaredRowHTML(item, partyByName, { showDate: false })).join("")}</ul>
       </section>`).join("")}
-      <p class="fineprint">Registers of Members' and Senators' Interests, 48th Parliament, and Queensland Register of Members' Interests, 58th Parliament; entries as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. AEC matches use <a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">Transparency Register returns, CC BY 4.0 ↗︎</a>.</p>`;
+      <p class="fineprint">Latest additions and deletions, dated as recorded by the registers. Entries are declared, not verified by OPAX.</p>
+      <details class="front-declared-notes"><summary>Sources and how to read these entries</summary>
+      <p class="fineprint">Registers of Members' and Senators' Interests, 48th Parliament, and Queensland Register of Members' Interests, 58th Parliament; entries as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. AEC matches use <a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">Transparency Register returns, CC BY 4.0 ↗︎</a>.</p></details>`;
     $("mod-declared").hidden = false;
   } catch { /* stays hidden */ }
 }
