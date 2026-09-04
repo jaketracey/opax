@@ -152,10 +152,12 @@
   <ol class="wrap crumbs-list"></ol>
 </nav>
 
-<dialog class="nav-drawer" id="nav-drawer" aria-label="Menu">
+<dialog class="nav-drawer" id="nav-drawer" aria-label="Menu" tabindex="-1">
   <div class="drawer-head">
     <p class="drawer-name">Open Parliamentary Accountability eXchange</p>
-    <button type="button" class="drawer-close" id="drawer-close" aria-label="Close menu">✕</button>
+    <button type="button" class="drawer-close" id="drawer-close" aria-label="Close menu">
+      <svg class="drawer-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><line class="x1" x1="5" y1="5" x2="19" y2="19"/><line class="x2" x1="19" y1="5" x2="5" y2="19"/></svg>
+    </button>
   </div>
   <form class="drawer-search" id="drawer-search" role="search">
     <label for="drawer-q" class="visually-hidden">Search the record</label>

@@ -1161,7 +1161,7 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo } = {}) {
   return { close, go };
 }
 attachQuickSearch($("mast-q"), $("mast-sugg"), { idPrefix: "ms" });
-attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: () => $("nav-drawer")?.close() });
+attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: () => closeNavDrawer() });
 
 // --- the masthead constellation ---------------------------------------------
 // Every now and then two (sometimes three) of the seven federation stars
@@ -1363,32 +1363,55 @@ window.addEventListener("resize", () => { if (openNavMenu) placeNavMenu(openNavM
 
 // The drawer is a modal <dialog>: native focus trap, Esc-close, and focus
 // restored to the hamburger when it closes.
+// Closing animates the panel out before the dialog actually closes; every
+// close path goes through here so the motion is the same from a link, the X,
+// the backdrop or Escape.
+function closeNavDrawer() {
+  const drawer = $("nav-drawer");
+  if (!drawer?.open || drawer.classList.contains("is-closing")) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { drawer.close(); return; }
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    drawer.classList.remove("is-closing");
+    drawer.close();
+  };
+  drawer.classList.add("is-closing");
+  drawer.addEventListener("animationend", (e) => { if (e.target === drawer) finish(); }, { once: true });
+  setTimeout(finish, 300); // the animation is 220ms; this is the safety net
+}
 {
   const drawer = $("nav-drawer");
   const toggle = $("nav-open");
   toggle.addEventListener("click", () => {
     drawer.showModal();
+    // The dialog itself takes focus, so a tap on the hamburger does not land
+    // a focus ring on the first control; Tab still reaches everything.
+    drawer.focus({ preventScroll: true });
     toggle.setAttribute("aria-expanded", "true");
   });
   drawer.addEventListener("close", () => toggle.setAttribute("aria-expanded", "false"));
-  $("drawer-close").addEventListener("click", () => drawer.close());
+  // Escape: run the same exit animation instead of the instant native close.
+  drawer.addEventListener("cancel", (e) => { e.preventDefault(); closeNavDrawer(); });
+  $("drawer-close").addEventListener("click", () => closeNavDrawer());
   // A search typed into the drawer lands on the Search page with the query.
   $("drawer-search").addEventListener("submit", (e) => {
     e.preventDefault();
     const q = $("drawer-q").value.trim();
     if (!q) return;
-    drawer.close();
+    closeNavDrawer();
     $("drawer-q").value = "";
     $("drawer-sugg").hidden = true;
     goRoute(`/search?q=${encodeURIComponent(q)}`);
   });
   drawer.addEventListener("click", (e) => {
     // A link tap navigates (the hash does the routing) and dismisses the drawer.
-    if (e.target.closest("a")) { drawer.close(); return; }
+    if (e.target.closest("a")) { closeNavDrawer(); return; }
     const r = drawer.getBoundingClientRect(); // outside the panel = backdrop
     const inside = e.clientX >= r.left && e.clientX <= r.right &&
                    e.clientY >= r.top && e.clientY <= r.bottom;
-    if (!inside) drawer.close();
+    if (!inside) closeNavDrawer();
   });
   // Growing past the mobile breakpoint with the drawer open would strand a
   // modal over a page that now shows the full nav.
