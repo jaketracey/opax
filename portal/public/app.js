@@ -4045,10 +4045,11 @@ async function openSubject(kind, name, manageFocus) {
     // file has loaded and the entity is known.
     campaigner: "Campaigner or third party",
   };
+  // A single bar where the tag line will be: the same height as the line it
+  // becomes, so nothing under the title moves when the entry arrives.
   body.innerHTML = subjectSkeleton(SUBJECT_LABELS[kind] || "Donor", name,
-    `<span id="subject-loader" class="subject-loader"></span>`);
+    `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`);
   if (manageFocus) $("subject-title")?.focus();
-  showPageLoader("subject-loader", "Opening the entry.");
 
   if (kind === "campaigner") { await renderCampaignerEntry(name, key); return; }
 
