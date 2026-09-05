@@ -3504,6 +3504,13 @@ html[data-panel="chat"] footer { display: none; }
   text-decoration-thickness: 1.5px; text-underline-offset: 4px;
 }
 .report-source-read:hover { color: var(--ink); text-decoration-color: var(--bronze-ink); }
+/* The line between what the answer cited and what was merely retrieved. It is
+   a label inside the list, so it takes no rule of its own above the rule the
+   row before it already draws. */
+.report-sources-divider {
+  padding: var(--space-5) 0 var(--space-3); color: var(--ink-faint);
+  font: 400 0.8125rem/1.5 var(--sans);
+}
 .report-all-sources { margin-top: var(--section-gap); }
 .report-all-sources > summary { font-size: 0.9375rem; }
 

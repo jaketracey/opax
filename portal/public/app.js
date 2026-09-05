@@ -8827,6 +8827,23 @@ const REPORT_TIDE_DECADES = {
   "2020s": { label: "2020–26", from: 2020, to: 2026 },
 };
 
+/**
+ * The span behind a decade the report names. The generator writes the decade
+ * as its label ("1993–99", "2020–26"), not as the key the Worker uses, so a
+ * key lookup alone silently dropped the first and last bars — the two the
+ * report's own claim about movement rests on. Match the label, then the key,
+ * then the leading year, so a decade written any of those three ways lands.
+ */
+function reportTideSpan(decade) {
+  const key = String(decade || "").trim();
+  const spans = Object.values(REPORT_TIDE_DECADES);
+  const year = Number(/^(\d{4})/.exec(key)?.[1]);
+  return spans.find((s) => s.label === key)
+    || REPORT_TIDE_DECADES[key]
+    || (Number.isFinite(year) ? spans.find((s) => year >= s.from && year <= s.to) : null)
+    || null;
+}
+
 /* Every block of model prose on the page carries this, in the fineprint
    voice. The report's claim is that the passages are real, not that the
    sentences joining them were written by a person. */
@@ -8909,6 +8926,9 @@ function reportWireCitations(essay, sources) {
 
 /** Open the folded list, reveal the cited speech, and offer the way back. */
 function reportOpenCitation(essay, button, n) {
+  // The rows are built on first open, so they have to exist before the one
+  // this superscript points at can be found.
+  for (const det of essay.querySelectorAll("details")) det.reportFill?.();
   const row = essay.querySelector(`.report-source-row[data-cite="${n}"]`);
   if (!row) return;
   for (let el = row.parentElement; el && el !== essay; el = el.parentElement) {
@@ -9062,16 +9082,54 @@ function reportSourceRow(s, num) {
   return li;
 }
 
-/** The evidence under an essay, folded away until a reader wants it. */
+/**
+ * Build a fold's rows the first time it opens. A v2 report carries four
+ * hundred source rows across its folds, each with a portrait to look up, and
+ * building all of them before a reader has asked for any is most of what the
+ * page spends on rendering.
+ */
+function reportFillOnOpen(det, host, build) {
+  det.reportFill = () => {
+    if (det.dataset.filled) return;
+    det.dataset.filled = "1";
+    host.replaceChildren(...build());
+  };
+  det.addEventListener("toggle", det.reportFill);
+}
+
+/**
+ * The evidence under an essay, folded away until a reader wants it.
+ *
+ * What was retrieved and what the answer leans on are different things. The
+ * generator marks the difference with `cited`, and a fold that offers twenty
+ * speeches under an answer built from nine is claiming more evidence than the
+ * answer used. The cited ones lead, and the rest are named as the rest.
+ */
 function reportSourcesFold(sources, label) {
+  const numbered = sources.map((s, i) => ({ s, n: i + 1 }));
+  const flagged = numbered.some((r) => r.s.cited === true);
+  const cited = flagged ? numbered.filter((r) => r.s.cited === true) : numbered;
+  const rest = flagged ? numbered.filter((r) => r.s.cited !== true) : [];
   const det = document.createElement("details");
   det.className = "chat-sources report-sources";
   const sum = document.createElement("summary");
-  sum.textContent = `${label || "Sources"} (${sources.length})`;
+  sum.textContent = flagged
+    ? `${label || "Sources"}: ${cited.length} cited, ${rest.length} more retrieved`
+    : `${label || "Sources"} (${numbered.length})`;
   const ol = document.createElement("ol");
   ol.className = "report-source-list";
-  ol.replaceChildren(...sources.map((s, i) => reportSourceRow(s, i + 1)));
   det.append(sum, ol);
+  reportFillOnOpen(det, ol, () => {
+    const rows = cited.map((r) => reportSourceRow(r.s, r.n));
+    if (rest.length) {
+      const divider = document.createElement("li");
+      divider.className = "report-sources-divider";
+      divider.textContent =
+        `Also retrieved for this question, not cited in the answer (${rest.length})`;
+      rows.push(divider, ...rest.map((r) => reportSourceRow(r.s, r.n)));
+    }
+    return rows;
+  });
   return det;
 }
 
@@ -9121,6 +9179,20 @@ function reportEssay(item, { id, slug, number } = {}) {
   return sec;
 }
 
+/**
+ * A debate's name without the procedural stage the record appends to it.
+ * "Statewide Treaty Bill 2025 - Second reading" is one debate about one bill;
+ * the stage is where in the machinery it was reached, not what was argued, and
+ * on a phone it costs a line of every second chip. The whole title stays in the
+ * chip's tooltip and its accessible name.
+ */
+const REPORT_DEBATE_STAGES =
+  /\s*[-–—]\s*(?:first|second|third) reading(?: debate)?$|\s*[-–—]\s*(?:consideration in detail|in committee|committee of the whole|declaration of urgency)$/i;
+function reportDebateName(title) {
+  const trimmed = String(title || "").trim().replace(REPORT_DEBATE_STAGES, "").trim();
+  return trimmed || String(title || "").trim();
+}
+
 /** The debates the report found in its window, each opening its own search. */
 function reportDiscovered(discovered, win) {
   const row = document.createElement("div");
@@ -9132,7 +9204,7 @@ function reportDiscovered(discovered, win) {
     chip.href = reportSearchLink(d.search || d.title, win);
     const name = document.createElement("span");
     name.className = "report-chip-name";
-    name.textContent = d.title;
+    name.textContent = reportDebateName(d.title);
     const tally = document.createElement("span");
     tally.className = "report-chip-count";
     tally.textContent = `${count.toLocaleString()} ${count === 1 ? "speech" : "speeches"}`;
@@ -9146,13 +9218,38 @@ function reportDiscovered(discovered, win) {
   return row;
 }
 
-/** "12,470 of 46,180 adult prisoners" — what the headline figure is a share of. */
+/**
+ * "12,470 of 46,180 adult prisoners" — the count the headline figure is a
+ * share of, and only when the denominator is a count. A denominator written as
+ * a phrase ("population of Queensland") is the same thing the tile's label
+ * already says, and stitching it to the number produced sentences no one would
+ * write: "4.6 of population of Queensland per cent". A unit already spoken in
+ * the value ("per cent", "%") is not repeated either.
+ */
+function reportStatCount(v) {
+  if (typeof v === "number") return Number.isFinite(v) ? v : null;
+  const raw = String(v ?? "").trim().replace(/,/g, "");
+  return /^\d+(\.\d+)?$/.test(raw) ? Number(raw) : null;
+}
 function reportStatRatio(s) {
-  const shown = (v) => (typeof v === "number" && Number.isFinite(v) ? v.toLocaleString() : String(v ?? "").trim());
-  const num = shown(s.numerator);
-  const den = shown(s.denominator);
-  if (!num || !den) return "";
-  return `${num} of ${den}${s.unit ? ` ${s.unit}` : ""}`;
+  const num = reportStatCount(s.numerator);
+  const den = reportStatCount(s.denominator);
+  if (num === null || den === null) return "";
+  const unit = String(s.unit || "").trim();
+  const tail = unit && !/^(%|per ?cent(age)?|pc)$/i.test(unit) ? ` ${unit}` : "";
+  return `${num.toLocaleString()} of ${den.toLocaleString()}${tail}`;
+}
+
+/**
+ * When a figure was true. A single point takes "as at"; a span the generator
+ * writes as a range ("1996-97 to 2004-05") takes "over", because a figure
+ * measured across nine years was never true as at any one of them.
+ */
+function reportStatAsOf(value) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return "";
+  if (/\bto\b|–|—/.test(raw)) return `over ${raw}`;
+  return `as at ${fmtDate(raw) || raw}`;
 }
 
 /** The figures the report leans on, each traced to the speech that said it. */
@@ -9169,7 +9266,7 @@ function reportStatTiles(stats) {
     label.textContent = s.label;
     t.append(value, label);
     const ratio = reportStatRatio(s);
-    const scope = [s.jurisdiction, s.as_of ? `as at ${fmtDate(s.as_of) || s.as_of}` : ""].filter(Boolean).join(" · ");
+    const scope = [s.jurisdiction, reportStatAsOf(s.as_of)].filter(Boolean).join(" · ");
     const under = [ratio, scope].filter(Boolean).join(" · ");
     if (under) {
       const q = document.createElement("span");
@@ -9242,7 +9339,7 @@ function reportPositions(positions, win) {
  */
 function reportTideHTML(tide, topic) {
   const rows = (tide || [])
-    .map((p) => ({ ...p, span: REPORT_TIDE_DECADES[p.decade] }))
+    .map((p) => ({ ...p, span: reportTideSpan(p.decade) }))
     .filter((p) => p.span);
   if (rows.length < 2) return "";
   const max = Math.max(...rows.map((p) => Number(p.share) || 0), Number.EPSILON);
@@ -9348,8 +9445,11 @@ function reportAllSources(report) {
   for (const s of report.now?.sections || []) add(s.sources);
   for (const e of report.over_time?.eras || []) add(e.sources);
   add(report.over_time?.key_moments);
-  add(report.positions);
-  add(report.key_stats);
+  // A position and a figure name their record in `source_title`; without it
+  // the row would fall back to a slug and lose the debate it came from.
+  const titled = (list) => (list || []).map((s) => ({ ...s, title: s.title || s.source_title }));
+  add(titled(report.positions));
+  add(titled(report.key_stats));
   const rows = [...seen.values()].sort((a, b) => String(a.date || "").localeCompare(String(b.date || "")));
   if (!rows.length) return null;
   const det = document.createElement("details");
@@ -9358,8 +9458,8 @@ function reportAllSources(report) {
   sum.textContent = `Every speech behind this report (${rows.length})`;
   const ol = document.createElement("ol");
   ol.className = "report-source-list";
-  ol.replaceChildren(...rows.map((s) => reportSourceRow(s)));
   det.append(sum, ol);
+  reportFillOnOpen(det, ol, () => rows.map((s) => reportSourceRow(s)));
   return det;
 }
 
