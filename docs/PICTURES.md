@@ -1,55 +1,61 @@
 # The year in pictures: sources, licences, curation, refresh
 
-Status 2026-09-05: **106 photographs** cover every Time Machine year from 1998 to
-2026. Files live in `portal/public/years/pictures/<year>/<slug>.webp`;
-`portal/public/years/pictures.json` supplies the dimensions, caption, event, date,
-author, Commons credit, licence, licence URL, Commons file page and original upload
-URL used by the gallery.
+Status 2026-09-05: **189 photographs** cover every Time Machine year from 1998 to
+2026, each year holding six to eight except 1998 and 1999. Files live in
+`portal/public/years/pictures/<year>/<slug>.webp`; `portal/public/years/pictures.json`
+supplies the dimensions, caption, event, date, author, Commons credit, licence,
+licence URL, Commons file page and original upload URL used by the gallery.
 
 The pictures are documentary evidence, not decoration. Each selection was checked
 against `YEAR_TOPICS` in `portal/public/timemachine.js` and the cited brief in
 `portal/public/years/<year>.json`, then inspected visually. Search results were not
-used merely because they mentioned the right year.
+used merely because they mentioned the right year. A first pass (recorded below)
+shipped one photograph per year at minimum; a second pass, "more photographs for
+the year in pictures", brought every year to six to eight by adding a second and
+third strand of coverage so no year is a single-series monoculture.
 
 | Year | Pictures | Principal coverage |
 |---|---:|---|
-| 1998 | 1 | Swanson Dock picket during the waterfront dispute |
-| 1999 | 4 | Australian-led INTERFET deployment in East Timor |
-| 2000 | 4 | Sydney Olympics opening ceremony |
-| 2001 | 3 | Ansett collapse and workers' demonstrations |
-| 2002 | 0 | no same-year photograph passed the relevance and subject-safety rules |
-| 2003 | 4 | Canberra bushfires |
-| 2004 | 4 | federal election campaign and polling preparations |
-| 2005 | 4 | Melbourne and Sydney industrial-relations protests |
-| 2006 | 2 | Labor leadership change and the Melbourne G20 protest |
-| 2007 | 4 | federal election campaign and polling day |
-| 2008 | 4 | the Apology to the Stolen Generations |
-| 2009 | 4 | Black Saturday and climate politics |
-| 2010 | 4 | federal election campaign |
-| 2011 | 4 | Queensland floods and carbon-pricing politics |
-| 2012 | 4 | disability-policy campaigning |
-| 2013 | 4 | leadership change, the election and the incoming government |
-| 2014 | 4 | budget protests |
-| 2015 | 4 | leadership change and the China-Australia agreement |
-| 2016 | 4 | federal election campaign |
-| 2017 | 4 | marriage equality and Hazelwood's closure |
-| 2018 | 4 | Wentworth by-election climate campaigning |
-| 2019 | 4 | Sydney climate strike |
-| 2020 | 4 | COVID-19 border controls |
-| 2021 | 4 | March 4 Justice |
-| 2022 | 4 | federal election campaign and climate forums |
-| 2023 | 4 | Indigenous Voice referendum |
-| 2024 | 4 | climate-finance protest and parliamentary or diplomatic events |
-| 2025 | 4 | federal election and declarations |
-| 2026 | 4 | Labor National Conference and government events |
+| 1998 | 4 | The waterfront dispute and the AUSMIN talks in Sydney |
+| 1999 | 4 | The INTERFET deployment to East Timor |
+| 2000 | 7 | The Sydney Olympics and Paralympics, and the East Timor handover |
+| 2001 | 6 | The Ansett collapse and the alliance after 11 September |
+| 2002 | 7 | Australian forces in the Gulf and East Timor, and diplomatic talks abroad |
+| 2003 | 7 | The Canberra bushfires, the Iraq war and the Solomon Islands mission |
+| 2004 | 7 | The federal election, the Jakarta embassy bombing and Iraq |
+| 2005 | 7 | WorkChoices protests, student unionism and the tsunami response |
+| 2006 | 7 | Labor's leadership change, Anzac Day, anti-terror laws, Cyclone Larry and Beaconsfield |
+| 2007 | 7 | The federal election and APEC in Sydney |
+| 2008 | 6 | The Apology to the Stolen Generations and the alliance |
+| 2009 | 7 | Emissions trading, Black Saturday and the stimulus |
+| 2010 | 7 | The federal election, Labor's leadership change and the alliance |
+| 2011 | 7 | The Queensland floods, the carbon price and the alliance |
+| 2012 | 7 | The NDIS campaign, the tent embassy protest and the alliance |
+| 2013 | 7 | Leadership change, the federal election and regional diplomacy |
+| 2014 | 7 | The budget fight, the Brisbane G20 and the China trade deal |
+| 2015 | 7 | Citizenship, the China trade deal, leadership change and refugee policy |
+| 2016 | 7 | The federal election, the double dissolution and offshore processing |
+| 2017 | 7 | The marriage equality postal survey, energy prices and the Adani mine |
+| 2018 | 6 | The Wentworth by-election, the school strike for climate and the Pacific step-up |
+| 2019 | 6 | The Sydney climate strike, the federal election and the Black Summer bushfires |
+| 2020 | 6 | COVID-19 border restrictions, the Black Summer bushfires and the Black Lives Matter rally |
+| 2021 | 8 | March 4 Justice, the vaccine rollout, the WA election and AUKUS |
+| 2022 | 6 | The federal election, the 2022 floods and the State of the Environment report |
+| 2023 | 6 | The Voice referendum and the alliance |
+| 2024 | 6 | Diplomatic visits, the Quad and health workers' pay |
+| 2025 | 6 | The federal election and the Washington visit |
+| 2026 | 7 | The EU and Japan agreements, Labor's national conference and the SA state election |
 
-The years short of four are **1998, 2001, 2002 and 2006**. They are deliberately
-short: unrelated stock, later memorial photographs and unsafe subjects were not
-used to fill a quota.
+The years short of six are **1998 and 1999**, each still at four. They are
+deliberately short: exhaustive Commons searches and category traversal (recorded
+under "Second pass" below) turned up only maps, election posters, unrelated stock
+and out-of-year frames for every other 1998 and 1999 event named in `YEAR_TOPICS`
+(the GST, native title, Telstra's sale, the republic referendum, aged care); no
+compliant photograph of any of them was found. Nothing was added to reach a quota.
 
 ## Source and licence rule
 
-All 106 shipped source pages are on Wikimedia Commons. No news-agency, commercial
+All 189 shipped source pages are on Wikimedia Commons. No news-agency, commercial
 stock, social-media, generated or screenshot image is present. Government and
 Parliament pages were not needed for the final set, and no APH image carrying a
 non-commercial or no-derivatives restriction was accepted.
@@ -70,15 +76,15 @@ Licences in the current manifest:
 
 | Licence | Pictures |
 |---|---:|
-| Public domain | 22 |
-| CC0 | 7 |
-| CC BY 2.0 | 16 |
-| CC BY 3.0 | 14 |
-| CC BY 4.0 | 6 |
-| CC BY-SA 2.0 | 8 |
-| CC BY-SA 2.5 | 1 |
-| CC BY-SA 3.0 | 15 |
-| CC BY-SA 4.0 | 17 |
+| Public domain | 51 |
+| CC0 | 9 |
+| CC BY 2.0 | 28 |
+| CC BY 3.0 | 19 |
+| CC BY 4.0 | 12 |
+| CC BY-SA 2.0 | 13 |
+| CC BY-SA 2.5 | 4 |
+| CC BY-SA 3.0 | 23 |
+| CC BY-SA 4.0 | 30 |
 
 `Artist`, `Credit`, `LicenseShortName`, `LicenseUrl`, the canonical Commons file
 page and `imageinfo.url` were captured from Commons. `original_url` preserves the
@@ -357,9 +363,50 @@ marriage rally in Melbourne, 26 August 2017`.
   declaration candidate`; category `2025 Australian federal election`.
 - 2026: `"Anthony Albanese" 2026`; category `2026 in politics of Australia`.
 
+## Second pass: bringing every year to six to eight
+
+A follow-up brief, "more photographs for the year in pictures", raised the target
+from at least one photograph per year to six to eight, added to what the first pass
+shipped rather than replacing it. It ran entirely on branch `ui-pictures2`, in three
+sittings across 2026-09-05, and added 88 photographs (101 to 189) using the same
+Commons-only method and licence allow-list, plus a small Python toolchain kept in the
+working scratchpad (`commons.py` to harvest candidates by search, category and
+category recursion into a per-year JSON file; `list.py` and `q.py` to triage them as
+compact text; `sheet.py` to build numbered contact sheets for visual review; `desc.py`
+to re-fetch full metadata for shortlisted titles; `ingest.py` to re-check licences
+live, download, resize, encode WebP and append the manifest entry).
+
+Priority followed the brief: 2002 first (0 to 7), then the other years under four
+(1998, 1999, 2001, 2006), then every remaining year under six or seven, finishing
+with 2018, 2019, 2020, 2022, 2023, 2024, 2025 and 2026. The recorded Commons API call
+counts from harvesting alone were 47 (1998–1999), 253 (1998–2007), 481 (2013,
+2014, 2023–2026) and 133 (2022); the 2008–2012 harvest's own tally line was not
+retained in the kept log, and one-off `q.py` and `desc.py` checks add a further
+small number of calls beyond that. All of it used the same public, unauthenticated
+`commons.wikimedia.org/w/api.php` endpoint documented above; none of it was Firecrawl
+or any paid API.
+
+A deliberate rule in this pass was series diversity: no year was allowed to reach
+its target by taking four or five frames from a single photographer's shoot of a
+single moment. Every addition was checked against what a year already had and
+picked from a different event, date or photographer where more than one candidate
+covered the same story (for example 2019 gained a federal-election polling photo
+and a Black Summer bushfire-smoke photo rather than two more frames of the existing
+Sydney climate strike; 2020 gained a bushfire-aftermath photo and a Black Lives
+Matter rally photo rather than a fourth COVID-checkpoint frame; 2026 gained a state
+election forum, the State Opening of the South Australian Parliament and a student
+protest against Pauline Hanson, three different events rather than three frames of
+one).
+
+1998 and 1999 were re-searched exhaustively in this pass (see the table note above)
+and stayed at four: no compliant photograph of the GST, native title, Telstra's
+sale, the republic referendum or aged care was found on Commons under any of the
+allowed licences.
+
 ## Firecrawl
 
-Firecrawl call count: **0**. Neither of the permitted discovery endpoints was called:
+Firecrawl call count: **0**, across both passes. Neither of the permitted discovery
+endpoints was called:
 
 ```text
 POST https://api.firecrawl.dev/v2/search
@@ -375,10 +422,12 @@ was not read or sent. No paid LLM or other paid API call was made.
   distress were rejected. Named public figures and speakers, and wide public-event
   crowds, were retained. Maps, charts, signatures, logos, standalone posters, generic
   buildings and undated portraits were also rejected.
-- 1998 has one relevant event photograph. 2001 has three same-year Ansett photographs.
-  In 2002 the only same-year drought candidate centred a private farmer; Bali results
-  were later memorial/site photographs and no Woomera file surfaced. In 2006 the AWB,
-  nuclear and media-ownership searches returned PDFs, logos or unrelated material.
+- 1998 and 1999 hold four photographs each after exhaustive re-searching in the
+  second pass; see the table note above. In 2002 the only same-year drought candidate
+  centred a private farmer; Bali results were later memorial/site photographs and no
+  Woomera file surfaced, so 2002's seven photographs are carried entirely by other
+  same-year Australian public business. In 2006 the AWB, nuclear and media-ownership
+  searches returned PDFs, logos or unrelated material.
 - Several archival sources are small: the 1999 Karabela frame is 508×253; several 2004
   election files are 318–606 pixels wide; and the 2006 G20 frame is 400×266. Expect
   softness on a large gallery mat. They must not be upscaled or sharpened into false
@@ -409,8 +458,8 @@ was not read or sent. No paid LLM or other paid API call was made.
    `url|extmetadata|size|mime`. Reject non-photographs, irrelevant dates, unsafe
    subjects and every licence outside the exact allow-list above.
 3. Open the full Commons file page and inspect the image. Do not approve from a small
-   search thumbnail. Aim for four to eight distinct event photographs, but ship fewer
-   when the evidence is thin.
+   search thumbnail. Aim for six to eight distinct event photographs drawn from more
+   than one series or moment, but ship fewer when the evidence is thin.
 4. Batch the exact selected `File:` titles through a fresh `imageinfo` request. Record
    `Artist`, `Credit`, `LicenseShortName`, `LicenseUrl`, `canonicaltitle`,
    `descriptionurl` and `url` from that response. A missing public-domain licence URL
