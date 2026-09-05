@@ -3108,6 +3108,7 @@ async function mountSubjectMap(nodeId) {
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       focus: nodeId,
       chrome: "mini",
+      reveal: true, // open on the subject, then pull out to the money
       scrub: true, // the year window, so a reader can watch the donors change
       askUrl: (industry) => askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
       onSelect: (node) => {

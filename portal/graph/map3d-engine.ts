@@ -106,7 +106,7 @@ function hubRadius(count: number): number {
 }
 
 /** Cubic in-out: the collapse gathers speed and settles, without a bounce. */
-function easeInOut(t: number): number {
+export function easeInOut(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 }
 
@@ -309,6 +309,8 @@ type ViewTween = {
   to: View
   started: number
   duration: number
+  /** Defaults to the ease-out a focus move uses; the reveal legs ease both ends. */
+  ease?: (t: number) => number
 }
 
 type DragState = {
@@ -1514,6 +1516,16 @@ export class KnowledgeMapEngine {
     return this.viewOwnedFlag
   }
 
+  /** True while the reader has asked for reduced motion - live, not a snapshot. */
+  get reducedMotion(): boolean {
+    return this.reduced
+  }
+
+  /** Where the camera is standing: its azimuth and elevation. */
+  get viewAngles(): { theta: number; phi: number } {
+    return { theta: this.view.theta, phi: this.view.phi }
+  }
+
   /**
    * True while the view is the one a focus move put there and the reader has
    * not touched it since - what lets the map give the space back when the
@@ -1524,11 +1536,29 @@ export class KnowledgeMapEngine {
     return this.focusOwnedFlag
   }
 
+  /**
+   * Fired the moment the reader takes the view - a press on the canvas, a
+   * drag, a wheel notch, an arrow key. An opening choreography listens here
+   * to get out of the way on the first touch.
+   */
+  onViewClaimed: (() => void) | null = null
+
   private claimView() {
+    this.onViewClaimed?.()
     this.tween = null
     this.viewOwnedFlag = true
     this.focusOwnedFlag = false
     this.idleSpin = false
+  }
+
+  /**
+   * Stop a camera move where it is rather than at its destination: the
+   * smoothed dolly is re-aimed at the current distance too, so nothing keeps
+   * drifting after the tween is dropped.
+   */
+  stopViewMove() {
+    this.tween = null
+    this.distGoal = this.view.dist
   }
 
   /**
@@ -1595,6 +1625,8 @@ export class KnowledgeMapEngine {
   }
 
   fit(animate = true) {
+    // Asking for the whole map ends an opening choreography as surely as a drag.
+    this.onViewClaimed?.()
     this.tween = null
     this.viewOwnedFlag = false
     this.focusOwnedFlag = false
@@ -1851,6 +1883,156 @@ export class KnowledgeMapEngine {
   }
 
   /**
+   * Frame exactly these nodes: the view moves so the set fills `fill` of the
+   * free box at the given orientation (the current one unless overridden),
+   * with `padPx` of screen room around it for the labels. Returns the
+   * distance it landed on, or null when none of the ids are in the scene.
+   *
+   * Unlike focusOn - a nudge that declines to move a node already in view -
+   * this always moves: it is the primitive an opening choreography composes,
+   * where each leg's framing is the whole point.
+   */
+  frameOn(
+    ids: readonly string[],
+    opts: {
+      /** Share of the free box the set fills. 1 fits it exactly. */
+      fill?: number
+      /** Room around the set for the labels, in screen pixels. */
+      padPx?: number
+      duration?: number
+      ease?: (t: number) => number
+      theta?: number
+      phi?: number
+    } = {},
+  ): number | null {
+    const points: { p: THREE.Vector3; r: number }[] = []
+    for (const id of ids) {
+      const visual = this.nodeVisuals.get(id)
+      if (!visual) continue
+      points.push({
+        p: new THREE.Vector3(visual.sim.x, visual.sim.y, visual.sim.z),
+        r: visual.r,
+      })
+    }
+    if (points.length === 0) return null
+
+    const theta = opts.theta ?? this.view.theta
+    const phi = Math.max(PHI_MIN, Math.min(PHI_MAX, opts.phi ?? this.view.phi))
+    const fill = Math.max(0.05, Math.min(1, opts.fill ?? 0.9))
+    const padPx = Math.max(0, opts.padPx ?? 0)
+
+    // The screen basis this orientation will have - the same spherical
+    // convention updateCamera and fitDistanceAt use; e points target -> camera.
+    const e = new THREE.Vector3(
+      Math.sin(phi) * Math.sin(theta),
+      Math.cos(phi),
+      Math.sin(phi) * Math.cos(theta),
+    )
+    const right = new THREE.Vector3().crossVectors(this.edgeUp, e)
+    if (right.lengthSq() < 0.001) right.set(1, 0, 0)
+    right.normalize()
+    const up = new THREE.Vector3().crossVectors(e, right)
+
+    const box = this.freeBox()
+    const vHalf = THREE.MathUtils.degToRad(FOV / 2)
+    const tanH = Math.tan(vHalf) * this.camera.aspect * Math.max(0.2, box.w / this.width) * 0.92
+    const tanV = Math.tan(vHalf) * Math.max(0.2, box.h / this.height) * 0.92
+    const k = (2 * Math.tan(vHalf)) / this.height
+
+    // Balance point first. Each side's binding quantity is extent plus tan
+    // times depth, not the bare extent, so the shift that equalises the two
+    // one-sided maxima is the one that leaves neither side of the box slack -
+    // the argument fitDistanceAt makes for the whole scene, over a subset.
+    const centre = new THREE.Vector3()
+    for (const { p } of points) centre.add(p)
+    centre.multiplyScalar(1 / points.length)
+    const d = new THREE.Vector3()
+    let plusR = -Infinity
+    let minusR = -Infinity
+    let plusU = -Infinity
+    let minusU = -Infinity
+    for (const { p, r } of points) {
+      d.copy(p).sub(centre)
+      const depth = d.dot(e)
+      const pr = d.dot(right)
+      const pu = d.dot(up)
+      plusR = Math.max(plusR, pr + r + tanH * depth)
+      minusR = Math.max(minusR, -pr + r + tanH * depth)
+      plusU = Math.max(plusU, pu + r + tanV * depth)
+      minusU = Math.max(minusU, -pu + r + tanV * depth)
+    }
+    centre
+      .addScaledVector(right, (plusR - minusR) / 2)
+      .addScaledVector(up, (plusU - minusU) / 2)
+
+    // The pad is set in screen pixels, so its world extent grows with the
+    // distance; the same inequality solves in closed form, as the captions do.
+    const fracH = Math.min(0.85, (padPx * k) / tanH)
+    const fracV = Math.min(0.85, (padPx * k) / tanV)
+    let dist = 60
+    for (const { p, r } of points) {
+      d.copy(p).sub(centre)
+      const depth = d.dot(e)
+      dist = Math.max(
+        dist,
+        ((Math.abs(d.dot(right)) + r) / tanH + depth) / (1 - fracH),
+        ((Math.abs(d.dot(up)) + r) / tanV + depth) / (1 - fracV),
+      )
+    }
+    dist = Math.max(this.minDist(), Math.min(this.maxDist(), dist / fill))
+
+    const wpp = (2 * dist * Math.tan(vHalf)) / this.height
+    const target = centre
+      .addScaledVector(right, -(box.cx - this.width / 2) * wpp)
+      .addScaledVector(up, (box.cy - this.height / 2) * wpp)
+
+    this.moveView({ target, theta, phi, dist }, opts.duration ?? 0, opts.ease)
+    this.viewOwnedFlag = true
+    this.focusOwnedFlag = true
+    this.idleSpin = false
+    return dist
+  }
+
+  /**
+   * The azimuth that lays the line from `others` to `id` across the screen
+   * rather than into it, so a flow reads as a flow. Two azimuths satisfy it,
+   * half a turn apart; this returns the nearer, turned at least `min` and at
+   * most `max` radians so the swing is always felt and never a whip.
+   */
+  swingTheta(
+    id: string,
+    others: readonly string[],
+    { min = 0, max = Math.PI }: { min?: number; max?: number } = {},
+  ): number | null {
+    const focus = this.nodeVisuals.get(id)
+    if (!focus) return null
+    let cx = 0
+    let cz = 0
+    let n = 0
+    for (const other of others) {
+      const visual = this.nodeVisuals.get(other)
+      if (!visual) continue
+      cx += visual.sim.x
+      cz += visual.sim.z
+      n++
+    }
+    if (n === 0) return null
+    const vx = focus.sim.x - cx / n
+    const vz = focus.sim.z - cz / n
+    if (Math.hypot(vx, vz) < 1) return null
+    // Looking from azimuth t, the ground-plane view direction is
+    // (sin t, cos t); the line lies across the screen when it is normal to it.
+    const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a))
+    const base = Math.atan2(-vz, vx)
+    let delta = wrap(base - this.view.theta)
+    const other = wrap(base + Math.PI - this.view.theta)
+    if (Math.abs(other) < Math.abs(delta)) delta = other
+    const sign = delta < 0 ? -1 : 1
+    delta = sign * Math.max(min, Math.min(max, Math.abs(delta)))
+    return this.view.theta + delta
+  }
+
+  /**
    * A panel came or went with nothing selected: slide the view by half the
    * change so whatever was centred stays centred, rather than snapping back.
    */
@@ -1881,7 +2063,7 @@ export class KnowledgeMapEngine {
     return this.fitDist * MAX_DIST_FACTOR
   }
 
-  private moveView(to: View, duration: number) {
+  private moveView(to: View, duration: number, ease?: (t: number) => number) {
     if (this.reduced || duration <= 0) {
       this.view = { ...to, target: to.target.clone() }
       this.distGoal = to.dist
@@ -1894,6 +2076,7 @@ export class KnowledgeMapEngine {
       to: { ...to, target: to.target.clone() },
       started: performance.now(),
       duration,
+      ease,
     }
     this.distGoal = to.dist
   }
@@ -2085,6 +2268,9 @@ export class KnowledgeMapEngine {
   }
 
   private onPointerDown = (event: PointerEvent) => {
+    // The first touch ends an opening choreography, whether it turns into a
+    // drag or stays a click - a reader who has reached for the map owns it.
+    this.onViewClaimed?.()
     const point = this.localPoint(event)
     this.pointers.set(event.pointerId, point)
     this.capturePointer(event.pointerId)
@@ -2483,7 +2669,7 @@ export class KnowledgeMapEngine {
     const tween = this.tween
     if (tween) {
       const t = Math.min(1, (now - tween.started) / tween.duration)
-      const e = 1 - Math.pow(1 - t, 3)
+      const e = tween.ease ? tween.ease(t) : 1 - Math.pow(1 - t, 3)
       this.view.target.lerpVectors(tween.from.target, tween.to.target, e)
       this.view.theta = tween.from.theta + (tween.to.theta - tween.from.theta) * e
       this.view.phi = tween.from.phi + (tween.to.phi - tween.from.phi) * e
