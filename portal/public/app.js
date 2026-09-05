@@ -11207,23 +11207,34 @@ fetch("/suggestions.json").then((r) => r.json()).then((s) => {
   renderChips();
 }).catch(() => {});
 
-api("/api/stats")
-  .then((s) => {
-    liveStats = s;
-    const line = `${(s.resources ?? 0).toLocaleString()} documents · ` +
-      `${(s.paragraphs ?? 0).toLocaleString()} passages indexed · growing daily`;
-    $("stats").textContent = line;
-    $("stats-live").textContent = "Figures marked live are read from the index itself and refresh every five minutes; the rest are from the corpus manifest.";
-    renderCorpusMeter();
-    if (frontRendered) renderFrontNumbers();
-    renderStatsHero();
-    renderStatsLiveTables();
-  })
-  .catch(() => {
-    $("stats").textContent = "corpus loading…";
-    $("stats-live").textContent = "Live index figures are unavailable right now.";
-    renderStatsLiveTables();
-  });
+// The endpoint is cached five minutes at the edge and in the browser, so a
+// payload without the facet counts (from before a deploy, or a facet that
+// failed) is asked for again a minute later, under a fresh query so the
+// browser does not answer from its own copy. The tables say "Counting…" in
+// the meantime rather than "unavailable".
+function loadLiveStats(attempt = 0) {
+  api(attempt ? `/api/stats?retry=${attempt}` : "/api/stats")
+    .then((s) => {
+      liveStats = s;
+      const line = `${(s.resources ?? 0).toLocaleString()} documents · ` +
+        `${(s.paragraphs ?? 0).toLocaleString()} passages indexed · growing daily`;
+      $("stats").textContent = line;
+      $("stats-live").textContent = "Figures marked live are read from the index itself and refresh every five minutes; the rest are from the corpus manifest.";
+      renderCorpusMeter();
+      if (frontRendered) renderFrontNumbers();
+      renderStatsHero();
+      if (s.kinds && s.speeches_by_state) renderStatsLiveTables();
+      else if (attempt < 6) setTimeout(() => loadLiveStats(attempt + 1), 60000);
+      else renderStatsLiveTables();
+    })
+    .catch(() => {
+      $("stats").textContent = "corpus loading…";
+      $("stats-live").textContent = "Live index figures are unavailable right now.";
+      if (attempt < 3) setTimeout(() => loadLiveStats(attempt + 1), 30000);
+      else renderStatsLiveTables();
+    });
+}
+loadLiveStats();
 
 // Legacy entry contract: /?ask=<question> (used by standalone map pages).
 {
