@@ -335,6 +335,10 @@ const CSS = `
 .mm-legend { position: absolute; top: 12px; left: 12px; display: flex;
   flex-direction: column; gap: 2px; max-height: calc(100% - 70px); overflow: auto;
   border: 1px solid #e4e1d8; border-radius: 10px; padding: 8px; }
+/* The full map docks the year scrub under the legend, in the same column: the
+   legend stops above it (its height is measured into --mm-scrub-h) and scrolls
+   inside itself rather than running on beneath the scrub. */
+.mm-root[data-mm-chrome='full'] .mm-legend { max-height: calc(100% - 36px - var(--mm-scrub-h, 0px)); }
 .mm-legend-title { font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
   color: #8a8578; text-transform: uppercase; padding: 0 6px 4px; }
 /* A section of the card ("Where it went", "In parliament"): a kicker under a
@@ -952,6 +956,7 @@ export async function mountMoneyMap(
     // scatter the graph twice per round trip. Keep the layout for its return.
     const rect = container.getBoundingClientRect()
     if (rect.width < 1 || rect.height < 1) return
+    reserveScrubRoom()
     // The chrome reflows with the host (the legend becomes a top row on
     // narrow screens), so the free area is re-measured on every resize; a
     // view the reader has not taken is refitted into it.
@@ -970,6 +975,11 @@ export async function mountMoneyMap(
     }
   })
   resizeObserver.observe(container)
+  /** How much of the left column the docked scrub takes, for the legend's max-height. */
+  function reserveScrubRoom() {
+    const docked = scrub && !compactScrub ? scrub.offsetHeight : 0
+    container.style.setProperty('--mm-scrub-h', `${docked}px`)
+  }
 
   // --- Legend / filter -------------------------------------------------
   const chips = new Map<string, HTMLButtonElement>()
