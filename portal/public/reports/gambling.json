@@ -2,7 +2,7 @@
  "slug": "gambling",
  "title": "Gambling",
  "blurb": "What parliament says about poker machines, online wagering and gambling reform.",
- "generated_at": "2026-09-05T03:43:17+00:00",
+ "generated_at": "2026-09-05T02:36:31+00:00",
  "corpus_resources": 609635,
  "stats": {
   "speech_count": 4358,
@@ -312,29 +312,16 @@
    "unit": "per cent",
    "jurisdiction": "Australia",
    "as_of": "2025",
-   "detail": "Cited evidence from the Australian Gambling Research Centre in the 'You win some, you lose more' report.",
+   "detail": "Cited evidence from the Australian Gambling Research Centre in the You win some, you lose more report.",
    "slug": "speech-1198717",
    "source_title": "Kara Cook \u2014 Motions \u2014 2025-11-24",
    "window": "now"
   },
   {
-   "value": "$32 billion",
-   "label": "Amount Australians lost in legal gambling",
-   "numerator": "32",
-   "denominator": "legal gambling in 2023-24",
-   "unit": "billion dollars",
-   "jurisdiction": "Australia",
-   "as_of": "2023-24",
-   "detail": "Stated by Alison Penfold.",
-   "slug": "speech-1205072",
-   "source_title": "Alison Penfold \u2014 Bills \u2014 2026-08-12",
-   "window": "now"
-  },
-  {
    "value": "80 per cent",
-   "label": "Chance of not winning as a share of people",
+   "label": "Chance people have of not winning",
    "numerator": "80",
-   "denominator": "people",
+   "denominator": "chance of not winning",
    "unit": "per cent",
    "jurisdiction": "Australia",
    "as_of": "2026",
@@ -345,7 +332,7 @@
   },
   {
    "value": "46 per cent to 67 per cent",
-   "label": "Gamblers classified as being at risk of gambling harm in the past 12 months",
+   "label": "Gamblers classified as at risk of gambling harm in the past 12 months",
    "numerator": "46 to 67",
    "denominator": "gamblers",
    "unit": "per cent",
@@ -355,25 +342,21 @@
    "slug": "speech-1205072",
    "source_title": "Alison Penfold \u2014 Bills \u2014 2026-08-12",
    "window": "now"
-  },
-  {
-   "value": "$32.2 billion",
-   "label": "Amount Australians lost on legal gambling",
-   "numerator": "32.2",
-   "denominator": "legal gambling in the 2023-24 financial year",
-   "unit": "billion dollars",
-   "jurisdiction": "Australia",
-   "as_of": "2023-24",
-   "detail": "Stated by Josh Burns.",
-   "slug": "speech-1205188",
-   "source_title": "Josh Burns \u2014 Bills \u2014 2026-08-13",
-   "window": "now"
   }
  ],
  "positions": [
   {
+   "party": "Labor",
+   "position": "Supports gambling reform legislation including the Interactive Gambling Amendment (Gambling Reform) Bill, which restricts wagering ads, strengthens BetStop, and cracks down on illegal and harmful gambling products, while opposing certain amendments from other members.",
+   "slug": "speech-1205525",
+   "source_title": "Sharon Claydon \u2014 Bills \u2014 2026-08-18",
+   "speaker": "Sharon Claydon",
+   "date": "2026-08-18",
+   "window": "now"
+  },
+  {
    "party": "Liberal",
-   "position": "Supports the Interactive Gambling Amendment (Gambling Reform) Bill as the strongest gambling reforms in the parliament's history, including restrictions on wagering ads, enforcement against illegal gambling services, strengthening BetStop, and addressing online lottery harms.",
+   "position": "Supports the Interactive Gambling Amendment (Gambling Reform) Bill as the strongest gambling reforms in parliament's history, including restrictions on wagering advertisements and enforcement against illegal gambling services.",
    "slug": "speech-1205064",
    "source_title": "Simon Kennedy \u2014 Bills \u2014 2026-08-12",
    "speaker": "Simon Kennedy",
@@ -381,26 +364,8 @@
    "window": "now"
   },
   {
-   "party": "Labor",
-   "position": "Supports delivering the strongest ever reforms to tackle gambling harm, including making it easier to switch off gambling ads online, breaking the connection between wagering and sport, minimising children's exposure to gambling ads, and strengthening rules around inducements.",
-   "slug": "speech-1205509",
-   "source_title": "Marion Scrymgour \u2014 Questions without Notice \u2014 2026-08-18",
-   "speaker": "Marion Scrymgour",
-   "date": "2026-08-18",
-   "window": "now"
-  },
-  {
-   "party": "Independent",
-   "position": "Andrew Wilkie promotes the gambling reform legislation before parliament and notes that poker machines, the major issue of addiction and problem gambling, are dealt with by state and territory governments rather than this jurisdiction.",
-   "slug": "speech-1205048",
-   "source_title": "Andrew Wilkie \u2014 Questions without Notice \u2014 2026-08-12",
-   "speaker": "Andrew Wilkie",
-   "date": "2026-08-12",
-   "window": "now"
-  },
-  {
    "party": "Nationals",
-   "position": "Supports the Interactive Gambling Amendment (Gambling Reform) Bill 2026, which breaks the connection between wagering and sport, minimises children's exposure to gambling advertising, reduces advertising saturation, disrupts illegal gambling operations, strengthens BetStop, and cracks down on harmful online lottery products.",
+   "position": "Supports the Interactive Gambling Amendment (Gambling Reform) Bill 2026, which breaks the connection between wagering and sport, minimises children's exposure to gambling advertising, and disrupts illegal gambling operations.",
    "slug": "speech-1205072",
    "source_title": "Alison Penfold \u2014 Bills \u2014 2026-08-12",
    "speaker": "Alison Penfold",
@@ -409,11 +374,20 @@
   },
   {
    "party": "Greens",
-   "position": "Supports the gambling reform legislation, believing it gets the right balance by protecting people from gambling harm and protecting children from overexposure to gambling ads.",
+   "position": "Supports the gambling reform legislation, believing it gets the right balance by protecting people from gambling harm and children from overexposure to gambling ads.",
    "slug": "speech-1205795",
    "source_title": "Mehreen Faruqi \u2014 Bills \u2014 2026-08-19",
    "speaker": "Mehreen Faruqi",
    "date": "2026-08-19",
+   "window": "now"
+  },
+  {
+   "party": "Independent",
+   "position": "Andrew Wilkie promotes gambling reform legislation and notes that poker machines (the major issue of addiction and problem gambling) are dealt with by state and territory governments, not the federal jurisdiction.",
+   "slug": "speech-1205048",
+   "source_title": "Andrew Wilkie \u2014 Questions without Notice \u2014 2026-08-12",
+   "speaker": "Andrew Wilkie",
+   "date": "2026-08-12",
    "window": "now"
   }
  ],
@@ -1021,7 +995,7 @@
    {
     "speaker": "David Pocock",
     "party": "Independent",
-    "count": 81
+    "count": 80
    },
    {
     "speaker": "Emma Hurst",
@@ -1068,7 +1042,7 @@
    {
     "speaker": "David Pocock",
     "party": "Independent",
-    "count": 82
+    "count": 81
    },
    {
     "speaker": "Andrew Wilkie",
@@ -1189,7 +1163,7 @@
   "sections": [
    {
     "question": "What has parliament said about the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024?",
-    "answer": "The Victorian Parliament debated the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 extensively. The bill establishes a framework for mandatory carded play and precommitment on electronic gaming machines (EGMs), introduces a minimum spin rate of 3 seconds for new machines (up from 2.14 seconds), and includes anti-money-laundering measures like identity verification for cash payouts of $2,000 or more. Government speakers, including Minister Melissa Horne (Labor) and Minister Enver Erdogan (Labor), argued the reforms address gambling harm and money laundering, citing evidence that 29 per cent of poker machine players experienced some form of harm and that voluntary schemes like YourPlay have been ineffective. Government MPs such as the member for Clarinda and the member for Melton (Labor) supported the bill, noting record losses of over $3 billion in 2023\u201324 and praising measures like mandatory closure periods from 4 am to 10 am.\n\nOpposition speakers from the Liberals and Nationals opposed the bill in its original form. The member for Euroa argued it \"infringe[s] upon personal freedoms,\" creates \"sovereign risk\" for venues with 20-year licences, and lacks consultation, warning of up to 30 per cent revenue drops and job losses. The member for Gippsland East raised concerns about impacts on casual gamblers, border venues, and regional communities, asking that trial venues avoid his electorate. The member for Gippsland South criticised the bill for not introducing mandatory carded play in full but merely setting up a framework, and questioned whether the evidence supports the reforms. The member for Melton (Labor) noted the opposition's reasoned amendment sought more evidence and protection for border clubs.\n\nCrossbench members were divided. The Greens, including members Katherine Copsey and the member for Brunswick, supported the bill but moved amendments to legislate a deadline of 1 December 2027 for implementation, arguing the timeline could be delayed past the next election. They also called for default maximum limits, slower spin rates, and reform of loyalty schemes and the community benefits scheme. The member for Northern Metropolitan (a government minister) circulated house amendments to ensure ministerial directions are subject to parliamentary scrutiny, which were later agreed to. Ultimately, the bill passed with amendments, and the opposition noted it was \"not opposing\" the final version, though it remained \"not our policy.\"",
+    "answer": "Debate on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 was sharply partisan in the Victorian Parliament. The bill establishes a framework for mandatory carded play and precommitment on electronic gaming machines, introduces a minimum 3-second spin rate for new machines, and includes anti-money-laundering identity verification measures. Government speakers, including Labor's Minister for Casino, Gaming and Liquor Regulation Melissa Horne and members such as the member for Clarinda, supported it as \"landmark gambling reforms\" that would \"help address gambling harms and prevent money laundering.\" Labor's member for Eureka and the member for Melton highlighted personal and community harm, with the latter noting record losses of \"$3.03 billion\" on poker machines in 2023\u201324. The Greens supported the bill but criticised delays, with Katherine Copsey arguing the reforms \"should go further and can too easily be wound back by a change in government.\"\n\nOpposition speakers from the Liberal and National parties opposed the bill. The member for Euroa claimed it \"does not leave room for choice\" and would \"infringe upon personal freedoms,\" while the member for Gippsland South argued it would hurt pubs, clubs and RSLs, reduce casual gaming and cause job losses, citing Crown Casino's loss of \"a thousand jobs\" after carded play was introduced there. The member for Gippsland East raised concerns about border venues and trial locations, asking the government to \"please keep out of Gippsland East.\" The opposition also questioned the evidence base, with the member for Euroa noting that \"participation in pokie play has halved from 22 per cent of the population in 2008 to 11 per cent in 2023\" and that the highest rates of problem gambling are among bingo and Keno players, not pokies players. The bill was ultimately passed with house amendments ensuring the minister's direction is \"subject to parliamentary oversight,\" and the opposition stated it was \"now not opposing it\" after initially voting against it.",
     "sources": [
      {
       "slug": "speech-856089",
@@ -1199,11 +1173,11 @@
       "state": "vic",
       "date": "2024-11-27",
       "cited": true,
-      "passage": "In accordance with section 28 of the Charter of Human Rights and Responsibilities Act 2006, I table this statement of compatibility with respect to the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024: Opening paragraphs In accordance with section 28 of the Charter of Human Rights and Responsibilities Act 2006, (the Charter), I make this Statement of Compatibility with\u2026",
+      "passage": "\u2026This is why I am proud to introduce this Bill, which delivers on the government's commitment to introduce landmark gambling reforms. These changes will protect not just the 10 per cent of Victorians who play poker machines from gambling related harm, but their friends and loved ones. Purpose The Bill I am introducing amends the Gambling Regulation Act 2003 and the Casino Control Act 1991 to\u2026",
       "answer_ranges": [
        [
         0,
-        968
+        987
        ]
       ]
      },
@@ -1219,7 +1193,7 @@
       "answer_ranges": [
        [
         0,
-        968
+        987
        ]
       ]
      },
@@ -1235,7 +1209,23 @@
       "answer_ranges": [
        [
         0,
-        968
+        987
+       ]
+      ]
+     },
+     {
+      "slug": "speech-849643",
+      "title": "Danny O\u2019Brien \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-03-18",
+      "speaker": "Danny O\u2019Brien",
+      "party": null,
+      "state": "vic",
+      "date": "2025-03-18",
+      "cited": true,
+      "passage": "\u2026We know that after this change was introduced and mandatory carded play was introduced on the gaming machines at Crown Casino there was a significant downturn, and we know that at about the same time a thousand jobs were laid off at Crown Casino. Crown Casino will be very keen to say, 'No, that can't be attributed directly to losses from the introduction of mandatory carded play; there were other\u2026",
+      "answer_ranges": [
+       [
+        0,
+        987
        ]
       ]
      },
@@ -1251,23 +1241,7 @@
       "answer_ranges": [
        [
         0,
-        968
-       ]
-      ]
-     },
-     {
-      "slug": "speech-848896",
-      "title": "John Mullahy \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-03-19",
-      "speaker": "John Mullahy",
-      "party": null,
-      "state": "vic",
-      "date": "2025-03-19",
-      "cited": true,
-      "passage": "I rise to speak in favour of the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024, and from the outset I would like to thank the Minister for Casino, Gaming and Liquor Regulation in the other place and his team for their efforts in bringing this important piece of legislation to this house. I trust that these changes will make a positive impact for Victorians. I would\u2026",
-      "answer_ranges": [
-       [
-        0,
-        968
+        987
        ]
       ]
      },
@@ -1279,11 +1253,11 @@
       "state": "vic",
       "date": "2025-03-19",
       "cited": true,
-      "passage": "I seem to have cleared the room out a little here. I rise to speak on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. The Greens do welcome efforts to reduce gambling harm, and poker machines contribute an enormous amount to that harm. These machines of misery are purposely designed to generate addiction. Poker machines strip-mine the physical health, the mental\u2026",
+      "passage": "\u2026Gambling is a dangerous industry that profits off misery and harm, and while this bill has important reforms that will reduce gambling harm, they should go further and can too easily be wound back by a change in government. To protect the countless Victorian families impacted by gambling harm, we need to legislate these reforms properly and we want to work with the government to make that happen.",
       "answer_ranges": [
        [
         0,
-        968
+        987
        ]
       ]
      },
@@ -1295,11 +1269,11 @@
       "state": "vic",
       "date": "2025-03-19",
       "cited": true,
-      "passage": "I rise today to speak on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024, a bill which proposes significant changes to the way electronic gaming machines, known as EGMs, are regulated in Victoria. Specifically, the bill introduces mandatory carded play, precommitment systems and new minimum spin rates for EGMs among other amendments to the Gambling Regulation Act\u2026",
+      "passage": "\u2026The bill does not leave room for choice; it mandates that all players must have a registered card to play, a policy which will inevitably infringe upon personal freedoms and could lead to unintended consequences. The government's announcement of these reforms took several by surprise. Anti-gambling groups have long campaigned for reform, but the scale and suddenness of this change along with the\u2026",
       "answer_ranges": [
        [
         0,
-        968
+        987
        ]
       ]
      },
@@ -1315,23 +1289,7 @@
       "answer_ranges": [
        [
         0,
-        968
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1156042",
-      "title": "Michael Galea \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-05-27",
-      "speaker": "Michael Galea",
-      "party": null,
-      "state": "vic",
-      "date": "2025-05-27",
-      "cited": true,
-      "passage": "I rise to speak on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. These amendments, the ones that are in this bill, will build on the government's work to reduce the pervasive harm that gambling causes to individuals, families, communities and Victoria more broadly. I think when you look at whether it is the implementation of Victorian Gambling and Casino Control\u2026",
-      "answer_ranges": [
-       [
-        0,
-        968
+        987
        ]
       ]
      },
@@ -1347,7 +1305,39 @@
       "answer_ranges": [
        [
         0,
-        968
+        987
+       ]
+      ]
+     },
+     {
+      "slug": "speech-1156051",
+      "title": "Enver Erdogan \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-05-27",
+      "speaker": "Enver Erdogan",
+      "party": null,
+      "state": "vic",
+      "date": "2025-05-27",
+      "cited": true,
+      "passage": "Thank you to all members that have contributed to this debate on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. I know there are a range of strong views on this sector and the reforms that this bill supports. I want to acknowledge the sincere contributions from all members in this chamber, and I also read the many passionate contributions in the other place. As was\u2026",
+      "answer_ranges": [
+       [
+        0,
+        987
+       ]
+      ]
+     },
+     {
+      "slug": "speech-1156042",
+      "title": "Michael Galea \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-05-27",
+      "speaker": "Michael Galea",
+      "party": null,
+      "state": "vic",
+      "date": "2025-05-27",
+      "cited": true,
+      "passage": "I rise to speak on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. These amendments, the ones that are in this bill, will build on the government's work to reduce the pervasive harm that gambling causes to individuals, families, communities and Victoria more broadly. I think when you look at whether it is the implementation of Victorian Gambling and Casino Control\u2026",
+      "answer_ranges": [
+       [
+        0,
+        987
        ]
       ]
      },
@@ -1359,18 +1349,7 @@
       "state": "vic",
       "date": "2025-03-18",
       "cited": false,
-      "passage": "I rise to make a contribution on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. As we have heard, this bill establishes a framework for the introduction of mandatory carded play and precommitment for electronic gaming machines among other things. As the member for Eureka leaves the chamber, I acknowledge her contribution and personal experience, which she has\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-849643",
-      "title": "Danny O\u2019Brien \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-03-18",
-      "speaker": "Danny O\u2019Brien",
-      "party": null,
-      "state": "vic",
-      "date": "2025-03-18",
-      "cited": false,
-      "passage": "I am pleased to rise to speak on the legislation before us, the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024, which has been a long time coming. It has taken me a little bit by surprise that it is up right now, but I will persist because we have been waiting for this for nigh on two years, since the government first announced its position with respect to reforms to\u2026",
+      "passage": "\u2026ed we can have a member of the government standing up and clearly articulating and outlining to us how that is going to work if this goes ahead. It would be very good if those trial locations avoid those locations, and please keep out of Gippsland East \u2013 we have had enough kicks in the guts with job losses. We do not need another state government policy that is going to hurt employment in my area.",
       "answer_ranges": []
      },
      {
@@ -1382,6 +1361,17 @@
       "date": "2025-03-18",
       "cited": false,
       "passage": "I too rise to speak on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. In doing so I would like to acknowledge the work of the Minister for Casino, Gaming and Liquor Regulation, his team, departmental officials and all the stakeholders that have been involved in bringing this bill to Parliament. I would like to acknowledge our many community clubs, RSLs and\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-848896",
+      "title": "John Mullahy \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-03-19",
+      "speaker": "John Mullahy",
+      "party": null,
+      "state": "vic",
+      "date": "2025-03-19",
+      "cited": false,
+      "passage": "I rise to speak in favour of the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024, and from the outset I would like to thank the Minister for Casino, Gaming and Liquor Regulation in the other place and his team for their efforts in bringing this important piece of legislation to this house. I trust that these changes will make a positive impact for Victorians. I would\u2026",
       "answer_ranges": []
      },
      {
@@ -1407,17 +1397,6 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-840842",
-      "title": "Tim McCurdy \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Council\u2019s amendments \u2014 2025-05-27",
-      "speaker": "Tim McCurdy",
-      "party": null,
-      "state": "vic",
-      "date": "2025-05-27",
-      "cited": false,
-      "passage": "\u2026We want to be clear that, even after these amendments have gone through, this is not our policy. The amendments certainly improve what came through this place the first time around. However, the changes were made in good faith in both houses. I note that the government still intends to do a trial later in the year. I am not sure how that will roll out. I do not think the government is even sure\u2026",
-      "answer_ranges": []
-     },
-     {
       "slug": "speech-840839",
       "title": "Anthony Carbines \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Council\u2019s amendments \u2014 2025-05-27",
       "speaker": "Anthony Carbines",
@@ -1425,18 +1404,7 @@
       "state": "vic",
       "date": "2025-05-27",
       "cited": false,
-      "passage": "I move: That the amendments be agreed to. The Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 continues the work of the Labor government in reducing gambling harm while ensuring that community clubs, RSLs and hospitality venues remain an important part of Victorian life. In particular I want to acknowledge the work of my colleague in the other place, member for Northern\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-1156051",
-      "title": "Enver Erdogan \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-05-27",
-      "speaker": "Enver Erdogan",
-      "party": null,
-      "state": "vic",
-      "date": "2025-05-27",
-      "cited": false,
-      "passage": "Thank you to all members that have contributed to this debate on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. I know there are a range of strong views on this sector and the reforms that this bill supports. I want to acknowledge the sincere contributions from all members in this chamber, and I also read the many passionate contributions in the other place. As was\u2026",
+      "passage": "\u2026The house amendments ensure that the minister's direction is subject to parliamentary oversight, just like other regulations in the bill, and give the minister the tools to manage the rollout carefully while keeping decisions transparent and accountable. It is an opportunity also to acknowledge in my own electorate the West Heidelberg sub-branch of the RSL, which is better known as RSL on Bell,\u2026",
       "answer_ranges": []
      },
      {
@@ -1451,6 +1419,17 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-840842",
+      "title": "Tim McCurdy \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Council\u2019s amendments \u2014 2025-05-27",
+      "speaker": "Tim McCurdy",
+      "party": null,
+      "state": "vic",
+      "date": "2025-05-27",
+      "cited": false,
+      "passage": "\u2026ying field as we can. I also want to acknowledge the advocacy of the Australian Hotels Association. Certainly we know that the greater parliamentary oversight that has occurred between the two houses, as I said, is a positive step. We did oppose this bill the first time it went through the Assembly, but we are now not opposing it. I commend the Council's amendments to this place. Motion agreed to.",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-1154087",
       "title": "Enver Erdogan \u2014 Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-06-17",
       "speaker": "Enver Erdogan",
@@ -1462,12 +1441,12 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T02:26:25+00:00",
+    "asked_at": "2026-09-05T02:33:53+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What has parliament said about Greyhound racing and gambling?",
-    "answer": "The record shows extensive parliamentary criticism of greyhound racing as an industry built on animal cruelty and sustained by gambling revenue. In the New South Wales Parliament, The Hon. Emma Hurst (Animal Justice Party) moved a bill to ban greyhound racing, arguing the industry \"has animal cruelty built into its business model\" and that it \"only exists because of gambling money.\" She detailed findings from the McHugh inquiry that up to 70 per cent of greyhounds born had been killed as \"wastage,\" and cited ongoing deaths, including 17 greyhounds killed and 4,223 injured on NSW tracks in one year. Hurst also criticised the Minns Labor Government for continuing to fund the industry with taxpayer money and for failing to act on its earlier promise to shut it down if it did not reform.\n\nIn the Commonwealth Parliament, Greens members attacked the Albanese government's gambling advertising reforms for exempting racing. One member said the bill \"gives a green light for wagering companies to go all-in on funnelling their marketing budgets into horse and greyhound racing,\" while another described the exemption as purely \"to sustain what would otherwise be a dead and buried industry.\" A Greens member in the Queensland Parliament noted that greyhound racing \"is banned in New Zealand as of 31 July,\" in the ACT, and in 44 US states, and tabled polling showing 66 per cent of Queenslanders support ending the sport. The same member alleged that in 2025 the major parties received $54,000 in gambling donations, and that the LNP had taken $23,000 in gambling donations that year.\n\nOther passages show cross-party support for ending the industry. A Tasmanian context is referenced where a Liberal Premier \"acknowledged that greyhound racing is an industry built on cruelty, injury, death and wastage,\" while the Tasmanian Labor opposition was criticised for protecting it. In the New South Wales Legislative Council, The Hon. Abigail Boyd (The Greens) supported a motion for transparency on tracks, calling the industry's end \"a really good news story\" and noting bans in Scotland, Wales, Tasmania and Western Australia. However, some passages defend racing: one Commonwealth speaker supported the racing carve-out in gambling laws, arguing \"Wagering has always been intrinsic to racing\" and that country racing clubs are \"enormously important to regional Australia.\"",
+    "answer": "Several parliamentarians across Australian jurisdictions have spoken strongly against greyhound racing, linking it to gambling harm and animal cruelty. In the New South Wales Legislative Council, The Hon. Emma Hurst (Animal Justice Party) moved a bill to ban greyhound racing, arguing the industry \"has animal cruelty built into its business model\" and that it \"only exists because of gambling money.\" She claimed the industry has repeatedly failed to reform despite being given a \"last chance\" after the 2015 live baiting scandal, citing ongoing deaths, injuries, and overbreeding, and noted that \"commercial greyhound racing is now banned in over 40 US states\" and that New Zealand announced a ban by 2026. Hurst also criticised the NSW Government for continuing to fund the industry with taxpayer money.\n\nIn the Commonwealth Parliament, a member (unnamed in the passages) criticised the Albanese government's gambling advertising reforms for exempting racing, saying the bill \"gives a green light for wagering companies to go all-in on funnelling their marketing budgets into horse and greyhound racing.\" Another Commonwealth member argued that \"horse and greyhound racing lost their social licence years ago\" and that the racing exemption exists \"purely to sustain what would otherwise be a dead and buried industry.\" However, a different Commonwealth speaker supported the racing carve-out, stating \"wagering has always been intrinsic to racing\" and that racing is \"enormously important to regional Australia.\"\n\nIn Tasmania, a member praised Liberal Premier Jeremy Rockliff for acknowledging greyhound racing is \"an industry built on cruelty, injury, death and wastage\" and for planning to end state subsidies by 2029, while criticising the Labor opposition for protecting the industry. In Queensland, a Greens member noted the sport is \"banned in New Zealand as of 31 July,\" in the ACT, and in \"forty-four states of the United States,\" and tabled polling showing \"66 per cent\" of Queenslanders support ending greyhound racing. In Victoria, a question was asked about why the minister continues to subsidise greyhound racing despite a Parliamentary Budget Office report finding a ban would save the state \"almost half a billion dollars over 10 years.\"",
     "sources": [
      {
       "slug": "speech-1284137",
@@ -1481,7 +1460,7 @@
       "answer_ranges": [
        [
         0,
-        794
+        806
        ]
       ]
      },
@@ -1497,7 +1476,27 @@
       "answer_ranges": [
        [
         0,
-        794
+        806
+       ],
+       [
+        1515,
+        2256
+       ]
+      ]
+     },
+     {
+      "slug": "speech-1149917",
+      "title": "Georgie Purcell \u2014 Greyhound racing \u2014 2025-08-14",
+      "speaker": "Georgie Purcell",
+      "party": null,
+      "state": "vic",
+      "date": "2025-08-14",
+      "cited": true,
+      "passage": "(1006) My question is for the Minister for Racing in the other place. Over the weekend Tasmania announced they will stop subsidising greyhound racing, putting an end to the blood sport in the state by 2029. A report by the Parliamentary Budget Office released this week revealed that the same decision in Victoria would save our state almost half a billion dollars over 10 years. These figures do\u2026",
+      "answer_ranges": [
+       [
+        1515,
+        2256
        ]
       ]
      },
@@ -1512,8 +1511,8 @@
       "passage": "In other words, greyhounds are being abused and dying in the name of this industry, and Australians want it to stop. Which brings me to the purpose of this refreshingly straightforward bill, simply to amend the Interactive Gambling Act 2001 to remove the exemption for wagering services which relate to betting on greyhound racing. In effect, this would end online wagering on greyhound racing and\u2026",
       "answer_ranges": [
        [
-        1588,
-        2375
+        0,
+        806
        ]
       ]
      },
@@ -1529,23 +1528,7 @@
       "answer_ranges": [
        [
         0,
-        794
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1309345",
-      "title": "Abigail Boyd \u2014 Greyhound Racing Tracks \u2014 2026-03-25",
-      "speaker": "Abigail Boyd",
-      "party": null,
-      "state": "nsw",
-      "date": "2026-03-25",
-      "cited": true,
-      "passage": "Ms ABIGAIL BOYD ( 16:13 :14 ): The Greens support this motion. I thank the Hon. Rachel Merton for moving it, even if we are perhaps coming at it from different angles. The Greens support the full transparency of exactly what is happening with all of the tracks across New South Wales. This is, indeed, a really good news story. We are finally going to see the back of the greyhound racing industry\u2026",
-      "answer_ranges": [
-       [
-        1588,
-        2375
+        806
        ]
       ]
      },
@@ -1561,7 +1544,27 @@
       "answer_ranges": [
        [
         0,
-        794
+        806
+       ],
+       [
+        1515,
+        2256
+       ]
+      ]
+     },
+     {
+      "slug": "speech-1205072",
+      "title": "Alison Penfold \u2014 Bills \u2014 2026-08-12",
+      "speaker": "Alison Penfold",
+      "party": "Nationals",
+      "state": "federal",
+      "date": "2026-08-12",
+      "cited": true,
+      "passage": "I also support the different treatment in this legislation for horseracing, harness racing and greyhound racing. That distinction is important. Racing isn't a football or cricket match onto which gambling has been bolted as another product. Wagering has always been intrinsic to racing. People deliberately tuning into racing coverage know what they're watching, and information about fields, form\u2026",
+      "answer_ranges": [
+       [
+        806,
+        1515
        ]
       ]
      },
@@ -1573,11 +1576,11 @@
       "state": "federal",
       "date": "2026-08-19",
       "cited": true,
-      "passage": "This bill does not protect Australians from gambling harm. It gives a green light for wagering companies to go all-in on funnelling their marketing budgets into horse and greyhound racing, but the irony doesn't stop there. The Albanese government says that, if you are a dedicated racing channel or program, you're not constrained by any of these weak reforms either. Effectively, you are saying\u2026",
+      "passage": "\u2026ally admitting that this horrific cruelty is no sport at all? There are no lines the Albanese government won't cross. There is no hypocrisy it won't engage in if it fills their election war chest. In the inquiry hearing, even Racing AustraliaCEOPaul Eriksson admitted that, without wagering, there is no racing industry. This is because horse and greyhound racing lost their social licence years ago.",
       "answer_ranges": [
        [
-        794,
-        1588
+        806,
+        1515
        ]
       ]
      },
@@ -1592,8 +1595,8 @@
       "passage": "I will make it quick\u2014as I have to. At least the Greens are consistent in their position on this. We have been calling for an end to greyhound racing for a long time now. We are increasingly isolated. Almost no-one around the world still tolerates this so-called sport. It is banned in New Zealand as of 31 July. It is banned in the ACT. Tasmania is looking at a ban. Forty-four states of the United\u2026",
       "answer_ranges": [
        [
-        794,
-        1588
+        1515,
+        2256
        ]
       ]
      },
@@ -1617,17 +1620,6 @@
       "date": "2025-08-06",
       "cited": false,
       "passage": "The Hon. STEPHEN LAWRENCE ( 18:13 :07 ): I make a contribution to debate on this motion. Welfare and integrity issues in greyhound racing in New South Wales are overseen by the Greyhound Welfare and Integrity Commission, which is, of course, an independent government body. Acting Commissioner Drake was given full autonomy in determining how the inquiry was conducted, and she had all the inquiry\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-1149917",
-      "title": "Georgie Purcell \u2014 Greyhound racing \u2014 2025-08-14",
-      "speaker": "Georgie Purcell",
-      "party": null,
-      "state": "vic",
-      "date": "2025-08-14",
-      "cited": false,
-      "passage": "(1006) My question is for the Minister for Racing in the other place. Over the weekend Tasmania announced they will stop subsidising greyhound racing, putting an end to the blood sport in the state by 2029. A report by the Parliamentary Budget Office released this week revealed that the same decision in Victoria would save our state almost half a billion dollars over 10 years. These figures do\u2026",
       "answer_ranges": []
      },
      {
@@ -1664,6 +1656,17 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-1309345",
+      "title": "Abigail Boyd \u2014 Greyhound Racing Tracks \u2014 2026-03-25",
+      "speaker": "Abigail Boyd",
+      "party": null,
+      "state": "nsw",
+      "date": "2026-03-25",
+      "cited": false,
+      "passage": "Ms ABIGAIL BOYD ( 16:13 :14 ): The Greens support this motion. I thank the Hon. Rachel Merton for moving it, even if we are perhaps coming at it from different angles. The Greens support the full transparency of exactly what is happening with all of the tracks across New South Wales. This is, indeed, a really good news story. We are finally going to see the back of the greyhound racing industry\u2026",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-1309340",
       "title": "Emma Hurst \u2014 Greyhound Racing Participant Registration \u2014 2026-03-25",
       "speaker": "Emma Hurst",
@@ -1686,17 +1689,6 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-1205072",
-      "title": "Alison Penfold \u2014 Bills \u2014 2026-08-12",
-      "speaker": "Alison Penfold",
-      "party": "Nationals",
-      "state": "federal",
-      "date": "2026-08-12",
-      "cited": false,
-      "passage": "I also support the different treatment in this legislation for horseracing, harness racing and greyhound racing. That distinction is important. Racing isn't a football or cricket match onto which gambling has been bolted as another product. Wagering has always been intrinsic to racing. People deliberately tuning into racing coverage know what they're watching, and information about fields, form\u2026",
-      "answer_ranges": []
-     },
-     {
       "slug": "speech-1205188",
       "title": "Josh Burns \u2014 Bills \u2014 2026-08-13",
       "speaker": "Josh Burns",
@@ -1708,13 +1700,29 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T02:26:35+00:00",
+    "asked_at": "2026-09-05T02:34:02+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What has parliament said about the Gambling Legislation Amendment Bill 2025?",
-    "answer": "The Gambling Legislation Amendment Bill 2025 was debated in the Victorian Parliament, with members sharply divided. The opposition Liberals and Nationals opposed the bill. One opposition member argued it was \"just another new big Labor tax on Victorians,\" citing the introduction of a premium payment for the monitoring licence that they said would flow through to venues and clubs as increased fees. They also raised concerns about uncertainty over the licence term, which the bill changes from a fixed 15 years to a term specified by the minister, and claimed the bill would limit competition and weaken the tender process. The same member acknowledged one positive: \"the phasing out of cheques is largely welcomed and will be positively received by venues.\" Another opposition-aligned speaker, a Libertarian, said they would not support the bill because the premium payment was \"effectively a new gambling tax\" and they had promised never to support a tax increase.\n\nGovernment members spoke in support. The Minister for Police, Anthony Carbines, moved the second reading, stating the bill \"amends the Gambling Regulation Act 2003 and the Casino Control Act 1991 to improve the regulatory framework for gambling in Victoria,\" including changes to the monitoring licence and public lottery frameworks to \"yield the best outcomes for the state,\" provisions for removing cheques, and reducing barriers to voluntary exclusion at the casino. A government backbencher praised the bill for strengthening regulation and noted that premiums would be paid into the Hospitals and Charities Fund to support health and community outcomes, contrasting this with the opposition's focus on tax. Another government speaker, the Minister for Health, framed the bill as part of the government's commitment to reduce gambling harm, citing prior reforms like mandatory closure periods and reduced load-up limits. The bill also drew comment in the federal Parliament, where a senator supporting the separate Interactive Gambling Amendment (Gambling Reform) Bill 2026 noted that the coalition had agreed to support that federal bill only because it had changed significantly from Labor's original proposal.",
+    "answer": "Debate on the Gambling Legislation Amendment Bill 2025 was sharply partisan. The Liberal\u2013National opposition opposed the bill, with members arguing it introduced \"another new big Labor tax on Victorians\" through a premium payment on the monitoring licence, which they said would flow through to venues and clubs as higher monitoring and compliance fees. One opposition member, speaking in the Victorian parliament, said the bill lacked detail, created uncertainty about licence terms, and that the government was \"desperate to keep their hand in the pockets of venues to prop up their budget.\" The same member acknowledged one positive: the phasing out of cheques was \"largely welcomed\" by venues. A Libertarian member also opposed the bill, calling the premium \"effectively a new gambling tax\" and saying he had promised never to support a tax increase.\n\nGovernment members in the Victorian parliament strongly defended the bill. The minister, Anthony Carbines, said it would \"improve the regulatory framework for gambling in Victoria\" and give the government flexibility in future licensing to \"yield the best outcomes for the state.\" Other Labor speakers framed the premium as extracting \"value\" from licences, with funds going to the Hospitals and Charities Fund to support harm minimisation. One Labor member criticised the opposition for being \"stuck in the tax vortex\" and ignoring gambling harm, while another said the bill modernised the licensing framework and improved integrity safeguards. The bill also made changes to voluntary exclusion orders at the casino, requiring the operator to issue an exclusion order on request, and removed the need for applications to be witnessed.",
     "sources": [
+     {
+      "slug": "speech-844734",
+      "title": "Anthony Carbines \u2014 Gambling Legislation Amendment Bill 2025 - Statement of compatibility \u2014 2025-04-02",
+      "speaker": "Anthony Carbines",
+      "party": null,
+      "state": "vic",
+      "date": "2025-04-02",
+      "cited": true,
+      "passage": "\u2026Incorporated speech as follows: The Bill I am introducing amends the Gambling Regulation Act 2003 and the Casino Control Act 1991 to improve the regulatory framework for gambling in Victoria. The Bill makes important changes to the legislative framework for the gaming machine monitoring licence and public lottery licences to provide flexibility for the government in future licensing processes to\u2026",
+      "answer_ranges": [
+       [
+        854,
+        1691
+       ]
+      ]
+     },
      {
       "slug": "speech-842100",
       "title": "Gary Maas \u2014 Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-05-20",
@@ -1727,7 +1735,11 @@
       "answer_ranges": [
        [
         0,
-        968
+        854
+       ],
+       [
+        854,
+        1691
        ]
       ]
      },
@@ -1743,7 +1755,7 @@
       "answer_ranges": [
        [
         0,
-        968
+        854
        ]
       ]
      },
@@ -1759,36 +1771,25 @@
       "answer_ranges": [
        [
         0,
-        968
+        854
        ]
       ]
      },
      {
-      "slug": "speech-1205732",
-      "title": "Katy Gallagher \u2014 Bills \u2014 2026-08-19",
-      "speaker": "Katy Gallagher",
-      "party": null,
-      "state": "federal",
-      "date": "2026-08-19",
-      "cited": true,
-      "passage": "Leave granted. The speechesread as follows\u2014 INTERACTIVE GAMBLING AMENDMENT (GAMBLING REFORM) BILL 2026 This Bill delivers a significant package of reforms to reduce gambling harm in Australia.",
-      "answer_ranges": [
-       [
-        968,
-        2186
-       ]
-      ]
-     },
-     {
-      "slug": "speech-844734",
-      "title": "Anthony Carbines \u2014 Gambling Legislation Amendment Bill 2025 - Statement of compatibility \u2014 2025-04-02",
-      "speaker": "Anthony Carbines",
+      "slug": "speech-1154082",
+      "title": "Tom McIntosh \u2014 Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-06-17",
+      "speaker": "Tom McIntosh",
       "party": null,
       "state": "vic",
-      "date": "2025-04-02",
-      "cited": false,
-      "passage": "\u2026Incorporated speech as follows: The Bill I am introducing amends the Gambling Regulation Act 2003 and the Casino Control Act 1991 to improve the regulatory framework for gambling in Victoria. The Bill makes important changes to the legislative framework for the gaming machine monitoring licence and public lottery licences to provide flexibility for the government in future licensing processes to\u2026",
-      "answer_ranges": []
+      "date": "2025-06-17",
+      "cited": true,
+      "passage": "I rise today to speak on the Gambling Legislation Amendment Bill 2025, in support of it. I will be speaking for a far shorter time than Mr Mulholland opposite, who took a very long time to say very, very little. I did think I was going to be standing up to say that in all that time talking about gambling he did not even find time to talk about the hundreds of thousands of Victorians that have\u2026",
+      "answer_ranges": [
+       [
+        854,
+        1691
+       ]
+      ]
      },
      {
       "slug": "speech-842099",
@@ -1843,17 +1844,6 @@
       "date": "2025-06-17",
       "cited": false,
       "passage": "I take this opportunity to thank all members who have contributed to the debate on the Gambling Legislation Amendment Bill 2025. I appreciate the considered contributions made in this chamber, and I want to acknowledge that there are a range of views on this issue. I thank Mr Batchelor as well for a good summary of the goals of our government in terms of minimising harm but also getting value\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-1154082",
-      "title": "Tom McIntosh \u2014 Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-06-17",
-      "speaker": "Tom McIntosh",
-      "party": null,
-      "state": "vic",
-      "date": "2025-06-17",
-      "cited": false,
-      "passage": "I rise today to speak on the Gambling Legislation Amendment Bill 2025, in support of it. I will be speaking for a far shorter time than Mr Mulholland opposite, who took a very long time to say very, very little. I did think I was going to be standing up to say that in all that time talking about gambling he did not even find time to talk about the hundreds of thousands of Victorians that have\u2026",
       "answer_ranges": []
      },
      {
@@ -1899,14 +1889,25 @@
       "cited": false,
       "passage": "12:46 pm I want to thank the parliament for coming together to deal with this issue and get a result that will work. This new legislation, the Interactive Gambling Amendment (Gambling Reform) Bill 2026, is the most significant gambling advertising reform by any Australian government ever. It increases protections for people who are most at risk of gambling harm while continuing to allow those who\u2026",
       "answer_ranges": []
+     },
+     {
+      "slug": "speech-1205732",
+      "title": "Katy Gallagher \u2014 Bills \u2014 2026-08-19",
+      "speaker": "Katy Gallagher",
+      "party": null,
+      "state": "federal",
+      "date": "2026-08-19",
+      "cited": false,
+      "passage": "10:57 am The coalition has agreed to support theInteractiveGamblingAmendment(GamblingReform)Bill2026 only because it changed significantly from what Labor first put on offer. This is a better bill today than the one they first put forward, and it is a better bill because the coalition did the work Labor should've done. I commend my colleagueSenator Hendersonfor her continued efforts. The\u2026",
+      "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T02:26:44+00:00",
+    "asked_at": "2026-09-05T02:34:11+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What has parliament said about Greyhound Racing Industry and gambling?",
-    "answer": "Parliamentarians across several jurisdictions have condemned the greyhound racing industry as inherently cruel and tied to gambling profits. In the New South Wales Parliament, The Hon. Emma Hurst (Animal Justice Party) moved a bill to ban greyhound racing, arguing the industry has \"animal cruelty built into its business model\" and that it \"only exists because of gambling money.\" She detailed a history of scandals, including the 2015 live baiting expose, and cited ongoing issues like overbreeding, on-track deaths, and the killing of healthy dogs as \"wastage.\" Hurst claimed the industry \"never cleaned up its act\" and that the NSW Government continues to \"pour millions of taxpayers' dollars\" into it, asking why a government would fund an industry that \"brings no money into the State and, in fact, costs the State money.\" She also moved for papers to compel Greyhound Racing NSW to disclose information to Parliament, noting the operating licence requires disclosure of anything \"capable of adversely affecting the reputation or integrity\" of the industry, but that these disclosures are not made public.\n\nIn the Commonwealth Parliament, Ms Abigail Boyd (The Greens) supported a motion for transparency on NSW tracks, calling the industry's end \"a really good news story\" and advocating for taxpayer money to be used to close it down, including transition packages for workers and rehoming for dogs. Another speaker in the Commonwealth Parliament stated that \"the only way to end the cruelty is to end the industry,\" pointing to bans in over 40 US states, New Zealand, Scotland, Wales, and the ACT, while noting Australia \"stands virtually alone as the global stronghold of the cruel greyhound racing industry.\" A separate Commonwealth contribution criticised the Albanese government's gambling advertising reforms as a \"piss-weak bill\" that exempts racing channels, and quoted a Racing Australia CEO admitting \"without wagering, there is no racing industry.\" The record also notes that in Tasmania, legislation for a ban was deferred by the Legislative Council, with one member urging Tasmanians to contact their parliamentarians to protect the dogs.",
+    "answer": "Parliamentary debate on greyhound racing and gambling was extensive and sharply critical of the industry. The Hon. Emma Hurst (NSW Legislative Council, Animal Justice Party) moved a bill to ban greyhound racing in New South Wales, arguing the industry \"has animal cruelty built into its business model\" and that \"the only way to end the cruelty is to end the industry.\" She cited the 2015 Four Corners expose on live baiting, the McHugh inquiry's finding that up to 70 per cent of greyhounds born had been killed as \"wastage,\" and ongoing deaths\u2014including 17 killed and 4,223 injured on NSW tracks in one year, plus at least five dogs killed in a US export program. Hurst claimed the industry \"never cleaned up its act after 2015\" and that the Minns Labor Government had failed to revoke Greyhound Racing NSW's operating licence despite promising to do so if noncompliance continued.\n\nOther speakers echoed these themes. Abigail Boyd (NSW Legislative Council, The Greens) supported transparency motions and noted Scotland, Wales, Tasmania and Western Australia were moving to ban greyhound racing, while New Zealand had recommitted to a ban by 2026. A Commonwealth speaker (unnamed in the passages) said \"Australia stands virtually alone as the global stronghold of the cruel greyhound racing industry\" and called for \"at least a ban on online gambling on racing.\" Another Commonwealth speaker criticised the Albanese government's gambling advertising bill as \"piss-weak,\" arguing it exempted racing channels and that \"horse and greyhound racing lost their social licence years ago.\" In contrast, a government-aligned speaker (NSW, Hon. Stephen Lawrence) defended the industry's regulatory framework, noting the Drake inquiry report was being considered and that the Government wanted \"the highest standards of governance, integrity and animal welfare\" in the industry.",
     "sources": [
      {
       "slug": "speech-1284137",
@@ -1920,7 +1921,7 @@
       "answer_ranges": [
        [
         0,
-        1111
+        883
        ]
       ]
      },
@@ -1936,11 +1937,7 @@
       "answer_ranges": [
        [
         0,
-        1111
-       ],
-       [
-        1111,
-        2158
+        883
        ]
       ]
      },
@@ -1956,27 +1953,7 @@
       "answer_ranges": [
        [
         0,
-        1111
-       ],
-       [
-        1111,
-        2158
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1309345",
-      "title": "Abigail Boyd \u2014 Greyhound Racing Tracks \u2014 2026-03-25",
-      "speaker": "Abigail Boyd",
-      "party": null,
-      "state": "nsw",
-      "date": "2026-03-25",
-      "cited": true,
-      "passage": "Ms ABIGAIL BOYD ( 16:13 :14 ): The Greens support this motion. I thank the Hon. Rachel Merton for moving it, even if we are perhaps coming at it from different angles. The Greens support the full transparency of exactly what is happening with all of the tracks across New South Wales. This is, indeed, a really good news story. We are finally going to see the back of the greyhound racing industry\u2026",
-      "answer_ranges": [
-       [
-        1111,
-        2158
+        883
        ]
       ]
      },
@@ -1992,7 +1969,7 @@
       "answer_ranges": [
        [
         0,
-        1111
+        883
        ]
       ]
      },
@@ -2004,11 +1981,11 @@
       "state": "nsw",
       "date": "2026-08-05",
       "cited": true,
-      "passage": "\u2026Currently the operating licence provides that Greyhound Racing NSW must disclose any information that comes into its possession which is capable of adversely affecting the reputation or integrity of, or attracting negative publicity to, Greyhound Racing NSW, the Greyhound Welfare Integrity Commission or greyhound racing generally. Those disclosures are not made public. Only the Minister is\u2026",
+      "passage": "The Hon. EMMA HURST ( 21:33 :43 ): I move: That, under standing order 52, there be laid upon the table of the House within 21 days of the date of passing of this resolution the following documents created since 25 March 2023 in the possession, custody or control of the Minister for Aboriginal Affairs and Treaty, Minister for Gaming and Racing, Minister for Veterans, Minister for Medical Research\u2026",
       "answer_ranges": [
        [
         0,
-        1111
+        883
        ]
       ]
      },
@@ -2020,11 +1997,11 @@
       "state": "federal",
       "date": "2026-08-19",
       "cited": true,
-      "passage": "\u2026ally admitting that this horrific cruelty is no sport at all? There are no lines the Albanese government won't cross. There is no hypocrisy it won't engage in if it fills their election war chest. In the inquiry hearing, even Racing AustraliaCEOPaul Eriksson admitted that, without wagering, there is no racing industry. This is because horse and greyhound racing lost their social licence years ago.",
+      "passage": "This bill does not protect Australians from gambling harm. It gives a green light for wagering companies to go all-in on funnelling their marketing budgets into horse and greyhound racing, but the irony doesn't stop there. The Albanese government says that, if you are a dedicated racing channel or program, you're not constrained by any of these weak reforms either. Effectively, you are saying\u2026",
       "answer_ranges": [
        [
-        1111,
-        2158
+        883,
+        1869
        ]
       ]
      },
@@ -2069,7 +2046,7 @@
       "state": "nsw",
       "date": "2025-08-06",
       "cited": false,
-      "passage": "The Hon. STEPHEN LAWRENCE ( 18:13 :07 ): I make a contribution to debate on this motion. Welfare and integrity issues in greyhound racing in New South Wales are overseen by the Greyhound Welfare and Integrity Commission, which is, of course, an independent government body. Acting Commissioner Drake was given full autonomy in determining how the inquiry was conducted, and she had all the inquiry\u2026",
+      "passage": "\u2026The findings and recommendations of the Drake inquiry report will be considered carefully as part of the New South Wales Government's ongoing commitment to the highest standards of governance, integrity and animal welfare in the greyhound racing industry. The Government will now consider the comprehensive report and determine the appropriate next steps to ensure that the New South Wales greyhound\u2026",
       "answer_ranges": []
      },
      {
@@ -2095,6 +2072,17 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-1309345",
+      "title": "Abigail Boyd \u2014 Greyhound Racing Tracks \u2014 2026-03-25",
+      "speaker": "Abigail Boyd",
+      "party": null,
+      "state": "nsw",
+      "date": "2026-03-25",
+      "cited": false,
+      "passage": "Ms ABIGAIL BOYD ( 16:13 :14 ): The Greens support this motion. I thank the Hon. Rachel Merton for moving it, even if we are perhaps coming at it from different angles. The Greens support the full transparency of exactly what is happening with all of the tracks across New South Wales. This is, indeed, a really good news story. We are finally going to see the back of the greyhound racing industry\u2026",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-1313955",
       "title": "Emma Hurst \u2014 Greyhound Welfare and Integrity Commission \u2014 2026-06-03",
       "speaker": "Emma Hurst",
@@ -2117,13 +2105,29 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T02:26:54+00:00",
+    "asked_at": "2026-09-05T02:34:20+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What has parliament said about the Casino and Gambling Legislation Amendment Bill 2025?",
-    "answer": "The Casino and Gambling Legislation Amendment Bill 2025 was debated in the Victorian Parliament, with the Liberal\u2013Nationals opposition indicating it would not oppose the bill. A Liberal\u2013Nationals speaker said the bill extends the deadline for mandatory carded play on traditional table games from 1 December 2025 to 1 December 2027, citing technology constraints, and increases the cap on club gaming machine entitlements from 840 to 1260. The same speaker noted the bill creates a new \"corporate associate\" category and raises penalties for non-compliance with the Melbourne Transformation Plan to up to $1 million per day. Another opposition speaker said the bill is not a \"sweetheart deal for Crown\" but a pragmatic response to the fact that the technology for carded play on table games \"doesn't exist anywhere in the world.\"\n\nGovernment speakers supported the bill. The Minister for Police, Anthony Carbines, said it \"will amend the Casino Control Act 1991 to deliver on government commitments to ensure the casino operator continues to run the Melbourne casino to the highest standard while reducing gambling harm,\" including new powers to discipline corporate associates and an additional fine of up to $1 million per day for non-compliance with Melbourne Transformation Plan directions. A Labor backbencher said the bill \"delivers on the government's commitment to holding Crown to the highest standards\" and that the extended timeline allows technology to be \"rolled out, tested and made sure that it is all okay.\"\n\nThe Greens opposed the bill. A Greens speaker said it \"does contain some modest good steps,\" such as stronger enforcement against Crown and its corporate associates, but \"delays life-saving harm reduction measures\" by pushing back cashless controls and carded play to 1 December 2027. The speaker argued this \"slows the rollout of the very tools \u2013 cashless gaming and mandatory player cards \u2013 that help people set limits, curb money laundering and stop losses from spiralling,\" and concluded: \"The Greens oppose this bill in its current form.\"",
+    "answer": "Debate on the Casino and Gambling Legislation Amendment Bill 2025 in the Victorian Parliament was sharply divided. The Greens opposed the bill, with two Greens members delivering near-identical speeches. They supported its \"modest good steps\" \u2014 such as new powers for the Victorian Gambling and Casino Control Commission (VGCCC) to discipline Crown's \"corporate associates\" with fines of up to $1 million, and an additional $1 million per day fine for ignoring directions tied to the Melbourne transformation plan \u2014 but condemned its delays. They said the bill pushes back key cashless controls, including the $1000 per day cash limit and electronic payment of winnings over $1000, from 1 December 2025 to 1 December 2027, and defers carded play on traditional table games to 2027. One Greens speaker called this \"a huge step backwards\" that \"aids and abets\" money laundering by organised crime, citing Victoria Police evidence to the Royal Commission that cash-and-carry laundering at the casino would \"happen on a daily basis\".\n\nThe Liberal\u2013Nationals opposition did not oppose the bill. Its speakers framed the two-year extension as a pragmatic response to technology that \"does not exist anywhere in the world\" for carded play on traditional tables, noting Crown is investing about $40 million in new technology. They stressed Crown's economic importance as Victoria's largest single employer with around 13,000 staff, and warned that without the extension Crown might have to close traditional table games, risking about 1000 jobs. They also supported the bill's increase in the club gaming machine entitlements cap from 840 to 1260, saying it helps smaller clubs exit the pokies market. Government speakers, including Minister Anthony Carbines, defended the bill as delivering on royal commission reforms, strengthening the regulator, and providing time to \"develop, test and roll out cashless technology\". One government speaker said the bill \"builds on Victoria's record of nation-leading gambling reform\".",
     "sources": [
+     {
+      "slug": "speech-844734",
+      "title": "Anthony Carbines \u2014 Gambling Legislation Amendment Bill 2025 - Statement of compatibility \u2014 2025-04-02",
+      "speaker": "Anthony Carbines",
+      "party": null,
+      "state": "vic",
+      "date": "2025-04-02",
+      "cited": true,
+      "passage": "In accordance with the Charter of Human Rights and Responsibilities Act 2006, I table a statement of compatibility in relation to the Gambling Legislation Amendment Bill 2025: Opening paragraphs In accordance with section 28 of the Charter of Human Rights and Responsibilities Act 2006 , (Charter), I make this Statement of Compatibility with respect to the Gambling Legislation Amendment Bill 2025.\u2026",
+      "answer_ranges": [
+       [
+        0,
+        1029
+       ]
+      ]
+     },
      {
       "slug": "speech-842056",
       "title": "Mary-Anne Thomas \u2014 Program \u2014 2025-05-20",
@@ -2136,7 +2140,7 @@
       "answer_ranges": [
        [
         0,
-        829
+        1029
        ]
       ]
      },
@@ -2152,43 +2156,23 @@
       "answer_ranges": [
        [
         0,
-        829
+        1029
        ]
       ]
      },
      {
-      "slug": "speech-833040",
-      "title": "Anthony Carbines \u2014 Casino and Gambling Legislation Amendment Bill 2025 - Statement of compatibility \u2014 2025-08-27",
-      "speaker": "Anthony Carbines",
+      "slug": "speech-1154087",
+      "title": "Enver Erdogan \u2014 Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-06-17",
+      "speaker": "Enver Erdogan",
       "party": null,
       "state": "vic",
-      "date": "2025-08-27",
+      "date": "2025-06-17",
       "cited": true,
-      "passage": "\u2026Incorporated speech as follows: The Casino and Gambling Legislation Amendment Bill 2025 will amend the Casino Control Act 1991 to deliver on government commitments to ensure the casino operator continues to run the Melbourne casino to the highest standard while reducing gambling harm. It will increase scrutiny of Crown Melbourne and support the modernisation of casino operations and\u2026",
+      "passage": "I take this opportunity to thank all members who have contributed to the debate on the Gambling Legislation Amendment Bill 2025. I appreciate the considered contributions made in this chamber, and I want to acknowledge that there are a range of views on this issue. I thank Mr Batchelor as well for a good summary of the goals of our government in terms of minimising harm but also getting value\u2026",
       "answer_ranges": [
        [
         0,
-        829
-       ],
-       [
-        829,
-        1523
-       ]
-      ]
-     },
-     {
-      "slug": "speech-832465",
-      "title": "Luba Grigorovitch \u2014 Casino and Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-09-10",
-      "speaker": "Luba Grigorovitch",
-      "party": null,
-      "state": "vic",
-      "date": "2025-09-10",
-      "cited": true,
-      "passage": "\u2026This piece of legislation before us today, the Casino and Gambling Legislation Amendment Bill 2025, delivers on the government's commitment to holding Crown to the highest standards on its day-to-day operation of the Melbourne casino. It proposes to increase scrutiny of Crown Melbourne and Crown Melbourne's corporate associates and support the modernisation of casino operations and implementation\u2026",
-      "answer_ranges": [
-       [
-        829,
-        1523
+        1029
        ]
       ]
      },
@@ -2204,11 +2188,11 @@
       "answer_ranges": [
        [
         0,
-        829
+        1029
        ],
        [
-        1523,
-        2068
+        1029,
+        2013
        ]
       ]
      },
@@ -2224,31 +2208,23 @@
       "answer_ranges": [
        [
         0,
-        829
-       ],
-       [
-        829,
-        1523
-       ],
-       [
-        1523,
-        2068
+        1029
        ]
       ]
      },
      {
-      "slug": "speech-832508",
-      "title": "Danny O\u2019Brien \u2014 Casino and Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-09-10",
-      "speaker": "Danny O\u2019Brien",
+      "slug": "speech-832506",
+      "title": "Cindy McLeish \u2014 Casino and Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-09-10",
+      "speaker": "Cindy McLeish",
       "party": null,
       "state": "vic",
       "date": "2025-09-10",
       "cited": true,
-      "passage": "\u2026I did ask the question: are you going to be able to deliver the technology to have carded play on table games by the December 2025 deadline? And the answer was, 'It'll be tight because it doesn't exist anywhere in the world, but we can do so.' I feel I was a little sceptical at the time. Again, I am not an expert, certainly, in gaming technology, but it did seem to be that it would be a very\u2026",
+      "passage": "I rise to make a contribution to the Casino and Gambling Legislation Amendment Bill 2025, and this is a bill that the opposition are not opposing. I want to begin my contribution with a little bit of history. This bill deals with casinos and gaming generally, and I am going to just start with the history around the casino, because history was made on 30 June 1994, when Melbourne first got a\u2026",
       "answer_ranges": [
        [
         0,
-        829
+        1029
        ]
       ]
      },
@@ -2263,8 +2239,8 @@
       "passage": "I am pleased to have the opportunity this morning to make a contribution on the Casino and Gambling Legislation Amendment Bill 2025 and to follow on from the comments of the lead speaker from the opposition. I note the lead speaker has indicated that the opposition will not be opposing the bill. I think the 30-minute contribution that was provided was quite measured when it comes to the matters\u2026",
       "answer_ranges": [
        [
-        829,
-        1523
+        0,
+        1029
        ]
       ]
      },
@@ -2280,11 +2256,11 @@
       "answer_ranges": [
        [
         0,
-        829
+        1029
        ],
        [
-        1523,
-        2068
+        1029,
+        2013
        ]
       ]
      },
@@ -2296,32 +2272,13 @@
       "state": "vic",
       "date": "2025-10-16",
       "cited": true,
-      "passage": "\u2026In plain terms, the bill slows the rollout of the very tools \u2013 cashless gaming and mandatory player cards \u2013 that help people set limits, curb money laundering and stop losses from spiralling. It is a huge step backwards. Let us remember why carded play matters. When people (1) must use a card and (2) crucially, must set a precommitment limit and (3) must verify who they are and receive large\u2026",
+      "passage": "\u2026It is a huge step backwards. Let us remember why carded play matters. When people (1) must use a card and (2) crucially, must set a precommitment limit and (3) must verify who they are and receive large payments electronically rather than in cash, the data will then show who is playing, how much and whether interventions are needed to reduce gambling harm and avoid money laundering. Experts have\u2026",
       "answer_ranges": [
        [
         0,
-        829
-       ],
-       [
-        829,
-        1523
-       ],
-       [
-        1523,
-        2068
+        1029
        ]
       ]
-     },
-     {
-      "slug": "speech-844734",
-      "title": "Anthony Carbines \u2014 Gambling Legislation Amendment Bill 2025 - Statement of compatibility \u2014 2025-04-02",
-      "speaker": "Anthony Carbines",
-      "party": null,
-      "state": "vic",
-      "date": "2025-04-02",
-      "cited": false,
-      "passage": "In accordance with the Charter of Human Rights and Responsibilities Act 2006, I table a statement of compatibility in relation to the Gambling Legislation Amendment Bill 2025: Opening paragraphs In accordance with section 28 of the Charter of Human Rights and Responsibilities Act 2006 , (Charter), I make this Statement of Compatibility with respect to the Gambling Legislation Amendment Bill 2025.\u2026",
-      "answer_ranges": []
      },
      {
       "slug": "speech-842099",
@@ -2368,25 +2325,36 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-1154087",
-      "title": "Enver Erdogan \u2014 Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-06-17",
-      "speaker": "Enver Erdogan",
+      "slug": "speech-833040",
+      "title": "Anthony Carbines \u2014 Casino and Gambling Legislation Amendment Bill 2025 - Statement of compatibility \u2014 2025-08-27",
+      "speaker": "Anthony Carbines",
       "party": null,
       "state": "vic",
-      "date": "2025-06-17",
+      "date": "2025-08-27",
       "cited": false,
-      "passage": "I take this opportunity to thank all members who have contributed to the debate on the Gambling Legislation Amendment Bill 2025. I appreciate the considered contributions made in this chamber, and I want to acknowledge that there are a range of views on this issue. I thank Mr Batchelor as well for a good summary of the goals of our government in terms of minimising harm but also getting value\u2026",
+      "passage": "In accordance with the Charter of Human Rights and Responsibilities Act 2006, I table a statement of compatibility in relation to the Casino and Gambling Legislation Amendment Bill 2025: Opening paragraphs In accordance with section 28 of the Charter of Human Rights and Responsibilities Act 2006 , (Charter), I make this Statement of Compatibility with respect to the Casino and Gambling\u2026",
       "answer_ranges": []
      },
      {
-      "slug": "speech-832506",
-      "title": "Cindy McLeish \u2014 Casino and Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-09-10",
-      "speaker": "Cindy McLeish",
+      "slug": "speech-832465",
+      "title": "Luba Grigorovitch \u2014 Casino and Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-09-10",
+      "speaker": "Luba Grigorovitch",
       "party": null,
       "state": "vic",
       "date": "2025-09-10",
       "cited": false,
-      "passage": "I rise to make a contribution to the Casino and Gambling Legislation Amendment Bill 2025, and this is a bill that the opposition are not opposing. I want to begin my contribution with a little bit of history. This bill deals with casinos and gaming generally, and I am going to just start with the history around the casino, because history was made on 30 June 1994, when Melbourne first got a\u2026",
+      "passage": "\u2026This bill builds on Victoria's record of nation-leading gambling reform, and no other state has gone as far as Victoria. We established the VGCCC, which is the strongest regulator in Australia, and we have already delivered reforms that reshaped gaming in pubs and clubs across the state, including mandatory carded play; the YourPlay statewide precommitment; the mandatory 4 am to 10 am closures in\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-832508",
+      "title": "Danny O\u2019Brien \u2014 Casino and Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-09-10",
+      "speaker": "Danny O\u2019Brien",
+      "party": null,
+      "state": "vic",
+      "date": "2025-09-10",
+      "cited": false,
+      "passage": "I rise to speak on the Casino and Gambling Legislation Amendment Bill 2025. It is a bit back to the future for me, having dealt with a lot of the legislation with respect to gaming and gambling over the last couple of years as the previous shadow minister, and I guess it highlights an issue that is sometimes lost by those who wish to see gambling curtailed or removed from our society. I\u2026",
       "answer_ranges": []
      },
      {
@@ -2423,12 +2391,12 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T02:27:04+00:00",
+    "asked_at": "2026-09-05T02:34:31+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What have MPs said about gambling reform and poker machine regulation since July 2024?",
-    "answer": "Several MPs have spoken on gambling reform and poker machine regulation since July 2024, mostly in Victorian and New South Wales parliaments. In the Victorian Legislative Assembly, an opposition Liberal/National MP criticised the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 for setting up a framework rather than fully introducing mandatory carded play, arguing the government was \"giving itself a head of power\" without parliamentary scrutiny of the details. He claimed mandatory cards would burden casual punters and hurt pubs and clubs, cited Crown Casino job losses after carded play was introduced there, and questioned the evidence base, noting the Victorian Population Gambling and Health Study counted \"feelings of regret\" as harm and found only 0.9 per cent of the population experience problem gambling. Greens MP Katherine Copsey supported the bill but moved amendments to require implementation by 1 December 2027, warning delays prioritised \"industry convenience over urgently needed community harm reduction\". She advocated default maximum limits of $100 a day, $500 per month and $5000 per year, slower spin rates of at least 5 seconds, and criticised the community benefits scheme as \"a sham\". A later Victorian minister, Enver Erdogan, moved house amendments ensuring the ministerial direction is subject to parliamentary scrutiny, and another government MP commended the amendments while praising community clubs like RSL on Bell.\n\nIn New South Wales, Premier Chris Minns defended his government's record, listing reforms including revoking over 650 exemptions to mandatory shutdown periods, reducing the statewide gaming machine entitlement cap by over 3,000 machines, banning political donations from clubs with gaming machines, cutting cash input limits from $5,000 to $500 for new machines, and banning external gambling signage. Labor MP Liesl Tesch similarly detailed reforms and said the government had done \"more in gaming reform in two years than the previous Government did in 12 years\". Opposition MP Cate Faehrmann criticised the Minns government for delaying mandatory account-based gaming, noting pokies losses rose 8 per cent to $9.3 billion in a year and that the number of machines increased by 247. In the Commonwealth Parliament, several MPs spoke on the Interactive Gambling Amendment (Gambling Reform) Bill 2026: one government-aligned speaker called it \"the strongest action against gambling that Australia has ever seen\", while another MP opposed it as \"a cave-in\" and \"shameful\", and a third praised the reforms as the most significant in Australia's history while urging further curbs on advertising to children.",
+    "answer": "Debate on gambling reform and poker machine regulation since July 2024 has been extensive and sharply partisan across several Australian parliaments. In the Victorian Legislative Assembly, the Liberal\u2013National opposition criticised the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 for setting up a framework rather than fully introducing mandatory carded play, arguing the government was \"giving itself a head of power\" without parliamentary scrutiny of the details. The opposition also claimed the reforms would harm pubs and clubs, citing Crown Casino's downturn after mandatory carded play, and questioned the evidence base, noting the Victorian Population Gambling and Health Study found only 0.9 per cent of the population experience problem gambling and that participation in pokie play halved from 22 per cent in 2008 to 11 per cent in 2023. The Greens supported the bill but moved amendments to require implementation by 1 December 2027, criticising the lack of a deadline and arguing the trial was duplicative since the technology already operates at Crown Casino. The Greens also advocated for default maximum limits of $100 a day, $500 per month and $5000 per year, slower spin rates of at least 5 seconds, and abolition of the community benefits scheme, which they called \"a complete sham\". The government minister, Enver Erdogan, said the bill creates a framework for staged implementation and that the government would \"revisit the implementation timeline\" given technological developments and approaches in bordering jurisdictions, while circulating amendments to ensure ministerial directions are subject to parliamentary scrutiny.\n\nIn the New South Wales Parliament, Premier Chris Minns defended his government's record, listing reforms including revoking over 650 exemptions to mandatory shutdown periods, reducing the statewide gaming machine entitlement cap by over 3,000 machines, banning political donations from clubs with gaming machines, reducing cash input limits from $5,000 to $500 for new machines, and investing $100 million in harm minimisation. Opposition member Cate Faehrmann criticised the government for delays, noting pokie losses increased by 8 per cent to $9.3 billion in the past year and that the number of machines increased by 247 on Minns's watch, and she moved an order for papers on the government's response to the independent panel's recommendation for mandatory account-based gaming. Government member Liesl Tesch said the government could not support a bill on returning proceeds of crime from gambling, arguing it was already addressing harm through evidence-based policy and that clubs are vital community centres and employers. In the Commonwealth Parliament, debate on the Interactive Gambling Amendment (Gambling Reform) Bill 2026 saw government supporters call it \"the strongest action against gambling that Australia has ever seen\", while an opponent called it \"a cave-in\" and \"shameful\", arguing it did not respond fully to the Murphy report's recommendations.",
     "sources": [
      {
       "slug": "speech-849643",
@@ -2442,7 +2410,7 @@
       "answer_ranges": [
        [
         0,
-        1478
+        1676
        ]
       ]
      },
@@ -2458,7 +2426,7 @@
       "answer_ranges": [
        [
         0,
-        1478
+        1676
        ]
       ]
      },
@@ -2470,11 +2438,11 @@
       "state": "vic",
       "date": "2025-05-27",
       "cited": true,
-      "passage": "Thank you to all members that have contributed to this debate on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. I know there are a range of strong views on this sector and the reforms that this bill supports. I want to acknowledge the sincere contributions from all members in this chamber, and I also read the many passionate contributions in the other place. As was\u2026",
+      "passage": "\u2026Given where we are in the year, recent developments in technology and evolving approaches in our bordering jurisdictions, we will need to revisit the implementation timeline for elements of these reforms. We will do that in consultation with stakeholders and the industry. I want to especially acknowledge the constructive engagement from members on all sides of this debate, in particular the\u2026",
       "answer_ranges": [
        [
         0,
-        1478
+        1676
        ]
       ]
      },
@@ -2486,11 +2454,11 @@
       "state": "nsw",
       "date": "2025-06-05",
       "cited": true,
-      "passage": "\u2026The Minister and his team have done more in gaming reform in two years than the previous Government did in 12 years. I note that Dominic Perrottet came in all guns blazing in the lead-up to the last election after doing nothing for 12 years, promising incredible reforms, but no work had been done and there were no plans in place to do work in the future. The reforms we have already implemented\u2026",
+      "passage": "Ms LIESL TESCH ( Gosford ) ( 10:22 :05 ): I thank the member for Murray for bringing the Return of Proceeds of Crime (Gambling Businesses) Bill 2025 to the House. The bill's intention of addressing the harms caused by gambling is laudable, and the New South Wales Government supports the intent of the member for Murray in seeking to protect victims who have had money stolen from them. Part 2 of\u2026",
       "answer_ranges": [
        [
-        1478,
-        2685
+        1676,
+        3047
        ]
       ]
      },
@@ -2506,11 +2474,11 @@
       "answer_ranges": [
        [
         0,
-        1478
+        1676
        ],
        [
-        1478,
-        2685
+        1676,
+        3047
        ]
       ]
      },
@@ -2525,8 +2493,8 @@
       "passage": "Ms CATE FAEHRMANN ( 15:18 :11 ): In reply: I thank both the Government and the Opposition member who spoke in the debate. I thank Opposition members for their passionate support of this motion and the issue. I note the response by the Minister on behalf of the Minister for Gaming and Racing. It was the same response we have heard for the past couple of years now about what they propose to do to\u2026",
       "answer_ranges": [
        [
-        1478,
-        2685
+        1676,
+        3047
        ]
       ]
      },
@@ -2541,8 +2509,12 @@
       "passage": "Ms KOBI SHETTY ( Balmain ) ( 14:55 :14 ): My question is directed to the Premier. The people of New South Wales are losing tens of billions of dollars to poker machines. Last year about $179 million was lost each week\u2014about $1.1 million every hour. Those losses are driving poverty, threatening mental and physical wellbeing and leading to relationship breakdowns, family violence, self-harm and\u2026",
       "answer_ranges": [
        [
-        1478,
-        2685
+        0,
+        1676
+       ],
+       [
+        1676,
+        3047
        ]
       ]
      },
@@ -2554,7 +2526,7 @@
       "state": "vic",
       "date": "2025-05-27",
       "cited": false,
-      "passage": "\u2026Gambling harm stakeholders have been very clear in sharing their concerns with us that this could be a timeline that prioritises industry convenience over urgently needed community harm reduction. We share the view that the trial of the technology itself in practice, how it works and what needs to be worked through has in fact been conducted. This kind of technology has been in full operation at\u2026",
+      "passage": "I also rise to speak on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. The Greens will be supporting this bill and are pleased that it is finally before us in this place. The previous Premier and the previous minister announced these reforms way back in July 2023, almost two years ago, and the bill itself was introduced to the other place six months ago. The reason\u2026",
       "answer_ranges": []
      },
      {
@@ -2657,12 +2629,12 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T02:27:15+00:00",
+    "asked_at": "2026-09-05T02:34:43+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What arguments have been made against tighter gambling regulation, and by whom since July 2024?",
-    "answer": "Arguments against tighter gambling regulation appear in the record, though the detail is limited. A coalition member, speaking in the Commonwealth Parliament on the Interactive Gambling Amendment (Ban Gambling Ads) Bill 2024, said they had \"listened to arguments at the second reading made by some coalition members that there could be unintended consequences that are similar to tobacco regulation,\" but the speaker themselves found those arguments unpersuasive, noting \"We're not banning gambling; we are debating how it can be promoted.\" Separately, in the Victorian Parliament, a member opposing the Gambling Legislation Amendment Bill 2025 expressed puzzlement at arguments from the other side supporting that legislation, characterising a previous speaker as wanting to \"take over and socialise all the lotteries in Victoria or Australia on behalf of government,\" while suggesting \"there is this amorphous good about lotteries.\"\n\nThe record also shows industry-funded resistance to reform. A speaker in the Commonwealth Parliament cited a committee finding that Responsible Wagering Australia had commissioned research by H2 Gambling Capital without disclosing it, so \"The central argument of the industry case was presented to the committee as independent market monitoring when it was actually research paid for by the industry peak body\u2014with no methodology\u2014before the inquiry.\" That speaker quoted the finding that \"Advertising is demonstrably not what contains the offshore market; enforcement is,\" and noted the offshore market \"doubled between 2019 and 2024, a period of saturation advertising in Australia.\" Another Commonwealth speaker alleged that \"Betting companies have campaigned aggressively against gambling reforms,\" and that the gambling industry had hired lobbying firms and made over $3 million in political donations in the 2024 financial year.",
+    "answer": "Arguments against tighter gambling regulation appear in the record from several sources. A coalition member in the Victorian Legislative Assembly, debating the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024, said they were \"puzzled\" by arguments from the other side, characterising one previous speaker as wanting to \"take over and socialise all the lotteries in Victoria or Australia on behalf of government,\" while asserting \"there is this amorphous good about lotteries.\" In the same Victorian debate, another coalition member said the Liberals and Nationals \"always want to support the reduction of gambling harm\" but \"understand that gambling is a legitimate pastime for many,\" and that they would \"always stand up for our local pubs and community clubs,\" acknowledging the advocacy of the Australian Hotels Association.\n\nIn the Commonwealth Parliament, a senator opposing the Interactive Gambling Amendment (Ban Gambling Ads) Bill 2024 said they had heard coalition members argue at second reading \"that there could be unintended consequences that are similar to tobacco regulation,\" though the senator found those arguments unpersuasive. Separately, a senator speaking on the Interactive Gambling Amendment (Gambling Reform) Bill 2026 claimed the gambling industry's case against reform included research commissioned by Responsible Wagering Australia that was presented \"as independent market monitoring when it was actually research paid for by the industry peak body,\" and that the industry argued \"Advertising is demonstrably not what contains the offshore market; enforcement is.\" The same senator also alleged that the gambling lobby's strategy was to say, \"Don't look at us. Look over there. Look at pokies, look at lotto... We're not to be regulated first.\"",
     "sources": [
      {
       "slug": "speech-842104",
@@ -2672,27 +2644,27 @@
       "state": "vic",
       "date": "2025-05-20",
       "cited": true,
-      "passage": "\u2026I have listened to quite a bit of the debate this afternoon, and I am quite puzzled by some of the arguments put across from the other side about their support for this particular legislation, not least the previous speaker before me who, as I would understand listening to his contribution, effectively wants to take over and socialise all the lotteries in Victoria or Australia on behalf of\u2026",
+      "passage": "I rise to make a contribution on the Gambling Legislation Amendment Bill 2025. I have listened to quite a bit of the debate this afternoon, and I am quite puzzled by some of the arguments put across from the other side about their support for this particular legislation, not least the previous speaker before me who, as I would understand listening to his contribution, effectively wants to take\u2026",
       "answer_ranges": [
        [
         0,
-        934
+        852
        ]
       ]
      },
      {
-      "slug": "speech-1203035",
-      "title": "Elizabeth Watson-Brown \u2014 Private Members' Business \u2014 2026-05-25",
-      "speaker": "Elizabeth Watson-Brown",
-      "party": "Greens",
-      "state": "federal",
-      "date": "2026-05-25",
+      "slug": "speech-840842",
+      "title": "Tim McCurdy \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Council\u2019s amendments \u2014 2025-05-27",
+      "speaker": "Tim McCurdy",
+      "party": null,
+      "state": "vic",
+      "date": "2025-05-27",
       "cited": true,
-      "passage": "\u2026gambling sector has hired 13 third-party lobbying firms to influence parliament, with Responsible Wagering Australia accessing over 100 lobbyists across all jurisdictions. Betting companies have campaigned aggressively against gambling reforms, most recently against the long-overdue measures recommended in the 2023 Murphy report including a full ban on gambling advertising, not three ads an hour.",
+      "passage": "I also want to make a brief contribution, as others have, on the Council's amendments to the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024, better known as the carded play bill. We raised in both chambers that the Liberals and Nationals always want to support the reduction of gambling harm, but at the same time we certainly understand that gambling is a legitimate\u2026",
       "answer_ranges": [
        [
-        934,
-        1869
+        0,
+        852
        ]
       ]
      },
@@ -2707,8 +2679,8 @@
       "passage": "I've listened to arguments at the second reading made by some coalition members that there could be unintended consequences that are similar to tobacco regulation. I don't find them persuasive. We're not banning gambling; we are debating how it can be promoted. We are debating the nature of the promotion of gambling and that the behaviours of many of the companies can be rightly described as\u2026",
       "answer_ranges": [
        [
-        0,
-        934
+        852,
+        1799
        ]
       ]
      },
@@ -2732,17 +2704,6 @@
       "date": "2025-05-27",
       "cited": false,
       "passage": "Thank you to all members that have contributed to this debate on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. I know there are a range of strong views on this sector and the reforms that this bill supports. I want to acknowledge the sincere contributions from all members in this chamber, and I also read the many passionate contributions in the other place. As was\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-840842",
-      "title": "Tim McCurdy \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Council\u2019s amendments \u2014 2025-05-27",
-      "speaker": "Tim McCurdy",
-      "party": null,
-      "state": "vic",
-      "date": "2025-05-27",
-      "cited": false,
-      "passage": "I also want to make a brief contribution, as others have, on the Council's amendments to the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024, better known as the carded play bill. We raised in both chambers that the Liberals and Nationals always want to support the reduction of gambling harm, but at the same time we certainly understand that gambling is a legitimate\u2026",
       "answer_ranges": []
      },
      {
@@ -2801,6 +2762,17 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-1203035",
+      "title": "Elizabeth Watson-Brown \u2014 Private Members' Business \u2014 2026-05-25",
+      "speaker": "Elizabeth Watson-Brown",
+      "party": "Greens",
+      "state": "federal",
+      "date": "2026-05-25",
+      "cited": false,
+      "passage": "This pattern also holds true for gambling reform. The influence of the gambling lobby is pervasive. The Australian Electoral Commission's transparency report revealed there were more than $3 million in gambling related political donations for the 2024 financial year. Gambling industry sponsorship of parliamentary groups, particularly the parliamentary sports club, has sparked major integrity\u2026",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-1203224",
       "title": "Matt Thistlethwaite \u2014 Bills \u2014 2026-05-28",
       "speaker": "Matt Thistlethwaite",
@@ -2809,28 +2781,6 @@
       "date": "2026-05-28",
       "cited": false,
       "passage": "Finally, we have schedule 4. To the extent that it's possible to have a favourite schedule of a bill about the integrity of the tax system, schedule 4 is my favourite. The background to the amendment proposed by schedule 4 is important, and it's relevant to understanding the amendment's purpose. InMYEFO2024-25, the Albanese Labor government announced that activities related to gambling and\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-1205007",
-      "title": "Scott Buchholz \u2014 Bills \u2014 2026-08-12",
-      "speaker": "Scott Buchholz",
-      "party": "Liberal",
-      "state": "federal",
-      "date": "2026-08-12",
-      "cited": false,
-      "passage": "Another way that this bill fails and where I feel that the policy makers from the government have caved to that pressure is that there's nothing here about a national gambling regulator, a national watchdog that is solely responsible for all licensing and regulation and is tasked with reducing gambling harm. Without a national regulator, we cannot have consistent monitoring and enforcement. It's\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-1205064",
-      "title": "Simon Kennedy \u2014 Bills \u2014 2026-08-12",
-      "speaker": "Simon Kennedy",
-      "party": "Liberal",
-      "state": "federal",
-      "date": "2026-08-12",
-      "cited": false,
-      "passage": "Beyond the statistics of gambling harm, the stories are gut wrenching. Gambling harm is insidious and must be addressed. The bill we're debating today, late into tonight, is the strongest gambling reform brought to this parliament since Federation. It builds on the last set of gambling reform delivered by this very Labor government in our first term. Despite the noise you might be hearing from\u2026",
       "answer_ranges": []
      },
      {
@@ -2845,6 +2795,28 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-1205064",
+      "title": "Simon Kennedy \u2014 Bills \u2014 2026-08-12",
+      "speaker": "Simon Kennedy",
+      "party": "Liberal",
+      "state": "federal",
+      "date": "2026-08-12",
+      "cited": false,
+      "passage": "Beyond the statistics of gambling harm, the stories are gut wrenching. Gambling harm is insidious and must be addressed. The bill we're debating today, late into tonight, is the strongest gambling reform brought to this parliament since Federation. It builds on the last set of gambling reform delivered by this very Labor government in our first term. Despite the noise you might be hearing from\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-1205007",
+      "title": "Scott Buchholz \u2014 Bills \u2014 2026-08-12",
+      "speaker": "Scott Buchholz",
+      "party": "Liberal",
+      "state": "federal",
+      "date": "2026-08-12",
+      "cited": false,
+      "passage": "Another way that this bill fails and where I feel that the policy makers from the government have caved to that pressure is that there's nothing here about a national gambling regulator, a national watchdog that is solely responsible for all licensing and regulation and is tasked with reducing gambling harm. Without a national regulator, we cannot have consistent monitoring and enforcement. It's\u2026",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-1205500",
       "title": "Jodie Belyea \u2014 Statements by Members \u2014 2026-08-18",
       "speaker": "Jodie Belyea",
@@ -2856,12 +2828,12 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T02:27:23+00:00",
+    "asked_at": "2026-09-05T02:34:50+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What has been said about the influence of the gambling industry on politics since July 2024?",
-    "answer": "Several speakers in the Commonwealth Parliament have alleged that the gambling industry exerts pervasive influence over Australian politics. One member claimed that \"the gambling industry has long had a powerful lobbying influence in Australia\" and that its reach \"extends into political donations, sponsorships and lobbying activity\u2014tools that continue to influence government decision-making at the very highest levels.\" They cited figures including more than $80 million in gambling-related political donations over two decades, $1.5 million donated to political parties in 2023-24 (mostly to the Australian Labor Party), and over $3 million in gambling-related donations for the 2024 financial year. Another speaker noted that \"in 2024 at least 19 federal politicians across both Labor and the coalition accepted gifts from Tabcorp and Sportsbet to attend major sporting events,\" and that in two years Labor and coalition MPs received \"$245,000 in free sports tickets by organisations opposing a gambling advertising ban,\" with the Prime Minister personally accepting close to $29,000 and Peter Dutton over $21,000.\n\nSpeakers also pointed to the industry's lobbying apparatus, including former politicians such as ex-Labor communications minister Stephen Conroy as CEO of the peak industry body and former NSW Liberal premier Barry O'Farrell as CEO of Racing Australia. One member stated that \"the gambling lobby has more influence on the Labor Party than Labor's own members, not to mention its voters,\" and another claimed that \"these greedy gambling companies have the Labor Party and the Liberal Party by the neck.\" A crossbench member asserted that \"the answer is not cynicism but accountability,\" proposing a ban on political donations from social harm industries, which neither major party supported. The record also includes claims that the government delayed acting on the Murphy report's 31 recommendations\u2014released over a thousand days prior\u2014due to industry influence, with one speaker alleging the government released its response \"on the afternoon of the budget\" to avoid scrutiny. The record is limited to these characterisations by individual members; no speaker in the passages defends the industry's influence or disputes these claims directly.",
+    "answer": "Speakers across multiple parliaments have alleged that the gambling industry exerts pervasive and corrupting influence over Australian politics, particularly over the federal Labor government. In the Commonwealth Parliament, Senator Sarah Hanson-Young (Greens) claimed the industry \"has long had a powerful lobbying influence in Australia,\" using political donations, sponsorships and lobbying to shape policy, and that \"gambling related industries have made more than $80 million in political donations over the last two decades alone,\" with $1.5 million in 2023-24 mostly going to Labor. She said it has been \"more than a thousand days\" since the Murphy report was released and the government has adopted \"not even one\" of its 31 recommendations, attributing this to industry influence. Senator Hanson-Young also cited former Labor minister Stephen Conroy becoming CEO of the peak industry body and former NSW Liberal premier Barry O'Farrell leading Racing Australia as examples of revolving-door lobbying. Another Commonwealth speaker, Senator Sarah Hanson-Young again, claimed \"the gambling lobby has more influence on the Labor Party than Labor's own members,\" and that Labor and coalition MPs received \"$245,000 in free sports tickets\" from organisations opposing a gambling ad ban, with the Prime Minister personally accepting close to $29,000 and Peter Dutton over $21,000.\n\nIn the New South Wales Parliament, Ms Cate Faehrmann (Greens) moved a motion for an inquiry into the gambling industry's political influence, stating that \"the gambling industry is dramatically over-represented in every measure of political influence compared to its contribution to the economy.\" She accused the Minns Labor Government of \"cosying up to the clubs industry\" and refusing to implement mandatory account-based gaming recommended by an independent panel, noting poker machine losses rose 8 per cent to $9.3 billion in the past year and the number of machines increased by 247. The motion was agreed to. In the Commonwealth Parliament, a speaker (unnamed in the passage) said the government released its response to a key gambling report \"on the afternoon of the budget\" to bury it, and that the industry's \"almost $3 million in donations to the major parties over the last decade\" had \"paid off.\" Another Commonwealth speaker, Senator Hanson-Young, described the gambling industry as \"so deeply embedded in our politics it feels like trying to pry open steel with our bare hands,\" while a further speaker claimed the Prime Minister had \"capitulated to vested interests\" and \"actively engaged in watering down reform\" despite 80 per cent of Australians wanting a ban on gambling ads. A government-aligned speaker defended the record, noting BetStop was established in 2023, seven additional measures were introduced at the close of 2024, and the Prime Minister announced 11 more measures in April, with \"hopefully more to come.\"",
     "sources": [
      {
       "slug": "speech-1199524",
@@ -2871,15 +2843,31 @@
       "state": "federal",
       "date": "2026-02-03",
       "cited": true,
-      "passage": "\u2026In just two years, Labor and coalition MPs were showered with $245,000 in free sports tickets by organisations opposing a gambling advertising ban. The Prime Minister personally accepted close to $29,000, andPeter Duttonover $21,000. It's influence dressed up as generosity. Imagine being a Labor MP, defending the gambling industry, pretending it's your actual view and not influenced by the\u2026",
+      "passage": "\u2026evidence is there, the political cover is there, and yet almost nothing has changed\u2014not because the facts and the evidence are unclear but because the gambling lobby is louder and it's richer. And it is far more present in these halls than the people being hurt by gambling. Let's be clear; the gambling lobby has more influence on the Labor Party than Labor's own members, not to mention its voters.",
       "answer_ranges": [
        [
         0,
-        1119
+        1381
        ],
        [
-        1119,
-        2265
+        1381,
+        2923
+       ]
+      ]
+     },
+     {
+      "slug": "speech-1309325",
+      "title": "Cate Faehrmann \u2014 Gaming Reform \u2014 2026-03-25",
+      "speaker": "Cate Faehrmann",
+      "party": null,
+      "state": "nsw",
+      "date": "2026-03-25",
+      "cited": true,
+      "passage": "Ms CATE FAEHRMANN ( 15:18 :11 ): In reply: I thank both the Government and the Opposition member who spoke in the debate. I thank Opposition members for their passionate support of this motion and the issue. I note the response by the Minister on behalf of the Minister for Gaming and Racing. It was the same response we have heard for the past couple of years now about what they propose to do to\u2026",
+      "answer_ranges": [
+       [
+        1381,
+        2923
        ]
       ]
      },
@@ -2895,27 +2883,11 @@
       "answer_ranges": [
        [
         0,
-        1119
+        1381
        ],
        [
-        1119,
-        2265
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1202884",
-      "title": "Steph Hodgins-May \u2014 Bills \u2014 2026-05-14",
-      "speaker": "Steph Hodgins-May",
-      "party": "Greens",
-      "state": "federal",
-      "date": "2026-05-14",
-      "cited": true,
-      "passage": "The Commonwealth Electoral Amendment (Banning Dirty Donations) Bill 2026 is pretty straightforward. It bans political donations from industries with a clear history of using money to buy influence and get privileged access to decision-makers. It also places a $3,000 cap on individual political donations per election term to reduce the outsized influence by wealthy donors in this place. The\u2026",
-      "answer_ranges": [
-       [
-        0,
-        1119
+        1381,
+        2923
        ]
       ]
      },
@@ -2927,35 +2899,15 @@
       "state": "federal",
       "date": "2026-05-25",
       "cited": true,
-      "passage": "\u2026The answer is not cynicism but accountability, and that is exactly what we are here to provide, on a gas tax and on gambling reform. I proposed a ban on political donations from social harm industries in my Electoral Legislation Amendment (Fair and Transparent Elections) Bill 2024, but neither major party supported that. We on the crossbench are here to continue to call this out, and that is what\u2026",
+      "passage": "\u2026They are so embarrassed by it they released it on the afternoon of the budget, right when all the journalists couldn't access their phones in the budget lock-up. It was the government response to a key gambling report, which they had been sitting on literally for years, that recommended banning online gambling advertising. I'd be embarrassed too if I completely capitulated to the gambling lobby\u2026",
       "answer_ranges": [
        [
         0,
-        1119
+        1381
        ],
        [
-        1119,
-        2265
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1205064",
-      "title": "Simon Kennedy \u2014 Bills \u2014 2026-08-12",
-      "speaker": "Simon Kennedy",
-      "party": "Liberal",
-      "state": "federal",
-      "date": "2026-08-12",
-      "cited": true,
-      "passage": "Meaningful action on gambling reform cannot occur without addressing the pervasive, insidious influence that corporate donations and corporate access have on politics and policy. The harmful impacts of gambling on physical and mental health are absolutely beyond doubt. For years, Australians have been the biggest gamblers in the world per capita. We know this problem is getting worse, with\u2026",
-      "answer_ranges": [
-       [
-        0,
-        1119
-       ],
-       [
-        1119,
-        2265
+        1381,
+        2923
        ]
       ]
      },
@@ -2967,31 +2919,31 @@
       "state": "federal",
       "date": "2026-08-12",
       "cited": true,
-      "passage": "\u2026We know that in 2024 at least 19 federal politicians across both Labor and the coalition accepted gifts from Tabcorp and Sportsbet to attend major sporting events. This included the Nationals leader and the current shadow health minister. We heard about the lavish birthday party for the minister responsible for gambling at the time, which was hosted by the peak industry body. Then there's the\u2026",
+      "passage": "With so many vivid and harrowing testimonies of harm and suffering due to gambling heard at the inquiry, coupled with the strong evidence about which measures will actually be effective in helping to fix the problem, it is incredibly difficult to understand how on earth the government could ignore the 31 recommendations of the Murphy report and instead propose such a weak and limited\u2026",
       "answer_ranges": [
        [
         0,
-        1119
-       ],
-       [
-        1119,
-        2265
+        1381
        ]
       ]
      },
      {
-      "slug": "speech-1205794",
-      "title": "Sue Lines \u2014 Bills \u2014 2026-08-19",
-      "speaker": "Sue Lines",
-      "party": null,
+      "slug": "speech-1205064",
+      "title": "Simon Kennedy \u2014 Bills \u2014 2026-08-12",
+      "speaker": "Simon Kennedy",
+      "party": "Liberal",
       "state": "federal",
-      "date": "2026-08-19",
+      "date": "2026-08-12",
       "cited": true,
-      "passage": "(b) acknowledges that these political inducements being funnelled into the two major parties by the gambling lobby has bought the gambling industry significant influence throughout the debate on these bills;",
+      "passage": "\u2026outlined a phased approach to reform, and that process is already underway. In 2023, BetStop was established, and it was a significant reform in its own right. At the close of 2024, seven additional measures were introduced to address gambling harm.In Aprilthis year, the Prime Minister announced a suite of 11 additional measures\u2014measures we are debating tonight\u2014and there is hopefully more to come.",
       "answer_ranges": [
        [
-        1119,
-        2265
+        0,
+        1381
+       ],
+       [
+        1381,
+        2923
        ]
       ]
      },
@@ -3003,18 +2955,29 @@
       "state": "federal",
       "date": "2025-11-04",
       "cited": false,
-      "passage": "Constituents across my electorate often ask me why meaningful action has not been taken, and the answer sadly lies around who gets access to power. Research from theGrattan Instituteshows industries most affected by regulation like gambling, property and fossil fuels dominate political donations, lobbying contracts and meetings with senior ministers. This has to stop. The gambling industry is\u2026",
+      "passage": "\u2026nd fossil fuels dominate political donations, lobbying contracts and meetings with senior ministers. This has to stop. The gambling industry is dramatically over-represented in every measure of political influence compared to its contribution to the economy. These are industries whispering at the door, saying, 'Don't worry about us; you don't need law,' even when the evidence screams the opposite.",
       "answer_ranges": []
      },
      {
-      "slug": "speech-1309325",
-      "title": "Cate Faehrmann \u2014 Gaming Reform \u2014 2026-03-25",
-      "speaker": "Cate Faehrmann",
-      "party": null,
-      "state": "nsw",
-      "date": "2026-03-25",
+      "slug": "speech-1202884",
+      "title": "Steph Hodgins-May \u2014 Bills \u2014 2026-05-14",
+      "speaker": "Steph Hodgins-May",
+      "party": "Greens",
+      "state": "federal",
+      "date": "2026-05-14",
       "cited": false,
-      "passage": "Ms CATE FAEHRMANN ( 15:18 :11 ): In reply: I thank both the Government and the Opposition member who spoke in the debate. I thank Opposition members for their passionate support of this motion and the issue. I note the response by the Minister on behalf of the Minister for Gaming and Racing. It was the same response we have heard for the past couple of years now about what they propose to do to\u2026",
+      "passage": "The Commonwealth Electoral Amendment (Banning Dirty Donations) Bill 2026 is pretty straightforward. It bans political donations from industries with a clear history of using money to buy influence and get privileged access to decision-makers. It also places a $3,000 cap on individual political donations per election term to reduce the outsized influence by wealthy donors in this place. The\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-1205732",
+      "title": "Katy Gallagher \u2014 Bills \u2014 2026-08-19",
+      "speaker": "Katy Gallagher",
+      "party": null,
+      "state": "federal",
+      "date": "2026-08-19",
+      "cited": false,
+      "passage": "\u2026We see that it's setting them up for failure in the country that is the biggest loser per capita in the world.' Yet we have a prime minister who, despite all that, has not just capitulated to vested interests but over the last three years has actively engaged in watering down reform, providing an off-ramp from the Murphy report, delaying the response and giving us talking points straight from the\u2026",
       "answer_ranges": []
      },
      {
@@ -3029,18 +2992,18 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-1205732",
-      "title": "Katy Gallagher \u2014 Bills \u2014 2026-08-19",
-      "speaker": "Katy Gallagher",
+      "slug": "speech-1205794",
+      "title": "Sue Lines \u2014 Bills \u2014 2026-08-19",
+      "speaker": "Sue Lines",
       "party": null,
       "state": "federal",
       "date": "2026-08-19",
       "cited": false,
-      "passage": "11:22 am Today, colleagues, is a sombre day. It is a tragic reminder of why we're seeing declining trust in politicians, in politics and in governments. I only started calling myself Australian in 2002, after my family moved here, and in that time I've never seen a prime minister with such a mandate to do something. This is a prime minister who has a unanimously backed parliamentary inquiry that\u2026",
+      "passage": "(b) acknowledges that these political inducements being funnelled into the two major parties by the gambling lobby has bought the gambling industry significant influence throughout the debate on these bills;",
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T02:27:31+00:00",
+    "asked_at": "2026-09-05T02:34:59+00:00",
     "cite_method": "platform"
    }
   ]
@@ -3052,7 +3015,7 @@
     "from": "1993-01-01",
     "to": "2009-12-31",
     "question": "How did parliament argue about gambling between 1993 and 2009?",
-    "answer": "The Commonwealth parliament debated interactive gambling extensively between 2000 and 2001, with the government pushing bans and moratoriums while Labor advocated regulation. Government speakers, including the member for Herbert (who supported the Interactive Gambling (Moratorium) Bill 2000), argued that interactive technology \"brings gambling into the home in a way that we have certainly not seen,\" making it too easy for compulsive gamblers and young people with credit cards to get into trouble. A government minister introducing the Interactive Gambling Bill 2001 said the government did not want \"a poker machine in every lounge room,\" citing Productivity Commission findings that around 290,000 Australians were problem gamblers. The member for Makin supported a 12-month moratorium, saying it would protect \"at-risk gamblers, and therefore their friends and families\" while the government examined the industry. Another government speaker claimed the opposition wanted \"the one-arm bandits in every lounge room\" and said the Nationals wanted to make families stronger.\n\nLabor speakers condemned the government's approach as hypocritical and unworkable. The member for Melbourne Ports said the government's ban was based on \"hypocrisy and the pretence that the attempted banning by the government of online gambling will actually solve the problem,\" arguing Australians would simply gamble on foreign sites and that the only sensible approach was \"a sensible regulatory regime.\" He moved amendments calling for harm minimisation, consumer protection, financial probity checks on providers, and co-regulation with states and territories. Another Labor speaker said the government's legislation was \"internally inconsistent, hypocritical and will not work,\" predicting that \"www.gamblingaustralia will become www.gamblingoffshore.\" A Labor member also accused the government of moral duplicity for allowing Australian casinos to advertise interactive services to overseas customers while banning them for Australians, noting that Australians could still gamble on unregulated offshore sites.\n\nThe record also shows internal government amendments. A government speaker supporting the Interactive Gambling Amendment Bill 2001 said the amendments ensured the advertising ban \"would only apply to interactive gambling services that are banned by the bill,\" so legitimate operators marketing online services offshore were not caught out. The member for Calwell, who later became an Independent, called the government's approach \"a nonsensical diatribe\" and said the only way to deal with Internet gambling was \"to have a properly controlled and regulated system,\" noting he could have gambled on a Caribbean site from his desk during question time. The record is limited to this 2000\u20132001 debate; no passages address gambling arguments in other years between 1993 and 2009.",
+    "answer": "Debate on gambling in the Commonwealth Parliament between 1993 and 2009 centred heavily on interactive and online gambling, with sharp partisan division over how to handle it. Government speakers, including members of the Liberal and National parties, argued for bans and moratoriums to prevent the spread of gambling. One government-aligned speaker said the Interactive Gambling Bill 2001 was about taking \"strong and decisive action to protect Australian families from the further spread of problem gambling,\" citing Productivity Commission findings that around 290,000 Australians were problem gamblers. Another government speaker claimed the opposition wanted \"a poker machine in every lounge room,\" while the Nationals \"want to make families stronger and keep them together.\" A supporter of the Interactive Gambling (Moratorium) Bill 2000 described it as \"a breathing space, and a sensible breathing space\" to examine the consequences of online gambling, and another said it would \"protect the vulnerable and the young.\"\n\nOpposition and some crossbench speakers attacked these measures as hypocritical and unworkable. A Labor speaker moved a second reading amendment condemning the government for \"introducing an unworkable, internally inconsistent and hypocritical bill,\" arguing that a ban would not work and would drive users to \"unregulated offshore online gambling sites.\" Another Labor speaker said the government's approach was \"based on hypocrisy and the pretence that the attempted banning by the government of online gambling will actually solve the problem,\" and that the result was \"a hypocritical, unworkable dog's breakfast.\" A Labor speaker also criticised the government for singling out online gambling while ignoring poker machines, saying \"the hypocrisy knows no bounds\" and that the government was making a judgment that it was \"fine for people in some other country to gamble on these sites\" but not for Australians. One speaker supporting the moratorium acknowledged the social costs, noting that problem gamblers \"account for one-third of all gambling expenditure\" and that \"levels of problem gambling are linked to the level of accessibility and type of gambling products.\"\n\nThe record also shows debate over specific amendments. The Interactive Gambling Amendment Bill 2001 was introduced to fix an unintended consequence where the advertising ban could catch land-based casinos that also offered lawful interactive gambling services to overseas customers. A government speaker said the amendment provided \"a regulation making power\" to exempt certain advertisements, while a Labor speaker said the bill \"only serves to further highlight the unworkability and hypocrisy of the government's approach.\" A government speaker in that debate accused Labor of being \"soft on Internet gambling just as they are soft on drugs, soft on crime,\" while a Labor speaker responded that the government's approach was not the most effective way to address the social harm. The record is limited to these exchanges on interactive gambling policy; it does not canvass other forms of gambling debate in that period.",
     "sources": [
      {
       "slug": "speech-53192",
@@ -3062,27 +3025,27 @@
       "state": "federal",
       "date": "2000-11-09",
       "cited": true,
-      "passage": "\u2026The bill was not designed to rein in innovation but to protect at-risk gamblers, and therefore their friends and families, while the government broadly examined the feasibility, implications and future of the industry. The defeat of the bill was a crushing blow to families around Australia, to many of those affected by the gambling addiction of loved ones. Labor ignored the opportunity to do the\u2026",
+      "passage": "It is with grave concern that I again rise to speak about the Interactive Gambling (Moratorium) Bill 2000, which was defeated in the other place by the Labor Party. I am addressing the chamber today, as I was not able to conclude my speech on the last occasion I spoke in relation to this issue. As I have stated earlier in this place, the legislation sought to introduce a 12-month moratorium on\u2026",
       "answer_ranges": [
        [
         0,
-        1078
+        1025
        ]
       ]
      },
      {
-      "slug": "speech-65393",
-      "title": "Stephen Smith \u2014 2001-06-28",
-      "speaker": "Stephen Smith",
-      "party": "Labor",
+      "slug": "speech-55407",
+      "title": "Peter Lindsay \u2014 2000-12-07",
+      "speaker": "Peter Lindsay",
+      "party": "Liberal",
       "state": "federal",
-      "date": "2001-06-28",
+      "date": "2000-12-07",
       "cited": true,
-      "passage": "\u2026Firstly, the government's approach is based on hypocrisy and the pretence that the attempted banning by the government of online gambling will actually solve the problem. The hypocrisy is that, as this government does on so many issues, it says one thing but another thing will happen. It will not solve the problem, and the government in its heart of hearts knows it. Secondly, its framework is\u2026",
+      "passage": "\u2026It is a breathing space, and a sensible breathing space. As members on both sides of the House would be aware, the Internet gambling industry is growing rapidly. The government recognises that we need to take immediate action to halt this as it poses a serious threat to compulsive, problematic gamblers, their families and indeed our community. I am concerned that this new interactive gambling\u2026",
       "answer_ranges": [
        [
-        1078,
-        2098
+        2202,
+        3126
        ]
       ]
      },
@@ -3097,12 +3060,56 @@
       "passage": "What a nonsensical diatribe! We heard from the shadow minister his description of the Interactive Gambling Bill 2001 as hypocritical, unworkable and a dog's breakfast\u2014an apt description of this legislation. The hypocrisy which knows no bounds in the coalition was given frank expression by the previous speaker. His admission was very clear: the problem gambling was with those people who pull the\u2026",
       "answer_ranges": [
        [
-        1078,
-        2098
-       ],
+        1025,
+        2202
+       ]
+      ]
+     },
+     {
+      "slug": "speech-65393",
+      "title": "Stephen Smith \u2014 2001-06-28",
+      "speaker": "Stephen Smith",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2001-06-28",
+      "cited": true,
+      "passage": "\u2026The second reading amendment condemns the government for introducing an unworkable, internally inconsistent and hypocritical bill. It calls on the government to show leadership on this issue by proceeding down the road of sensible regulation, which is the only way in which you can provide Australians with proper and necessary protections\u2014insofar as they are concerned as consumers\u2014and which might\u2026",
+      "answer_ranges": [
        [
-        2098,
-        2875
+        1025,
+        2202
+       ]
+      ]
+     },
+     {
+      "slug": "speech-65390",
+      "title": "Warren Entsch \u2014 2001-06-28",
+      "speaker": "Warren Entsch",
+      "party": "Liberal",
+      "state": "federal",
+      "date": "2001-06-28",
+      "cited": true,
+      "passage": "I move: That the bill be now read a second time. Through the Interactive Gambling Bill 2001, the government is taking strong and decisive action to protect Australian families from the further spread of problem gambling and the social and economic hardship that it brings to hundreds of thousands of Australians. The bill responds to serious community concern about the availability and\u2026",
+      "answer_ranges": [
+       [
+        0,
+        1025
+       ]
+      ]
+     },
+     {
+      "slug": "speech-71082",
+      "title": "Peter Slipper \u2014 2001-09-27",
+      "speaker": "Peter Slipper",
+      "party": "Liberal",
+      "state": "federal",
+      "date": "2001-09-27",
+      "cited": true,
+      "passage": "Initially, I would like to say to the member for Calwell that I was not seeking to restrict him to 10 minutes; I was just interested to know how long he was going to speak in the Main Committee. I do understand that there is a division imminent in the main chamber and so I will endeavour to complete the summing up prior to that occurring, but I could be interrupted. I listened very carefully to\u2026",
+      "answer_ranges": [
+       [
+        2202,
+        3126
        ]
       ]
      },
@@ -3118,7 +3125,7 @@
       "answer_ranges": [
        [
         0,
-        1078
+        1025
        ]
       ]
      },
@@ -3130,15 +3137,19 @@
       "state": "federal",
       "date": "2001-09-27",
       "cited": true,
-      "passage": "The Interactive Gambling Amendment Bill 2001 amends the Interactive Gambling Act 2001 to allow regulations to be made under the act to provide that certain advertisements are not interactive gambling service amendments and therefore are not prohibited under part 7A of the act. The government's policy in introducing the amendment is to allow the exemption from the ban of interactive gambling\u2026",
+      "passage": "\u2026While unobjectionable in itself, this bill only serves to further highlight the unworkability and hypocrisy of the government's approach to interactive gambling. Contrary to the repeated assertions by the government, this is not a debate about who in this chamber cares more about the problems posed or caused by gambling. Others have spoken during debate on the Interactive Gambling Act 2001 and in\u2026",
       "answer_ranges": [
        [
         0,
-        1078
+        1025
        ],
        [
-        1078,
-        2098
+        1025,
+        2202
+       ],
+       [
+        2202,
+        3126
        ]
       ]
      },
@@ -3153,32 +3164,40 @@
       "passage": "That is what he said. He said, `I don't worry about people having a flutter.' Those are not his words; they are mine. But they are an apt description of what he said. Somehow or other, people who sit at home and have access to the Internet are different. Well, the hypocrisy knows no bounds. It is worth contemplating what this all means, Mr Deputy Speaker. I refer to the Bills Digest because the\u2026",
       "answer_ranges": [
        [
-        0,
-        1078
-       ],
-       [
-        1078,
-        2098
-       ],
-       [
-        2098,
-        2875
+        2202,
+        3126
        ]
       ]
      },
      {
-      "slug": "speech-71082",
+      "slug": "speech-71066",
       "title": "Peter Slipper \u2014 2001-09-27",
       "speaker": "Peter Slipper",
       "party": "Liberal",
       "state": "federal",
       "date": "2001-09-27",
       "cited": true,
-      "passage": "Initially, I would like to say to the member for Calwell that I was not seeking to restrict him to 10 minutes; I was just interested to know how long he was going to speak in the Main Committee. I do understand that there is a division imminent in the main chamber and so I will endeavour to complete the summing up prior to that occurring, but I could be interrupted. I listened very carefully to\u2026",
+      "passage": "\u2026The Interactive Gambling Amendment Bill 2001 provides for a regulation making power in relation to the advertising ban. Using this power, regulations may be made to exempt advertisements of a specified kind from the definition of `interactive gambling service advertisement'. These regulations will be disallowable by parliament. The government will use the Ministerial Council On Gambling to\u2026",
       "answer_ranges": [
        [
-        0,
-        1078
+        2202,
+        3126
+       ]
+      ]
+     },
+     {
+      "slug": "speech-797175",
+      "title": "Kerry O'Brien \u2014 Committees \u2014 2009-11-19",
+      "speaker": "Kerry O'Brien",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2009-11-19",
+      "cited": true,
+      "passage": "Protecting Problem Gamblers Bill 2009 Reasons for referral/principal issues for consideration: Gambling losses from poker machines have enormous social costs on society. It is important to introduce harm minimisation measures.",
+      "answer_ranges": [
+       [
+        1025,
+        2202
        ]
       ]
      },
@@ -3205,6 +3224,17 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-55402",
+      "title": "Julie Bishop \u2014 2000-12-07",
+      "speaker": "Julie Bishop",
+      "party": "Liberal",
+      "state": "federal",
+      "date": "2000-12-07",
+      "cited": false,
+      "passage": "As legislators, we are regularly called upon to consider issues of public importance for which there can be a more than respectable argument in favour or against a particular position. So it is with some caution that I speak in favour of the Interactive Gambling (Moratorium) Bill 2000. This is not to deny the good intentions of the bill and of those who drafted it, for problem gambling is a\u2026",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-55391",
       "title": "Stephen Smith \u2014 2000-12-07",
       "speaker": "Stephen Smith",
@@ -3212,7 +3242,7 @@
       "state": "federal",
       "date": "2000-12-07",
       "cited": false,
-      "passage": "The problem for the government is that the Interactive Gambling (Moratorium) Bill 2000 which is before the House now, on this last scheduled day of sitting before Christmas, is internally inconsistent, hypocritical and will not work. That is the basic problem; it will not work. In the latter stages of his second reading speech\u2014which, whilst a second reading speech to the House, was read by him\u2026",
+      "passage": "\u2026unregulated offshore online gambling sites; (c) does not extend current regulatory and consumer protection requirements applying to other forms of gambling; (d) singles out one form of gambling in an attempt to placate community concern but does not address more prevalent forms of gambling; (e) is not technology neutral or technically feasible. (f) is contrary to the best interests of the\u2026",
       "answer_ranges": []
      },
      {
@@ -3234,29 +3264,7 @@
       "state": "federal",
       "date": "2000-12-07",
       "cited": false,
-      "passage": "I am delighted to be able to speak on the Interactive Gambling (Moratorium) Bill 2000. Colleagues considering this bill should not be influenced by interested parties who would have you believe that this bill will inhibit innovation and over-regulate the interactive gambling industry. This bill seeks merely to introduce a 12-month moratorium on the establishment of additional sites and the\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-55402",
-      "title": "Julie Bishop \u2014 2000-12-07",
-      "speaker": "Julie Bishop",
-      "party": "Liberal",
-      "state": "federal",
-      "date": "2000-12-07",
-      "cited": false,
-      "passage": "As legislators, we are regularly called upon to consider issues of public importance for which there can be a more than respectable argument in favour or against a particular position. So it is with some caution that I speak in favour of the Interactive Gambling (Moratorium) Bill 2000. This is not to deny the good intentions of the bill and of those who drafted it, for problem gambling is a\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-55407",
-      "title": "Peter Lindsay \u2014 2000-12-07",
-      "speaker": "Peter Lindsay",
-      "party": "Liberal",
-      "state": "federal",
-      "date": "2000-12-07",
-      "cited": false,
-      "passage": "\u2026Interactive technology just brings gambling into the home in a way that we have certainly not seen. It is just so easy these days if it is on your computer screen, you have a credit card and you are a compulsive gambler. Before you know it, you are in deep strife. As members would be aware, the Howard government is concerned that, with this unprecedented possible access and the attraction of\u2026",
+      "passage": "\u2026Levels of problem gambling are linked to the level of accessibility and type of gambling products. Electronic gaming machines account for between 65 to 80 per cent of problem gamblers in Australia. There is considerable public concern about the level of gambling in Australia. Nationally, about 70 per cent of Australians believe it does more harm than good. In South Australia the figure is 85 per\u2026",
       "answer_ranges": []
      },
      {
@@ -3268,28 +3276,6 @@
       "date": "2001-03-28",
       "cited": false,
       "passage": "I am pleased to say on behalf of the government that, unlike the Labor Party, we are concerned about preventing the spread of gambling in this country. It is the view of this government that there is already too much gambling in Australia. It is unrealistic to expect a roll-back\u2014now isn't that an interesting word, Mr Speaker\u2014of existing facilities but the very least I would have thought all of\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-65390",
-      "title": "Warren Entsch \u2014 2001-06-28",
-      "speaker": "Warren Entsch",
-      "party": "Liberal",
-      "state": "federal",
-      "date": "2001-06-28",
-      "cited": false,
-      "passage": "I move: That the bill be now read a second time. Through the Interactive Gambling Bill 2001, the government is taking strong and decisive action to protect Australian families from the further spread of problem gambling and the social and economic hardship that it brings to hundreds of thousands of Australians. The bill responds to serious community concern about the availability and\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-71066",
-      "title": "Peter Slipper \u2014 2001-09-27",
-      "speaker": "Peter Slipper",
-      "party": "Liberal",
-      "state": "federal",
-      "date": "2001-09-27",
-      "cited": false,
-      "passage": "I move: That the bill be now read a second time. The Interactive Gambling Bill 2001 was passed by the parliament on 28 June this year. With this act, the government took decisive action to address the further spread of problem gambling. The act responds to serious community concern about the potential for online technologies to exacerbate problem gambling. Under the act it is now an offence to:\u00b7\u2026",
       "answer_ranges": []
      },
      {
@@ -3313,27 +3299,17 @@
       "cited": false,
       "passage": "In December 1999 the Prime Minister,John Howard, announced the Australian government's support for a national approach to problem gambling and that involved the establishment of a council of Australian ministers responsible in the community services area to focus on: stopping the further expansion of gambling in Australia, the impact of problem gambling on families and communities, and internet\u2026",
       "answer_ranges": []
-     },
-     {
-      "slug": "speech-797175",
-      "title": "Kerry O'Brien \u2014 Committees \u2014 2009-11-19",
-      "speaker": "Kerry O'Brien",
-      "party": "Labor",
-      "state": "federal",
-      "date": "2009-11-19",
-      "cited": false,
-      "passage": "Protecting Problem Gamblers Bill 2009 Reasons for referral/principal issues for consideration: Gambling losses from poker machines have enormous social costs on society. It is important to introduce harm minimisation measures.",
-      "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T02:27:59+00:00"
+    "asked_at": "2026-09-05T02:35:24+00:00",
+    "cite_method": "platform"
    },
    {
     "label": "2010\u20132019",
     "from": "2010-01-01",
     "to": "2019-12-31",
     "question": "How did parliament argue about gambling between 2010 and 2019? The debates of the period included Greyhound Racing Prohibition Bill 2016, Greyhound Racing Bill 2017 and Betting Tax Amendment (Point of Consumption) Bill 2018.",
-    "answer": "The debates show deep division over gambling policy, especially greyhound racing and the taxation of online wagering. In the NSW Legislative Assembly, Labor\u2019s Ryan Park (Keira) led the Opposition in supporting the Betting Tax Amendment (Point of Consumption) Bill 2018, which imposed a 10 per cent point-of-consumption tax on betting operators\u2019 NSW wagering revenue. He noted the Opposition would move amendments on how revenue is distributed and on review timing, warning that under the bill\u2019s inter-code formula greyhound racing would receive only 13 per cent of the industry funding stream despite generating \u201cbetween 20 per cent and 22 per cent of racing revenue across New South Wales\u201d, which he said meant it would be \u201csubsidising the other racing codes\u201d. Alex Greenwich (Sydney) supported the tax but criticised the 10 per cent rate as too low, saying the Government was helping \u201can industry that has, as its core business model, profit from people losing money they cannot afford to lose\u201d, and attacked the use of tax revenue to subsidise racing. Tamara Smith (Ballina), for The Greens, also backed the tax but moved amendments to raise the rate to 15 per cent, arguing the 2 per cent refund to racing effectively reduced the tax to 8 per cent and was \u201ca gift back to the industry\u201d.\n\nIn the NSW Legislative Council, the Government\u2019s second reading speech, delivered by Rick Colless on behalf of Don Harwin, defended the 10 per cent rate as striking \u201cthe right balance\u201d, noting it was below the 15 per cent in South Australia and Queensland but above Victoria\u2019s 8 per cent. Treasurer Dominic Perrottet (Hawkesbury) rejected both The Greens\u2019 push for 15 per cent and the Shooters, Fishers and Farmers Party\u2019s push for 8 per cent, saying the latter put \u201cthe views of and support for online bookmakers\u201d above the people of NSW. The Shooters, Fishers and Farmers Party\u2019s Robert Borsak moved amendments to cut the rate to 8 per cent, claiming the TAB and thoroughbred industry wanted to \u201ckill the greyhound racing industry once and for all\u201d. Labor\u2019s Adam Searle in the Council said the Opposition supported distributing revenue by market share rather than the inter-code deed but would not support a rate cut to 8 per cent. Reverend Fred Nile, for the Christian Democratic Party, supported the bill, praising the $2.5 million for the Responsible Gambling Fund and $2 million for the Greyhound Welfare Integrity Commission.\n\nThe greyhound racing ban and its reversal were also fiercely contested. In the Assembly, Labor\u2019s Luke Foley (Auburn) moved the Greyhound Racing (Repeal of Ban) Bill 2016, arguing the Premier had admitted he \u201cgot it wrong\u201d and should repeal the ban before Parliament rose. In the Council, Duncan Gay, a former Government Leader, admitted the earlier prohibition was \u201cthe wrong bill\u201d that had \u201ccreated hurt, hardship, angst and anger\u201d, and supported the Greyhound Racing Bill 2017 to replace it. The Greens opposed that reversal: a formal protest recorded by Dr Mehreen Faruqi, Jeremy Buckingham, Justin Field and Dawn Walker said the bill would allow \u201centrenched animal neglect and cruelty\u201d and subsidise \u201can industry rife with animal cruelty\u201d with $41 million of taxpayer money. Faruqi also criticised the gambling and greyhound industries for spending \u201cmillions of dollars\u201d trying to overturn the ban.",
+    "answer": "Debate on gambling in New South Wales between 2016 and 2018 was sharply contested, centring on the greyhound racing ban and its repeal, and on the design of a new point-of-consumption betting tax. In 2016 the NSW Government passed the Greyhound Racing Prohibition Bill 2016, which Mr LUKE FOLEY (Auburn, Labor) sought to repeal immediately, accusing the Government of a \"con\" for delaying repeal: \"It was urgent to ban greyhound racing. Why is it not urgent to repeal that awful piece of law and take it off the statute books?\" The Hon. DUNCAN GAY (NSW Legislative Council) admitted the ban was a mistake: \"for all the right reasons, we got it damn wrong.\" The Greens opposed the repeal, with Dr MEHREEN FARUQI (NSW Legislative Council) and others lodging a formal protest against the Greyhound Racing Bill 2017, citing \"entrenched animal neglect and cruelty, dog drugging and the breeding and killing of tens of thousands of greyhounds for the purposes of gambling.\"\n\nThe Betting Tax Amendment (Point of Consumption) Bill 2018, introducing a 10 per cent tax on wagering revenue from NSW bets, drew a different set of arguments. Mr RYAN PARK (Keira, Labor) led the Opposition in supporting the tax but moving amendments for revenue to be distributed by market share rather than the 1998 Racing Inter-Code Deed, and for an independent review after 12 months. Mr PHILIP DONATO (Orange, Shooters, Fishers and Farmers) argued the greyhound industry contributed \"approximately 23 per cent of market share revenue but only receives 13 per cent in return\", calling that \"disproportionate and unfair\". The Hon. ROBERT BORSAK (NSW Legislative Council, Shooters, Fishers and Farmers) moved to cut the rate to 8 per cent, claiming the TAB and thoroughbred industry wanted to \"kill the greyhound racing industry once and for all\". By contrast, Mr JUSTIN FIELD (NSW Legislative Council, Greens) moved to raise the rate to 15 per cent, arguing gambling taxes should be increased. Mr ALEX GREENWICH (Sydney, Greens) in the Legislative Assembly also backed 15 per cent and criticised the 2 per cent rebate to racing as \"reinvested in gambling\". Treasurer Mr DOMINIC PERROTTET (Hawkesbury, Liberal) defended 10 per cent as \"the considered, moderate middle\", rejecting both the Greens' 15 per cent and the Shooters' 8 per cent.",
     "sources": [
      {
       "slug": "speech-869632",
@@ -3346,8 +3322,8 @@
       "passage": "Mr LUKE FOLEY ( Auburn ) ( 10:51 :20 ): I move: That this bill be now read a second time. The Greyhound Racing (Repeal of Ban) Bill 2016 simply seeks to give effect to the stated backdown announced by the Premier in recent weeks. It will repeal the Government's ban on greyhound racing. As it currently stands, the law of New South Wales will ban greyhound racing as at 1 July next year. The\u2026",
       "answer_ranges": [
        [
-        2424,
-        3328
+        0,
+        967
        ]
       ]
      },
@@ -3359,91 +3335,11 @@
       "state": "nsw",
       "date": "2017-04-05",
       "cited": true,
-      "passage": "\u2026It was put in place for the right reasons, but as we have seen it was the wrong bill. It has created problems for a lot of people, and it was not meant to do that. It has created hurt, hardship, angst and anger for many people across this State, and many of those people include me and the Government\u2014we have felt that angst and that anger. I have been a member of Parliament for more than 29 years.\u2026",
-      "answer_ranges": [
-       [
-        2424,
-        3328
-       ]
-      ]
-     },
-     {
-      "slug": "speech-953290",
-      "title": "Tamara Smith \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
-      "speaker": "Tamara Smith",
-      "party": null,
-      "state": "nsw",
-      "date": "2018-10-23",
-      "cited": true,
-      "passage": "\u2026As I have said, this essentially brings the 10 per cent down to 8 per cent and is a gift back to the industry. According to the Treasurer's second reading speech, this gives the industry approximately $40 million a year in additional funding. The 2 per cent, as I have said, will be divided between the industry codes. The Greens welcome the $5 million a year to be invested in the Responsible\u2026",
+      "passage": "\u2026Not very often have we, or I, got it wrong, but on this occasion, as I indicated earlier, for all the right reasons, we got it damn wrong. When people get it wrong, it takes people of integrity with guts and strength to admit that they got it wrong. That is why I am speaking on this bill today. I could easily have sat on the backbench in silence and many would have said, Well, so he should be\u2026",
       "answer_ranges": [
        [
         0,
-        1290
-       ]
-      ]
-     },
-     {
-      "slug": "speech-953292",
-      "title": "Kevin Humphries \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
-      "speaker": "Kevin Humphries",
-      "party": null,
-      "state": "nsw",
-      "date": "2018-10-23",
-      "cited": true,
-      "passage": "Mr KEVIN HUMPHRIES ( Barwon ) ( 17:00 :27 ): I make a short contribution to debate on the Betting Tax Amendment (Point of Consumption) Bill 2018. Crossbench and Opposition members expressed some concerns in relation to gambling, and the greyhound industry in particular. There were also some references to the Sydney Opera House. I remind the member for Sydney that the Opera House was funded by a\u2026",
-      "answer_ranges": [
-       [
-        0,
-        1290
-       ]
-      ]
-     },
-     {
-      "slug": "speech-953293",
-      "title": "Michael Johnsen \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
-      "speaker": "Michael Johnsen",
-      "party": null,
-      "state": "nsw",
-      "date": "2018-10-23",
-      "cited": true,
-      "passage": "Mr MICHAEL JOHNSEN ( Upper Hunter ) ( 17:04 :06 ): It is with pleasure that I contribute to debate on the Betting Tax Amendment (Point of Consumption) Bill 2018. Much has been said about the details of the bill. Upper Hunter is the home of world-class mines, wines and, importantly, equines and bovines. It is the horse capital of Australia, and second only to Kentucky in the world. We have a\u2026",
-      "answer_ranges": [
-       [
-        0,
-        1290
-       ]
-      ]
-     },
-     {
-      "slug": "speech-953289",
-      "title": "Alex Greenwich \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
-      "speaker": "Alex Greenwich",
-      "party": null,
-      "state": "nsw",
-      "date": "2018-10-23",
-      "cited": true,
-      "passage": "\u2026That will result in significant lost revenue for the State in order to help an industry that has, as its core business model, profit from people losing money they cannot afford to lose. A total of 2 per cent of the tax will also be reinvested in gambling through promised subsidies to horseracing and greyhound racing. In 2015 when the Government introduced the greyhound racing ban, it was a move\u2026",
-      "answer_ranges": [
-       [
-        0,
-        1290
-       ]
-      ]
-     },
-     {
-      "slug": "speech-953294",
-      "title": "Dominic Perrottet \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
-      "speaker": "Dominic Perrottet",
-      "party": null,
-      "state": "nsw",
-      "date": "2018-10-23",
-      "cited": true,
-      "passage": "\u2026The rate of 10 per cent for the New South Wales point of consumption tax strikes the right balance. I understand from comments made in this Chamber that amendments will be moved in the other place in respect of the rate of the tax. The Greens, from the Left, hate the racing industry and want to amend the tax to a rate of 15 per cent. Mr Jamie Parker: That is the South Australian rate. Mr DOMINIC\u2026",
-      "answer_ranges": [
-       [
-        0,
-        1290
+        967
        ]
       ]
      },
@@ -3458,8 +3354,24 @@
       "passage": "The Hon. ADAM SEARLE ( 22:40 :55 ): I lead for the Opposition on the Betting Tax Amendment (Point of Consumption) Bill 2018. The bill provides for a 10 per cent point of consumption tax to be applied to all betting operators wagering revenue derived from New South Wales activity\u2014that is, as I understand it, racing meets located in New South Wales. The bill also provides for an additional funding\u2026",
       "answer_ranges": [
        [
-        0,
-        1290
+        967,
+        2309
+       ]
+      ]
+     },
+     {
+      "slug": "speech-953291",
+      "title": "Philip Donato \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
+      "speaker": "Philip Donato",
+      "party": null,
+      "state": "nsw",
+      "date": "2018-10-23",
+      "cited": true,
+      "passage": "\u2026Considering the greyhound industry contributes approximately 23 per cent of market share revenue but only receives 13 per cent in return, a person does not need to be a Rhodes scholar to work out that this is disproportionate and unfair. It would not happen to the thoroughbred industry and it should not happen to the greyhound industry. It has a stench of class warfare. I hope that the Treasurer\u2026",
+      "answer_ranges": [
+       [
+        967,
+        2309
        ]
       ]
      },
@@ -3474,8 +3386,24 @@
       "passage": "Mr RYAN PARK ( Keira ) ( 17:24 :06 ): By leave: I move Opposition amendments Nos 1 and 2 in globo on sheet 2018-130C: No. 1 Hypothecation of tax revenue Pages 9 and 10, Schedule 1 [4], proposed section 13M (2), line 41 on page 9 to line 8 on page 10. Omit all words on those lines. Insert instead: (2) The amount determined under subsection (1) is to be paid to those bodies in quarterly instalments\u2026",
       "answer_ranges": [
        [
+        967,
+        2309
+       ]
+      ]
+     },
+     {
+      "slug": "speech-953867",
+      "title": "Rick Colless \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
+      "speaker": "Rick Colless",
+      "party": null,
+      "state": "nsw",
+      "date": "2018-10-23",
+      "cited": true,
+      "passage": "The Hon. RICK COLLESS ( 23:13 :51 ): On behalf of the Hon. Don Harwin: In reply: I thank all the speakers in this debate: the Hon. Adam Searle, Mr Robert Borsak, Mr Justin Field and Reverend the Hon. Fred Nile. This bill fulfils the Government's commitment to introduce a 10 per cent point of consumption [PoC] tax on wagering in New South Wales, effective from 1 January 2019. The bill will update\u2026",
+      "answer_ranges": [
+       [
         0,
-        1290
+        967
        ]
       ]
      },
@@ -3491,7 +3419,11 @@
       "answer_ranges": [
        [
         0,
-        1290
+        967
+       ],
+       [
+        967,
+        2309
        ]
       ]
      },
@@ -3503,11 +3435,63 @@
       "state": "nsw",
       "date": "2018-10-23",
       "cited": true,
-      "passage": "\u2026As best one can get across this, greyhound racing generates between 20 per cent and 22 per cent of racing revenue across New South Wales when racing is looked at overall. That does not include when it is looked at per sport, but it does include when it is looked at in relation to racing. A distribution back of less than 22 per cent to greyhound racing ongoing means that it essentially would be\u2026",
+      "passage": "Mr RYAN PARK ( Keira ) ( 16:13 :19 ): I lead on behalf of the Opposition in debate on the Betting Tax Amendment (Point of Consumption) Bill 2018. At the outset, I acknowledge the Treasurer's staff member, Julian Whealing, for offering the member for Maroubra, and shadow Minister for Gaming and Racing and me the opportunity to discuss the bill. I also acknowledge the input I have received from\u2026",
+      "answer_ranges": [
+       [
+        967,
+        2309
+       ]
+      ]
+     },
+     {
+      "slug": "speech-953871",
+      "title": "Robert Borsak \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
+      "speaker": "Robert Borsak",
+      "party": null,
+      "state": "nsw",
+      "date": "2018-10-23",
+      "cited": true,
+      "passage": "\u2026It appears as though the TAB and the thoroughbred racing industry want to stifle the corporate competition and kill the greyhound racing industry once and for all. If their recent presence in the corridors of Parliament is any indication of what the Government is planning I fear this may be a foregone conclusion. I fear that their influence in this place and over this bill is so powerful that\u2026",
+      "answer_ranges": [
+       [
+        967,
+        2309
+       ]
+      ]
+     },
+     {
+      "slug": "speech-953294",
+      "title": "Dominic Perrottet \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
+      "speaker": "Dominic Perrottet",
+      "party": null,
+      "state": "nsw",
+      "date": "2018-10-23",
+      "cited": true,
+      "passage": "\u2026Therefore, 10 per cent is the considered, moderate middle where the Liberal Party and The Nationals are right at home. The views of The Greens and the Shooters, Fishers and Farmers Party have demonstrated that the Government has landed the tax rate of 10 per cent right where it needs to be. It is known that online wagering operators have existing funding arrangements with racing and sporting\u2026",
       "answer_ranges": [
        [
         0,
-        1290
+        967
+       ],
+       [
+        967,
+        2309
+       ]
+      ]
+     },
+     {
+      "slug": "speech-953292",
+      "title": "Kevin Humphries \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
+      "speaker": "Kevin Humphries",
+      "party": null,
+      "state": "nsw",
+      "date": "2018-10-23",
+      "cited": true,
+      "passage": "Mr KEVIN HUMPHRIES ( Barwon ) ( 17:00 :27 ): I make a short contribution to debate on the Betting Tax Amendment (Point of Consumption) Bill 2018. Crossbench and Opposition members expressed some concerns in relation to gambling, and the greyhound industry in particular. There were also some references to the Sydney Opera House. I remind the member for Sydney that the Opera House was funded by a\u2026",
+      "answer_ranges": [
+       [
+        967,
+        2309
        ]
       ]
      },
@@ -3545,14 +3529,14 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-953867",
-      "title": "Rick Colless \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
-      "speaker": "Rick Colless",
+      "slug": "speech-953293",
+      "title": "Michael Johnsen \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
+      "speaker": "Michael Johnsen",
       "party": null,
       "state": "nsw",
       "date": "2018-10-23",
       "cited": false,
-      "passage": "The Hon. RICK COLLESS ( 23:13 :51 ): On behalf of the Hon. Don Harwin: In reply: I thank all the speakers in this debate: the Hon. Adam Searle, Mr Robert Borsak, Mr Justin Field and Reverend the Hon. Fred Nile. This bill fulfils the Government's commitment to introduce a 10 per cent point of consumption [PoC] tax on wagering in New South Wales, effective from 1 January 2019. The bill will update\u2026",
+      "passage": "Mr MICHAEL JOHNSEN ( Upper Hunter ) ( 17:04 :06 ): It is with pleasure that I contribute to debate on the Betting Tax Amendment (Point of Consumption) Bill 2018. Much has been said about the details of the bill. Upper Hunter is the home of world-class mines, wines and, importantly, equines and bovines. It is the horse capital of Australia, and second only to Kentucky in the world. We have a\u2026",
       "answer_ranges": []
      },
      {
@@ -3567,6 +3551,17 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-953290",
+      "title": "Tamara Smith \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
+      "speaker": "Tamara Smith",
+      "party": null,
+      "state": "nsw",
+      "date": "2018-10-23",
+      "cited": false,
+      "passage": "Ms TAMARA SMITH ( Ballina ) ( 16:48 :16 ): I speak to the Betting Tax Amendment (Point Of Consumption) Bill 2018. The Greens share the concerns of the member for Sydney, which we consider to raise in a different context in terms of problem gambling, online gambling, what that is doing for people with gambling addiction and also the humane treatment of animals. This bill is about revenue and it\u2026",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-953862",
       "title": "Rick Colless \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
       "speaker": "Rick Colless",
@@ -3578,25 +3573,14 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-953871",
-      "title": "Robert Borsak \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
-      "speaker": "Robert Borsak",
+      "slug": "speech-953289",
+      "title": "Alex Greenwich \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
+      "speaker": "Alex Greenwich",
       "party": null,
       "state": "nsw",
       "date": "2018-10-23",
       "cited": false,
-      "passage": "\u2026It appears as though the TAB and the thoroughbred racing industry want to stifle the corporate competition and kill the greyhound racing industry once and for all. If their recent presence in the corridors of Parliament is any indication of what the Government is planning I fear this may be a foregone conclusion. I fear that their influence in this place and over this bill is so powerful that\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-953291",
-      "title": "Philip Donato \u2014 Betting Tax Amendment (Point of Consumption) Bill 2018 \u2014 2018-10-23",
-      "speaker": "Philip Donato",
-      "party": null,
-      "state": "nsw",
-      "date": "2018-10-23",
-      "cited": false,
-      "passage": "Mr PHILIP DONATO ( Orange ) ( 16:56 :36 ): I make a short contribution to debate on the Betting Tax Amendment (Point of Consumption) Bill 2018. While I support the overall objectives of the bill, this was an opportunity to address the parity breakdown specifically in relation to the greyhound industry. I note that amendments will be moved in relation to the tax parity breakdown, especially the\u2026",
+      "passage": "\u2026A total of 2 per cent of the tax will also be reinvested in gambling through promised subsidies to horseracing and greyhound racing. In 2015 when the Government introduced the greyhound racing ban, it was a move to be proud of. It proved that it could act on principle to end an abhorrent form of animal cruelty despite a tough campaign from a very vocal industry of bullies that the Opposition took\u2026",
       "answer_ranges": []
      },
      {
@@ -3611,15 +3595,64 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T02:28:11+00:00"
+    "asked_at": "2026-09-05T02:35:37+00:00",
+    "cite_method": "platform"
    },
    {
     "label": "2020\u20132024",
     "from": "2020-01-01",
     "to": "2024-06-30",
     "question": "How did parliament argue about gambling between 2020 and the middle of 2024? The debates of the period included SkyCity Adelaide, Casino Legislation Amendment Bill 2022 and Gambling Regulation Amendment (Wagering and Betting Tax) Bill 2021.",
-    "answer": "The Victorian Parliament debated gambling regulation extensively between 2020 and mid-2024, with several distinct bills and themes. One major debate concerned the **Gambling Regulation Amendment Bill 2023**, which sought to allow multiple wagering and betting licences and remove the \"no less favourable\" racing industry funding requirement. Government speakers like the member for Narre Warren South framed the changes as technical but necessary, arguing the market had become national due to online gambling and that the reforms would \"maximise the value of the licence to the state.\" The member for Thomastown supported the bill, noting it was about \"making sure that legislation has adapted and responded to the changing nature of society.\" Opposition speakers, including the member for Eildon and the member for Gippsland East, raised concerns about the government's lack of consultation, the \"sovereign risk\" of changing rules soon after 20-year licence agreements, and unresolved questions over Tabcorp's customer data and intellectual property. The member for Gippsland East also warned that reforms could push casual gamblers to spend money in New South Wales instead of Victoria.\n\nA separate debate concerned the **Gambling Legislation Amendment Bill 2023**, which introduced mandatory closure periods for gaming machine areas (4 am to 10 am) except at Crown Casino. The member for Morwell noted the opposition did not oppose the bill but proposed an amendment to exempt inner-city venues competing with Crown, arguing shiftworkers were disadvantaged. He also criticised the government for having \"no mandate\" for the reforms and for changing the rules \"only a year after entering into a 20-year arrangement with the pubs and clubs.\" The member for Gippsland East similarly attacked the timing, saying the government \"moved the goalposts\" within 12 months of negotiations, and supported the minister's new power to ban betting on certain activities outside Victoria, citing betting markets on the Women's Under-19 T20 Cricket World Cup involving minors.\n\nThe record also covers the **Gambling Regulation Amendment (Wagering and Betting Tax) Bill 2021**, which was guillotined at 7 pm on 20 May 2021, and the **Gambling and Liquor Legislation Amendment Bill 2022**, which made changes including extending the time to claim lottery winnings from six to twelve months and raising the raffle prize threshold from $5000 to $20,000. The member for Box Hill supported these changes, noting a constituent who could not claim a ticket during lockdown. On South Australia, a ministerial statement detailed the Liquor and Gambling Commissioner's investigation into SkyCity Adelaide's suitability to hold the casino licence, with former Supreme Court Justice Brian Ross Martin AO QC appointed to undertake it. The statement noted AUSTRAC's civil penalty proceedings against Crown Melbourne and Crown Perth and ongoing investigations of SkyCity Adelaide and Sydney's Star Casino.",
+    "answer": "Debate on gambling in Victoria between 2020 and mid-2024 was extensive and largely framed around licensing reform, taxation, and harm minimisation, with recurring partisan friction over process and fairness. In the Victorian Parliament, the **Gambling Regulation Amendment Bill 2023** drew contributions from government and opposition members alike. Government speakers, including the member for Narre Warren South, defended the bill as \"in essence technical changes\" that would \"permit the award of multiple licences with exclusivity periods determined by the responsible minister\" and remove the \"'no less favourable' industry funding requirement\" for the wagering and betting licence, arguing this would \"maximise the value of the licence to the state.\" The member for Thomastown supported the bill, noting it was \"quite narrow\" and about \"making sure that legislation has adapted and responded to the changing nature of society,\" while acknowledging gambling harm and the need for balance with recreation and jobs.\n\nOpposition members were more critical, particularly of process and consultation. The member for Gippsland East argued the government \"cannot make a raft of changes that impact on the bottom line\" of pubs and clubs so soon after negotiating 20-year electronic gaming machine arrangements, calling it a \"sovereign risk issue.\" The member for Gippsland South's amendment sought an exemption from mandatory 4 am to 10 am closure periods for venues competing with Crown Casino, a change the member for Gippsland East supported, noting the casino was exempt despite the government \"spruiking its strongest casino laws in the world.\" The member for Eildon raised concerns about \"intellectual property that Tabcorp currently holds,\" including customer data and odds, and criticised the government for not fully explaining arrangements around multiple licences or the confidential memorandum of understanding with the racing industry. The member for Box Hill, speaking on the related **Gambling and Liquor Legislation Amendment Bill 2022**, noted that \"industry and the various stakeholders who have an interest in this bill were not consulted before it landed in the house,\" which he called \"quite unusual.\"\n\nDebate also covered the **Gambling Regulation Amendment (Wagering and Betting Tax) Bill 2021**, which was guillotined at 7 pm on 20 May 2021 under a government business program motion moved by the Leader of the House, with opposition cooperation acknowledged. In South Australia, the Minister for Consumer and Business Affairs advised that the Liquor and Gambling Commissioner had appointed former Supreme Court Justice Brian Ross Martin to investigate \"the suitability of SkyCity Adelaide Pty Ltd to hold the South Australian casino licence,\" following AUSTRAC investigations into alleged breaches of anti-money laundering laws. The minister noted the commissioner's review was \"much broader than the current AUSTRAC enforcement investigation\" and included analysis of facial recognition data and probity records.",
     "sources": [
+     {
+      "slug": "speech-984594",
+      "title": "Wells \u2014 Program \u2014 2021-05-20",
+      "speaker": "Wells",
+      "party": null,
+      "state": "vic",
+      "date": "2021-05-20",
+      "cited": true,
+      "passage": "The opposition will not be opposing the government business program. We have spent I suppose the last week or so negotiating through what the opposition needed to happen today and next Tuesday and Wednesday. I guess the main thing that we were keen to do was to make sure that the State Taxation and Mental Health Acts Amendment Bill 2021 was first read and second read, which means that we will\u2026",
+      "answer_ranges": [
+       [
+        2219,
+        3035
+       ]
+      ]
+     },
+     {
+      "slug": "speech-908556",
+      "title": "Hamer \u2014 Gambling and Liquor Legislation Amendment Bill 2022 - Second reading \u2014 2022-03-24",
+      "speaker": "Hamer",
+      "party": null,
+      "state": "vic",
+      "date": "2022-03-24",
+      "cited": true,
+      "passage": "I rise too in support of the Gambling and Liquor Legislation Amendment Bill 2022, which makes a range of amendments to the Casino Control Act 1991, the Gambling Regulation Act 2003 and the Liquor Control Reform Act 1998. The bill does contain a range of reforms that will improve the regulation of gambling and liquor in the state of Victoria and more accurately reflect community expectations and\u2026",
+      "answer_ranges": [
+       [
+        0,
+        1018
+       ]
+      ]
+     },
+     {
+      "slug": "speech-1164157",
+      "title": "K.J. Maher \u2014 SkyCity Adelaide \u2014 2022-09-06",
+      "speaker": "K.J. Maher",
+      "party": null,
+      "state": "sa",
+      "date": "2022-09-06",
+      "cited": true,
+      "passage": "\u2026In light of the interstate findings and other information obtained, the commissioner considers that it is now necessary to carry out an investigation into the suitability of SkyCity Adelaide Pty Ltd to hold the South Australian casino licence and for its ultimate holding company SkyCity Entertainment Group Limited (NZ) to be a close associate. The commissioner has subsequently appointed former\u2026",
+      "answer_ranges": [
+       [
+        2219,
+        3035
+       ]
+      ]
+     },
      {
       "slug": "speech-878497",
       "title": "Gary Maas \u2014 Gambling Regulation Amendment Bill 2023 - Second reading \u2014 2023-05-16",
@@ -3628,43 +3661,11 @@
       "state": "vic",
       "date": "2023-05-16",
       "cited": true,
-      "passage": "I too rise to make a contribution to the Gambling Regulation Amendment Bill 2023. I note at the outset that the bill will make changes to Victoria's wagering and betting framework and that the changes are there necessarily to provide flexibility to government when awarding the next wagering and betting licence to maximise the benefit to the state through the licensing process. The bill primarily\u2026",
+      "passage": "\u2026The amendments in this bill are in essence technical changes, but you know it would be remiss of me not to talk about gambling harm whilst speaking to this bill. I raise that in the context of a government which sees where reform needs to be made. Indeed it sees what the operating environment is, it sees where that operating environment is going and it is not scared to make the changes and to\u2026",
       "answer_ranges": [
        [
         0,
-        1189
-       ]
-      ]
-     },
-     {
-      "slug": "speech-878423",
-      "title": "Mary-Anne Thomas \u2014 Program \u2014 2023-05-16",
-      "speaker": "Mary-Anne Thomas",
-      "party": null,
-      "state": "vic",
-      "date": "2023-05-16",
-      "cited": true,
-      "passage": "I move: That, under standing order 94(2), the orders of the day, government business, relating to the following bills be considered and completed by 5 pm on 18 May 2023: Gambling Regulation Amendment Bill 2023 Gambling Taxation Bill 2023. It is good to be back in the house for another week of important government business. Of course the Andrews Labor government, as our community expects, has hit\u2026",
-      "answer_ranges": [
-       [
-        0,
-        1189
-       ]
-      ]
-     },
-     {
-      "slug": "speech-878509",
-      "title": "Paul Hamer \u2014 Gambling Regulation Amendment Bill 2023 - Second reading \u2014 2023-05-16",
-      "speaker": "Paul Hamer",
-      "party": null,
-      "state": "vic",
-      "date": "2023-05-16",
-      "cited": true,
-      "passage": "I too rise in support of the Gambling Regulation Amendment Bill 2023. I would like to just start by thanking the Minister for Casino, Gaming and Liquor Regulation for bringing this important regulatory change to the Parliament and for the number of other reforms that she has made in that space. I also want to acknowledge the contribution from the member for Eureka, who has often spoken very\u2026",
-      "answer_ranges": [
-       [
-        0,
-        1189
+        1018
        ]
       ]
      },
@@ -3680,23 +3681,7 @@
       "answer_ranges": [
        [
         0,
-        1189
-       ]
-      ]
-     },
-     {
-      "slug": "speech-878502",
-      "title": "Sam Groth \u2014 Gambling Regulation Amendment Bill 2023 - Second reading \u2014 2023-05-16",
-      "speaker": "Sam Groth",
-      "party": null,
-      "state": "vic",
-      "date": "2023-05-16",
-      "cited": true,
-      "passage": "I rise to make a contribution on the Gambling Regulation Amendment Bill 2023, and I want to thank first of all the member for Gippsland South for the work that he has done on preparing this and mention as well the contribution from the member for Gippsland East, with his thorough knowledge of the racing industry. And I thank the member for Sandringham for his work on the Gambling Taxation Bill\u2026",
-      "answer_ranges": [
-       [
-        0,
-        1189
+        1018
        ]
       ]
      },
@@ -3708,11 +3693,11 @@
       "state": "vic",
       "date": "2023-10-17",
       "cited": true,
-      "passage": "It is a pleasure to rise and make a contribution on the Gambling Legislation Amendment Bill 2023. We are led to believe that this will be the first of a couple of tranches of industry reforms \u2013 announced, I think, in the middle of this year \u2013 that will be coming into play. The introduction of mandatory closure periods for gaming machine areas is probably the key element of this tranche of\u2026",
+      "passage": "\u2026But the government needs to be made aware that, having entered into negotiations and licences having been allocated, it cannot make a raft of changes that impact on the bottom line of those that have been successful in obtaining machines. The second tranche of reform that we are told is coming in after Christmas really, really needs to consider this because, as has been mooted by members of the\u2026",
       "answer_ranges": [
        [
-        1189,
-        2063
+        1018,
+        2219
        ]
       ]
      },
@@ -3724,15 +3709,15 @@
       "state": "vic",
       "date": "2023-10-18",
       "cited": true,
-      "passage": "I stand here today to speak on the Gambling Legislation Amendment Bill 2023, and first I would like to thank the member for Gippsland South for providing the report to us and explaining it to us so well. I do note that we do not oppose the bill, but the member for Gippsland South has put forward an amendment, which has been circulated. This bill implements the first lot of gaming industry reforms\u2026",
+      "passage": "\u2026This, coupled with lack of consultation and the sovereign risk issue of government changing the electronic gaming machine rules only a year after entering into a 20-year arrangement with the pubs and clubs, should be used to cause debate that we can stand up and talk about. Mandatory closing hours \u2013 going to some of the clauses, clause 26 is in two paragraphs and implements the mandatory 4 am to\u2026",
       "answer_ranges": [
        [
         0,
-        1189
+        1018
        ],
        [
-        1189,
-        2063
+        1018,
+        2219
        ]
       ]
      },
@@ -3756,17 +3741,6 @@
       "date": "2021-05-20",
       "cited": false,
       "passage": "I will just say a few words on the government business program. It is pretty straightforward. We are debating of course the Gambling Regulation Amendment (Wagering and Betting Tax) Bill 2021, and it is appropriate that the minister and the shadow minister are both talking at the moment, probably sharing a couple of tips, I would imagine. A member interjected. Mr D O'BRIEN: No, not sharing tips.\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-984594",
-      "title": "Wells \u2014 Program \u2014 2021-05-20",
-      "speaker": "Wells",
-      "party": null,
-      "state": "vic",
-      "date": "2021-05-20",
-      "cited": false,
-      "passage": "The opposition will not be opposing the government business program. We have spent I suppose the last week or so negotiating through what the opposition needed to happen today and next Tuesday and Wednesday. I guess the main thing that we were keen to do was to make sure that the State Taxation and Mental Health Acts Amendment Bill 2021 was first read and second read, which means that we will\u2026",
       "answer_ranges": []
      },
      {
@@ -3825,17 +3799,6 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-908556",
-      "title": "Hamer \u2014 Gambling and Liquor Legislation Amendment Bill 2022 - Second reading \u2014 2022-03-24",
-      "speaker": "Hamer",
-      "party": null,
-      "state": "vic",
-      "date": "2022-03-24",
-      "cited": false,
-      "passage": "I rise too in support of the Gambling and Liquor Legislation Amendment Bill 2022, which makes a range of amendments to the Casino Control Act 1991, the Gambling Regulation Act 2003 and the Liquor Control Reform Act 1998. The bill does contain a range of reforms that will improve the regulation of gambling and liquor in the state of Victoria and more accurately reflect community expectations and\u2026",
-      "answer_ranges": []
-     },
-     {
       "slug": "speech-908546",
       "title": "Ryan \u2014 Gambling and Liquor Legislation Amendment Bill 2022 - Second reading \u2014 2022-03-24",
       "speaker": "Ryan",
@@ -3843,7 +3806,7 @@
       "state": "vic",
       "date": "2022-03-24",
       "cited": false,
-      "passage": "It is a pleasure to rise this morning to speak on the Gambling and Liquor Legislation Amendment Bill 2022, and it is excellent timing that the minister responsible is also at the table on table duty. I am pleased that she is here to listen to some of this debate on the bill that she has carriage of. The purpose of this bill is to make a range of amendments to the Casino Control Act 1991, the\u2026",
+      "passage": "\u2026On first reading this just appeared like a fairly technical bill, and it is in many respects, but one of the things that I did notice in my consultation with stakeholders on this bill is that industry and the various stakeholders who have an interest in this bill were not consulted before it landed in the house, which is quite unusual, I have to say. Generally with these pieces of legislation\u2026",
       "answer_ranges": []
      },
      {
@@ -3869,18 +3832,41 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-1164157",
-      "title": "K.J. Maher \u2014 SkyCity Adelaide \u2014 2022-09-06",
-      "speaker": "K.J. Maher",
+      "slug": "speech-878423",
+      "title": "Mary-Anne Thomas \u2014 Program \u2014 2023-05-16",
+      "speaker": "Mary-Anne Thomas",
       "party": null,
-      "state": "sa",
-      "date": "2022-09-06",
+      "state": "vic",
+      "date": "2023-05-16",
       "cited": false,
-      "passage": "The Minister for Consumer and Business Affairs has advised: Both the Casino Act 1997 and the Gambling Administration Act 2019 fall under my portfolio responsibilities as Minister for Consumer and Business Affairs, and are administered by the Liquor and Gambling Commissioner, through Consumer and Business Services (CBS). Any allegations of breaches of anti-money laundering and counter-terrorism\u2026",
+      "passage": "I move: That, under standing order 94(2), the orders of the day, government business, relating to the following bills be considered and completed by 5 pm on 18 May 2023: Gambling Regulation Amendment Bill 2023 Gambling Taxation Bill 2023. It is good to be back in the house for another week of important government business. Of course the Andrews Labor government, as our community expects, has hit\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-878509",
+      "title": "Paul Hamer \u2014 Gambling Regulation Amendment Bill 2023 - Second reading \u2014 2023-05-16",
+      "speaker": "Paul Hamer",
+      "party": null,
+      "state": "vic",
+      "date": "2023-05-16",
+      "cited": false,
+      "passage": "I too rise in support of the Gambling Regulation Amendment Bill 2023. I would like to just start by thanking the Minister for Casino, Gaming and Liquor Regulation for bringing this important regulatory change to the Parliament and for the number of other reforms that she has made in that space. I also want to acknowledge the contribution from the member for Eureka, who has often spoken very\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-878502",
+      "title": "Sam Groth \u2014 Gambling Regulation Amendment Bill 2023 - Second reading \u2014 2023-05-16",
+      "speaker": "Sam Groth",
+      "party": null,
+      "state": "vic",
+      "date": "2023-05-16",
+      "cited": false,
+      "passage": "\u2026One of the big points that has been brought up in this debate, though, is in relation to the intellectual property that Tabcorp currently holds. You can understand a company the size of Tabcorp would love, I am sure, to hold onto the licensing. I am sure it is a big profit maker for them, and they have got a great arrangement with the racing industry. But there is a big dispute right now over the\u2026",
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T02:28:25+00:00"
+    "asked_at": "2026-09-05T02:35:48+00:00",
+    "cite_method": "platform"
    }
   ],
   "tide": [
@@ -3898,15 +3884,15 @@
    },
    {
     "decade": "2010s",
-    "count": 805,
-    "labelled": 102677,
-    "share": 0.00784
+    "count": 829,
+    "labelled": 104098,
+    "share": 0.00796
    },
    {
     "decade": "2020\u201326",
-    "count": 532,
-    "labelled": 88177,
-    "share": 0.00603
+    "count": 553,
+    "labelled": 89780,
+    "share": 0.00616
    }
   ],
   "tide_scope": "federal",
@@ -4018,19 +4004,29 @@
    "reason": "the passage does not say this number is a share of that base"
   },
   {
+   "value": "$32 billion",
+   "measure": "Amount Australians lost in legal gambling",
+   "reason": "the passage states no total for this number to be measured against"
+  },
+  {
    "value": "50 per cent",
-   "measure": "Share of gambling losses from poker machines",
+   "measure": "Gambling losses from poker machines",
    "reason": "numerator 50 not in the passage"
   },
   {
    "value": "25 per cent",
-   "measure": "Share of gambling losses from online wagering and sporting bets",
+   "measure": "Gambling losses from online wagering and sporting bets",
    "reason": "the passage does not say this number is a share of that base"
   },
   {
    "value": "25 per cent",
-   "measure": "Share of gambling losses from lotteries and gambling products",
+   "measure": "Gambling losses from lotteries and gambling products",
    "reason": "the passage does not say this number is a share of that base"
+  },
+  {
+   "value": "$32.2 billion",
+   "measure": "Amount Australians lost on legal gambling",
+   "reason": "the passage states no total for this number to be measured against"
   },
   {
    "value": "26 per cent",
@@ -4039,8 +4035,24 @@
   }
  ],
  "lede": {
-  "text": "Across state and federal parliaments the gambling debate now turns on how far harm-minimisation regulation should go, with Labor governments in Victoria and New South Wales legislating mandatory carded play, closure periods and machine caps while the Greens and crossbench press for faster, deeper curbs. The Victorian opposition has opposed or withheld support from successive Labor gambling bills, objecting to new licence premiums as taxes and to frameworks that leave implementation details to ministerial discretion rather than full parliamentary scrutiny. Greyhound racing has become a separate front, where Greens and Animal Justice members argue the industry exists only on gambling revenue and should be banned, citing bans in New Zealand, the ACT and dozens of US states, while some coalition speakers defend racing's place in regional Australia. Since the 2000-01 Commonwealth fights over banning online gambling, the argument has shifted from whether to prohibit new forms of wagering to how to tax, cap and reform existing machines and advertising, with industry influence over donations and lobbying now itself a central charge.",
+  "text": "Parliament argued sharply over mandatory carded play and precommitment on poker machines, with Labor backing \"landmark gambling reforms\" while the Liberal\u2013Nationals claimed they infringed personal freedoms and would cost pub and club jobs. Greyhound racing bans drew fierce support, with Emma Hurst arguing cruelty was \"built into\" the industry's business model, against defenders citing regional importance.\n\nFrom 1993 to 2009 parliament fought over banning online gambling as hypocritical and unworkable. In 2016\u201318 NSW banned then repealed greyhound racing and set a 10 per cent point-of-consumption tax. From 2020 Victoria pursued licensing, taxation and harm-minimisation reform. Attention has risen, now centring on carded play, cashless controls and racing bans.\n\nSixty-nine per cent of Australians believed they saw too many betting advertisements in 2025. Pokie losses reached $3.03 billion in Victoria in 2023\u201324. Labor, Liberal, Nationals and Greens all support the gambling reform bill; Andrew Wilkie notes poker machines fall to the states.",
   "sources": [
+   {
+    "slug": "speech-856089",
+    "title": "Melissa Horne \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Statement of compatibility \u2014 2024-11-27",
+    "speaker": "Melissa Horne",
+    "party": null,
+    "state": "vic",
+    "date": "2024-11-27",
+    "passage": "\u2026This is why I am proud to introduce this Bill, which delivers on the government\u2019s commitment to introduce landmark gambling reforms. These changes will protect not just the 10 per cent of Victorians who play poker machines from gambling related harm, but their friends and loved ones. Purpose The Bill I am introducing amends the Gambling Regulation Act 2003 and the Casino Control Act 1991 to\u2026",
+    "cited": true,
+    "answer_ranges": [
+     [
+      0,
+      239
+     ]
+    ]
+   },
    {
     "slug": "speech-849650",
     "title": "Steve McGhie \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-03-18",
@@ -4049,13 +4061,17 @@
     "state": "vic",
     "date": "2025-03-18",
     "passage": "I rise to contribute on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. Of course this bill just continues the work of the Allan Labor government in reducing gambling harm while ensuring that the community clubs and the RSLs and the hospitality venues that have been referred to do remain an important part of the Victorian community. Firstly, I want to mention that\u2026",
-    "cited": true,
-    "answer_ranges": [
-     [
-      0,
-      304
-     ]
-    ]
+    "cited": true
+   },
+   {
+    "slug": "speech-849648",
+    "title": "Gary Maas \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-03-18",
+    "speaker": "Gary Maas",
+    "party": null,
+    "state": "vic",
+    "date": "2025-03-18",
+    "passage": "It gives me pleasure to rise today and speak to the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. I am really happy that these are the strongest gambling harm prevention laws in Australia that we are introducing and are a really big step in the right direction on gambling harm minimisation in our state. I am very proud that these long-awaited reforms before Parliament\u2026",
+    "cited": true
    },
    {
     "slug": "speech-849643",
@@ -4064,14 +4080,78 @@
     "party": null,
     "state": "vic",
     "date": "2025-03-18",
-    "passage": "\u2026The government is basically giving itself a head of power to introduce these reforms rather than giving the Parliament the opportunity to understand exactly what it is going to do and in what timeframe it is going to do it. I acknowledge the timeframe is listed in the second-reading speech, but we are already somewhat behind that timeframe given that the bill was introduced in November. Here we\u2026",
-    "cited": true,
-    "answer_ranges": [
-     [
-      305,
-      561
-     ]
-    ]
+    "passage": "I am pleased to rise to speak on the legislation before us, the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024, which has been a long time coming. It has taken me a little bit by surprise that it is up right now, but I will persist because we have been waiting for this for nigh on two years, since the government first announced its position with respect to reforms to\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-848914",
+    "title": "Meng Heang Tak \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-03-19",
+    "speaker": "Meng Heang Tak",
+    "party": null,
+    "state": "vic",
+    "date": "2025-03-19",
+    "passage": "I am pleased to rise today to speak in favour of the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. This is another important bill, one of the many gambling-related amendments that we have seen here in this place over the past few years. I would like to take this opportunity to also commend the minister in the other place for that and for bringing this bill forward.\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-848912",
+    "title": "Tim Read \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-03-19",
+    "speaker": "Tim Read",
+    "party": null,
+    "state": "vic",
+    "date": "2025-03-19",
+    "passage": "I seem to have cleared the room out a little here. I rise to speak on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. The Greens do welcome efforts to reduce gambling harm, and poker machines contribute an enormous amount to that harm. These machines of misery are purposely designed to generate addiction. Poker machines strip-mine the physical health, the mental\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-848895",
+    "title": "Annabelle Cleeland \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-03-19",
+    "speaker": "Annabelle Cleeland",
+    "party": null,
+    "state": "vic",
+    "date": "2025-03-19",
+    "passage": "I rise today to speak on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024, a bill which proposes significant changes to the way electronic gaming machines, known as EGMs, are regulated in Victoria. Specifically, the bill introduces mandatory carded play, precommitment systems and new minimum spin rates for EGMs among other amendments to the Gambling Regulation Act\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-842108",
+    "title": "Tim Read \u2014 Gambling Legislation Amendment Bill 2025 - Second reading \u2014 2025-05-20",
+    "speaker": "Tim Read",
+    "party": null,
+    "state": "vic",
+    "date": "2025-05-20",
+    "passage": "I rise to speak on the Gambling Legislation Amendment Bill \u200d2025, and I will begin by commending the member for Point Cook for his expos\u00e9 of what sounds like borderline fraudulent use of the community benefits classification. I look forward to a subsequent speech at some stage about how it has all been stopped. For the most part, however, this bill is necessary enabling legislation for the wider\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1156050",
+    "title": "Rachel Payne \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-05-27",
+    "speaker": "Rachel Payne",
+    "party": null,
+    "state": "vic",
+    "date": "2025-05-27",
+    "passage": "I rise to speak in support of the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. This bill paves the way for the introduction of mandatory carded play and precommitment on electronic gaming machines in Victoria. This bill will also increase spin rate limits for new electronic gaming machines, slowing down the rate of play, reducing money laundering and helping to\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1156051",
+    "title": "Enver Erdogan \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-05-27",
+    "speaker": "Enver Erdogan",
+    "party": null,
+    "state": "vic",
+    "date": "2025-05-27",
+    "passage": "Thank you to all members that have contributed to this debate on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. I know there are a range of strong views on this sector and the reforms that this bill supports. I want to acknowledge the sincere contributions from all members in this chamber, and I also read the many passionate contributions in the other place. As was\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1156042",
+    "title": "Michael Galea \u2014 Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024 - Second reading \u2014 2025-05-27",
+    "speaker": "Michael Galea",
+    "party": null,
+    "state": "vic",
+    "date": "2025-05-27",
+    "passage": "I rise to speak on the Gambling Legislation Amendment (Pre-commitment and Carded Play) Bill 2024. These amendments, the ones that are in this bill, will build on the government's work to reduce the pervasive harm that gambling causes to individuals, families, communities and Victoria more broadly. I think when you look at whether it is the implementation of Victorian Gambling and Casino Control\u2026",
+    "cited": true
    },
    {
     "slug": "speech-1284137",
@@ -4080,32 +4160,10 @@
     "party": null,
     "state": "nsw",
     "date": "2025-02-12",
-    "passage": "\u2026From the substandard conditions greyhounds are bred and forced to live in to the shocking number of on-track injuries and deaths that occur every week as greyhounds are forced to race for their lives and the thousands of healthy greyhounds who are killed as so-called wastage when they do not run fast enough, this is an industry that has animal cruelty built into its business model. The history\u2026",
-    "cited": true,
-    "answer_ranges": [
-     [
-      562,
-      856
-     ]
-    ]
-   },
-   {
-    "slug": "speech-65393",
-    "title": "Stephen Smith \u2014 2001-06-28",
-    "speaker": "Stephen Smith",
-    "party": "Labor",
-    "state": "federal",
-    "date": "2001-06-28",
-    "passage": "\u2026Firstly, the government's approach is based on hypocrisy and the pretence that the attempted banning by the government of online gambling will actually solve the problem. The hypocrisy is that, as this government does on so many issues, it says one thing but another thing will happen. It will not solve the problem, and the government in its heart of hearts knows it. Secondly, its framework is\u2026",
-    "cited": true,
-    "answer_ranges": [
-     [
-      857,
-      1142
-     ]
-    ]
+    "passage": "The Hon. EMMA HURST ( 17:12 :54 ): I move: That this bill be now read a second time. Greyhound racing is an industry that has long been synonymous with animal cruelty. From the substandard conditions greyhounds are bred and forced to live in to the shocking number of on-track injuries and deaths that occur every week as greyhounds are forced to race for their lives and the thousands of healthy\u2026",
+    "cited": true
    }
   ],
-  "cite_method": "declared"
+  "cite_method": "verbatim"
  }
 }

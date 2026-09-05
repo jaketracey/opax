@@ -2,8 +2,8 @@
  "slug": "immigration",
  "title": "Immigration",
  "blurb": "Border policy, offshore detention and migration levels across the decades.",
- "generated_at": "2026-09-05T03:45:32+00:00",
- "corpus_resources": 610042,
+ "generated_at": "2026-09-05T02:41:42+00:00",
+ "corpus_resources": 609635,
  "stats": {
   "speech_count": 49867,
   "unique_speakers": 2351,
@@ -219,32 +219,32 @@
    "window": "now"
   },
   {
-   "value": "17,000",
-   "label": "Amount net overseas migration is below Treasury's forecast",
-   "numerator": "17,000",
-   "denominator": "Treasury's forecast for the first three-quarters of 2024-25",
-   "unit": "people",
+   "value": "46,590",
+   "label": "Number of cases before the Administrative Review Tribunal",
+   "numerator": "46,590",
+   "denominator": "cases before the ART as at 31 October 2025",
+   "unit": "cases",
    "jurisdiction": "Australia",
-   "as_of": "2024-25",
-   "detail": "Paul Scarr citing that net overseas migration is around 17,000 below Treasury's forecast for the first three-quarters of 2024-25.",
-   "slug": "speech-1198223",
-   "source_title": "Paul Scarr \u2014 Questions without Notice \u2014 2025-11-04",
+   "as_of": "2025-10-31",
+   "detail": "David Shoebridge noting the registrar of the ART told him there were 46,590 cases as at 31 October 2025.",
+   "slug": "speech-1199650",
+   "source_title": "David Shoebridge \u2014 Bills \u2014 2026-02-04",
    "window": "now"
   }
  ],
  "positions": [
   {
    "party": "Liberal",
-   "position": "The Liberal Party believes the current rate of immigration is too high and that migration has been grossly mismanaged under the current government, running above long-term averages. They advocate for an Australia-first policy that caps migration at sustainable levels, prioritises skilled workers, and strengthens borders.",
-   "slug": "speech-1199074",
-   "source_title": "Malcolm Roberts \u2014 Bills \u2014 2025-11-26",
-   "speaker": "Malcolm Roberts",
-   "date": "2025-11-26",
+   "position": "Supports capping migration at sustainable levels, prioritising skilled workers who share Australian values, and strengthening borders to protect sovereignty (Sharma). Hastie notes no side of politics has clean hands on border security/irregular immigration policies, and that the crossbench are the only ones fighting for natural justice and the rule of law.",
+   "slug": "speech-1198427",
+   "source_title": "Dave Sharma \u2014 Questions without Notice: Take Note of Answers \u2014 2025-11-05",
+   "speaker": "Dave Sharma",
+   "date": "2025-11-05",
    "window": "now"
   },
   {
    "party": "Labor",
-   "position": "Labor argues that net overseas migration spiked after borders reopened post-COVID but is now falling significantly, and that migration is not to blame for the housing crisis. They remain proudly in support of a non-discriminatory migration policy.",
+   "position": "Defends its migration record, arguing net overseas migration spiked post-COVID due to border reopening and returning Australians and is now falling over 40 per cent; rejects claims that migration is to blame for the housing crisis, calling such blame lazy and divisive. Also states Labor remains proudly in support of a non-discriminatory migration policy.",
    "slug": "speech-1200060",
    "source_title": "Milton Dick \u2014 Matters of Public Importance \u2014 2026-02-10",
    "speaker": "Milton Dick",
@@ -253,16 +253,16 @@
   },
   {
    "party": "Greens",
-   "position": "The Greens oppose Australia's punitive migration system, arguing it has caused immeasurable harm in violation of international law, and criticise both Labor and the coalition for cruel, inhumane migration and offshore detention policies.",
-   "slug": "speech-1197334",
-   "source_title": "David Shoebridge \u2014 Bills \u2014 2025-09-04",
+   "position": "Opposes offshore detention and punitive migration laws, arguing they are cruel, inhumane and violate international law; criticises Labor and coalition for scapegoating migrants and introducing harsh migration laws, including deals with Nauru to forcibly remove people.",
+   "slug": "speech-1194503",
+   "source_title": "David Shoebridge \u2014 Bills \u2014 2025-02-12",
    "speaker": "David Shoebridge",
-   "date": "2025-09-04",
+   "date": "2025-02-12",
    "window": "now"
   },
   {
    "party": "Katter's Australian Party",
-   "position": "Katter's Australian Party notes that net overseas migration numbers have been coming down considerably from their peak under the current government.",
+   "position": "Bob Katter's question notes net overseas migration numbers have been coming down considerably and are down about 45 per cent from their peak, disputing claims by those opposite who 'cosy up to One Nation'.",
    "slug": "speech-1203729",
    "source_title": "Bob Katter \u2014 Questions without Notice \u2014 2026-06-23",
    "speaker": "Bob Katter",
@@ -774,7 +774,7 @@
    {
     "speaker": "Watt",
     "party": null,
-    "count": 84
+    "count": 83
    },
    {
     "speaker": "Jonathon Duniam",
@@ -786,17 +786,17 @@
    {
     "speaker": "Philip Ruddock",
     "party": "Liberal",
-    "count": 1037
+    "count": 1036
    },
    {
     "speaker": "Scott Morrison",
     "party": "Liberal",
-    "count": 577
+    "count": 571
    },
    {
     "speaker": "Peter Dutton",
     "party": "Liberal",
-    "count": 494
+    "count": 492
    },
    {
     "speaker": "Julia Gillard",
@@ -806,12 +806,12 @@
    {
     "speaker": "David Shoebridge",
     "party": "Greens",
-    "count": 407
+    "count": 406
    },
    {
     "speaker": "Chris Bowen",
     "party": "Labor",
-    "count": 288
+    "count": 287
    },
    {
     "speaker": "Gary Hardgrave",
@@ -913,8 +913,24 @@
   "sections": [
    {
     "question": "What has parliament said about Community safety and immigration?",
-    "answer": "Community safety and immigration were discussed extensively, with several speakers linking the two. A Commonwealth government speaker claimed the Minister for Home Affairs had failed to lodge a single application for a preventive detention order under the community safety order regime, despite the member for Scullin promising in May that six applications were \"nearly ready\" and 26 more were in an advanced stage. Another Commonwealth speaker said the coalition supported a bill's intent but moved an amendment because the government's version \"does not deal with the issue of community safety,\" noting that 354 members of the so-called NZYQ cohort\u2014including \"rapists, paedophiles, murderers and a contract killer\"\u2014were still free in the community. A third Commonwealth speaker criticised the government for granting 3,000 people from Gaza permission to come to Australia, calling them \"3,000 potential agents for the Iranian revolutionary guard\" and urging a permanent ban on immigration from countries \"where this hatred prevails.\"\n\nOther speakers took a different view. A Victorian minister (Multicultural Affairs) rejected what they called the federal Liberal Party's \"politics of division,\" accusing them of cosying up to One Nation and of failing to condemn hateful comments by Pauline Hanson, Jacinta Price and Angus Taylor. They stressed that \"community safety is our number one priority\" and that \"no multicultural community is served by polarisation and division.\" A Commonwealth speaker from Kooyong acknowledged legitimate community concerns about immigration and crime but rejected the idea that such concerns make Australia racist. A New South Wales MP (The Entrance) spoke on a state bill responding to the 14 December Bondi attack, arguing that reducing firearm availability would reduce risk and that the bill would \"heighten community safety and confidence\" while strengthening multicultural society. The record also includes a Commonwealth speaker noting that many Canberrans expect a migration system that is \"humane, accountable and consistent with our values,\" and a First Nations speaker declaring that \"no colonial government in this country has the right to say who and who isn't illegal on stolen land.\"",
+    "answer": "Parliamentary debate on community safety and immigration was sharply partisan, with speakers trading accusations over the government's handling of detention, deportation and border policy. A Commonwealth speaker (whose party is not named in the passage) accused the Albanese Labor government of failure, saying that \"more than 18 months after the parliament passed legislation to create the community safety order regime, the minister has still not lodged a single application for a preventive detention order,\" despite the member for Scullin promising in May last year that six applications were nearly ready and a further 26 were in an advanced stage. Another Commonwealth speaker claimed the government's failures included \"the former minister for immigration's direction 99 debacle, which saw 97 criminal noncitizens avoid deportation,\" and that the Minister for Home Affairs had admitted \"he had been personally interviewing Palestinian families before granting them humanitarian visas.\" The same speaker said the coalition supported the bill in question but had an amendment because \"what we want to ensure is community safety,\" noting that \"there are still 354 members roaming free in the Australian community who are members of the so-called NZYQ cohort,\" which \"includes rapists, paedophiles, murderers and a contract killer.\"\n\nOther Commonwealth speakers defended the government's approach. One said \"community safety is our number one priority \u2013 not politics, not headlines, but safety,\" and argued that \"strong powers must come with strong safeguards\" and that \"ministerial discretion must be exercised transparently and responsibly.\" A Victorian minister (whose party is not named in the passage) rejected a motion from the Liberal Party, saying it showed \"how low Jess Wilson and the Liberal Party are willing to go to cosy up to Pauline Hanson and to One Nation,\" and accused the federal Liberal Party of failing to condemn \"the hateful anti-Muslim comments of Pauline Hanson or the anti-Indian comments of Jacinta Price or the anti-immigration comments of Angus Taylor.\" That minister stressed that \"no multicultural community is served by polarisation and division\" and that \"it is measured, thoughtful leadership that keeps communities safe and united, not whipping up fear.\"\n\nA Commonwealth speaker from Kooyong said their community had \"grave concerns around the precedent set by this piece of legislation,\" while acknowledging that \"all of us care about keeping Australians safe\" and that the government must \"deal fairly and justly with some of the most consequential decisions that a government can make\u2014decisions about the deportation, detention and transfer of vulnerable individuals.\" Another Commonwealth speaker argued that \"confusing and legitimate concerns in the community about high immigration\" with racism \"is wrong,\" and that such concerns \"shouldn't be an excuse to shut down legitimate debates.\" A speaker in the New South Wales Parliament (The Entrance) addressed the Terrorism and Other Legislation Amendment Bill 2025, saying the events of 14 December at Bondi, where \"15 people of the Jewish faith\" were killed, \"demand that we reconvene... to do all we can within the walls of this Parliament to make our communities safer.\" The record on this question is otherwise limited, with some passages touching only briefly on related themes such as social cohesion, anti-vilification laws and the need for parliamentary scrutiny of migration legislation.",
     "sources": [
+     {
+      "slug": "speech-1196766",
+      "title": "Kate Chaney \u2014 Bills \u2014 2025-09-01",
+      "speaker": "Kate Chaney",
+      "party": "Independent",
+      "state": "federal",
+      "date": "2025-09-01",
+      "cited": true,
+      "passage": "3:34 pm I rise to support the motion moved by the member for Curtin, and I do that because so many members of my Kooyong community have contacted the electorate office in the last week with their grave concerns around the precedent set by this piece of legislation. All of us care about community safety. Certainly, in Victoria, we've had a significant increase in the incidence of aggravated\u2026",
+      "answer_ranges": [
+       [
+        2293,
+        3489
+       ]
+      ]
+     },
      {
       "slug": "speech-1196879",
       "title": "Andrew Hastie \u2014 Bills \u2014 2025-09-02",
@@ -927,39 +943,7 @@
       "answer_ranges": [
        [
         0,
-        1035
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1197317",
-      "title": "Michaelia Cash \u2014 Bills \u2014 2025-09-04",
-      "speaker": "Michaelia Cash",
-      "party": null,
-      "state": "federal",
-      "date": "2025-09-04",
-      "cited": true,
-      "passage": "I said we support what the bill is doing. However, the coalition has an amendment, because what we want to ensure is community safety. There is no amendment put on the table by the government. The government, in this bill, does not deal with the issue of community safety. What we established last night is that there are still 354 members roaming free in the Australian community who are members of\u2026",
-      "answer_ranges": [
-       [
-        0,
-        1035
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1197860",
-      "title": "Malarndirri McCarthy \u2014 Motions \u2014 2025-10-30",
-      "speaker": "Malarndirri McCarthy",
-      "party": null,
-      "state": "federal",
-      "date": "2025-10-30",
-      "cited": true,
-      "passage": "It has often been the case\u2014and it's been so even in this chamber this week\u2014that confusing and legitimate concerns in the community about high immigration under this current government or voting no at a referendum on the Voice somehow mean Australia is a racist country, and that is wrong. It is absolutely wrong. Is there more work to do? Absolutely. Is it beholden on everybody in this chamber and\u2026",
-      "answer_ranges": [
-       [
-        1035,
-        2231
+        1335
        ]
       ]
      },
@@ -971,11 +955,11 @@
       "state": "vic",
       "date": "2026-03-04",
       "cited": true,
-      "passage": "\u2026They are only interested in finding another global crisis or point of tension \u2013 in this case one that is entirely within the remit of the Commonwealth government \u2013 to use it in their politics of division to inflame tensions and sow fear. This motion really does show how low Jess Wilson and the Liberal Party are willing to go to cosy up to Pauline Hanson and to One Nation. Many Victorian families,\u2026",
+      "passage": "This is a matter that our government takes incredibly seriously. Yes, it is very much about leadership. Community safety is our number one priority \u2013 not politics, not headlines, but safety. I want to be incredibly clear from the outset that citizenship and travel decisions are made by the Commonwealth government. These are national security matters handled by federal agencies. Victoria does not\u2026",
       "answer_ranges": [
        [
-        1035,
-        2231
+        1335,
+        2293
        ]
       ]
      },
@@ -987,7 +971,7 @@
       "state": "federal",
       "date": "2025-08-26",
       "cited": false,
-      "passage": "\u2026ion policy allows people who nurture these hatreds to come here and commit these crimes. Labor has given 3,000 people from Gaza permission to come here. That's 3,000 potential agents for the Iranian revolutionary guard. We should immediately and permanently ban immigration from any countries where this hatred prevails. We cannot afford to take any risks with the safety of the Australian community.",
+      "passage": "Today it's been revealed the hideous Iranian regime actively organised and orchestrated crimes on Australian territory against Australian people. What is absolutely certain in this space is that Iran had fertile ground to plant and grow its hatred in Australia, because current immigration policy allows people who nurture these hatreds to come here and commit these crimes. Labor has given 3,000\u2026",
       "answer_ranges": []
      },
      {
@@ -1002,17 +986,6 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-1196766",
-      "title": "Kate Chaney \u2014 Bills \u2014 2025-09-01",
-      "speaker": "Kate Chaney",
-      "party": "Independent",
-      "state": "federal",
-      "date": "2025-09-01",
-      "cited": false,
-      "passage": "3:34 pm I rise to support the motion moved by the member for Curtin, and I do that because so many members of my Kooyong community have contacted the electorate office in the last week with their grave concerns around the precedent set by this piece of legislation. All of us care about community safety. Certainly, in Victoria, we've had a significant increase in the incidence of aggravated\u2026",
-      "answer_ranges": []
-     },
-     {
       "slug": "speech-1197319",
       "title": "Lisa Darmanin \u2014 Committees \u2014 2025-09-04",
       "speaker": "Lisa Darmanin",
@@ -1021,6 +994,28 @@
       "date": "2025-09-04",
       "cited": false,
       "passage": "I want to make clear that no colonial government in this country has the right to say who and who isn't illegal on stolen land.First Peoplesdo not use immigrants and refugees as political footballs. We make sure that people are welcome and follow the proper protocol of our land. To the people out there who are scared about what this bill means for them and their families: you are welcome here and\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-1197317",
+      "title": "Michaelia Cash \u2014 Bills \u2014 2025-09-04",
+      "speaker": "Michaelia Cash",
+      "party": null,
+      "state": "federal",
+      "date": "2025-09-04",
+      "cited": false,
+      "passage": "I said we support what the bill is doing. However, the coalition has an amendment, because what we want to ensure is community safety. There is no amendment put on the table by the government. The government, in this bill, does not deal with the issue of community safety. What we established last night is that there are still 354 members roaming free in the Australian community who are members of\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-1197860",
+      "title": "Malarndirri McCarthy \u2014 Motions \u2014 2025-10-30",
+      "speaker": "Malarndirri McCarthy",
+      "party": null,
+      "state": "federal",
+      "date": "2025-10-30",
+      "cited": false,
+      "passage": "It has often been the case\u2014and it's been so even in this chamber this week\u2014that confusing and legitimate concerns in the community about high immigration under this current government or voting no at a referendum on the Voice somehow mean Australia is a racist country, and that is wrong. It is absolutely wrong. Is there more work to do? Absolutely. Is it beholden on everybody in this chamber and\u2026",
       "answer_ranges": []
      },
      {
@@ -1064,7 +1059,7 @@
       "state": "nsw",
       "date": "2025-12-22",
       "cited": false,
-      "passage": "\u2026People who are members of clubs, have a firearm as part of their hobby\u2014as does my son\u2014or collect firearms will find that the Government's proposed amendments will heighten community safety and confidence that firearms are being appropriately controlled to ensure that all members of our community feel safe and are safe from the misuse of firearms by some members of the community. I acknowledge\u2026",
+      "passage": "\u2026A community group was targeted because of their religion, heritage and ethnicity, resulting in the deaths of 15 people of the Jewish faith as well as people outside the Jewish faith. The events of 14 December demand that we reconvene in the way we have today to do all we can within the walls of this Parliament to make our communities safer and to do all we can to make sure we strengthen our\u2026",
       "answer_ranges": []
      },
      {
@@ -1075,7 +1070,7 @@
       "state": "federal",
       "date": "2026-01-20",
       "cited": false,
-      "passage": "It's not just about the pressures. Migration concerns are also about the safety of our citizens. Today, I received hundreds of emails from concerned people in my electorate, as well as hundreds more from across Australia, who are deeply concerned about this bill. I say this to them: I have heard you; I have read your emails and your opinions matter. Shane fromOrchard Hillshares that immigration\u2026",
+      "passage": "\u2026. Integrity cuts both ways. Strong powers must come with strong safeguards. Ministerial discretion must be exercised transparently and responsibly. Decisions that affect people's lives must be lawful, proportionate and subject to proper scrutiny. The rule of law is not optional, and it must apply to government just as much as it applies to everyone else. This parliament has a duty to get it right.",
       "answer_ranges": []
      },
      {
@@ -1108,7 +1103,7 @@
       "state": "federal",
       "date": "2026-03-12",
       "cited": false,
-      "passage": "\u2026rutiny and the rule of law. People here understand that Australia needs a well-managed migration system, but they also expect that system to be humane, accountable and consistent with our values. The concerns raised are reasonable and reflect the broader expectations that Australians have, that their parliament will be cautious when legislating in areas that affect fundamental rights and freedoms.",
+      "passage": "It is also important that the parliament listens to the people we represent. Many Canberrans have contacted my office about this bill. Canberra is a community that values transparency. It values parliamentary scrutiny and the rule of law. People here understand that Australia needs a well-managed migration system, but they also expect that system to be humane, accountable and consistent with our\u2026",
       "answer_ranges": []
      },
      {
@@ -1123,12 +1118,12 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T03:33:03+00:00",
+    "asked_at": "2026-09-05T02:39:02+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What has parliament said about the Multicultural Victoria Amendment Bill 2026?",
-    "answer": "The Multicultural Victoria Amendment Bill 2026 was debated in the Victorian Parliament, with the government proposing to abolish the Victorian Multicultural Commission and replace it with a new statutory entity, Multicultural Victoria, led by a Multicultural Coordinator General supported by two deputies and a Multicultural Community Advisory Group. The bill implements recommendations from the 2025 Victorian multicultural review led by George Lekakis AO, which heard from over 600 Victorians and identified confusion about roles, duplication and weaknesses in accountability. The government argued the bill would strengthen engagement, improve whole-of-government accountability through departmental action plans and annual reporting, recognise language services as essential, and acknowledge First Peoples' self-determination and Treaty.\n\nThe opposition coalition did not oppose the bill's second reading but moved amendments, with Shadow Assistant Minister Mulholland expressing concerns about the minister's powers over appointments, the lack of guaranteed funding and dedicated workforce, and the absence of protected multifaith representation. The coalition also questioned making the advancement of Statewide Treaty an objective of a multicultural body and proposed that appointments made before 30 January 2027 should finish on that date. The Libertarian Party opposed the bill entirely, with one member arguing the government should not manage culture and criticising the preferred provider arrangement for VITS LanguageLoop as destroying market diversity and harming interpreters who work as contractors. The Greens supported the direction but argued the bill did not go far enough, criticising that it \"does not even mention racism or discrimination\" and proposing amendments for multicultural impact statements in cabinet submissions and data collection on racism and hate incidents.",
+    "answer": "Debate on the Multicultural Victoria Amendment Bill 2026 was extensive and largely bipartisan in the Victorian Parliament, with the bill abolishing the Victorian Multicultural Commission and establishing a new statutory entity, Multicultural Victoria, led by a multicultural coordinator general. The coalition did not oppose the bill's second reading, with Shadow Assistant Minister for Multicultural and Multifaith Affairs Mr Mulholland saying the change \"could provide a more coordinated whole-of-government response to concerns raised by communities\" and noting \"welcome accountability measures,\" but he moved amendments over concerns including the timing of appointments, the lack of a guaranteed dedicated workforce or operating budget, and the need for meaningful multifaith representation. The Libertarian Party opposed the bill entirely, with one member arguing \"the government does not need to be interfering in this\" and that the preferred-provider model for VITS LanguageLoop \"is actually destroying market diversity.\" Legalise Cannabis Victoria supported the bill, and the Greens supported it in principle while moving amendments, with one Greens member criticising that the bill \"does not even mention racism or discrimination\" and arguing the government had shown \"utter disregard for genuine good-faith consultation\" with the language services sector.\n\nGovernment speakers strongly defended the bill. Attorney-General Sonya Kilkenny tabled statements of compatibility with the Charter of Human Rights and the Statewide Treaty Act 2025, describing the bill as \"a fundamentally rights-promoting piece of legislation.\" Minister Ingrid Stitt, in her second-reading speech, said the bill \"delivers on key commitments arising from the Review\" led by George Lekakis AO and that Multicultural Victoria \"signals a reset in how we as a government listens to, collaborates with and supports multicultural and multifaith Victorians.\" Several Labor members spoke in support, including the member for Greenvale, who said \"multiculturalism and national unity are not opposites,\" and the member for Narre Warren South, who said the bill ensures \"the security of our multicultural institutions\" against a potential \"Liberal\u2013One Nation coalition.\" Opposition members, including the member for Warrandyte, accused Labor of politicising multiculturalism, saying \"we will not tolerate the racism from Labor or the politicisation of multiculturalism from Labor,\" while the member for South Eastern Metropolitan said the new structure would be \"fully controlled by the government\" and that \"it is already too political.\"",
     "sources": [
      {
       "slug": "speech-1206950",
@@ -1142,23 +1137,7 @@
       "answer_ranges": [
        [
         0,
-        841
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1206570",
-      "title": "Gary Maas \u2014 Multicultural Victoria Amendment Bill 2026 - Second reading \u2014 2026-08-12",
-      "speaker": "Gary Maas",
-      "party": null,
-      "state": "vic",
-      "date": "2026-08-12",
-      "cited": true,
-      "passage": "It gives me great pleasure to rise today to speak to the Multicultural Victoria Amendment Bill 2026 and to do so representing my community of Narre Warren South, which is one of the most multicultural areas in the state. I have had the great pleasure of representing my community for the last eight years and all of the fantastic, wonderful diversity that comes with it. I know the importance of the\u2026",
-      "answer_ranges": [
-       [
-        0,
-        841
+        1366
        ]
       ]
      },
@@ -1170,27 +1149,11 @@
       "state": "vic",
       "date": "2026-08-12",
       "cited": true,
-      "passage": "I rise to speak on the Multicultural Victoria Amendment Bill 2026. The bill would restructure the state's multicultural policy programs and engagement with multicultural and multifaith communities. From 1 October 2026 the Victorian Multicultural Commission, an institution that in different forms has worked for more than four decades at the grassroots level and communicated community needs to\u2026",
+      "passage": "\u2026The change could provide a more coordinated whole-of-government response to concerns raised by communities. Combining community engagement, policy development, grants and program delivery may reduce duplication and create a clearer pathway from consultation to better policy, funding and services. The bill responds to the 2025 Victorian multicultural review led by George Lekakis AO and an expert\u2026",
       "answer_ranges": [
        [
         0,
-        841
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1206599",
-      "title": "Ella George \u2014 Multicultural Victoria Amendment Bill 2026 - Second reading \u2014 2026-08-12",
-      "speaker": "Ella George",
-      "party": null,
-      "state": "vic",
-      "date": "2026-08-12",
-      "cited": true,
-      "passage": "I am really proud to rise and make a contribution on the Multicultural Victoria Amendment Bill 2026 and prouder still of what it will mean for the multicultural community in the Lara electorate. I would like to begin by thanking our new Minister for Multicultural Affairs and also the previous Minister for Multicultural Affairs and their teams for all of the hard work that has gone into this\u2026",
-      "answer_ranges": [
-       [
-        0,
-        841
+        1366
        ]
       ]
      },
@@ -1206,23 +1169,7 @@
       "answer_ranges": [
        [
         0,
-        841
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1209081",
-      "title": "Anasina Gray-barberio \u2014 Multicultural Victoria Amendment Bill 2026 - Second reading \u2014 2026-08-27",
-      "speaker": "Anasina Gray-barberio",
-      "party": null,
-      "state": "vic",
-      "date": "2026-08-27",
-      "cited": true,
-      "passage": "\u2026For goodness sake, it does not even mention racism or discrimination. This is a significant omission which dances around the real reason there was a need for the bill in the first place. To truly tackle the scale of racial hate, vilification and attacks being felt by communities across Victoria, we must first name racism plainly. This Labor government must not be scared to name and confront\u2026",
-      "answer_ranges": [
-       [
-        0,
-        841
+        1366
        ]
       ]
      },
@@ -1234,11 +1181,11 @@
       "state": "vic",
       "date": "2026-08-27",
       "cited": true,
-      "passage": "I also would like to say a few words on the Multicultural Victoria Amendment Bill 2026. I will start with a couple of principles. Culture is not something that should be defined by government or managed by government; culture is something that is organic and emergent, similar to language and many other things. In fact if we look at history, the societies that have tried to dictate \u2013 and some\u2026",
+      "passage": "\u2026The government does not need to be interfering in this. The government's involvement with this is not creating social cohesion in Victoria. It is not helping what is happening \u2013 quite the opposite; it is making things worse. There is a backlash. If the government cannot see that backlash, they are blind. They must be able to see the backlash that is happening. This is exactly the sort of thing\u2026",
       "answer_ranges": [
        [
         0,
-        841
+        1366
        ]
       ]
      },
@@ -1294,7 +1241,7 @@
       "state": "vic",
       "date": "2026-08-12",
       "cited": false,
-      "passage": "I am very pleased to contribute today to the debate on the Multicultural Victoria Amendment Bill 2026, a bill that I have been very pleased and proud to have been involved with really since its earliest phase of gestation as the Parliamentary Secretary for Multicultural and Multifaith Victoria. This legislation represents I think really the biggest change in a generation to the legislative\u2026",
+      "passage": "\u2026I want to assert really strongly that multiculturalism and national unity are not opposites. Victoria and our country more broadly demonstrate conclusively that people can maintain different cultures, languages, religions and traditions while belonging to one nation, as it were \u200d\u2013 one cohesive nation. It is an irony, I think \u2013 and a tragic one \u2013 that a political party has sought to appropriate\u2026",
       "answer_ranges": []
      },
      {
@@ -1309,6 +1256,17 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-1206570",
+      "title": "Gary Maas \u2014 Multicultural Victoria Amendment Bill 2026 - Second reading \u2014 2026-08-12",
+      "speaker": "Gary Maas",
+      "party": null,
+      "state": "vic",
+      "date": "2026-08-12",
+      "cited": false,
+      "passage": "\u2026Our state Labor government will not allow that to happen, and that is why we are progressing this bill to ensure the security of our multicultural institutions and to protect them indeed from a Liberal\u2013One Nation coalition. The bill itself goes to ensuring more voices are represented and heard right across our state. It delivers on recommendations that were made in Victoria's multicultural\u2026",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-1206604",
       "title": "Nicole Werner \u2014 Multicultural Victoria Amendment Bill 2026 - Second reading \u2014 2026-08-12",
       "speaker": "Nicole Werner",
@@ -1316,7 +1274,18 @@
       "state": "vic",
       "date": "2026-08-12",
       "cited": false,
-      "passage": "I rise to speak on the Multicultural Victoria Amendment Bill 2026. The bill abolishes the Victorian Multicultural Commission, the VMC, and replaces it with a new independent body, Multicultural Victoria, led by a coordinator general. As has been stated on this side of the house, we will not be opposing this bill but will be moving amendments, reasonable amendments, and I will go through those\u2026",
+      "passage": "\u2026ved experience to say that we are on the side of multicultural communities. Say what you want, Labor. Say what you say to my face. Call us racist one more time, I dare you. I will not stand for it. We will not tolerate the racism from Labor or the politicisation of multiculturalism from Labor. We will not stand for it. I stand on the side and we stand on the side of multiculturalism in this place.",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-1206599",
+      "title": "Ella George \u2014 Multicultural Victoria Amendment Bill 2026 - Second reading \u2014 2026-08-12",
+      "speaker": "Ella George",
+      "party": null,
+      "state": "vic",
+      "date": "2026-08-12",
+      "cited": false,
+      "passage": "I am really proud to rise and make a contribution on the Multicultural Victoria Amendment Bill 2026 and prouder still of what it will mean for the multicultural community in the Lara electorate. I would like to begin by thanking our new Minister for Multicultural Affairs and also the previous Minister for Multicultural Affairs and their teams for all of the hard work that has gone into this\u2026",
       "answer_ranges": []
      },
      {
@@ -1339,6 +1308,17 @@
       "date": "2026-08-12",
       "cited": false,
       "passage": "It is a pleasure to rise and speak on the Multicultural Victoria Amendment Bill 2026. Can I say from the outset that multiculturalism in this state is one of those important ingredients. It is what I have called on many occasions the secret sauce in Victoria. Those that come here and share their faiths, their traditions, their cultures and their backgrounds really enhance the great state that we\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-1209081",
+      "title": "Anasina Gray-barberio \u2014 Multicultural Victoria Amendment Bill 2026 - Second reading \u2014 2026-08-27",
+      "speaker": "Anasina Gray-barberio",
+      "party": null,
+      "state": "vic",
+      "date": "2026-08-27",
+      "cited": false,
+      "passage": "\u2026For goodness sake, it does not even mention racism or discrimination. This is a significant omission which dances around the real reason there was a need for the bill in the first place. To truly tackle the scale of racial hate, vilification and attacks being felt by communities across Victoria, we must first name racism plainly. This Labor government must not be scared to name and confront\u2026",
       "answer_ranges": []
      },
      {
@@ -1371,7 +1351,7 @@
       "state": "vic",
       "date": "2026-08-27",
       "cited": false,
-      "passage": "I too rise to speak on the Multicultural Victoria Amendment Bill 2026, and I also wish to give a shout-out to the number of multicultural groups in my region. There are so many it is difficult to actually go through them all. I have spent the last 3\u00bd years enjoying many feasts, many community events and many cultural opportunities to learn and to grow \u2013 not just cultural but also multifaith\u2026",
+      "passage": "\u2026voice. They are communities, but they are communities of individuals and individuals that must be able to have the same democratic processes as everybody else in this nation and to be able to have a voice. Just thinking that we can put something together that can be fully controlled by the government, especially if it is under a Labor government, is going to be very problematic for all Victorians.",
       "answer_ranges": []
      },
      {
@@ -1386,12 +1366,12 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T03:33:12+00:00",
+    "asked_at": "2026-09-05T02:39:13+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What has parliament said about Australian Indian Community and immigration?",
-    "answer": "The New South Wales Parliament debated and passed a motion acknowledging the contribution of the Indian Australian community and rejecting criticism of migration from India. Mr Warren Kirby (Riverstone) moved the motion, which acknowledged the community's \"tremendous contribution\" to New South Wales, stood in solidarity against remarks seeking to divide, reiterated support for non-discriminatory migration, and \"firmly rejects criticisms of migration from India.\" Mr Mark Speakman (Cronulla, Liberal) said over 200,000 India-born people live in New South Wales, that they are Australia's \"second largest taxpaying migrant group,\" and that two-way trade has reached over $24 billion annually. He said there is \"no place in New South Wales for prejudice masquerading as commentary\" and that the NSW Liberals and Nationals were sorry for hurt caused by a Federal senator's comments. Mr Mark Coure (Oatley) said more than 350,000 people of Indian ancestry call New South Wales home and that Senator Price should apologise.\n\nSeveral speakers condemned remarks by Federal Senator Jacinta Nampijinpa Price, who suggested migration from India was politically motivated. Ms Donna Davis (Parramatta) said the comments were \"appalling\" and caused \"deep hurt,\" quoting a student who said \"our vote was bought is simply disrespectful.\" Mr Stephen Kamper (Rockdale, Minister for Multiculturalism) said the Minns Labor Government held a roundtable with over 40 Indian community leaders and called the claims behind rallies \"blatant falsehood.\" Mr Warren Kirby said Senator Price's comments were \"appalling\" and that the claim of mass migration is false, as Australia's migration rate has been \"approximately 1 per cent of the total population.\" Ms Charishma Kaliyanda (Liverpool) said the suggestion that Indians were brought in to manipulate votes \"undermines one of the most fundamental principles of Australian life.\" Dr Hugh McDermott (Prospect) said the remarks \"shattered\" the security of many in the community.\n\nThe Commonwealth Parliament also addressed the issue. A government speaker said \"targeting specific ethnic groups, like the wave of anti-Indian sentiment that we saw over the weekend, is racism\u2014full stop,\" and that no-one should have to justify their belonging. Another speaker noted that \"the scapegoating of Indian communities, designed to undermine their sense of safety and belonging, is wrong.\" A Victorian Parliament speaker condemned Senator Price's claims as \"disgusting\" and \"laughably false,\" telling Victoria's Indian community \"you belong.\" The same speaker criticised Peta Credlin's op-ed disparaging migrants and multiculturalism.",
+    "answer": "The New South Wales Parliament debated a motion acknowledging the contribution of the Indian Australian community and rejecting criticism of migration from India. Mr Warren Kirby (Riverstone), who moved the motion, said the community has \"among the highest rates of employment and the lowest rates of incarceration\" and that their values \"are perfectly aligned with Australian values\". Mr Mark Speakman (Cronulla, Liberal) said over 200,000 people born in India call New South Wales home, that Indian-born residents are \"Australia's second largest taxpaying migrant group\", and that two-way trade has reached \"over $24 billion annually\". Mr Mark Coure (Oatley, Liberal) said more than 350,000 people of Indian ancestry live in New South Wales.\n\nThe debate was sparked by comments from federal Senator Jacinta Nampijinpa Price, which multiple speakers condemned. Mr Kirby said her comments were \"appalling and have caused deep hurt for our Australian Indian community\", and Mr Coure said they were \"not only wrong but deeply hurtful\". Mr Speakman said the NSW Liberals and Nationals were \"sorry for the deep hurt many Indian Australians feel\" after the Senator's comments. Ms Donna Davis (Parramatta, Labor) quoted a local student who said \"to hear our vote was bought is simply disrespectful\". Mr Stephen Kamper (Rockdale, Labor), the Minister for Multiculturalism, said the March for Australia's claim about migration numbers was \"a blatant falsehood peddled by those with ulterior motives\". Mr Kirby also noted that \"Australia's migration rate has consistently been maintained at approximately 1 per cent of the total population\".\n\nThe Commonwealth Parliament also addressed the issue. A government speaker said \"targeting specific ethnic groups, like the wave of anti-Indian sentiment that we saw over the weekend, is racism\u2014full stop\", and that \"No-one in Australia should have to justify their belonging in this country\". Another speaker noted that \"the scapegoating of Indian communities, designed to undermine their sense of safety and belonging, is wrong\". A Victorian Parliament speaker, discussing attacks on the Indian community, said \"you belong\" and that \"Our new Australians living in Victoria could have chosen to live anywhere in the world. They chose us.\"",
     "sources": [
      {
       "slug": "speech-1196750",
@@ -1401,11 +1381,11 @@
       "state": "federal",
       "date": "2025-09-01",
       "cited": true,
-      "passage": "The anti-immigration protests on the weekend highlight, however, that questions of belonging and inclusion linger despite our successes. This government stands with all Australians, no matter where they were born, against those who seek to divide us and intimidate migrant communities. I want to be clear and unequivocal: targeting specific ethnic groups, like the wave of anti-Indian sentiment that\u2026",
+      "passage": "\u2026I want to be clear and unequivocal: targeting specific ethnic groups, like the wave of anti-Indian sentiment that we saw over the weekend, is racism\u2014full stop. There is no excuse, no nuance, no justification. No-one in Australia should have to justify their belonging in this country, and this Albanese Labor government believes that every Australian, whatever their race or religion, wherever they\u2026",
       "answer_ranges": [
        [
-        2005,
-        2651
+        1632,
+        2272
        ]
       ]
      },
@@ -1420,8 +1400,8 @@
       "passage": "Mr WARREN KIRBY ( Riverstone ) ( 12:49 :14 ): My question is addressed to the Minister for Multiculturalism. Will the Minister update the House on the Minns Labor Government's work to protect Australian Indian and other multicultural communities? Mr STEPHEN KAMPER ( Rockdale\u2014Minister for Lands and Property, Minister for Multiculturalism, Minister for Sport, and Minister for Jobs and Tourism)\u2026",
       "answer_ranges": [
        [
-        2005,
-        2651
+        1632,
+        2272
        ]
       ]
      },
@@ -1433,11 +1413,11 @@
       "state": "nsw",
       "date": "2025-09-10",
       "cited": true,
-      "passage": "Mr MARK COURE ( Oatley ) ( 12:43 :06 ): I support this important motion, which acknowledges, celebrates and stands in solidarity with the Australian Indian community here in New South Wales. The Australian Indian community is one of the fastest growing and most vibrant in our State. In fact, more than 350,000 people of Indian ancestry call New South Wales home, making it the largest Australian\u2026",
+      "passage": "\u2026That is why the comments made recently by a Federal Senator suggesting that migration from India was politically motivated were not only wrong but deeply hurtful. Remarks like these undermine the unity, respect and inclusiveness that are at the heart of modern Australia. This House must send a clear and unambiguous message that we value the contribution of the Australian Indian community,\u2026",
       "answer_ranges": [
        [
         0,
-        1021
+        743
        ]
       ]
      },
@@ -1453,7 +1433,7 @@
       "answer_ranges": [
        [
         0,
-        1021
+        743
        ]
       ]
      },
@@ -1465,15 +1445,15 @@
       "state": "nsw",
       "date": "2025-09-10",
       "cited": true,
-      "passage": "Ms DONNA DAVIS ( Parramatta ) ( 11:39 :19 ): My question is addressed to the Minister for Multiculturalism. Will the Minister update the House on the Minns Labor Government's roundtable meeting with leaders of the Australian Indian community? Mr STEPHEN KAMPER ( Rockdale\u2014Minister for Lands and Property, Minister for Multiculturalism, Minister for Sport, and Minister for Jobs and Tourism)\u2026",
+      "passage": "\u2026That is a blatant falsehood peddled by those with ulterior motives and despicable agendas. It is important that we shine a light on this disinformation and call it out, because we know that the far-right agenda is built on lies and the demonisation of migrants. But we should also understand that they are preying on everyday people's concerns about their standard of living. Our essential services\u2026",
       "answer_ranges": [
        [
         0,
-        1021
+        743
        ],
        [
-        1021,
-        2005
+        1632,
+        2272
        ]
       ]
      },
@@ -1485,19 +1465,31 @@
       "state": "nsw",
       "date": "2025-09-10",
       "cited": true,
-      "passage": "Ms DONNA DAVIS ( Parramatta ) ( 12:49 :07 ): Australia is an immigration success story, with each chapter recounting the waves of migration. Like those who came before, the Indian diaspora represents different faiths and cultural backgrounds, multiple languages and dialects, and a range of socio-economic backgrounds. They have built temples, community associations, and language and dance schools.\u2026",
+      "passage": "\u2026She reflected: We voted for the first time in the 2025 federal election and to hear our vote was bought is simply disrespectful. The comment was out-of-touch with the Indian community and demonstrates that they do not know the community as they should. It targets us and singles us out as the Great Australian problem, fuelling the tensions and giving rise to more racism towards my community. The\u2026",
+      "answer_ranges": [
+       [
+        743,
+        1632
+       ],
+       [
+        1632,
+        2272
+       ]
+      ]
+     },
+     {
+      "slug": "speech-1295944",
+      "title": "Warren Kirby \u2014 Australian Indian Community \u2014 2025-09-10",
+      "speaker": "Warren Kirby",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-09-10",
+      "cited": true,
+      "passage": "\u2026By any objective measure, the Australian Indian community has made a tremendous contribution to our society, and they have among the highest rates of employment and the lowest rates of incarceration. They actively engage in community building and work diligently to improve our society. In fact, DNA evidence proves that the first wave of Indian migration began 141 generations ago. That is over\u2026",
       "answer_ranges": [
        [
         0,
-        1021
-       ],
-       [
-        1021,
-        2005
-       ],
-       [
-        2005,
-        2651
+        743
        ]
       ]
      },
@@ -1513,15 +1505,15 @@
       "answer_ranges": [
        [
         0,
-        1021
+        743
        ],
        [
-        1021,
-        2005
+        743,
+        1632
        ],
        [
-        2005,
-        2651
+        1632,
+        2272
        ]
       ]
      },
@@ -1536,12 +1528,12 @@
       "passage": "Dr HUGH McDERMOTT ( Prospect ) ( 12: 58 :42 ): Our Indian community embodies and defines the ideals that modern multicultural Australia is built upon: a commitment to community, an aspirational and determined outlook, an unbreakable work ethic, and an honest belief that hard work will be met with opportunity. Our Indian diaspora is an example of a determined productive migration that builds and\u2026",
       "answer_ranges": [
        [
-        1021,
-        2005
+        743,
+        1632
        ],
        [
-        2005,
-        2651
+        1632,
+        2272
        ]
       ]
      },
@@ -1553,11 +1545,11 @@
       "state": "vic",
       "date": "2025-10-15",
       "cited": true,
-      "passage": "I rise to speak on budget paper 3 and the Department of Premier and Cabinet's output initiatives on multicultural affairs. Over the past week \u2013 and indeed it is still ongoing \u2013 I have had the great privilege of joining many in our Indian community in very many Diwali celebrations across my region and across the state as well, whether it be the BAPS Kids Diwali in Cranbourne, Tamil Pengal in\u2026",
+      "passage": "\u2026eir families. My grandparents were amongst them. But what they also did was contribute to this state and made it the vibrant, successful place it is today. Today, the exact same can be said of our Indian communities. Our new Australians living in Victoria could have chosen to live anywhere in the world. They chose us. They chose to come here. It is time the Liberal Party affords them some respect.",
       "answer_ranges": [
        [
-        2005,
-        2651
+        1632,
+        2272
        ]
       ]
      },
@@ -1628,17 +1620,6 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-1295944",
-      "title": "Warren Kirby \u2014 Australian Indian Community \u2014 2025-09-10",
-      "speaker": "Warren Kirby",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-09-10",
-      "cited": false,
-      "passage": "\u2026(4)Firmly rejects criticisms of migration from India. I thank the House for bringing this debate forward. Multiculturalism is such an important part of the rich fabric of our society. It is enshrined in our national anthem. We proudly sing: For those who've come across the seas We've boundless plains to share We follow that with: With courage let us all combine To Advance Australia Fair. These\u2026",
-      "answer_ranges": []
-     },
-     {
       "slug": "speech-1295946",
       "title": "Charishma Kaliyanda \u2014 Australian Indian Community \u2014 2025-09-10",
       "speaker": "Charishma Kaliyanda",
@@ -1646,7 +1627,7 @@
       "state": "nsw",
       "date": "2025-09-10",
       "cited": false,
-      "passage": "\u2026Senator Jacinta Nampijinpa Price's suggestion that Indians were brought in by Labor to manipulate votes is not just irresponsible, it is dangerous, because it undermines one of the most fundamental principles of Australian life: When you become a citizen, you are equal. Your rights, your responsibilities and your belonging are not conditional on your ancestry or geopolitics. They are not up for\u2026",
+      "passage": "Ms CHARISHMA KALIYANDA ( Liverpool ) ( 12:39 :03 ): I thank my friend and colleague the member for Riverstone for bringing this motion to the House. It is an important one and comes in the wake of weeks of harmful rhetoric towards Australian Indians, with members of the Coalition and minor parties jumping on a bandwagon driven by neo-Nazis to corrode social cohesion. Senator Jacinta Nampijinpa\u2026",
       "answer_ranges": []
      },
      {
@@ -1683,13 +1664,29 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T03:33:23+00:00",
+    "asked_at": "2026-09-05T02:39:23+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What has parliament said about Bondi Beach Terrorist Incident and immigration?",
-    "answer": "Parliamentary debate on the Bondi Beach terrorist incident linked it directly to immigration and migration law reform. The Commonwealth Parliament passed the \"Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Act 2026\" on 20 January 2026, which included \"reforms to Australia's migration laws to improve community safety by enabling the Minister for Home Affairs to refuse to grant, or to cancel a visa, on the basis of hate motivated conduct and offences relating to the spread of hatred and extremism.\" A speaker in that debate also argued for a \"preventive element\" and a \"protective element\" in visa decisions, so that someone flagged as a risk \"doesn't have the opportunity to come to the country\" or, if already in Australia, is dealt with protectively.\n\nThe Hon. Mark Latham (NSW Legislative Council) was highly critical of past immigration policy, claiming \"the Coalition parties which, under the Howard Government, allowed Sajid Akram into our country from India and set the foundation for Big Australia immigration with inadequate security checking processes.\" He argued the priority should be to \"rid Australia of anyone likely to engage in radical Islamic terrorism and get them out of this country or, if that is not possible, get them off the streets.\" A National Party speaker supported \"tougher migration laws to get hate preachers off our streets, on a plane and out of our country to stop the harm of radicalisation.\" Another speaker asked why hate speech laws passed after the attack were not being enforced against \"foreign hate preachers\" in Sydney mosques, urging agencies to \"remove the dangerous influence of foreign hate preachers and those who would preach hate to our young minds.\"",
+    "answer": "Parliamentary debate on the Bondi Beach terrorist incident was extensive and highly partisan, with speakers from multiple parties and parliaments addressing the attack and its aftermath. The Hon. Mark Latham (NSW Legislative Council) argued that the political class was \"culpable in allowing the radical Islamic terrorism of Naveed and Sajid Akram to strike at Bondi,\" criticising both the Coalition for allowing Sajid Akram into the country under the Howard Government with \"inadequate security checking processes\" and those who failed to address Islamic hate preachers. He claimed the government had been \"banning everything except for the big one that truly matters: Islamic hate preachers and the terrorism they promote,\" and questioned why a neo-Nazi could be deported but not \"these Islamic hate preachers in Western Sydney urging the murder of innocent people.\" He also criticised the treatment of Prime Minister Albanese, who was \"booed and abused\" at Bondi, saying he \"deserved a better fate.\"\n\nOn immigration specifically, several speakers linked the attack to migration policy. Latham called for Australia to \"rid Australia of anyone likely to engage in radical Islamic terrorism and get them out of this country.\" Michael Kemp (Oxley, Commonwealth) said that anyone who \"brings hatred with you, or if you seek to divide, intimidate or harm others because of their views... should be deported or your citizenship revoked.\" A National Party speaker supported \"tougher migration laws to get hate preachers off our streets, on a plane and out of our country to stop the harm of radicalisation.\" The Commonwealth Parliament passed the Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Act 2026 on 20 January 2026, which included reforms \"enabling the Minister for Home Affairs to refuse to grant, or to cancel a visa, on the basis of hate motivated conduct and offences relating to the spread of hatred and extremism.\" A senator also supported an amendment on visa refusal for those who \"might\" impact Australians' security, calling it \"reasonable and proportionate\" in the context of Bondi.",
     "sources": [
+     {
+      "slug": "speech-1304382",
+      "title": "Mark Latham \u2014 Bondi Beach Terrorist Incident \u2014 2025-12-22",
+      "speaker": "Mark Latham",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-12-22",
+      "cited": true,
+      "passage": "\u2026The political class as a whole in our country is culpable in allowing the radical Islamic terrorism of Naveed and Sajid Akram to strike at Bondi: those left of centre who have been unable to say the three words radical Islamic terrorism , let alone deal with it; the Coalition parties which, under the Howard Government, allowed Sajid Akram into our country from India and set the foundation for Big\u2026",
+      "answer_ranges": [
+       [
+        0,
+        1002
+       ]
+      ]
+     },
      {
       "slug": "speech-1199361",
       "title": "Murray Watt \u2014 Bills \u2014 2026-01-20",
@@ -1698,27 +1695,11 @@
       "state": "federal",
       "date": "2026-01-20",
       "cited": true,
-      "passage": "\u2026doesn't have the opportunity to come to the country if they 'might' have an impact on the lives and security of Australians, and a protective element, if a person is in that category and they're currently in our country\u2014preventive and protective. I think the amendment which is proposed is reasonable and proportionate, especially, as Senator O'Neill said, in the context of what happened at Bondi,\u2026",
+      "passage": "\u2026at's supposed to deal with it. Of course the National Party supports tougher migration laws to get hate preachers off our streets, on a plane and out of our country to stop the harm of radicalisation. But this Prime Minister has used this opportunity to divide our country, to divide this parliament, for his own political advantage and that says everything about this man who we call Prime Minister.",
       "answer_ranges": [
        [
-        0,
-        783
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1199326",
-      "title": "Michelle Rowland \u2014 Bills \u2014 2026-01-20",
-      "speaker": "Michelle Rowland",
-      "party": "Labor",
-      "state": "federal",
-      "date": "2026-01-20",
-      "cited": true,
-      "passage": "I commend the bill to the chamber. 11:32 am I rise to speak on the Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Bill 2026. I want to open by using that old Irish phrase 'if I wanted to get to Dublin, I wouldn't have started here'. That sums up the government's handling of antisemitism since 7 October 2023. In the wake of theBondi Beachtragedy, the coalition called for\u2026",
-      "answer_ranges": [
-       [
-        0,
-        783
+        1002,
+        2122
        ]
       ]
      },
@@ -1733,8 +1714,8 @@
       "passage": "Let's not forget that this parliament returned earlier this year to pass the Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Bill 2026 following the horrific terrorist attack in Bondi. These reforms make it an offence to promote or incite hatred on the basis of race, colour or national or ethnic origin. It strengthens the bans on hate symbols, creating a framework for\u2026",
       "answer_ranges": [
        [
-        0,
-        783
+        1002,
+        2122
        ]
       ]
      },
@@ -1749,8 +1730,8 @@
       "passage": "\u2026tuting a hate crime, with offences for individuals participating in certain activities with these prohibited hate groups. In addition, the Act included reforms to Australia's migration laws to improve community safety by enabling the Minister for Home Affairs to refuse to grant, or to cancel a visa, on the basis of hate motivated conduct and offences relating to the spread of hatred and extremism.",
       "answer_ranges": [
        [
-        0,
-        783
+        1002,
+        2122
        ]
       ]
      },
@@ -1777,14 +1758,14 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-1304382",
-      "title": "Mark Latham \u2014 Bondi Beach Terrorist Incident \u2014 2025-12-22",
-      "speaker": "Mark Latham",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-12-22",
+      "slug": "speech-1199326",
+      "title": "Michelle Rowland \u2014 Bills \u2014 2026-01-20",
+      "speaker": "Michelle Rowland",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2026-01-20",
       "cited": false,
-      "passage": "\u2026The key objective\u2014and surely this is the only rational, lasting message to come from Bondi\u2014is to rid Australia of anyone likely to engage in radical Islamic terrorism and get them out of this country or, if that is not possible, get them off the streets. I make one other observation in this time of tragedy, as someone who was in the House of Representatives in 1996 at the time of Port Arthur.\u2026",
+      "passage": "I've been speaking about the rise of antisemitism in this country since I entered the parliament mid-last year. It's something that has to be stamped out, and it's something that as a country we should have taken a tougher stand against. It's something that the Jewish community has long been calling for us to do. What happened in Bondi\u2014let's be clear\u2014was the result of two things: antisemitism and\u2026",
       "answer_ranges": []
      },
      {
@@ -1806,7 +1787,7 @@
       "state": "federal",
       "date": "2026-03-03",
       "cited": false,
-      "passage": "\u2026laws need to be now put into practice. The government needs to enforce them. Our agencies need to take the actions. That's what our security agencies and other agencies need to focus on in this, because we must preserve our own society first. That means removing the dangerous influence of foreign hate preachers and those who would preach hate to our young minds. We know the effects that that has.",
+      "passage": "I ask a question of this government and of this parliament: why did we pass hate speech laws so recently following the Bondi terrorist attack in Australia, which was againISISinspired, terrorist inspired? Why did we set up 15-year penalties, if we cannot tackle the most basic hate speech being preached in mosques in Sydney right now under the guise of religious speech? Those laws need to be now\u2026",
       "answer_ranges": []
      },
      {
@@ -1821,42 +1802,26 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T03:33:31+00:00",
+    "asked_at": "2026-09-05T02:39:34+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What has parliament said about Community leaders and immigration?",
-    "answer": "A Victorian minister, speaking in what appears to be the Victorian parliament, said that \"when tensions are high, it is incumbent upon me \u2013 indeed it is incumbent upon all of us in this place \u2013 to listen to all communities and help to bring that tension down.\" They added that \"no multicultural community is served by polarisation and division, and all multicultural communities suffer when they are subjected to racist and divisive rhetoric.\" The minister also said that \"it is measured, thoughtful leadership that keeps communities safe and united, not whipping up fear, not inflaming tensions,\" and that \"unity does not happen automatically, it requires leadership.\"\n\nA Commonwealth MP said that \"multiculturalism is a strength, not a weakness,\" citing census data from their community showing \"higher than average education levels, higher than average household income, lower unemployment.\" They criticised the LNP for staying silent on racist rallies, saying \"there has been silence from the Premier and, worse still, we heard the Deputy Premier defend the right of protesters to protest.\" They also claimed that \"they say one thing when they meet multicultural community leaders and attend events but they say something very different at LNP meetings,\" citing motions to cap migration and repeal anti-discrimination laws.\n\nA Commonwealth senator, speaking about a migration bill, quoted the Asylum Seeker Resource Centre as saying the legislation \"risks entrenching the perception that certain groups are permanently conditional in their belonging, subject to different rules and denied the same access to justice.\" The senator said this \"erodes trust in institutions not only among affected individuals but across multicultural communities who see these laws as part of a pattern of exclusion.\" Another Commonwealth MP said that \"if we want to continue to live in a harmonious, multicultural society, we must work for it,\" and that \"the responsibility lies with every generation, every community and every parliament.\"",
+    "answer": "Several passages address community leaders and immigration, though often indirectly. A Victorian state minister (Multicultural Affairs) said that \"when tensions are high, it is incumbent upon me \u2013 indeed it is incumbent upon all of us in this place \u2013 to listen to all communities and help to bring that tension down,\" and that \"no multicultural community is served by polarisation and division.\" The same minister criticised opposition leaders for not condemning \"the hateful anti-Muslim comments of Pauline Hanson or the anti-Indian comments of Jacinta Price or the anti-immigration comments of Angus Taylor,\" calling this \"a political strategy; it is divisive and it is cynical.\" In the Commonwealth parliament, a Labor member said the LNP \"say one thing when they meet multicultural community leaders and attend events but they say something very different at LNP meetings,\" citing motions to cap migration and repeal anti-discrimination laws.\n\nOn community leadership more broadly, one Commonwealth member said \"effective representation involves empowering the community you serve so that it can help itself,\" and stressed the importance of \"recently arrived migrants, and, in particular, migrant women, to take up leadership roles where they can and make a real impact on decision-making.\" Another Commonwealth member praised cross-party leaders\u2014\"Senator Ruston, Senator Ayres, the Greens, Senator Wong and others\"\u2014for agreeing on words all could support, saying \"Australians are looking for leadership at a time of great discord and division.\" A Victorian opposition question alleged the government politicised multicultural events by inviting only Labor MPs to speak at its iftar dinner, citing a Board of Imams Victoria member who \"said it would have been good to have greater political diversity at the government-hosted event.\" The record on community leaders and immigration is otherwise limited.",
     "sources": [
      {
-      "slug": "speech-1197334",
-      "title": "David Shoebridge \u2014 Bills \u2014 2025-09-04",
-      "speaker": "David Shoebridge",
-      "party": "Greens",
+      "slug": "speech-1198944",
+      "title": "Claire Chandler \u2014 Matters of Urgency \u2014 2025-11-25",
+      "speaker": "Claire Chandler",
+      "party": "Liberal",
       "state": "federal",
-      "date": "2025-09-04",
+      "date": "2025-11-25",
       "cited": true,
-      "passage": "\u2026This legislation risks entrenching the perception that certain groups are permanently conditional in their belonging, subject to different rules and denied the same access to justice. Such a move erodes trust in institutions not only among affected individuals but across multicultural communities who see these laws as part of a pattern of exclusion.' President, if you'd heard the contribution\u2026",
+      "passage": "That's why I want to acknowledge all the leaders today\u2014Senator Ruston, Senator Ayres, the Greens, Senator Wong and others\u2014who have been able to bring us together to agree on a set of words that we can all support. The parliament is working at its best when we can show that there is a community standard represented by all the different groups with all their different life experiences and\u2026",
       "answer_ranges": [
        [
-        1327,
-        2025
-       ]
-      ]
-     },
-     {
-      "slug": "speech-850478",
-      "title": "Martin \u2014 Motions \u2014 2025-10-15",
-      "speaker": "Martin",
-      "party": "Labor",
-      "state": "qld",
-      "date": "2025-10-15",
-      "cited": true,
-      "passage": "I am very lucky to represent a fantastic multicultural community, but when it comes to community cohesion and multiculturalism the LNP certainly needs to do better. I often say in this place that multiculturalism is a strength, not a weakness, and the evidence is right there for everyone to see in my community in the census data\u2014higher than average education levels, higher than average household\u2026",
-      "answer_ranges": [
-       [
-        669,
-        1327
+        946,
+        1907
        ]
       ]
      },
@@ -1872,7 +1837,23 @@
       "answer_ranges": [
        [
         0,
-        669
+        946
+       ]
+      ]
+     },
+     {
+      "slug": "speech-430339",
+      "title": "Evan Mulholland \u2014 Cultural events \u2014 2026-03-19",
+      "speaker": "Evan Mulholland",
+      "party": null,
+      "state": "vic",
+      "date": "2026-03-19",
+      "cited": true,
+      "passage": "\u2026he iftar, and the current Premier also had a fireside chat segment, while no opposition MP was invited to speak. Sheikh Moustapha Sarakibi, a member of the Board of Imams Victoria, said it would have been good to have greater political diversity at the government-hosted event. Will you follow his call and open up invitations to all members of Parliament with advance notice for future celebrations?",
+      "answer_ranges": [
+       [
+        946,
+        1907
        ]
       ]
      },
@@ -1910,6 +1891,17 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-1197334",
+      "title": "David Shoebridge \u2014 Bills \u2014 2025-09-04",
+      "speaker": "David Shoebridge",
+      "party": "Greens",
+      "state": "federal",
+      "date": "2025-09-04",
+      "cited": false,
+      "passage": "What has the community said, though? What have theNGOs, refugee advocacy groups and the Law Council said about Labor's bill? I think it's important that we read on to the record just some of their submissions. The Asylum Seeker Resource Centre said: 'We believe the removal of legal rights from certain cohorts of people will have impacts beyond refugees and people seeking asylum, standing to\u2026",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-1197352",
       "title": "Steph Hodgins-May \u2014 Statements by Senators \u2014 2025-09-04",
       "speaker": "Steph Hodgins-May",
@@ -1921,6 +1913,17 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-850478",
+      "title": "Martin \u2014 Motions \u2014 2025-10-15",
+      "speaker": "Martin",
+      "party": "Labor",
+      "state": "qld",
+      "date": "2025-10-15",
+      "cited": false,
+      "passage": "\u2026The truth is: they say one thing when they meet multicultural community leaders and attend events but they say something very different at LNP meetings. For example, we have heard of: motions moved at LNP conferences to cap migration; motions apparently in the name of free speech to repeal anti- discrimination laws; Liberal federal backbenchers saying that Australia should pay jobless migrants to\u2026",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-1197860",
       "title": "Malarndirri McCarthy \u2014 Motions \u2014 2025-10-30",
       "speaker": "Malarndirri McCarthy",
@@ -1928,7 +1931,7 @@
       "state": "federal",
       "date": "2025-10-30",
       "cited": false,
-      "passage": "\u2026If we want to continue to live in a harmonious, multicultural society, we must work for it. The responsibility lies with every generation, every community and every parliament. Racism in this country has a long history, from the myth of terra nullius to the massacres ofFirst Nationspeople and the forced removals of children during the stolen generations. Even this very place has not been immune.\u2026",
+      "passage": "It has often been the case\u2014and it's been so even in this chamber this week\u2014that confusing and legitimate concerns in the community about high immigration under this current government or voting no at a referendum on the Voice somehow mean Australia is a racist country, and that is wrong. It is absolutely wrong. Is there more work to do? Absolutely. Is it beholden on everybody in this chamber and\u2026",
       "answer_ranges": []
      },
      {
@@ -1940,17 +1943,6 @@
       "date": "2025-11-04",
       "cited": false,
       "passage": "I asked this question because the relevant minister, MinisterTony Burke, was onABC'sInsiders, and he was asked the same question byDavid Speers. David Speers asked him, 'Are immigration rates too high?' The minister said, 'Well, they're coming down to appropriate levels,' and then David Speers asked, 'What is an appropriate level?' and Minister Tony Burke refused to give an answer, refused to\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-1198944",
-      "title": "Claire Chandler \u2014 Matters of Urgency \u2014 2025-11-25",
-      "speaker": "Claire Chandler",
-      "party": "Liberal",
-      "state": "federal",
-      "date": "2025-11-25",
-      "cited": false,
-      "passage": "That's why I want to acknowledge all the leaders today\u2014Senator Ruston, Senator Ayres, the Greens, Senator Wong and others\u2014who have been able to bring us together to agree on a set of words that we can all support. The parliament is working at its best when we can show that there is a community standard represented by all the different groups with all their different life experiences and\u2026",
       "answer_ranges": []
      },
      {
@@ -2018,25 +2010,14 @@
       "cited": false,
       "passage": "It is also important that the parliament listens to the people we represent. Many Canberrans have contacted my office about this bill. Canberra is a community that values transparency. It values parliamentary scrutiny and the rule of law. People here understand that Australia needs a well-managed migration system, but they also expect that system to be humane, accountable and consistent with our\u2026",
       "answer_ranges": []
-     },
-     {
-      "slug": "speech-430339",
-      "title": "Evan Mulholland \u2014 Cultural events \u2014 2026-03-19",
-      "speaker": "Evan Mulholland",
-      "party": null,
-      "state": "vic",
-      "date": "2026-03-19",
-      "cited": false,
-      "passage": "(1279) My question is to the Minister for Multicultural Affairs. Last week the government held its Victorian iftar dinner. Only after all invitations were distributed to community members did the government send single invitations to the leaders of the Greens and opposition, with one week's notice, the day after I wrote to the current Premier alleging politicisation of multicultural events. Every\u2026",
-      "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T03:33:39+00:00",
+    "asked_at": "2026-09-05T02:39:44+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What positions have MPs taken on asylum seekers and offshore detention since July 2024?",
-    "answer": "Several MPs have voiced strong opposition to Australia's offshore detention regime and its treatment of asylum seekers since July 2024. In the Commonwealth Parliament, Senator Nick McKim (Greens) claimed that \"the Labor Party and the coalition\" have engaged in \"a decade-long collusion... to destroy the lives of people who seek asylum in this country,\" and asserted that \"literally thousands of lives\" have been destroyed by this \"lockstep in cruelty.\" He also stated that, having visited the offshore prison on Manus Island, \"every single one of the well north of a thousand people who went through was black- or brown-skinned.\" Senator McKim further alleged that \"pretty much every time\" the most hateful laws against asylum seekers have been passed, \"it's Labor,\" citing mandatory detention and the Nauru deals as examples.\n\nIn the same parliament, another MP (unnamed in the passages) criticised the Albanese government for rushing through bills limiting asylum seeker rights, including \"establishing mandatory visa cancellations for low-level offences\" and expanding warrantless search powers in detention centres. They described the Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025 as \"a bill to strip natural justice, a fundamental right, from asylum seekers,\" and noted that offshore detention was \"a system that the UK government toyed with copying from us but abandoned, because it was just too inhumane.\" A further MP (also unnamed) stated that \"offshore detention emerged during a period of toxic politics that saw a race to the bottom on how to treat people seeking asylum,\" and that people were \"forced, coerced and deceived into going to so called 'regional processing countries.'\"\n\nIn the New South Wales Parliament, Ms Jenny Leong (Newtown) congratulated Professor Mark Harris for 25 years of volunteer medical care with the Asylum Seekers Centre, including for those \"who had been detained offshore on Manus Island and Nauru.\" In the Commonwealth Parliament, Mr Jihad Dib (Bankstown, NSW Labor) praised Settlement Services International for supporting \"migrants, asylum seekers and women from diverse cultural backgrounds,\" but did not state a position on offshore detention itself. The record also includes committee questioning of the Department of Home Affairs about the UN Human Rights Committee's January 2025 ruling that Australia remained responsible for arbitrary detention of asylum seekers transferred offshore, and about unanswered questions on notice regarding transfers to regional processing countries, but these passages do not state the questioners' own positions on the policy.",
+    "answer": "Positions on asylum seekers and offshore detention were sharply critical from several MPs, with Labor and the coalition accused of colluding against asylum seekers. One senator claimed: \"What we are seeing here is the continuation of a decade-long collusion between the Labor Party and the coalition to destroy the lives of people who seek asylum in this country,\" adding that the offshore prison on Manus Island held \"well north of a thousand people\" who were \"black- or brown-skinned\" and not a single white person. Another senator said the government and coalition \"agreed to ram through\" a bill \"to strip natural justice, a fundamental right, from asylum seekers and whomever else the government chooses to deport to Nauru,\" and described offshore detention as \"a system that the UK government toyed with copying from us but abandoned, because it was just too inhumane.\" A third MP characterised offshore detention as emerging \"during a period of toxic politics that saw a race to the bottom on how to treat people seeking asylum,\" noting that people were \"forced, coerced and deceived into going to so called 'regional processing countries.'\"\n\nOther MPs highlighted the human and financial costs. One senator noted that \"spending on offshore processing has blown out to $12.1 billion since offshore detention was started in 2012, with $580 million to Nauru in the 2025-26 budget,\" and questioned how the department justifies \"the warehousing of people who are seeking asylum offshore at this cost, in breach of international obligations and to the detriment of their health and welfare.\" In the New South Wales parliament, Ms Jenny Leong praised volunteers and organisations supporting asylum seekers, including Professor Mark Harris, who \"for the past 25 years has provided vital medical care to people seeking asylum,\" and House of Welcome, which has \"always supported clients to navigate broken systems and campaigned for lasting policy change.\" In the Commonwealth parliament, Mr Jihad Dib, a Labor MP, commended Settlement Services International for providing services to migrants and asylum seekers, but the record also shows repeated frustration in Senate estimates over unanswered questions about asylum seekers transferred to offshore detention, with one senator noting a question from 4 November 2024 had gone \"one year and three months\" without an answer.",
     "sources": [
      {
       "slug": "speech-1194503",
@@ -2049,40 +2030,40 @@
       "passage": "Offshore detention emerged during a period of toxic politics that saw a race to the bottom on how to treat people seeking asylum. As a consequence, people who came to Australia seeking safety and to rebuild their lives were forced, coerced and deceived into going to so called 'regional processing countries.' While the agreement with Nauru endures, there is no current agreement with PNG, despite\u2026",
       "answer_ranges": [
        [
-        1715,
-        2631
+        0,
+        1147
        ]
       ]
      },
      {
-      "slug": "speech-1011339",
-      "title": "Shoebridge \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 24/02/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2025-02-24",
+      "slug": "speech-990559",
+      "title": "Shoebridge \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 27/03/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2025-03-27",
       "speaker": "Shoebridge",
       "party": null,
       "state": "federal",
-      "date": "2025-02-24",
+      "date": "2025-03-27",
       "cited": true,
-      "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 24/02/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] Does the department accept the unanimous view in both decisions from the UN Human Rights Committee that Australia remained responsible for the arbitrary detention of asylum seekers redirected or transferred to\u2026",
+      "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 27/03/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] SE24-377. There's not much that Senator Paterson and I agree on, but the inability to answer the most basic questions in the course of hearings frustrates the public. They cannot believe that senior public servants\u2026",
       "answer_ranges": [
        [
-        1715,
-        2631
+        1147,
+        2371
        ]
       ]
      },
      {
-      "slug": "speech-1011337",
-      "title": "Shoebridge \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 24/02/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2025-02-24",
-      "speaker": "Shoebridge",
+      "slug": "speech-991083",
+      "title": "Payman \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 27/03/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2025-03-27",
+      "speaker": "Payman",
       "party": null,
       "state": "federal",
-      "date": "2025-02-24",
+      "date": "2025-03-27",
       "cited": true,
-      "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 24/02/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] I'm going to ask a series of questions about the UN Human Rights Committee's two decisions that were handed down both on 22 January this year about Australia's use of offshore detention in Nauru. Dr Cassar and Mr\u2026",
+      "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 27/03/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] We know that spending on offshore processing has blown out to $12.1 billion since offshore detention was started in 2012, with $580 million to Nauru in the 2025-26 budget. How does the department justify the\u2026",
       "answer_ranges": [
        [
-        1715,
-        2631
+        1147,
+        2371
        ]
       ]
      },
@@ -2097,24 +2078,24 @@
       "passage": "This bill may have significant ramifications for the people to which it applies. Combined with the measures passed last term to which I've already referred, this bill may be another step in that slow creep towards stripping away rights of asylum seekers in this country. These are people we have harmed by exposing them to the cruel and unusual offshore detention system we dreamed up in a shameful\u2026",
       "answer_ranges": [
        [
-        827,
-        1715
+        0,
+        1147
        ]
       ]
      },
      {
-      "slug": "speech-1196833",
-      "title": "Mehreen Faruqi \u2014 Motions \u2014 2025-09-01",
-      "speaker": "Mehreen Faruqi",
+      "slug": "speech-1197315",
+      "title": "David Shoebridge \u2014 Business \u2014 2025-09-04",
+      "speaker": "David Shoebridge",
       "party": "Greens",
       "state": "federal",
-      "date": "2025-09-01",
+      "date": "2025-09-04",
       "cited": true,
-      "passage": "If you look at the history of who has passed the most hateful laws against asylum seekers, pretty much every time it's Labor. Every time! Every time. Mandatory detention? Labor. Who cuts the Nauru deals and the attacks? It's Labor\u2014 Senator McKim, which bit of 'silence' did you not understand?",
+      "passage": "The government and the coalition have agreed to ram through the Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025 which is a bill to strip natural justice, a fundamental right, from asylum seekers and whomever else the government chooses to deport to Nauru.",
       "answer_ranges": [
        [
         0,
-        827
+        1147
        ]
       ]
      },
@@ -2129,24 +2110,24 @@
       "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 08/10/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] While we're talking about questions on notice, some questions on notice have been lingering not for weeks or months past the due-by date; one question, SE24-358, was put to you on 4 November 2024. We're seeking\u2026",
       "answer_ranges": [
        [
-        1715,
-        2631
+        1147,
+        2371
        ]
       ]
      },
      {
-      "slug": "speech-1300613",
-      "title": "Jenny Leong \u2014 Professor Mark Harris \u2014 2025-11-11",
-      "speaker": "Jenny Leong",
+      "slug": "speech-888353",
+      "title": "Shoebridge \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 10/02/2026 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2026-02-10",
+      "speaker": "Shoebridge",
       "party": null,
-      "state": "nsw",
-      "date": "2025-11-11",
+      "state": "federal",
+      "date": "2026-02-10",
       "cited": true,
-      "passage": "\u2026For the next quarter of a century, Professor Harris worked closely with the health team at the Asylum Seekers Centre to provide care for those seeking asylum, including those who had been detained offshore on Manus Island and Nauru. Professor Harris was central to establishing the centre's health navigator program, which will make a real difference in simplifying healthcare access for people\u2026",
+      "passage": "\u2026nk, through you and your department, on 4 November 2024, a question about the breakdown of people seeking asylum who've been transferred to Australia from offshore detention. That question has been waiting one year and three months for an answer. It's SE24-358. How do we wait one year and three months for an answer just about some basic data of people who have been transferred out of this country?",
       "answer_ranges": [
        [
-        1715,
-        2631
+        1147,
+        2371
        ]
       ]
      },
@@ -2162,25 +2143,25 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-991083",
-      "title": "Payman \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 27/03/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2025-03-27",
-      "speaker": "Payman",
-      "party": null,
-      "state": "federal",
-      "date": "2025-03-27",
-      "cited": false,
-      "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 27/03/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] We know that spending on offshore processing has blown out to $12.1 billion since offshore detention was started in 2012, with $580 million to Nauru in the 2025-26 budget. How does the department justify the\u2026",
-      "answer_ranges": []
-     },
-     {
-      "slug": "speech-990559",
-      "title": "Shoebridge \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 27/03/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2025-03-27",
+      "slug": "speech-1011337",
+      "title": "Shoebridge \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 24/02/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2025-02-24",
       "speaker": "Shoebridge",
       "party": null,
       "state": "federal",
-      "date": "2025-03-27",
+      "date": "2025-02-24",
       "cited": false,
-      "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 27/03/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] SE24-377. There's not much that Senator Paterson and I agree on, but the inability to answer the most basic questions in the course of hearings frustrates the public. They cannot believe that senior public servants\u2026",
+      "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 24/02/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] I'm going to ask a series of questions about the UN Human Rights Committee's two decisions that were handed down both on 22 January this year about Australia's use of offshore detention in Nauru. Dr Cassar and Mr\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-1011339",
+      "title": "Shoebridge \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 24/02/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2025-02-24",
+      "speaker": "Shoebridge",
+      "party": null,
+      "state": "federal",
+      "date": "2025-02-24",
+      "cited": false,
+      "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 24/02/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] Does the department accept the unanimous view in both decisions from the UN Human Rights Committee that Australia remained responsible for the arbitrary detention of asylum seekers redirected or transferred to\u2026",
       "answer_ranges": []
      },
      {
@@ -2195,14 +2176,14 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-1197315",
-      "title": "David Shoebridge \u2014 Business \u2014 2025-09-04",
-      "speaker": "David Shoebridge",
+      "slug": "speech-1196833",
+      "title": "Mehreen Faruqi \u2014 Motions \u2014 2025-09-01",
+      "speaker": "Mehreen Faruqi",
       "party": "Greens",
       "state": "federal",
-      "date": "2025-09-04",
+      "date": "2025-09-01",
       "cited": false,
-      "passage": "The government and the coalition have agreed to ram through the Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025 which is a bill to strip natural justice, a fundamental right, from asylum seekers and whomever else the government chooses to deport to Nauru.",
+      "passage": "If you look at the history of who has passed the most hateful laws against asylum seekers, pretty much every time it's Labor. Every time! Every time. Mandatory detention? Labor. Who cuts the Nauru deals and the attacks? It's Labor\u2014 Senator McKim, which bit of 'silence' did you not understand?",
       "answer_ranges": []
      },
      {
@@ -2224,7 +2205,7 @@
       "state": "nsw",
       "date": "2025-09-10",
       "cited": false,
-      "passage": "\u2026These range from housing, foster care and disability services to employment assistance and youth support programs for migrants, asylum seekers and women from diverse cultural backgrounds. At its core, SSI is driven by the belief that everyone deserves equal access to opportunities that allow them to thrive and participate in society. This belief informs their holistic approach to service\u2026",
+      "passage": "Mr JIHAD DIB ( Bankstown\u2014Minister for Customer Service and Digital Government, Minister for Emergency Services, and Minister for Youth Justice)\u2014On 8 July 2025, I had the pleasure of visiting Settlement Services International's (SSI) Bankstown Office. SSI is an asset to our community, providing life\u2011changing services and opportunities to those who need it most. Originally established as a refugee\u2026",
       "answer_ranges": []
      },
      {
@@ -2250,14 +2231,14 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-888353",
-      "title": "Shoebridge \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 10/02/2026 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2026-02-10",
-      "speaker": "Shoebridge",
+      "slug": "speech-1300613",
+      "title": "Jenny Leong \u2014 Professor Mark Harris \u2014 2025-11-11",
+      "speaker": "Jenny Leong",
       "party": null,
-      "state": "federal",
-      "date": "2026-02-10",
+      "state": "nsw",
+      "date": "2025-11-11",
       "cited": false,
-      "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 10/02/2026 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] I asked, I think, through you and your department, on 4 November 2024, a question about the breakdown of people seeking asylum who've been transferred to Australia from offshore detention. That question has been\u2026",
+      "passage": "Ms JENNY LEONG ( Newtown ) ( 19:3 3 :14 ): On behalf of the Newtown electorate, I recognise and congratulate Professor Mark Harris, who for the past 25 years has provided vital medical care to people seeking asylum through his work as a volunteer with the Asylum Seekers Centre in Newtown. Professor Harris joined the Asylum Seekers Centre as a volunteer in May 2000 at the suggestion of his wife,\u2026",
       "answer_ranges": []
      },
      {
@@ -2270,28 +2251,39 @@
       "cited": false,
       "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 10/02/2026 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] Minister, you can make those assertions about everything possible, but I point out the fact that the department has put an answer on the minister's desk in relation to asylum seekers being transferred to regional\u2026",
       "answer_ranges": []
+     },
+     {
+      "slug": "speech-1310376",
+      "title": "Jenny Leong \u2014 House of Welcome \u2014 2026-05-06",
+      "speaker": "Jenny Leong",
+      "party": null,
+      "state": "nsw",
+      "date": "2026-05-06",
+      "cited": false,
+      "passage": "\u2026Through so many iterations of harsh immigration policies, House of Welcome has always supported clients to navigate broken systems and campaigned for lasting policy change. For over a decade, House of Welcome has expanded its scope, providing life-saving and dignified support through transitional housing, trauma-informed casework, employment assistance and emergency support. It now also runs a\u2026",
+      "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T03:33:49+00:00",
+    "asked_at": "2026-09-05T02:39:53+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What has been said about immigration levels and skilled migration since July 2024?",
-    "answer": "Several speakers addressed immigration levels and skilled migration. A government representative from the Department of Home Affairs outlined key measures delivered in 2024-25, including \"a new ministerial direction\" to ensure the genuine student requirement was met, changes to the visa application charge, and closing the business innovation and investment program to new applicants on 31 July 2024. They also noted the implementation of the new national innovation visa and skills-in-demand visa on 7 December 2024, and that the core skills occupation lists came into effect that same day. The representative reported \"very strong growth in demand\" for the skills-in-demand visa, with 164,860 applications in 2024-25 compared to 121,168 previously.\n\nA Coalition senator criticised the government's approach, claiming net overseas migration was \"running out of control\" at 315,900 for the year ending 31 March 2025, which they said was 46 per cent higher than the 10-year average before COVID-19. The senator also argued that just 20 per cent of the 301,000 net overseas migrants in 2025 were skilled, and that the skilled list included occupations such as dog handler, hairdresser, gardener, golfer and migration agent. Another Coalition senator claimed that between 2022 and 2023, of 737,000 migrants brought in, only 51,605 had skills, and of those only 1,800 were from the construction industry.\n\nGovernment senators and representatives defended the record, stating that \"net overseas migration has now fallen for six quarters in a row in annual terms, and it's over 40 per cent down on its peak.\" One senator said net overseas migration peaked at 538,000 in 2022-23 \"based on policy settings that we inherited from the former government.\" Another stated that \"the most recent data shows that net overseas migration is around 17,000 below Treasury's forecast for the first three-quarters of 2024-25.\" A government senator also argued that \"we do not have record levels of immigration\" and that Australia \"desperately rely[ies] on immigration\" for skilled visas, services, and business, citing Jobs and Skills Australia data from 2025 showing \"ongoing unmet labour demand in key sectors such as health care, education, construction and utilities.\"",
+    "answer": "Debate on immigration levels and skilled migration was sharply partisan. Government speakers, including a representative from the Department of Home Affairs, highlighted measures to strengthen integrity in the international education sector, the closure of the business innovation and investment program on 31 July 2024, and the implementation of the new national innovation visa and skills-in-demand visa in December 2024. They noted \"very strong growth in demand\" for the skills-in-demand visa, with 164,860 applications in 2024-25 compared to 121,168 previously. A Labor senator argued that \"we do not have record levels of immigration\" and that Australia \"desperately rely[ies] on immigration\" for essential services, citing Jobs and Skills Australia data showing unmet labour demand in health care, education, construction and utilities. Another government senator stated net overseas migration \"has now fallen for six quarters in a row in annual terms, and it's over 40 per cent down on its peak,\" attributing this to fixing the \"broken, discredited, corrupted immigration system\" inherited from the coalition.\n\nOpposition speakers strongly criticised the government's record. One senator claimed net overseas migration was 315,900 for the year to 31 March 2025, \"46 per cent higher than the 10-year average before the COVID-19 pandemic,\" and accused Labor of \"flooding the market with record net overseas migration.\" Another asserted that \"just 20 per cent of your 301,000 net overseas migrants in 2025 were skilled\" and that the skilled list included occupations such as \"dog handler, hairdresser, gardener, golfer and migration agent.\" A coalition senator said between 2022 and 2023 the government brought in 737,000 migrants but only 51,605 had skills, of whom only 1,800 were from construction. The same speaker criticised the Temporary Skilled Migration Income Threshold, which rose from $53,900 under the previous government to $70,000 on 1 July 2023, then to $73,150 in July 2024 and $76,515 in July 2025, pricing out employers in dairy, horticulture and meat under labour agreements. Another opposition senator noted the government had not announced the 2025-26 permanent migration program by mid-August 2025, causing issues for skilled independent stream applicants.",
     "sources": [
      {
-      "slug": "speech-1196004",
-      "title": "Tyron Whitten \u2014 Questions without Notice \u2014 2025-07-31",
-      "speaker": "Tyron Whitten",
+      "slug": "speech-1196866",
+      "title": "Malcolm Roberts \u2014 Committees \u2014 2025-09-01",
+      "speaker": "Malcolm Roberts",
       "party": null,
       "state": "federal",
-      "date": "2025-07-31",
+      "date": "2025-09-01",
       "cited": true,
-      "passage": "\u2026tion over the three years since our government was elected. You would have seen from outside the parliament the efforts that we took around international students and a range of other categories. What that has meant is that net overseas migration to Australia peaked at 538,000 in 2022-23\u2014the year after we were elected\u2014obviously based on policy settings that we inherited from the former government.",
+      "passage": "The second point I would make is that the Labor government still hasn't announced the 2025-26 permanent migration program. It still hasn't been announced. We're now in mid-August, and they still haven't announced the permanent migration program for 2025-26. This issue has been raised by theMIA, theMigration Institute of Australia, because it's causing real issues for people seeking to take\u2026",
       "answer_ranges": [
        [
-        1401,
-        2252
+        1116,
+        2282
        ]
       ]
      },
@@ -2306,8 +2298,24 @@
       "passage": "And they aren't just maintaining course, according to ABS data. The net permanent and long-term immigration to May 2025 was 246,000 people\u2014a record for the first five months of the year. It is not only the sheer number; it is also the poor targeting of annual net migration, with 340,000 net migration of skilled workers representing just 66,000. A Deloitte report from 2023 found that 44 per cent\u2026",
       "answer_ranges": [
        [
-        1401,
-        2252
+        1116,
+        2282
+       ]
+      ]
+     },
+     {
+      "slug": "speech-922504",
+      "title": "Sharp \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 08/10/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2025-10-08",
+      "speaker": "Sharp",
+      "party": null,
+      "state": "federal",
+      "date": "2025-10-08",
+      "cited": true,
+      "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 08/10/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] Certainly. The key measures we delivered in 2024-25 had a real focus on strengthening the integrity and quality of the international education sector. We had a range of changes introduced, including a new\u2026",
+      "answer_ranges": [
+       [
+        0,
+        1116
        ]
       ]
      },
@@ -2323,23 +2331,23 @@
       "answer_ranges": [
        [
         0,
-        751
+        1116
        ]
       ]
      },
      {
-      "slug": "speech-922504",
-      "title": "Sharp \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 08/10/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2025-10-08",
-      "speaker": "Sharp",
+      "slug": "speech-1198240",
+      "title": "Paul Scarr \u2014 Questions without Notice: Take Note of Answers \u2014 2025-11-04",
+      "speaker": "Paul Scarr",
       "party": null,
       "state": "federal",
-      "date": "2025-10-08",
+      "date": "2025-11-04",
       "cited": true,
-      "passage": "\u2026We had a range of changes introduced, including a new ministerial direction, that were all to ensure the genuine student requirement was met. Alongside that there were changes to the visa application charge really intended to ensure that people who were applying for a student visa were coming to Australia to study. Another key deliverable: on 31 July 2024 we closed the business innovation and\u2026",
+      "passage": "But the bottom line is\u2014and I do rise to take note of the answer to the question asked by Senator Scarr\u2014that every country has a responsibility to run its migration program in its national interest, and that is not happening under this government. We have seen migration be grossly mismanaged. Senator Scarr spelt out some of the facts in relation to that mismanagement. We know that migration is\u2026",
       "answer_ranges": [
        [
-        0,
-        751
+        1116,
+        2282
        ]
       ]
      },
@@ -2354,28 +2362,32 @@
       "passage": "\u2026nd 17,000 below Treasury's forecast for the first three-quarters of 2024-25. Net overseas migration has now fallen for six quarters in a row in annual terms, and it's over 40 per cent down on its peak. The government recognised that steps did need to be taken to fix the broken, discredited, corrupted immigration system that we inherited from the coalition. Those figures show that we're doing that.",
       "answer_ranges": [
        [
-        751,
-        1401
+        0,
+        1116
        ],
        [
-        1401,
-        2252
+        1116,
+        2282
        ]
       ]
      },
      {
-      "slug": "speech-1198240",
-      "title": "Paul Scarr \u2014 Questions without Notice: Take Note of Answers \u2014 2025-11-04",
-      "speaker": "Paul Scarr",
+      "slug": "speech-1199074",
+      "title": "Malcolm Roberts \u2014 Bills \u2014 2025-11-26",
+      "speaker": "Malcolm Roberts",
       "party": null,
       "state": "federal",
-      "date": "2025-11-04",
+      "date": "2025-11-26",
       "cited": true,
-      "passage": "\u2026We know that migration is running out of control. Net overseas migration for the year ending 31 March 2025 was still 315,900. This is approximately 100,000, or 46 per cent, above the 10-year average prior to theCOVID-19 pandemic. It is 91,000 higher than Treasury'sNOMforecast in the last budget for the three years commencing 1 July 2026. It is 80,000 higher than the long-term average assumption\u2026",
+      "passage": "This is no accident. It is the direct consequence of Labor's reckless policies, flooding the market with record net overseas migration while ignoring the iron laws of supply and demand. In the 12 months to September 2025, we saw net long-term arrivals of over 468,000\u2014the equivalent of adding the population of Hobart to the country twice. Labor have stuck their heads in the sand, fabricating\u2026",
       "answer_ranges": [
        [
-        751,
-        1401
+        0,
+        1116
+       ],
+       [
+        1116,
+        2282
        ]
       ]
      },
@@ -2390,12 +2402,12 @@
       "passage": "Net overseas migration was 306,000 in 2024-25, down from its high afterCOVID. The largest group of migrant arrivals was temporary students\u2014some 157,000 people\u2014and the most nominated occupations for employer-sponsored permanent skilled visas are nurses, chefs and software programmers. It's important, when we have the damaging rhetoric from too many on the right side of politics, that we have\u2026",
       "answer_ranges": [
        [
-        751,
-        1401
+        0,
+        1116
        ],
        [
-        1401,
-        2252
+        1116,
+        2282
        ]
       ]
      },
@@ -2407,11 +2419,11 @@
       "state": "federal",
       "date": "2026-02-09",
       "cited": true,
-      "passage": "\u2026g-term economic stability. Without ongoing migration, our workforce will shrink, threatening our capacity to deliver essential services like aged, child and health care. Jobs and Skills Australia data from 2025 shows ongoing unmet labour demand in key sectors such as health care, education, construction and utilities. These are shortages which can be resolved by careful, targeted migration intake.",
+      "passage": "We need to discuss immigration levels in an open, honest and transparent way. Australia's birthrate is at a record low. Immigration is a major driver of population growth. Migration is playing an increasingly critical role in maintaining our quality of life and supporting Australia's long-term economic stability. Without ongoing migration, our workforce will shrink, threatening our capacity to\u2026",
       "answer_ranges": [
        [
-        1401,
-        2252
+        0,
+        1116
        ]
       ]
      },
@@ -2426,12 +2438,8 @@
       "passage": "There are a lot of false facts and false information to suit a populist narrative around migration and immigration. The census data shows that, in fact, we do not have record levels of immigration. We do not have a problem that is out of control. And we know in so many aspects of our economy and our services, we desperately rely on immigration to bring skilled visas and people that come and\u2026",
       "answer_ranges": [
        [
-        751,
-        1401
-       ],
-       [
-        1401,
-        2252
+        0,
+        1116
        ]
       ]
      },
@@ -2446,8 +2454,8 @@
       "passage": "2:43 pm Minister, analysis of migration data shows that just 20 per cent of your 301,000 net overseas migrants in 2025 were skilled. That's before dealing with the fact that your skilled list includes occupations such as dog handler, hairdresser, gardener, golfer and migration agent. Minister, why is your government flooding Australia with 80 per cent of unskilled migration?",
       "answer_ranges": [
        [
-        751,
-        1401
+        1116,
+        2282
        ]
       ]
      },
@@ -2474,14 +2482,14 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-1196866",
-      "title": "Malcolm Roberts \u2014 Committees \u2014 2025-09-01",
-      "speaker": "Malcolm Roberts",
+      "slug": "speech-1196004",
+      "title": "Tyron Whitten \u2014 Questions without Notice \u2014 2025-07-31",
+      "speaker": "Tyron Whitten",
       "party": null,
       "state": "federal",
-      "date": "2025-09-01",
+      "date": "2025-07-31",
       "cited": false,
-      "passage": "The second point I would make is that the Labor government still hasn't announced the 2025-26 permanent migration program. It still hasn't been announced. We're now in mid-August, and they still haven't announced the permanent migration program for 2025-26. This issue has been raised by theMIA, theMigration Institute of Australia, because it's causing real issues for people seeking to take\u2026",
+      "passage": "2:44 pm Again, I'll see if I can get access to the specific information that you're seeking. But, given that your question goes to overall migration levels, what I can tell you is that there's been a massive fall in what's known as net overseas migration over the three years since our government was elected. You would have seen from outside the parliament the efforts that we took around\u2026",
       "answer_ranges": []
      },
      {
@@ -2507,17 +2515,6 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-1199074",
-      "title": "Malcolm Roberts \u2014 Bills \u2014 2025-11-26",
-      "speaker": "Malcolm Roberts",
-      "party": null,
-      "state": "federal",
-      "date": "2025-11-26",
-      "cited": false,
-      "passage": "This is no accident. It is the direct consequence of Labor's reckless policies, flooding the market with record net overseas migration while ignoring the iron laws of supply and demand. In the 12 months to September 2025, we saw net long-term arrivals of over 468,000\u2014the equivalent of adding the population of Hobart to the country twice. Labor have stuck their heads in the sand, fabricating\u2026",
-      "answer_ranges": []
-     },
-     {
       "slug": "speech-1200427",
       "title": "Tyron Whitten \u2014 Questions without Notice \u2014 2026-03-02",
       "speaker": "Tyron Whitten",
@@ -2529,12 +2526,12 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T03:34:44+00:00",
+    "asked_at": "2026-09-05T02:40:02+00:00",
     "cite_method": "platform"
    },
    {
     "question": "What has parliament said about Anti-Immigration Protests?",
-    "answer": "Parliamentary debate on the anti-immigration protests was extensive and deeply divided. In the Commonwealth Parliament, Greens Senator Nick McKim moved a motion that \"condemns the racist, white supremacist, and anti-immigrant rallies held over the weekend and condemns the support of and attendance at the rallies by MPs,\" while noting the Greens would support a Labor amendment that \"waters down the motion.\" Senator McKim accused the Labor government of having \"joined with Peter Dutton to pass those hateful laws\" targeting asylum seekers and refugees, and claimed the Prime Minister \"has said that he has no doubt that there were good people who went along\" to the rallies. He also quoted a government statement saying: \"targeting specific ethnic groups, like the wave of anti-Indian sentiment that we saw over the weekend, is racism\u2014full stop.\"\n\nOther Commonwealth senators also weighed in. Senator Scarr said \"there is no doubt that there are many people in our community who were extremely disappointed by the sight of Neo-Nazis on the steps of the Victorian parliament,\" but argued the protests were \"about mass immigration\" and \"the numbers swamping our country, housing and homelessness.\" A senator from Bradfield described a constituent of South Asian heritage whose \"stomach was churning with grief and fear\" over the protests, and another speaker said the Neo-Nazi in immigration detention \"can lead by example and leave by example.\" One senator criticised the Minister for Multicultural Affairs for describing marchers as \"blatantly racist\" and Senator Faruqi for \"her deranged view that Australians are inherently racist,\" while another speaker condemned \"the delay in the consideration of the attempted terrorism attack on the Invasion Day rallies in Western Australia\" as a \"double standard.\"\n\nIn the Queensland Parliament, opposition members attacked the state government's response. One Labor MP said the LNP government was \"focused on petty politics and setting their mates up for cushy jobs\" and that \"the silence from this government is deafening\" over \"Nazi-led rallies\" and \"anti-immigration protests.\" Another Labor MP said \"no-one from the government came out to call those out\u2014not one,\" that the Premier and deputy leader called them \"peaceful protests,\" and that the government had \"watered down laws that protect our communities from racial vilification.\" A First Nations speaker declared: \"no colonial government in this country has the right to say who and who isn't illegal on stolen land,\" adding \"you are welcome here and you are not alone.\"",
+    "answer": "Parliamentary debate on the anti-immigration protests was sharply partisan. In the Queensland parliament, an opposition MP described the government as \"mediocre, immature\" and accused the Premier of failing to \"publicly condemn the anti-immigration protests,\" while claiming the Deputy Premier \"defended the protests.\" The same MP said the LNP \"seek to use multicultural communities as a political battering ram.\" A Labor MP responded that \"No-one from the government came out to call those out\u2014not one,\" and accused the government of refusing to condemn \"the racism we saw outside at the rallies on 31 August,\" while urging the Premier to \"call it out and also put One Nation last.\"\n\nIn the Commonwealth parliament, the Greens moved a motion that \"Condemns the racist, white supremacist, and anti-immigrant rallies held over the weekend and condemns the support of and attendance at the rallies by MPs.\" Greens Senator Nick McKim criticised the Labor government for \"ramming through legislation that targets multicultural Australia\" and for joining \"with Peter Dutton to pass those hateful laws,\" while also condemning \"the senators and MPs who supported and spoke at the marches.\" Labor's Minister for Multicultural Affairs described the marchers as \"blatantly racist\" and having an \"anti-immigration agenda,\" and a government senator said the Prime Minister's government \"stands with all Australians, no matter where they were born, against those who seek to divide us and intimidate migrant communities,\" calling the targeting of specific ethnic groups \"racism\u2014full stop.\"\n\nOther speakers offered contrasting views. Liberal Senator Paul Scarr said many in the community were \"extremely disappointed by the sight of Neo-Nazis on the steps of the Victorian parliament,\" but argued the issues must be discussed in a \"considered, measured and reasoned\" way. One senator, in a passage that appears to be from a different speaker, claimed the protests \"are not about religion, skin colour or past nationality. They're about mass immigration,\" saying it was \"about the numbers swamping our country, housing and homelessness.\" A First Nations senator said \"no colonial government in this country has the right to say who and who isn't illegal on stolen land,\" and told people \"you are welcome here and you are not alone.\"",
     "sources": [
      {
       "slug": "speech-1196750",
@@ -2544,11 +2541,11 @@
       "state": "federal",
       "date": "2025-09-01",
       "cited": true,
-      "passage": "\u2026I want to be clear and unequivocal: targeting specific ethnic groups, like the wave of anti-Indian sentiment that we saw over the weekend, is racism\u2014full stop. There is no excuse, no nuance, no justification. No-one in Australia should have to justify their belonging in this country, and this Albanese Labor government believes that every Australian, whatever their race or religion, wherever they\u2026",
+      "passage": "The anti-immigration protests on the weekend highlight, however, that questions of belonging and inclusion linger despite our successes. This government stands with all Australians, no matter where they were born, against those who seek to divide us and intimidate migrant communities. I want to be clear and unequivocal: targeting specific ethnic groups, like the wave of anti-Indian sentiment that\u2026",
       "answer_ranges": [
        [
-        0,
-        849
+        683,
+        1576
        ]
       ]
      },
@@ -2563,8 +2560,8 @@
       "passage": "I move: That the Senate: 1. Condemns the racist, white supremacist, and anti-immigrant rallies held over the weekend and condemns the support of and attendance at the rallies by MPs; 2. Notes:",
       "answer_ranges": [
        [
-        0,
-        849
+        683,
+        1576
        ]
       ]
      },
@@ -2579,12 +2576,8 @@
       "passage": "\u2026um?' What did the government do? It ignored those calls to not fuel hateful right-wing, anti-immigration sentiment, and it joined with Peter Dutton to pass those hateful laws. Shame on the Labor government. Then, when their ministers are given a chance in this place to respond to that criticism, they deflect, they dissemble, they defer, they avoid and they turn it into a parallel political attack.",
       "answer_ranges": [
        [
-        0,
-        849
-       ],
-       [
-        1809,
-        2575
+        683,
+        1576
        ]
       ]
      },
@@ -2599,24 +2592,8 @@
       "passage": "The MinisterforMulticultural Affairsdescribed the marchers as 'blatantly racist' and having an 'anti-immigration agenda'.Senator Faruqiexpediently used the marches to again voice her anti-Westernism and her deranged view that Australians are inherently racist. She said:",
       "answer_ranges": [
        [
-        849,
-        1809
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1196886",
-      "title": "Nicolette Boele \u2014 Statements by Members \u2014 2025-09-02",
-      "speaker": "Nicolette Boele",
-      "party": "Independent",
-      "state": "federal",
-      "date": "2025-09-02",
-      "cited": true,
-      "passage": "\u2026kend I was contacted by a constituent deeply troubled by the anti-immigration protests which were about to occur in Australia's capital cities. This constituent is ofSouth Asianheritage and has lived in Australia for close to four decades, safely and happily. But, in the face of the weekend protest, she said that her stomach was churning with grief and fear. It was devastating to hear these words.",
-      "answer_ranges": [
-       [
-        849,
-        1809
+        683,
+        1576
        ]
       ]
      },
@@ -2631,8 +2608,8 @@
       "passage": "While some individual government MPs have rightly condemned the Nazi organised marches that terrorised black and brown people in our streets, the Prime Minister has said that he has no doubt that there were good people who went along, while his government rams through legislation that targets multicultural Australia and strips the rights of migrants and refugees. When the government allows the\u2026",
       "answer_ranges": [
        [
-        0,
-        849
+        683,
+        1576
        ]
       ]
      },
@@ -2644,11 +2621,11 @@
       "state": "qld",
       "date": "2025-10-15",
       "cited": true,
-      "passage": "This is a mediocre, immature government, and that is on display every single day. This is a government that is focused on petty politics and setting their mates up for cushy jobs. Where were the voices of the LNP when Nazi-led rallies were marching in our streets\u2014rallies that erupted in violence across our nation? The only person opposite I have heard talking about Nazis is the member for Barron\u2026",
+      "passage": "\u2026The Premier chose not to publicly condemn the anti-immigration protests that took place on our streets. The member for Maroochydore was silent, gagged\u2014just like she has been on women's reproductive rights. These protests specifically targeted and vilified hardworking immigrants and Queensland multicultural communities. On this side of the House we called out these rallies and we asked for the\u2026",
       "answer_ranges": [
        [
-        1809,
-        2575
+        0,
+        683
        ]
       ]
      },
@@ -2663,8 +2640,8 @@
       "passage": "\u2026No-one from the government came out to call those out\u2014not one. When the Premier and the deputy leader were asked about those, what did they say? They said that people had the right to protest, that these were peaceful protests. I say that Neo-Nazis do not peacefully protest; they look to instil hatred and division in our communities. What they do is look to divide. To every single person from our\u2026",
       "answer_ranges": [
        [
-        1809,
-        2575
+        0,
+        683
        ]
       ]
      },
@@ -2688,6 +2665,17 @@
       "date": "2025-09-01",
       "cited": false,
       "passage": "6:11 pm I rise to support business of the Senate motion No. 1. There is no doubt that there are many people in our community who were extremely disappointed by the sight of Neo-Nazis on the steps of the Victorian parliament and with some of the signs and some of the chants that were used by some over the course of the rallies that occurred yesterday. When we discuss these issues in relation to\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-1196886",
+      "title": "Nicolette Boele \u2014 Statements by Members \u2014 2025-09-02",
+      "speaker": "Nicolette Boele",
+      "party": "Independent",
+      "state": "federal",
+      "date": "2025-09-02",
+      "cited": false,
+      "passage": "My electorate of Bradfield is proudly multicultural\u2014Chinese, Jewish, Armenian and so many more. On the weekend I was contacted by a constituent deeply troubled by the anti-immigration protests which were about to occur in Australia's capital cities. This constituent is ofSouth Asianheritage and has lived in Australia for close to four decades, safely and happily. But, in the face of the weekend\u2026",
       "answer_ranges": []
      },
      {
@@ -2731,7 +2719,7 @@
       "state": "federal",
       "date": "2025-11-24",
       "cited": false,
-      "passage": "\u2026d that somehow they are being patriotic about our country. They are people who hate modern Australia. The priority of this government and, I would say, this parliament is to defend the right of every Australian to be safe and to feel safe. The Neo-Nazi who is now in immigration detention had a view that there are people who should leave Australia. Well, he can lead by example and leave by example.",
+      "passage": "We're setting a standard for Australia. The last thing people want is for the conflicts or hatreds from overseas to be imported here. Modern Australia and multicultural Australia are the same thing, and someone who gets involved in that sort of movement should not pretend that somehow they are being patriotic about our country. They are people who hate modern Australia. The priority of this\u2026",
       "answer_ranges": []
      },
      {
@@ -2757,7 +2745,7 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T03:34:54+00:00",
+    "asked_at": "2026-09-05T02:40:11+00:00",
     "cite_method": "platform"
    }
   ]
@@ -2769,8 +2757,24 @@
     "from": "1993-01-01",
     "to": "2009-12-31",
     "question": "How did parliament argue about immigration between 1993 and 2009? The debates of the period included Australian Citizenship Amendment (Citizenship Testing) Bill 2007, Auditor-General\u2019s Reports and Migration Amendment (Abolishing Detention Debt) Bill 2009.",
-    "answer": "The debates show a sharp partisan divide over immigration policy, particularly on detention and citizenship testing. On the **Migration Amendment (Abolishing Detention Debt) Bill 2009**, government speakers framed it as part of the Rudd government's \"broader reform of immigration detention\" and a correction of \"a significant social injustice that has been long overdue.\" One supporter said the bill \"makes Australia the only country in the world that charges innocent people the cost of incarcerating them,\" while another argued it achieves an \"appropriate balance\" by abolishing an \"outmoded and ineffectual system\" for asylum seekers but keeping detention debt liability for \"convicted illegal foreign fishers and people smugglers.\" A speaker from the opposition, however, opposed the bill, claiming it showed the Rudd government failed on \"national security\" and \"economic management\" compared with the former Howard government.\n\nOn the **Australian Citizenship Amendment (Citizenship Testing) Bill 2007**, critics argued the test was exclusionary. One speaker said that despite the bill's stated aim of \"a more inclusive society,\" the test \"by its very nature, is a very exclusionary measure,\" since tests \"are designed to be passed or failed.\" Another cited evidence from the Victorian Immigrant and Refugee Women's Coalition that \"Australia has been well served by its existing, inclusive citizenship laws.\" A related 2009 bill sought to implement committee recommendations, including making it easier for people with incapacity from torture or trauma to apply for citizenship and allowing applicants to sit the test at the same time as applying. The record is limited on the Auditor-General\u2019s Reports, as none of the passages address them.",
+    "answer": "Debate on immigration in this period was sharply partisan, with speakers clashing over the balance between border security and humane treatment. On the Migration Amendment (Abolishing Detention Debt) Bill 2009, government supporters framed it as correcting a \"significant social injustice\" and ending \"a policy that penalises persons who come to our shores seeking asylum from persecution in their homelands.\" One speaker called the detention debt \"an arbitrary and pointless policy\u2014a policy that makes Australia the only country in the world that charges innocent people the cost of incarcerating them.\" The same speaker argued that \"fair and effective immigration detention policies and strong border security measures\" are not incompatible, and that the bill achieved balance by still requiring \"convicted illegal foreign fishers and people smugglers\" to pay their debts.\n\nOpposition speakers rejected this framing. One claimed the bill showed the Rudd government failing on \"national security\" and \"economic management,\" areas where the former Howard government had succeeded. Another speaker, while agreeing with Senator Cormann on some issues, disagreed with him on this bill, and the record shows the Greens opposed a motion to discharge the bill from the Notice Paper, wanting it kept for debate.\n\nOn the Australian Citizenship Amendment (Citizenship Testing) Bill 2007, the debate centred on whether a citizenship test promoted inclusion. One speaker said the test was \"a very exclusionary measure\" despite its stated aim of a \"more inclusive society,\" since \"tests are, by their very nature, designed to be passed or failed.\" Another noted the Senate Standing Committee on Legal and Constitutional Affairs had heard evidence that \"Australia has been well served by its existing, inclusive citizenship laws\" and that no case had been made for changing them. The record also shows committee recommendations for reviewing the testing regime's impact on refugee and humanitarian entrants, and for the test questions to be tabled in parliament.",
     "sources": [
+     {
+      "slug": "speech-781584",
+      "title": "Fiona Nash \u2014 Australian Citizenship Amendment (Citizenship Testing) Bill 2007 \u2014 2007-08-07",
+      "speaker": "Fiona Nash",
+      "party": "Nationals",
+      "state": "federal",
+      "date": "2007-08-07",
+      "cited": true,
+      "passage": "At the request of the Chair of the Senate Standing Committee on Legal and Constitutional Affairs,Senator Barnett, I present additional information received by the committee on its inquiry into the provisions of the Australian Citizenship Amendment (Citizenship Testing) Bill 2007.",
+      "answer_ranges": [
+       [
+        1304,
+        2049
+       ]
+      ]
+     },
      {
       "slug": "speech-781967",
       "title": "Linda Kirk \u2014 Australian Citizenship Amendment (Citizenship Testing) Bill 2007 \u2014 2007-08-13",
@@ -2779,11 +2783,11 @@
       "state": "federal",
       "date": "2007-08-13",
       "cited": true,
-      "passage": "I was speaking before question time in this second reading debate on theAustralian Citizenship Amendment (Citizenship Testing) Bill 2007and the citizenship test that it seeks to introduce. One of the stated aims of the bill is to achieve a more inclusive society. However, in my view, and in the view of a number of witnesses before the Senate Standing Committee on Legal and Constitutional Affairs,\u2026",
+      "passage": "\u2026a more inclusive society. However, in my view, and in the view of a number of witnesses before the Senate Standing Committee on Legal and Constitutional Affairs, the test, by its very nature, is a very exclusionary measure to achieve this aim. Tests are, by their very nature, designed to be passed or failed, so it difficult to see exactly how this bill is going to promote a more inclusive society.",
       "answer_ranges": [
        [
-        933,
-        1748
+        1304,
+        2049
        ]
       ]
      },
@@ -2798,24 +2802,8 @@
       "passage": "I note the Senate Standing Committee on Legal and Constitutional Affairs made several key recommendations following its inquiry into theAustralian Citizenship Amendment (Citizenship Testing) Bill 2007. The committee recommended that the operation of the citizenship testing regime be reviewed three years after the bill's commencement, particularly in order to gauge the regime's impact on\u2026",
       "answer_ranges": [
        [
-        933,
-        1748
-       ]
-      ]
-     },
-     {
-      "slug": "speech-794145",
-      "title": "Penny Wong \u2014 National Security Legislation Monitor Bill 2009; Australian Citizenship Amendment (Citizenship Test Review and Other Measures) Bill 2009; Migration Amendment (Immigration Detention Reform) Bill 2009 \u2014 2009-06-25",
-      "speaker": "Penny Wong",
-      "party": null,
-      "state": "federal",
-      "date": "2009-06-25",
-      "cited": true,
-      "passage": "In conjunction with these improvements, the Australian Citizenship Amendment (Citizenship Test Review and Other Measures) Bill 2009 seeks to implement the committee recommendations agreed to by the Government that require legislative change.",
-      "answer_ranges": [
-       [
-        933,
-        1748
+        1304,
+        2049
        ]
       ]
      },
@@ -2827,24 +2815,13 @@
       "state": "federal",
       "date": "2009-09-07",
       "cited": true,
-      "passage": "\u2026o enter Australia illegally and are placed in detention. This bill is part of a broader reform of immigration detention being introduced by the Rudd Labor government. The Rudd government understands it must continue to have tight entry requirements to protect the security of the nation, but it also understands it must treat all people humanely, including noncitizens. That is what it intends to do.",
+      "passage": "8:36 pm I rise tonight to speak in full support of theMigration Amendment (Abolishing Detention Debt) Bill 2009. This legislation not only marks the beginning of the Rudd government's reform of immigration policy in Australia but corrects a significant social injustice that has been long overdue.",
       "answer_ranges": [
        [
         0,
-        933
+        874
        ]
       ]
-     },
-     {
-      "slug": "speech-781584",
-      "title": "Fiona Nash \u2014 Australian Citizenship Amendment (Citizenship Testing) Bill 2007 \u2014 2007-08-07",
-      "speaker": "Fiona Nash",
-      "party": "Nationals",
-      "state": "federal",
-      "date": "2007-08-07",
-      "cited": false,
-      "passage": "At the request of the Chair of the Senate Standing Committee on Legal and Constitutional Affairs,Senator Barnett, I present additional information received by the committee on its inquiry into the provisions of the Australian Citizenship Amendment (Citizenship Testing) Bill 2007.",
-      "answer_ranges": []
      },
      {
       "slug": "speech-786768",
@@ -2877,6 +2854,17 @@
       "date": "2009-06-15",
       "cited": false,
       "passage": "The first report by the committee made 18 recommendations that were aimed at improving accountability and ensuring a timely release from detention centres following health, security and identity checks. It gives me great pleasure to note that the government has already acted on some of those recommendations from the first report, particularly with the introduction of the Migration Amendment\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-794145",
+      "title": "Penny Wong \u2014 National Security Legislation Monitor Bill 2009; Australian Citizenship Amendment (Citizenship Test Review and Other Measures) Bill 2009; Migration Amendment (Immigration Detention Reform) Bill 2009 \u2014 2009-06-25",
+      "speaker": "Penny Wong",
+      "party": null,
+      "state": "federal",
+      "date": "2009-06-25",
+      "cited": false,
+      "passage": "The Bill deserves the support of all members of this Parliament. I commend the Bill to the chamber. Migration Amendment (ImmigrationDetentionReform) Bill 2009 The Migration Amendment (Immigration Detention Reform) Bill 2009 amends the Migration Act 1958 (the 'Act') to give legislative effect to the Government's NewDirectionsin Detention policy.",
       "answer_ranges": []
      },
      {
@@ -2913,14 +2901,15 @@
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T03:35:17+00:00"
+    "asked_at": "2026-09-05T02:40:32+00:00",
+    "cite_method": "platform"
    },
    {
     "label": "2010\u20132019",
     "from": "2010-01-01",
     "to": "2019-12-31",
     "question": "How did parliament argue about immigration between 2010 and 2019? The debates of the period included Racism and Harmony Day.",
-    "answer": "Parliamentarians debated immigration and multiculturalism largely through the lens of Harmony Day and the Racial Discrimination Act. A federal MP (Labor, House of Representatives) supported a motion on Harmony Day, describing his electorate of Perth as having \"very strong migrant communities\" and paying tribute to their contribution to the \"richness, vibrancy and diversity of Perth\". He criticised the then Prime Minister for proposing to weaken section 18C of the Racial Discrimination Act on Harmony Day itself, calling the move \"short-sighted, divisive\" and accusing the Liberal Party of appeasing Pauline Hanson and the far right. Another federal MP (Labor) argued that the government was \"using section 18C to create an ideological divide within its own party lines\" and was beholden to the far right, while a third (Labor) said the government's discussions to water down 18C dishonoured the Australians in his electorate who came from over 200 nations.\n\nIn the New South Wales parliament, the Hon. Daniel Mookhey (Labor) supported a motion on Harmony Day, noting it is also the UN International Day for the Elimination of Racial Discrimination. He referenced the Christchurch massacre as a reminder to remain vigilant against racism, and said Labor supported \"a toughening of the law relating to hate speech\". A federal MP (Labor) also spoke of the need to avoid a return to the White Australia policy, noting that his own family's history included members of \"anti-Chinese committees\" in pre-Federation parliaments, and he praised the 1988 bipartisan motion against racial discrimination in immigration. A minister (Labor, in question time) described Harmony Day as a day to celebrate cultural diversity with the message \"Everyone belongs\". The record also includes a coalition MP's written question about departmental reporting obligations under the Migration Act, but the passages do not otherwise detail coalition arguments on immigration policy.",
+    "answer": "Debate over immigration in this period was frequently framed through the lens of racism, multiculturalism and Harmony Day, with sharp partisan conflict over the Racial Discrimination Act. A Labor MP for Perth, Patrick Gorman, attacked the then Coalition government for seeking to weaken section 18C, claiming the Prime Minister introduced the amendment on Harmony Day and that the Liberal Party had an \"appeasement policy towards Pauline Hanson 2.0\". He argued that weakening the law would harm ethnic communities and that \"racism, wherever it occurs, does not just harm its direct victims; rather, it demeans us all\". In the New South Wales Legislative Council, Labor's Daniel Mookhey supported a Coalition motion on Harmony Day, noting the day marks the UN International Day for the Elimination of Racial Discrimination and that the Christchurch massacre the week prior was \"a pertinent reminder as to why it is so important that we remain vigilant against racism in all its forms\". He also said Labor had been \"campaigning for a toughening of the law relating to hate speech\".\n\nOther speakers echoed these themes. A Labor MP for the Commonwealth seat of Chifley, Ed Husic, described Harmony Day as more than food and clothing, arguing it is \"about respect\" and \"promoting substantive equality by eliminating barriers to participation for all people\". He criticised the government for proposing changes to 18C on the International Day for the Elimination of Racial Discrimination, saying the government was \"beholden to the far right on its backbench\". A Labor MP for Hindmarsh, Steve Georganas, similarly condemned the government for discussing watering down 18C on Harmony Day, calling it \"an absolute disgrace\". In the Commonwealth parliament, Labor MP Tim Watts spoke of the return of \"race based politics\" in 2018, citing a former Coalition Prime Minister calling for an immigration policy \"seemingly intended to discriminate against black African migrants\" and warning that \"the leadership void\" at the heart of government had been \"filled by extremists who want to sabotage and destroy Australia's multicultural success story\". He also noted that 85 per cent of Australians supported multiculturalism according to the Scanlon Foundation. The record also includes a question to a Labor minister, Kate Lundy, in the Commonwealth Senate, who described Harmony Day as a day to celebrate cultural diversity with the message \"Everyone belongs\".",
     "sources": [
      {
       "slug": "speech-814863",
@@ -2933,24 +2922,8 @@
       "passage": "My question is to the Minister forMulticultural Affairs, Senator Lundy, and I congratulate her on a very successfulHarmony Dayevent this morning. Can the minister inform the Senate about Harmony Day? 3:00 pm Harmony Dayis celebrated around Australia every year on 21 March. It is a day to celebrate our cultural diversity, and its overriding message is 'Everyone belongs'. It is a uniquely\u2026",
       "answer_ranges": [
        [
-        961,
-        1959
-       ]
-      ]
-     },
-     {
-      "slug": "speech-822801",
-      "title": "Lisa Singh \u2014 Committees \u2014 2013-03-19",
-      "speaker": "Lisa Singh",
-      "party": "Labor",
-      "state": "federal",
-      "date": "2013-03-19",
-      "cited": true,
-      "passage": "You would be aware that the coalition under the former Howard government introduced multicultural policies and programs that signified the coalition's strong and enduring commitment to community harmony, and a migration program that does not discriminate on the basis of ethnic origin, gender, race or religion. A decade ago the then coalition minister for immigration the Hon. Philip Ruddock MP,\u2026",
-      "answer_ranges": [
-       [
-        961,
-        1959
+        1079,
+        2447
        ]
       ]
      },
@@ -2965,24 +2938,8 @@
       "passage": "(b) this day is also the United Nations International Day for the Elimination of Racial Discrimination; (c) Harmony Day is about community participation, inclusiveness and respect \u2013 it is a day to reflect on our success as a multicultural nation, our strong social cohesion and the benefits of cultural diversity;",
       "answer_ranges": [
        [
-        961,
-        1959
-       ]
-      ]
-     },
-     {
-      "slug": "speech-343540",
-      "title": "Steve Georganas \u2014 2017-03-21",
-      "speaker": "Steve Georganas",
-      "party": "Labor",
-      "state": "federal",
-      "date": "2017-03-21",
-      "cited": true,
-      "passage": "It is a real shame that on a day like today, Harmony Day, when we celebrate this nation's multicultural beliefs and acknowledge our citizens who have come from every corner of the world, that the government in their caucus room today and in their cabinet are discussing how to water down 18C of the Racial Discrimination Act that has served our nation for many years. It has served the people of\u2026",
-      "answer_ranges": [
-       [
-        0,
-        961
+        1079,
+        2447
        ]
       ]
      },
@@ -2994,27 +2951,11 @@
       "state": "federal",
       "date": "2017-03-27",
       "cited": true,
-      "passage": "I rise to support this motion. I realise that when people refer to ethnically diverse communities in Australia perhaps not that many might immediately think of my home electorate of the federal seat of Perth. But I can assure you that there are very strong migrant communities all throughout my electorate that have added immeasurably to the vibrancy of our local community and have done so for\u2026",
+      "passage": "\u2026They also now have an appeasement policy towards Pauline Hanson 2.0-particularly if the recent Western Australian experience is anything to go by. Listening to the Prime Minister last week, his Orwellian newspeak that I suspect even he had difficulty believing, insisting that weakening section 18C of the Racial Discrimination Act was actually strengthening it, was, with respect, pathetic. War is\u2026",
       "answer_ranges": [
        [
         0,
-        961
-       ]
-      ]
-     },
-     {
-      "slug": "speech-367520",
-      "title": "Tim Watts \u2014 2018-08-16",
-      "speaker": "Tim Watts",
-      "party": "Labor",
-      "state": "federal",
-      "date": "2018-08-16",
-      "cited": true,
-      "passage": "There has been a lot of self-congratulation in this building today. Yesterday, the Leader of the Opposition showed the leadership that this country desperately needed by moving a motion to re-affirm the parliament's commitment to a racially and religiously non-discriminatory immigration policy. It mirrored a motion moved in 1988-by the Prime Minister, on that occasion-to put back in its box a\u2026",
-      "answer_ranges": [
-       [
-        0,
-        961
+        1079
        ]
       ]
      },
@@ -3026,11 +2967,11 @@
       "state": "nsw",
       "date": "2019-10-17",
       "cited": true,
-      "passage": "\u2026Labor has been campaigning for a toughening of the law relating to hate speech. Using our legislative power in this place is one practical way to curb that practice. I say that because even last month we have seen the revival of anti-Semitic sentiment led by the same sort of political forces that are stirring on the issues highlighted by the Christchurch massacre. Prior to Harmony Day, it was the\u2026",
+      "passage": "\u2026It was a pertinent reminder as to why it is so important that we remain vigilant against racism in all its forms. This year members ought to note that the virulence of some strains of racism is returning. Organised political forces, particularly of the far right, are stirring on those issues worldwide. The Hon. Natalie Ward: Shame. The Hon. DANIEL MOOKHEY: It is shameful. They are trying to draw\u2026",
       "answer_ranges": [
        [
-        961,
-        1959
+        0,
+        1079
        ]
       ]
      },
@@ -3046,14 +2987,14 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-231189",
-      "title": "Chris Bowen \u2014 2011-02-28",
-      "speaker": "Chris Bowen",
+      "slug": "speech-231186",
+      "title": "Scott Morrison \u2014 2011-02-28",
+      "speaker": "Scott Morrison",
       "party": null,
       "state": "federal",
       "date": "2011-02-28",
       "cited": false,
-      "passage": "Minister for Immigration and Citizenship Mr Bowen \u2014The answer to the honourable member's question is as follows: The Principal Member of the Refugee Review Tribunal provided a report to the Minister for the period from 1 March 2010 to 30 June 2010 on 12 August 2010 in accordance with section 440A of the Migration Act 1958 (the Act). The report was tabled by the Minister on 16 November 2010 in\u2026",
+      "passage": "Mr Morrison asked the Minister for Immigration and Citizenship, in writing, on 26 October 2010: In respect of section 91Y of the Migration Act 1958 and the obligation of the Secretary of the department to provide periodic reports to the Minister, has he been provided a report for the period 1 March to 30 June 2010; if not, why not; if so, will it be tabled in the Parliament in accordance with\u2026",
       "answer_ranges": []
      },
      {
@@ -3079,14 +3020,14 @@
       "answer_ranges": []
      },
      {
-      "slug": "speech-231186",
-      "title": "Scott Morrison \u2014 2011-02-28",
-      "speaker": "Scott Morrison",
+      "slug": "speech-231189",
+      "title": "Chris Bowen \u2014 2011-02-28",
+      "speaker": "Chris Bowen",
       "party": null,
       "state": "federal",
       "date": "2011-02-28",
       "cited": false,
-      "passage": "Mr Morrison asked the Minister for Immigration and Citizenship, in writing, on 26 October 2010: In respect of section 91Y of the Migration Act 1958 and the obligation of the Secretary of the department to provide periodic reports to the Minister, has he been provided a report for the period 1 March to 30 June 2010; if not, why not; if so, will it be tabled in the Parliament in accordance with\u2026",
+      "passage": "Minister for Immigration and Citizenship Mr Bowen \u2014The answer to the honourable member's question is as follows: The Principal Member of the Refugee Review Tribunal provided a report to the Minister for the period from 1 March 2010 to 30 June 2010 on 12 August 2010 in accordance with section 440A of the Migration Act 1958 (the Act). The report was tabled by the Minister on 16 November 2010 in\u2026",
       "answer_ranges": []
      },
      {
@@ -3098,6 +3039,17 @@
       "date": "2012-06-28",
       "cited": false,
       "passage": "Through the course of my time in this parliament, I became involved in the Senate's legal and constitutional affairs committees. I was involved in the legislation and references committees in opposition, when the legislation committee was chaired byMarise Payne, and since we have been in government I have become Chair of the Legal and Constitutional Affairs Legislation Committee and Deputy Chair\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-822801",
+      "title": "Lisa Singh \u2014 Committees \u2014 2013-03-19",
+      "speaker": "Lisa Singh",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2013-03-19",
+      "cited": false,
+      "passage": "You would be aware that the coalition under the former Howard government introduced multicultural policies and programs that signified the coalition's strong and enduring commitment to community harmony, and a migration program that does not discriminate on the basis of ethnic origin, gender, race or religion. A decade ago the then coalition minister for immigration the Hon. Philip Ruddock MP,\u2026",
       "answer_ranges": []
      },
      {
@@ -3152,51 +3104,42 @@
       "state": "federal",
       "date": "2017-03-21",
       "cited": false,
-      "passage": "\u2026It is a government that is using section 18C to create an ideological divide within its own party lines and that is beholden to the far right on its backbench. And of all days to do this, it has chosen today-a day that coincides with the International Day for the Elimination of Racial Discrimination. On 21 March 1960 police in Sharpeville, South Africa opened fire and killed 69 people at a\u2026",
+      "passage": "\u2026It is a day for promoting substantive equality by eliminating barriers to participation for all people. It is a day when we reflect on who we are as a nation and how we can remain vigilant against racism, discrimination and the hate speech that divide us. As I look over the divide to the other side of this chamber, I see a government made up of people who have never had to defend themselves\u2026",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-343540",
+      "title": "Steve Georganas \u2014 2017-03-21",
+      "speaker": "Steve Georganas",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2017-03-21",
+      "cited": false,
+      "passage": "\u2026ns at the moment. It is wrong, it is not right, in a nation like ours where we have done so much over past years to ensure that everyone is treated equally regardless of the colour of their skin, regardless of their religion, regardless of where they come from, because everybody is contributing to this nation. To see this government do what it is doing today is an absolute disgrace. (Time expired)",
+      "answer_ranges": []
+     },
+     {
+      "slug": "speech-367520",
+      "title": "Tim Watts \u2014 2018-08-16",
+      "speaker": "Tim Watts",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2018-08-16",
+      "cited": false,
+      "passage": "\u2026As our outgoing Race Discrimination Commissioner, Tim Soutphommasane, warned last week: 2018 is the year that race based politics returned to the mainstream political debate in Australia. In 2018, 30 years after Bob Hawke introduced his motion into our parliament, we have seen a former Country Liberal Party Chief Minister smiling and posing with a neo-Nazi for a photograph before hosting him on\u2026",
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T03:35:28+00:00"
+    "asked_at": "2026-09-05T02:40:42+00:00",
+    "cite_method": "platform"
    },
    {
     "label": "2020\u20132024",
     "from": "2020-01-01",
     "to": "2024-06-30",
     "question": "How did parliament argue about immigration between 2020 and the middle of 2024? The debates of the period included South Australian Multicultural Bill, Afghanistan and COVID-19.",
-    "answer": "Parliamentary debate on immigration in this period was shaped by the South Australian Multicultural Bill 2020, the fall of Afghanistan, and COVID-19. In the South Australian parliament, the bill\u2019s supporters framed it as modernising multiculturalism, with one government member noting it would \"advance multiculturalism and interculturalism in South Australia\" and replace the South Australian Multicultural and Ethnic Affairs Commission with a new South Australian Multicultural Commission. Labor\u2019s lead speaker in that parliament welcomed the bill\u2019s intentions but criticised the government for omitting three elements: recognising temporary migrants\u2019 contribution, making \"raising awareness of the harm that racism can do\" a commission function, and requiring state authorities to report on the charter to parliament. Another Labor member in the same parliament raised concerns about the bill\u2019s references to Aboriginal peoples, questioning whether proper consultation had occurred and whether celebrating Australia Day on 26 January was consistent with the bill\u2019s definition of \"interculturalism\", quoting Noel Pearson\u2019s warning against symbolic gestures without consultation.\n\nOn Afghanistan, a South Australian Labor member moved a motion calling on the Morrison government to grant Afghan nationals on temporary visas a path to permanent residency, facilitate migration for those who assisted Australian forces, announce a humanitarian visa program for at-risk ethnic minorities, and prioritise family reunion visas. He argued that people on Safe Haven Enterprise Visas and Temporary Protection Visas faced ongoing insecurity, saying \"if we are sincere and genuine in our hearts in believing that these individuals should be able to call Australia home, then they should be able to call Australia home forever.\" In the Commonwealth parliament, a minister credited the South Australian government for trialling home quarantine, saying it would allow families in multicultural communities to be reunited after international border closures.\n\nOn COVID-19 and immigration, a South Australian minister acknowledged that culturally and linguistically diverse communities faced misunderstandings about testing, including fears that non-citizens without Medicare would be charged for COVID tests, and stressed that testing was free. Another South Australian minister noted that commonwealth funding for the Adult Migrant English Program had fallen by $1.2 million, partly due to fewer migrants undertaking training during the 2020 COVID-19 period. A Commonwealth minister defended hotel quarantine as having saved over 30,000 lives, while a South Australian opposition member questioned border screening and travel restrictions for countries like Iran and Italy early in the pandemic.",
+    "answer": "Debate on immigration in this period was largely conducted through the South Australian Multicultural Bill 2020, with speakers from multiple parties. A Labor member, the lead speaker for the opposition, said the bill would \"advance multiculturalism and interculturalism in South Australia\" and noted the opposition supported its modernising intent but had three outstanding amendments: recognising temporary migrants' contribution, making \"raising awareness of the harm that racism can do\" a commission function, and requiring state authorities to report on the charter to parliament. Another Labor member, speaking on the same bill, said Labor supported updating the act and that its amendments would \"strengthen the role of the proposed South Australian multicultural commission by ensuring grassroots community representation\". A government member, who said his grandparents migrated from Madeira, commended the bill, noting it reflected consultation feedback including that \"Aboriginal South Australians should be recognised as the carriers of the original cultures in South Australia\". A different government member, the minister for multicultural affairs, later said the government had delivered on a \"historic multicultural policy\", including reinstating a Multicultural Women's Leadership course and establishing a Multicultural Chambers of Commerce group.\n\nA separate debate concerned Afghanistan and refugees. A Labor member moved a motion calling on the Morrison government to grant Afghan nationals on temporary visas a path to permanent residency, facilitate migration for those who worked with Australian forces, and increase family reunion visas. He said South Australia had \"an incredibly proud record of really leading the nation when it comes to multiculturalism\" and described individuals on Safe Haven Enterprise visas who faced uncertainty, quoting one as saying, \"I have lived here for 10 years. We have some freedom, but we still don't have the same freedoms as others.\" A government minister, responding to a question about COVID-19 and multicultural communities, said the home quarantine trial with South Australia would allow families to be reunited, \"particularly those in our multicultural communities across this country who have carried the hardest and heaviest burden of that international ban\". Another government minister, answering a question about COVID-19 testing, said there had been misunderstandings among culturally and linguistically diverse communities, including that non-citizens without Medicare might be charged for tests, and stressed that \"anybody who presents for a COVID test will have it free of charge\".",
     "sources": [
-     {
-      "slug": "speech-1057599",
-      "title": "S.G. Wade \u2014 Coronavirus, Health Advice \u2014 2020-07-23",
-      "speaker": "S.G. Wade",
-      "party": null,
-      "state": "sa",
-      "date": "2020-07-23",
-      "cited": true,
-      "passage": "I can assure you they are acting now. I have not actually seen the finalised\u2014what is today, the 23 rd ? It happened seven days ago. In some of the early feedback that I heard at the forum and that I have heard since, in many ways it was not so much the knowledge gaps. Many of the multicultural communities clearly understood issues like social distancing and what have you, but one of the issues\u2026",
-      "answer_ranges": [
-       [
-        2045,
-        2783
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1093009",
-      "title": "J.A.W. Gardner \u2014 Auditor-General's Report \u2014 2021-02-02",
-      "speaker": "J.A.W. Gardner",
-      "party": null,
-      "state": "sa",
-      "date": "2021-02-02",
-      "cited": true,
-      "passage": "I am advised that that depends on a couple of things, including commonwealth funding. The commonwealth government's Adult Migrant English Program and Skills for Education and Employment Program were $1.2 million lower than the previous year. That reduction is partially due to fewer migrants and clients undertaking the training during the 2020 COVID-19 period. Obviously, given the international\u2026",
-      "answer_ranges": [
-       [
-        2045,
-        2783
-       ]
-      ]
-     },
      {
       "slug": "speech-1124067",
       "title": "Malinauskas \u2014 Afghanistan \u2014 2021-08-25",
@@ -3205,27 +3148,11 @@
       "state": "sa",
       "date": "2021-08-25",
       "cited": true,
-      "passage": "\u2026I believe and I hope this house believes that that is wrong, because if we are sincere and genuine in our hearts in believing that these individuals should be able to call Australia home, then they should be able to call Australia home forever. That is what underpins the whole concept of citizenship. When we talk about these big picture policy questions in generalities, it is easy to lose sight\u2026",
+      "passage": "\u2026South Australia has an incredibly proud record of really leading the nation when it comes to multiculturalism, leading the nation in ensuring that we demonstrate that as South Australians we have those common ideals of compassion and openheartedness not just to people from other parts of the world but to people from other parts of the world who are in peril. We know, tragically, that as we speak\u2026",
       "answer_ranges": [
        [
-        1180,
-        2045
-       ]
-      ]
-     },
-     {
-      "slug": "speech-1125652",
-      "title": "J.A. Darley \u2014 South Australian Multicultural Bill \u2014 2021-08-26",
-      "speaker": "J.A. Darley",
-      "party": null,
-      "state": "sa",
-      "date": "2021-08-26",
-      "cited": true,
-      "passage": "I rise to speak on the South Australian Multicultural Bill 2020; however, I have several concerns with the bill. Clause 4(a) under 'Parliamentary declaration' and clause 19(2)(b) in the South Australian Multicultural Charter refer to Aboriginal peoples. My office has sought clarification on the extent to which the diverse Aboriginal communities in South Australia have been asked about these\u2026",
-      "answer_ranges": [
-       [
-        0,
-        1180
+        1364,
+        2655
        ]
       ]
      },
@@ -3241,7 +3168,7 @@
       "answer_ranges": [
        [
         0,
-        1180
+        1364
        ]
       ]
      },
@@ -3268,6 +3195,17 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-1057599",
+      "title": "S.G. Wade \u2014 Coronavirus, Health Advice \u2014 2020-07-23",
+      "speaker": "S.G. Wade",
+      "party": null,
+      "state": "sa",
+      "date": "2020-07-23",
+      "cited": false,
+      "passage": "\u2026Anybody who presents for a COVID test will have it free of charge\u2014no questions asked\u2014if they meet the eligibility criteria. That is clearly an area where we have not been as successful as we would want to be in terms of getting the message out. At SA Health, because of the diversity of issues that are raised they will all be forwarded through in terms of the relevant teams, but that might be one\u2026",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-393289",
       "title": "Ken O'Dowd \u2014 2020-08-24",
       "speaker": "Ken O'Dowd",
@@ -3290,6 +3228,17 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-1093009",
+      "title": "J.A.W. Gardner \u2014 Auditor-General's Report \u2014 2021-02-02",
+      "speaker": "J.A.W. Gardner",
+      "party": null,
+      "state": "sa",
+      "date": "2021-02-02",
+      "cited": false,
+      "passage": "I am advised that that depends on a couple of things, including commonwealth funding. The commonwealth government's Adult Migrant English Program and Skills for Education and Employment Program were $1.2 million lower than the previous year. That reduction is partially due to fewer migrants and clients undertaking the training during the 2020 COVID-19 period. Obviously, given the international\u2026",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-1101468",
       "title": "Harvey \u2014 South Australian Multicultural Bill \u2014 2021-03-04",
       "speaker": "Harvey",
@@ -3297,7 +3246,7 @@
       "state": "sa",
       "date": "2021-03-04",
       "cited": false,
-      "passage": "I rise today to make a contribution on the South Australian Multicultural Bill 2020. I am, like all members, a proud South Australian. One reason why I am so proud to be a South Australian is because of the deep multicultural roots of our state. We are home to people from 200 birthplace groups, who speak approximately 180 languages at home and observe more than 95 religions. This is an amazing\u2026",
+      "passage": "\u2026What was evident in the consultation stage was that multiculturalism should be modernised to reflect changes in thinking and practices, SAMEAC's functions should be modernised, multicultural principles should be included in the legislation, Aboriginal South Australians should be recognised as the carriers of the original cultures in South Australia, there should be greater transparency with the\u2026",
       "answer_ranges": []
      },
      {
@@ -3308,7 +3257,7 @@
       "state": "sa",
       "date": "2021-03-17",
       "cited": false,
-      "passage": "I welcome the opportunity to speak today on the South Australian Multicultural Bill 2020. Australia is a nation built on multiculturalism, from our First Nations people to the waves of new migrants over the decades who have travelled across the seas and the generations who now call Australia home. My electorate of Torrens is truly a multicultural community, and I enjoy the presence of the\u2026",
+      "passage": "\u2026These amendments strengthen the role of the proposed South Australian multicultural commission by ensuring grassroots community representation and, therefore, will provide a diversity of views. If supported, they will ensure that those appointed as members of the multicultural commission will have demonstrated experience in at least one of a number of areas, including sports, arts, media, workers\u2026",
       "answer_ranges": []
      },
      {
@@ -3356,6 +3305,17 @@
       "answer_ranges": []
      },
      {
+      "slug": "speech-1125652",
+      "title": "J.A. Darley \u2014 South Australian Multicultural Bill \u2014 2021-08-26",
+      "speaker": "J.A. Darley",
+      "party": null,
+      "state": "sa",
+      "date": "2021-08-26",
+      "cited": false,
+      "passage": "I rise to speak on the South Australian Multicultural Bill 2020; however, I have several concerns with the bill. Clause 4(a) under 'Parliamentary declaration' and clause 19(2)(b) in the South Australian Multicultural Charter refer to Aboriginal peoples. My office has sought clarification on the extent to which the diverse Aboriginal communities in South Australia have been asked about these\u2026",
+      "answer_ranges": []
+     },
+     {
       "slug": "speech-412934",
       "title": "Scott Morrison \u2014 2021-09-02",
       "speaker": "Scott Morrison",
@@ -3363,7 +3323,7 @@
       "state": "federal",
       "date": "2021-09-02",
       "cited": false,
-      "passage": "I thank the member for his question. Since 28 March 2020, when mandatory quarantine commenced-when public health orders were put in place by the states to support the decision of the Commonwealth government to close the borders-over 434,000 people have arrived and we have detected and isolated over 4,200 COVID-19 cases. In about half a dozen cases there were breaches of those quarantines which\u2026",
+      "passage": "\u2026We will see families reunited, particularly those in our multicultural communities across this country who have carried the hardest and heaviest burden of that international ban. They will be reunited. They will be able to reconnect. The home quarantine model is absolutely vital to the success of the national plan. Again, I want to thank Premier Marshall for being the one who put his hand up and\u2026",
       "answer_ranges": []
      },
      {
@@ -3407,11 +3367,12 @@
       "state": "sa",
       "date": "2023-05-16",
       "cited": false,
-      "passage": "I look forward to continuing my Supply Bill speech. In the first half of my speech, I spoke about tourism. I want to reflect on the other portfolio of multicultural affairs. I often say that I travel around the world every week without leaving Adelaide. I have to say that it keeps me very busy, but I am absolutely honoured when I am invited to come and share with our diverse cultures and\u2026",
+      "passage": "\u2026I think it is safe to say that we went to the last election with a historic multicultural policy. I am excited that we are delivering these outcomes. I know that our diverse community thanked us for taking the time to present a detailed policy. It is important to have additional money for celebration and expansions, but it is actually about recognising more the barriers and the challenges of\u2026",
       "answer_ranges": []
      }
     ],
-    "asked_at": "2026-09-05T03:35:38+00:00"
+    "asked_at": "2026-09-05T02:40:53+00:00",
+    "cite_method": "platform"
    }
   ],
   "tide": [
@@ -3423,21 +3384,21 @@
    },
    {
     "decade": "2000s",
-    "count": 3665,
-    "labelled": 52749,
-    "share": 0.06948
+    "count": 3661,
+    "labelled": 52439,
+    "share": 0.06981
    },
    {
     "decade": "2010s",
-    "count": 7492,
-    "labelled": 111697,
-    "share": 0.06707
+    "count": 7348,
+    "labelled": 105862,
+    "share": 0.06941
    },
    {
     "decade": "2020\u201326",
-    "count": 3715,
-    "labelled": 98172,
-    "share": 0.03784
+    "count": 3671,
+    "labelled": 90206,
+    "share": 0.0407
    }
   ],
   "tide_scope": "federal",
@@ -3535,14 +3496,9 @@
    "reason": "the passage does not say this number is a share of that base"
   },
   {
-   "value": "46,590",
-   "measure": "Cases before the ART as at 31 October 2025",
-   "reason": "the denominator only repeats the unit"
-  },
-  {
    "value": "2,236",
-   "measure": "Increase in ART cases in one month",
-   "reason": "the denominator only repeats the unit"
+   "measure": "Increase in ART case load in one month",
+   "reason": "the passage states no total for this number to be measured against"
   },
   {
    "value": "40 per cent",
@@ -3551,8 +3507,18 @@
   }
  ],
  "lede": {
-  "text": "The immigration debate in Australian parliaments now turns on whether migration policy should be tightened for community safety, with the coalition and crossbench pressing Labor over the NZYQ cohort, preventive detention and visa cancellations after the Bondi attack. Labor and the Greens counter that such laws strip natural justice from asylum seekers and entrench exclusion, with Senator McKim accusing both major parties of a decade-long collusion to destroy the lives of people seeking asylum. Anti-immigration rallies and Senator Price's remarks on Indian migration have sharpened a parallel fight over racism and belonging, as state parliaments moved motions rejecting prejudice while the coalition defended the protests as being about mass immigration and housing.",
+  "text": "Parliament argued sharply over community safety and immigration, with Commonwealth speakers accusing Labor of failing to lodge a single preventive detention order and of the \"direction 99 debacle, which saw 97 criminal noncitizens avoid deportation,\" while defenders insisted \"community safety is our number one priority.\"\n\nFrom 1993 to 2009 parliament clashed over detention debt and citizenship testing as exclusionary. In the 2010s debate turned on racism, section 18C and Harmony Day. By 2020\u201324 attention shifted to multicultural commissions and Afghan refugees. The tide of attention has stayed roughly level across the decades.\n\nThirty per cent of Australians were born overseas, against a 14 per cent OECD average, and skilled migrants add $198,000 each in budget contribution. Labor defends falling net migration; the Liberals back caps and skilled prioritisation; the Greens oppose offshore detention; Katter disputes One Nation-style claims.",
   "sources": [
+   {
+    "slug": "speech-1196766",
+    "title": "Kate Chaney \u2014 Bills \u2014 2025-09-01",
+    "speaker": "Kate Chaney",
+    "party": "Independent",
+    "state": "federal",
+    "date": "2025-09-01",
+    "passage": "3:34 pm I rise to support the motion moved by the member for Curtin, and I do that because so many members of my Kooyong community have contacted the electorate office in the last week with their grave concerns around the precedent set by this piece of legislation. All of us care about community safety. Certainly, in Victoria, we've had a significant increase in the incidence of aggravated\u2026",
+    "cited": true
+   },
    {
     "slug": "speech-1196879",
     "title": "Andrew Hastie \u2014 Bills \u2014 2025-09-02",
@@ -3560,48 +3526,122 @@
     "party": "Liberal",
     "state": "federal",
     "date": "2025-09-02",
-    "passage": "The member for Watson's test as the new Minister for Home Affairs was to fix this mess and restore order to our immigration system. But, evidently, he has failed too. More than 18 months after the parliament passed legislation to create the community safety order regime, the minister has still not lodged a single application for a preventive detention order, despite the member for Scullin\u2026",
+    "passage": "\u2026Sadly, these are just the latest in a litany of failures from the Albanese Labor government on immigration and community safety, including the former minister for immigration's direction 99 debacle, which saw 97 criminal noncitizens avoid deportation from Australia because of the government's capitulation to pressure from theNew Zealandgovernment, and the Minister for Home Affairs' humanitarian\u2026",
     "cited": true,
     "answer_ranges": [
      [
       0,
-      267
+      322
      ]
     ]
    },
    {
-    "slug": "speech-1197334",
-    "title": "David Shoebridge \u2014 Bills \u2014 2025-09-04",
-    "speaker": "David Shoebridge",
-    "party": "Greens",
-    "state": "federal",
-    "date": "2025-09-04",
-    "passage": "\u2026This legislation risks entrenching the perception that certain groups are permanently conditional in their belonging, subject to different rules and denied the same access to justice. Such a move erodes trust in institutions not only among affected individuals but across multicultural communities who see these laws as part of a pattern of exclusion.' President, if you'd heard the contribution\u2026",
+    "slug": "speech-1127884",
+    "title": "Ingrid Stitt \u2014 Syrian repatriations \u2014 2026-03-04",
+    "speaker": "Ingrid Stitt",
+    "party": null,
+    "state": "vic",
+    "date": "2026-03-04",
+    "passage": "This is a matter that our government takes incredibly seriously. Yes, it is very much about leadership. Community safety is our number one priority \u2013 not politics, not headlines, but safety. I want to be incredibly clear from the outset that citizenship and travel decisions are made by the Commonwealth government. These are national security matters handled by federal agencies. Victoria does not\u2026",
     "cited": true,
     "answer_ranges": [
      [
-      268,
-      498
+      0,
+      322
      ]
     ]
    },
    {
-    "slug": "speech-1196833",
-    "title": "Mehreen Faruqi \u2014 Motions \u2014 2025-09-01",
-    "speaker": "Mehreen Faruqi",
-    "party": "Greens",
+    "slug": "speech-1206950",
+    "title": "Sonya Kilkenny \u2014 Multicultural Victoria Amendment Bill 2026 - Statement of charter compatibility \u2014 2026-07-29",
+    "speaker": "Sonya Kilkenny",
+    "party": null,
+    "state": "vic",
+    "date": "2026-07-29",
+    "passage": "Under the Charter of Human Rights and Responsibilities Act 2006, I table a statement of compatibility: Opening paragraphs In accordance with section 28 of the Charter of Human Rights and Responsibilities Act 2006 , (the Charter ), I make this Statement of Compatibility with respect to the Multicultural Victoria Amendment Bill 2026 ( Bill ). In my opinion, the Bill, as introduced to the\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1206600",
+    "title": "Chris Crewther \u2014 Multicultural Victoria Amendment Bill 2026 - Second reading \u2014 2026-08-12",
+    "speaker": "Chris Crewther",
+    "party": null,
+    "state": "vic",
+    "date": "2026-08-12",
+    "passage": "I rise to speak on the Multicultural Victoria Amendment Bill 2026. The bill would restructure the state's multicultural policy programs and engagement with multicultural and multifaith communities. From 1 October 2026 the Victorian Multicultural Commission, an institution that in different forms has worked for more than four decades at the grassroots level and communicated community needs to\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1209568",
+    "title": "Ingrid Stitt \u2014 Multicultural Victoria Amendment Bill 2026 - Introduction and first reading \u2014 2026-08-13",
+    "speaker": "Ingrid Stitt",
+    "party": null,
+    "state": "vic",
+    "date": "2026-08-13",
+    "passage": "I move: That the bill be now read a first time. Motion agreed to. Read first time. Ingrid STITT: I move, by leave: That the second reading be taken forthwith. Motion agreed to. Ingrid STITT (Western Metropolitan \u2013 Minister for Health, Minister for Mental Health, Minister for Ambulance Services, Special Minister of State) (22:23): I lay on the table a statement of compatibility with the Charter of\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1209072",
+    "title": "David Limbrick \u2014 Multicultural Victoria Amendment Bill 2026 - Second reading \u2014 2026-08-27",
+    "speaker": "David Limbrick",
+    "party": null,
+    "state": "vic",
+    "date": "2026-08-27",
+    "passage": "I also would like to say a few words on the Multicultural Victoria Amendment Bill 2026. I will start with a couple of principles. Culture is not something that should be defined by government or managed by government; culture is something that is organic and emergent, similar to language and many other things. In fact if we look at history, the societies that have tried to dictate \u2013 and some\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1196750",
+    "title": "Ash Ambihaipahar \u2014 Questions without Notice \u2014 2025-09-01",
+    "speaker": "Ash Ambihaipahar",
+    "party": "Labor",
     "state": "federal",
     "date": "2025-09-01",
-    "passage": "If you look at the history of who has passed the most hateful laws against asylum seekers, pretty much every time it's Labor. Every time! Every time. Mandatory detention? Labor. Who cuts the Nauru deals and the attacks? It's Labor\u2014 Senator McKim, which bit of 'silence' did you not understand?",
-    "cited": true,
-    "answer_ranges": [
-     [
-      499,
-      772
-     ]
-    ]
+    "passage": "The anti-immigration protests on the weekend highlight, however, that questions of belonging and inclusion linger despite our successes. This government stands with all Australians, no matter where they were born, against those who seek to divide us and intimidate migrant communities. I want to be clear and unequivocal: targeting specific ethnic groups, like the wave of anti-Indian sentiment that\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1295519",
+    "title": "Warren Kirby \u2014 Multiculturalism \u2014 2025-09-09",
+    "speaker": "Warren Kirby",
+    "party": null,
+    "state": "nsw",
+    "date": "2025-09-09",
+    "passage": "Mr WARREN KIRBY ( Riverstone ) ( 12:49 :14 ): My question is addressed to the Minister for Multiculturalism. Will the Minister update the House on the Minns Labor Government's work to protect Australian Indian and other multicultural communities? Mr STEPHEN KAMPER ( Rockdale\u2014Minister for Lands and Property, Minister for Multiculturalism, Minister for Sport, and Minister for Jobs and Tourism)\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1295947",
+    "title": "Mark Coure \u2014 Australian Indian Community \u2014 2025-09-10",
+    "speaker": "Mark Coure",
+    "party": null,
+    "state": "nsw",
+    "date": "2025-09-10",
+    "passage": "Mr MARK COURE ( Oatley ) ( 12:43 :06 ): I support this important motion, which acknowledges, celebrates and stands in solidarity with the Australian Indian community here in New South Wales. The Australian Indian community is one of the fastest growing and most vibrant in our State. In fact, more than 350,000 people of Indian ancestry call New South Wales home, making it the largest Australian\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1295945",
+    "title": "Mark Speakman \u2014 Australian Indian Community \u2014 2025-09-10",
+    "speaker": "Mark Speakman",
+    "party": null,
+    "state": "nsw",
+    "date": "2025-09-10",
+    "passage": "Mr MARK SPEAKMAN ( Cronulla ) ( 12:30 :32 ): Our State's story, ancient and modern, is one of many threads woven together. Today we celebrate a thread of extraordinary colour and strength: the Indian Australian community. Paragraph (1) of the motion asks us to acknowledge the tremendous contribution the Indian Australian community makes to New South Wales and to our successful multicultural\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1295930",
+    "title": "Donna Davis \u2014 Australian Indian Community \u2014 2025-09-10",
+    "speaker": "Donna Davis",
+    "party": null,
+    "state": "nsw",
+    "date": "2025-09-10",
+    "passage": "Ms DONNA DAVIS ( Parramatta ) ( 11:39 :19 ): My question is addressed to the Minister for Multiculturalism. Will the Minister update the House on the Minns Labor Government's roundtable meeting with leaders of the Australian Indian community? Mr STEPHEN KAMPER ( Rockdale\u2014Minister for Lands and Property, Minister for Multiculturalism, Minister for Sport, and Minister for Jobs and Tourism)\u2026",
+    "cited": true
    }
   ],
-  "cite_method": "declared"
+  "cite_method": "verbatim"
  }
 }

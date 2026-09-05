@@ -9,7 +9,11 @@ block makes a claim a reader can act on:
   every source         carries a passage of about 400 characters, and the
                        answer it sits under carries at least one inline
                        citation marker (a source's `answer_ranges`) pointing
-                       into it — the same two things the ask page shows
+                       into it — the same two things the ask page shows.
+                       The lede is the one exception: it paraphrases the
+                       whole report in three short paragraphs, so it may
+                       carry fewer markers than the sections it draws on,
+                       including none at all
   every key figure     carries a numerator, a denominator and a unit, and its
                        label names the base it is measured against
   every source slug    resolves live in the box
@@ -44,7 +48,8 @@ STAT_FIELDS = ("value", "label", "numerator", "denominator", "unit", "slug", "wi
 # model's summary of a prompt rather than the record.
 FORBIDDEN_OPENERS = re.compile(
     r"^\s*(?:based on|according to the (?:provided|passages)|the (?:provided )?context"
-    r"|the passages|from the (?:provided )?context)", re.I)
+    r"|the passages|from the (?:provided )?context|the record shows|the record indicates"
+    r"|the record reveals)", re.I)
 # A passage is trimmed to PASSAGE_CHARS and may carry an ellipsis on either
 # side ("…" is one character), so a couple of characters of slack either way
 # is the trim doing its job, not a bug. PASSAGE_MIN only catches the empty or
@@ -64,13 +69,20 @@ def check(condition: object, message: str, problems: list[str]) -> bool:
     return True
 
 
-def validate_markup(where: str, sources: list[dict], text: str, problems: list[str]) -> None:
+def validate_markup(where: str, sources: list[dict], text: str, problems: list[str], *,
+                    require_marker: bool = True) -> None:
     """Every source carries a quotable passage; the answer carries markers.
 
     These are the two things the ask page shows beside a live answer — a
     passage behind each source and a superscript in the prose that says which
     source a claim came from — and a report carries both in the file instead
-    of asking the platform for them again on every page view."""
+    of asking the platform for them again on every page view.
+
+    `require_marker` is False for the lede: it is a paraphrase of the whole
+    report in three short paragraphs, not a one-sentence-per-source list, so
+    it may earn fewer markers than the sections it draws on — a synthesised
+    sentence with no verbatim quotation should carry no marker, not a wrong
+    one, and a lede with none at all is honest rather than broken."""
     length = len(text)
     for source in sources:
         label = source.get("slug") or source.get("title") or "?"
@@ -84,8 +96,9 @@ def validate_markup(where: str, sources: list[dict], text: str, problems: list[s
                      and all(isinstance(n, int) for n in span)
                      and 0 <= span[0] < span[1] <= length)
             check(valid, f"{where}: source {label!r} has a bad citation range {span!r}", problems)
-    check(any(s.get("answer_ranges") for s in sources),
-          f"{where}: no source carries an inline citation marker", problems)
+    if require_marker:
+        check(any(s.get("answer_ranges") for s in sources),
+              f"{where}: no source carries an inline citation marker", problems)
 
 
 def validate_section(where: str, section: dict, problems: list[str]) -> list[str]:
@@ -134,7 +147,8 @@ def validate_report(slug: str, report: dict, problems: list[str]) -> list[str]:
     check(not FORBIDDEN_OPENERS.match(lede.get("text") or ""),
           f"{slug}: the lede opens with a context preamble", problems)
     if lede_text and lede.get("sources"):
-        validate_markup(f"{slug} lede", lede.get("sources") or [], lede.get("text") or "", problems)
+        validate_markup(f"{slug} lede", lede.get("sources") or [], lede.get("text") or "",
+                        problems, require_marker=False)
     slugs += [s["slug"] for s in (lede.get("sources") or []) if s.get("slug")]
 
     now = report.get("now") or {}

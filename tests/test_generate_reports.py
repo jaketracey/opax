@@ -6,20 +6,21 @@ from scripts.generate_reports import (
     Records,
     anchor_block,
     brief_matches_topic,
+    cap_paragraph_words,
     compose_stat_label,
     debate_question,
     dedupe_ranges,
     dedupe_subjects,
-    holds_the_quotes,
     is_procedural_debate,
     is_topic_echo,
+    lede_sources,
     longest_verbatim_run,
     period_question,
     ranges_from,
     sentence_spans,
     settle_jurisdiction,
-    settle_lede_ref,
     stat_support,
+    tide_direction,
     trim_passage,
     voices,
     window_questions,
@@ -377,59 +378,95 @@ class JurisdictionTests(unittest.TestCase):
             "Australia")
 
 
-class LedeCitationTests(unittest.TestCase):
-    srcs = {
-        1: {"slug": "speech-1", "speaker": "Andrew Bragg"},
-        2: {"slug": "speech-2", "speaker": "Jason Li"},
-        3: {"slug": "speech-3", "speaker": "Sue Higginson"},
-    }
+class TideDirectionTests(unittest.TestCase):
+    def test_a_rising_share_is_reported_as_risen(self):
+        rows = [{"decade": "1990s", "share": 0.01}, {"decade": "2000s", "share": 0.02},
+                {"decade": "2010s", "share": 0.03}, {"decade": "2020s", "share": 0.05}]
+        line = tide_direction(rows)
+        self.assertIn("risen", line)
+        self.assertIn("1990s 1.0%", line)
+        self.assertIn("2020s 5.0%", line)
 
-    def test_a_sentence_is_moved_to_the_speaker_it_names(self):
-        self.assertEqual(
-            settle_lede_ref("Senator Bragg argued the government will never solve it.",
-                            2, self.srcs), 1)
+    def test_a_falling_share_is_reported_as_fallen(self):
+        rows = [{"decade": "1990s", "share": 0.05}, {"decade": "2020s", "share": 0.01}]
+        self.assertIn("fallen", tide_direction(rows))
 
-    def test_a_correct_citation_is_left_alone(self):
-        self.assertEqual(
-            settle_lede_ref("Sue Higginson opposed the bill.", 3, self.srcs), 3)
+    def test_a_flat_share_is_reported_as_level(self):
+        rows = [{"decade": "1990s", "share": 0.02}, {"decade": "2020s", "share": 0.021}]
+        self.assertIn("level", tide_direction(rows))
 
-    def test_a_sentence_naming_nobody_keeps_its_citation(self):
-        self.assertEqual(
-            settle_lede_ref("Government speakers defended the plan.", 2, self.srcs), 2)
-
-    def test_a_sentence_naming_two_speakers_at_once_is_dropped(self):
-        self.assertIsNone(
-            settle_lede_ref("Bragg and Higginson disagreed.", 2, self.srcs))
+    def test_fewer_than_two_decades_yields_nothing(self):
+        self.assertEqual(tide_direction([{"decade": "2020s", "share": 0.02}]), "")
+        self.assertEqual(tide_direction([]), "")
 
 
-class LedeQuoteTests(unittest.TestCase):
-    class FakeKb:
-        bodies = {
-            "speech-1": "the government's own tax changes will decrease supply over the decade",
-            "speech-2": "we are talking to builders, developers and tradespeople every day",
-        }
+class ParagraphWordCapTests(unittest.TestCase):
+    def test_a_short_paragraph_is_untouched(self):
+        text = "Parliament argued about the bill. Labor backed it."
+        self.assertEqual(cap_paragraph_words(text, limit=55), text)
 
-        def get_resource_by_slug(self, slug, **params):
-            return {"data": {"texts": {"body": {"value": {"body": self.bodies.get(slug, "")}}}}}
+    def test_a_long_paragraph_is_cut_at_a_sentence_boundary(self):
+        sentences = [f"Sentence number {n} makes a short claim about the record." for n in range(10)]
+        text = " ".join(sentences)
+        out = cap_paragraph_words(text, limit=20)
+        self.assertLessEqual(len(out.split()), 25)   # a little slack for the sentence that fit
+        self.assertTrue(out.endswith("."))
+        self.assertTrue(text.startswith(out))
 
-    def test_a_quotation_in_the_cited_record_passes(self):
-        self.assertTrue(holds_the_quotes(
-            self.FakeKb(), 'Bragg said the changes "will decrease supply" this decade.',
-            "speech-1", {}))
+    def test_never_cuts_a_word_in_half_even_with_one_giant_sentence(self):
+        text = " ".join(f"word{n}" for n in range(100)) + "."
+        out = cap_paragraph_words(text, limit=20)
+        self.assertEqual(len(out.split()), 20)
+        self.assertTrue(out.endswith("."))
+        self.assertEqual(out.rstrip("."), " ".join(f"word{n}" for n in range(20)))
 
-    def test_a_quotation_from_another_speech_fails(self):
-        self.assertFalse(holds_the_quotes(
-            self.FakeKb(), 'Bragg said the changes "will decrease supply" this decade.',
-            "speech-2", {}))
+    def test_a_period_next_to_a_closing_quote_still_counts_as_a_boundary(self):
+        # A quoted claim ends '"decrease supply."' — period THEN closing quote,
+        # so a boundary that demands whitespace right after the period would
+        # never match it at all and would run past the sentence entirely.
+        text = ('Parliament argued fiercely, with speakers defending the plan and warning tax '
+                'changes would "decrease supply." In New South Wales, the bill split the '
+                'chamber, with members on both sides trading accusations for hours on end.')
+        out = cap_paragraph_words(text, limit=20)
+        self.assertTrue(out.endswith('"decrease supply."'))
+        self.assertNotIn("New South Wales", out)
 
-    def test_curly_quotes_and_loose_spacing_still_match(self):
-        self.assertTrue(holds_the_quotes(
-            self.FakeKb(), 'Bragg named “builders,  developers and tradespeople”.',
-            "speech-2", {}))
+    def test_a_semicolon_joined_run_on_is_trimmed_at_a_clause(self):
+        # The figures paragraph packs party positions into one semicolon-joined
+        # sentence, which a period-only sentence splitter would never trim.
+        text = ("Labor backs restricting negative gearing to new builds; "
+                "the Liberal Party opposes the change as promise-breaking; "
+                "the LNP likewise opposes it as a toxic tax on investors and renters.")
+        out = cap_paragraph_words(text, limit=10)
+        self.assertLessEqual(len(out.split()), 10)
+        self.assertTrue(out.endswith("."))
+        self.assertFalse(out.endswith(";"))
+        self.assertTrue(text.startswith(out.rstrip(".")))
 
-    def test_a_sentence_with_no_quotation_is_never_dropped(self):
-        self.assertTrue(holds_the_quotes(
-            self.FakeKb(), "Bragg criticised the government.", "speech-2", {}))
+
+class LedeSourceUnionTests(unittest.TestCase):
+    def test_only_cited_sources_are_kept_and_duplicates_drop(self):
+        sections = [{"sources": [
+            {"slug": "speech-1", "cited": True, "title": "A"},
+            {"slug": "speech-2", "cited": False, "title": "B"},
+        ]}]
+        eras = [{"sources": [
+            {"slug": "speech-1", "cited": True, "title": "A"},
+            {"slug": "speech-3", "cited": True, "title": "C"},
+        ]}]
+        out = lede_sources(sections, eras)
+        self.assertEqual({s["slug"] for s in out}, {"speech-1", "speech-3"})
+        self.assertTrue(all(s.get("cited") for s in out))
+
+    def test_the_union_is_capped(self):
+        sections = [{"sources": [
+            {"slug": f"speech-{n}", "cited": True} for n in range(20)
+        ]}]
+        self.assertEqual(len(lede_sources(sections, [], cap=12)), 12)
+
+    def test_no_cited_sources_yields_nothing(self):
+        sections = [{"sources": [{"slug": "speech-1", "cited": False}]}]
+        self.assertEqual(lede_sources(sections, []), [])
 
 
 class RangeHelperTests(unittest.TestCase):
