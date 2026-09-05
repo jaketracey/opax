@@ -920,45 +920,220 @@
       cross-referencing what politicians say on the record with the money that flows around them.
       A politician who gives two hundred speeches about a problem but votes against every reform,
       or an industry that donates millions while its regulation stalls, leaves a paper trail.
-      OPAX makes that trail searchable and citable.</p>
+      OPAX makes that trail searchable and citable. It started as speeches and donations; it now
+      also carries the votes those speeches led to, the bills those votes decided, the government
+      grants that sometimes follow the same money, and the registers that record who lobbies whom.</p>
 
       <h2>What you can do here</h2>
       <ul class="about-list">
-        <li><strong>Ask</strong>: put a question to the speech corpus (widen it to the
-        recorded divisions with one checkbox) and get a grounded answer. Every claim is cited;
-        every citation opens the actual speech at a stable, linkable page.</li>
-        <li><strong>Search</strong>: hybrid semantic + keyword search with reranking, filterable
+        <li><strong>Ask</strong>: put a question to the speech corpus (widen it to the recorded
+        divisions with one checkbox) and get an answer written only from the passages retrieved
+        for it. Every claim is cited; every citation opens the actual speech at a stable, linkable
+        page; if the record is thin on a question, the answer says so.</li>
+        <li><strong>Search</strong>: hybrid semantic and keyword search with reranking, filterable
         by speaker, party, parliament and year, with citation-ready exports.</li>
-        <li><strong>Reports</strong>: standing investigations pairing the structured money data
-        (AEC donations classified by industry) with what was actually said in parliament.</li>
         <li><strong>Money map</strong>: the largest disclosed donors in three dimensions, ringed
-        by industry around the parties they gave to, with a year range you can drag and a words
-        layer showing who speaks on each industry's debates.</li>
+        by industry around the parties they gave to, with a year range you can drag, a words layer
+        showing who speaks on each industry's debates, and a grants layer showing which of those
+        donors also collect government money.</li>
+        <li><strong>Reports</strong>: six standing investigations — climate &amp; energy, gambling,
+        housing, immigration, First Nations and media ownership — each pairing the money data with
+        what parliament has actually said, regenerated as the record grows.</li>
+        <li><strong>Explore</strong>: the Time Machine (dial up any year since 1998 and see what
+        parliament was arguing about), the tide (which debates are rising or fading), the record
+        quiz, the ledger (every disclosed donation flow in one exportable table) and who gets the
+        grants.</li>
+        <li><strong>Bills</strong>: a registry of federal bills since 2013, each one linked to the
+        divisions that decided it and the speeches made about it, with a plain-English summary of
+        what its explanatory memorandum says.</li>
         <li><strong>Encyclopedia</strong>: an entry for every parliamentarian, party, donor and
         topic, with quick facts, voting record, declared interests, expenses and the money map
         narrowed to that entity.</li>
-        <li><strong>Explore</strong>: the time machine, the record quiz, the ledger, who gets the
-        grants, who owns which debate, words per dollar, and then versus now.</li>
       </ul>
 
-      <h2>The corpus</h2>
+      <h2>The record</h2>
       <div class="table-scroll"><table class="about-table">
         <thead><tr><th>Source</th><th>Documents</th><th>Coverage</th></tr></thead>
         <tbody id="about-sources"><!-- filled from corpus.json --></tbody>
       </table></div>
-      <p class="fineprint">The speech corpus is filtered to the era of currently serving
-      parliamentarians (March 1993 onward), deduplicated across overlapping sources, and stripped
-      of procedural noise (division roll-calls, chair interjections, day indexes) so retrieval
-      surfaces substance, not housekeeping. Recorded divisions and per-member voting records are
-      in; government contracts and the disconnect-scoring analytics from the previous version of
-      this site are not yet rebuilt. Full detail: <a href="/methods">methods &amp; how to cite
-      OPAX</a>.</p>
+      <p>The last two rows above are not speeches: recorded divisions and AEC donation returns
+      share the corpus's citation and search plumbing, so they are counted here even though the
+      donations themselves are described in full below. The speech rows are filtered to the era of
+      currently serving parliamentarians (13 March 1993 onward), deduplicated across overlapping
+      sources, and stripped of procedural noise (division roll-calls, chair interjections, day
+      indexes). Federal Hansard is Commonwealth copyright, reproduced here under the CC BY-NC-ND
+      terms that cover the official transcript; each state parliament sets its own copyright terms,
+      and OPAX reproduces and cites speeches for research rather than republishing whole documents
+      commercially — check the source link on any document before quoting it commercially.</p>
+      <p class="fineprint">Full detail, model identity and known defects:
+      <a href="/methods">methods &amp; how to cite OPAX</a> · machine-readable manifest:
+      <a href="/corpus.json">corpus.json</a>.</p>
 
-      <h2>How answers are produced</h2>
-      <p>Retrieval runs hybrid semantic and keyword search with a reranking pass over the corpus;
-      a language model then writes the answer <em>only</em> from the retrieved passages, with
-      citations back to each source speech. If the record is thin on a question, the answer says
-      so. OPAX is <a href="https://github.com/jaketracey/opax" rel="noopener">open source</a> (AGPL-3.0).</p>
+      <h2>The money</h2>
+      <p>Every federal donation disclosed to the AEC since 1998 is loaded — 199,233 rows —
+      and the <a href="/money">money map</a> plots the 250 largest donors against 11 parties as
+      662 flows, built from 127,658 of those rows after excluding public funding, internal party
+      transfers and donations from government-linked entities. Queensland, Victoria and Tasmania
+      publish their own donation registers under an open licence, and OPAX runs the same map over
+      each: Queensland (250 donors, 402 flows from 22,703 gifts), Victoria (250 donors, 291 flows
+      from 3,416 donations) and Tasmania (166 donors, 172 flows from 221 donations, because its
+      disclosure scheme is only a year old). State and federal totals are never added together,
+      because AEC returns already fold in what a party's state branches raised.</p>
+      <p>The newest layer is government grants. Every Commonwealth grant award published on
+      GrantConnect since the register opened at the end of 2017 (360,058 awards, $235.5 billion,
+      CC BY 3.0 AU) and every Queensland Government funding line since 2017-18 (230,007 awards,
+      $85.7 billion, CC BY 4.0) are matched to the donor register by ABN wherever one is published:
+      763 Commonwealth recipients ($26.3 billion, 11% of the register) and 489 Queensland
+      recipients ($3.3 billion, 4%) are also donors. On the money map itself, 30 of the 250 largest
+      federal donors and 27 of the 250 largest Queensland donors also collected grants — $1.0
+      billion and $334 million between them — shown as a toggleable layer with its own flows from
+      a single grantor node. A donor receiving a grant is a fact on the public record, not a
+      finding; the grants explorer states plainly what share of a recipient's dollars arrived while
+      a party it had donated to held office, and nothing stronger.</p>
+      <p>Alongside the donations sit an uncapped roster of 438 associated entities, third parties,
+      significant third parties and political campaigners that raise or spend on politics without
+      being a party — everything above $100,000 in any year from the AEC's own annual returns —
+      and, separately, the parties' own lodged debts and discretionary benefits. Six lobbyist
+      registers (federal, New South Wales, Queensland, Victoria, South Australia and Western
+      Australia) are loaded in full: on the money map, 133 of the 250 largest federal donors also
+      show up as a registered lobbying client or a name in a ministerial diary — 102 as lobbying
+      clients, 92 in one of 61,499 disclosed meetings between ministers and everyone they met,
+      from the New South Wales Cabinet Office and the Queensland Cabinet Office. Queensland alone
+      also publishes who lobbied whom and when: 8,235 logged contacts since September 2016. A
+      separate federal register, the Foreign Influence Transparency Scheme, tracks who works in
+      Australia for a foreign government or political organisation for the purpose of political
+      influence; OPAX carries the whole public register (145 registrants, 728 declared activities)
+      and shows it on any donor, lobbying firm or parliamentarian page it matches, always with the
+      reminder that registering is a legal disclosure, not a finding of wrongdoing.</p>
+      <p class="fineprint">Every donation, meeting and grant figure here is a floor, not a
+      ceiling: disclosure schemes only require reporting above a threshold, so smaller gifts and
+      quieter meetings leave no public trace. New South Wales and South Australia's political
+      donations are not on OPAX at all — New South Wales' own terms forbid automated collection of
+      its disclosure portal, and South Australia banned political donations from 1 July 2025.
+      Western Australia, the ACT and the Northern Territory publish their donations, but under
+      terms that do not permit republishing them here; that data is held for internal research
+      only and nothing from those three jurisdictions appears on the site.</p>
+
+      <h2>Votes and bills</h2>
+      <p>Every recorded division OPAX could get in a structured form — 13,867 of them, federal
+      divisions from TheyVoteForYou and state divisions parsed from New South Wales, Victorian and
+      Queensland Hansard, 1998 to today — is a citable document in the search index in its own
+      right, and 962 sitting and former parliamentarians (622 federal, 133 New South Wales, 122
+      Victorian, 85 Queensland) carry a voting record on their own page. Most questions in every
+      chamber are decided on the voices and leave no division at all, so "no recorded vote" never
+      means "did not vote".</p>
+      <p>A federal bill registry now covers every bill introduced from the 43rd Parliament (2013)
+      to today: 2,969 bills, 31,377 progress events and 19,958 links out to the divisions,
+      speeches and Acts that followed from them. 13,949 of those links are speeches that name the
+      bill on a day it was genuinely before the chamber — checked against the bill's own progress
+      record, not guessed from a topic string, because federal Hansard topics from 2013 on carry
+      only the bare word "Bills". 1,698 of the 2,969 bills carry a three-sentence, model-written
+      summary of what their explanatory memorandum or Bills Digest says, each one labelled
+      "written by a model from the explanatory memorandum; not the record" (a further 812 were
+      generated but held back after failing an automatic check, and are not shown).</p>
+      <p class="fineprint">Two gaps in the underlying speech corpus shape what a bill or a division
+      page can show, and are worth stating plainly. There is no Senate Hansard in the corpus at all
+      for 2014 to 2022, so a bill whose real fight happened in the Senate in that window looks
+      quiet on OPAX no matter how contested it was. And 2024 is thin across the board — federal
+      chamber speeches drop to 82 for the whole year — so the 47th Parliament's bills (2022–2025)
+      reach a linked speech only 24% of the time, against 74–84% in every other parliament since
+      2013. Neither gap is a fault in the bill registry; both close only as more Hansard is loaded.</p>
+
+      <h2>People</h2>
+      <p>1,557 names appear as speakers in the corpus since 1993; 313 of them currently sit in a
+      state or federal parliament. 829 portrait photographs cover just over a thousand of those
+      names: 551 official portraits from Parliament House, fetched through OpenAustralia because
+      the official image API blocks every identified research tool, reproduced under aph.gov.au's
+      site-wide CC BY-NC-ND 4.0 terms; and 277 from Wikimedia Commons for state parliamentarians
+      and pre-2006 federal members, each individually licensed — Creative Commons, public domain
+      or CC0 — and credited by name on the person page it appears on.</p>
+      <p>Declared shareholdings, real estate, directorships, gifts, travel and liabilities are
+      shown for 317 sitting members — every House member (151), all but one senator (73) and every
+      Queensland MP (93) — 10,052 declared entries in total, each one linking to the exact page of
+      the source PDF it was read from. They are not in OPAX's ask-and-search index: the House and
+      Senate registers are licensed CC BY-NC-ND, Queensland's terms could not even be read (they
+      sit behind a firewall that blocked every request), and a rewritten version of a declared
+      interest would be a derivative work in a way a fact with a link back to the original PDF is
+      not.</p>
+
+      <h2>Enrichments written by machines</h2>
+      <ul class="about-list">
+        <li><strong>Topic labels</strong>: every speech is, eventually, tagged against a fixed
+        taxonomy of 21 subjects — gambling, financial services, mining &amp; energy, climate &amp;
+        environment, property &amp; construction, housing, health, media &amp; communications,
+        hospitality &amp; alcohol, defence &amp; security, agriculture, unions &amp; the workplace,
+        immigration, First Nations affairs, tax &amp; the budget, education, welfare &amp; social
+        services, integrity &amp; democracy, infrastructure &amp; transport, justice &amp; law, and
+        foreign affairs — applied by a mix of the hosting platform's own labeller and separate
+        agents that read back over what it produced. The pass is still running: a speech with no
+        topic chip yet has simply not been reached, not been checked and found to have none.</li>
+        <li><strong>Machine briefs</strong>: many speeches and every topic page carry a short "In
+        brief" summary, written by a language model from that one passage alone and labelled as a
+        machine summary. It is a reading aid, not a replacement for the speech underneath it.</li>
+        <li><strong>Report essays</strong>: the six standing reports retrieve live from the corpus
+        for every section, and every factual claim is built to trace back to a real, quoted
+        passage — but the connecting prose (the opening summary, the era-by-era narrative) is a
+        model's synthesis of the report's own generated sections, written last. Read it as a guide
+        to where to look, not as the finding.</li>
+        <li><strong>Bill summaries</strong>: 1,698 federal bills carry a three-sentence,
+        plain-English account of what their explanatory memorandum or Bills Digest says, written
+        by a model and checked by a mechanical rule that rejects any sentence copying nine or more
+        consecutive words from the source. Every one carries its own attribution, because an
+        explanatory memorandum is a bill's own sponsor explaining their own bill, not a neutral
+        account of what it will do.</li>
+        <li><strong>Explain flow</strong>: the "Explain this money" walkthrough on a donor or party
+        page is not a language model at all — its sentences are assembled by ordinary code from the
+        same structured donation and grant figures the map itself draws on. It can still be wrong,
+        but only the way a mail-merge can be wrong: a bad number or a mis-filed category upstream,
+        never an invented claim.</li>
+      </ul>
+
+      <h2>What this cannot prove</h2>
+      <p>OPAX puts the record and the money side by side. It does not draw a conclusion from
+      them, and neither should a reader without checking the primary source first.</p>
+      <ul class="about-list">
+        <li>Money near a decision is a pattern to investigate, not evidence of a favour.</li>
+        <li>A division is not the whole vote: most questions in every chamber are decided on the
+        voices, so a member with no recorded division on a bill did not necessarily do nothing.</li>
+        <li>Every donation, meeting and grant figure here is a floor. Amounts under a
+        jurisdiction's reporting threshold, and anything from a jurisdiction OPAX does not cover,
+        are invisible by construction, not because nothing happened.</li>
+        <li>Registration under the Foreign Influence Transparency Scheme, or an entry in a
+        lobbyist register, is a legal disclosure the law requires, not a finding of wrongdoing.</li>
+        <li>A donor receiving a grant, or a bill's sponsor sharing an industry with donors to their
+        party, is a fact on the public record. What it means is for the reader to weigh, with the
+        primary sources OPAX links to at every step.</li>
+      </ul>
+      <p class="fineprint">The corpus's own technical limits — what Hansard is and is not, where
+      coverage is thin, which members' records are unreliable — are on the
+      <a href="/methods">methods page</a>, not repeated here.</p>
+
+      <h2>Licences and reuse</h2>
+      <p>OPAX's own code is open source under AGPL-3.0, at
+      <a href="https://github.com/jaketracey/opax" rel="noopener">github.com/jaketracey/opax</a>.
+      The data behind it is not ours, and it carries a patchwork of licences rather than one. The
+      Hansard record itself — however it reaches OPAX, through TheyVoteForYou, OpenAustralia or a
+      state Hansard feed — is Commonwealth or state parliamentary copyright, reproduced here under
+      CC BY-NC-ND terms; TheyVoteForYou's own compiled division data carries a separate open
+      licence of its own (the Open Data Commons Open Database Licence). Most of the money data —
+      AEC returns, GrantConnect and the Queensland grants portal, the Queensland and Tasmanian
+      donation registers, the Foreign Influence Transparency Scheme register, and most lobbyist
+      registers — is Creative Commons Attribution, in one version or another. The House and Senate
+      registers of members' interests are licensed CC BY-NC-ND, which is why they appear on OPAX
+      as facts with a link to the source page rather than as reproduced text; Queensland's register
+      carries no verified licence at all, so it is treated the same cautious way. And a few sources
+      — Western Australian, ACT and Northern Territory donations among them — are held under
+      all-rights-reserved terms and are kept off the public site entirely; that data exists only
+      for internal research. Every page that carries licensed data names its source and, where one
+      applies, its licence; when the two disagree, trust the page, since licences and coverage
+      windows both move and this paragraph will not always be the first place they are updated.</p>
+
+      <h2>How to reach us</h2>
+      <p>OPAX has no dedicated inbox. Data errors are the corrections we most want to hear about,
+      and the fastest way to report one, ask about the methodology, or point out a source we have
+      missed is to open an issue on
+      <a href="https://github.com/jaketracey/opax" rel="noopener">the GitHub repository</a>, where
+      the code, the ingestion scripts and the issue tracker all live in one place.</p>
     </section>
 
     <!-- ============================ METHODS ============================ -->
