@@ -56,7 +56,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=60c7df62b4">
+<link rel="stylesheet" href="/style.css?v=64791fba0f">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -535,6 +535,15 @@
       <div class="results-bar" id="results-bar" hidden>
         <span id="results-count" role="status" aria-live="polite" aria-atomic="true"></span>
         <span class="results-actions">
+          <!-- Passages/Briefs rides on the same line as the sort and the actions;
+               app.js still shows and hides it by #search-readbar. -->
+          <div id="search-readbar" class="search-readbar" hidden>
+            <div class="quiet-toggle" role="group" aria-label="Search result text">
+              <button type="button" id="search-read-passages" aria-pressed="true">Passages</button>
+              <button type="button" id="search-read-briefs" aria-pressed="false">Briefs</button>
+            </div>
+            <span id="search-brief-status" class="search-brief-status" aria-live="polite"></span>
+          </div>
           <label for="search-sort" class="visually-hidden">Sort every retrieved match</label>
           <select id="search-sort" title="Sorts every page of the retrieved matches, not just this one.">
             <option value="relevance">Relevance</option>
@@ -545,13 +554,6 @@
         </span>
       </div>
       <div id="search-date-ruler" class="date-ruler" hidden></div>
-      <div id="search-readbar" class="search-readbar" hidden>
-        <div class="quiet-toggle" role="group" aria-label="Search result text">
-          <button type="button" id="search-read-passages" aria-pressed="true">Passages</button>
-          <button type="button" id="search-read-briefs" aria-pressed="false">Briefs</button>
-        </div>
-        <span id="search-brief-status" class="search-brief-status" aria-live="polite"></span>
-      </div>
       <ul id="search-results" class="results" role="list"></ul>
       <!-- The band keeps its height whether or not there is a second page, so
            arriving at a short last page does not lift the footer. -->

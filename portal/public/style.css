@@ -531,11 +531,15 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 .ask-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 .ask-row > :is(input, .grow-field) { flex: 1 1 320px; min-height: 56px; font-size: 1.0625rem; }
 
-.ask-options-wrap { position: relative; display: inline-block; }
+/* A flex item that stretches to the row, and a flex container so the button
+   inside stretches with it: the textarea sets the row's height (its padding
+   and line-height come to a little over 56px), and a min-height alone left the
+   filter button a few pixels short of the submit beside it. */
+.ask-options-wrap { position: relative; display: inline-flex; align-items: stretch; }
 /* The ask row and the search row carry the same control, so it is one rule.
    Held apart they drifted: search's was 48 square against a 56 tall submit. */
 #ask-options-btn, #search-options-btn {
-  min-height: 56px; width: 56px; justify-content: center; padding: 0;
+  min-height: 56px; width: 56px; justify-content: center; padding: 0; align-self: stretch;
 }
 #ask-options-btn .btn-icon, #search-options-btn .btn-icon { width: 22px; height: 22px; }
 #ask-options-btn[aria-expanded="true"], #search-options-btn[aria-expanded="true"] { border-color: var(--ink); }
@@ -1088,7 +1092,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 }
 .search-readbar {
   display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-3) var(--space-4);
-  margin: var(--space-3) 0 var(--space-2);
+  margin: 0; /* one item among the results actions, on their line */
 }
 .search-brief-status { color: var(--ink-faint); font-size: 0.75rem; }
 .search-result-brief {
@@ -2260,7 +2264,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 }
 .quiet-toggle {
   display: inline-flex; flex: 0 0 auto; border: 1px solid var(--line-strong);
-  border-radius: 2px; overflow: hidden; background: var(--paper-raised);
+  border-radius: 4px; overflow: hidden; background: var(--paper-raised); /* the action buttons' radius */
 }
 .quiet-toggle button {
   min-height: 44px; padding: 0.45rem 0.85rem; border: 0; cursor: pointer;
@@ -3223,7 +3227,7 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .search-passage-more:focus-visible { outline: 2px solid var(--bronze); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { #panel-search .search-passage-more, #panel-search .search-passage-more::before { transition: none; } }
 #panel-search .search-passage-more[hidden] { display: none; }
-#panel-search #search-readbar { margin-top: 12px; margin-bottom: 0; }
+#panel-search #search-readbar { margin: 0; }
 
 #panel-search .search-filter-word { display: none; }
 #panel-search .search-year-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
