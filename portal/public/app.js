@@ -8961,6 +8961,12 @@ function reportBracketCitations(text, sources) {
  * text, so bracket conversion only runs when there are no ranges to shift.
  */
 function reportRenderProse(container, text, sources) {
+  // The generator writes snake_case (answer_ranges, passage); the ask page's
+  // shape is camelCase with a snippet. Fold one into the other once here.
+  for (const s of sources) {
+    if (!s.answerRanges && Array.isArray(s.answer_ranges)) s.answerRanges = s.answer_ranges;
+    if (!s.snippet && typeof s.passage === "string") s.snippet = s.passage;
+  }
   const hasRanges = sources.some((s) => s.answerRanges?.length);
   container.askEvidence = sources;
   renderAnswer(container, hasRanges ? text : reportBracketCitations(text, sources));
