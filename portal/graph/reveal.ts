@@ -16,8 +16,8 @@
 //   no motion means   under prefers-reduced-motion the map opens ON the final
 //   no motion         framing: the same composition, arrived at with no move
 //   it is a camera    the scene is untouched but for the emphasis, which is
-//                     the engine's own selection dimming, released before the
-//                     camera stops so the reader never sees a static flicker
+//                     the engine's own path dimming - the destination, not a
+//                     transition, so it holds until the reader touches the map
 //
 // The camera primitives live in the engine (frameOn, swingTheta); this module
 // is only the score.
@@ -30,26 +30,20 @@ import type { MapEdge } from './map-types.ts'
 const HOLD_MS = 900
 /** The pull-out. HOLD + OUT is the whole choreography: 2.6s. */
 const OUT_MS = 1700
-/**
- * The spotlight is handed back this long before the camera stops, so the rest
- * of the map comes up while the view is still easing rather than blinking on
- * under a still frame.
- */
-const RELEASE_LEAD_MS = 450
 
 /** The close-up: the subject fills this much of the free box, plus label room. */
-const CLOSE_FILL = 0.3
+const CLOSE_FILL = 0.24
 const CLOSE_PAD_PX = 30
 /** The landing: the subject and its strongest counterparties, with room to breathe. */
-const OUT_FILL = 0.88
+const OUT_FILL = 0.94
 const OUT_PAD_PX = 38
 
 /**
- * How far the camera comes around. Enough that the move is felt even when the
- * flows already lie across the screen, never so far that the map spins.
+ * The swing when the subject sits on top of its own counterparties (a party
+ * at the centre of the donors that fund it) and no screen-plane direction
+ * exists. Small - just enough that coming around is still felt.
  */
 const SWING_MIN = 0.3
-const SWING_MAX = 1.05
 /** A touch more elevation on the way out, so the ring reads as a ring. */
 const LIFT = 0.1
 
@@ -68,6 +62,12 @@ export type RevealHooks = {
    * back to the plain selection the map would have shown anyway (`false`).
    */
   spotlight: (on: boolean) => void
+  /**
+   * The camera has stopped and the lit landing is holding. The host arms
+   * whatever else should hand it back - a pointer moving over the map is a
+   * reader exploring, and every other touch already cancels.
+   */
+  settled?: () => void
 }
 
 export type Reveal = {
@@ -94,22 +94,24 @@ export function runReveal(
   // caller's ordinary focus move is the better behaviour.
   if (spec.withIds.length === 0) return NOOP_REVEAL
 
+  // Solved at the elevation the camera is landing at, not the one it starts
+  // from: the screen plane that matters is the one the reader arrives in.
   // A subject sitting on top of its own counterparties (a party at the centre
   // of the donors that fund it) gives no direction to lay across the screen;
   // the smallest swing still carries the sense of coming around.
-  const swing = () =>
-    engine.swingTheta(spec.focusId, spec.withIds, { min: SWING_MIN, max: SWING_MAX }) ??
+  const swing = (phi: number) =>
+    engine.swingTheta(spec.focusId, spec.withIds, phi) ??
       engine.viewAngles.theta + SWING_MIN
 
   const landing = (duration: number) => {
-    const { phi } = engine.viewAngles
+    const targetPhi = engine.viewAngles.phi - LIFT
     return engine.frameOn(cast, {
       fill: OUT_FILL,
       padPx: OUT_PAD_PX,
       duration,
       ease: easeInOut,
-      theta: swing(),
-      phi: phi - LIFT,
+      theta: swing(targetPhi),
+      phi: targetPhi,
     })
   }
 
@@ -138,18 +140,26 @@ export function runReveal(
     timers.length = 0
   }
 
+  let lit = false
+  const release = () => {
+    if (!lit) return
+    lit = false
+    hooks.spotlight(false)
+  }
+
   const reveal: Reveal = {
     get running() {
       return phase !== 'done'
     },
+    // Idempotent, and still meaningful after the camera has stopped: the lit
+    // landing outlives the move, so cancelling is what hands the map back.
     cancel: () => {
-      if (phase === 'done') return
       // Mid-flight: the camera keeps the frame it has reached rather than
       // finishing a move the reader has already overruled.
       if (phase === 'out') engine.stopViewMove()
       phase = 'done'
       stop()
-      hooks.spotlight(false)
+      release()
     },
     remeasure: () => {
       // Only the held close-up: re-solving a leg in flight would jerk it, and
@@ -161,20 +171,17 @@ export function runReveal(
   // The map opens ON the close-up - it is where the first frame is painted,
   // not somewhere the camera travels to from a fit the reader never saw.
   closeUp(0)
+  lit = true
   hooks.spotlight(true)
   at(HOLD_MS, () => {
     if (phase !== 'close') return
     phase = 'out'
     landing(OUT_MS)
   })
-  at(HOLD_MS + OUT_MS - RELEASE_LEAD_MS, () => {
-    if (phase !== 'out') return
-    hooks.spotlight(false)
-  })
   at(HOLD_MS + OUT_MS, () => {
     if (phase === 'done') return
     phase = 'done'
-    hooks.spotlight(false)
+    hooks.settled?.()
   })
   return reveal
 }

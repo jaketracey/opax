@@ -570,6 +570,14 @@ export class KnowledgeMapEngine {
   private viewOwnedFlag = false
   private focusOwnedFlag = false
   private fitDist = 420
+  /**
+   * The closest a framing move has taken the view. The reader's dolly floor is
+   * a fraction of the fitted distance - fine for a scene, useless for a single
+   * donor on a map 1250 units across, which is unreachable by that rule. A
+   * frame that has been shown is a frame the reader may return to, so the
+   * floor follows the framing down and never back up.
+   */
+  private distFloor = Infinity
 
   private pointers = new Map<number, { x: number; y: number }>()
   private orbit: OrbitState | null = null
@@ -1979,7 +1987,23 @@ export class KnowledgeMapEngine {
         ((Math.abs(d.dot(up)) + r) / tanV + depth) / (1 - fracV),
       )
     }
-    dist = Math.max(this.minDist(), Math.min(this.maxDist(), dist / fill))
+    // A framing move answers to the marks it is framing, not to the scene: it
+    // must only stay clear of their surfaces. The reader's floor then follows
+    // it down, so the close-up stays somewhere the wheel can go back to.
+    let floor = 60
+    for (const { r } of points) floor = Math.max(floor, r * 3.4)
+    const raw = dist
+    dist = Math.max(floor, Math.min(this.maxDist(), dist / fill))
+    this.distFloor = Math.min(this.distFloor, dist)
+    if ((globalThis as Record<string, unknown>).__MMDEBUG) {
+      console.log('[frameOn]', JSON.stringify({
+        n: points.length, raw: Math.round(raw), dist: Math.round(dist),
+        floor: Math.round(floor), max: Math.round(this.maxDist()), fitDist: Math.round(this.fitDist),
+        box: { w: Math.round(box.w), h: Math.round(box.h) }, wh: [this.width, this.height],
+        tanH: +tanH.toFixed(3), tanV: +tanV.toFixed(3), fracH: +fracH.toFixed(3), fracV: +fracV.toFixed(3),
+        insets: this.insets,
+      }))
+    }
 
     const wpp = (2 * dist * Math.tan(vHalf)) / this.height
     const target = centre
@@ -1994,42 +2018,52 @@ export class KnowledgeMapEngine {
   }
 
   /**
-   * The azimuth that lays the line from `others` to `id` across the screen
-   * rather than into it, so a flow reads as a flow. Two azimuths satisfy it,
-   * half a turn apart; this returns the nearer, turned at least `min` and at
-   * most `max` radians so the swing is always felt and never a whip.
+   * The azimuth that lays the line from `others` to `id` in the screen plane,
+   * so a flow reads as a flow and costs the framing nothing in depth. Looking
+   * from (theta, phi) the view axis is e = (sin p sin t, cos p, sin p cos t),
+   * and the line vanishes from depth when v . e = 0, i.e.
+   *
+   *     vx sin t + vz cos t = -vy / tan p
+   *
+   * which is L sin(t + atan2(vz, vx)) = g: two solutions, and this returns
+   * the one nearer the camera's current azimuth. Zeroing only the ground-plane
+   * component (the obvious reading of "across the screen") leaves the pair's
+   * height difference in depth, and on a map 2500 units across that alone
+   * pushed the landing 35% further out than it needed to be.
+   *
+   * Null when the two sit on top of one another and no direction exists.
    */
-  swingTheta(
-    id: string,
-    others: readonly string[],
-    { min = 0, max = Math.PI }: { min?: number; max?: number } = {},
-  ): number | null {
+  swingTheta(id: string, others: readonly string[], phi: number): number | null {
     const focus = this.nodeVisuals.get(id)
     if (!focus) return null
     let cx = 0
+    let cy = 0
     let cz = 0
     let n = 0
     for (const other of others) {
       const visual = this.nodeVisuals.get(other)
       if (!visual) continue
       cx += visual.sim.x
+      cy += visual.sim.y
       cz += visual.sim.z
       n++
     }
     if (n === 0) return null
     const vx = focus.sim.x - cx / n
+    const vy = focus.sim.y - cy / n
     const vz = focus.sim.z - cz / n
-    if (Math.hypot(vx, vz) < 1) return null
-    // Looking from azimuth t, the ground-plane view direction is
-    // (sin t, cos t); the line lies across the screen when it is normal to it.
+    const span = Math.hypot(vx, vz)
+    if (span < 1) return null
+    const tanPhi = Math.tan(Math.max(PHI_MIN, Math.min(PHI_MAX, phi)))
+    // Out of reach at this elevation: take the closest the azimuth can get.
+    const ratio = Math.max(-1, Math.min(1, -vy / tanPhi / span))
+    const psi = Math.atan2(vz, vx)
     const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a))
-    const base = Math.atan2(-vz, vx)
-    let delta = wrap(base - this.view.theta)
-    const other = wrap(base + Math.PI - this.view.theta)
-    if (Math.abs(other) < Math.abs(delta)) delta = other
-    const sign = delta < 0 ? -1 : 1
-    delta = sign * Math.max(min, Math.min(max, Math.abs(delta)))
-    return this.view.theta + delta
+    const a = Math.asin(ratio) - psi
+    const b = Math.PI - Math.asin(ratio) - psi
+    return Math.abs(wrap(a - this.view.theta)) <= Math.abs(wrap(b - this.view.theta))
+      ? this.view.theta + wrap(a - this.view.theta)
+      : this.view.theta + wrap(b - this.view.theta)
   }
 
   /**
@@ -2056,7 +2090,7 @@ export class KnowledgeMapEngine {
   }
 
   private minDist(): number {
-    return Math.max(60, this.fitDist * MIN_DIST_FACTOR)
+    return Math.max(60, Math.min(this.fitDist * MIN_DIST_FACTOR, this.distFloor))
   }
 
   private maxDist(): number {

@@ -690,7 +690,18 @@ export async function mountMoneyMap(
       pathFrom: spotlightEdges ? selectedId : null,
     })
   }
+  // The lit landing outlives the camera move, so something has to hand it
+  // back when the reader does nothing more decisive than move the pointer
+  // across the map. Armed only once the choreography has settled: a pointer
+  // drifting over the plate on the way to the card must not cut the shot.
+  let armedRelease: ((event: PointerEvent) => void) | null = null
+  const disarmRelease = () => {
+    if (!armedRelease) return
+    container.removeEventListener('pointermove', armedRelease)
+    armedRelease = null
+  }
   const cancelReveal = () => {
+    disarmRelease()
     const running = reveal
     reveal = null
     running?.cancel()
@@ -1487,6 +1498,10 @@ export async function mountMoneyMap(
         spotlightEdges = on ? strongest.edges : null
         spotlightFor = on ? focusId : null
         applyEmphasis()
+      },
+      settled: () => {
+        armedRelease = () => cancelReveal()
+        container.addEventListener('pointermove', armedRelease)
       },
     })
   }
