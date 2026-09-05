@@ -280,8 +280,10 @@ const CSS = `
   font: 14px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif; color: #33322e;
   transition: height 360ms cubic-bezier(0.22, 0.7, 0.3, 1); }
 @media (prefers-reduced-motion: reduce) { .mm-root { transition: none; } }
-/* A host grown to hold its card (see fitHostToCard): the card may use the room. */
-.mm-root.mm-grown .mm-card { max-height: calc(100% - 64px); }
+/* A host grown to hold its card (see fitHostToCard): the card may use the
+   room, short of whatever gap fitHostToCard reserved above it for chrome
+   (a phone's scrub bar, relocated to the top) and a floor of visible map. */
+.mm-root.mm-grown .mm-card { max-height: calc(100% - var(--mm-grown-gap, 64px)); }
 .mm-canvas { display: block; width: 100%; height: 100%; cursor: grab;
   touch-action: none; user-select: none; -webkit-user-select: none; outline-offset: -3px; }
 .mm-canvas:focus-visible { outline: 2px solid ${ACCENT}; }
@@ -660,10 +662,40 @@ export async function mountMoneyMap(
   // which then clips or scrolls. While a card is up the host grows to hold it
   // with a band of map above, and gives the height back when it closes; the
   // engine's ResizeObserver refits the view either way.
+  //
+  // "Above" is real chrome plus a floor of visible map, not an assumed
+  // constant: on a narrow phone the card becomes a bottom sheet and the
+  // scrub relocates to the top-left to stay clear of it (chromeInsets()
+  // already measures exactly that). A fixed band sized for a scrub-free top
+  // left nothing for the map once the scrub also claimed that space - the
+  // grown plate matched the card's own height but not what had to share it.
+  const MAP_BAND_MIN = 56
+  /** The narrow card's own `bottom: 8px` anchor (see the max-width: 720px rule). */
+  const CARD_BOTTOM_GAP = 8
+  /** Headroom so a sub-pixel rounding never forces an avoidable internal scroll. */
+  const CARD_SLACK = 8
+  /**
+   * The engine floors a framing box shorter than a fifth of the plate to a
+   * fifth anyway, rather than fail on a sliver (freeBox/frameOn in
+   * map3d-engine.ts) - so growing only enough for MAP_BAND_MIN's flat band
+   * quietly asks it to fit a subject into far less room than its own math
+   * assumes it has, and the subject ends up half under the card. Growing
+   * enough to keep the real share close to that same fifth keeps the two
+   * honest with each other.
+   */
+  const MIN_MAP_SHARE = 0.2
   let hostBase: { style: string; px: number } | null = null
+  // The seeded focus reads the card's geometry synchronously, one line below
+  // this one (startReveal's setInsets), with no frame to spare for the
+  // host's own 360ms height transition to settle. Every later open is a
+  // reader-visible change worth smoothing, and its insets are re-measured
+  // a frame later anyway (the rAF in setSelection) - only this first one
+  // needs to land instantly.
+  let grownOnce = false
   const releaseHost = () => {
     if (!hostBase) return
     container.style.height = hostBase.style
+    container.style.removeProperty('--mm-grown-gap')
     hostBase = null
     container.classList.remove('mm-grown')
   }
@@ -673,13 +705,45 @@ export async function mountMoneyMap(
     card.style.maxHeight = 'none'
     const natural = card.scrollHeight
     card.style.maxHeight = prevMax
-    const want = natural + 16 + 56
-    const have = container.getBoundingClientRect().height
-    const base = hostBase ? hostBase.px : have
+    const hostRect = container.getBoundingClientRect()
+    // The same test measureInsets() uses: a bottom sheet on narrow screens,
+    // a right panel otherwise. A right panel costs the map nothing
+    // vertically - the scrub stays wherever it already sits, at the bottom -
+    // so it only needs enough room that the card does not scroll internally.
+    // The sheet competes with whatever chrome now sits above it for the very
+    // room it is growing into, and that only measured-before-growth (an
+    // absolutely-positioned top scrub doesn't move when the host does).
+    const isSheet = card.getBoundingClientRect().width >= hostRect.width - 40
+    let want: number
+    let topGap = 0
+    if (isSheet) {
+      const topChrome = chromeInsets().top
+      topGap = Math.round(topChrome + MAP_BAND_MIN + CARD_BOTTOM_GAP)
+      const bottomReserve = natural + CARD_BOTTOM_GAP
+      want = Math.round(Math.max(
+        natural + topGap + CARD_SLACK,
+        (topChrome + bottomReserve) / (1 - MIN_MAP_SHARE),
+      ))
+    } else {
+      want = natural + 16 + 56
+    }
+    const base = hostBase ? hostBase.px : hostRect.height
     if (want <= base) { releaseHost(); return }
-    if (!hostBase) hostBase = { style: container.style.height, px: have }
+    if (!hostBase) hostBase = { style: container.style.height, px: hostRect.height }
     container.classList.add('mm-grown')
-    container.style.height = `${Math.round(Math.min(want, window.innerHeight * 0.85))}px`
+    if (isSheet) container.style.setProperty('--mm-grown-gap', `${topGap}px`)
+    else container.style.removeProperty('--mm-grown-gap')
+    const grown = Math.round(Math.min(want, window.innerHeight * 0.85))
+    if (!grownOnce) {
+      const prevTransition = container.style.transition
+      container.style.transition = 'none'
+      container.style.height = `${grown}px`
+      container.getBoundingClientRect() // flush layout before transitions resume
+      container.style.transition = prevTransition
+    } else {
+      container.style.height = `${grown}px`
+    }
+    grownOnce = true
   }
   card.tabIndex = -1
   card.setAttribute('role', 'region')
