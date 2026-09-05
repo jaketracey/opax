@@ -6186,12 +6186,13 @@ async function renderFrontReports() {
 async function renderFrontEncy(dayIdx, todayReport, don) {
   const n = reportsIndex.length;
   const order = reportsIndex.map((_, i) => reportsIndex[(dayIdx + i) % n]);
-  const [reports] = await Promise.all([
+  const [reports, , , , roster] = await Promise.all([
     Promise.all(order.map((r) => r.slug === order[0].slug
       ? todayReport
       : api(`/reports/${encodeURIComponent(r.slug)}.json`).catch(() => null))),
-    loadPhotoMap(), loadVotes(), loadMoneyData(),
+    loadPhotoMap(), loadVotes(), loadMoneyData(), loadParliamentarians().catch(() => null),
   ]);
+  const rosterByName = new Map((roster?.people || []).map((p) => [p.name.toLowerCase(), p]));
   const ranked = reports.map((rep) => ({
     topic: rep?.title || "",
     speakers: (rep?.stats?.top_speakers || []).filter(([nm]) => photoUrlFor(nm)),
@@ -6217,16 +6218,22 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
   const cards = picks.map((p) => {
     const v = votesFor(p.name);
     const hasVotes = Boolean(v?.for?.length || v?.against?.length);
+    const r = rosterByName.get(p.name.toLowerCase()); // the roster fills a card that has no votes to show
     return `<article class="report-card ency-card">
       <div class="ency-head">
         <img class="ency-portrait" src="${esc(photoUrlFor(p.name))}" alt="" width="64" height="64">
         <div class="ency-id">
           <span class="card-kicker">Parliamentarian</span>
           <a class="card-title ency-name" href="${esc(subjectHash("person", p.name))}">${esc(p.name)}</a>
-          ${v?.party ? partyChipHTML(v.party) : ""}
+          ${v?.party || r?.party ? partyChipHTML(v?.party || r.party) : ""}
         </div>
       </div>
       <p class="card-blurb">${esc(Number(p.count).toLocaleString())} speeches on ${esc(p.topic.toLowerCase())} in the indexed record.</p>
+      ${!hasVotes && r ? `<dl class="ency-facts">
+        ${r.states?.length ? `<div><dt>Parliament</dt><dd>${esc(r.states.map((s) => STATE_NAMES[s] || s).join(", "))}</dd></div>` : ""}
+        ${r.first ? `<div><dt>Speaking</dt><dd>${esc(String(r.first))}${r.last && r.last !== r.first ? ` to ${esc(String(r.last))}` : ""}</dd></div>` : ""}
+        ${r.speeches ? `<div><dt>Indexed</dt><dd>${esc(Number(r.speeches).toLocaleString())} speeches</dd></div>` : ""}
+      </dl>` : ""}
       ${hasVotes ? `<div class="ency-votes">${voteList("Voted for", v.for)}${voteList("Voted against", v.against)}</div>
       <span class="card-meta">${esc(Number(v.divisions_total || 0).toLocaleString())} recorded votes${v.years ? `, ${esc(String(v.years[0]))} to ${esc(String(v.years[1]))}` : ""}</span>` : ""}
       ${actionBtn("entry", subjectHash("person", p.name), "Open the entry")}

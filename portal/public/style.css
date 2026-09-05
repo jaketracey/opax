@@ -1909,6 +1909,10 @@ a.ency-name:hover, a.ency-name:focus-visible {
 }
 .ency-year { color: var(--ink-faint); font-variant-numeric: tabular-nums; flex: 0 0 auto; }
 .ency-card .action-btn { display: inline-flex; align-self: flex-start; margin-top: auto; }
+.ency-facts { display: grid; gap: 0.3rem; margin: 0; border-top: 1px solid var(--line); padding-top: 0.65rem; font-size: 0.8125rem; line-height: 1.35; }
+.ency-facts div { display: flex; justify-content: space-between; gap: 0.7rem; }
+.ency-facts dt { color: var(--ink-faint); }
+.ency-facts dd { margin: 0; color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
 .ency-nav { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.7rem; }
 .ency-nav .action-btn { width: 40px; height: 40px; padding: 0; justify-content: center; }
 .ency-nav .action-btn:disabled { opacity: 0.4; cursor: default; border-color: var(--line); }
