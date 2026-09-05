@@ -350,7 +350,7 @@ const CSS = `
 .mm-chip[aria-pressed='true'] { background: #142a43; color: #ffffff; }
 .mm-chip[data-dimmed] { opacity: 0.4; }
 .mm-chip.mm-grants-toggle { margin-top: 6px; padding-top: 8px; border-top: 1px solid #e4e1d8; border-radius: 0; }
-.mm-chip.mm-grants-toggle[aria-pressed='true'] { background: none; }
+.mm-chip.mm-grants-toggle[aria-pressed='true'] { background: none; color: #4a4942; } /* the pressed-chip rule paints white text; this one keeps the legend's ink */
 .mm-chip.mm-grants-toggle[aria-pressed='false'] { opacity: 0.5; }
 .mm-chip.mm-grants-toggle[aria-pressed='false'] .mm-dot { background: #b7b3a8 !important; }
 .mm-row-note { padding: 4px 0 6px; font-size: 12px; color: #8a8578; }
