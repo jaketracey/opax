@@ -106,7 +106,7 @@ export function mountTide (container, options = {}) {
   }
 
   const load = async () => {
-    status.textContent = 'Counting the labelled record by decade…'
+    status.textContent = ''  // the skeleton below says it is loading; no words needed
     // Paper placeholder rows in the shape of the list, so the dialog never
     // stands empty while the decades are counted (see .chart-skeleton).
     view.innerHTML = `<ol class="tide-list chart-skeleton" aria-hidden="true">${Array.from({ length: 6 }, () => `

@@ -3270,6 +3270,11 @@ textarea.grow-field {
 textarea.grow-field.is-collapsed { white-space: nowrap; }
 /* Inside the ask and search rows the field is a flex item, not a block: it shares the line with its buttons. */
 .ask-row > .grow-field, .query-line > .grow-field { width: auto; min-width: 0; }
+.ask-row > .grow-field { --field-h: 56px; }
+.query-line > .grow-field { --field-h: 48px; }
+/* One line of text sits centred in the closed field: the padding splits what the row height leaves over. */
+.ask-row > .grow-field, .query-line > .grow-field { padding-block: calc((var(--field-h) - 2px - 1.35em) / 2); }
+@media (max-width: 640px) { .ask-row > .grow-field, .query-line > .grow-field { --field-h: 52px; } }
 @media (hover: none) and (pointer: coarse) {
   textarea.grow-field.is-open { min-height: 6.4rem; white-space: pre-wrap; overflow: auto; }
 }
@@ -3336,3 +3341,6 @@ html[data-panel="chat"] footer { display: none; }
 .person-jumps-row .person-jumps { flex: 1 1 auto; border: 0; margin: 0; }
 .person-jumps-row .person-money-link { flex: 0 0 auto; margin: 0; }
 @media (max-width: 700px) { .person-jumps-row { display: contents; } }
+
+/* ==== the tide: air between the switchers and the chart ==== */
+.tide-view { margin-top: var(--space-4); }
