@@ -2880,7 +2880,7 @@ const CSP_PAGE = [
   "default-src 'self'",
   `script-src 'self' ${GTM}`,
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' ${GTM} ${GA}`,
+  `img-src 'self' data: ${GTM} ${GA}`, // data: for the stylesheet's inline SVG glyphs (a select's chevron); images, never script
   "font-src 'self'",
   `connect-src 'self' ${GTM} ${GA}`,
   "worker-src 'self'",

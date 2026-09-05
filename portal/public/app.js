@@ -2584,7 +2584,28 @@ for (const id of ["a-speaker", "f-speaker"]) {
 let subjectMapHandle = null;
 let currentSubjectKey = null;
 
+// The page's map renders only while it can be seen: it pauses when it scrolls
+// off-screen and while any dialog stands over it (the Explain scene is a
+// second WebGL loop, and two at once stutter on a laptop).
+const subjectMapPauses = new Set();
+let subjectMapObserver = null;
+function pauseSubjectMap(reason, on) {
+  if (on) subjectMapPauses.add(reason); else subjectMapPauses.delete(reason);
+  subjectMapHandle?.setPaused?.(subjectMapPauses.size > 0);
+}
+function watchSubjectMap(el) {
+  subjectMapObserver?.disconnect();
+  subjectMapPauses.delete("offscreen");
+  if (!("IntersectionObserver" in window)) return;
+  subjectMapObserver = new IntersectionObserver((entries) => pauseSubjectMap("offscreen", !entries[entries.length - 1].isIntersecting), { threshold: 0.05 });
+  subjectMapObserver.observe(el);
+}
+document.addEventListener("close", (e) => { if (e.target instanceof HTMLDialogElement) pauseSubjectMap("dialog", document.querySelector("dialog[open]") !== null); }, true);
+
 function destroySubjectMap() {
+  subjectMapObserver?.disconnect();
+  subjectMapObserver = null;
+  subjectMapPauses.clear();
   if (subjectMapHandle) {
     try { subjectMapHandle.destroy(); } catch { /* already gone */ }
     subjectMapHandle = null;
@@ -3119,6 +3140,9 @@ async function mountSubjectMap(nodeId) {
     el.classList.remove("is-waiting");
     subjectMapHandle = handle;
     subjectMapHandle.select?.(nodeId);
+    watchSubjectMap(el);
+    if (document.querySelector("dialog[open]")) subjectMapPauses.add("dialog");
+    subjectMapHandle.setPaused?.(subjectMapPauses.size > 0);
   } catch {
     el.innerHTML = `<p class="status" style="padding:1rem">The map could not load here. <a href="/map">Open the full map</a>.</p>`;
   }
@@ -5736,6 +5760,7 @@ async function openExplain(detail) {
   setCrumbs([...explainReturnCrumbs, { label: "Explain this flow" }]);
   body.replaceChildren();
   if (!dialog.open) dialog.showModal();
+  pauseSubjectMap("dialog", true);
 
   let waiting = null;
   try {
@@ -5792,6 +5817,7 @@ async function openGame(which) {
   const game = GAMES[which];
   if (!game) return;
   $(game.dialog).showModal();
+  pauseSubjectMap("dialog", true);
   // The module is a page in its own right while it is up; the trail says so
   // and returns to plain Explore when it closes (see the close listener below).
   setCrumbs([{ label: "Explore", href: "/explore" }, { label: game.name }]);
