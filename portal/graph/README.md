@@ -148,6 +148,32 @@ as before (retried no sooner than a minute later).
   intensities. Rings ease with the engine's fades, so reduced motion makes
   them instant.
 
+## The grants layer
+
+Public money going the other way. `scripts/export_money_graph.py` (and the
+state export for Queensland) adds one **grantor** node per file
+(`grantor:federal` "Commonwealth grants", `grantor:qld` "Queensland grants";
+`kind: 'grantor'`, `group: 'parties'` so it sits at the centre, teal
+`GRANTOR_COLOUR`) and one **grant flow** per donor on the map that the grant
+register resolves to the same entity (`parli.ingest.grant_recipients`: ABN,
+then unique name), `grantor -> donor`, marked `grant: true`, with `byYear`
+cells like every other flow. Each such donor also carries a `grants` block
+(total, count, years, cells, the three largest programs, and the recipient's
+id and shard in the explorer). Node totals stay donations only; the two kinds
+of money are never summed.
+
+- Legend: a "Public money · N" toggle (on by default when the file has the
+  layer) shows or hides the grantor and its flows; the year scrub re-sums the
+  grants blocks with everything else.
+- Cards: the grantor card lists the largest recipients among the map's donors
+  and opens "Who gets the grants"; a donor card gains "Public money received"
+  (the grantor row, top programs, and "Open their grants file", which deep
+  links to `/explore?game=grants&jur=<jur>&open=<rid>`); a grant flow has its
+  own card. Grantor nodes get no words block.
+- Semantic zoom: flows INTO a folded cluster from outside it (the grantor's)
+  fold into one aggregated flow per source, drawn in the source's hue, the
+  mirror of the donor->party hub flows.
+
 ## Checks
 
 ```sh

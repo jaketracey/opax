@@ -20,7 +20,7 @@ assert.ok(typeof bundle.mountMoneyMap === 'function', 'mountMoneyMap exported')
 const raw = JSON.parse(await readFile(new URL('../public/graph/money.json', import.meta.url)))
 assert.ok(raw.meta.donor_nodes >= 200, 'export holds 200+ donors')
 assert.ok(raw.meta.party_nodes >= 10, 'export holds the canonical parties')
-assert.equal(raw.nodes.length, raw.meta.donor_nodes + raw.meta.party_nodes)
+assert.equal(raw.nodes.length, raw.meta.donor_nodes + raw.meta.party_nodes + (raw.meta.grantor_nodes ?? 0))
 assert.equal(raw.edges.length, raw.meta.edge_count)
 
 const graph = buildGraph(raw)
@@ -136,6 +136,32 @@ assert.ok(spread > 200, `layout spread out (max radius ${spread.toFixed(0)})`)
 assert.equal(formatMoney(1_234_567), '$1.2m')
 assert.equal(formatMoney(45_600), '$46k')
 
+// The grants layer: a grantor at the centre, grant flows out to donors that the
+// grant register resolves to the same entity, each donor carrying its own
+// grants block that re-sums like every other figure.
+{
+  const grantors = raw.nodes.filter((n) => n.kind === 'grantor')
+  assert.equal(grantors.length, raw.meta.grantor_nodes ?? 0, 'grantor nodes match meta')
+  const grantEdges = raw.edges.filter((e) => e.grant)
+  assert.equal(grantEdges.length, raw.meta.donors_with_grants ?? 0, 'one grant flow per donor with grants')
+  for (const g of grantors) {
+    assert.equal(g.group, 'parties', 'grantor sits at the centre')
+    assert.ok(g.colour, 'grantor carries its colour')
+  }
+  const donorIds = new Set(raw.nodes.filter((n) => n.kind === 'donor').map((n) => n.id))
+  let sum = 0
+  for (const e of grantEdges) {
+    assert.ok(e.source.startsWith('grantor:') && donorIds.has(e.target), `grant flow endpoints ${e.source} -> ${e.target}`)
+    const donor = raw.nodes.find((n) => n.id === e.target)
+    assert.ok(donor.grants && donor.grants.total === e.total, `grants block on ${e.target} matches its flow`)
+    sum += e.total
+  }
+  if (grantors.length) {
+    assert.ok(Math.abs(sum - grantors[0].total) <= grantEdges.length, 'grantor total is the flows summed')
+    checkCells(raw.nodes.filter((n) => n.grants).map((n) => ({ ...n.grants, id: `grants:${n.id}` })), 'grants blocks')
+  }
+}
+
 console.log(
   `smoke test OK — ${graph.nodes.length} nodes, ${graph.edges.length} edges, ` +
     `${centres.size} clusters, layout radius ${spread.toFixed(0)}`,
@@ -154,7 +180,7 @@ for (const jur of ['qld', 'vic', 'tas']) {
   }
   assert.ok(state.meta.donor_nodes >= 50, `${jur}: holds 50+ donors`)
   assert.ok(state.meta.party_nodes >= 3, `${jur}: holds the main parties`)
-  assert.equal(state.nodes.length, state.meta.donor_nodes + state.meta.party_nodes)
+  assert.equal(state.nodes.length, state.meta.donor_nodes + state.meta.party_nodes + (state.meta.grantor_nodes ?? 0))
   assert.equal(state.edges.length, state.meta.edge_count)
   checkCells(state.nodes, jur)
   checkCells(state.edges, jur)

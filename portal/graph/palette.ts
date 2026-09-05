@@ -14,6 +14,8 @@ export type ClusterColour = { colour: string; ink: string }
 
 export const SURFACE = '#FAF9F6'
 export const ACCENT = '#C28E0E'
+/** The grantor node and its flows: public money, a teal no industry uses. */
+export const GRANTOR_COLOUR = '#2A7F76'
 
 /**
  * Cluster order fixes palette slots AND the legend order. Largest clusters

@@ -1166,6 +1166,72 @@ export class KnowledgeMapEngine {
           this.flowVisuals.push(flow)
         }
       }
+      // Flows INTO a folded cluster from outside it (public money from a
+      // grantor at the centre to the cluster's donors) fold the same way:
+      // one aggregated flow per outside source, drawn in that source's hue.
+      for (const territory of this.territories) {
+        const hub = territory.hub
+        if (!hub) continue
+        const group = territory.group
+        const perSource = new Map<string, {
+          total: number
+          weight: number
+          recipients: number
+          firstYear: number | null
+          lastYear: number | null
+        }>()
+        for (const edgeVisual of this.edgeVisuals) {
+          if (edgeVisual.to.node.group !== group || edgeVisual.from.node.group === group) continue
+          const edge = edgeVisual.edge
+          const agg = perSource.get(edge.source) ?? {
+            total: 0, weight: 0, recipients: 0, firstYear: null, lastYear: null,
+          }
+          agg.total += edge.total ?? 0
+          agg.weight += edge.weight
+          agg.recipients += 1
+          if (edge.firstYear) {
+            agg.firstYear = agg.firstYear === null ? edge.firstYear : Math.min(agg.firstYear, edge.firstYear)
+          }
+          if (edge.lastYear) {
+            agg.lastYear = agg.lastYear === null ? edge.lastYear : Math.max(agg.lastYear, edge.lastYear)
+          }
+          perSource.set(edge.source, agg)
+        }
+        for (const [sourceId, agg] of perSource) {
+          const from = this.nodeVisuals.get(sourceId)
+          if (!from) continue
+          const synthetic: MapEdge = {
+            source: sourceId,
+            target: hub.id,
+            label: formatMoney(agg.total),
+            weight: agg.weight,
+            total: agg.total,
+            count: agg.recipients,
+            firstYear: agg.firstYear,
+            lastYear: agg.lastYear,
+            hub: group,
+          }
+          const flow: EdgeVisual = {
+            edge: synthetic,
+            key: `${synthetic.source}|${synthetic.label}|${synthetic.target}`,
+            from,
+            to: hub.anchor,
+            colour: from.colour.clone(),
+            width: edgeRadius(agg.weight),
+            crossing: true,
+            lateral: 0,
+            opacity: { current: 0, target: flowResting(agg.weight) },
+            emphasised: false,
+            label: null,
+            labelW: 0,
+            hub,
+            aggregate: true,
+          }
+          this.applyEdgeColour(flow)
+          hub.flows.push(flow)
+          this.flowVisuals.push(flow)
+        }
+      }
       // Individual flows follow their donor's cluster fold.
       for (const edgeVisual of this.edgeVisuals) {
         const from = this.nodeVisuals.get(edgeVisual.edge.source)

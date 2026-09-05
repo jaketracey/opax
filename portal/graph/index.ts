@@ -23,7 +23,7 @@ import {
   type MapNode,
 } from './map-types.ts'
 import { type EngineData, KnowledgeMapEngine, webglAvailable } from './map3d-engine.ts'
-import { ACCENT, CLUSTER_COLOURS, clusterColour, SURFACE } from './palette.ts'
+import { ACCENT, CLUSTER_COLOURS, clusterColour, GRANTOR_COLOUR, SURFACE } from './palette.ts'
 import { mountWordsLayer } from './words.ts'
 import { cpiMultiplier } from './cpi.ts'
 
@@ -45,10 +45,30 @@ export { webglAvailable }
 export type YearCell = [dollars: number, count: number]
 
 /** One node of the exported money.json graph. */
+/**
+ * Public money a donor on the map received, from the grant register
+ * (scripts/export_money_graph.py, grants_layer): totals by year like every
+ * other figure, the largest programs, and the recipient's file in the
+ * explorer ("Who gets the grants": shard `sh`, id `rid`).
+ */
+export type GrantsBlock = {
+  total: number
+  count: number
+  firstYear: number | null
+  lastYear: number | null
+  byYear?: Record<string, YearCell>
+  undated?: YearCell
+  top?: [string, number][]
+  rid?: string
+  sh?: number
+  jur?: string
+}
+
 export type MoneyNode = {
   id: string
   label: string
-  kind: 'donor' | 'party'
+  /** 'grantor' is the central node public money flows out of. */
+  kind: 'donor' | 'party' | 'grantor'
   industry: string
   group: string
   colour?: string
@@ -58,6 +78,11 @@ export type MoneyNode = {
   lastYear: number | null
   byYear?: Record<string, YearCell>
   undated?: YearCell
+  grants?: GrantsBlock
+  /** Grantor nodes: donors on this map they awarded to. */
+  recipients?: number
+  /** Grantor nodes: the explorer jurisdiction ('federal' | 'qld'). */
+  explorer?: string
 }
 
 export type MoneyEdge = {
@@ -69,7 +94,11 @@ export type MoneyEdge = {
   lastYear: number | null
   byYear?: Record<string, YearCell>
   undated?: YearCell
+  /** A grant flow: grantor -> donor, public money going the other way. */
+  grant?: boolean
 }
+
+const isGrantEdge = (e: { source: string }) => e.source.startsWith('grantor:')
 
 export type MoneyGraph = {
   meta: Record<string, unknown> & { coverage?: string; generated?: string }
@@ -294,6 +323,10 @@ const CSS = `
 .mm-chip:hover { background: rgba(0, 0, 0, 0.05); }
 .mm-chip[aria-pressed='true'] { background: #142a43; color: #ffffff; }
 .mm-chip[data-dimmed] { opacity: 0.4; }
+.mm-chip.mm-grants-toggle { margin-top: 6px; padding-top: 8px; border-top: 1px solid #e4e1d8; border-radius: 0; }
+.mm-chip.mm-grants-toggle[aria-pressed='true'] { background: rgba(42, 127, 118, 0.14); color: #1f5f58; }
+.mm-chip.mm-grants-toggle[aria-pressed='false'] { opacity: 0.55; }
+.mm-row-note { padding: 4px 0 6px; font-size: 12px; color: #8a8578; }
 .mm-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
 .mm-card { position: absolute; top: 12px; right: 12px; width: 330px;
   max-width: calc(100% - 24px); max-height: calc(100% - 24px); overflow: auto;
@@ -571,8 +604,14 @@ export async function mountMoneyMap(
    * thumbs at the ends it is the file itself; `span` names the window
    * otherwise, for copy that has to say which years a figure covers.
    */
-  type WindowView = { nodes: Map<string, MoneyNode>; edges: MoneyEdge[]; span: string | null }
-  let view: WindowView = { nodes: byId, edges: raw.edges, span: null }
+  type WindowView = {
+    nodes: Map<string, MoneyNode>
+    edges: MoneyEdge[]
+    span: string | null
+    /** Each donor's grants block, re-summed for the window. */
+    grants: Map<string, GrantsBlock>
+  }
+  let view: WindowView = { nodes: byId, edges: raw.edges, span: null, grants: new Map() }
 
   // --- DOM scaffolding -------------------------------------------------
   const canvas = el('canvas', 'mm-canvas', container)
@@ -676,6 +715,10 @@ export async function mountMoneyMap(
   }
 
   let fitSig = ''
+  // The grants layer: the grantor node and its flows, shown unless the reader
+  // switches them off in the legend. Absent when the file has none.
+  const hasGrants = raw.nodes.some((n) => n.kind === 'grantor')
+  let grantsOn = hasGrants
   const pushData = ({ keepFocus = false } = {}) => {
     // Time scrub: every node and flow is re-summed from its per-year cells
     // for [lo, hi], so the scene, the cards and the words block all read the
@@ -698,13 +741,21 @@ export async function mountMoneyMap(
       ? raw.edges.map((e) => windowFigures(e, yearLo, yearHi, adjustForInflation))
       : raw.edges)
       .filter(inWindow)
+      .filter((e) => grantsOn || !isGrantEdge(e))
+    const grantsByNode = new Map<string, GrantsBlock>()
+    for (const n of raw.nodes) {
+      if (!n.grants) continue
+      grantsByNode.set(n.id, recalculated ? windowFigures(n.grants, yearLo, yearHi, adjustForInflation) : n.grants)
+    }
     view = {
       nodes: recalculated ? new Map(windowNodes.map((n) => [n.id, n])) : byId,
       edges: windowEdges,
       span: scrubbed ? yearSpan(yearLo, yearHi) : null,
+      grants: grantsByNode,
     }
     const activeDonors = new Set(windowEdges.map((e) => e.source))
     const visibleNodes = windowNodes.filter((n) => {
+      if (n.kind === 'grantor') return grantsOn
       if (n.group === 'parties') return true
       if (activeGroup !== null && n.group !== activeGroup) return false
       return !scrubbed || activeDonors.has(n.id)
@@ -820,6 +871,25 @@ export async function mountMoneyMap(
       name.textContent = `${group.charAt(0).toUpperCase()}${group.slice(1)} · ${graph.groupStyles.get(group)?.count ?? 0}`
       chip.addEventListener('click', () => applyIsolate(activeGroup === group ? null : group))
       chips.set(group, chip)
+    }
+    if (hasGrants) {
+      const grantor = raw.nodes.find((n) => n.kind === 'grantor')
+      const toggle = el('button', 'mm-chip mm-grants-toggle', legend)
+      toggle.type = 'button'
+      toggle.setAttribute('aria-pressed', String(grantsOn))
+      toggle.title = 'Public money the donors on this map received, drawn as flows out from the grantor'
+      const dot = el('span', 'mm-dot', toggle)
+      dot.style.background = grantor?.colour ?? GRANTOR_COLOUR
+      const name = el('span', '', toggle)
+      const n = typeof raw.meta.donors_with_grants === 'number' ? raw.meta.donors_with_grants : (grantor?.recipients ?? 0)
+      name.textContent = `Public money · ${n}`
+      toggle.addEventListener('click', () => {
+        grantsOn = !grantsOn
+        toggle.setAttribute('aria-pressed', String(grantsOn))
+        if (!grantsOn && selectedId?.startsWith('grantor:')) setSelection(null)
+        if (!grantsOn && selectedEdge && isGrantEdge(selectedEdge)) setEdgeSelection(null)
+        pushData()
+      })
     }
   }
 
@@ -1065,10 +1135,10 @@ export async function mountMoneyMap(
     title.textContent = node.label
     const tag = el('span', 'mm-card-tag', card)
     const style = clusterColour(node.group)
-    tag.style.color = node.kind === 'party' ? (node.colour ?? style.ink) : style.ink
+    tag.style.color = node.kind === 'party' || node.kind === 'grantor' ? (node.colour ?? style.ink) : style.ink
     tag.textContent = node.kind === 'party'
       ? 'political party'
-      : node.industry.replace(/_/g, ' ')
+      : node.kind === 'grantor' ? 'public money' : node.industry.replace(/_/g, ' ')
 
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(node.total)
@@ -1078,10 +1148,12 @@ export async function mountMoneyMap(
     // the years within it that carry anything; a subject with nothing there
     // says so rather than showing an empty zero.
     sub.textContent = node.count === 0 && view.span
-      ? `nothing disclosed in ${view.span}`
+      ? (node.kind === 'grantor' ? `nothing awarded in ${view.span}` : `nothing disclosed in ${view.span}`)
       : node.kind === 'party'
         ? `received across ${node.count.toLocaleString()} receipts · ${span}`
-        : `given across ${node.count.toLocaleString()} donations · ${span}`
+        : node.kind === 'grantor'
+          ? `awarded to donors on this map across ${node.count.toLocaleString()} grants · ${span}`
+          : `given across ${node.count.toLocaleString()} donations · ${span}`
     inflationFineprint(card)
 
     const listTitle = el('div', 'mm-card-section', card)
@@ -1103,6 +1175,31 @@ export async function mountMoneyMap(
           () => setSelection(party.id, { user: true }),
         )
       }
+      if (node.grants && grantsOn) {
+        // Public money going the other way: shown beside the donations, never
+        // summed with them. The figures follow the year window like the rest.
+        const g = view.grants.get(node.id) ?? node.grants
+        const grantsTitle = el('div', 'mm-card-section', card)
+        grantsTitle.textContent = 'Public money received'
+        const glist = el('ul', 'mm-rows', card)
+        const grantor = raw.nodes.find((n) => n.kind === 'grantor')
+        if (g.count > 0) {
+          row(glist, grantor?.colour ?? GRANTOR_COLOUR, grantor?.label ?? 'Grants', g.total,
+            `${g.count.toLocaleString()} grant${g.count === 1 ? '' : 's'} · ${yearSpan(g.firstYear, g.lastYear)}`,
+            grantor ? () => setSelection(grantor.id, { user: true }) : null)
+          for (const [program, dollars] of (g.top ?? []).slice(0, 3)) {
+            row(glist, null, program, dollars, '', null)
+          }
+        } else {
+          const none = el('li', 'mm-row-note', glist)
+          none.textContent = view.span ? `no grants started in ${view.span}` : 'no grants'
+        }
+        if (node.grants.rid) {
+          trigger(card,
+            `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.grants.jur ?? 'federal')}&open=${encodeURIComponent(node.grants.rid)}`,
+            'Open their grants file', true)
+        }
+      }
       if (!['individual', 'other', ''].includes(node.industry.toLowerCase())) {
         trigger(card, askUrl(node.industry.replace(/_/g, ' ')),
           'What did parliament say about this industry?')
@@ -1114,6 +1211,30 @@ export async function mountMoneyMap(
         `What was said about ${shortName(node.label)}?`, true)
       trigger(card, subjectUrl('donor', node.label), 'Full profile', true)
       explain(card, { kind: 'donor', from: node.label })
+    } else if (node.kind === 'grantor') {
+      listTitle.textContent = 'Largest recipients among the donors on this map'
+      const outgoing = view.edges
+        .filter((e) => e.source === node.id)
+        .sort((a, b) => b.total - a.total)
+        .slice(0, 15)
+      for (const edge of outgoing) {
+        const donor = view.nodes.get(edge.target)
+        if (!donor) continue
+        row(
+          list,
+          clusterColour(donor.group).colour,
+          donor.label,
+          edge.total,
+          yearSpan(edge.firstYear, edge.lastYear),
+          () => setSelection(donor.id, { user: true }),
+        )
+      }
+      const fine = el('p', 'mm-card-fine', card)
+      fine.textContent = typeof raw.meta.grants_source === 'string'
+        ? `${raw.meta.grants_source}. Public money is drawn the other way from donations and never summed with them; a donor receiving a grant is a fact, not a finding.`
+        : 'Public money is drawn the other way from donations and never summed with them.'
+      trigger(card, `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.explorer ?? 'federal')}`,
+        'Open Who gets the grants', false)
     } else {
       listTitle.textContent = 'Top donors shown on the map'
       const incoming = view.edges
@@ -1207,9 +1328,52 @@ export async function mountMoneyMap(
     })
   }
 
+  /** A grant flow: the grantor's public money to one donor on the map. */
+  const renderGrantFlowCard = (edge: MapEdge, grantor: MoneyNode) => {
+    const donor = view.nodes.get(edge.target)
+    if (!donor) return
+    card.innerHTML = ''
+    const close = el('button', 'mm-card-close', card)
+    close.type = 'button'
+    close.textContent = '✕'
+    close.setAttribute('aria-label', 'Close details')
+    close.addEventListener('click', () => setEdgeSelection(null))
+    const title = el('h2', '', card)
+    title.textContent = `${grantor.label} → ${donor.label}`
+    const tag = el('span', 'mm-card-tag', card)
+    tag.style.color = '#1f5f58'
+    tag.textContent = 'public money'
+    const total = el('div', 'mm-card-total', card)
+    total.textContent = formatMoney(edge.total ?? 0)
+    const sub = el('div', 'mm-card-sub', card)
+    const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
+    sub.textContent = `across ${(edge.count ?? 0).toLocaleString()} grants${span ? ` · ${span}` : ''}`
+    inflationFineprint(card)
+    const list = el('ul', 'mm-rows', card)
+    row(list, grantor.colour ?? GRANTOR_COLOUR, grantor.label, grantor.total, '',
+      () => setSelection(grantor.id, { user: true }))
+    row(list, donor.colour ?? clusterColour(donor.group).colour, donor.label, donor.total, 'given to parties',
+      () => setSelection(donor.id, { user: true }))
+    for (const [program, dollars] of (donor.grants?.top ?? []).slice(0, 3)) {
+      row(list, null, program, dollars, '', null)
+    }
+    const fine = el('p', 'mm-card-fine', card)
+    fine.textContent = 'Public money going the other way; not summed with the donations. A donor receiving a grant is a fact, not a finding.'
+    if (donor.grants?.rid) {
+      trigger(card,
+        `${routeBase}/explore?game=grants&jur=${encodeURIComponent(donor.grants.jur ?? 'federal')}&open=${encodeURIComponent(donor.grants.rid)}`,
+        'Open their grants file', true)
+    }
+  }
+
   const renderEdgeCard = (edge: MapEdge) => {
     if (edge.hub) {
       renderHubFlowCard(edge, edge.hub)
+      return
+    }
+    const from = view.nodes.get(edge.source)
+    if (from?.kind === 'grantor') {
+      renderGrantFlowCard(edge, from)
       return
     }
     const donor = view.nodes.get(edge.source)

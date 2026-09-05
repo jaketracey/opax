@@ -846,7 +846,17 @@ function renderMoneySwitch(jur) {
 }
 
 /** The panel fineprint, from the loaded file's meta block where it has one. */
+// The grants layer's sentence rides on the end of the fineprint whenever the
+// loaded file carries it (scripts/export_money_graph.py, grants_layer).
 function moneyFineprintHTML(jur, meta) {
+  const base = moneyFineprintBaseHTML(jur, meta);
+  const n = meta && typeof meta.donors_with_grants === "number" ? meta.donors_with_grants : 0;
+  if (!n) return base;
+  const dollars = fmtMoney(meta.grant_dollars_to_map_donors || 0);
+  const what = jur === "qld" ? "Queensland Government grants" : "Commonwealth grants";
+  return base + ` Teal flows are public money going the other way: ${what} received by ${n} of the donors shown (${dollars}), from the grant register; never summed with donations. Switch them off with the "Public money" chip.`;
+}
+function moneyFineprintBaseHTML(jur, meta) {
   const cfg = MONEY_JURISDICTIONS[jur];
   const parts = [];
   if (meta?.jurisdiction) {
@@ -1103,6 +1113,10 @@ function route() {
     mountMoney(params.get("jur"), params.get("industry"));
   } else if (view === "explore") {
     showPanel("explore");
+    // A link into one module, and for the grants explorer into one recipient's
+    // file: /explore?game=grants&jur=federal&open=abn:12345678901
+    const game = params.get("game");
+    if (game && GAMES[game]) openGame(game, params);
     document.title = TITLES.explore;
     // A game already open (e.g. reload with its dialog up) keeps its own crumb.
     const open = Object.entries(GAMES).find(([, g]) => $(g.dialog)?.open);
@@ -5832,10 +5846,10 @@ const GAMES = {
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js", mount: "mountThenVsNow" },
 };
 
-async function openGame(which) {
+async function openGame(which, params = null) {
   const game = GAMES[which];
   if (!game) return;
-  $(game.dialog).showModal();
+  if (!$(game.dialog).open) $(game.dialog).showModal();
   pauseSubjectMap("dialog", true);
   // The module is a page in its own right while it is up; the trail says so
   // and returns to plain Explore when it closes (see the close listener below).
@@ -5853,6 +5867,12 @@ async function openGame(which) {
     // Every Explore dialog carries its hero into the sticky head once it
     // scrolls past: the Time Machine's big year, the others' own title.
     wireDialogHeadYear($(game.dialog), which === "tm" ? ".tm-year" : ".game-dialog-body h1, .game-dialog-body h2");
+    // The grants explorer can open straight onto one recipient's file.
+    if (which === "grants" && params?.get("open") && typeof explore.grants?.open === "function") {
+      explore.grants.open(params.get("open"), params.get("jur") || undefined);
+    } else if (which === "grants" && params?.get("jur") && typeof explore.grants?.open === "function") {
+      explore.grants.open(null, params.get("jur"));
+    }
   } catch (err) {
     $(game.body).innerHTML =
       `<p class="status">This could not load (${esc(String(err.message || err))}). Try again shortly.</p>`;

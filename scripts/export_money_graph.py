@@ -218,6 +218,139 @@ def load_canonical(db) -> tuple[dict, dict]:
     return alias, ents
 
 
+# ── the grants layer (parli.ingest.grant_recipients + the grant tables) ──────
+# For the donors on the map: what public money they received, by year, so the
+# map can draw a "grants" flow from a central grantor node out to each of them.
+# Never summed with donations: it is a different kind of money going the other
+# way, and the node totals stay donations only.
+
+GRANTOR = {
+    "federal": {"id": "grantor:federal", "label": "Commonwealth grants", "source": "grantconnect",
+                "note": "GrantConnect grant awards (Department of Finance), CC BY 3.0 AU",
+                "explorer": "federal"},
+    "qld": {"id": "grantor:qld", "label": "Queensland grants", "source": "qld_expenditure",
+            "note": "Queensland Government Investment Portal expenditure (data.qld.gov.au), CC BY 4.0",
+            "explorer": "qld"},
+}
+GRANTOR_COLOUR = "#2A7F76"
+
+
+def _file_key(rid: str) -> str:
+    kind, _, rest = rid.partition(":")
+    s = re.sub(r"[^a-z0-9]+", "-", rest.lower()).strip("-") or "x"
+    return f"{kind}-{s}"
+
+
+def grants_layer(db, jur: str, eid_to_node: dict) -> dict | None:
+    """{donor node id: aggregate} for the map's donors that are grant recipients."""
+    import zlib
+    cfg = GRANTOR.get(jur)
+    if not cfg:
+        return None
+    have = {r[0] for r in db.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name IN "
+        "('ext_grant_recipients','ext_grant_recipient_keys','ext_grants','ext_grant_details','government_grants')")}
+    if not {"ext_grant_recipients", "ext_grant_recipient_keys"} <= have:
+        return None
+    rid_to_node = {}
+    for rid, eid in db.execute(
+            "SELECT recipient_id, donor_entity_id FROM ext_grant_recipients WHERE donor_entity_id IS NOT NULL"):
+        node = eid_to_node.get(eid)
+        if node:
+            rid_to_node[rid] = node
+    if not rid_to_node:
+        return None
+    keys = {}
+    for kt, kv, rid in db.execute(
+            "SELECT key_type, key_value, recipient_id FROM ext_grant_recipient_keys WHERE source = ?", (cfg["source"],)):
+        if rid in rid_to_node:
+            keys[(kt, kv)] = rid
+    per: dict = {}
+
+    def agg_for(node_id):
+        a = per.get(node_id)
+        if a is None:
+            a = per[node_id] = {"total": 0.0, "count": 0, **year_cells(),
+                                "programs": defaultdict(float), "rids": defaultdict(float)}
+        return a
+
+    def add(rid, value, fy, program):
+        node_id = rid_to_node[rid]
+        a = agg_for(node_id)
+        y = int(fy[:4]) if fy and fy[:4].isdigit() else None
+        v = float(value or 0)
+        tally(a, y, v)
+        a["programs"][program or ""] += v
+        a["rids"][rid] += v
+
+    if jur == "federal" and "ext_grants" in have:
+        details = {}
+        if "ext_grant_details" in have:
+            details = {r[0]: r[1] for r in db.execute(
+                "SELECT ga_id, recipient_abn FROM ext_grant_details WHERE recipient_abn IS NOT NULL")}
+        for ga, name, value, fy, activity, aggregate in db.execute(
+                "SELECT ga_id, recipient_name, value, financial_year, activity, aggregate FROM ext_grants"):
+            if aggregate:
+                continue
+            abn = details.get(ga)
+            rid = (keys.get(("abn", abn)) if abn else None) or keys.get(("name", (name or "").strip()))
+            if rid:
+                add(rid, value, fy, activity)
+    elif jur == "qld" and "government_grants" in have:
+        for abn, name, amount, fy, program, title in db.execute(
+                "SELECT recipient_abn, recipient, amount, financial_year, program, title FROM government_grants "
+                "WHERE source = 'qld_expenditure'"):
+            abn = re.sub(r"\D", "", abn or "")
+            rid = (keys.get(("abn", abn)) if abn and abn != "0" else None) or keys.get(("name", (name or "").strip()))
+            if rid:
+                add(rid, amount, fy, program or title)
+    if not per:
+        return None
+    for node_id, a in per.items():
+        top_rid = max(a["rids"].items(), key=lambda kv: kv[1])[0]
+        a["rid"] = top_rid
+        a["sh"] = zlib.crc32(_file_key(top_rid).encode("utf-8")) % 40
+        # Program names are sometimes a whole purpose sentence; the card wants a title.
+        a["top"] = [[(p if len(p) <= 90 else p[:88].rstrip() + "…"), round(v)]
+                    for p, v in sorted(a["programs"].items(), key=lambda kv: -kv[1])[:3] if p]
+    return per
+
+
+def grants_nodes_edges(jur: str, per: dict, nodes: list) -> tuple[list, list, dict]:
+    """Attach `grants` to each donor node it concerns; return (grantor nodes, grant edges, meta)."""
+    cfg = GRANTOR[jur]
+    total = {"total": 0.0, "count": 0, **year_cells()}
+    edges = []
+    by_node = {n["id"]: n for n in nodes}
+    for node_id, a in sorted(per.items(), key=lambda kv: -kv[1]["total"]):
+        n = by_node.get(node_id)
+        if not n:
+            continue
+        n["grants"] = {"total": round(a["total"]), "count": a["count"], **year_fields(a),
+                       "top": a["top"], "rid": a["rid"], "sh": a["sh"], "jur": cfg["explorer"]}
+        edges.append({"source": cfg["id"], "target": node_id, "total": round(a["total"]), "count": a["count"],
+                      **year_fields(a), "grant": True})
+        total["total"] += a["total"]
+        total["count"] += a["count"]
+        for y, (v, c) in a["byYear"].items():
+            total["byYear"][y][0] += v
+            total["byYear"][y][1] += c
+        total["undated"][0] += a["undated"][0]
+        total["undated"][1] += a["undated"][1]
+    grantor = {"id": cfg["id"], "label": cfg["label"], "kind": "grantor", "industry": "public money",
+               "group": "parties", "colour": GRANTOR_COLOUR, "total": round(total["total"]),
+               "count": total["count"], **year_fields(total), "recipients": len(edges),
+               "explorer": cfg["explorer"]}
+    meta = {"grants_source": cfg["note"], "grantor_nodes": 1, "donors_with_grants": len(edges),
+            "grant_dollars_to_map_donors": round(total["total"]),
+            "grants_note": ("Grant flows run from the grantor node out to the donors on this map that the "
+                            "grant register resolves to the same entity (parli.ingest.grant_recipients: ABN, "
+                            "then unique name). They are public money going the other way and are never "
+                            "summed with donations; node totals stay donations only. byYear keys are the "
+                            "first year of the financial year the grant started.")}
+    return [grantor], edges, meta
+
+
 def main() -> None:
     db = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
@@ -264,6 +397,7 @@ def main() -> None:
         d = donors.get(key)
         if d is None:
             d = donors[key] = {
+                "eid": eid,
                 "canonical": ent["name"] if ent else None,
                 "entity_kind": ent["kind"] if ent else None,
                 "names": defaultdict(float),
@@ -334,6 +468,7 @@ def main() -> None:
             **year_fields(pt),
         })
 
+    eid_to_node: dict = {}
     for d in picked:
         display = d["canonical"]
         if not display:
@@ -369,6 +504,15 @@ def main() -> None:
                 "count": p["count"],
                 **year_fields(p),
             })
+        if d.get("eid"):
+            eid_to_node[d["eid"]] = node_id
+
+    grants_meta = {}
+    per_grants = grants_layer(db, "federal", eid_to_node)
+    if per_grants:
+        g_nodes, g_edges, grants_meta = grants_nodes_edges("federal", per_grants, nodes)
+        nodes.extend(g_nodes)
+        edges.extend(g_edges)
 
     out = {
         "meta": {
@@ -415,6 +559,7 @@ def main() -> None:
             "donor_nodes": len(picked),
             "party_nodes": len(party_totals),
             "edge_count": len(edges),
+            **grants_meta,
             "party_totals_note": (
                 "Party node totals cover all cleaned rows except public funding, "
                 "unchanged by entity resolution."

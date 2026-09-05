@@ -1448,6 +1448,34 @@ export function mountGrants (container, opts = {}) {
 
   let destroyed = false
   return {
+    /**
+     * Open on a jurisdiction and, when given, one recipient's file
+     * (`/explore?game=grants&jur=federal&open=abn:...`, the money map's link).
+     */
+    async open (rid, jur) {
+      if (destroyed) return
+      if (state.view !== 'recipients') {
+        state.view = 'recipients'
+        for (const b of root.querySelectorAll('.gr-view')) b.setAttribute('aria-pressed', b.dataset.view === 'recipients' ? 'true' : 'false')
+      }
+      if (rid) {
+        state.open = rid
+        state.q = ''
+        searchEl.value = ''
+        state.donors = false
+        for (const b of root.querySelectorAll('.gr-donors')) b.setAttribute('aria-pressed', b.dataset.donors === '0' ? 'true' : 'false')
+      }
+      const target = JURISDICTIONS[jur] ? jur : state.jur
+      if (target !== state.jur || !data) await load(target)
+      else { renderHead(); render() }
+      if (rid) {
+        const btn = bodyEl.querySelector(`.gr-open[data-id="${CSS.escape(rid)}"]`)
+        if (btn) {
+          btn.scrollIntoView({ block: 'center' })
+          btn.focus({ preventScroll: true })
+        }
+      }
+    },
     destroy () {
       if (destroyed) return
       destroyed = true

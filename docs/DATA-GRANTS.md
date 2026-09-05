@@ -155,6 +155,19 @@ Honesty rules carried by every file and screen:
   Queensland Government.
 - WA, ACT and NT state donations stay behind their licence gates (`EXPOSED_STATES`).
 
+### 3.1 On the money map (2026-09-05)
+
+`scripts/export_money_graph.py` and `scripts/export_state_money.py qld` carry a
+`grants_layer`: for each of the map's top-250 donors that `ext_grant_recipients` ties to
+the same donor entity, the grants it received (by year, top programs, explorer file), a
+central grantor node ("Commonwealth grants" / "Queensland grants") and one grant flow
+per such donor. Measured 2026-09-05: 30 of the federal map's donors received $1.0B in
+Commonwealth grants (Telstra $466M, BlueScope $150M, Regional Express $140M, Ramsay
+$70M); 27 of the Queensland map's donors received $334M (Ramsay $229M, Black & White
+Cabs $51M). The legend's "Public money" chip toggles the layer; donor cards gain "Public
+money received" with a deep link into the explorer (`/explore?game=grants&jur=..&open=..`).
+See `portal/graph/README.md`, "The grants layer". Never summed with donations.
+
 ## 4. Runbook
 
 All from the worktree on the Mac unless noted. `uv run` fails here; use `.venv`.
@@ -165,7 +178,7 @@ All from the worktree on the Mac unless noted. `uv run` fails here; use `.venv`.
 | Federal awards, refresh | `... -m parli.ingest.grantconnect --since 2026-08-01 --refetch` (replaces rows published in the range; awards can be varied, so refresh the last two months) | weekly |
 | Detail pages (background, on desktop) | `scp scripts/grantconnect_details.py desktop:/tmp/ && ssh desktop 'nohup python3 /tmp/grantconnect_details.py > /tmp/gc_details.log 2>&1 & echo $! > /tmp/gc_details.pid'`; status `ssh desktop 'tail -2 /tmp/gc_details.log'`; stop `ssh desktop 'kill $(cat /tmp/gc_details.pid)'`. Resumes where it left off. | started 2026-09-05 11:35 local, ~0.8 awards/s, ~5 days for the register |
 | Recipients | `rsync -a --exclude __pycache__ parli/ desktop:~/opax-sync/parli/ && ssh desktop 'cd ~/opax-sync && PYTHONPATH=. python3 -m parli.ingest.grant_recipients --db ~/.cache/autoresearch/parli.db --abr-dir ~/.cache/autoresearch/abr'` (~1 min) | after any grants load or donor-register rebuild, and daily while the detail harvest runs |
-| Export | `.venv/bin/python scripts/export_grants.py federal && .venv/bin/python scripts/export_grants.py qld`, then `npm run deploy` from `portal/` | with the recipients step |
+| Export | `.venv/bin/python scripts/export_grants.py federal && .venv/bin/python scripts/export_grants.py qld`; money maps `ssh desktop python3 - < scripts/export_money_graph.py > portal/public/graph/money.json` and `ssh desktop python3 - qld < scripts/export_state_money.py > portal/public/graph/money.qld.json`, then `node graph/smoke-test.mjs` and `npm run deploy` from `portal/` | with the recipients step |
 | Tests | `cd portal && node --test test/grants.test.mjs` | with any change to grants.js |
 
 ## 5. Open items

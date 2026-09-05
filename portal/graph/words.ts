@@ -467,6 +467,7 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
   }
 
   const renderInto = (card: HTMLElement, node: MoneyNode, view: WordsView) => {
+    if (node.kind === 'grantor') return
     // The block lands between the flows list and the card's triggers, so the
     // card reads money, then words, then what to ask next.
     const host = document.createElement('div')
