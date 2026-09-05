@@ -51,8 +51,8 @@ STOP_FILE = DEFAULT_DB.with_name("labels_stop")
 STALE_CLAIM_S = 45 * 60
 MAX_LABELS = 4
 TEXT_HEAD, TEXT_TAIL = 1800, 400
-PACE_S = 0.25          # seconds between a worker's requests
-POOL = 4               # parallel requests per worker
+PACE_S = 1.0           # seconds between a worker's requests: the box answers about 25 requests a second for the whole fleet before it starts refusing with 429s
+POOL = 2               # parallel requests per worker
 
 
 def env() -> dict[str, str]:
@@ -85,7 +85,7 @@ class Kb:
                     # A 429 is the box asking the whole fleet to slow down: wait it out
                     # (up to about two minutes across the retries) rather than drop the
                     # row and have another worker read and label it again.
-                    time.sleep(min(40, 1.5 * (2 ** attempt)) + random.random() * 2)
+                    time.sleep(min(20, 1.5 * (2 ** attempt)) + random.random() * 2)
                     continue
                 raise RuntimeError(f"{method} {path} -> {err.code}: {err.read()[:200]!r}") from None
             except (urllib.error.URLError, TimeoutError) as err:
