@@ -24,6 +24,7 @@ import {
 } from './map-types.ts'
 import { type EngineData, KnowledgeMapEngine, webglAvailable } from './map3d-engine.ts'
 import { ACCENT, CLUSTER_COLOURS, clusterColour, GRANTOR_COLOUR, SURFACE } from './palette.ts'
+import { type Reveal, runReveal } from './reveal.ts'
 import { mountWordsLayer } from './words.ts'
 import { cpiMultiplier } from './cpi.ts'
 
@@ -125,6 +126,16 @@ export type MoneyMapOptions = {
    * drop the scrub from the full map.
    */
   scrub?: boolean
+  /**
+   * The opening reveal: with a `focus`, the map opens close on that entity,
+   * holds a beat, then eases out and around to frame it with the parties it
+   * gave the most to (or, for a party, its largest donors), the rest of the
+   * map dimmed behind them. Defaults to on for a focused mini map - a subject
+   * page's embed, which is about one entity - and off everywhere else: the
+   * full map and the front page open on the whole scene, which is their point.
+   * The reader's first touch ends it; reduced motion opens on the landing.
+   */
+  reveal?: boolean
 }
 
 export type MoneyMapHandle = {
@@ -540,6 +551,10 @@ export async function mountMoneyMap(
   const byId = new Map(raw.nodes.map((n) => [n.id, n]))
   const chrome = opts.chrome ?? 'full'
   const full = chrome === 'full'
+  // A focused mini map is a subject page's embed - it is about one entity, so
+  // it opens on that entity. The full map and the front page are about the
+  // whole scene and open on it, as before.
+  const revealWanted = opts.reveal ?? (opts.focus !== undefined && chrome === 'mini')
   container.dataset.mmChrome = chrome
   // The app serves real paths, so map links are plain paths too. They were
   // hash routes from before that change, which sent "Full profile" on /money to
@@ -707,6 +722,38 @@ export async function mountMoneyMap(
   engine.onEdgePick = (edge) => setEdgeSelection(edge)
   const words = mountWordsLayer({ engine, raw, legend, routeBase })
 
+  // --- The opening reveal ----------------------------------------------
+  // Only its emphasis reaches the scene, and only while it runs: the flows
+  // it is lighting, restored to the plain selection before the camera stops.
+  let reveal: Reveal | null = null
+  let spotlightEdges: MapEdge[] | null = null
+  let spotlightFor: string | null = null
+  const applyEmphasis = () => {
+    engine.setEmphasis({
+      selectedId,
+      pathEdges: spotlightEdges,
+      pathFrom: spotlightEdges ? selectedId : null,
+    })
+  }
+  // The lit landing outlives the camera move, so something has to hand it
+  // back when the reader does nothing more decisive than move the pointer
+  // across the map. Armed only once the choreography has settled: a pointer
+  // drifting over the plate on the way to the card must not cut the shot.
+  let armedRelease: ((event: PointerEvent) => void) | null = null
+  const disarmRelease = () => {
+    if (!armedRelease) return
+    container.removeEventListener('pointermove', armedRelease)
+    armedRelease = null
+  }
+  const cancelReveal = () => {
+    disarmRelease()
+    const running = reveal
+    reveal = null
+    running?.cancel()
+  }
+  // The reader's first press, drag, wheel notch or arrow key ends it.
+  engine.onViewClaimed = () => cancelReveal()
+
   const aspectBucket = () => {
     const rect = container.getBoundingClientRect()
     if (rect.width < 1 || rect.height < 1) return 1.5
@@ -720,6 +767,9 @@ export async function mountMoneyMap(
   const hasGrants = raw.nodes.some((n) => n.kind === 'grantor')
   let grantsOn = hasGrants
   const pushData = ({ keepFocus = false } = {}) => {
+    // A scrub step, a filter or a re-layout is the reader driving: the
+    // choreography gives way rather than animating over the top of it.
+    cancelReveal()
     // Time scrub: every node and flow is re-summed from its per-year cells
     // for [lo, hi], so the scene, the cards and the words block all read the
     // same years the scrub shows. A flow with nothing in the window drops
@@ -811,7 +861,7 @@ export async function mountMoneyMap(
     // map, that is the whole subject walking off. Hold it, without refitting:
     // focusOn is a nudge that does nothing while the node is comfortably in
     // view, so a scrub that barely moves anything moves the camera not at all.
-    if (keepFocus && selectedId && visibleIds.has(selectedId)) {
+    if (keepFocus && selectedId && visibleIds.has(selectedId) && !reveal?.running) {
       engine.setInsets(measureInsets())
       engine.focusOn(selectedId, null)
     }
@@ -1511,10 +1561,14 @@ export async function mountMoneyMap(
    * focus seed, handle.select and filter-driven clears stay silent.
    */
   function setSelection(id: string | null, { user = false } = {}) {
+    if (user) cancelReveal()
     selectedId = id
     selectedEdge = null
     const node = id ? view.nodes.get(id) ?? null : null
-    engine.setEmphasis({ selectedId: id, pathEdges: null, pathFrom: null })
+    // A re-select of the very node the reveal is lighting (the host echoing
+    // its own seed) keeps the spotlight; anything else drops it.
+    if (id !== spotlightFor) spotlightEdges = null
+    applyEmphasis()
     if (node) {
       renderCard(node)
       card.hidden = false
@@ -1524,7 +1578,10 @@ export async function mountMoneyMap(
       requestAnimationFrame(() => {
         if (card.hidden) return
         engine.setInsets(measureInsets())
-        if (selectedId) engine.focusOn(selectedId, null)
+        // The reveal owns the camera while it runs; it only wants the
+        // measured insets, which its close-up is re-solved against.
+        if (reveal?.running) reveal.remeasure()
+        else if (selectedId) engine.focusOn(selectedId, null)
       })
       card.focus({ preventScroll: true })
     } else {
@@ -1539,6 +1596,8 @@ export async function mountMoneyMap(
 
   /** Select a flow (edge). Reuses the engine's path emphasis to light it up. */
   function setEdgeSelection(edge: MapEdge | null) {
+    cancelReveal()
+    spotlightEdges = null
     selectedEdge = edge
     selectedId = null
     engine.setEmphasis({
@@ -1573,11 +1632,58 @@ export async function mountMoneyMap(
   }
   container.addEventListener('keydown', onKeyDown)
 
+  /**
+   * Where the money runs, largest first: the parties a donor gave the most
+   * to, or the donors a party took the most from. The same ranking the card's
+   * rows use, cut to the few the eye can follow in one frame.
+   */
+  const strongestFlows = (id: string) => {
+    const node = view.nodes.get(id)
+    if (!node) return null
+    const incoming = node.kind === 'party'
+    const flows = view.edges
+      .filter((e) => (incoming ? e.target : e.source) === id)
+      .sort((a, b) => b.total - a.total)
+      .slice(0, incoming ? 5 : 4)
+      .filter((e) => view.nodes.has(incoming ? e.source : e.target))
+    if (flows.length === 0) return null
+    return {
+      ids: flows.map((e) => (incoming ? e.source : e.target)),
+      edges: flows.map(toMapEdge),
+    }
+  }
+
+  /**
+   * Open on the subject, then pull out to the money. The card is already laid
+   * out by here (setSelection opened it synchronously), so the free area is
+   * known before the first frame is painted and the close-up is what the
+   * reader sees the map open on - no fitted frame flashes behind it.
+   */
+  const startReveal = (focusId: string) => {
+    const strongest = strongestFlows(focusId)
+    if (!strongest) return
+    engine.setInsets(measureInsets())
+    reveal = runReveal(engine, { focusId, withIds: strongest.ids, edges: strongest.edges }, {
+      spotlight: (on) => {
+        spotlightEdges = on ? strongest.edges : null
+        spotlightFor = on ? focusId : null
+        applyEmphasis()
+      },
+      settled: () => {
+        armedRelease = () => cancelReveal()
+        container.addEventListener('pointermove', armedRelease)
+      },
+    })
+  }
+
   pushData()
 
   // The embed seed: mount already-selected with the camera on the node.
   // Deliberately silent - the host asked for it, so it is not an event.
-  if (opts.focus && byId.has(opts.focus)) setSelection(opts.focus)
+  if (opts.focus && byId.has(opts.focus)) {
+    setSelection(opts.focus)
+    if (revealWanted) startReveal(opts.focus)
+  }
 
   return {
     select: (id) => setSelection(id),
@@ -1585,6 +1691,7 @@ export async function mountMoneyMap(
     fit: (animate = true) => engine.fit(animate),
     setPaused: (paused) => engine.setPaused(paused),
     destroy: () => {
+      cancelReveal()
       container.removeEventListener('keydown', onKeyDown)
       resizeObserver.disconnect()
       engine.dispose()
