@@ -206,6 +206,15 @@ def cmd_submit(a: argparse.Namespace) -> None:
     con = db()
     rows = {r[0]: (r[1], r[2], r[3]) for r in con.execute(
         "SELECT rid, slug, existing, status FROM queue WHERE rid IN (%s)" % ",".join("?" * len(labels)), list(labels))}
+    # A batch that calls more than half its speeches topicless was not read: the
+    # fleet's honest rate is about one in five. Refuse it whole so the worker
+    # rereads, rather than let empty verdicts retire rows from the queue.
+    n_in = len(labels)
+    n_empty = sum(1 for v in labels.values() if not v)
+    if n_in >= 10 and n_empty > 0.55 * n_in:
+        print(f"REJECTED: {n_empty} of {n_in} speeches marked no-topic; the fleet norm is about one in five. "
+              "Reread the texts (a label is decided from the text, never the title) and submit again; your claims are kept.")
+        return
     kb = Kb()
     jobs: list[tuple[str, list[str], list[dict]]] = []
     bad = 0
