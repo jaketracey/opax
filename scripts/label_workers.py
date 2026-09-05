@@ -125,11 +125,16 @@ def clip(text: str) -> str:
 def fetch_item(kb: Kb, rid: str) -> dict:
     d = kb.resource(rid)
     texts = (d.get("data") or {}).get("texts") or {}
+    # The speech itself, never the machine brief that sits beside it in its own
+    # text field (da-summary-t-body): a worker handed the brief judges two
+    # sentences and calls the speech thin. Take the longest non-summary field.
     body = ""
-    for v in texts.values():
-        body = ((v.get("value") or {}).get("body") or "")
-        if body:
-            break
+    for name, v in texts.items():
+        if "summary" in str(name).lower():
+            continue
+        candidate = ((v.get("value") or {}).get("body") or "")
+        if len(candidate) > len(body):
+            body = candidate
     cls = (d.get("usermetadata") or {}).get("classifications") or []
     tags = {c.get("labelset"): c.get("label") for c in cls if c.get("labelset") in ("state", "party", "chamber")}
     return {
