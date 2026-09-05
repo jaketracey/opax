@@ -71,7 +71,7 @@ class Kb:
         self.base = f"https://{e['ARAG_ZONE']}.rag.progress.cloud/api/v1/kb/{e['ARAG_KB_ID']}"
         self.headers = {"x-nuclia-serviceaccount": f"Bearer {e['ARAG_KB_TOKEN']}", "content-type": "application/json"}
 
-    def call(self, method: str, path: str, body: dict | None = None, tries: int = 6) -> dict:
+    def call(self, method: str, path: str, body: dict | None = None, tries: int = 9) -> dict:
         data = None if body is None else json.dumps(body).encode()
         time.sleep(PACE_S)  # many workers share one account: keep each one's requests spaced
         for attempt in range(tries):
@@ -82,7 +82,10 @@ class Kb:
                     return json.loads(raw) if raw else {}
             except urllib.error.HTTPError as err:
                 if err.code in (429, 500, 502, 503, 504) and attempt < tries - 1:
-                    time.sleep(1.5 * (2 ** attempt) + random.random())
+                    # A 429 is the box asking the whole fleet to slow down: wait it out
+                    # (up to about two minutes across the retries) rather than drop the
+                    # row and have another worker read and label it again.
+                    time.sleep(min(40, 1.5 * (2 ** attempt)) + random.random() * 2)
                     continue
                 raise RuntimeError(f"{method} {path} -> {err.code}: {err.read()[:200]!r}") from None
             except (urllib.error.URLError, TimeoutError) as err:
