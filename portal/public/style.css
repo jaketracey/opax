@@ -2804,6 +2804,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 .subject-person #subject-sections { min-width: 0; }
 .subject-person #subject-sections .subject-section-title { font: 600 1.35rem/1.35 var(--serif); margin: 2rem 0 .85rem; }
 .subject-person .person-topics, .subject-person .declared-ties { margin-top: 0; }
+.subject-person .person-topics { max-width: none; } /* the block spans the column like the ask form above it */
 .subject-person .person-jumps { display: flex; flex-wrap: wrap; gap: 0 .75rem; border-block: 1px solid var(--line); margin: 0 0 1rem; }
 .subject-person .person-jumps[hidden] { display: none; }
 .subject-person .person-jumps a { display: inline-flex; align-items: center; min-height: 44px; font: 500 .875rem var(--sans); color: var(--bronze-ink); }
