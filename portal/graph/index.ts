@@ -390,6 +390,8 @@ const CSS = `
   padding: 9px 11px; background: ${SURFACE}; border: 1px solid #d5d1c4; border-radius: 6px;
   box-shadow: 0 10px 24px rgba(30, 26, 18, 0.16); font-size: 12px; line-height: 1.45; color: #33322e; }
 .mm-cpi-pop[hidden] { display: none; }
+/* Inside a page's map plate the host clips overflow, so the note opens upward from the icon, anchored to its right. */
+.mm-scrub-mini .mm-cpi-pop { top: auto; bottom: calc(100% + 6px); left: auto; right: 0; z-index: 9; }
 /* The same control on a small plate: one row, the window years as its label,
    the two thumbs and inflation switch sharing one compact strip. */
 .mm-scrub-mini { width: auto; max-width: calc(100% - 24px); padding: 5px 10px;
