@@ -1840,7 +1840,7 @@ a.report-card .card-meta { color: var(--ink-soft); }
    the only thing that scrolls sideways, never the page. */
 .ency-slider { min-width: 0; }
 .ency-track {
-  display: flex; align-items: flex-start; gap: 0.8rem; overflow-x: auto; scroll-snap-type: x mandatory; /* each card as tall as its own words: a card with two vote lists no longer stretches the ones beside it into empty paper */
+  display: flex; gap: 0.8rem; overflow-x: auto; scroll-snap-type: x mandatory;
   scrollbar-width: none; padding: 1px 0 3px; margin: -1px 0 -3px;
 }
 .ency-track::-webkit-scrollbar { display: none; }
@@ -1892,7 +1892,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .votes-cols .subject-list li { padding: var(--space-2) 0; }
 .votes-method { margin-top: var(--space-3); }
 .votes-method .fineprint { margin: var(--space-1) 0 var(--space-2); }
-.ency-votes { display: grid; gap: 0.6rem; border-top: 1px solid var(--line); padding-top: 0.65rem; }
+.ency-votes { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem 0.9rem; border-top: 1px solid var(--line); padding-top: 0.65rem; } /* the two vote lists side by side at every width, so a voting card stays close to its neighbours' height */
 .ency-votes-label {
   display: block; margin-bottom: 0.25rem; color: var(--ink-faint);
   font: 600 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase;
