@@ -2026,7 +2026,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   explore: {
     title: 'Explore · OPAX',
-    description: 'Play with the parliamentary record: the time machine, the record quiz, the donations ledger and the money map.',
+    description: 'Play with the parliamentary record: the time machine, the record quiz, the donations ledger, who gets the grants and the money map.',
   },
   chat: {
     title: 'Keep asking · OPAX',
