@@ -3,7 +3,7 @@
  "title": "Housing",
  "blurb": "Decades of affordability promises, negative gearing fights and supply debates.",
  "version": 2,
- "generated_at": "2026-09-05T00:54:04+00:00",
+ "generated_at": "2026-09-05T02:15:23+00:00",
  "corpus_resources": 609635,
  "stats": {
   "speech_count": 210854,
@@ -1131,8 +1131,84 @@
   }
  ],
  "lede": {
-  "text": "Senator Andrew Bragg told the Senate the government's own budget papers confirm its housing tax changes will decrease supply, arguing the proposition facing Australians is one of a lack of housing supply. Minister Paul Scully reported an \"almost universally positive response\" to the passage of the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025, with the Opposition welcoming it and conceding the reform should have been done years ago. Senator Barbara Pocock told a Treasury estimates hearing that social housing is at record lows and the public housing waitlist at record highs, with around 190,000 households waiting, arguing the government's plan to support at most 55,000 households does not match the scale of demand.",
+  "text": "Parliament argued that housing supply was the central solution to the crisis, with government speakers defending a \"$32 billion Homes for Australia plan\" and a \"pro-supply budget,\" while opposition figures claimed Treasury's own modelling showed the 1.2 million homes target \"won't be met\" and that tax changes would \"decrease supply.\"\n\nFrom 1993 to 2009 parliament fought over public housing cuts, negative gearing and GST on caravan parks. In the 2010s the fight turned to tenancy law, no-grounds evictions and foreign vacancy charges. From 2020 to 2024 HomeBuilder and the Housing Australia Future Fund dominated. Attention has risen steadily across all decades.\n\nEighty-nine per cent of Australians agreed the nation faced a housing crisis in 2025. Social housing made up just 0.9 per cent of private homes in Bradfield against a 3.8 per cent national average. Labor backs restricting negative gearing and CGT to new builds; the Liberal and LNP oppose the changes as breaking promises and harming supply.",
   "sources": [
+   {
+    "slug": "speech-1194212",
+    "title": "Catryna Bilyk \u2014 Matters of Public Importance \u2014 2025-02-10",
+    "speaker": "Catryna Bilyk",
+    "party": "Labor",
+    "state": "federal",
+    "date": "2025-02-10",
+    "passage": "\u2026deliver more housing supply to Australians. And, when given the chance to support real solutions, they vote against them. The bottom line: action on supply is critical, and more supply means better affordability. That's what we're delivering, and an Albanese Labor government is building Australia's future. That is what we will keep fighting for\u2014more homes more quickly in more parts of the country.",
+    "cited": true
+   },
+   {
+    "slug": "speech-422783",
+    "title": "Max Chandler-Mather \u2014 Questions without Notice \u2014 2025-02-10",
+    "speaker": "Max Chandler-Mather",
+    "party": "Greens",
+    "state": "federal",
+    "date": "2025-02-10",
+    "passage": "\u2026We have a plan that is focused on supply, because that is the key, whether you want to be a homeowner, or you are a renter or someone in social and affordable housing. That's why our $32 billion Homes for Australia plan is worthy of the support of everyone in this parliament\u2014I note that the crossbenchers eventually, reluctantly, got there. They crab-walked their way to vote for some of the plans\u2026",
+    "cited": true,
+    "answer_ranges": [
+     [
+      0,
+      335
+     ]
+    ]
+   },
+   {
+    "slug": "speech-1196161",
+    "title": "Jacinta Nampijinpa Price \u2014 Bills \u2014 2025-08-25",
+    "speaker": "Jacinta Nampijinpa Price",
+    "party": null,
+    "state": "federal",
+    "date": "2025-08-25",
+    "passage": "\u2026But the proposition that is facing the Australian people is really one of a lack of housing supply. Until the government is able to better understand what is holding back the supply, by talking to builders, developers and tradespeople, then they will never solve this crisis. Unfortunately what we now see are more bandaids, more press releases and more puff pieces, and, frankly, an incoherence.\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1198427",
+    "title": "Dave Sharma \u2014 Questions without Notice: Take Note of Answers \u2014 2025-11-05",
+    "speaker": "Dave Sharma",
+    "party": null,
+    "state": "federal",
+    "date": "2025-11-05",
+    "passage": "\u2026On housing supply, quite clearly the coalition were in government for 10 years, and, for those 10 years, they neglected housing. You can't turn around the supply of housing in a year or even one term. You're talking about significant structural change to get the housing supply that we need in this country to ensure that people have choices, that we protect renters, that we provide opportunities\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-956891",
+    "title": "Scarr \u2014 Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 02/12/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs \u2014 2025-12-02",
+    "speaker": "Scarr",
+    "party": null,
+    "state": "federal",
+    "date": "2025-12-02",
+    "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 02/12/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] Secretary, I'll ask you a question and let you finish this up. They run a model in relation to housing supply; it's in chapter 5 of their State of the housing system 2025 report. Basically, they're saying that if\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-978784",
+    "title": "Rimmer \u2014 Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2025-12-04",
+    "speaker": "Rimmer",
+    "party": null,
+    "state": "federal",
+    "date": "2025-12-04",
+    "passage": "[Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Housing Australia] The National Housing Supply and Affordability Council has public information about that matter. The most recent public report was the state of the system report that was published, from memory, in May this year.",
+    "cited": true
+   },
+   {
+    "slug": "speech-428848",
+    "title": "Whiteaker \u2014 Finance and Public Administration Legislation Committee - Finance and Public Administration Legislation Committee 10/02/2026 Estimates PRIME MINISTER AND CABINET PORTFOLIO Indigenous Business Australia \u2014 2026-02-10",
+    "speaker": "Whiteaker",
+    "party": null,
+    "state": "federal",
+    "date": "2026-02-10",
+    "passage": "[Finance and Public Administration Legislation Committee - Finance and Public Administration Legislation Committee 10/02/2026 Estimates PRIME MINISTER AND CABINET PORTFOLIO Indigenous Business Australia] Good morning. Thanks for joining us today. This is further to some of the conversation we've already had about housing. Of course, one of the biggest challenges for housing at the moment is\u2026",
+    "cited": true
+   },
    {
     "slug": "speech-1203672",
     "title": "Andrew Bragg \u2014 Questions without Notice \u2014 2026-06-22",
@@ -1140,45 +1216,47 @@
     "party": null,
     "state": "federal",
     "date": "2026-06-22",
-    "answer_ranges": [
-     [
-      0,
-      204
-     ]
-    ],
-    "passage": "I actually responded to that in the first answer. As I explained, as a whole we will see an increase in the supply of housing over the next decade if you look at all of the budget measures. What we will see, importantly, in terms of composition is an extra 75,000 first home buyers. So this is a budget which, despiteSenator Bragg's best effort, is a pro-supply budget. This is the budget which\u2026",
+    "passage": "\u2026So this is a budget which, despiteSenator Bragg's best effort, is a pro-supply budget. This is the budget which ensures that negative gearing will still be available for new builds, and new builds will have a choice ofCPIindexation or 50 per cent discount for capital gains. What I would say to you, Senator Bragg, is that we know housing affordability is a problem that is decades in the making,\u2026",
     "cited": true
    },
    {
-    "slug": "speech-1301465",
-    "title": "Kylie Wilkinson \u2014 Planning Policy \u2014 2025-11-13",
-    "speaker": "Kylie Wilkinson",
+    "slug": "speech-1288100",
+    "title": "Sue Higginson \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-27",
+    "speaker": "Sue Higginson",
     "party": null,
     "state": "nsw",
-    "date": "2025-11-13",
-    "answer_ranges": [
-     [
-      204,
-      474
-     ]
-    ],
-    "passage": "\u2026I am pleased to report that there has been an almost universally positive response to the passage of the Government's Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025. As with all meaningful reforms, there are some critics, but I am sure they will come around when they see the benefits to communities that the reforms will deliver. The reforms are a significant\u2026",
+    "date": "2025-03-27",
+    "passage": "Ms SUE HIGGINSON ( 20:20 :54 ): The Greens do not oppose the Environmental Planning and Assessment Amendment Bill 2025, despite holding reservations about some of the bill's schedules. I acknowledge that the Government has taken our suggestions on board and has ensured that amendments have been agreed to in the other place to address some of those concerns. We are very grateful to the Minister\u2026",
     "cited": true
    },
    {
-    "slug": "speech-905087",
-    "title": "Barbara Pocock \u2014 Economics Legislation Committee - Economics Legislation Committee 12/02/2026 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2026-02-12",
-    "speaker": "Barbara Pocock",
+    "slug": "speech-1297581",
+    "title": "Liesl Tesch \u2014 Planning Policy \u2014 2025-09-18",
+    "speaker": "Liesl Tesch",
     "party": null,
-    "state": "federal",
-    "date": "2026-02-12",
-    "answer_ranges": [
-     [
-      474,
-      761
-     ]
-    ],
-    "passage": "[Economics Legislation Committee - Economics Legislation Committee 12/02/2026 Estimates TREASURY PORTFOLIO Housing Australia] I want to go to the question of social housing, which is currently at record lows, and the waitlist for public housing is at record highs. Around 190,000 households are currently on the public housing waitlist. Many are in very severe need.",
+    "state": "nsw",
+    "date": "2025-09-18",
+    "passage": "Ms LIESL TESCH ( Gosford ) ( 11:12 :53 ): My question is addressed to the Minister for Planning and Public Spaces. Will the fine Minister update the House on the community reaction to the Minns Labor Government's planning reforms, including those in The Daily Telegraph? Mr PAUL SCULLY ( Wollongong\u2014Minister for Planning and Public Spaces) (11:13:09): I thank the member for Gosford for her\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1298429",
+    "title": "Clayton Barr \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
+    "speaker": "Clayton Barr",
+    "party": null,
+    "state": "nsw",
+    "date": "2025-10-15",
+    "passage": "Mr CLAYTON BARR ( Cessnock ) ( 16:39 :49 ): I support the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025. It is not every day that I get to stand in this place and participate in a debate about a piece of legislation that might stand the test of time and literally shape the structure and form or our communities, homes, villages and cities for the next 50 or\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1298460",
+    "title": "Iamson \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
+    "speaker": "Iamson",
+    "party": null,
+    "state": "nsw",
+    "date": "2025-10-15",
+    "passage": "\u2026I am glad that the Opposition and the Government are focused on getting more homes built without adding cost or complexity to a system that is already very costly and complex. However, there is more to be done in regional New South Wales to drive down the costs of homes being built in the bush. As a former mayor of Clarence Valley, I understand the planning difficulties that some regional\u2026",
     "cited": true
    }
   ],

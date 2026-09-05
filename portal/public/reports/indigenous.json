@@ -3,7 +3,7 @@
  "title": "First Nations",
  "blurb": "Reconciliation, the Voice, Closing the Gap and native title, in parliament's own words.",
  "version": 2,
- "generated_at": "2026-09-05T00:54:31+00:00",
+ "generated_at": "2026-09-05T02:18:44+00:00",
  "corpus_resources": 609635,
  "stats": {
   "speech_count": 51381,
@@ -985,8 +985,18 @@
   }
  ],
  "lede": {
-  "text": "Sheena Watt called the Statewide Treaty Bill 2025, establishing Gellung Warl, \"a landmark in Victoria's ongoing journey towards justice and self-determination for First Peoples.\" Evan Mulholland said the Liberals and Nationals will not support the Statewide Treaty Bill 2025 and would repeal it if elected, arguing it \"elevates Indigenous Victorians above their fellow citizens.\" Ellen Sandell backed the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024 but criticised Labor for accepting \"less than 15 per cent\" of Yoorrook Justice Commission recommendations.",
+  "text": "Parliament debated the Statewide Treaty Bill 2025, which would establish Gellung Warl as a statutory body for First Peoples. Labor and Greens members called it \"a landmark in Victoria's ongoing journey towards justice and self-determination,\" while the Liberals and Nationals opposed it as creating a body \"answerable to itself\" with escalating payments beyond $70 million, vowing repeal within 100 days.\n\nIn the 1990s and 2000s, parliament split over land rights and native title amendments, with Labor, Greens and Democrats condemning rushed consultation. The 2010s brought NSW language and Crown land legislation framed as historic righting of wrongs. By 2020\u201324, South Australia debated a First Nations Voice amid funding and bureaucracy concerns. Attention has stayed roughly level.\n\nFirst Nations people make up 4.6 per cent of Queensland's population but 37 per cent of adult prisoners and 69 per cent of young people in detention. Labor supports Closing the Gap and structural reform. The Greens demand action over words. Independents call Closing the Gap \"a responsibility not a favour\" and seek permanent parliamentary representation.",
   "sources": [
+   {
+    "slug": "speech-831905",
+    "title": "Juliana Addison \u2014 Statewide Treaty Bill 2025 - Second reading \u2014 2025-10-14",
+    "speaker": "Juliana Addison",
+    "party": null,
+    "state": "vic",
+    "date": "2025-10-14",
+    "passage": "\u2026It is not about division, it is about unity, justice and reconciliation and the power of truth-telling. As my friend Nikki Foy, a proud Gunditjmara woman who lives in my community, reminded me, treaty does not take anything away from non-Aboriginal people; rather, it is a mutual agreement that respects the rights and interests of all. I want to acknowledge the work of Aunty Jill Gallagher, Ngarra\u2026",
+    "cited": true
+   },
    {
     "slug": "speech-1144408",
     "title": "Sheena Watt \u2014 Scrutiny of Acts and Regulations Committee - Alert Digest No. 13 \u2014 2025-10-14",
@@ -995,12 +1005,62 @@
     "state": "vic",
     "date": "2025-10-14",
     "passage": "\u2026I want to take a moment to talk to the chamber about this bill, which represents a landmark in Victoria's ongoing journey towards justice and self-determination for First Peoples in this state. Building on the Advancing the Treaty Process with Aboriginal Victorians Act 2018 and the Treaty Authority and Other Treaty Elements Act 2022, this bill establishes the legislative foundation for a\u2026",
+    "cited": true,
     "answer_ranges": [
      [
-      0,
-      178
+      124,
+      404
      ]
-    ],
+    ]
+   },
+   {
+    "slug": "speech-769255",
+    "title": "Dylan Wight \u2014 Statewide Treaty Bill 2025 - Second reading \u2014 2025-10-15",
+    "speaker": "Dylan Wight",
+    "party": null,
+    "state": "vic",
+    "date": "2025-10-15",
+    "passage": "This evening I rise to make a contribution on the Statewide Treaty Bill 2025. Before I begin, I would like to acknowledge the traditional owners of the land on which we meet, the Wurundjeri people of the Kulin nation. I also pay my respects to the traditional owners of the lands that I represent, the Bunurong people. This was and always will be Aboriginal land. I would also like to acknowledge\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-769230",
+    "title": "Ella George \u2014 Statewide Treaty Bill 2025 - Second reading \u2014 2025-10-15",
+    "speaker": "Ella George",
+    "party": null,
+    "state": "vic",
+    "date": "2025-10-15",
+    "passage": "I am honoured to rise today to speak on the Statewide Treaty Bill \u200d2025, and I would like to begin by acknowledging the traditional owners of the land on which the Parliament meets, the Wurundjeri Woi Wurrung people of the Kulin nation. I acknowledge the Wathaurong people of the Kulin nation, the traditional owners of the lands I represent in this place, and I thank them for the thousands of\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-769242",
+    "title": "Tim Read \u2014 Statewide Treaty Bill 2025 - Second reading \u2014 2025-10-15",
+    "speaker": "Tim Read",
+    "party": null,
+    "state": "vic",
+    "date": "2025-10-15",
+    "passage": "\u2026We have heard scaremongering from those opposing this legislation, but this treaty bill is not a radical proposition. It is a first step toward delivering benefits for First Nations people based on self-determined priorities established by the democratically elected First Peoples' Assembly. We have heard other critiques of this bill, that what it establishes is still limited by colonial\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-769259",
+    "title": "Michaela Settle \u2014 Statewide Treaty Bill 2025 - Second reading \u2014 2025-10-15",
+    "speaker": "Michaela Settle",
+    "party": null,
+    "state": "vic",
+    "date": "2025-10-15",
+    "passage": "It is truly an honour and a privilege to stand and speak on the Statewide Treaty Bill 2025 here on the land of the Wurundjeri people. We stand on land that was a meeting place for the Wurundjeri and Bunurong peoples for millennia, a place for important discussions between clans. This bill heralds the start of important discussions on truth, justice and self-determination. I begin by acknowledging\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1142226",
+    "title": "Michael Galea \u2014 Statewide Treaty Bill 2025 - Second reading \u2014 2025-10-28",
+    "speaker": "Michael Galea",
+    "party": null,
+    "state": "vic",
+    "date": "2025-10-28",
+    "passage": "\u2026It is the right thing to do, and it does not take anything away from anyone else. In her contribution last sitting week, the member for Cranbourne made a powerful observation when she said: We know treaty is an opportunity not to divide Victoria but to complete it. It is significant that Victoria is the only state in the Commonwealth so far to have a treaty, but I know that the other states and\u2026",
     "cited": true
    },
    {
@@ -1010,13 +1070,37 @@
     "party": null,
     "state": "vic",
     "date": "2025-10-28",
-    "passage": "\u2026In its attempt to right past wrongs and fix inequality, it elevates Indigenous Victorians above their fellow citizens in terms of access to government and their ability to influence future decisions. We have had several referendums, including a referendum that expanded the right to vote for the Australian Capital Territory and the Northern Territory and indeed the landmark referendum of the Holt\u2026",
-    "answer_ranges": [
-     [
-      179,
-      379
-     ]
-    ],
+    "passage": "I rise to speak on the Statewide Treaty Bill 2025, and it would be remiss of me not to acknowledge this is a very significant debate in our Parliament. I would like to acknowledge particularly Melina Bath. I would like to acknowledge all the work that she has done \u2013 and Peter Walsh before her \u2013 as our shadow minister for Indigenous affairs. I would also like to acknowledge everyone in my\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-1142234",
+    "title": "Bev McArthur \u2014 Statewide Treaty Bill 2025 - Second reading \u2014 2025-10-28",
+    "speaker": "Bev McArthur",
+    "party": null,
+    "state": "vic",
+    "date": "2025-10-28",
+    "passage": "\u2026Under this bill, Gellung Warl will receive automatic escalating payments starting at $24 million a year and rising beyond $70 million by the end of the decade. Parliament will have no control over this funding, and the minister will have no authority to direct or oversee it. Hundreds of millions of dollars will be handed to an unelected, race-based body that is accountable to no-one. The First\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-856856",
+    "title": "Natalie Hutchins \u2014 Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024 - Statement of compatibility \u2014 2024-11-13",
+    "speaker": "Natalie Hutchins",
+    "party": null,
+    "state": "vic",
+    "date": "2024-11-13",
+    "passage": "In accordance with the Charter of Human Rights and Responsibilities Act 2006, I table a statement of compatibility in relation to the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024: Opening paragraphs In accordance with section 28 of the Charter of Human Rights and Responsibilities Act 2006 , (the Charter), I make this Statement of Compatibility with respect\u2026",
+    "cited": true
+   },
+   {
+    "slug": "speech-856102",
+    "title": "Tim Richardson \u2014 Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024 - Second reading \u2014 2024-11-27",
+    "speaker": "Tim Richardson",
+    "party": null,
+    "state": "vic",
+    "date": "2024-11-27",
+    "passage": "It is a pleasure to rise in the short time I have got on the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024. I too want to start by acknowledging the traditional owners of the land on which we meet today, the Wurundjeri people, and paying my profound respect to elders past and present and to those that have courageously fronted up to the Yoorrook Justice\u2026",
     "cited": true
    },
    {
@@ -1026,17 +1110,11 @@
     "party": null,
     "state": "vic",
     "date": "2024-11-27",
-    "passage": "\u2026It has been a year since the government received the Yoorrook Justice Commission\u2019s report, and Labor has officially accepted less than 15 per cent of the Yoorrook Justice Commission\u2019s recommendations. Less than 15 per cent of the recommendations that this body of First Nations people have put before this government have been accepted. First Peoples are sick and tired of telling governments the\u2026",
-    "answer_ranges": [
-     [
-      380,
-      597
-     ]
-    ],
+    "passage": "I rise to also speak on the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024, which will entrench principles of Indigenous data sovereignty within Victorian law. The Greens will be supporting this bill. We would like to commend the government on what sounds like has been a very good consultation and development process. As we understand it, the first step was\u2026",
     "cited": true
    }
   ],
-  "cite_method": "declared"
+  "cite_method": "verbatim"
  },
  "now": {
   "since": "2024-07-01",
@@ -1351,7 +1429,7 @@
       "state": "vic",
       "date": "2025-10-28",
       "cited": false,
-      "passage": "I too rise to speak in support of the Statewide Treaty Bill 2025 before us today, and in doing so I begin by acknowledging the traditional owners and custodians of the land on which this Parliament stands, the Wurundjeri Woi Wurrung people of the Kulin nations, and I pay my respects to their elders past and present. I extend that acknowledgement to all traditional owners and First Peoples across\u2026"
+      "passage": "\u2026Treaty does not take anything away from anyone, but what it does is restore balance, respect and recognition where it has too long been denied. Treaty is how we come together properly as one. We cannot have unity without honesty and without truth. We cannot have reconciliation without recognition, and we cannot move forward until we face what is behind us. I commend this historic bill to the\u2026"
      },
      {
       "slug": "speech-1142222",
