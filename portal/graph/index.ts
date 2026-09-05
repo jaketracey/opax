@@ -143,6 +143,12 @@ export type MoneyMapOptions = {
    * node is lit and framed and the card waits for the reader's own tap.
    */
   openCard?: boolean
+  /**
+   * The node this page is ABOUT (a subject page's embed). Its card drops the
+   * "Full profile" link, which would only reload the page the reader is on;
+   * every other card keeps it.
+   */
+  subject?: string
 }
 
 export type MoneyMapHandle = {
@@ -1331,7 +1337,7 @@ export async function mountMoneyMap(
       trigger(card,
         `/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`,
         `What was said about ${shortName(node.label)}?`, true)
-      trigger(card, subjectUrl('donor', node.label), 'Full profile', true)
+      if (node.id !== opts.subject) trigger(card, subjectUrl('donor', node.label), 'Full profile', true)
       explain(card, { kind: 'donor', from: node.label })
     } else if (node.kind === 'grantor') {
       listTitle.textContent = 'Largest recipients among the donors on this map'
@@ -1383,7 +1389,7 @@ export async function mountMoneyMap(
           }`,
           `Ask what ${node.label} said about ${industry}`)
       }
-      trigger(card, subjectUrl('party', node.label), 'Full profile', true)
+      if (node.id !== opts.subject) trigger(card, subjectUrl('party', node.label), 'Full profile', true)
       explain(card, { kind: 'party', to: node.label })
     }
   }
