@@ -31,6 +31,7 @@ import argparse
 import json
 import os
 import random
+import re
 import sqlite3
 import sys
 import time
@@ -152,7 +153,14 @@ def cmd_init(a: argparse.Namespace) -> None:
     print(f"queued {len(rids)} rids (skipped the first {a.skip}); total rows {con.execute('SELECT COUNT(*) FROM queue').fetchone()[0]}")
 
 
+RETIRED_WORKERS = re.compile(r"^h\d+$")  # the Haiku fleet of 2026-09-05: it scripted its labels and is refused
+
+
 def cmd_next(a: argparse.Namespace) -> None:
+    if RETIRED_WORKERS.match(a.worker or ""):
+        Path(a.out).write_text("[]")
+        print("STOP: this worker id is retired; do not continue.")
+        return
     if STOP_FILE.exists():
         Path(a.out).write_text("[]")
         print("STOP")
@@ -211,6 +219,9 @@ def _safe(fn, *args):
 
 
 def cmd_submit(a: argparse.Namespace) -> None:
+    if RETIRED_WORKERS.match(a.worker or ""):
+        print("STOP: this worker id is retired; nothing was written.")
+        return
     labels: dict[str, list[str]] = json.load(open(a.labels))
     con = db()
     rows = {r[0]: (r[1], r[2], r[3]) for r in con.execute(
