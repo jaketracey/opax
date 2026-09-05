@@ -356,59 +356,90 @@ const COLUMNS = {
 const CSS = `
 .gr-root { font-family: var(--sans, 'Public Sans', -apple-system, 'Segoe UI', Roboto, sans-serif); color: var(--ink, #23271F); }
 .gr-root :focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
-.gr-title { font: 700 clamp(1.6rem, 3vw, 2.25rem)/1.15 var(--serif, Merriweather, Georgia, serif); margin: 0 0 0.35rem; }
-.gr-deck { margin: 0 0 1.1rem; max-width: 70ch; color: var(--ink-soft, #575C52); font-size: 0.9375rem; line-height: 1.55; }
+.gr-title { font: 700 clamp(1.4rem, 2.6vw, 1.9rem)/1.15 var(--serif, Merriweather, Georgia, serif); margin: 0 0 0.25rem; }
+.gr-deck { margin: 0 0 0.8rem; max-width: 66ch; color: var(--ink-soft, #575C52); font-size: 0.875rem; line-height: 1.5; }
 
-.gr-toolbar { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; align-items: flex-end; margin-bottom: 0.75rem; }
-.gr-field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
-.gr-label { font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint, #6F7468); }
+.gr-toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem 0.6rem; align-items: center; margin-bottom: 0.6rem; }
+.gr-field { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+.gr-label { font-size: 0.625rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint, #6F7468); }
 .gr-input, .gr-select {
-  font: inherit; font-size: 0.875rem; color: var(--ink, #23271F); background: var(--paper-raised, #FFFFFF);
-  border: 1px solid var(--line-strong, #8D897B); border-radius: 2px; padding: 0.375rem 0.5rem; min-height: 2.125rem;
+  font: inherit; font-size: 0.8125rem; color: var(--ink, #23271F); background: var(--paper-raised, #FFFFFF);
+  border: 1px solid var(--line-strong, #8D897B); border-radius: 2px; padding: 0.3rem 0.45rem; min-height: 1.95rem;
 }
-.gr-search { width: 15rem; max-width: 100%; }
-.gr-year { width: 5.75rem; font-variant-numeric: tabular-nums; }
-.gr-yearrow { display: flex; align-items: center; gap: 0.35rem; }
+.gr-search { width: 13rem; max-width: 100%; }
+.gr-year { width: 5.25rem; font-variant-numeric: tabular-nums; }
+.gr-yearrow { display: flex; align-items: center; gap: 0.3rem; }
 .gr-yearrow span { color: var(--ink-faint, #6F7468); }
 .gr-views { display: flex; }
 .gr-seg {
-  font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer; padding: 0.4rem 0.85rem; min-height: 2.125rem;
+  font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer; padding: 0.3rem 0.7rem; min-height: 1.95rem;
   background: var(--paper-raised, #FFFFFF); color: var(--ink-soft, #575C52); border: 1px solid var(--line-strong, #8D897B);
+  white-space: nowrap;
 }
 .gr-seg + .gr-seg { border-left: 0; }
 .gr-seg:first-child { border-radius: 2px 0 0 2px; }
 .gr-seg:last-child { border-radius: 0 2px 2px 0; }
 .gr-seg[aria-pressed="true"] { background: var(--navy, #142A43); border-color: var(--navy, #142A43); color: #FFFFFF; }
-.gr-actions { display: flex; gap: 0.5rem; margin-left: auto; align-items: flex-end; }
 .gr-btn {
-  font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer; padding: 0.4rem 0.8rem; min-height: 2.125rem;
-  border-radius: 2px; background: none; border: 1px solid var(--line-strong, #8D897B); color: var(--ink-soft, #575C52);
+  font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer; padding: 0.3rem 0.7rem; min-height: 1.95rem;
+  border-radius: 2px; background: var(--paper-raised, #FFFFFF); border: 1px solid var(--line-strong, #8D897B); color: var(--ink-soft, #575C52);
+  white-space: nowrap;
 }
 .gr-btn:hover { background: var(--paper-sunken, #F1EFE8); }
-.gr-export { border-color: var(--bronze-ink, #8A5A12); color: var(--bronze-ink, #8A5A12); }
+.gr-export { border-color: var(--bronze-ink, #8A5A12); color: var(--bronze-ink, #8A5A12); margin-left: auto; }
 .gr-export:hover { background: var(--bronze-wash, rgba(160, 118, 27, 0.16)); }
 
-.gr-tiles { display: flex; flex-wrap: wrap; gap: 0.9rem 1.6rem; margin: 0.4rem 0 0.9rem; }
-.gr-tile { padding: 0.6rem 0 0.2rem; min-width: 130px; flex: 1 1 140px; max-width: 260px; border-top: 2px solid var(--bronze, #A0761B); }
-.gr-tile b { display: block; font: 700 1.55rem/1.1 var(--serif, Merriweather, Georgia, serif); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
-.gr-tile span { display: block; margin-top: 0.35rem; color: var(--ink-soft, #575C52); font-size: 0.8125rem; line-height: 1.4; }
+/* The secondary filters live behind one disclosure so the bar stays one line. */
+.gr-more { position: relative; }
+.gr-more-btn { display: inline-flex; align-items: center; gap: 0.4rem; list-style: none; }
+.gr-more-btn::-webkit-details-marker { display: none; }
+.gr-more-btn::after { content: ''; width: 0.4rem; height: 0.4rem; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); }
+.gr-more[open] .gr-more-btn { background: var(--paper-sunken, #F1EFE8); color: var(--ink, #23271F); }
+.gr-more[open] .gr-more-btn::after { transform: translateY(1px) rotate(-135deg); }
+.gr-count { display: inline-grid; place-items: center; min-width: 1.15rem; height: 1.15rem; padding: 0 0.3rem; border-radius: 1rem; background: var(--bronze-ink, #8A5A12); color: #FFFFFF; font-size: 0.6875rem; line-height: 1; }
+.gr-pop {
+  position: absolute; z-index: 6; top: calc(100% + 0.35rem); left: 0; width: min(34rem, calc(100vw - 3rem));
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem 0.9rem;
+  padding: 0.8rem 0.9rem 0.7rem; background: var(--paper-raised, #FFFFFF); border: 1px solid var(--line-strong, #8D897B);
+  border-radius: 3px; box-shadow: 0 12px 28px rgba(30, 26, 18, 0.16);
+}
+.gr-pop.gr-pop-right { left: auto; right: 0; }
+.gr-pop .gr-select, .gr-pop .gr-input { width: 100%; }
+.gr-pop .gr-year { width: 100%; }
+.gr-pop-foot { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 0.15rem; }
+.gr-done { background: var(--navy, #142A43); border-color: var(--navy, #142A43); color: #FFFFFF; }
+.gr-done:hover { background: var(--navy-raised, #1D3A5C); }
 
-.gr-chart { margin: 0 0 1rem; }
-.gr-chart svg { width: 100%; height: auto; display: block; }
+.gr-tiles { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin: 0.2rem 0 0.6rem; }
+.gr-tile { padding: 0.4rem 0 0.1rem; min-width: 110px; flex: 1 1 120px; max-width: 220px; border-top: 2px solid var(--bronze, #A0761B); }
+.gr-tile b { display: block; font: 700 1.3rem/1.1 var(--serif, Merriweather, Georgia, serif); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.gr-tile span { display: block; margin-top: 0.25rem; color: var(--ink-soft, #575C52); font-size: 0.75rem; line-height: 1.35; }
+
+.gr-chart { margin: 0 0 0.7rem; }
+.gr-chart svg { width: 100%; height: auto; max-height: 150px; display: block; }
 .gr-bar { fill: var(--bronze-wash, rgba(160, 118, 27, 0.16)); stroke: var(--bronze, #A0761B); stroke-width: 1; }
 .gr-bar-donor { fill: var(--bronze, #A0761B); }
 .gr-axis { font: 600 10px/1 var(--sans, sans-serif); fill: var(--ink-faint, #6F7468); }
 .gr-val { font: 600 10px/1 var(--sans, sans-serif); fill: var(--ink-soft, #575C52); }
-.gr-gov { display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; margin: 0.35rem 0 0; font-size: 0.75rem; color: var(--ink-faint, #6F7468); }
+.gr-year-col { cursor: pointer; outline: none; }
+.gr-hit { fill: transparent; }
+.gr-year-col:hover .gr-bar, .gr-year-col:focus-visible .gr-bar { stroke-width: 2; }
+.gr-year-col:focus-visible .gr-hit { fill: var(--bronze-wash, rgba(160,118,27,.16)); }
+.gr-windowed .gr-dim .gr-bar { fill: transparent; stroke: var(--line-strong, #8D897B); stroke-dasharray: 2 2; }
+.gr-windowed .gr-dim .gr-bar-donor { fill: var(--line, #DFDCD2); }
+.gr-windowed .gr-dim .gr-val, .gr-windowed .gr-dim .gr-axis { fill: var(--line-strong, #8D897B); }
+.gr-windowed .gr-sel .gr-axis { fill: var(--bronze-ink, #8A5A12); }
+.gr-hint { font-style: italic; }
+.gr-gov { display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; margin: 0.25rem 0 0; font-size: 0.72rem; color: var(--ink-faint, #6F7468); }
 .gr-gov .party { text-transform: none; letter-spacing: 0; font-weight: 600; }
 .gr-legend { display: inline-flex; align-items: center; gap: 0.35rem; }
 .gr-legend i { display: inline-block; width: 12px; height: 9px; border: 1px solid var(--bronze, #A0761B); background: var(--bronze-wash, rgba(160,118,27,.16)); }
 .gr-legend i.gr-solid { background: var(--bronze, #A0761B); }
 
-.gr-summary { margin: 0 0 0.5rem; font-size: 0.8125rem; color: var(--ink-soft, #575C52); font-variant-numeric: tabular-nums; }
+.gr-summary { margin: 0 0 0.4rem; font-size: 0.78rem; color: var(--ink-soft, #575C52); font-variant-numeric: tabular-nums; }
 .gr-summary b { font-weight: 700; color: var(--ink, #23271F); }
-.gr-tablewrap { overflow: auto; max-height: min(70vh, 900px); border: 1px solid var(--line-strong, #8D897B); background: var(--paper-raised, #FFFFFF); }
-.gr-table { border-collapse: collapse; width: 100%; min-width: 820px; font-size: 0.875rem; line-height: 1.4; }
+.gr-tablewrap { overflow: auto; max-height: min(72vh, 900px); border: 1px solid var(--line-strong, #8D897B); background: var(--paper-raised, #FFFFFF); }
+.gr-table { border-collapse: collapse; width: 100%; min-width: 800px; font-size: 0.84rem; line-height: 1.35; }
 .gr-table thead th { position: sticky; top: 0; z-index: 2; padding: 0; background: var(--paper-sunken, #F1EFE8); border-bottom: 1px solid var(--line-strong, #8D897B); text-align: left; white-space: nowrap; }
 .gr-sort { font: inherit; font-size: 0.8125rem; font-weight: 700; cursor: pointer; color: var(--ink-soft, #575C52); background: none; border: 0; width: 100%; text-align: inherit; padding: 0.5rem 0.625rem; display: flex; gap: 0.3rem; align-items: baseline; }
 .gr-sort:hover { color: var(--ink, #23271F); }
@@ -416,7 +447,7 @@ th[aria-sort] .gr-sort { color: var(--ink, #23271F); }
 .gr-arrow { font-size: 0.625rem; color: var(--bronze-ink, #8A5A12); }
 .gr-th-num { text-align: right; }
 .gr-th-num .gr-sort { justify-content: flex-end; }
-.gr-table td { padding: 0.45rem 0.625rem; border-bottom: 1px solid var(--line, #DFDCD2); vertical-align: baseline; }
+.gr-table td { padding: 0.38rem 0.55rem; border-bottom: 1px solid var(--line, #DFDCD2); vertical-align: baseline; }
 .gr-table tbody tr.gr-row:hover td { background: var(--paper-sunken, #F1EFE8); }
 .gr-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .gr-muted { color: var(--ink-faint, #6F7468); }
@@ -434,7 +465,7 @@ th[aria-sort] .gr-sort { color: var(--ink, #23271F); }
 .gr-mps .party { text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 0.8125rem; }
 .gr-donor-cell { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.45rem; justify-content: flex-end; }
 
-.gr-detail td { background: var(--paper, #FAF9F6); padding: 1rem 1.1rem 1.2rem; border-bottom: 2px solid var(--line-strong, #8D897B); }
+.gr-detail td { background: var(--paper, #FAF9F6); padding: 0.85rem 1rem 1rem; border-bottom: 2px solid var(--line-strong, #8D897B); }
 .gr-detail-head { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; align-items: baseline; margin-bottom: 0.4rem; }
 .gr-detail-head h3 { font: 700 1.2rem/1.2 var(--serif, Merriweather, Georgia, serif); margin: 0; }
 .gr-detail-meta { font-size: 0.8125rem; color: var(--ink-soft, #575C52); line-height: 1.5; margin: 0 0 0.6rem; }
@@ -458,16 +489,36 @@ th[aria-sort] .gr-sort { color: var(--ink, #23271F); }
 .gr-links .gr-primary { background: var(--navy, #142A43); border-color: var(--navy, #142A43); color: #FFFFFF; }
 .gr-links .gr-primary:hover { background: var(--navy-raised, #1D3A5C); color: #FFFFFF; }
 
+.gr-panel { position: relative; margin: 0 0 0.6rem; padding: 0.8rem 0.9rem 0.9rem; background: var(--paper-raised, #FFFFFF); border: 1px solid var(--line-strong, #8D897B); border-left: 3px solid var(--bronze, #A0761B); }
+.gr-panel-close { position: absolute; top: 0.6rem; right: 0.6rem; }
+.gr-panel .gr-detail-head { padding-right: 4.5rem; }
 .gr-fineprint { margin: 0.6rem 0 0; font-size: 0.75rem; line-height: 1.55; color: var(--ink-faint, #6F7468); }
 .gr-fineprint a { color: var(--bronze-ink, #8A5A12); }
 .gr-visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 
-@media (max-width: 760px) {
-  .gr-search { width: 100%; }
-  .gr-field-search { flex: 1 1 100%; }
-  .gr-actions { margin-left: 0; }
+/* Tablet: the bar wraps to two lines, the popover hugs the button's edge. */
+@media (max-width: 1000px) {
+  .gr-search { width: 11rem; }
+  .gr-table { min-width: 760px; }
+}
+/* Phone: each segmented control fills a line, the search and the popover go full width. */
+@media (max-width: 640px) {
+  .gr-deck { font-size: 0.8125rem; margin-bottom: 0.6rem; }
+  .gr-toolbar { gap: 0.4rem 0.5rem; }
+  .gr-views { flex: 1 1 100%; }
+  .gr-views .gr-seg { flex: 1 1 0; padding: 0.3rem 0.4rem; text-align: center; }
+  .gr-search { flex: 1 1 100%; width: auto; }
+  .gr-more { flex: 1 1 auto; position: static; }
+  .gr-more-btn { width: 100%; justify-content: center; }
+  .gr-export { flex: 0 0 auto; margin-left: 0; }
+  .gr-pop { position: static; width: 100%; grid-template-columns: 1fr; margin-top: 0.4rem; box-shadow: none; }
+  .gr-tiles { gap: 0.4rem 0.8rem; }
+  .gr-tile { flex: 1 1 40%; max-width: none; min-width: 0; }
+  .gr-tile b { font-size: 1.15rem; }
+  .gr-chart svg { max-height: 120px; }
+  .gr-val, .gr-axis-odd { display: none; }
+  .gr-table { min-width: 720px; font-size: 0.8rem; }
   .gr-cols { grid-template-columns: 1fr; }
-  .gr-table { min-width: 720px; }
 }
 `
 
@@ -550,66 +601,61 @@ export function mountGrants (container, opts = {}) {
   root.innerHTML = `
     <h2 class="gr-title">Who gets the grants</h2>
     <p class="gr-deck">Every published grant award, resolved to the organisations that receive it and
-      checked against the donor registers. Who gets public money, from which programs, in which seats,
+      checked against the donor registers: who gets public money, from which programs, in which seats,
       and which of them also fund parties.</p>
 
     <div class="gr-toolbar" role="group" aria-label="Grant filters">
-      <div class="gr-field" role="group" aria-label="Jurisdiction">
-        <span class="gr-label" aria-hidden="true">Jurisdiction</span>
-        <div class="gr-views">
-          ${Object.entries(JURISDICTIONS).map(([k, j]) =>
-            `<button type="button" class="gr-seg gr-jur" data-jur="${k}" aria-pressed="${k === state.jur ? 'true' : 'false'}">${j.label}</button>`).join('')}
+      <div class="gr-views" role="group" aria-label="Jurisdiction">
+        ${Object.entries(JURISDICTIONS).map(([k, j]) =>
+          `<button type="button" class="gr-seg gr-jur" data-jur="${k}" aria-pressed="${k === state.jur ? 'true' : 'false'}">${j.label}</button>`).join('')}
+      </div>
+      <div class="gr-views" role="group" aria-label="View">
+        <button type="button" class="gr-seg gr-view" data-view="recipients" aria-pressed="true">Recipients</button>
+        <button type="button" class="gr-seg gr-view" data-view="programs" aria-pressed="false">Programs</button>
+        <button type="button" class="gr-seg gr-view" data-view="electorates" aria-pressed="false">Electorates</button>
+      </div>
+      <div class="gr-views" role="group" aria-label="Donor filter">
+        <button type="button" class="gr-seg gr-donors" data-donors="0" aria-pressed="true">Everyone</button>
+        <button type="button" class="gr-seg gr-donors" data-donors="1" aria-pressed="false">Donors only</button>
+      </div>
+      <label class="gr-visually-hidden" for="gr-q">Filter by name</label>
+      <input class="gr-input gr-search" id="gr-q" type="search" autocomplete="off" placeholder="Filter by name…" />
+      <details class="gr-more">
+        <summary class="gr-btn gr-more-btn" aria-label="More filters"><span>Filters</span><b class="gr-count" hidden></b></summary>
+        <div class="gr-pop">
+          <div class="gr-field gr-field-kind">
+            <label class="gr-label" for="gr-kind">Kind</label>
+            <select class="gr-select" id="gr-kind"><option value="">All kinds</option></select>
+          </div>
+          <div class="gr-field gr-field-agency">
+            <label class="gr-label" for="gr-agency">Agency</label>
+            <select class="gr-select" id="gr-agency"><option value="">All agencies</option></select>
+          </div>
+          <div class="gr-field">
+            <span class="gr-label" id="gr-years-label">Financial years starting</span>
+            <div class="gr-yearrow" role="group" aria-labelledby="gr-years-label">
+              <input class="gr-input gr-year" id="gr-year-from" type="number" inputmode="numeric" placeholder="2017" aria-label="From financial year starting" />
+              <span aria-hidden="true">–</span>
+              <input class="gr-input gr-year" id="gr-year-to" type="number" inputmode="numeric" placeholder="2026" aria-label="To financial year starting" />
+            </div>
+          </div>
+          <div class="gr-field">
+            <label class="gr-label" for="gr-min">Minimum awarded</label>
+            <select class="gr-select" id="gr-min">
+              <option value="0">Any amount</option>
+              <option value="100000">$100K+</option>
+              <option value="1000000">$1M+</option>
+              <option value="10000000">$10M+</option>
+              <option value="100000000">$100M+</option>
+            </select>
+          </div>
+          <div class="gr-pop-foot">
+            <button type="button" class="gr-btn" id="gr-clear" hidden>Clear all filters</button>
+            <button type="button" class="gr-btn gr-done">Done</button>
+          </div>
         </div>
-      </div>
-      <div class="gr-field" role="group" aria-label="View">
-        <span class="gr-label" aria-hidden="true">View</span>
-        <div class="gr-views">
-          <button type="button" class="gr-seg gr-view" data-view="recipients" aria-pressed="true">Recipients</button>
-          <button type="button" class="gr-seg gr-view" data-view="programs" aria-pressed="false">Programs</button>
-          <button type="button" class="gr-seg gr-view" data-view="electorates" aria-pressed="false">Electorates</button>
-        </div>
-      </div>
-      <div class="gr-field" role="group" aria-label="Donor filter">
-        <span class="gr-label" aria-hidden="true">Show</span>
-        <div class="gr-views">
-          <button type="button" class="gr-seg gr-donors" data-donors="0" aria-pressed="true">Everyone</button>
-          <button type="button" class="gr-seg gr-donors" data-donors="1" aria-pressed="false">Donors only</button>
-        </div>
-      </div>
-      <div class="gr-field gr-field-search">
-        <label class="gr-label" for="gr-q">Filter by name</label>
-        <input class="gr-input gr-search" id="gr-q" type="search" autocomplete="off" placeholder="e.g. council, Anglicare, mining" />
-      </div>
-      <div class="gr-field gr-field-kind">
-        <label class="gr-label" for="gr-kind">Kind</label>
-        <select class="gr-select" id="gr-kind"><option value="">All kinds</option></select>
-      </div>
-      <div class="gr-field gr-field-agency">
-        <label class="gr-label" for="gr-agency">Agency</label>
-        <select class="gr-select" id="gr-agency"><option value="">All agencies</option></select>
-      </div>
-      <div class="gr-field">
-        <span class="gr-label" id="gr-years-label">Financial years</span>
-        <div class="gr-yearrow" role="group" aria-labelledby="gr-years-label">
-          <input class="gr-input gr-year" id="gr-year-from" type="number" inputmode="numeric" placeholder="2017" aria-label="From financial year starting" />
-          <span aria-hidden="true">–</span>
-          <input class="gr-input gr-year" id="gr-year-to" type="number" inputmode="numeric" placeholder="2026" aria-label="To financial year starting" />
-        </div>
-      </div>
-      <div class="gr-field">
-        <label class="gr-label" for="gr-min">Min awarded</label>
-        <select class="gr-select" id="gr-min">
-          <option value="0">Any amount</option>
-          <option value="100000">$100K+</option>
-          <option value="1000000">$1M+</option>
-          <option value="10000000">$10M+</option>
-          <option value="100000000">$100M+</option>
-        </select>
-      </div>
-      <div class="gr-actions">
-        <button type="button" class="gr-btn" id="gr-clear" hidden>Clear filters</button>
-        <button type="button" class="gr-btn gr-export" id="gr-export">Export CSV</button>
-      </div>
+      </details>
+      <button type="button" class="gr-btn gr-export" id="gr-export">Export CSV</button>
     </div>
 
     <div class="gr-tiles" aria-label="Headline figures"></div>
@@ -651,6 +697,16 @@ export function mountGrants (container, opts = {}) {
   const hasFilters = () =>
     state.q.trim() !== '' || state.kind !== '' || state.agency !== '' || state.donors ||
     state.yearFrom != null || state.yearTo != null || state.min > 0
+
+  const moreEl = $('.gr-more')
+  const countEl = $('.gr-count')
+  /** How many of the popover's filters are set: shown on its button when closed. */
+  function syncFilterCount () {
+    const n = (state.kind ? 1 : 0) + (state.agency !== '' ? 1 : 0) +
+      ((state.yearFrom != null || state.yearTo != null) ? 1 : 0) + (state.min > 0 ? 1 : 0)
+    countEl.hidden = n === 0
+    countEl.textContent = String(n)
+  }
 
   // ---- rows ----------------------------------------------------------------
 
@@ -718,6 +774,21 @@ export function mountGrants (container, opts = {}) {
     }
   }
 
+  let chartSvg = null
+  /** Marks the year columns inside the current window (all of them when no window is set). */
+  function syncChartSelection () {
+    if (!chartSvg) return
+    const windowed = state.yearFrom != null || state.yearTo != null
+    chartSvg.classList.toggle('gr-windowed', windowed)
+    for (const col of chartSvg.querySelectorAll('.gr-year-col')) {
+      const y = fyStart(col.dataset.fy)
+      const inside = !windowed || ((state.yearFrom == null || y >= state.yearFrom) && (state.yearTo == null || y <= state.yearTo))
+      col.classList.toggle('gr-sel', windowed && inside)
+      col.classList.toggle('gr-dim', windowed && !inside)
+      col.setAttribute('aria-pressed', windowed && inside ? 'true' : 'false')
+    }
+  }
+
   function renderChart () {
     chartEl.textContent = ''
     // Awards published later can carry start dates years earlier (and agreements
@@ -727,12 +798,12 @@ export function mountGrants (container, opts = {}) {
     const years = (data.meta.chart_years || data.meta.years.filter((fy) => ((data.years[fy] || {}).t || 0) >= maxAll * 0.01))
       .filter((fy) => data.years[fy])
     if (!years.length) return
-    const W = 720
-    const H = 150
-    const padL = 6
-    const padB = 22
-    const padT = 16
-    const gap = 6
+    const W = Math.max(340, Math.min(720, chartEl.clientWidth || 720))
+    const H = W < 480 ? 118 : 136
+    const padL = 4
+    const padB = 20
+    const padT = 14
+    const gap = 5
     const bw = (W - padL * 2 - gap * (years.length - 1)) / years.length
     const max = Math.max(...years.map((fy) => data.years[fy].t)) || 1
     const svgNS = 'http://www.w3.org/2000/svg'
@@ -744,36 +815,70 @@ export function mountGrants (container, opts = {}) {
       const y = data.years[fy]
       const x = padL + i * (bw + gap)
       const h = (H - padB - padT) * (y.t / max)
+      // One group per year, a button: click (or Enter) narrows the table to that
+      // financial year, click again to clear. The whole column is the target.
+      const g = document.createElementNS(svgNS, 'g')
+      g.setAttribute('class', 'gr-year-col')
+      g.setAttribute('role', 'button')
+      g.setAttribute('tabindex', '0')
+      g.dataset.fy = fy
+      g.setAttribute('aria-label', `${fy}: ${AUD_FULL.format(y.t)} in ${NUM.format(y.c)} grants; ${AUD_FULL.format(y.dt)} to recipients in the donor registers. Filter to this year`)
+      const hit = document.createElementNS(svgNS, 'rect')
+      hit.setAttribute('class', 'gr-hit')
+      hit.setAttribute('x', x - gap / 2); hit.setAttribute('y', 0)
+      hit.setAttribute('width', bw + gap); hit.setAttribute('height', H)
+      g.appendChild(hit)
       const bar = document.createElementNS(svgNS, 'rect')
       bar.setAttribute('class', 'gr-bar')
       bar.setAttribute('x', x); bar.setAttribute('y', H - padB - h)
       bar.setAttribute('width', bw); bar.setAttribute('height', Math.max(h, 0.5))
       const t = document.createElementNS(svgNS, 'title')
-      t.textContent = `${fy}: ${AUD_FULL.format(y.t)} in ${NUM.format(y.c)} grants; ${AUD_FULL.format(y.dt)} to recipients in the donor registers`
-      bar.appendChild(t)
-      svg.appendChild(bar)
+      t.textContent = `${fy}: ${AUD_FULL.format(y.t)} in ${NUM.format(y.c)} grants; ${AUD_FULL.format(y.dt)} to recipients in the donor registers. Click to filter to this year.`
+      g.appendChild(t)
+      g.appendChild(bar)
       const dh = (H - padB - padT) * (y.dt / max)
       if (dh > 0) {
         const d = document.createElementNS(svgNS, 'rect')
         d.setAttribute('class', 'gr-bar-donor')
         d.setAttribute('x', x); d.setAttribute('y', H - padB - dh)
         d.setAttribute('width', bw); d.setAttribute('height', dh)
-        svg.appendChild(d)
+        g.appendChild(d)
       }
+      svg.appendChild(g)
       const val = document.createElementNS(svgNS, 'text')
       val.setAttribute('class', 'gr-val')
       val.setAttribute('x', x + bw / 2); val.setAttribute('y', H - padB - h - 4)
       val.setAttribute('text-anchor', 'middle')
       val.textContent = fmtMoney(y.t)
-      svg.appendChild(val)
+      g.appendChild(val)
       const lab = document.createElementNS(svgNS, 'text')
-      lab.setAttribute('class', 'gr-axis')
+      lab.setAttribute('class', i % 2 ? 'gr-axis gr-axis-odd' : 'gr-axis')
       lab.setAttribute('x', x + bw / 2); lab.setAttribute('y', H - 6)
       lab.setAttribute('text-anchor', 'middle')
       lab.textContent = fyShort(fy)
-      svg.appendChild(lab)
+      g.appendChild(lab)
+    })
+    const toggleYear = (fy) => {
+      const y = fyStart(fy)
+      if (y == null) return
+      const same = state.yearFrom === y && state.yearTo === y
+      state.yearFrom = same ? null : y
+      state.yearTo = same ? null : y
+      yearFromEl.value = same ? '' : String(y)
+      yearToEl.value = same ? '' : String(y)
+      render()
+    }
+    svg.addEventListener('click', (e) => {
+      const col = e.target.closest('.gr-year-col')
+      if (col) toggleYear(col.dataset.fy)
+    })
+    svg.addEventListener('keydown', (e) => {
+      const col = e.target.closest('.gr-year-col')
+      if (col && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggleYear(col.dataset.fy) }
     })
     chartEl.appendChild(svg)
+    chartSvg = svg
+    syncChartSelection()
 
     // the government of the day, as a legend line rather than a colour on the bars
     const gov = el('div', 'gr-gov')
@@ -781,7 +886,7 @@ export function mountGrants (container, opts = {}) {
     leg1.append(el('i'), document.createTextNode('awarded'))
     const leg2 = el('span', 'gr-legend')
     leg2.append(el('i', 'gr-solid'), document.createTextNode('to recipients in the donor registers'))
-    gov.append(leg1, leg2)
+    gov.append(leg1, leg2, el('span', 'gr-hint', 'Click a year to filter'))
     const govLine = el('span', null, 'In government: ')
     for (const [from, to, bloc] of data.meta.government || []) {
       govLine.append(partyChip(bloc), document.createTextNode(` ${from.slice(0, 7)} to ${to ? to.slice(0, 7) : 'now'}  `))
@@ -878,12 +983,18 @@ export function mountGrants (container, opts = {}) {
     const frag = document.createDocumentFragment()
     const renderCells = state.view === 'recipients' ? renderRecipientRow
       : state.view === 'programs' ? renderProgramRow : renderElectorateRow
+    const phone = window.matchMedia('(max-width: 640px)').matches
+    let openRow = null
     for (const r of rows) {
       const tr = el('tr', 'gr-row')
       renderCells(tr, r)
       frag.appendChild(tr)
-      if (state.view === 'recipients' && state.open === r.id) frag.appendChild(detailRow(r))
+      if (state.view === 'recipients' && state.open === r.id) {
+        openRow = r
+        if (!phone) frag.appendChild(detailRow(r))
+      }
     }
+    renderPanel(phone && openRow ? openRow : null)
     if (rows.length === 0) {
       const tr = el('tr')
       const td = el('td', 'gr-empty', state.view === 'electorates' && !data.electorates.length
@@ -912,6 +1023,40 @@ export function mountGrants (container, opts = {}) {
       ? 'Grant recipients matching the current filters'
       : state.view === 'programs' ? 'Grant programs matching the current filters' : 'Electorates matching the current filters'
     clearBtn.hidden = !hasFilters()
+    syncFilterCount()
+    syncChartSelection()
+  }
+
+  // ---- recipient file: a panel above the table on phones ------------------
+
+  const panelEl = el('section', 'gr-panel')
+  panelEl.hidden = true
+  panelEl.setAttribute('aria-label', 'Recipient file')
+  $('.gr-tablewrap').before(panelEl)
+  let panelFor = null
+  function renderPanel (r) {
+    if (!r) { panelEl.hidden = true; panelEl.textContent = ''; panelFor = null; return }
+    if (panelFor === r.id && !panelEl.hidden) return
+    panelFor = r.id
+    panelEl.hidden = false
+    panelEl.textContent = ''
+    const close = el('button', 'gr-btn gr-panel-close', 'Close')
+    close.type = 'button'
+    close.addEventListener('click', () => { state.open = null; render() })
+    panelEl.appendChild(close)
+    const body = el('div')
+    body.appendChild(el('div', 'gr-status', 'Opening the file…'))
+    panelEl.appendChild(body)
+    loadDetail(r).then((d) => {
+      if (panelFor !== r.id) return
+      body.textContent = ''
+      renderDetail(body, r, d)
+      panelEl.scrollIntoView({ block: 'start', behavior: 'smooth' })
+    }).catch(() => {
+      if (panelFor !== r.id) return
+      body.textContent = ''
+      body.appendChild(el('div', 'gr-status', 'The file could not be opened.'))
+    })
   }
 
   // ---- recipient file (detail row) -----------------------------------------
@@ -1159,6 +1304,22 @@ export function mountGrants (container, opts = {}) {
     searchEl.focus()
   })
   exportBtn.addEventListener('click', exportCSV)
+  $('.gr-done').addEventListener('click', () => { moreEl.open = false; $('.gr-more-btn').focus() })
+  // The panel hangs off the button's left edge unless that would run off the
+  // viewport (the button has wrapped to a second line), then off its right.
+  moreEl.addEventListener('toggle', () => {
+    if (!moreEl.open) return
+    const pop = $('.gr-pop')
+    pop.classList.remove('gr-pop-right')
+    const r = pop.getBoundingClientRect()
+    if (r.right > window.innerWidth - 8) pop.classList.add('gr-pop-right')
+    const r2 = pop.getBoundingClientRect()
+    if (r2.left < 8) pop.classList.remove('gr-pop-right')
+  })
+  const onDocClick = (e) => { if (moreEl.open && !moreEl.contains(e.target)) moreEl.open = false }
+  const onKey = (e) => { if (e.key === 'Escape' && moreEl.open) { e.stopPropagation(); moreEl.open = false } }
+  document.addEventListener('click', onDocClick)
+  moreEl.addEventListener('keydown', onKey)
   for (const btn of root.querySelectorAll('.gr-jur')) {
     btn.addEventListener('click', () => { if (state.jur !== btn.dataset.jur) load(btn.dataset.jur) })
   }
@@ -1291,6 +1452,7 @@ export function mountGrants (container, opts = {}) {
       if (destroyed) return
       destroyed = true
       aborter.abort()
+      document.removeEventListener('click', onDocClick)
       root.remove()
     },
   }
