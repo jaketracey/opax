@@ -3202,7 +3202,27 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .search-result-heading .result-title { display: flex; align-items: center; }
 #panel-search .result-meta { margin-top: -4px; }
 #panel-search .search-result-text.is-collapsed { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
-#panel-search .search-passage-more { padding: 4px 0; background: none; border: 0; color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 3px; font: 400 .875rem/1.5 var(--sans); cursor: pointer; }
+/* The fold's control: a quiet bronze pill with a chevron that turns, sitting
+   on a hairline rise so the passage reads as folded paper. */
+#panel-search .search-result-text.is-collapsed { position: relative; }
+#panel-search .search-result-text.is-collapsed::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2.6em; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--paper));
+}
+#panel-search .search-passage-more {
+  display: inline-flex; align-items: center; gap: 0.4rem; min-height: 36px; margin: 0.15rem 0 0.2rem;
+  padding: 0.3rem 0.85rem 0.3rem 0.7rem; background: var(--paper-raised); color: var(--bronze-ink);
+  border: 1px solid var(--line); border-radius: 999px; font: 600 0.8125rem/1.2 var(--sans); cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+#panel-search .search-passage-more::before {
+  content: ""; width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg); transition: transform 220ms cubic-bezier(0.22, 0.7, 0.3, 1);
+}
+#panel-search .search-passage-more[aria-expanded="true"]::before { transform: translateY(2px) rotate(-135deg); }
+#panel-search .search-passage-more:hover { background: var(--bronze-wash); border-color: var(--bronze-rule); }
+#panel-search .search-passage-more:focus-visible { outline: 2px solid var(--bronze); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { #panel-search .search-passage-more, #panel-search .search-passage-more::before { transition: none; } }
 #panel-search .search-passage-more[hidden] { display: none; }
 #panel-search #search-readbar { margin-top: 12px; margin-bottom: 0; }
 
