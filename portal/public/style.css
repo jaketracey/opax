@@ -3015,11 +3015,13 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #front-page, #front-page .front-main, #front-page .front-rail { gap: 2.5rem; }
 #front-page .front-mod > .subject-section-title,
 #front-map .subject-section-title { margin: 0 0 1rem; font-size: 1.4rem; line-height: 1.35; }
-#panel-ask:has(#front-page:not([hidden])) #chip-row { flex-wrap: wrap; gap: 0.5rem; mask-image: none; animation: none; }
+/* Wide screens: one scrolling line with the edge fade, like the search page; phones keep the stacked rule above. */
+@media (max-width: 700px) { #panel-ask:has(#front-page:not([hidden])) #chip-row { flex-wrap: wrap; gap: 0.5rem; mask-image: none; animation: none; } }
 #panel-ask:has(#front-page:not([hidden])) #chip-row .chip {
-  display: inline-flex; align-items: center; min-height: 44px; white-space: normal;
+  display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap;
   text-align: left; line-height: 1.45; border-radius: 6px; height: auto;
 }
+@media (max-width: 700px) { #panel-ask:has(#front-page:not([hidden])) #chip-row .chip { white-space: normal; } }
 #front-map .fineprint, #front-page .fineprint { font-size: 0.875rem; line-height: 1.6; }
 #front-map .map-chip { min-height: 44px; font-size: 0.8125rem; }
 #front-map .front-state-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
