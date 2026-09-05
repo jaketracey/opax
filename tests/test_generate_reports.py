@@ -6,6 +6,7 @@ from scripts.generate_reports import (
     Records,
     anchor_block,
     brief_matches_topic,
+    cap_paragraph_words,
     compose_stat_label,
     debate_question,
     dedupe_ranges,
@@ -397,6 +398,50 @@ class TideDirectionTests(unittest.TestCase):
     def test_fewer_than_two_decades_yields_nothing(self):
         self.assertEqual(tide_direction([{"decade": "2020s", "share": 0.02}]), "")
         self.assertEqual(tide_direction([]), "")
+
+
+class ParagraphWordCapTests(unittest.TestCase):
+    def test_a_short_paragraph_is_untouched(self):
+        text = "Parliament argued about the bill. Labor backed it."
+        self.assertEqual(cap_paragraph_words(text, limit=55), text)
+
+    def test_a_long_paragraph_is_cut_at_a_sentence_boundary(self):
+        sentences = [f"Sentence number {n} makes a short claim about the record." for n in range(10)]
+        text = " ".join(sentences)
+        out = cap_paragraph_words(text, limit=20)
+        self.assertLessEqual(len(out.split()), 25)   # a little slack for the sentence that fit
+        self.assertTrue(out.endswith("."))
+        self.assertTrue(text.startswith(out))
+
+    def test_never_cuts_a_word_in_half_even_with_one_giant_sentence(self):
+        text = " ".join(f"word{n}" for n in range(100)) + "."
+        out = cap_paragraph_words(text, limit=20)
+        self.assertEqual(len(out.split()), 20)
+        self.assertTrue(out.endswith("."))
+        self.assertEqual(out.rstrip("."), " ".join(f"word{n}" for n in range(20)))
+
+    def test_a_period_next_to_a_closing_quote_still_counts_as_a_boundary(self):
+        # A quoted claim ends '"decrease supply."' — period THEN closing quote,
+        # so a boundary that demands whitespace right after the period would
+        # never match it at all and would run past the sentence entirely.
+        text = ('Parliament argued fiercely, with speakers defending the plan and warning tax '
+                'changes would "decrease supply." In New South Wales, the bill split the '
+                'chamber, with members on both sides trading accusations for hours on end.')
+        out = cap_paragraph_words(text, limit=20)
+        self.assertTrue(out.endswith('"decrease supply."'))
+        self.assertNotIn("New South Wales", out)
+
+    def test_a_semicolon_joined_run_on_is_trimmed_at_a_clause(self):
+        # The figures paragraph packs party positions into one semicolon-joined
+        # sentence, which a period-only sentence splitter would never trim.
+        text = ("Labor backs restricting negative gearing to new builds; "
+                "the Liberal Party opposes the change as promise-breaking; "
+                "the LNP likewise opposes it as a toxic tax on investors and renters.")
+        out = cap_paragraph_words(text, limit=10)
+        self.assertLessEqual(len(out.split()), 10)
+        self.assertTrue(out.endswith("."))
+        self.assertFalse(out.endswith(";"))
+        self.assertTrue(text.startswith(out.rstrip(".")))
 
 
 class LedeSourceUnionTests(unittest.TestCase):

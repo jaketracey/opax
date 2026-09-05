@@ -841,26 +841,29 @@ LEDE_SCHEMA = {
             "now_paragraph": {
                 "type": "string",
                 "description": (
-                    "About 50-60 words. What parliament is arguing about NOW: name the "
-                    "largest debates below and give the main lines of argument across the "
-                    "NOW findings — who wants what, and the sharpest disagreement. Past "
-                    "tense. No preamble: begin directly with the substance."
+                    "STRICT MAXIMUM 55 WORDS — count them. What parliament is arguing "
+                    "about NOW: name the largest debates below and give the main lines of "
+                    "argument across the NOW findings — who wants what, and the sharpest "
+                    "disagreement. PAST TENSE ONLY: 'argued', 'said', 'proposed', never "
+                    "'is arguing' or 'is debating'. No preamble: begin directly with the "
+                    "substance. Two or three sentences, not more."
                 ),
             },
             "arc_paragraph": {
                 "type": "string",
                 "description": (
-                    "About 40-60 words. How the argument has moved since 1993: one "
-                    "sentence for each era given, in order, ending with the direction the "
-                    "tide of attention shows. Past tense throughout."
+                    "STRICT MAXIMUM 55 WORDS — count them. How the argument has moved "
+                    "since 1993: one SHORT sentence for each era given, in order, ending "
+                    "with the direction the tide of attention shows. Past tense throughout."
                 ),
             },
             "figures_paragraph": {
                 "type": "string",
                 "description": (
-                    "About 40-60 words. The two or three strongest key figures, each with "
-                    "the base it is measured against, and each party's CURRENT position in "
-                    "one clause. Present tense for the parties' positions."
+                    "STRICT MAXIMUM 55 WORDS — count them. The two or three strongest key "
+                    "figures, each with the base it is measured against, and each party's "
+                    "CURRENT position in one SHORT clause. Present tense for the parties' "
+                    "positions."
                 ),
             },
         },
@@ -911,6 +914,70 @@ def tide_direction(tide_rows: list[dict]) -> str:
         direction = "stayed roughly level"
     return (f"TIDE — share of the labelled federal record on this topic, by decade: "
             f"{parts}. Attention has {direction}.")
+
+
+LEDE_PARAGRAPH_WORDS = 60   # 3 paragraphs x 60 words = the owner's 180-word ceiling
+# A boundary allows closing quotes/brackets after the punctuation before the
+# whitespace it looks for — a quoted claim inside the lede ends '"decrease
+# supply."' (period THEN closing quote), and without this a period like that
+# never counts as a boundary at all, mirroring `_SENTENCE_END` elsewhere.
+_CLAUSE_END = re.compile(r"[.!?;][\"'’”)\]]*(?=\s|$)")
+_SOFT_BREAK = re.compile(r"[.!?;,][\"'’”)\]]*(?=\s|$)")
+_END_PUNCT = re.compile(r"([.!?;,])([\"'’”)\]]*)$")
+
+
+def _fit_spans(text: str, boundary: "re.Pattern[str]", limit: int) -> str:
+    """The longest prefix of `text`, cut only at a `boundary` match, that does
+    not exceed `limit` words — or "" if not even the first piece fits."""
+    spans: list[tuple[int, int]] = []
+    start = 0
+    for match in boundary.finditer(text):
+        spans.append((start, match.end()))
+        start = match.end()
+    if text[start:].strip():
+        spans.append((start, len(text)))
+    kept, count = "", 0
+    for piece_start, piece_end in spans:
+        words = len(text[piece_start:piece_end].split())
+        if count + words > limit:
+            break
+        kept, count = text[:piece_end].strip(), count + words
+    return kept
+
+
+def _close_sentence(kept: str) -> str:
+    """Swap a trailing `;` or `,` for a full stop, keeping any closing quote
+    or bracket that followed it. A real `.!?` is left exactly as it is."""
+    match = _END_PUNCT.search(kept)
+    if match and match.group(1) in ";,":
+        return kept[:match.start(1)] + "." + match.group(2)
+    return kept
+
+
+def cap_paragraph_words(text: str, limit: int = LEDE_PARAGRAPH_WORDS) -> str:
+    """Trim to the last full sentence, clause or (failing that) comma-phrase
+    at or under the word limit.
+
+    The owner asked for a lede of about 120 to 180 words, and a model's own
+    word count is not reliable enough to hit that on instructions alone — both
+    exemplars came back at 265 and 303 words on the first try despite an
+    explicit per-paragraph target in the prompt and the schema. This is the
+    mechanical backstop, in the same spirit as `tide_direction()`: never trust
+    the model for arithmetic a script can just do.
+
+    Three tiers, each tried only when the one before it found nothing that
+    fit: `.!?;` boundaries first; failing that — the paragraph's very first
+    sentence alone is already over budget — `,` as well, so a 58-word opening
+    sentence still yields a clean phrase instead of nothing; only when not
+    even the first comma-phrase fits does it fall back to a hard word cut."""
+    text = re.sub(r"\s+", " ", str(text or "")).strip()
+    if len(text.split()) <= limit:
+        return text
+    for boundary in (_CLAUSE_END, _SOFT_BREAK):
+        kept = _fit_spans(text, boundary, limit)
+        if kept:
+            return _close_sentence(kept)
+    return " ".join(text.split()[:limit]).rstrip(",;:") + "."
 
 
 def lede_sources(sections: list[dict], eras: list[dict], cap: int = 12) -> list[dict]:
@@ -982,25 +1049,28 @@ def gen_lede(kb: KbClient, title: str, now: dict, over_time: dict,
 
     query = (
         f'Open a report on "{title}" in the Australian parliament. Use ONLY the material '
-        "below — the report's own findings, nothing outside it. Write exactly three "
+        "below — the report's own findings, nothing outside it. Write exactly three short "
         "paragraphs, in this order: (1) what parliament is arguing about now, naming the "
         "largest debates and the main lines of argument in the NOW findings — who wants "
         "what, and the sharpest disagreement; (2) how the argument has moved since 1993, "
-        "one sentence per era, ending with the direction the tide of attention shows; "
+        "one short sentence per era, ending with the direction the tide of attention shows; "
         "(3) the strongest figures, each with its base, and where each party currently "
-        "stands, one clause each. Past tense for the historical record, present tense for "
-        "the parties' positions. Do not open with any preamble, and never write 'this "
-        "report', 'based on', 'the record shows' or any other description of the report or "
-        "its sources — begin directly with what parliament is doing. Quote a source's exact "
-        "words, in quotation marks, only where a finding below already does; never invent a "
-        "quotation.\n\n"
+        "stands, one short clause each. PAST TENSE for paragraphs 1 and 2 — what was argued, "
+        "said and proposed, never 'is arguing' or 'is debating' — and PRESENT TENSE only for "
+        "the parties' positions in paragraph 3. THE WHOLE OPENING MUST BE 120 TO 180 WORDS TOTAL — "
+        "55 WORDS OR FEWER IN EACH PARAGRAPH. Write tightly: a plain clause beats a long "
+        "one, and a detail that will not fit is a detail to cut, not a reason to run long. "
+        "Do not open with any preamble, and never write 'this report', 'based on', 'the "
+        "record shows' or any other description of the report or its sources — begin "
+        "directly with what parliament is doing. Quote a source's exact words, in quotation "
+        "marks, only where a finding below already does; never invent a quotation.\n\n"
         f"DEBATES NOW BEFORE PARLIAMENT:\n{debates}\n\n{findings}\n\n{era_findings}\n\n"
         f"{tide_line}\n\nKEY FIGURES:\n{stats_lines}\n\nPARTY POSITIONS:\n{position_lines}"
     )
     result = openrouter_tool_call(LEDE_SCHEMA, query)
     ASKS["lede"] += 1
     paragraphs = [
-        re.sub(r"\s+", " ", str(result.get(key) or "")).strip()
+        cap_paragraph_words(re.sub(r"\s+", " ", str(result.get(key) or "")).strip())
         for key in ("now_paragraph", "arc_paragraph", "figures_paragraph")
     ]
     if not any(paragraphs):
