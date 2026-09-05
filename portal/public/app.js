@@ -5972,7 +5972,7 @@ const BILLS_FINEPRINT =
 /** APH writes a sponsor as "SMITH, Sen Dean" or "BURKE, the Hon Tony, MP"; readers want "Dean Smith". */
 function billSponsorName(raw) {
   const s = String(raw || "").replace(/&#39;/g, "'").replace(/&#34;|&quot;/g, '"').trim();
-  const m = s.match(/^([A-Z][A-Z'\- ]+),\s*(.+)$/);
+  const m = s.match(/^([A-Za-z][A-Za-z'\- ]+),\s*(.+)$/); // the surname is upper case, bar the Mc and Mac prefixes
   if (!m) return s;
   const surname = m[1].toLowerCase().replace(/(^|[\s'\-])([a-z])/g, (_, a, b) => a + b.toUpperCase())
     .replace(/^Mc([a-z])/, (_, c) => "Mc" + c.toUpperCase());
