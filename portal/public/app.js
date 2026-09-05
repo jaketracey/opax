@@ -3135,6 +3135,9 @@ async function mountSubjectMap(nodeId) {
       focus: nodeId,
       chrome: "mini",
       reveal: true, // open on the subject, then pull out to the money
+      // On a phone the card docks over most of the plate and would hide that
+      // reveal: the subject is lit and framed, and the card waits for a tap.
+      openCard: !window.matchMedia("(max-width: 720px)").matches,
       scrub: true, // the year window, so a reader can watch the donors change
       askUrl: (industry) => askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
       onSelect: (node) => {
@@ -9416,8 +9419,9 @@ function reportPositions(positions, win) {
   list.className = "position-list report-position-list";
   for (const p of positions) {
     const li = document.createElement("li");
-    const head = document.createElement("span");
+    const head = document.createElement("a");
     head.className = "position-party";
+    head.href = subjectHash("party", p.party); // the chip opens the party's page
     head.innerHTML = partyChipHTML(p.party); // fixed map lookup, not model text
     if (!head.firstChild) head.textContent = p.party;
     const text = document.createElement("span");
@@ -9488,8 +9492,7 @@ function reportVoiceRow(v, max) {
   row.className = "report-voice";
   const face = document.createElement("span");
   face.className = "report-voice-face";
-  face.setAttribute("aria-hidden", "true");
-  face.textContent = reportInitials(v.speaker);
+  face.setAttribute("aria-hidden", "true"); // a blank circle until the portrait lands; never initials
   loadPhotoMap().then(() => {
     const url = photoUrlFor(v.speaker);
     if (url) face.innerHTML = `<img src="${esc(url)}" alt="" width="32" height="32" loading="lazy">`;
@@ -9586,10 +9589,136 @@ function reportSectionHead(id, text) {
   return h;
 }
 
+// --- follow the money: the money map, isolated to the report's industry ------
+// The keys are the map's own cluster groups (graph/palette.ts CLUSTER_COLOURS,
+// the `group` on every node in graph/money.json). A report whose subject has
+// no donor industry (immigration, First Nations) has no money part.
+const REPORT_MONEY = {
+  gambling: { group: "gambling", topic: "gambling", label: "gambling industry", ask: "gambling" },
+  housing: { group: "property", topic: "property-construction", label: "property and construction", ask: "property and construction" },
+  climate: { group: "mining & energy", topic: "mining-energy", label: "mining and energy", ask: "mining and energy" },
+  media: { group: "media & tech", topic: "media-communications", label: "media and technology", ask: "media ownership" },
+};
+
+let reportMapHandle = null;
+let reportWordsHandle = null; // the words-per-dollar panel under the map
+let reportMapObserver = null;
+const reportMapPauses = new Set();
+function pauseReportMap(reason, on) {
+  if (on) reportMapPauses.add(reason); else reportMapPauses.delete(reason);
+  reportMapHandle?.setPaused?.(reportMapPauses.size > 0);
+}
+function destroyReportMap() {
+  reportMapObserver?.disconnect();
+  reportMapObserver = null;
+  reportMapPauses.clear();
+  if (reportMapHandle) {
+    try { reportMapHandle.destroy(); } catch { /* already gone */ }
+    reportMapHandle = null;
+  }
+  if (reportWordsHandle) {
+    try { reportWordsHandle.destroy(); } catch { /* already gone */ }
+    reportWordsHandle = null;
+  }
+}
+document.addEventListener("close", (e) => {
+  if (e.target instanceof HTMLDialogElement) pauseReportMap("dialog", document.querySelector("dialog[open]") !== null);
+}, true);
+
+/** Words per dollar for the report's own industry: money beside the debate share, party by party. */
+async function mountReportWords(el, cfg, slug) {
+  try {
+    const { mountWordsDollars } = await import("/wordsdollars.js");
+    if (currentReportSlug !== slug || !el.isConnected) return;
+    reportWordsHandle = mountWordsDollars(el, { only: [cfg.topic] });
+  } catch {
+    el.remove();
+  }
+}
+
+async function mountReportMap(el, cfg, slug) {
+  try {
+    const { mountMoneyMap } = await import("/money-map.js");
+    if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
+    const handle = await mountMoneyMap(el, "/graph/money.json", {
+      chrome: "mini",
+      scrub: true, // the year window: watch the industry's money move
+      askUrl: (industry) => askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
+      // No onSelect: a click opens the node's card in place (with its own
+      // "Full profile" link), so the reader can explore without leaving.
+    });
+    if (currentReportSlug !== slug || !el.isConnected) { handle.destroy?.(); return; }
+    el.classList.remove("is-waiting");
+    reportMapHandle = handle;
+    handle.isolate?.(cfg.group);
+    // Offscreen (or the whole view hidden) pauses the render loop; a dialog too.
+    reportMapObserver?.disconnect();
+    if ("IntersectionObserver" in window) {
+      reportMapObserver = new IntersectionObserver(
+        (entries) => pauseReportMap("offscreen", !entries[entries.length - 1].isIntersecting), { threshold: 0.05 });
+      reportMapObserver.observe(el);
+    }
+    if (document.querySelector("dialog[open]")) reportMapPauses.add("dialog");
+    handle.setPaused?.(reportMapPauses.size > 0);
+  } catch {
+    el.classList.remove("is-waiting");
+    el.innerHTML = `<p class="status" style="padding:1rem">The map could not load here. <a href="${esc(moneyHash("federal", cfg.group))}">Open the full map</a>.</p>`;
+  }
+}
+
+/** The money part: the map isolated to the industry behind the subject. */
+function renderReportMoney(report, slug) {
+  const part = $("report-money");
+  if (!part) return;
+  destroyReportMap();
+  part.replaceChildren();
+  const cfg = REPORT_MONEY[slug];
+  part.hidden = !cfg;
+  if (!cfg) return;
+  part.append(reportSectionHead("report-money", "Follow the money"));
+  const note = document.createElement("p");
+  note.className = "report-part-note";
+  note.textContent = `Disclosed donations from ${cfg.label} donors to the parties, from the AEC returns. ` +
+    "Drag to orbit, click a donor or a party for its card, and drag the years to watch the money move.";
+  const plate = document.createElement("div");
+  plate.className = "subject-map report-map is-waiting";
+  plate.id = "report-map";
+  plate.setAttribute("role", "region");
+  plate.setAttribute("aria-label", `Money map, ${cfg.label} donors`);
+  const links = document.createElement("p");
+  links.className = "fineprint report-money-links";
+  links.innerHTML = `<a href="${esc(moneyHash("federal", cfg.group))}">Open the full money map with the ${esc(cfg.label)} isolated</a> · ` +
+    `<a href="${esc(askHash(`What has parliament said about ${cfg.ask}?`))}">Ask what parliament said about ${esc(cfg.ask)}</a>`;
+  const wordsHead = document.createElement("h4");
+  wordsHead.className = "report-sub-title";
+  wordsHead.textContent = "Words per dollar";
+  const wordsNote = document.createElement("p");
+  wordsNote.className = "report-part-note";
+  wordsNote.textContent = "What the industry disclosed to each party, beside that party's share of the debate in the labelled record. Comparison, never causation; every number opens the disclosures or speeches behind it.";
+  const words = document.createElement("div");
+  words.className = "report-words";
+  part.append(note, plate, links, wordsHead, wordsNote, words);
+  // Mount when the plate comes near: three.js is half a megabyte and the money
+  // sits at the foot of a long read.
+  const mount = () => { mountReportMap(plate, cfg, slug); mountReportWords(words, cfg, slug); };
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      if (reportMapObserver === io) reportMapObserver = null;
+      mount();
+    }, { rootMargin: "600px 0px" });
+    reportMapObserver = io;
+    io.observe(plate);
+  } else {
+    mount();
+  }
+}
+
 /**
- * Build the v2 page: the head, the debate now, how it has moved, and the two
- * closing layers (the money, and every source deduplicated). Section numbers
- * run through both essay groups so /reports/<slug>/s/<n> still names one.
+ * Build the v2 page: the head, the debate now, how it has moved, the money,
+ * and every source deduplicated. Section numbers run through both essay
+ * groups so /reports/<slug>/s/<n> still names one.
  */
 function renderReportV2(report, slug) {
   const win = reportWindow(report);
@@ -9626,7 +9755,9 @@ function renderReportV2(report, slug) {
   const nav = $("report-jump");
   nav.replaceChildren();
   nav.hidden = false;
-  for (const [id, label] of [["report-now", "Now"], ["report-overtime", "Over time"]]) {
+  const parts = [["report-now", "Now"], ["report-overtime", "Over time"]];
+  if (REPORT_MONEY[slug]) parts.push(["report-money", "Money"]);
+  for (const [id, label] of parts) {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "report-jump-btn";
@@ -9727,6 +9858,9 @@ function renderReportV2(report, slug) {
     }
   }
 
+  // --- follow the money -------------------------------------------------------
+  renderReportMoney(report, slug);
+
   // --- every source, once ---------------------------------------------------
   const all = $("report-allsources");
   all.replaceChildren();
@@ -9786,7 +9920,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   $("report-meta").hidden = v2;
   $("report-meta2").hidden = !v2;
   $("report-head2").hidden = !v2;
-  for (const id of ["report-jump", "report-now", "report-overtime", "report-allsources"]) $(id).hidden = !v2;
+  for (const id of ["report-jump", "report-now", "report-overtime", "report-money", "report-allsources"]) $(id).hidden = !v2;
   if (v2) {
     for (const id of ["report-brief", "report-figures", "report-positions", "report-moments", "report-sections"]) {
       $(id).replaceChildren();

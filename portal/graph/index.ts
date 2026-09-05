@@ -136,6 +136,13 @@ export type MoneyMapOptions = {
    * The reader's first touch ends it; reduced motion opens on the landing.
    */
   reveal?: boolean
+  /**
+   * Whether a silent selection (the `focus` seed, `handle.select`) opens the
+   * detail card. Defaults to true. A subject page on a phone passes false: the
+   * card docks over most of the plate there and would hide the reveal, so the
+   * node is lit and framed and the card waits for the reader's own tap.
+   */
+  openCard?: boolean
 }
 
 export type MoneyMapHandle = {
@@ -1570,7 +1577,17 @@ export async function mountMoneyMap(
     // its own seed) keeps the spotlight; anything else drops it.
     if (id !== spotlightFor) spotlightEdges = null
     applyEmphasis()
-    if (node) {
+    if (node && !user && opts.openCard === false) {
+      // Selected without the card: lit and framed, the plate left clear.
+      card.hidden = true
+      card.innerHTML = ''
+      releaseHost()
+      engine.setInsets(chromeInsets())
+      requestAnimationFrame(() => {
+        if (reveal?.running) reveal.remeasure()
+        else if (selectedId) engine.focusOn(selectedId, null)
+      })
+    } else if (node) {
       renderCard(node)
       card.hidden = false
       fitHostToCard()

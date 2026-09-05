@@ -12,6 +12,10 @@
  *   const wd = mountWordsDollars(container)   // renders into container
  *   wd.destroy()                              // removes DOM + aborts loads
  *
+ * Options: { only: ['gambling'] } renders just those topics' panels, without
+ * the cross-industry introduction — a report embeds its own industry's panel
+ * under the money map.
+ *
  * Data sources (same-origin, fetched in parallel):
  *   GET /api/matrix       labelled, parties, cells {topicSlug: {party: n}},
  *                         totals {topicSlug: labelled-so-far}
@@ -303,8 +307,10 @@ function buildPanel (pairing, matrix, money) {
 // mountWordsDollars
 // ---------------------------------------------------------------------------
 
-export function mountWordsDollars (container) {
+export function mountWordsDollars (container, opts = {}) {
   injectStyles()
+  const only = Array.isArray(opts.only) && opts.only.length ? new Set(opts.only) : null
+  const pairings = only ? PAIRINGS.filter((p) => only.has(p.topic)) : PAIRINGS
 
   const aborter = new AbortController()
 
@@ -321,7 +327,7 @@ export function mountWordsDollars (container) {
       250 largest disclosed donors, aggregated to party recipients, so money to
       independents is not separated. A machine pass is still labelling the
       corpus by subject, so speech counts are floors and shares will settle as
-      it runs. Bars scale within their own panel and series — compare the
+      it runs. Bars scale within their own panel and series: compare the
       numbers, not bar lengths, across panels. Bars are bronze and ink, never
       party colours. <a href="#/money">Money map</a> ·
       <a href="#/methods">Methodology</a></p>
@@ -465,22 +471,25 @@ export function mountWordsDollars (container) {
           return res.json()
         }))
 
-      const panels = PAIRINGS.map((p) => buildPanel(p, matrix, money))
+      const panels = pairings.map((p) => buildPanel(p, matrix, money))
         .filter((p) => p.moneyTotal > 0)
         .sort((a, b) => b.moneyTotal - a.moneyTotal)
       const grand = panels.reduce((a, p) => a + p.moneyTotal, 0)
 
       introEl.textContent = ''
-      const grandLink = el('a')
-      grandLink.href = '#/money'
-      grandLink.title = 'Opens the money map.'
-      grandLink.appendChild(el('b', null, fmtMoney(grand)))
-      introEl.append(
-        'Where an AEC donor industry maps onto a debate in the topic taxonomy, ',
-        'this view puts the two side by side: ', grandLink,
-        ` in disclosed donations across ${panels.length} industries, beside each ` +
-        'party\'s share of the matching debate in the labelled record. ' +
-        'Every number opens the disclosures or speeches behind it.')
+      introEl.hidden = Boolean(only) // a single embedded panel carries its own lead
+      if (!only) {
+        const grandLink = el('a')
+        grandLink.href = '#/money'
+        grandLink.title = 'Opens the money map.'
+        grandLink.appendChild(el('b', null, fmtMoney(grand)))
+        introEl.append(
+          'Where an AEC donor industry maps onto a debate in the topic taxonomy, ',
+          'this view puts the two side by side: ', grandLink,
+          ` in disclosed donations across ${panels.length} industries, beside each ` +
+          'party\'s share of the matching debate in the labelled record. ' +
+          'Every number opens the disclosures or speeches behind it.')
+      }
 
       panelsEl.textContent = ''
       for (const panel of panels) panelsEl.appendChild(renderPanel(panel))

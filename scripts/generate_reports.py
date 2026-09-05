@@ -830,9 +830,10 @@ def gen_positions(kb: KbClient, title: str, srcs: dict, lines: list[str],
 LEDE_SCHEMA = {
     "name": "lede",
     "description": (
-        "Three sentences opening a report on what parliament is arguing about now, "
-        "each drawn from the numbered findings below and each carrying the number of "
-        "the source that evidences it."
+        "Three or four sentences opening a report with the overarching view of a debate "
+        "in the Australian parliament: what it is about, where the sides stand, what is "
+        "being fought over now and how it has moved. Each sentence is drawn from the "
+        "findings below and carries the number of the source that best evidences it."
     ),
     "parameters": {
         "type": "object",
@@ -841,12 +842,12 @@ LEDE_SCHEMA = {
             "sentences": {
                 "type": "array",
                 "minItems": 3,
-                "maxItems": 3,
+                "maxItems": 4,
                 "items": {
                     "type": "object",
                     "additionalProperties": False,
                     "properties": {
-                        "text": {"type": "string", "description": "One sentence, at most 32 words, plain and specific. Name speakers, parties, bills and figures where the findings do. No preamble, no 'the record shows', no meta-commentary."},
+                        "text": {"type": "string", "description": "One sentence, at most 36 words, plain and specific: a claim about the debate (its subject, a side's position, a shift over time), with the parties, bills and figures from the findings as its evidence. Name a member only where the point turns on that member. No preamble, no 'the record shows', no meta-commentary."},
                         "source_ref": {"type": "integer", "description": "The [n] of the source that evidences this sentence."},
                     },
                     "required": ["text", "source_ref"],
@@ -929,17 +930,22 @@ def _names_speaker(sentence: str, speaker: str) -> bool:
     return bool(re.search(rf"\b{re.escape(surname)}\b", sentence))
 
 
-def gen_lede(kb: KbClient, title: str, sections: list[dict]) -> dict:
-    """Three cited sentences over the `now` answers.
+def gen_lede(kb: KbClient, title: str, sections: list[dict], eras: list[dict] = ()) -> dict:
+    """The overarching view: three or four cited sentences on what the argument
+    is about, where the sides stand, what is fought over now and how it has
+    moved, written over the `now` answers and the era answers together.
 
-    The numbered sources are the sections' own CITED sources, so the lede's
-    citations are the same records the sections were built on — not a fresh
-    retrieval that could point somewhere the report never went."""
+    The numbered sources are the sections' and eras' own CITED sources, so the
+    lede's citations are the same records the report was built on — not a
+    fresh retrieval that could point somewhere the report never went. It used
+    to be three attributed sentences ("Senator X told the Senate..."), which
+    read as a run of quotations rather than an opening; Jake asked for the
+    overview (2026-09-05)."""
     srcs: dict[int, dict] = {}
     lines: list[str] = []
     index: dict[str, int] = {}
     bodies: dict[str, str] = {}
-    for section in sections:
+    for section in [*sections, *eras]:
         for source in section.get("sources") or []:
             if not source.get("cited") or source["slug"] in index:
                 continue
@@ -960,17 +966,29 @@ def gen_lede(kb: KbClient, title: str, sections: list[dict]) -> dict:
         return {}
     findings = "\n\n".join(
         f"FINDING — {s['question']}\n{s['answer']}" for s in sections if s.get("answer"))
+    moved = "\n\n".join(
+        f"ERA {e.get('label')} — {e.get('question')}\n{e.get('answer')}" for e in eras if e.get("answer"))
     query = (
-        f'Open a report on "{title}" in the Australian parliament with three sentences about '
-        "what parliament is arguing over NOW. Below are the report's own findings and the "
-        "numbered sources they were built from. Write the three sentences from the findings, "
-        "and give each the number of the source that evidences it. Be specific: name the bills, "
-        "the parliaments, the speakers and the figures the findings name. EVERY sentence must "
-        "name the member or minister whose words it carries, and its source_ref must be that "
-        "member's own record in the list below — a sentence about what a federal minister said "
-        "cannot cite a state member's question. Do not describe the "
-        "report, the sources or the record itself."
-        f"\n\n{findings}\n\nSOURCES:\n" + "\n".join(lines)
+        f'Open a report on "{title}" in the Australian parliament with one paragraph of three or '
+        "four sentences that gives a reader the overarching view of the debate. Write as an "
+        "analyst summing it up, not as a run of quotations: what the argument is fundamentally "
+        "about, where the sides stand and on what grounds, what is being fought over now, and "
+        "how the terms of the argument have shifted across the years the record covers. Lead "
+        "with the shape of the debate. The parties, bills, figures and members in the findings "
+        "are the evidence for those claims: name them where they sharpen a point, never as the "
+        "subject of every sentence. At most one sentence may rest on a single member's words, "
+        "and no sentence may be a paraphrase of one speech. Give each sentence the number of "
+        "the source that best evidences it: a claim about a party's position cites a member of "
+        "that party making it, and a sentence that names a member cites that member's own "
+        "record. Keep the whole opening to about 120 to 160 words. Paraphrase throughout and "
+        "put nothing in quotation marks: an opening is the analyst's own account, and a quoted "
+        "phrase is checked against the record and dropped when it is not there verbatim. Use "
+        "commas and full stops, never dashes. Do not "
+        "describe the report, the sources or the record itself; no headings, no lists, no "
+        "'the record shows'."
+        f"\n\nFINDINGS NOW:\n{findings}"
+        + (f"\n\nHOW IT HAS MOVED:\n{moved}" if moved else "")
+        + "\n\nSOURCES:\n" + "\n".join(lines)
     )
     sentences = (openrouter_tool_call(LEDE_SCHEMA, query)).get("sentences") or []
     ASKS["lede"] += 1
@@ -979,7 +997,13 @@ def gen_lede(kb: KbClient, title: str, sections: list[dict]) -> dict:
     used: list[dict] = []
     for sentence in sentences:
         ref = sentence.get("source_ref")
-        body = re.sub(r"\s+", " ", str(sentence.get("text") or "")).strip()
+        # House style has no dashes; the model reaches for them between clauses.
+        body = re.sub(r"\s*[—–]\s*", ", ", str(sentence.get("text") or ""))
+        # The opening is asked to paraphrase, so a quotation mark here is the
+        # model slipping: the words stay, as its own account, rather than the
+        # sentence being dropped for a quotation the record does not hold.
+        body = re.sub(r"[\"“”]", "", body)
+        body = re.sub(r"\s+", " ", body).strip()
         if ref not in srcs or not body:
             continue
         ref = settle_lede_ref(body, ref, srcs)
@@ -2528,7 +2552,8 @@ def main() -> None:
                       f"all {len(report['voices']['all'])}")
             elif args.only == "lede":
                 sections = (report.get("now") or {}).get("sections") or []
-                report["lede"] = gen_lede(kb, cfg["title"], sections)
+                report["lede"] = gen_lede(kb, cfg["title"], sections,
+                                          (report.get("over_time") or {}).get("eras") or [])
                 print(f"[{slug}] lede: {len((report['lede'] or {}).get('text') or '')} chars")
             elif args.only == "cites":
                 print(f"[{slug}] marking answers and filling passages (free)")
@@ -2643,7 +2668,8 @@ def main() -> None:
         checkpoint(positions=positions)
 
         try:
-            lede = gen_lede(kb, cfg["title"], report["now"]["sections"])
+            lede = gen_lede(kb, cfg["title"], report["now"]["sections"],
+                            (report.get("over_time") or {}).get("eras") or [])
         except AragError as error:
             print(f"  lede FAILED ({error.status})", file=sys.stderr)
             lede = prior.get("lede") or {}

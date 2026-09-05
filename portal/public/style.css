@@ -3700,3 +3700,11 @@ html[data-panel="chat"] footer { display: none; }
 @media (prefers-reduced-motion: reduce) {
   #panel-reports * { scroll-behavior: auto; }
 }
+
+/* ==== report: follow the money ==== */
+.report-map { height: 460px; margin-top: var(--space-4); }
+.report-money-links { margin-top: var(--space-3); }
+.report-money-links a + a { margin-left: 0.2rem; }
+@media (max-width: 640px) { .report-map { height: 380px; } }
+.report-words { margin-top: var(--space-3); }
+.report-words .wd-panel { margin-top: 0; }
