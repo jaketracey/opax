@@ -135,8 +135,9 @@ const STEP_NAMES = [
   'How much, and when',
   'Where it lands',
   'What parliament said',
-  'What this cannot prove',
 ] as const
+// The former fifth step, the caveats, was retired on 2026-09-05: the limits
+// stay on the About page and in the fineprint under every figure.
 
 const normFallback = (value: string) => String(value || '')
   .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
@@ -1634,8 +1635,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     if (prev) prev.disabled = step === 0
     if (next) {
       next.disabled = false
-      next.textContent = step === STEP_NAMES.length - 1 ? 'Close'
-        : step === STEP_NAMES.length - 2 ? 'Read the limits' : 'Next'
+      next.textContent = step === STEP_NAMES.length - 1 ? 'Close' : 'Next'
     }
     scene?.setStep(step)
     if (yearLabel) yearLabel.hidden = step !== 1
