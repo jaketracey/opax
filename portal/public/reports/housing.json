@@ -3,7 +3,7 @@
  "title": "Housing",
  "blurb": "Decades of affordability promises, negative gearing fights and supply debates.",
  "version": 2,
- "generated_at": "2026-09-04T23:08:06+00:00",
+ "generated_at": "2026-09-05T00:19:16+00:00",
  "corpus_resources": 609635,
  "stats": {
   "speech_count": 210854,
@@ -330,64 +330,96 @@
  },
  "key_stats": [
   {
-   "value": "637",
-   "label": "Fewer social housing dwellings in the ACT between 1996-97 and 2004-05",
-   "numerator": "637",
-   "denominator": "social housing dwellings funded under the Commonwealth-State Housing Agreement in the Australian Capital Territory",
-   "unit": "dwellings",
-   "jurisdiction": "Australian Capital Territory",
-   "as_of": "1996-97 to 2004-05",
-   "detail": "Australian government's draft independent audit of government contributions to housing assistance",
-   "slug": "speech-781567",
-   "source_title": "Nigel Scullion \u2014 Questions without Notice: Additional Answers \u2014 2007-08-07"
-  },
-  {
-   "value": "13",
-   "label": "Loss of social housing dwellings nationally for the same period",
-   "numerator": "13",
-   "denominator": "social housing dwellings funded under the Commonwealth-State Housing Agreement nationally",
-   "unit": "dwellings",
-   "jurisdiction": "Australia",
-   "as_of": "1996-97 to 2004-05",
-   "detail": "Australian government's draft independent audit of government contributions to housing assistance",
-   "slug": "speech-781567",
-   "source_title": "Nigel Scullion \u2014 Questions without Notice: Additional Answers \u2014 2007-08-07"
-  },
-  {
-   "value": "20.2%",
-   "label": "Long-run average proportion of first home buyers",
-   "numerator": "20.2",
-   "denominator": "long-run average",
+   "value": "89 per cent",
+   "label": "Australians who agree we're in a housing crisis",
+   "numerator": "89",
+   "denominator": "Australians",
    "unit": "per cent",
    "jurisdiction": "Australia",
-   "as_of": "2006",
-   "detail": "Kim Carr noting proportion of first home buyers below long-run average for over four years",
-   "slug": "speech-775069",
-   "source_title": "Kim Carr \u2014 Questions without Notice: Take Note of Answers \u2014 2006-09-12"
+   "as_of": "2025",
+   "detail": "Glenn Sterle speaking on Australia's housing crisis",
+   "slug": "speech-1198267",
+   "source_title": "Glenn Sterle \u2014 Matters of Public Importance \u2014 2025-11-04",
+   "window": "now"
   },
   {
-   "value": "28%",
-   "label": "Loans to first home buyers as share of new loans financed",
-   "numerator": "28",
-   "denominator": "new loans financed",
+   "value": "0.9 per cent",
+   "label": "Share of private homes in Bradfield that are social housing",
+   "numerator": "0.9",
+   "denominator": "67,000 private homes",
+   "unit": "per cent",
+   "jurisdiction": "Bradfield",
+   "as_of": "2026",
+   "detail": "Nicolette Boele on social housing in her electorate of Bradfield",
+   "slug": "speech-1199444",
+   "source_title": "Nicolette Boele \u2014 Constituency Statements \u2014 2026-02-03",
+   "window": "now"
+  },
+  {
+   "value": "3.8 per cent",
+   "label": "National average share of social housing",
+   "numerator": "3.8",
+   "denominator": "national average",
    "unit": "per cent",
    "jurisdiction": "Australia",
-   "as_of": "2009",
-   "detail": "Anne McEwen noting loans to first home buyers at record levels",
-   "slug": "speech-793443",
-   "source_title": "Anne McEwen \u2014 Questions without Notice \u2014 2009-06-16"
+   "as_of": "2026",
+   "detail": "Nicolette Boele comparing Bradfield to national average",
+   "slug": "speech-1199444",
+   "source_title": "Nicolette Boele \u2014 Constituency Statements \u2014 2026-02-03",
+   "window": "now"
+  },
+  {
+   "value": "1.8 per cent",
+   "label": "Share of social housing unoccupied as of March 2024",
+   "numerator": "1.8",
+   "denominator": "social housing",
+   "unit": "per cent",
+   "jurisdiction": "Victoria",
+   "as_of": "2024",
+   "detail": "Evan Mulholland citing government claim",
+   "slug": "speech-1158783",
+   "source_title": "Evan Mulholland \u2014 Housing \u2014 2025-04-02",
+   "window": "now"
+  },
+  {
+   "value": "42 per cent",
+   "label": "Greatest needs households waiting more than two years for housing",
+   "numerator": "42",
+   "denominator": "greatest needs households",
+   "unit": "per cent",
+   "jurisdiction": "Victoria",
+   "as_of": "2024",
+   "detail": "Evan Mulholland on households waiting for housing",
+   "slug": "speech-1158783",
+   "source_title": "Evan Mulholland \u2014 Housing \u2014 2025-04-02",
+   "window": "now"
   }
  ],
  "key_stats_dropped": [
   {
-   "value": "3.6%",
-   "measure": "Rise in housing finance in April",
+   "value": "more than one per cent",
+   "measure": "increase in national housing prices in October",
+   "reason": "numerator 1 not in the passage"
+  },
+  {
+   "value": "six per cent",
+   "measure": "increase in national housing prices over the last year",
+   "reason": "numerator 6 not in the passage"
+  },
+  {
+   "value": "4935",
+   "measure": "unoccupied public and community housing dwellings as of 30 June 2024",
+   "reason": "the passage states no total for this number to be measured against"
+  },
+  {
+   "value": "13 per cent",
+   "measure": "guarantees issued to joint-citizen resident households as share of total",
    "reason": "the passage does not say this number is a share of that base"
   },
   {
-   "value": "13.5%",
-   "measure": "Housing finance higher over the year",
-   "reason": "numerator 13.5 not in the passage"
+   "value": "one per cent",
+   "measure": "rise in national home values in October",
+   "reason": "numerator 1 not in the passage"
   }
  ],
  "positions": [
@@ -990,16 +1022,8 @@
   }
  ],
  "lede": {
-  "text": "A Labor minister defended the $32 billion Homes for Australia plan as 'focused on supply, because that is the key,' promising an extra 75,000 first home buyers and a pro-supply budget. Senator Andrew Bragg countered that the government's tax changes 'will decrease supply' and that Treasury already deems its 1.2 million homes target by 2029 'very unlikely' to be met. In NSW, Greens MP Sue Higginson said the Environmental Planning and Assessment Amendment Bill 2025 'centralises powers in the hands of the Minister,' while Minister Paul Scully reported an 'almost universally positive response' to its passage.",
+  "text": "Senator Bragg argued the government will never solve the housing crisis until it understands what is holding back supply, claiming its own budget papers confirm the tax changes will decrease supply. Government speakers defended the $32 billion Homes for Australia plan as focused on supply, the key for homeowners, renters and those in social and affordable housing. In NSW, The Greens' Sue Higginson opposed the Planning System Reforms Bill 2025 as centralising power and creating significant corruption risk, while Minister Paul Scully reported an almost universally positive response to its passage.",
   "sources": [
-   {
-    "slug": "speech-1203218",
-    "title": "Madonna Jarrett \u2014 Bills \u2014 2026-05-27",
-    "speaker": "Madonna Jarrett",
-    "party": "Labor",
-    "state": "federal",
-    "date": "2026-05-27"
-   },
    {
     "slug": "speech-1203672",
     "title": "Andrew Bragg \u2014 Questions without Notice \u2014 2026-06-22",
@@ -1007,6 +1031,14 @@
     "party": null,
     "state": "federal",
     "date": "2026-06-22"
+   },
+   {
+    "slug": "speech-1299259",
+    "title": "Jason Li \u2014 Housing Supply \u2014 2025-10-21",
+    "speaker": "Jason Li",
+    "party": null,
+    "state": "nsw",
+    "date": "2025-10-21"
    },
    {
     "slug": "speech-1288100",
@@ -1105,7 +1137,7 @@
   "sections": [
    {
     "question": "What has parliament said about Housing Supply?",
-    "answer": "Parliamentary debate on housing supply is sharply divided. Government speakers insist supply is the core issue and that their agenda is pro-supply. One minister said the government\u2019s $32 billion Homes for Australia plan is \u201cfocused on supply, because that is the key,\u201d and that the budget \u201cis a pro-supply budget\u201d which will see \u201can extra 75,000 first home buyers\u201d and an overall increase in housing supply over the next decade. Another Labor speaker accused the coalition of a \u201cdecade of neglect\u201d on housing and claimed One Nation and the coalition voted to delay the Help to Buy scheme, arguing they \u201ctalk tough on housing, but, when given the chance to support real solutions, they vote against them.\u201d A Labor senator also rejected a claim that the HAFF acquiring 340 houses worsens the crisis, retorting that Senator Bragg and the Greens \u201cblocked housing supply\u201d for so long.\n\nCoalition and crossbench voices dispute the government\u2019s record. Senator Bragg said the government\u2019s own tax changes \u201cwill decrease supply\u201d and that its 1.2 million homes target by 2029 is, per Treasury, \u201calready very unlikely\u201d to be met. He argued the real problem is that the government has not \u201cbetter understand what is holding back the supply, by talking to builders, developers and tradespeople,\u201d and that demand-side measures are only \u201cbandaids.\u201d Another opposition-aligned speaker said supply is part of the answer but \u201cignoring the question of demand is a red flag.\u201d A senator also pressed for detailed collaboration between Home Affairs and the National Housing Supply and Affordability Council, citing the council\u2019s model in its *State of the housing system 2025* report showing a supply deficit under baseline population growth and a surplus only if growth is 15 per cent lower.\n\nCommittee evidence reinforces the supply focus. In a 2026 Treasury estimates hearing, a senator asked whether the Productivity Commission had assessed the government\u2019s claim that limiting negative gearing to new builds supports supply; the response noted a new build would be classified as one that \u201cgenuinely adds to supply of housing.\u201d In a Social Services estimates hearing, an official said \u201csupply\u2014notwithstanding that that might take some time\u2014is the key driver of keeping down rental stress and improving housing affordability.\u201d The record is otherwise limited on detailed supply policy mechanics.",
+    "answer": "Parliamentary debate on housing supply has been extensive, with government speakers repeatedly framing supply as the central solution to the housing crisis. One government member stated: \"action on supply is critical, and more supply means better affordability. That's what we're delivering, and an Albanese Labor government is building Australia's future. That is what we will keep fighting for\u2014more homes more quickly in more parts of the country.\" Another said: \"We have a plan that is focused on supply, because that is the key, whether you want to be a homeowner, or you are a renter or someone in social and affordable housing. That's why our $32 billion Homes for Australia plan is worthy of the support of everyone in this parliament.\" A minister also claimed the budget is \"a pro-supply budget,\" arguing that \"as a whole we will see an increase in the supply of housing over the next decade if you look at all of the budget measures,\" including \"an extra 75,000 first home buyers.\"\n\nOpposition figures challenged the government's record. Senator Bragg argued that \"the proposition that is facing the Australian people is really one of a lack of housing supply. Until the government is able to better understand what is holding back the supply, by talking to builders, developers and tradespeople, then they will never solve this crisis.\" He also criticised the government's tax changes, claiming \"its own budget papers, its own word, confirm that these measures will decrease supply.\" Another opposition member said the government's 1.2 million homes target by 2029 is \"a program that we know from Treasury is already very unlikely. In fact, from their assessment, it won't be met,\" adding that \"supply is part of the answer, but ignoring the question of demand is a red flag.\"\n\nGovernment speakers also blamed the coalition for past inaction. One said: \"the coalition were in government for 10 years, and, for those 10 years, they neglected housing. You can't turn around the supply of housing in a year or even one term.\" Another accused Senator Bragg and the Australian Greens of having \"blocked housing supply\" for so long. In committee estimates, a departmental official noted that the National Housing Supply and Affordability Council's modelling, in its *State of the housing system 2025* report, suggests Australia \"will be in a housing supply deficit at the end of the Housing Accord period\" under baseline population growth, and only in surplus if population growth is 15 per cent less. The record also includes a claim that One Nation and the coalition \"voted to delay the government's Help to Buy housing scheme bill, stalling a key initiative to support housing affordability.\"",
     "sources": [
      {
       "slug": "speech-1194212",
@@ -1135,15 +1167,6 @@
       "cited": true
      },
      {
-      "slug": "speech-1196844",
-      "title": "Andrew Bragg \u2014 Questions without Notice \u2014 2025-09-01",
-      "speaker": "Andrew Bragg",
-      "party": null,
-      "state": "federal",
-      "date": "2025-09-01",
-      "cited": true
-     },
-     {
       "slug": "speech-1198427",
       "title": "Dave Sharma \u2014 Questions without Notice: Take Note of Answers \u2014 2025-11-05",
       "speaker": "Dave Sharma",
@@ -1162,39 +1185,21 @@
       "cited": true
      },
      {
+      "slug": "speech-978784",
+      "title": "Rimmer \u2014 Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2025-12-04",
+      "speaker": "Rimmer",
+      "party": null,
+      "state": "federal",
+      "date": "2025-12-04",
+      "cited": true
+     },
+     {
       "slug": "speech-428848",
       "title": "Whiteaker \u2014 Finance and Public Administration Legislation Committee - Finance and Public Administration Legislation Committee 10/02/2026 Estimates PRIME MINISTER AND CABINET PORTFOLIO Indigenous Business Australia \u2014 2026-02-10",
       "speaker": "Whiteaker",
       "party": null,
       "state": "federal",
       "date": "2026-02-10",
-      "cited": true
-     },
-     {
-      "slug": "speech-908143",
-      "title": "Flavel \u2014 Community Affairs Legislation Committee - Community Affairs Legislation Committee 12/02/2026 Estimates SOCIAL SERVICES PORTFOLIO Department of Social Services \u2014 2026-02-12",
-      "speaker": "Flavel",
-      "party": null,
-      "state": "federal",
-      "date": "2026-02-12",
-      "cited": true
-     },
-     {
-      "slug": "speech-1270477",
-      "title": "Gallagher \u2014 Economics Legislation Committee - Economics Legislation Committee 04/06/2026 Estimates TREASURY PORTFOLIO Department of the Treasury \u2014 2026-06-04",
-      "speaker": "Gallagher",
-      "party": null,
-      "state": "federal",
-      "date": "2026-06-04",
-      "cited": true
-     },
-     {
-      "slug": "speech-1279225",
-      "title": "Hume \u2014 Economics Legislation Committee - Economics Legislation Committee 05/06/2026 Estimates TREASURY PORTFOLIO Productivity Commission \u2014 2026-06-05",
-      "speaker": "Hume",
-      "party": null,
-      "state": "federal",
-      "date": "2026-06-05",
       "cited": true
      },
      {
@@ -1243,6 +1248,15 @@
       "cited": false
      },
      {
+      "slug": "speech-1196844",
+      "title": "Andrew Bragg \u2014 Questions without Notice \u2014 2025-09-01",
+      "speaker": "Andrew Bragg",
+      "party": null,
+      "state": "federal",
+      "date": "2025-09-01",
+      "cited": false
+     },
+     {
       "slug": "speech-1198066",
       "title": "Andrew Bragg \u2014 Questions without Notice \u2014 2025-11-03",
       "speaker": "Andrew Bragg",
@@ -1252,12 +1266,12 @@
       "cited": false
      },
      {
-      "slug": "speech-978784",
-      "title": "Rimmer \u2014 Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2025-12-04",
-      "speaker": "Rimmer",
+      "slug": "speech-908143",
+      "title": "Flavel \u2014 Community Affairs Legislation Committee - Community Affairs Legislation Committee 12/02/2026 Estimates SOCIAL SERVICES PORTFOLIO Department of Social Services \u2014 2026-02-12",
+      "speaker": "Flavel",
       "party": null,
       "state": "federal",
-      "date": "2025-12-04",
+      "date": "2026-02-12",
       "cited": false
      },
      {
@@ -1267,6 +1281,24 @@
       "party": null,
       "state": "federal",
       "date": "2026-05-13",
+      "cited": false
+     },
+     {
+      "slug": "speech-1270477",
+      "title": "Gallagher \u2014 Economics Legislation Committee - Economics Legislation Committee 04/06/2026 Estimates TREASURY PORTFOLIO Department of the Treasury \u2014 2026-06-04",
+      "speaker": "Gallagher",
+      "party": null,
+      "state": "federal",
+      "date": "2026-06-04",
+      "cited": false
+     },
+     {
+      "slug": "speech-1279225",
+      "title": "Hume \u2014 Economics Legislation Committee - Economics Legislation Committee 05/06/2026 Estimates TREASURY PORTFOLIO Productivity Commission \u2014 2026-06-05",
+      "speaker": "Hume",
+      "party": null,
+      "state": "federal",
+      "date": "2026-06-05",
       "cited": false
      },
      {
@@ -1288,25 +1320,16 @@
       "cited": false
      }
     ],
-    "asked_at": "2026-09-04T23:05:55+00:00"
+    "asked_at": "2026-09-05T00:08:12+00:00"
    },
    {
     "question": "What has parliament said about the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025?",
-    "answer": "The New South Wales Parliament debated the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 extensively, with support and opposition crossing party lines. Minister for Planning and Public Spaces Paul Scully (Labor) reported an \"almost universally positive response\" to the bill's passage, citing praise from the Planning Institute of Australia NSW, the Master Builders Association, and Local Government NSW, and noting the Opposition \"welcomed the passage\" and \"conceding that the reform should have been done years ago.\" Government speakers, including Dr Marjorie O'Neill (Labor, Coogee), Maryanne Stuart (Labor, Heathcote), Edmond Atalla (Labor, Mount Druitt), Clayton Barr (Labor, Cessnock), Nathan Hagarty (Labor, Leppington), and David Mehan (Labor, The Entrance), supported the bill as a modernisation that would speed housing delivery, cut duplication, and address \"zombie\" consents. The Libertarian Party's John Ruddick also supported the bill as \"a good step in the right direction\" toward supply-side reform.\n\nThe Greens strongly opposed the bill. Sue Higginson, Kobi Shetty (Balmain), and Amanda Cohn argued it centralises power in the Minister, weakens environmental protections and community consultation, and creates corruption risks, noting ICAC \"confirmed that it was not asked to comment on the bill\" and that its probity advice was general. They criticised the new Development Coordination Authority and \"targeted assessment development\" pathway, with Higginson later saying The Greens did not oppose the bill in the Legislative Council despite \"reservations,\" acknowledging some Government amendments. The Shooters, Fishers and Farmers Party's Mark Banasiak supported building more homes but raised concerns about the bill being used to fast-track mining and renewable projects, welcoming Government amendments while foreshadowing further ones. Opposition members, including Richie Williamson (Clarence), supported the bill while moving amendments, including on the Housing Delivery Authority and regional planning panels.",
+    "answer": "The New South Wales Parliament debated the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 extensively, with the Government and Opposition supporting it and The Greens opposing it. Minister Paul Scully reported an \"almost universally positive response\" to the bill's passage, citing praise from the Planning Institute of Australia, the Master Builders Association, and Local Government NSW, and noting the Opposition \"welcomed the passage\" and conceded \"the reform should have been done years ago.\" Labor MPs like Maryanne Stuart (Heathcote), Edmond Atalla (Mount Druitt), Clayton Barr (Cessnock), and David Mehan (The Entrance) spoke in support, arguing it modernises a system from 1979, streamlines approvals, and boosts housing supply. Opposition MP Richie Williamson (Clarence) said he \"broadly support[s]\" the bill, calling it important for getting \"more homes built without adding cost or complexity,\" while noting regional councils' nervousness.\n\nThe Greens strongly opposed the bill. Sue Higginson, Kobi Shetty (Balmain), and Amanda Cohn argued it \"centralises power,\" creates \"significant corruption risk,\" weakens environmental protections, and reduces community participation. Higginson claimed ICAC \"was not asked to comment on the bill\" and that the Minister's consultation claims were \"misleading,\" while Shetty called it \"a gift for developers\" that will not fix affordability. Cohn quoted the Premier as saying of local government, \"we've been rolling over the top of them for the last two years, and now we're about to formalise it with the bill.\" The Shooters, Fishers and Farmers Party's Mark Banasiak expressed concerns about fast-tracking mines and renewable projects, while the Libertarian Party's John Ruddick supported the bill as \"supply-side economics\" and \"a good step in the right direction.\" Minister Penny Sharpe, replying in the Legislative Council, defended the bill as addressing a housing crisis and legal uncertainties, and noted the Government would support an Opposition amendment on local strategic planning oversight.",
     "sources": [
      {
-      "slug": "speech-1287068",
-      "title": "Marjorie O'Neill \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-25",
-      "speaker": "Marjorie O'Neill",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-03-25",
-      "cited": true
-     },
-     {
-      "slug": "speech-1288102",
-      "title": "Penny Sharpe \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-27",
-      "speaker": "Penny Sharpe",
+      "slug": "speech-1288100",
+      "title": "Sue Higginson \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-27",
+      "speaker": "Sue Higginson",
       "party": null,
       "state": "nsw",
       "date": "2025-03-27",
@@ -1331,6 +1354,15 @@
       "cited": true
      },
      {
+      "slug": "speech-1298460",
+      "title": "Iamson \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
+      "speaker": "Iamson",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-10-15",
+      "cited": true
+     },
+     {
       "slug": "speech-1298461",
       "title": "David Mehan \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
       "speaker": "David Mehan",
@@ -1343,6 +1375,15 @@
       "slug": "speech-1298440",
       "title": "Maryanne Stuart \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
       "speaker": "Maryanne Stuart",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-10-15",
+      "cited": true
+     },
+     {
+      "slug": "speech-1298428",
+      "title": "Kobi Shetty \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
+      "speaker": "Kobi Shetty",
       "party": null,
       "state": "nsw",
       "date": "2025-10-15",
@@ -1376,9 +1417,18 @@
       "cited": true
      },
      {
-      "slug": "speech-1288100",
-      "title": "Sue Higginson \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-27",
-      "speaker": "Sue Higginson",
+      "slug": "speech-1287068",
+      "title": "Marjorie O'Neill \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-25",
+      "speaker": "Marjorie O'Neill",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-03-25",
+      "cited": false
+     },
+     {
+      "slug": "speech-1288102",
+      "title": "Penny Sharpe \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-27",
+      "speaker": "Penny Sharpe",
       "party": null,
       "state": "nsw",
       "date": "2025-03-27",
@@ -1394,15 +1444,6 @@
       "cited": false
      },
      {
-      "slug": "speech-1298419",
-      "title": "Edmond Atalla \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
-      "speaker": "Edmond Atalla",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-15",
-      "cited": false
-     },
-     {
       "slug": "speech-1298454",
       "title": "Nathan Hagarty \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
       "speaker": "Nathan Hagarty",
@@ -1412,36 +1453,27 @@
       "cited": false
      },
      {
-      "slug": "speech-1298460",
-      "title": "Iamson \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
-      "speaker": "Iamson",
+      "slug": "speech-1298419",
+      "title": "Edmond Atalla \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
+      "speaker": "Edmond Atalla",
       "party": null,
       "state": "nsw",
       "date": "2025-10-15",
-      "cited": false
-     },
-     {
-      "slug": "speech-1298428",
-      "title": "Kobi Shetty \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
-      "speaker": "Kobi Shetty",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-15",
-      "cited": false
-     },
-     {
-      "slug": "speech-1299658",
-      "title": "John Ruddick \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-21",
-      "speaker": "John Ruddick",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-21",
       "cited": false
      },
      {
       "slug": "speech-1299655",
       "title": "Sue Higginson \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-21",
       "speaker": "Sue Higginson",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-10-21",
+      "cited": false
+     },
+     {
+      "slug": "speech-1299658",
+      "title": "John Ruddick \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-21",
+      "speaker": "John Ruddick",
       "party": null,
       "state": "nsw",
       "date": "2025-10-21",
@@ -1475,11 +1507,11 @@
       "cited": false
      }
     ],
-    "asked_at": "2026-09-04T23:06:05+00:00"
+    "asked_at": "2026-09-05T00:08:32+00:00"
    },
    {
-    "question": "What has parliament said about Planning policy?",
-    "answer": "Planning policy has been a major point of debate across several Australian parliaments, with speakers sharply divided on how to address housing supply and affordability. In the New South Wales Parliament, Labor Minister for Planning and Public Spaces Paul Scully defended the Minns Government's reforms, arguing the state inherited a planning system that was \"as confused as it was confusing,\" with a forecast of only 180,000 homes over five years\u2014less than half the National Housing Accord requirement\u2014and development assessment times averaging 116 days. He said the reforms are \"a significant overhaul\" designed to deliver \"faster, fairer and more transparent planning decisions,\" citing results such as assessment times down by a third, a 26 per cent increase in development applications lodged, and more than 75,000 homes under construction. Scully also criticised The Greens for filibustering the bill in the upper house, accusing them of \"inner-city nimbyism\" and opposing projects like the Waterloo redevelopment, while noting the Opposition had come onboard and welcomed the bill's passage.\n\nIn the Victorian Parliament, an Opposition member (unnamed in the passage) criticised the Allan Labor Government's planning agenda, saying the government has \"taxed the industry out of existence\" and failed to meet its housing targets, with no new CBD residential towers, no precinct structure plans approved, and no major development commenced in activity centres. The member argued the government already had powers under section 20(4) of the *Planning and Environment Act 1987* to expedite projects but had not used them. A Victorian Greens member also spoke, opposing disallowance motions for planning scheme amendments, arguing they would be \"nothing other than a minor nuisance\" as the government could \"reintroduce the same planning scheme amendments tomorrow.\" The Greens member criticised the government for not using the affordable housing head of power secured in the Act and for \"hand[ing] the keys of our housing system and planning system over to property developers,\" while also acknowledging the government had agreed to review environmentally sustainable design standards and tree canopy impacts in the townhouse code.\n\nIn the New South Wales Parliament, Greens MP Sue Higginson raised concerns about the *Environmental Planning and Assessment Amendment Bill 2025*, saying it \"removes oversight, diminishes strategy and sidelines the public.\" She criticised reductions in public exhibition periods for State significant developments from 28 to 14 days, removal of the requirement for Independent Planning Commission advice, and the omission of accountability provisions for the new Housing Delivery Authority, calling the latter \"chilling.\" Higginson also highlighted the failure to act on climate risks, noting the government was \"still allowing new houses on flood plains and in fire-prone areas\" and had refused to revoke \"zombie developments\"\u2014historical approvals no longer appropriate given climate change. She tabled amendments to strengthen bushfire and natural hazard protections, which the government indicated it would progress. The record also includes a Victorian Opposition member accusing the Planning Minister of hypocrisy, quoting her past statements supporting community participation and heritage protection, and a Commonwealth committee exchange where a Treasury official noted the National Planning Reform Blueprint had been agreed, with the next phase of reform being \"above, beyond and better than\" what is currently in it.",
+    "question": "What has parliament said about Planning policy and housing?",
+    "answer": "Planning policy and housing were discussed in several Australian parliaments. In the New South Wales Parliament, Labor Minister for Planning and Public Spaces Paul Scully said his government inherited a \"confused and confusing planning system\" and that reforms were delivering results: average development application assessment times were down by a third, homes with development applications lodged were up 26 per cent in the last financial year, and New South Wales had more than 75,000 homes under construction\u2014the highest in the country. He also cited \"the biggest rezoning in New South Wales history,\" a record injection of funding for social housing, and reforms to speed up over 90 per cent of development activity. In the same parliament, Mr Jason Li (Labor, Strathfield) asked questions supportive of these reforms, while an ePetition was lodged requesting that the government retain low- and mid-rise housing provisions in the State Environmental Planning Policy (Housing) 2021 for a specific Lindfield property.\n\nIn the Victorian Parliament, an opposition member (not named in the passage) criticised the state Labor government's housing statement, claiming the government had not met its housing targets, had \"taxed the industry out of existence,\" and that no precinct structure plans had been approved. The member argued the government already had powers to speed up planning and did not need new legislation. In the Commonwealth Parliament, a Labor speaker (not named) said the government's \"Homes for Australia\" plan would help 75,000 Australians get out of renting and into a home, and criticised the Liberals for suggesting Australians raid their super to buy a home, citing Saul Eslake's view that this was \"the worst public policy idea in 60 years.\" Another Commonwealth speaker (also not named) said the government had moved from being a \"negligent bystander\" to the most active housing government in the post-war years, while a third noted the government was making progress on planning and infrastructure after \"12 years of a different approach.\"",
     "sources": [
      {
       "slug": "speech-855495",
@@ -1491,30 +1523,12 @@
       "cited": true
      },
      {
-      "slug": "speech-1288100",
-      "title": "Sue Higginson \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-27",
-      "speaker": "Sue Higginson",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-03-27",
-      "cited": true
-     },
-     {
-      "slug": "speech-1290741",
-      "title": "Sue Higginson \u2014 Portfolio Committee No. 7 - Planning and Environment \u2014 2025-05-27",
-      "speaker": "Sue Higginson",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-05-27",
-      "cited": true
-     },
-     {
-      "slug": "speech-1153528",
-      "title": "Sarah Mansfield \u2014 Planning policy \u2014 2025-06-18",
-      "speaker": "Sarah Mansfield",
-      "party": null,
-      "state": "vic",
-      "date": "2025-06-18",
+      "slug": "speech-1197280",
+      "title": "Matt Gregg \u2014 Adjournment \u2014 2025-09-04",
+      "speaker": "Matt Gregg",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2025-09-04",
       "cited": true
      },
      {
@@ -1527,21 +1541,30 @@
       "cited": true
      },
      {
-      "slug": "speech-1210769",
-      "title": "Sarah Mansfield \u2014 Planning policy \u2014 2026-06-03",
-      "speaker": "Sarah Mansfield",
-      "party": null,
-      "state": "vic",
-      "date": "2026-06-03",
+      "slug": "speech-1205386",
+      "title": "Joanne Ryan \u2014 Questions without Notice \u2014 2026-08-17",
+      "speaker": "Joanne Ryan",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2026-08-17",
       "cited": true
      },
      {
-      "slug": "speech-1283692",
-      "title": "Mark Buttigieg \u2014 Portfolio Committee No. 7 - Planning and Environment \u2014 2025-02-11",
-      "speaker": "Mark Buttigieg",
+      "slug": "speech-1195158",
+      "title": "Sussan Ley \u2014 Questions without Notice \u2014 2025-07-23",
+      "speaker": "Sussan Ley",
+      "party": "Liberal",
+      "state": "federal",
+      "date": "2025-07-23",
+      "cited": false
+     },
+     {
+      "slug": "speech-1195803",
+      "title": "Andrew Bragg \u2014 Statements by Senators \u2014 2025-07-30",
+      "speaker": "Andrew Bragg",
       "party": null,
-      "state": "nsw",
-      "date": "2025-02-11",
+      "state": "federal",
+      "date": "2025-07-30",
       "cited": false
      },
      {
@@ -1554,12 +1577,12 @@
       "cited": false
      },
      {
-      "slug": "speech-1297555",
-      "title": "Ily Suvaal \u2014 Woollahra Housing Development \u2014 2025-09-17",
-      "speaker": "Ily Suvaal",
+      "slug": "speech-1295942",
+      "title": "Petitions Received \u2014 2025-09-10",
+      "speaker": null,
       "party": null,
       "state": "nsw",
-      "date": "2025-09-17",
+      "date": "2025-09-10",
       "cited": false
      },
      {
@@ -1590,57 +1613,48 @@
       "cited": false
      },
      {
-      "slug": "speech-1300517",
-      "title": "Jason Li \u2014 Housing Supply \u2014 2025-11-11",
-      "speaker": "Jason Li",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-11-11",
-      "cited": false
-     },
-     {
-      "slug": "speech-1301465",
-      "title": "Kylie Wilkinson \u2014 Planning Policy \u2014 2025-11-13",
-      "speaker": "Kylie Wilkinson",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-11-13",
-      "cited": false
-     },
-     {
-      "slug": "speech-1136332",
-      "title": "Evan Mulholland \u2014 Planning policy \u2014 2025-11-19",
-      "speaker": "Evan Mulholland",
-      "party": null,
-      "state": "vic",
-      "date": "2025-11-19",
-      "cited": false
-     },
-     {
-      "slug": "speech-904980",
-      "title": "Colbeck \u2014 Economics Legislation Committee - Economics Legislation Committee 12/02/2026 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2026-02-12",
-      "speaker": "Colbeck",
+      "slug": "speech-977656",
+      "title": "Wilkinson \u2014 Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Department of the Treasury \u2014 2025-12-04",
+      "speaker": "Wilkinson",
       "party": null,
       "state": "federal",
-      "date": "2026-02-12",
+      "date": "2025-12-04",
       "cited": false
      },
      {
-      "slug": "speech-431433",
-      "title": "Sonya Kilkenny \u2014 Ministers statements: housing \u2014 2026-02-17",
-      "speaker": "Sonya Kilkenny",
-      "party": null,
-      "state": "vic",
-      "date": "2026-02-17",
+      "slug": "speech-1199942",
+      "title": "Madonna Jarrett \u2014 Questions without Notice \u2014 2026-02-09",
+      "speaker": "Madonna Jarrett",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2026-02-09",
       "cited": false
      },
      {
-      "slug": "speech-1264416",
-      "title": "Rimmer \u2014 Economics Legislation Committee - Economics Legislation Committee 03/06/2026 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2026-06-03",
-      "speaker": "Rimmer",
+      "slug": "speech-1202624",
+      "title": "Tyron Whitten \u2014 Questions without Notice: Take Note of Answers \u2014 2026-05-12",
+      "speaker": "Tyron Whitten",
       "party": null,
       "state": "federal",
+      "date": "2026-05-12",
+      "cited": false
+     },
+     {
+      "slug": "speech-1314085",
+      "title": "Stephen Lawrence \u2014 Population Policy \u2014 2026-06-03",
+      "speaker": "Stephen Lawrence",
+      "party": null,
+      "state": "nsw",
       "date": "2026-06-03",
+      "cited": false
+     },
+     {
+      "slug": "speech-1203480",
+      "title": "Ali France \u2014 Questions without Notice \u2014 2026-06-04",
+      "speaker": "Ali France",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2026-06-04",
       "cited": false
      },
      {
@@ -1653,280 +1667,39 @@
       "cited": false
      },
      {
-      "slug": "speech-1205386",
-      "title": "Joanne Ryan \u2014 Questions without Notice \u2014 2026-08-17",
-      "speaker": "Joanne Ryan",
+      "slug": "speech-1203883",
+      "title": "Zoe McKenzie \u2014 Questions without Notice \u2014 2026-06-24",
+      "speaker": "Zoe McKenzie",
+      "party": "Liberal",
+      "state": "federal",
+      "date": "2026-06-24",
+      "cited": false
+     },
+     {
+      "slug": "speech-1213951",
+      "title": "Bleijie \u2014 Legislation Amendment Bill \u2014 2026-06-25",
+      "speaker": "Bleijie",
+      "party": null,
+      "state": "qld",
+      "date": "2026-06-25",
+      "cited": false
+     },
+     {
+      "slug": "speech-1205682",
+      "title": "Ali France \u2014 Questions without Notice \u2014 2026-08-19",
+      "speaker": "Ali France",
       "party": "Labor",
       "state": "federal",
-      "date": "2026-08-17",
+      "date": "2026-08-19",
       "cited": false
      }
     ],
-    "asked_at": "2026-09-04T23:06:17+00:00"
+    "asked_at": "2026-09-05T00:10:41+00:00"
    },
    {
-    "question": "What has parliament said about the Environmental Planning and Assessment Amendment Bill 2025?",
-    "answer": "The New South Wales Parliament debated the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 extensively, with the Government and Opposition ultimately supporting it and The Greens opposing it. Minister for Planning and Public Spaces Paul Scully reported an \"almost universally positive response\" to the bill's passage, citing support from the Planning Institute of Australia, the Master Builders Association and Local Government NSW, and noting that Opposition amendments were \"largely adopted because they made a positive contribution to the bill.\" Labor members such as Dr Marjorie O'Neill (Coogee), Maryanne Stuart (Heathcote), Edmond Atalla (Mount Druitt), Julia Finn (Granville) and Clayton Barr (Cessnock) spoke in favour, describing it as modernising the 1979 Act to address housing supply, streamline approvals, remove duplication and introduce climate change as an object of the Act for the first time.\n\nThe Greens strongly opposed the bill. Ms Sue Higginson argued it \"centralises powers in the hands of the Minister,\" removes checks and balances, weakens environmental duties and public consultation, and creates corruption risks, noting that ICAC \"was not asked to comment on the bill itself\" and that its general probity advice had not been released. Dr Amanda Cohn and Ms Kobi Shetty echoed those concerns, with Shetty calling it \"a gift for developers\" that would not fix housing affordability. The Shooters, Fishers and Farmers Party's Mark Banasiak expressed in-principle support for building more homes but raised concerns about the bill being used to fast-track projects like mining. The Libertarian Party's John Ruddick supported the bill as \"supply-side economics\" and a step towards freer markets, praising the expansion of complying development.\n\nThe record also shows the bill was amended during passage. Minister Scully noted the Government accepted an Opposition amendment on oversight of local planning statements, and Minister Penny Sharpe, in the Legislative Council, indicated the Government would support that amendment. Sharpe also acknowledged discussions with crossbench members, including The Greens on bushfire and natural hazard amendments, which the Government said it would consider in future reforms but did not support in this bill.",
+    "question": "What has parliament said about Energy policy and housing?",
+    "answer": "Several speakers addressed both energy policy and housing, often linking them. A government minister (Commonwealth) said the coalition is \"completely out of touch, not just with energy policy but also with the housing experience of Australians,\" citing former leaders Malcolm Turnbull and Joe Hockey as evidence. The same minister stated housing is \"an absolutely foremost priority of our government in this second term\" and that \"Housing is in crisis in our country.\" Another government speaker accused the coalition of being \"housing hypocrites\" and claimed they are \"busy fighting culture wars against non-existent enemies,\" while a coalition speaker countered that Labor \"legislates ambition without resourcing it\" in housing, citing the 1.2 million homes commitment, and said of Labor's \"energy policy of 82 per cent renewables\u2014ain't gonna happen!\"\n\nOn the substance of energy and housing policy, the Hon. Bob Nanva (New South Wales) said the NSW Government \"is not supportive of banning new gas connections, because households should have choice,\" while detailing decarbonisation efforts: the Energy Savings Scheme, the Consumer Energy Strategy, 35 per cent renewable energy, and EV charging rollout figures. He noted NSW \"became the first State to mandate seven\u2011star thermal performance for all new homes\" in 2023, projecting savings of approximately $1,070 per year on energy bills. In contrast, Ms Abigail Boyd (New South Wales) moved a motion congratulating the Victorian Government, the ACT Government and various NSW councils for mandating electrification, and called on the government to \"ban new gas connections for residential and commercial developments.\" She cited the Net Zero Commission's 2024 report finding NSW \"is not on track to meet emission reduction targets\" and that the built environment sector \"nearly doubled greenhouse gas emissions between 2005 and 2022,\" and quoted the Property Council supporting the City of Sydney's electrification mandate.\n\nA Western Australian speaker (Commonwealth) praised that state's approach: \"Our domestic gas reservation policy has protected us from some of the worst volatility that has been seen on the east coast,\" and claimed that under the coalition \"household electricity prices rose by nearly 20 per cent.\" Senator Gallagher (Commonwealth, at estimates) said the government is \"working across government\" on housing, energy and regulatory reduction, but that the coalition votes against reform bills \"and then you come in here and complain.\" The record also includes a coalition speaker claiming the government \"had 23 different energy policies over that period\" and is \"divided, confused and uncertain,\" while another government speaker quoted the shadow minister for housing as saying, \"We've been too busy talking about the internals of the Liberal Party to do any work.\"",
     "sources": [
-     {
-      "slug": "speech-1288104",
-      "title": "Penny Sharpe \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-27",
-      "speaker": "Penny Sharpe",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-03-27",
-      "cited": true
-     },
-     {
-      "slug": "speech-1288100",
-      "title": "Sue Higginson \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-27",
-      "speaker": "Sue Higginson",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-03-27",
-      "cited": true
-     },
-     {
-      "slug": "speech-1288733",
-      "title": "Penny Sharpe \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-05-06",
-      "speaker": "Penny Sharpe",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-05-06",
-      "cited": true
-     },
-     {
-      "slug": "speech-1288821",
-      "title": "Paul Scully \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-05-07",
-      "speaker": "Paul Scully",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-05-07",
-      "cited": true
-     },
-     {
-      "slug": "speech-1298419",
-      "title": "Edmond Atalla \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
-      "speaker": "Edmond Atalla",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-15",
-      "cited": true
-     },
-     {
-      "slug": "speech-1298429",
-      "title": "Clayton Barr \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
-      "speaker": "Clayton Barr",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-15",
-      "cited": true
-     },
-     {
-      "slug": "speech-1298442",
-      "title": "Julia Finn \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
-      "speaker": "Julia Finn",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-15",
-      "cited": true
-     },
-     {
-      "slug": "speech-1298440",
-      "title": "Maryanne Stuart \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
-      "speaker": "Maryanne Stuart",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-15",
-      "cited": true
-     },
-     {
-      "slug": "speech-1300451",
-      "title": "Amanda Cohn \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-23",
-      "speaker": "Amanda Cohn",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-23",
-      "cited": true
-     },
-     {
-      "slug": "speech-1301465",
-      "title": "Kylie Wilkinson \u2014 Planning Policy \u2014 2025-11-13",
-      "speaker": "Kylie Wilkinson",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-11-13",
-      "cited": true
-     },
-     {
-      "slug": "speech-1287068",
-      "title": "Marjorie O'Neill \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-25",
-      "speaker": "Marjorie O'Neill",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-03-25",
-      "cited": false
-     },
-     {
-      "slug": "speech-1287064",
-      "title": "Edmond Atalla \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-25",
-      "speaker": "Edmond Atalla",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-03-25",
-      "cited": false
-     },
-     {
-      "slug": "speech-1288102",
-      "title": "Penny Sharpe \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-27",
-      "speaker": "Penny Sharpe",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-03-27",
-      "cited": false
-     },
-     {
-      "slug": "speech-1298454",
-      "title": "Nathan Hagarty \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
-      "speaker": "Nathan Hagarty",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-15",
-      "cited": false
-     },
-     {
-      "slug": "speech-1298428",
-      "title": "Kobi Shetty \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-15",
-      "speaker": "Kobi Shetty",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-15",
-      "cited": false
-     },
-     {
-      "slug": "speech-1299658",
-      "title": "John Ruddick \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-21",
-      "speaker": "John Ruddick",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-21",
-      "cited": false
-     },
-     {
-      "slug": "speech-1299659",
-      "title": "Amanda Cohn \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-21",
-      "speaker": "Amanda Cohn",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-21",
-      "cited": false
-     },
-     {
-      "slug": "speech-1299655",
-      "title": "Sue Higginson \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-21",
-      "speaker": "Sue Higginson",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-21",
-      "cited": false
-     },
-     {
-      "slug": "speech-1300452",
-      "title": "Mark Banasiak \u2014 Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 \u2014 2025-10-23",
-      "speaker": "Mark Banasiak",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-10-23",
-      "cited": false
-     },
-     {
-      "slug": "speech-1199220",
-      "title": "Susan Templeman \u2014 Questions without Notice \u2014 2025-11-27",
-      "speaker": "Susan Templeman",
-      "party": "Labor",
-      "state": "federal",
-      "date": "2025-11-27",
-      "cited": false
-     }
-    ],
-    "asked_at": "2026-09-04T23:06:30+00:00"
-   },
-   {
-    "question": "What has parliament said about Energy policy?",
-    "answer": "Parliamentary debate on energy policy is sharply partisan. Coalition speakers attack the government's approach: one says the \"failing energy policy\" is \"based on ideology, not reality\" and is pushing up retail power costs, while another calls the government's \"renewables-only policy train wreck\" the centre of a cost-of-living crisis, claiming electricity bills have risen about 30 per cent and that the promised $275 cut was broken. A Coalition senator also cites \"23 different energy policies\" under his side's opponents and says \"24 out of 28 coal-fired power stations announced their closure when you were in government\" with no response. Another opposition speaker calls the 82 per cent renewables target \"a pipe dream\" and says the government is \"sneakily introducing more gas into the system.\"\n\nGovernment and crossbench speakers defend the record. A government senator says the Coalition \"voted against\" the gas and coal price caps and the mandated code of conduct, and that \"capacity exited the system\" under the previous government. A minister notes the government is \"not supportive of banning new gas connections\" but cites the Energy Savings Scheme, the Consumer Energy Strategy, 35 per cent renewable energy, EV charger rollouts, and NSW's mandated seven-star thermal performance for new homes, projected to save about $1,070 per year. A Western Australian speaker credits the domestic gas reservation policy with protecting that state \"from some of the worst volatility seen on the east coast,\" while another government voice says the opposition's plan \"will deliver more expensive energy, it will cost $600 billion.\"\n\nA Greens MP in the Victorian parliament, speaking on the Energy and Resources Legislation Amendment (VEET Strategic Review and Other Matters) Bill 2026, supports the bill's recognition of social, environmental and economic benefits of efficient electric appliances, but criticises Labor for \"watering down its electrification plans,\" opening new gas areas and approving a major new gas project. The MP also attacks the Liberals, Nationals and One Nation for wanting to \"rip up critical transmission infrastructure\" and \"bring back new gas connections,\" and calls for taxing fossil fuel giants, noting eight big oil companies made over $125 billion in profits in three months. The record on energy policy is extensive but entirely contested along party lines.",
-    "sources": [
-     {
-      "slug": "speech-1195056",
-      "title": "Peter Dutton \u2014 Bills \u2014 2025-03-27",
-      "speaker": "Peter Dutton",
-      "party": "Liberal",
-      "state": "federal",
-      "date": "2025-03-27",
-      "cited": true
-     },
-     {
-      "slug": "speech-1195185",
-      "title": "Milton Dick \u2014 Matters of Public Importance \u2014 2025-07-23",
-      "speaker": "Milton Dick",
-      "party": null,
-      "state": "federal",
-      "date": "2025-07-23",
-      "cited": true
-     },
-     {
-      "slug": "speech-1199103",
-      "title": "James Paterson \u2014 Questions without Notice \u2014 2025-11-26",
-      "speaker": "James Paterson",
-      "party": null,
-      "state": "federal",
-      "date": "2025-11-26",
-      "cited": true
-     },
-     {
-      "slug": "speech-1199607",
-      "title": "Milton Dick \u2014 Matters of Public Importance \u2014 2026-02-04",
-      "speaker": "Milton Dick",
-      "party": null,
-      "state": "federal",
-      "date": "2026-02-04",
-      "cited": true
-     },
-     {
-      "slug": "speech-1194672",
-      "title": "James McGrath \u2014 Questions without Notice \u2014 2025-02-13",
-      "speaker": "James McGrath",
-      "party": null,
-      "state": "federal",
-      "date": "2025-02-13",
-      "cited": false
-     },
-     {
-      "slug": "speech-1194853",
-      "title": "Angus Taylor \u2014 Bills \u2014 2025-03-26",
-      "speaker": "Angus Taylor",
-      "party": "Liberal",
-      "state": "federal",
-      "date": "2025-03-26",
-      "cited": false
-     },
-     {
-      "slug": "speech-1195201",
-      "title": "David Pocock \u2014 Statements by Senators \u2014 2025-07-23",
-      "speaker": "David Pocock",
-      "party": "Independent",
-      "state": "federal",
-      "date": "2025-07-23",
-      "cited": false
-     },
-     {
-      "slug": "speech-1195400",
-      "title": "Louise Miller-Frost \u2014 Governor-General's Speech \u2014 2025-07-28",
-      "speaker": "Louise Miller-Frost",
-      "party": "Labor",
-      "state": "federal",
-      "date": "2025-07-28",
-      "cited": false
-     },
      {
       "slug": "speech-1195694",
       "title": "Angus Taylor \u2014 Bills \u2014 2025-07-30",
@@ -1934,12 +1707,75 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2025-07-30",
-      "cited": false
+      "cited": true
+     },
+     {
+      "slug": "speech-1195740",
+      "title": "Madonna Jarrett \u2014 Questions without Notice \u2014 2025-07-30",
+      "speaker": "Madonna Jarrett",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2025-07-30",
+      "cited": true
      },
      {
       "slug": "speech-1294831",
       "title": "Bob Nanva \u2014 Energy Transition \u2014 2025-08-06",
       "speaker": "Bob Nanva",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-08-06",
+      "cited": true
+     },
+     {
+      "slug": "speech-1198151",
+      "title": "Emma Comer \u2014 Questions without Notice \u2014 2025-11-04",
+      "speaker": "Emma Comer",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2025-11-04",
+      "cited": true
+     },
+     {
+      "slug": "speech-1198427",
+      "title": "Dave Sharma \u2014 Questions without Notice: Take Note of Answers \u2014 2025-11-05",
+      "speaker": "Dave Sharma",
+      "party": null,
+      "state": "federal",
+      "date": "2025-11-05",
+      "cited": true
+     },
+     {
+      "slug": "speech-1270567",
+      "title": "Gallagher \u2014 Economics Legislation Committee - Economics Legislation Committee 04/06/2026 Estimates TREASURY PORTFOLIO Department of the Treasury \u2014 2026-06-04",
+      "speaker": "Gallagher",
+      "party": null,
+      "state": "federal",
+      "date": "2026-06-04",
+      "cited": true
+     },
+     {
+      "slug": "speech-1027734",
+      "title": "Hume \u2014 Finance and Public Administration Legislation Committee - Finance and Public Administration Legislation Committee 25/02/2025 Estimates FINANCE PORTFOLIO Future Fund Management Agency \u2014 2025-02-25",
+      "speaker": "Hume",
+      "party": null,
+      "state": "federal",
+      "date": "2025-02-25",
+      "cited": false
+     },
+     {
+      "slug": "speech-1195171",
+      "title": "David Moncrieff \u2014 Questions without Notice \u2014 2025-07-23",
+      "speaker": "David Moncrieff",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2025-07-23",
+      "cited": false
+     },
+     {
+      "slug": "speech-1294828",
+      "title": "Abigail Boyd \u2014 Energy Transition \u2014 2025-08-06",
+      "speaker": "Abigail Boyd",
       "party": null,
       "state": "nsw",
       "date": "2025-08-06",
@@ -1955,84 +1791,307 @@
       "cited": false
      },
      {
-      "slug": "speech-1196769",
-      "title": "Ted O'Brien \u2014 Bills \u2014 2025-09-01",
-      "speaker": "Ted O'Brien",
-      "party": "Liberal",
+      "slug": "speech-1196396",
+      "title": "Clare O'Neil \u2014 Ministerial Statements \u2014 2025-08-27",
+      "speaker": "Clare O'Neil",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2025-08-27",
+      "cited": false
+     },
+     {
+      "slug": "speech-1196718",
+      "title": "Tania Lawrence \u2014 Documents \u2014 2025-09-01",
+      "speaker": "Tania Lawrence",
+      "party": "Labor",
       "state": "federal",
       "date": "2025-09-01",
       "cited": false
      },
      {
-      "slug": "speech-1198151",
-      "title": "Emma Comer \u2014 Questions without Notice \u2014 2025-11-04",
-      "speaker": "Emma Comer",
+      "slug": "speech-1196931",
+      "title": "Tim Wilson \u2014 Bills \u2014 2025-09-02",
+      "speaker": "Tim Wilson",
+      "party": "Liberal",
+      "state": "federal",
+      "date": "2025-09-02",
+      "cited": false
+     },
+     {
+      "slug": "speech-1197280",
+      "title": "Matt Gregg \u2014 Adjournment \u2014 2025-09-04",
+      "speaker": "Matt Gregg",
       "party": "Labor",
       "state": "federal",
-      "date": "2025-11-04",
+      "date": "2025-09-04",
       "cited": false
      },
      {
-      "slug": "speech-1198427",
-      "title": "Dave Sharma \u2014 Questions without Notice: Take Note of Answers \u2014 2025-11-05",
-      "speaker": "Dave Sharma",
+      "slug": "speech-913803",
+      "title": "Watt \u2014 Environment and Communications Legislation Committee - Environment and Communications Legislation Committee 07/10/2025 Estimates; and CLIMATE CHANGE, ENERGY, THE ENVIRONMENT AND WATER PORTFOLIO Department of Climate Change, Energy, the Environment and Water \u2014 2025-10-07",
+      "speaker": "Watt",
       "party": null,
       "state": "federal",
-      "date": "2025-11-05",
+      "date": "2025-10-07",
       "cited": false
      },
      {
-      "slug": "speech-1199489",
-      "title": "James McGrath \u2014 Questions without Notice \u2014 2026-02-03",
-      "speaker": "James McGrath",
-      "party": null,
-      "state": "federal",
-      "date": "2026-02-03",
-      "cited": false
-     },
-     {
-      "slug": "speech-1201342",
-      "title": "Milton Dick \u2014 Matters of Public Importance \u2014 2026-03-12",
-      "speaker": "Milton Dick",
-      "party": null,
-      "state": "federal",
-      "date": "2026-03-12",
-      "cited": false
-     },
-     {
-      "slug": "speech-1201558",
-      "title": "Leon Rebello \u2014 Private Members' Business \u2014 2026-03-23",
-      "speaker": "Leon Rebello",
-      "party": "LNP",
-      "state": "federal",
-      "date": "2026-03-23",
-      "cited": false
-     },
-     {
-      "slug": "speech-1202405",
-      "title": "Madonna Jarrett \u2014 Questions without Notice \u2014 2026-04-01",
+      "slug": "speech-1199942",
+      "title": "Madonna Jarrett \u2014 Questions without Notice \u2014 2026-02-09",
       "speaker": "Madonna Jarrett",
       "party": "Labor",
       "state": "federal",
-      "date": "2026-04-01",
+      "date": "2026-02-09",
       "cited": false
      },
      {
-      "slug": "speech-1208933",
-      "title": "Sarah Mansfield \u2014 Energy and Resources Legislation Amendment (VEET Strategic Review and Other Matters) Bill 2026 - Second reading \u2014 2026-08-28",
-      "speaker": "Sarah Mansfield",
-      "party": null,
-      "state": "vic",
-      "date": "2026-08-28",
+      "slug": "speech-1202848",
+      "title": "Gordon Reid \u2014 Questions without Notice \u2014 2026-05-14",
+      "speaker": "Gordon Reid",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2026-05-14",
+      "cited": false
+     },
+     {
+      "slug": "speech-1203883",
+      "title": "Zoe McKenzie \u2014 Questions without Notice \u2014 2026-06-24",
+      "speaker": "Zoe McKenzie",
+      "party": "Liberal",
+      "state": "federal",
+      "date": "2026-06-24",
+      "cited": false
+     },
+     {
+      "slug": "speech-1205386",
+      "title": "Joanne Ryan \u2014 Questions without Notice \u2014 2026-08-17",
+      "speaker": "Joanne Ryan",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2026-08-17",
+      "cited": false
+     },
+     {
+      "slug": "speech-1205510",
+      "title": "Angie Bell \u2014 Questions without Notice \u2014 2026-08-18",
+      "speaker": "Angie Bell",
+      "party": "LNP",
+      "state": "federal",
+      "date": "2026-08-18",
       "cited": false
      }
     ],
-    "asked_at": "2026-09-04T23:06:39+00:00"
+    "asked_at": "2026-09-05T00:08:50+00:00"
+   },
+   {
+    "question": "What has parliament said about the Strata Schemes Legislation Amendment Bill 2024?",
+    "answer": "Parliamentary debate on the Strata Schemes Legislation Amendment Bill 2024 shows it was a New South Wales Government bill implementing 37 recommendations from the 2021 statutory review of strata laws, with Labor members describing it as the second tranche of reforms. Labor's Julia Finn (Granville) said the bill aims to \"improve the management and governance of strata schemes,\" enhancing \"transparency, accountability and the overall functioning\" of the more than 86,000 schemes in the state. Labor's Edmond Atalla (Mount Druitt) said it would \"strengthen accountability to ensure trust in strata managing agents and building managers,\" prohibit unfair contract terms, improve committee governance, and tackle noncompliance in maintaining common property. Labor's Jodie Harrison (Charlestown) said it would make strata living \"fairer for the 1.2 million people living in the 86,000 schemes\" and help owners in financial hardship by requiring levy notices to include information on payment options and financial counselling.\n\nLabor's Greg Warren (Campbelltown) said the bill would \"uplift developer and strata managing agent professionalism,\" require owners' corporations to maintain common property, and assist owners in financial hardship, including by increasing the notice of debt recovery action from 21 days to 30 days. Labor's Charishma Kaliyanda (Liverpool) highlighted reforms to strata managing agents and building managers, including prohibiting management agreements that limit agent liability, requiring six-monthly activity reports, and imposing a statutory obligation for building managers to act in the owners' corporation's best interests. Labor's Maryanne Stuart (Heathcote) said constituents had raised concerns about agents \"misusing their authority,\" and that the bill would protect owners' corporations from unfair contract terms and hold developers to account. Labor's Kylie Wilkinson (East Hills) focused on reforms around environmental sustainability, financial viability and accessibility, including prohibiting by-laws that block sustainability infrastructure due to appearance and lowering voting thresholds for accessibility infrastructure.\n\nMinister Anoulack Chanthivong (Macquarie Fields), in reply, said the bill was \"the most significant reforms to strata living and strata laws since 2015,\" and that the Government had implemented 31 recommendations in December 2023, passed the Strata Managing Agents Legislation Amendment Act 2024 in September 2024, and was progressing the remaining 36 legislative recommendations. Minister Jihad Dib (Bankstown) said the bill made changes to conveyancing laws to improve disclosure of embedded networks as part of the sale of a lot, including new disclosure requirements for \"exclusive supply networks.\" Labor's Stephanie Di Pasqua (Drummoyne) said the bill would \"go some way to improving the many issues that are experienced by owners in strata schemes,\" while noting \"there is always more work to be done.\"",
+    "sources": [
+     {
+      "slug": "speech-1283334",
+      "title": "Stephanie Di Pasqua \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-11",
+      "speaker": "Stephanie Di Pasqua",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-11",
+      "cited": true
+     },
+     {
+      "slug": "speech-1283337",
+      "title": "Felicity Wilson \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-11",
+      "speaker": "Felicity Wilson",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-11",
+      "cited": true
+     },
+     {
+      "slug": "speech-1283326",
+      "title": "Greg Warren \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-11",
+      "speaker": "Greg Warren",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-11",
+      "cited": true
+     },
+     {
+      "slug": "speech-1283330",
+      "title": "Charishma Kaliyanda \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-11",
+      "speaker": "Charishma Kaliyanda",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-11",
+      "cited": true
+     },
+     {
+      "slug": "speech-1283332",
+      "title": "Maryanne Stuart \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-11",
+      "speaker": "Maryanne Stuart",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-11",
+      "cited": true
+     },
+     {
+      "slug": "speech-1283338",
+      "title": "Edmond Atalla \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-11",
+      "speaker": "Edmond Atalla",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-11",
+      "cited": true
+     },
+     {
+      "slug": "speech-1283767",
+      "title": "Anoulack Chanthivong \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-12",
+      "speaker": "Anoulack Chanthivong",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-12",
+      "cited": true
+     },
+     {
+      "slug": "speech-1283743",
+      "title": "Julia Finn \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-12",
+      "speaker": "Julia Finn",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-12",
+      "cited": true
+     },
+     {
+      "slug": "speech-1284522",
+      "title": "Mark Buttigieg \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-13",
+      "speaker": "Mark Buttigieg",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-13",
+      "cited": true
+     },
+     {
+      "slug": "speech-1284516",
+      "title": "Scott Farlow \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-13",
+      "speaker": "Scott Farlow",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-13",
+      "cited": true
+     },
+     {
+      "slug": "speech-1306381",
+      "title": "Mes \u2014 Strata Schemes Legislation Amendment (Miscellaneous) Bill 2025 \u2014 2026-02-11",
+      "speaker": "Mes",
+      "party": null,
+      "state": "nsw",
+      "date": "2026-02-11",
+      "cited": true
+     },
+     {
+      "slug": "speech-1283335",
+      "title": "Kylie Wilkinson \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-11",
+      "speaker": "Kylie Wilkinson",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-11",
+      "cited": false
+     },
+     {
+      "slug": "speech-1283336",
+      "title": "Jodie Harrison \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-11",
+      "speaker": "Jodie Harrison",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-11",
+      "cited": false
+     },
+     {
+      "slug": "speech-1283331",
+      "title": "Jenny Leong \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-11",
+      "speaker": "Jenny Leong",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-11",
+      "cited": false
+     },
+     {
+      "slug": "speech-1283765",
+      "title": "Jihad Dib \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-12",
+      "speaker": "Jihad Dib",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-12",
+      "cited": false
+     },
+     {
+      "slug": "speech-1284518",
+      "title": "Cate Faehrmann \u2014 Strata Schemes Legislation Amendment Bill 2024 \u2014 2025-02-13",
+      "speaker": "Cate Faehrmann",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-02-13",
+      "cited": false
+     },
+     {
+      "slug": "speech-1306384",
+      "title": "Jenny Leong \u2014 Strata Schemes Legislation Amendment (Miscellaneous) Bill 2025 \u2014 2026-02-11",
+      "speaker": "Jenny Leong",
+      "party": null,
+      "state": "nsw",
+      "date": "2026-02-11",
+      "cited": false
+     },
+     {
+      "slug": "speech-1306390",
+      "title": "Anoulack Chanthivong \u2014 Strata Schemes Legislation Amendment (Miscellaneous) Bill 2025 \u2014 2026-02-11",
+      "speaker": "Anoulack Chanthivong",
+      "party": null,
+      "state": "nsw",
+      "date": "2026-02-11",
+      "cited": false
+     },
+     {
+      "slug": "speech-1306387",
+      "title": "Alex Greenwich \u2014 Strata Schemes Legislation Amendment (Miscellaneous) Bill 2025 \u2014 2026-02-11",
+      "speaker": "Alex Greenwich",
+      "party": null,
+      "state": "nsw",
+      "date": "2026-02-11",
+      "cited": false
+     },
+     {
+      "slug": "speech-1306385",
+      "title": "Jihad Dib \u2014 Strata Schemes Legislation Amendment (Miscellaneous) Bill 2025 \u2014 2026-02-11",
+      "speaker": "Jihad Dib",
+      "party": null,
+      "state": "nsw",
+      "date": "2026-02-11",
+      "cited": false
+     }
+    ],
+    "asked_at": "2026-09-05T00:09:01+00:00"
    },
    {
     "question": "What have MPs said about housing affordability and home ownership since July 2024?",
-    "answer": "Several MPs addressed housing affordability and home ownership. In the New South Wales Parliament, Ms Jenny Leong (The Greens) said demand-side subsidies like the Help to Buy scheme are \"inflationary\" and \"push up the cost of housing by injecting more money into the housing market,\" citing evidence that the money is \"eventually capitalised into house prices, so the beneficiaries gain at the expense of everyone else.\" She noted the scheme would assist only an estimated 3,000 of over 23,000 annual first home buyers in NSW\u2014about 12.9 per cent\u2014and asked what would be done for the remaining 87 per cent. Mr Stephen Bali (Labor, NSW) supported the bill, arguing the shared equity scheme \"will have little impact on demand pricing\" and citing a Grattan Institute prediction that it would increase house prices by just 0.016 per cent, or $160 per $1 million spent. Ms Eleni Petinos (Liberal, NSW Opposition) supported the bill but criticised the government for closing the NSW Shared Equity Home Buyer scheme and for imposing a \"$12,000 tax on new homes,\" while noting the Commonwealth price cap for Sydney was lifted to $1.3 million.\n\nIn the Commonwealth Parliament, a Labor speaker said the Albanese government is implementing a \"$43 billion agenda\" on housing, having taken the Commonwealth from \"a negligent bystander\" to \"the boldest and most ambitious Australian government on housing since the Second World War.\" Another Labor MP said the government inherited a \"housing horror show\" in May 2022, with building costs rising at 17 per cent, and criticised the coalition for a \"decade of waste and neglect.\" A coalition speaker claimed that under the government's housing policy failures, \"older women are the fastest-growing group of homeless Australians\u2014up to almost 40 per cent in a decade.\" In the Northern Territory, a government MP noted the five per cent deposit scheme had helped more than 1,800 Territorians into their first home, with the Greater Darwin price cap increased to $750,000 from 1 July. In Victoria, a Liberal MP said that after 11 years of Labor, \"the dream of a home is slipping away for our next generations,\" and that the opposition is \"lifting\" support for first home buyers.",
+    "answer": "Several MPs addressed housing affordability and home ownership. In the New South Wales Parliament, Ms Jenny Leong (The Greens) said the Help to Buy shared equity scheme would assist an estimated 3,000 first home buyers per year in NSW, or 12.9 per cent of the over 23,000 who bought their first home in the 12 months to July 2024. She argued demand-side subsidies like this are \"inflationary\" and \"push up the cost of housing\", citing evidence from the Senate inquiry that the money \"is eventually capitalised into house prices, so the beneficiaries gain at the expense of everyone else\". She said the scheme is \"good for the 40,000 lucky recipients of it and worse for everybody else\" and asked what the Government will do for the remaining 87 per cent of first home buyers.\n\nMr Stephen Bali (Labor, NSW) supported the bill, saying home ownership for low to middle income households is getting more difficult in Sydney. He noted the scheme modernises a 1980s shared equity program that helped people \"participate in the housing market rather than simply pay rent\". He cited the Grattan Institute's prediction that the scheme will increase house prices by just 0.016 per cent, or $160 per $1 million spent on a home. Ms Eleni Petinos (Liberal, NSW Opposition) also supported the bill but criticised the Minns Labor Government for closing the NSW Shared Equity Home Buyer scheme on 30 June 2024, just seven months after opening it to domestic violence victims, and for cutting support for anyone buying a home worth over $1 million.\n\nIn the Commonwealth Parliament, a Labor MP said the Albanese government is implementing a \"$43 billion agenda\" on housing, having taken the Commonwealth \"from being, really, a negligent bystander\" to \"the boldest and most ambitious Australian government on housing since the Second World War\". Another Labor MP said the government inherited a \"housing horror show\" in May 2022, with building costs rising at 17 per cent, and criticised the coalition for a \"decade of waste and neglect\" and for not even having a housing minister. A Commonwealth MP also noted that house prices have risen by 400 per cent over two decades, ownership is down by seven per cent for young people, and just 44 per cent of Australians aged 25 to 34 own a home.",
     "sources": [
+     {
+      "slug": "speech-1195043",
+      "title": "Louise Miller-Frost \u2014 Questions without Notice \u2014 2025-03-27",
+      "speaker": "Louise Miller-Frost",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2025-03-27",
+      "cited": true
+     },
+     {
+      "slug": "speech-1290817",
+      "title": "Stephen Bali \u2014 Help to Buy (Commonwealth Powers) Bill 2025 \u2014 2025-05-28",
+      "speaker": "Stephen Bali",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-05-28",
+      "cited": true
+     },
      {
       "slug": "speech-1290818",
       "title": "Jenny Leong \u2014 Help to Buy (Commonwealth Powers) Bill 2025 \u2014 2025-05-28",
@@ -2040,6 +2099,42 @@
       "party": null,
       "state": "nsw",
       "date": "2025-05-28",
+      "cited": true
+     },
+     {
+      "slug": "speech-1290804",
+      "title": "Eleni Petinos \u2014 Help to Buy (Commonwealth Powers) Bill 2025 \u2014 2025-05-28",
+      "speaker": "Eleni Petinos",
+      "party": null,
+      "state": "nsw",
+      "date": "2025-05-28",
+      "cited": true
+     },
+     {
+      "slug": "speech-1195171",
+      "title": "David Moncrieff \u2014 Questions without Notice \u2014 2025-07-23",
+      "speaker": "David Moncrieff",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2025-07-23",
+      "cited": true
+     },
+     {
+      "slug": "speech-1196718",
+      "title": "Tania Lawrence \u2014 Documents \u2014 2025-09-01",
+      "speaker": "Tania Lawrence",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2025-09-01",
+      "cited": true
+     },
+     {
+      "slug": "speech-1203348",
+      "title": "Matt Smith \u2014 Bills \u2014 2026-06-02",
+      "speaker": "Matt Smith",
+      "party": "Labor",
+      "state": "federal",
+      "date": "2026-06-02",
       "cited": true
      },
      {
@@ -2052,57 +2147,12 @@
       "cited": false
      },
      {
-      "slug": "speech-1195043",
-      "title": "Louise Miller-Frost \u2014 Questions without Notice \u2014 2025-03-27",
-      "speaker": "Louise Miller-Frost",
-      "party": "Labor",
-      "state": "federal",
-      "date": "2025-03-27",
-      "cited": false
-     },
-     {
-      "slug": "speech-1290804",
-      "title": "Eleni Petinos \u2014 Help to Buy (Commonwealth Powers) Bill 2025 \u2014 2025-05-28",
-      "speaker": "Eleni Petinos",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-05-28",
-      "cited": false
-     },
-     {
-      "slug": "speech-1290817",
-      "title": "Stephen Bali \u2014 Help to Buy (Commonwealth Powers) Bill 2025 \u2014 2025-05-28",
-      "speaker": "Stephen Bali",
-      "party": null,
-      "state": "nsw",
-      "date": "2025-05-28",
-      "cited": false
-     },
-     {
       "slug": "speech-1292971",
       "title": "Cate Faehrmann \u2014 Community Housing Providers (Adoption of National Law) Amendment Bill 2025 \u2014 2025-06-24",
       "speaker": "Cate Faehrmann",
       "party": null,
       "state": "nsw",
       "date": "2025-06-24",
-      "cited": false
-     },
-     {
-      "slug": "speech-1195171",
-      "title": "David Moncrieff \u2014 Questions without Notice \u2014 2025-07-23",
-      "speaker": "David Moncrieff",
-      "party": "Labor",
-      "state": "federal",
-      "date": "2025-07-23",
-      "cited": false
-     },
-     {
-      "slug": "speech-1196718",
-      "title": "Tania Lawrence \u2014 Documents \u2014 2025-09-01",
-      "speaker": "Tania Lawrence",
-      "party": "Labor",
-      "state": "federal",
-      "date": "2025-09-01",
       "cited": false
      },
      {
@@ -2151,12 +2201,12 @@
       "cited": false
      },
      {
-      "slug": "speech-1203348",
-      "title": "Matt Smith \u2014 Bills \u2014 2026-06-02",
-      "speaker": "Matt Smith",
-      "party": "Labor",
+      "slug": "speech-1263811",
+      "title": "Barbara Pocock \u2014 Economics Legislation Committee - Economics Legislation Committee 03/06/2026 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2026-06-03",
+      "speaker": "Barbara Pocock",
+      "party": null,
       "state": "federal",
-      "date": "2026-06-02",
+      "date": "2026-06-03",
       "cited": false
      },
      {
@@ -2169,12 +2219,12 @@
       "cited": false
      },
      {
-      "slug": "speech-1263811",
-      "title": "Barbara Pocock \u2014 Economics Legislation Committee - Economics Legislation Committee 03/06/2026 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2026-06-03",
-      "speaker": "Barbara Pocock",
-      "party": null,
+      "slug": "speech-1203697",
+      "title": "David Pocock \u2014 Bills \u2014 2026-06-22",
+      "speaker": "David Pocock",
+      "party": "Independent",
       "state": "federal",
-      "date": "2026-06-03",
+      "date": "2026-06-22",
       "cited": false
      },
      {
@@ -2182,15 +2232,6 @@
       "title": "Cassandra Fernando \u2014 Private Members' Business \u2014 2026-06-22",
       "speaker": "Cassandra Fernando",
       "party": "Labor",
-      "state": "federal",
-      "date": "2026-06-22",
-      "cited": false
-     },
-     {
-      "slug": "speech-1203697",
-      "title": "David Pocock \u2014 Bills \u2014 2026-06-22",
-      "speaker": "David Pocock",
-      "party": "Independent",
       "state": "federal",
       "date": "2026-06-22",
       "cited": false
@@ -2205,21 +2246,12 @@
       "cited": false
      }
     ],
-    "asked_at": "2026-09-04T23:06:47+00:00"
+    "asked_at": "2026-09-05T00:09:11+00:00"
    },
    {
     "question": "What positions have been taken on negative gearing and property tax concessions since July 2024?",
-    "answer": "The government has taken a clear position in favour of reforming negative gearing and capital gains tax concessions to address housing affordability. From 1 July 2027, negative gearing for residential property will be limited to new builds, with changes taking effect for properties purchased after 7:30 pm on 12 May 2026. Existing investments are protected: properties held before budget night are grandfathered, and investors can continue to negatively gear those properties until sold. The government is also replacing the 50 per cent capital gains tax discount with cost-base indexation for gains accrued after 1 July 2027, plus a 30 per cent minimum tax on realised gains. These reforms are expected to help an additional 75,000 Australians buy a home over the next decade. Senator Gallagher (Labor) defended the grandfathering arrangements, noting that investment decisions made prior to budget night are protected.\n\nThe opposition has criticised these changes. One speaker argued the government has \"attacked negative gearing and gutted capital gains tax concessions\" while doing nothing about bracket creep, and claimed planned changes to trusts would \"cripple nearly 300,000 small businesses\" used by \"battlers,\" not billionaires. Another opposition voice said Labor had \"wasted $53 billion on tax concessions for wealthy property investors\" over four years and, citing PBO analysis, claimed a further $190 billion would be foregone over the next decade if action were delayed\u2014funds that should instead build public and affordable housing. The coalition was also accused of wanting the tax system to \"continue to favour the person buying their next investment property over young Australians trying to buy a place to live.\"\n\nGovernment speakers stressed the reforms are not an abolition of negative gearing. As one put it: \"Australians will still be able to negatively gear residential property. The difference is that, from 1 July 2027, those arrangements will be focused on new housing supply.\" New builds can continue to be negatively geared, including dwellings on vacant land or where existing properties are demolished and replaced with more dwellings. The government also indicated it would remove ministerial discretion over definitions of eligible new builds and exempt housing types, moving full definitions into primary law after consultation.",
+    "answer": "Government speakers\u2014including Senator Gallagher and other Labor members in the Commonwealth Parliament\u2014have defended reforms to negative gearing and capital gains tax (CGT) as a way to level the playing field for first home buyers and direct investment toward new housing supply. They state that, from 1 July 2027, negative gearing for residential property purchased after budget night (7:30 pm on 12 May 2026) will be limited to new builds, with existing investments grandfathered so current owners can continue under old rules until sale. They also say the 50 per cent CGT discount will be replaced with cost-base indexation for gains accrued after 1 July 2027, plus a 30 per cent minimum tax on realised gains. One Labor speaker claims these changes are expected to help an additional 75,000 Australians buy a home over the next decade, and another says the reforms are \"careful, responsible policy design\" that protects existing investment decisions.\n\nOpposition and crossbench speakers have taken contrary positions. A coalition speaker criticises the reforms as attacking negative gearing and gutting CGT concessions \"while doing nothing about bracket creep,\" and claims the changes will \"cripple nearly 300,000 small businesses\" that use trusts, calling those affected \"battlers; they're not billionaires.\" A Greens speaker alleges Labor has \"wasted $53 billion on tax concessions for wealthy property investors\" over four years and, citing PBO analysis, says further delay would waste another $190 billion over the next decade, urging that revenue instead fund public and affordable housing. The same speaker calls housing affordability \"a political choice.\" A coalition senator also moved a motion in the Economics Legislation Committee on 4 June 2026 seeking Treasury advice on the impact of housing tax changes on supply and rents.\n\nThe record also includes a Labor speaker rebutting opposition claims, saying \"We are not abolishing it; we're changing it,\" and another noting the government will remove ministerial discretion over definitions of eligible new builds and exempt housing types, moving full definitions into primary law after consultation. A separate Labor speaker welcomes the reforms as \"ambitious\" and notes exemptions for new houses to incentivise supply, while a coalition speaker characterises Labor as prioritising \"wealthy property investors, multiple-property owners, over regular mortgage holders and renters.\"",
     "sources": [
-     {
-      "slug": "speech-1202989",
-      "title": "Tony Pasin \u2014 Statements by Members \u2014 2026-05-25",
-      "speaker": "Tony Pasin",
-      "party": "Liberal",
-      "state": "federal",
-      "date": "2026-05-25",
-      "cited": true
-     },
      {
       "slug": "speech-1203218",
       "title": "Madonna Jarrett \u2014 Bills \u2014 2026-05-27",
@@ -2230,12 +2262,12 @@
       "cited": true
      },
      {
-      "slug": "speech-1203341",
-      "title": "Tim Wilson \u2014 Bills \u2014 2026-06-02",
-      "speaker": "Tim Wilson",
-      "party": "Liberal",
+      "slug": "speech-1203224",
+      "title": "Matt Thistlethwaite \u2014 Bills \u2014 2026-05-28",
+      "speaker": "Matt Thistlethwaite",
+      "party": "Labor",
       "state": "federal",
-      "date": "2026-06-02",
+      "date": "2026-05-28",
       "cited": true
      },
      {
@@ -2243,6 +2275,15 @@
       "title": "Matt Smith \u2014 Bills \u2014 2026-06-02",
       "speaker": "Matt Smith",
       "party": "Labor",
+      "state": "federal",
+      "date": "2026-06-02",
+      "cited": true
+     },
+     {
+      "slug": "speech-1203341",
+      "title": "Tim Wilson \u2014 Bills \u2014 2026-06-02",
+      "speaker": "Tim Wilson",
+      "party": "Liberal",
       "state": "federal",
       "date": "2026-06-02",
       "cited": true
@@ -2293,6 +2334,15 @@
       "cited": true
      },
      {
+      "slug": "speech-1203823",
+      "title": "Sue Lines \u2014 Matters of Urgency \u2014 2026-06-23",
+      "speaker": "Sue Lines",
+      "party": null,
+      "state": "federal",
+      "date": "2026-06-23",
+      "cited": true
+     },
+     {
       "slug": "speech-1204099",
       "title": "Slade Brockman \u2014 Bills \u2014 2026-06-25",
       "speaker": "Slade Brockman",
@@ -2329,30 +2379,21 @@
       "cited": false
      },
      {
+      "slug": "speech-1202989",
+      "title": "Tony Pasin \u2014 Statements by Members \u2014 2026-05-25",
+      "speaker": "Tony Pasin",
+      "party": "Liberal",
+      "state": "federal",
+      "date": "2026-05-25",
+      "cited": false
+     },
+     {
       "slug": "speech-1203186",
       "title": "Milton Dick \u2014 Matters of Public Importance \u2014 2026-05-27",
       "speaker": "Milton Dick",
       "party": null,
       "state": "federal",
       "date": "2026-05-27",
-      "cited": false
-     },
-     {
-      "slug": "speech-1203224",
-      "title": "Matt Thistlethwaite \u2014 Bills \u2014 2026-05-28",
-      "speaker": "Matt Thistlethwaite",
-      "party": "Labor",
-      "state": "federal",
-      "date": "2026-05-28",
-      "cited": false
-     },
-     {
-      "slug": "speech-1272045",
-      "title": "Gallagher \u2014 Economics Legislation Committee - Economics Legislation Committee 04/06/2026 Estimates TREASURY PORTFOLIO Tax Practitioners Board \u2014 2026-06-04",
-      "speaker": "Gallagher",
-      "party": null,
-      "state": "federal",
-      "date": "2026-06-04",
       "cited": false
      },
      {
@@ -2365,20 +2406,20 @@
       "cited": false
      },
      {
-      "slug": "speech-1203823",
-      "title": "Sue Lines \u2014 Matters of Urgency \u2014 2026-06-23",
-      "speaker": "Sue Lines",
+      "slug": "speech-1272045",
+      "title": "Gallagher \u2014 Economics Legislation Committee - Economics Legislation Committee 04/06/2026 Estimates TREASURY PORTFOLIO Tax Practitioners Board \u2014 2026-06-04",
+      "speaker": "Gallagher",
       "party": null,
       "state": "federal",
-      "date": "2026-06-23",
+      "date": "2026-06-04",
       "cited": false
      }
     ],
-    "asked_at": "2026-09-04T23:06:55+00:00"
+    "asked_at": "2026-09-05T00:09:20+00:00"
    },
    {
     "question": "What has parliament said about social and public housing supply since July 2024?",
-    "answer": "Several passages address social and public housing supply, mostly from New South Wales and Commonwealth sources. In the NSW Legislative Council, Minister for Housing Rose Jackson (Labor) reported that under the previous NSW government, completed public homes fell from 519 in 2014-15 to a low of 194 in 2019-20, while her government completed 849 new homes in 2023-24\u2014the largest number in a decade\u2014and was on track to match that figure in 2025-26. She also stated that vacant home turnaround time in NSW dropped from 34.7 days in 2022-23 to 27.6 days, the fastest in the country, aided by Social Housing Accelerator funding. In a separate NSW answer, Jackson said regional NSW deliveries rose from 416 homes in 2023-24 to 466 the following year, with 749 on track for 2025-26, and cited 55 homes in the pipeline for Goulburn.\n\nNSW MP Stephen Lawrence (Labor) supported the Housing Amendment Bill 2025, which enables the Minister to exercise functions of the NSW Land and Housing Corporation and supports the state's Building Homes for NSW program commitment to build 8,400 new social homes and 21,000 affordable and market homes. He noted Homes NSW is on track to deliver 850 new social homes in year one of that program, with seven projects in the Central West expected to deliver over 30 homes, and a second Forbes project proposing around 100 new lots including 124 mixed-tenure homes, 30 per cent for social and affordable housing. The bill unlocks $4 billion of investment committed in the 2024-25 NSW budget.\n\nAt the Commonwealth level, a speaker in the Economics Legislation Committee (12/02/2026) noted that over the Housing Accord period commencing 1 July 2024, the Council forecasts gross new housing supply of 938,000 under baseline conditions\u2014around 188,000 per year\u2014implying a shortfall of 262,000 relative to the 1.2 million target. Another speaker in the same committee said the government's plan supports at most 55,000 households in new social and affordable homes over 25 years, while around 190,000 households are on the public housing waitlist, arguing the scale of delivery does not match demand. A Commonwealth minister (Labor) defended the $43 billion Homes for Australia plan, claiming more than 5,000 homes completed with Commonwealth investment, another 25,000 in planning or construction, and 5,000 social and affordable houses underway in Tasmania, including over 600 from the Housing Australia Future Fund alone.",
+    "answer": "Several speakers addressed social and public housing supply. In the New South Wales Parliament, Minister for Housing Rose Jackson (Labor) reported that in 2023-24, the first year of the Minns Labor Government, 849 new public homes were completed\u2014\"the largest number of homes delivered over the past decade\"\u2014and that the state was on track to match that figure in the current year. She contrasted this with the previous government's record, noting that under that government over $3.6 billion of public housing was sold, and completions dropped to only 194 homes in 2019-20. She also stated that the turnaround time for vacant public homes had been reduced from 34.7 days in 2022-23 to 27.6 days, giving New South Wales \"the fastest turnaround time for vacant homes in the country.\" In a separate answer, she said the government was on track to deliver 749 homes in regional New South Wales in 2025-26, up from 416 in 2023-24 and 466 the following year.\n\nAlso in the New South Wales Parliament, Stephen Lawrence (Labor) supported the Housing Amendment Bill 2025, which he said enables the delivery of the state government's commitment to build 8,400 new social homes and 21,000 new affordable and market homes under the Building Homes for NSW program. He noted the state was on track to deliver 850 new social homes in year one of that program and that the bill unlocks $4 billion of investment committed in the 2024-25 budget for Homes NSW. In the Commonwealth Parliament, a government speaker claimed that Labor's $43 billion Homes for Australia plan was delivering 5,000 social and affordable houses, with projects already underway in Tasmania, and that the Housing Australia Future Fund alone was delivering more than 600 new social and affordable homes in that state.\n\nHowever, the record also contains criticism of the scale of delivery. In a Commonwealth estimates hearing on 12 February 2026, a questioner noted that social housing is \"at record lows\" and the public housing waitlist \"at record highs,\" with around 190,000 households waiting, and argued that the government's plan to support at most 55,000 households in new social and affordable homes over 25 years \"does not match the scale of demand.\" Separately, in a Commonwealth estimates hearing on 4 December 2025, a speaker acknowledged that \"there's a lot of social housing stock that needs repair\" but said the government through its program \"has created additional supply of public and social housing that is very important for the system.\" The record is otherwise limited on this specific topic.",
     "sources": [
      {
       "slug": "speech-1284894",
@@ -2399,21 +2440,21 @@
       "cited": true
      },
      {
-      "slug": "speech-1196373",
-      "title": "Malcolm Roberts \u2014 Regulations and Determinations \u2014 2025-08-26",
-      "speaker": "Malcolm Roberts",
-      "party": null,
-      "state": "federal",
-      "date": "2025-08-26",
-      "cited": true
-     },
-     {
       "slug": "speech-1197021",
       "title": "Marielle Smith \u2014 Matters of Public Importance \u2014 2025-09-02",
       "speaker": "Marielle Smith",
       "party": "Labor",
       "state": "federal",
       "date": "2025-09-02",
+      "cited": true
+     },
+     {
+      "slug": "speech-978446",
+      "title": "Rimmer \u2014 Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2025-12-04",
+      "speaker": "Rimmer",
+      "party": null,
+      "state": "federal",
+      "date": "2025-12-04",
       "cited": true
      },
      {
@@ -2462,6 +2503,15 @@
       "cited": false
      },
      {
+      "slug": "speech-1196373",
+      "title": "Malcolm Roberts \u2014 Regulations and Determinations \u2014 2025-08-26",
+      "speaker": "Malcolm Roberts",
+      "party": null,
+      "state": "federal",
+      "date": "2025-08-26",
+      "cited": false
+     },
+     {
       "slug": "speech-1196931",
       "title": "Tim Wilson \u2014 Bills \u2014 2025-09-02",
       "speaker": "Tim Wilson",
@@ -2486,15 +2536,6 @@
       "party": null,
       "state": "federal",
       "date": "2025-11-05",
-      "cited": false
-     },
-     {
-      "slug": "speech-978446",
-      "title": "Rimmer \u2014 Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2025-12-04",
-      "speaker": "Rimmer",
-      "party": null,
-      "state": "federal",
-      "date": "2025-12-04",
       "cited": false
      },
      {
@@ -2561,7 +2602,7 @@
       "cited": false
      }
     ],
-    "asked_at": "2026-09-04T23:07:04+00:00"
+    "asked_at": "2026-09-05T00:09:30+00:00"
    }
   ]
  },

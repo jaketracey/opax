@@ -5,9 +5,11 @@ from scripts.generate_reports import (
     brief_matches_topic,
     compose_stat_label,
     debate_question,
+    dedupe_subjects,
     is_procedural_debate,
     is_topic_echo,
     period_question,
+    settle_jurisdiction,
     stat_support,
     voices,
     window_questions,
@@ -255,3 +257,111 @@ class TautologicalDenominatorTests(unittest.TestCase):
         self.assertIsNone(stat_support({
             "value": "4,000 homes", "numerator": "4,000", "unit": "homes",
             "denominator": "30,000 homes", "measure": "homes funded"}, passage))
+
+
+class DebateDedupeTests(unittest.TestCase):
+    def test_a_bill_folded_inside_a_longer_one_loses_its_question(self):
+        titles = [
+            "Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025",
+            "Environmental Planning and Assessment Amendment Bill 2025",
+            "Strata Schemes Legislation Amendment Bill 2024",
+        ]
+        self.assertEqual(dedupe_subjects(titles), [titles[0], titles[2]])
+
+    def test_the_bigger_debate_keeps_its_question(self):
+        # discover_debates returns largest first, so the survivor is the larger.
+        titles = ["Residential Tenancies Amendment (Rental Reform) Bill 2025",
+                  "Residential Tenancies Amendment Bill 2025"]
+        self.assertEqual(dedupe_subjects(titles), [titles[0]])
+
+    def test_a_two_word_debate_is_never_folded_away(self):
+        titles = ["Housing Supply and Affordability Bill 2025", "Housing Supply"]
+        self.assertEqual(dedupe_subjects(titles), titles)
+
+    def test_a_short_standing_debate_survives_a_bill_that_contains_it(self):
+        titles = ["Statewide Treaty Bill 2025 - Second reading", "Treaty"]
+        self.assertEqual(dedupe_subjects(titles), titles)
+
+    def test_unrelated_debates_are_left_alone(self):
+        titles = ["Planning policy", "Energy policy", "Community safety"]
+        self.assertEqual(dedupe_subjects(titles), titles)
+
+
+class AnchoredQuestionTests(unittest.TestCase):
+    housing = REPORTS["housing"]
+    indigenous = REPORTS["indigenous"]
+
+    def test_a_bare_heading_is_anchored_to_the_report(self):
+        self.assertEqual(
+            debate_question("Energy policy", self.housing),
+            "What has parliament said about Energy policy and housing?")
+
+    def test_a_heading_that_already_says_the_subject_is_left_alone(self):
+        self.assertEqual(
+            debate_question("Housing Supply", self.housing),
+            "What has parliament said about Housing Supply?")
+
+    def test_a_bill_names_itself_and_is_never_anchored(self):
+        self.assertEqual(
+            debate_question("Aboriginal Land Legislation Amendment Bill 2024 - Second reading",
+                            self.indigenous),
+            "What has parliament said about the Aboriginal Land Legislation Amendment Bill 2024?")
+
+    def test_without_a_report_the_question_is_the_bare_heading(self):
+        self.assertEqual(debate_question("Energy policy"),
+                         "What has parliament said about Energy policy?")
+
+
+class TotalWithoutABaseTests(unittest.TestCase):
+    def test_a_total_measured_against_nothing_is_not_a_statistic(self):
+        passage = ("The Indigenous business snapshot estimated First Nations businesses "
+                   "contribute about $16 billion in revenue to the economy.")
+        self.assertEqual(
+            stat_support({
+                "value": "$16 billion", "numerator": "16 billion", "unit": "dollars",
+                "denominator": "economy", "measure": "revenue contributed"}, passage),
+            "the passage states no total for this number to be measured against",
+        )
+
+    def test_a_count_out_of_a_stated_total_still_passes(self):
+        passage = "Of the 19 targets, only 4 are on track."
+        self.assertIsNone(stat_support({
+            "value": "4 of 19", "numerator": "4", "unit": "targets",
+            "denominator": "19 targets", "measure": "Closing the Gap targets on track"}, passage))
+
+    def test_a_share_needs_no_number_in_its_base(self):
+        passage = ("First Nations people make up 37 per cent of the adult prisoners "
+                   "in custody in Queensland.")
+        self.assertIsNone(stat_support({
+            "value": "37 per cent", "numerator": "37", "unit": "per cent",
+            "denominator": "adult prisoners in custody in Queensland",
+            "measure": "First Nations share of adult prisoners"}, passage))
+
+
+class JurisdictionTests(unittest.TestCase):
+    def test_a_state_member_speaking_of_their_own_state_is_not_national(self):
+        self.assertEqual(
+            settle_jurisdiction(
+                {"jurisdiction": "Australia"}, {"state": "vic"},
+                "your government has claimed that only 1.8 per cent of social housing "
+                "was unoccupied as of March 2024"),
+            "Victoria")
+
+    def test_a_state_member_quoting_a_national_figure_stays_national(self):
+        self.assertEqual(
+            settle_jurisdiction(
+                {"jurisdiction": "Australia"}, {"state": "vic"},
+                "compared to a national average of 3.8 per cent across Australia"),
+            "Australia")
+
+    def test_a_named_place_is_always_kept(self):
+        self.assertEqual(
+            settle_jurisdiction(
+                {"jurisdiction": "Queensland"}, {"state": "federal"},
+                "In Queensland, First Nations people make up 37 per cent"),
+            "Queensland")
+
+    def test_a_federal_speaker_keeps_the_national_label(self):
+        self.assertEqual(
+            settle_jurisdiction({"jurisdiction": "Australia"}, {"state": "federal"}, "x"),
+            "Australia")

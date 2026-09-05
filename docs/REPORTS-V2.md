@@ -39,16 +39,18 @@ working until the v2 page lands.
 
   "positions":  [ { "party", "position", "speaker", "date", "slug", "window": "now" } ],
   "key_stats":  [ { "value", "label", "numerator", "denominator", "unit",
-                    "jurisdiction", "as_of", "detail", "slug", "source_title" } ],
+                    "jurisdiction", "as_of", "detail", "slug", "source_title",
+                    "window": "now" | "all" } ],
   "key_stats_dropped": [ { "value", "measure", "reason" } ],   // audit trail
   "voices": { "now": [ { "speaker", "party", "count" } ], "all": [ ... ] }
 }
 ```
 
-`discovered[].parliaments` and `key_stats_dropped` are the two additions
-beyond the agreed shape. The first tells a reader that a "live debate" is a
-Victorian one; the second is the record of what the figure check threw away,
-which is the only way to see the check working.
+`discovered[].parliaments`, `key_stats_dropped` and `key_stats[].window` are
+the three additions beyond the agreed shape. The first tells a reader that a
+"live debate" is a Victorian one; the second is the record of what the figure
+check threw away, which is the only way to see the check working; the third
+says whether a tile came out of the `now` window or the whole record.
 
 ## The platform quirk that shapes everything
 
@@ -107,6 +109,23 @@ A group needs at least **3** speeches to count as a debate.
 1. One per discovered debate, in plain words — *"What has parliament said
    about the Statewide Treaty Bill 2025?"* The reading stage (`- Second
    reading`) is stripped, and a bill or an act gains its `the`.
+
+   Two more rules earn their keep here. **`dedupe_subjects()`** drops a debate
+   whose subject words all sit inside a bigger debate's: the NSW record holds
+   both `Environmental Planning and Assessment Amendment Bill 2025` (43
+   speeches) and `Environmental Planning and Assessment Amendment (Planning
+   System Reforms) Bill 2025` (66), and whichever way you count them as bills,
+   one question retrieves the other's passages and the report prints the same
+   answer twice. A short title is never folded into a long one — `Treaty` sits
+   inside `Statewide Treaty Bill 2025` and is its own standing debate.
+
+   **Anchoring**: a heading that names no bill and carries none of the
+   report's own words gets the report's `subject` spliced in — *"What has
+   parliament said about Energy policy **and housing**?"* `Energy policy` is a
+   real 42-speech group inside the housing label, and asked as it stands it
+   answers with electricity prices and renewables. Anchored, it answers with
+   gas connections in new homes and the seven-star thermal standard, which is
+   what a housing report was asking.
 2. The report's curated questions, with the period spliced in — *"What have
    MPs said about housing affordability and home ownership **since July
    2024**?"*
@@ -159,6 +178,16 @@ section source has a null speaker and a null date.
 Sources are returned with a `cited` flag from the answer's citation map, cited
 ones first, so a section can be checked by eye.
 
+One more line in the template is not the Worker's, and it is there because a
+generated answer failed on it: **a passage is one member's own words, including
+what it says about their opponents.** Without it, a section reported a Labor
+speaker's characterisation of the coalition — that it wants the tax system to
+keep favouring investors over first home buyers — as the coalition's own
+position, in the coalition's voice. The rule makes the model say who is
+claiming what. The same paragraph forbids "the same parliament", because
+consecutive passages are usually from different ones and one answer put a
+Victorian opposition member in the New South Wales chamber.
+
 ## Key figures, and their denominators
 
 A v1 tile was a value and a free sentence, and the free sentence is where a
@@ -193,10 +222,38 @@ reversed one fails, in both word orders.
 `as a share of <denominator>` when a percentage does not already name its base.
 The label is never the model's own sentence.
 
+Two later rules close the two holes that survived the first pass:
+
+- **A denominator that only repeats the unit** is not a base. *"24,561
+  students out of ... students"* is the unit said twice, and it shipped a tile
+  whose share had nothing to be a share of.
+- **A total is not a statistic.** *"$16 billion in revenue contributed to the
+  economy"*, *"almost 14,000 active businesses"* — real numbers, truly in the
+  record, measured against nothing. The schema asks for a base and the model
+  hands back the subject again in longer words, so a non-share denominator now
+  has to carry a number of its own.
+
 **A figure with no stated base is not a statistic.** A fund's size, a bare
 year, the name of a rule — v1 shipped all three — are dropped, and the reason
 is written into `key_stats_dropped` so the drop is auditable rather than
 invisible. Expect fewer tiles than v1. That is the point.
+
+**Where the figures come from.** Both pools are retrieved and numbered into one
+prompt: the `now` window first, then the whole record, minus anything already
+shown. A report whose brief is the live argument should not lead with a tile
+from 2007, but a narrow window is thick with targets and totals and thin on
+figures that state their own base, and a window-only ask kept nothing at all on
+both exemplars. One paid call sees all of it and each tile records its
+`window`. The retrieval query asks for the *shape* of a usable figure — "per
+cent of, share of, proportion of, out of, one in" — not for figures.
+
+**Whose jurisdiction.** The model never sees which chamber it is reading, and
+writes "Australia" by default. `settle_jurisdiction()` puts a state member's
+figure back in their own state unless the passage itself reaches for a national
+frame ("national average", "across Australia"), which is how a Victorian
+question about Victorian social housing stopped being a national statistic. A
+jurisdiction the model actually names is always kept: a federal senator saying
+"in Queensland" means Queensland.
 
 ## Positions, voices, tide, lede
 
@@ -230,6 +287,10 @@ Paid calls per report, at the default settings:
 | lede | 1 |
 | **total** | **12-14** |
 
+One bad answer in eight costs **one** call, not eight: `--only now --redo 3`
+re-asks section 3 alone, with the question and the window already in the file,
+and leaves the other seven untouched.
+
 Everything else — discovery, catalog paging, the tide, the voices, key-moment
 retrieval and every per-field text read — is free and unmetered.
 
@@ -248,6 +309,7 @@ python3 scripts/generate_reports.py housing
 
 # one block at a time; every other field is preserved
 python3 scripts/generate_reports.py housing --only now          # 6-8 calls
+python3 scripts/generate_reports.py housing --only now --redo 3 # 1 call: section 3 alone
 python3 scripts/generate_reports.py housing --only over-time    # 3 calls
 python3 scripts/generate_reports.py housing --only stats        # 1 call
 python3 scripts/generate_reports.py housing --only positions    # 1 call
@@ -277,3 +339,12 @@ The figure check is mechanical. It reads the passage the model read and asks
 whether the claimed parts are in it, close enough together. It cannot tell you
 that a speaker's number was wrong when they said it, that a 2011 figure is
 stale, or that two sources disagree. Nothing replaces reading the tiles.
+
+It also cannot see past the corpus. Some resources are a whole debate under one
+member's name: `speech-1198267` is titled *Glenn Sterle — Matters of Public
+Importance — 2025-11-04* and runs 24,000 characters across six speaking turns
+from 5:07 to 5:28 pm. A figure retrieved from the fourth turn is real, and the
+name attached to it is the name on the resource, not necessarily the member who
+said it. That is an ingest question, not a report one, but it is why a tile's
+`detail` line should be read as "somewhere in this debate" and a quotation
+inside an answer trusted over a name beside one.

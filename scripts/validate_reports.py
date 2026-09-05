@@ -34,7 +34,7 @@ from scripts.generate_reports import (  # noqa: E402
 
 REPORT_DIR = ROOT / "portal" / "public" / "reports"
 MOMENT_FIELDS = ("brief", "date", "speaker", "slug")
-STAT_FIELDS = ("value", "label", "numerator", "denominator", "unit", "slug")
+STAT_FIELDS = ("value", "label", "numerator", "denominator", "unit", "slug", "window")
 # The openers the owner rejected. A v2 answer that starts with one of these is
 # a regression, not a style quibble: it tells the reader they are reading a
 # model's summary of a prompt rather than the record.
@@ -142,6 +142,8 @@ def validate_report(slug: str, report: dict, problems: list[str]) -> list[str]:
         check(not label.endswith("."), f"{slug} figure #{index}: label is a sentence", problems)
         check(any(c.isdigit() for c in str(stat.get("numerator") or "")),
               f"{slug} figure #{index}: numerator carries no number", problems)
+        check(stat.get("window") in ("now", "all"),
+              f"{slug} figure #{index}: window is {stat.get('window')!r}", problems)
         if stat.get("slug"):
             slugs.append(stat["slug"])
 

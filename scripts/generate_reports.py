@@ -37,6 +37,7 @@ REPORTS: dict[str, dict] = {
         "title": "Gambling",
         "blurb": "What parliament says about poker machines, online wagering and gambling reform.",
         "topic": "gambling",
+        "subject": "gambling",
         "relevance_terms": (
             "gambling", "wagering", "betting", "poker machine", "casino", "gaming",
         ),
@@ -60,6 +61,7 @@ REPORTS: dict[str, dict] = {
         "title": "Climate & Energy",
         "blurb": "The climate debate on the record: targets, coal, renewables and carbon pricing.",
         "topic": "climate-environment",
+        "subject": "climate and energy",
         "relevance_terms": (
             "climate", "emission", "renewable", "carbon", "coal", "energy", "greenhouse",
         ),
@@ -104,6 +106,7 @@ REPORTS: dict[str, dict] = {
         "title": "Housing",
         "blurb": "Decades of affordability promises, negative gearing fights and supply debates.",
         "topic": "housing",
+        "subject": "housing",
         "relevance_terms": (
             "housing", "home", "rent", "tenant", "homeless", "mortgage", "property",
             "negative gearing",
@@ -138,6 +141,7 @@ REPORTS: dict[str, dict] = {
         "title": "First Nations",
         "blurb": "Reconciliation, the Voice, Closing the Gap and native title, in parliament's own words.",
         "topic": "indigenous-affairs",
+        "subject": "First Nations",
         "relevance_terms": (
             "indigenous", "aboriginal", "torres strait", "first nations", "native title",
             "stolen generation", "uluru", "voice",
@@ -187,6 +191,7 @@ REPORTS: dict[str, dict] = {
         "title": "Immigration",
         "blurb": "Border policy, offshore detention and migration levels across the decades.",
         "topic": "immigration",
+        "subject": "immigration",
         "relevance_terms": (
             "immigration", "migration", "asylum", "refugee", "detention", "visa", "border",
             "people smuggl", "nauru", "manus", "citizenship", "multicultural",
@@ -220,6 +225,7 @@ REPORTS: dict[str, dict] = {
         "title": "Media Ownership",
         "blurb": "Concentration, regulation and the platforms: parliament on the press.",
         "topic": "media-communications",
+        "subject": "media ownership",
         "relevance_terms": (
             "media", "press", "journalis", "broadcast", "abc", "sbs", "news", "newspaper",
             "social media", "platform",
@@ -312,8 +318,12 @@ WINDOW_PROMPT = (
     "paraphrasing them. Ignore passages that are off-topic; answer from the ones that apply "
     "even if only a few do or they address it only in part. If some passages mention the "
     "subject only briefly, report what they say and note that the record is limited. "
-    "Name the speakers and their parties wherever the passages do, and say which parliament "
-    "when it is not the Commonwealth. Be exact with figures and never invent one. "
+    "Name the speakers and their parties wherever the passages do, and name the parliament "
+    "every time it is not the Commonwealth — never \"the same parliament\", since consecutive "
+    "passages are usually from different ones. Be exact with figures and never invent one. "
+    "Every passage is one member's own words, including what it says about their opponents: "
+    "report a characterisation of another party as that member's claim about them, never as "
+    "that party's own position and never as established fact. "
     "Begin with the answer itself. Never open with a preamble such as \"Based on the provided "
     "context\", \"According to the passages\" or \"The context shows\": the reader knows the "
     "answer comes from the record. Do not explain how the passages are numbered, ordered or "
@@ -428,7 +438,10 @@ STATS_SCHEMA = {
         "properties": {
             "stats": {
                 "type": "array",
-                "maxItems": 6,
+                # More candidates than the six a report can show: the support
+                # check drops most of what a model offers, and a run that
+                # returns exactly six ships two.
+                "maxItems": 10,
                 "items": {
                     "type": "object",
                     "additionalProperties": False,
@@ -612,6 +625,17 @@ def stat_support(stat: dict, passage: str) -> str | None:
             _fold(denominator).strip() == _fold(stat.get("unit")).strip()
             or (denominator_words and denominator_words <= unit_words)):
         return "the denominator only repeats the unit"
+    # A total is not a statistic. "$16 billion in revenue contributed to the
+    # economy" and "almost 14,000 active businesses" are real numbers truly in
+    # the record, and neither is measured against anything: the schema asks for
+    # a base and the model hands back the subject again in longer words. A
+    # denominator therefore has to be either a share's named base or a total
+    # with a number of its own.
+    share = ("per cent" in _fold(stat.get("unit"))
+             or "%" in str(stat.get("value") or "")
+             or "%" in _fold(stat.get("unit")))
+    if not share and not _numbers(denominator):
+        return "the passage states no total for this number to be measured against"
     numbers = _numbers(numerator)
     if not numbers:
         return "numerator carries no number"
@@ -643,7 +667,7 @@ def stat_support(stat: dict, passage: str) -> str | None:
     # number to THIS base, in one breath, with the word that joins them.
     # ("27 per cent of the national prison population" passes; the same passage
     # does not support "27 per cent of Aboriginal people".)
-    if "per cent" in _fold(stat.get("unit")) or "%" in str(stat.get("value") or ""):
+    if share:
         for hit in hits:
             window = text[max(0, hit - 40):hit + 60]
             if " of " not in window and not window.startswith("of "):
@@ -670,6 +694,29 @@ def compose_stat_label(stat: dict) -> str:
     return measure[0].upper() + measure[1:]
 
 
+# A figure said in a state parliament is a figure about that state, unless the
+# record says otherwise. The model does not see which chamber it is reading and
+# writes "Australia" by default, which turns a Victorian question about
+# Victorian social housing into a national statistic.
+_NATIONAL_MARKERS = re.compile(
+    r"\b(?:australia|australian|australia's|national|nationally|nationwide|"
+    r"commonwealth|federal|the country)\b", re.I)
+_NATIONAL_JURISDICTIONS = {"australia", "national", "commonwealth", "nationwide", ""}
+
+
+def settle_jurisdiction(stat: dict, source: dict, passage: str) -> str:
+    """The jurisdiction the tile should carry, given who was speaking."""
+    claimed = str(stat.get("jurisdiction") or "").strip()
+    state = str(source.get("state") or "").strip().casefold()
+    if claimed.casefold() not in _NATIONAL_JURISDICTIONS:
+        return claimed                       # the model named a place; trust it
+    if state in ("", "federal"):
+        return claimed or "Australia"
+    if _NATIONAL_MARKERS.search(passage or ""):
+        return claimed or "Australia"        # a state member quoting a national figure
+    return PARLIAMENT_NAMES.get(state, state.upper())
+
+
 def gen_key_stats(kb: KbClient, title: str, srcs: dict, lines: list[str],
                   report: dict | None = None) -> tuple[list[dict], list[dict]]:
     """Returns (kept, dropped). Dropped rows carry the reason, for the report."""
@@ -681,8 +728,10 @@ def gen_key_stats(kb: KbClient, title: str, srcs: dict, lines: list[str],
         "the passage it was retrieved on. Report ONLY figures that appear in those passages, "
         "exactly as stated, and ONLY where the passage also states what the figure is measured "
         "against. Give the numerator, that base as the denominator, and the unit, and set "
-        "source_ref to the number of the source. Never reverse the part and the whole. If the "
-        "passages contain no such figures, return an empty list."
+        "source_ref to the number of the source. Never reverse the part and the whole. A number "
+        "the passage sets against nothing — a total spent, a headcount, a fund's size — is not "
+        "wanted however striking it is. If the passages contain no such figures, return an "
+        "empty list."
         "\n\nSOURCES:\n" + "\n".join(lines)
     )
     stats = (openrouter_tool_call(STATS_SCHEMA, query)).get("stats") or []
@@ -724,7 +773,8 @@ def gen_key_stats(kb: KbClient, title: str, srcs: dict, lines: list[str],
             "numerator": str(stat.get("numerator") or "").strip(),
             "denominator": str(stat.get("denominator") or "").strip(),
             "unit": str(stat.get("unit") or "").strip(),
-            "jurisdiction": str(stat.get("jurisdiction") or "").strip(),
+            "jurisdiction": settle_jurisdiction(
+                stat, source, source.get("passage") or source.get("snippet") or ""),
             "as_of": str(stat.get("as_of") or "").strip(),
             "detail": str(stat.get("detail") or "").strip(),
             "slug": source["slug"],
@@ -1297,12 +1347,34 @@ def debate_subject(title: str) -> str:
     return re.sub(r"\s+", " ", _READING_SUFFIX.sub("", str(title or ""))).strip(" .,;:—-")
 
 
-def debate_question(title: str) -> str:
-    """A discovered debate, asked in plain words."""
+_NAMED_INSTRUMENT = re.compile(
+    r"\b(?:Bill|Act|Amendment|Scheme|Fund|Commission|Inquiry)\b")
+
+
+def carries_subject(title: str, cfg: dict) -> bool:
+    """True when the heading already says what the report is about."""
+    folded = _fold(title)
+    terms = [t.casefold() for t in cfg.get("relevance_terms", ())]
+    terms.append(str(cfg.get("subject") or cfg["title"]).casefold())
+    return any(term in folded for term in terms if term)
+
+
+def debate_question(title: str, cfg: dict | None = None) -> str:
+    """A discovered debate, asked in plain words.
+
+    A chamber heading is only as specific as the chamber needed it to be.
+    'Energy policy' is a real 42-speech group inside the housing label, and
+    asked as it stands it returns an answer about electricity prices in a
+    housing report. A heading that names no instrument and carries none of the
+    report's own words is therefore anchored to the report's subject, which is
+    the frame the reader is reading it in anyway. A bill names itself."""
     subject = debate_subject(title)
-    if (re.search(r"\b(?:Bill|Act|Amendment|Scheme|Fund|Commission|Inquiry)\b", subject)
-            and not re.match(r"(?i)^(?:the|a|an)\b", subject)):
+    named = _NAMED_INSTRUMENT.search(subject)
+    if named and not re.match(r"(?i)^(?:the|a|an)\b", subject):
         subject = f"the {subject}"
+    if cfg and not named and not carries_subject(subject, cfg):
+        anchor = str(cfg.get("subject") or cfg["title"])
+        return f"What has parliament said about {subject} and {anchor}?"
     return f"What has parliament said about {subject}?"
 
 
@@ -1423,6 +1495,43 @@ def search_link(query: str, topic: str, first: str, last: str) -> str:
         f"{k}={urllib.parse.quote_plus(v)}" for k, v in params.items() if v)
 
 
+# Words that carry no subject, so two titles that differ only in these are the
+# same debate to a retriever.
+_TITLE_STOPWORDS = frozenset({
+    "a", "an", "and", "of", "on", "the", "to", "for", "no", "nos", "second",
+    "reading", "bill", "bills", "act", "amendment", "amendments",
+})
+
+
+def _subject_tokens(title: str) -> set[str]:
+    return {w for w in normalise_debate(debate_subject(title)).split()
+            if w and w not in _TITLE_STOPWORDS}
+
+
+def dedupe_subjects(titles: list[str], floor: int = 3) -> list[str]:
+    """Drop a title whose subject words are all inside a bigger debate's.
+
+    The NSW record since mid-2024 holds both 'Environmental Planning and
+    Assessment Amendment Bill 2025' (43 speeches) and 'Environmental Planning
+    and Assessment Amendment (Planning System Reforms) Bill 2025' (66). Whether
+    or not they are two bills, one question retrieves the other's passages and
+    the report prints the same answer twice.
+
+    Titles arrive largest first, so the bigger debate keeps its question. A
+    short title is never folded into a long one — 'Treaty' sits inside
+    'Statewide Treaty Bill 2025' and is its own standing debate — which is what
+    `floor` is for."""
+    kept: list[str] = []
+    kept_tokens: list[set[str]] = []
+    for title in titles:
+        tokens = _subject_tokens(title)
+        if len(tokens) >= floor and any(tokens <= seen for seen in kept_tokens):
+            continue
+        kept.append(title)
+        kept_tokens.append(tokens)
+    return kept
+
+
 def window_questions(cfg: dict, discovered: list[dict], limit: int = 8) -> list[str]:
     """Discovery seeds the questions; the report's curated spine keeps its place.
 
@@ -1430,7 +1539,8 @@ def window_questions(cfg: dict, discovered: list[dict], limit: int = 8) -> list[
     live argument — but a report whose eight largest debates are all one state's
     bills would otherwise lose every question that gives it its identity, so the
     curated questions are guaranteed their slots in the middle."""
-    found = [debate_question(d["title"]) for d in discovered if not is_topic_echo(d["title"], cfg)]
+    titles = [d["title"] for d in discovered if not is_topic_echo(d["title"], cfg)]
+    found = [debate_question(t, cfg) for t in dedupe_subjects(titles)]
     curated = [period_question(q) for q in cfg["questions"]]
     lead = max(0, limit - len(curated))
     ordered = found[:min(5, lead)] + curated + found[min(5, lead):]
@@ -1459,12 +1569,12 @@ def era_question(cfg: dict, era: dict, discovered: list[dict]) -> str:
     # A compound bill title runs to 140 characters and misdirects retrieval as
     # much as it informs it; a truncated one names a bill that does not exist.
     # Long titles are simply left out of the list.
-    subjects = [
-        s for s in (debate_subject(d["title"]) for d in discovered
-                    if not is_topic_echo(d["title"], cfg))
-        if len(s) <= 80
-    ][:3]
-    stem = (f"How did parliament argue about {cfg['title'].lower()} "
+    titles = dedupe_subjects(
+        [d["title"] for d in discovered if not is_topic_echo(d["title"], cfg)])
+    subjects = [s for s in (debate_subject(t) for t in titles) if len(s) <= 80][:3]
+    # The report's subject, spelled the way a reader spells it: "First Nations",
+    # not the lowercased title.
+    stem = (f"How did parliament argue about {cfg.get('subject') or cfg['title'].lower()} "
             f"{era['period']}?")
     if not subjects:
         return stem
@@ -1649,6 +1759,27 @@ def build_now(kb: KbClient, slug: str, rows: list[dict], since: str) -> dict:
     return {"since": since, "discovered": discovered, "sections": sections}
 
 
+def redo_sections(kb: KbClient, slug: str, now: dict, wanted: list[int]) -> dict:
+    """Re-ask named `now` sections in place, leaving the rest of the block alone."""
+    cfg = REPORTS[slug]
+    sections = list(now.get("sections") or [])
+    since = now.get("since") or NOW_SINCE
+    for index in wanted:
+        if not 1 <= index <= len(sections):
+            print(f"  no section {index} to redo", file=sys.stderr)
+            continue
+        question = sections[index - 1]["question"]
+        t0 = time.time()
+        try:
+            sections[index - 1] = build_section(
+                kb, question, topic=cfg["topic"], since=since,
+                period=f"on or after {since}")
+            print(f"  redone ({time.time() - t0:.0f}s) #{index}: {question[:60]}")
+        except AragError as error:
+            print(f"  FAILED ({error.status}) #{index}: {question[:60]}", file=sys.stderr)
+    return {**now, "sections": sections}
+
+
 def build_over_time(kb: KbClient, slug: str, rows: list[dict],
                     moments: list[dict]) -> dict:
     """Three era answers, the decade tide, and the existing reading list."""
@@ -1690,11 +1821,46 @@ def now_sources(kb: KbClient, cfg: dict, since: str) -> tuple[dict, list[str]]:
         filter_expression=window_clauses(cfg["topic"], since, None))
 
 
-def topic_sources(kb: KbClient, cfg: dict) -> tuple[dict, list[str]]:
-    """Numbered sources across the whole record, for key figures."""
+def topic_sources(kb: KbClient, cfg: dict, since: str | None = None) -> tuple[dict, list[str]]:
+    """Numbered sources for key figures, from a window or the whole record.
+
+    The query asks for the SHAPE of a usable figure, not for figures. A narrow
+    window is thick with targets and totals — "1.2 million homes", "$32
+    billion" — and a passage that states no base yields a stat the support
+    check then throws away, so the window's query leans on the words that
+    introduce a share."""
+    query = (f"{cfg['title']}: per cent of, share of, proportion of, out of, "
+             f"one in — figures given with the total they are measured against")
     return numbered_sources(
-        kb, f"{cfg['title']}: figures, shares, rates and totals in the record",
-        top_k=24, filter_expression=window_clauses(cfg["topic"], None, None))
+        kb, query, top_k=24,
+        filter_expression=window_clauses(cfg["topic"], since, None))
+
+
+def build_key_stats(kb: KbClient, cfg: dict, since: str) -> tuple[list[dict], list[dict]]:
+    """Key figures, from the `now` window and the whole record in one ask.
+
+    A report whose brief is the live argument should not lead with a tile from
+    2007 — but a narrow window is thick with targets and totals ("1.2 million
+    homes", "$32 billion") and thin on figures that state their own base, so a
+    window-only ask can keep nothing at all. Both pools are retrieved (free)
+    and numbered into one prompt, so the model chooses from all of it and each
+    tile records which pool it came from. One paid call either way."""
+    now_srcs, now_lines = topic_sources(kb, cfg, since)
+    all_srcs, all_lines = topic_sources(kb, cfg, None)
+    srcs = dict(now_srcs)
+    lines = list(now_lines)
+    offset = max(now_srcs or [0])
+    by_slug = {s["slug"] for s in now_srcs.values()}
+    for ref, source in all_srcs.items():
+        if source["slug"] in by_slug:
+            continue
+        srcs[offset + ref] = source
+        lines.append(re.sub(r"^\[\d+\]", f"[{offset + ref}]", all_lines[ref - 1]))
+    kept, dropped = gen_key_stats(kb, cfg["title"], srcs, lines)
+    windows = {s["slug"]: "now" for s in now_srcs.values()}
+    for stat in kept:
+        stat["window"] = windows.get(stat["slug"], "all")
+    return kept, dropped
 
 
 def report_path(slug: str) -> Path:
@@ -1727,7 +1893,13 @@ def main() -> None:
     parser.add_argument(
         "--refresh-rows", action="store_true",
         help="re-enumerate the topic's speeches from the catalog (free, ~1-2 min a topic)")
+    parser.add_argument(
+        "--redo", type=int, nargs="+", metavar="N",
+        help="with --only now: re-ask just these sections, 1-based, keeping their "
+             "questions and every other section (1 paid call each)")
     args = parser.parse_args()
+    if args.redo and args.only != "now":
+        parser.error("--redo only applies to --only now")
     if args.stats_only and args.only:
         parser.error("--stats-only and --only cannot be combined")
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.since):
@@ -1755,8 +1927,7 @@ def main() -> None:
                 print(f"[{slug}] {len(rows):,} labelled speeches on {cfg['topic']}")
             if args.only == "stats":
                 report["stats"] = all_stats.get(slug)
-                srcs, lines = topic_sources(kb, cfg)
-                kept, dropped = gen_key_stats(kb, cfg["title"], srcs, lines)
+                kept, dropped = build_key_stats(kb, cfg, args.since)
                 report["key_stats"] = kept
                 report["key_stats_dropped"] = dropped
                 print(f"[{slug}] key figures: {len(kept)} kept, {len(dropped)} dropped")
@@ -1777,6 +1948,12 @@ def main() -> None:
                 sections = (report.get("now") or {}).get("sections") or []
                 report["lede"] = gen_lede(cfg["title"], sections)
                 print(f"[{slug}] lede: {len((report['lede'] or {}).get('text') or '')} chars")
+            elif args.only == "now" and args.redo:
+                # One bad answer in eight should cost one ask, not eight. The
+                # question and the window are the ones already in the file, so
+                # the section is re-asked exactly as it was first asked.
+                report["now"] = redo_sections(
+                    kb, slug, report.get("now") or {}, args.redo)
             elif args.only == "now":
                 report["now"] = build_now(kb, slug, rows, args.since)
             elif args.only == "over-time":
@@ -1859,8 +2036,7 @@ def main() -> None:
         checkpoint(over_time=build_over_time(kb, slug, rows, moments))
 
         try:
-            srcs, lines = topic_sources(kb, cfg)
-            kept, dropped = gen_key_stats(kb, cfg["title"], srcs, lines)
+            kept, dropped = build_key_stats(kb, cfg, args.since)
             print(f"  key figures: {len(kept)} kept, {len(dropped)} dropped")
             for row in dropped:
                 print(f"    dropped {row['value']!r}: {row['reason']}")

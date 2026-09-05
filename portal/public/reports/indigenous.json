@@ -3,7 +3,7 @@
  "title": "First Nations",
  "blurb": "Reconciliation, the Voice, Closing the Gap and native title, in parliament's own words.",
  "version": 2,
- "generated_at": "2026-09-04T23:06:44+00:00",
+ "generated_at": "2026-09-05T00:04:51+00:00",
  "corpus_resources": 609635,
  "stats": {
   "speech_count": 51381,
@@ -155,64 +155,146 @@
  },
  "key_stats": [
   {
-   "value": "24,561 students",
-   "label": "Total enrolment of First Nations students",
-   "numerator": "24,561",
-   "denominator": "students",
-   "unit": "students",
-   "jurisdiction": "Australia",
-   "as_of": "2024",
-   "detail": "Total enrolment of First Nations students increased by just over five per cent in 2024 to 24,561 students.",
-   "slug": "speech-974685",
-   "source_title": "Champion de Crespigny \u2014 Education and Employment Legislation Committee - Education and Employment Legislation Committee 04/12/2025 Estimates EDUCATION PORTFOLIO Department of Education \u2014 2025-12-04"
-  },
-  {
    "value": "4.6 per cent",
    "label": "First Nations share of the Queensland population",
    "numerator": "4.6",
-   "denominator": "population of Queensland",
+   "denominator": "per cent of the population",
    "unit": "per cent",
    "jurisdiction": "Queensland",
    "as_of": "2026",
    "detail": "In Queensland, First Nations people make up 4.6 per cent of the population.",
    "slug": "speech-1200452",
-   "source_title": "Lidia Thorpe \u2014 Ministerial Statements \u2014 2026-03-02"
+   "source_title": "Lidia Thorpe \u2014 Ministerial Statements \u2014 2026-03-02",
+   "window": "all"
   },
   {
    "value": "37 per cent",
-   "label": "First Nations share of adult prisoners in custody",
+   "label": "First Nations share of adult prisoners in custody in Queensland",
    "numerator": "37",
-   "denominator": "adult prisoners in custody in Queensland",
+   "denominator": "per cent of adult prisoners in custody",
    "unit": "per cent",
    "jurisdiction": "Queensland",
    "as_of": "2026",
-   "detail": "First Nations people make up 37 per cent of the adult prisoners in custody in Queensland.",
+   "detail": "In Queensland, First Nations people make up 37 per cent of the adult prisoners in custody.",
    "slug": "speech-1200452",
-   "source_title": "Lidia Thorpe \u2014 Ministerial Statements \u2014 2026-03-02"
+   "source_title": "Lidia Thorpe \u2014 Ministerial Statements \u2014 2026-03-02",
+   "window": "all"
   },
   {
    "value": "69 per cent",
-   "label": "First Nations share of young people in detention",
+   "label": "First Nations share of young people in detention in Queensland",
    "numerator": "69",
-   "denominator": "young people in detention in Queensland",
+   "denominator": "per cent of young people in detention",
    "unit": "per cent",
    "jurisdiction": "Queensland",
    "as_of": "2026",
-   "detail": "First Nations people make up 69 per cent of young people in detention in Queensland.",
+   "detail": "In Queensland, First Nations people make up 69 per cent of young people in detention.",
    "slug": "speech-1200452",
-   "source_title": "Lidia Thorpe \u2014 Ministerial Statements \u2014 2026-03-02"
+   "source_title": "Lidia Thorpe \u2014 Ministerial Statements \u2014 2026-03-02",
+   "window": "all"
+  },
+  {
+   "value": "3.8 per cent",
+   "label": "First Nations share of the Australian population",
+   "numerator": "3.8",
+   "denominator": "per cent of the Australian population",
+   "unit": "per cent",
+   "jurisdiction": "Australia",
+   "as_of": "2022",
+   "detail": "First Nations people make up only 3.8 per cent of the Australian population.",
+   "slug": "speech-828774",
+   "source_title": "Helen Polley \u2014 Matters of Public Importance \u2014 2023-03-21",
+   "window": "all"
+  },
+  {
+   "value": "32 per cent",
+   "label": "First Nations share of the adult prison population",
+   "numerator": "32",
+   "denominator": "per cent of the adult prison population",
+   "unit": "per cent",
+   "jurisdiction": "Australia",
+   "as_of": "2022",
+   "detail": "First Nations people represent 32 per cent of the adult prison population.",
+   "slug": "speech-828774",
+   "source_title": "Helen Polley \u2014 Matters of Public Importance \u2014 2023-03-21",
+   "window": "all"
   }
  ],
  "key_stats_dropped": [
   {
+   "value": "just over five per cent",
+   "measure": "Increase in total enrolment of First Nations students in 2024",
+   "reason": "the denominator only repeats the unit"
+  },
+  {
+   "value": "24,561 students",
+   "measure": "Total enrolment of First Nations students",
+   "reason": "the denominator only repeats the unit"
+  },
+  {
+   "value": "50 per cent",
+   "measure": "Ownership threshold for registered First Nations businesses under current criteria",
+   "reason": "the denominator only repeats the unit"
+  },
+  {
+   "value": "51 per cent",
+   "measure": "Ownership, management and control threshold for certified First Nations businesses",
+   "reason": "the denominator only repeats the unit"
+  },
+  {
+   "value": "86 per cent",
+   "measure": "Share of First Nations businesses registered with Supply Nation meeting the new criteria",
+   "reason": "the denominator only repeats the unit"
+  },
+  {
+   "value": "20 times",
+   "measure": "How much more likely First Nations young people aged 10-17 were than non-Indigenous young people to be under youth justice supervision",
+   "reason": "the denominator only repeats the unit"
+  },
+  {
+   "value": "30 per cent",
+   "measure": "Target reduction in number of children in detention by 2030-31",
+   "reason": "the denominator only repeats the unit"
+  },
+  {
+   "value": "37 per cent",
+   "measure": "Indigenous Australians' share of people in custody nationally",
+   "reason": "the denominator only repeats the unit"
+  },
+  {
    "value": "27 times",
    "measure": "How much more likely First Nations children are to be locked up than other Australian kids",
-   "reason": "denominator has nothing checkable in the passage"
+   "reason": "the denominator only repeats the unit"
   },
   {
    "value": "10 times",
    "measure": "How much more likely First Nations children are to be taken into out-of-home care",
-   "reason": "denominator has nothing checkable in the passage"
+   "reason": "the denominator only repeats the unit"
+  },
+  {
+   "value": "just over five per cent",
+   "measure": "Increase in total enrolment of First Nations students in 2024",
+   "reason": "numerator 5 not in the passage"
+  },
+  {
+   "value": "24,561 students",
+   "measure": "Total enrolment of First Nations students",
+   "reason": "the denominator only repeats the unit"
+  },
+  {
+   "value": "27 times",
+   "measure": "How much more likely First Nations children are to be locked up than other Australian kids",
+   "reason": "the passage states no total for this number to be measured against"
+  },
+  {
+   "value": "10 times",
+   "measure": "How much more likely First Nations children are to be taken into out-of-home care",
+   "reason": "the passage states no total for this number to be measured against"
+  },
+  {
+   "value": "13.5 times",
+   "measure": "How much more likely First Nations people are to be imprisoned than non-Indigenous Australians",
+   "reason": "the passage states no total for this number to be measured against"
   }
  ],
  "positions": [
