@@ -236,7 +236,7 @@ function injectStyles() {
   position:relative; font:400 .92rem/1.55 var(--serif); }
 .explain-caveats li::before { content:""; position:absolute; left:0; top:1.35rem; width:6px;
   border-top:1px solid var(--bronze); }
-.explain-controls { position:sticky; bottom:0; z-index:3; display:flex; justify-content:space-between; gap:.6rem;
+.explain-controls { position:sticky; bottom:calc(-1 * var(--explain-pad)); z-index:3; display:flex; justify-content:space-between; gap:.6rem;
   margin:1.25rem calc(-1 * var(--explain-pad)) calc(-1 * var(--explain-pad)); padding:.7rem var(--explain-pad);
   background:var(--paper); border-top:1px solid var(--line); }
 .explain-controls button { min-height:44px; border:1px solid var(--line-strong); border-radius:4px;
@@ -252,6 +252,7 @@ function injectStyles() {
   .explain-stage { position:sticky; top:44px; z-index:1; height:clamp(276px,38dvh,350px); min-height:0; max-height:350px;
     border-right:0; border-bottom:1px solid var(--line); }
   .explain-narrative { --explain-pad:1.1rem; overflow:visible; padding:var(--explain-pad); }
+  .explain-controls { bottom:0; } /* the dialog body scrolls here and carries no padding */
   .explain-stage-label { max-width:39%; font-size:.76rem; }
   .explain-stage-label { top:1.5rem; }
   .explain-stage-label.from { left:1.4rem; }.explain-stage-label.to { right:1.4rem; }
