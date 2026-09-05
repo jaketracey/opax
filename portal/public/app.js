@@ -5952,7 +5952,7 @@ function billRowHTML(b) {
     <span class="result-meta bill-row-meta">${[
       b.status ? `<b class="bill-row-status">${esc(sentenceCase(b.status))}</b>` : "",
       year ? esc(year) : "",
-      b.sponsor_party ? partyChipHTML(b.sponsor_party) : "",
+      b.sponsor_party ? partyChipHTML(billParty(b.sponsor_party)) : "",
       members ? esc(billMembersLabel(members)) : esc(billPortfolio(b)),
     ].filter(Boolean).join("&nbsp;· ")}</span>
     ${b.short_title && b.short_title !== b.title ? `<p class="bill-row-long">${esc(b.title)}</p>` : ""}
@@ -5969,6 +5969,38 @@ const BILLS_FINEPRINT =
    separate vote of the house; a bill page folds the duplicates and usually shows fewer.`;
 
 /** /bills — the whole list, searchable by name, filtered by parliament, status and year. */
+/** APH writes a sponsor as "SMITH, Sen Dean" or "BURKE, the Hon Tony, MP"; readers want "Dean Smith". */
+function billSponsorName(raw) {
+  const s = String(raw || "").replace(/&#39;/g, "'").replace(/&#34;|&quot;/g, '"').trim();
+  const m = s.match(/^([A-Z][A-Z'\- ]+),\s*(.+)$/);
+  if (!m) return s;
+  const surname = m[1].toLowerCase().replace(/(^|[\s'\-])([a-z])/g, (_, a, b) => a + b.toUpperCase())
+    .replace(/^Mc([a-z])/, (_, c) => "Mc" + c.toUpperCase());
+  const given = m[2].replace(/\b(the Hon|Hon|Sen|Senator|Dr|Mr|Mrs|Ms|Miss|MP|AM|AO|OAM|QC|SC)\b\.?/g, "").replace(/[,\s]+/g, " ").trim();
+  return given ? `${given} ${surname}` : surname;
+}
+/** The registry's party strings, in the form the party chip and the party pages know. */
+function billPartyName(raw) {
+  const s = String(raw || "").replace(/&#39;/g, "'").replace(/&#34;|&quot;/g, "").trim();
+  const k = s.toLowerCase();
+  if (!k || /independent/.test(k)) return k ? "Independent" : "";
+  if (/liberal national party/.test(k)) return "LNP";
+  if (/country liberal/.test(k)) return "Country Liberal Party";
+  if (/liberal democrat/.test(k)) return "Liberal Democrats";
+  if (/^liberal|liberal party/.test(k)) return "Liberal";
+  if (/labor|^alp$/.test(k)) return "Labor";
+  if (/national/.test(k)) return "Nationals";
+  if (/green/.test(k)) return "Greens";
+  if (/one nation/.test(k)) return "One Nation";
+  if (/centre alliance|nick xenophon/.test(k)) return "Centre Alliance";
+  if (/katter/.test(k)) return "Katter's Australian Party";
+  if (/united australia|palmer/.test(k)) return "United Australia Party";
+  if (/lambie/.test(k)) return "JLN";
+  if (/family first/.test(k)) return "Family First";
+  if (/democrats/.test(k)) return "Australian Democrats";
+  return s;
+}
+
 async function openBillsIndex(params, manageFocus) {
   if (billView === "index") {
     activeDirectory?.setParams(params);
@@ -6332,7 +6364,7 @@ function billQuestionShort(division, bill, max = 104) {
 
 /** The register's own codes for who is not a party. */
 const BILL_PARTY_LABELS = { PRES: "Presiding officer", SPK: "Speaker", "": "Not recorded" };
-const billParty = (p) => BILL_PARTY_LABELS[String(p || "").trim()] || String(p || "");
+const billParty = (p) => BILL_PARTY_LABELS[String(p || "").trim()] || billPartyName(p);
 
 function billDivisionHTML(d, bill) {
   const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
@@ -6508,7 +6540,7 @@ async function openBill(key, manageFocus) {
   const members = billSponsorFromPortfolio(bill.portfolio);
   // Each co-sponsor is a person with an entry of their own, so each is a link.
   const sponsorLinks = bill.sponsor
-    ? [`<a href="${esc(subjectHash("person", bill.sponsor))}">${esc(bill.sponsor)}</a>`]
+    ? [`<a href="${esc(subjectHash("person", billSponsorName(bill.sponsor)))}">${esc(billSponsorName(bill.sponsor))}</a>`]
     : (members || []).map((m) => `<a href="${esc(subjectHash("person", m.name))}">${esc(m.name)}</a>${
       m.suffix ? ` ${esc(m.suffix)}` : ""}`);
   const sponsorBits = [
@@ -6516,7 +6548,7 @@ async function openBill(key, manageFocus) {
       ? `Introduced by ${sponsorLinks.slice(0, 3).join(", ")}${
         sponsorLinks.length > 3 ? ` and ${sponsorLinks.length - 3} others` : ""}`
       : "Sponsor not recorded",
-    bill.sponsor_party ? partyChipHTML(bill.sponsor_party) : "",
+    billParty(bill.sponsor_party) ? partyChipHTML(billParty(bill.sponsor_party)) : "",
     billPortfolio(bill) ? esc(billPortfolio(bill)) : "",
   ].filter(Boolean);
   const billhome = safeUrl((bill.sources || []).find((s) => s.kind === "billhome")?.url);
