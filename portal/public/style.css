@@ -3326,3 +3326,13 @@ html[data-panel="chat"] footer { display: none; }
 #dialog-explain .explain-steps { display: none; }
 @media (max-width: 700px) { #dialog-explain .explain-deck { display: none; } }
 
+
+/* ==== subject pages on wide screens ==== */
+/* Air between the header and the two-column body. */
+@media (min-width: 901px) { .subject-grid { margin-top: 1.25rem; } }
+/* The person page's jump links and the money map button share one ruled row
+   on wide screens; on phones the wrapper dissolves and they stack as before. */
+.person-jumps-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-block: 1px solid var(--line); padding: 0.35rem 0; margin: 0 0 1rem; }
+.person-jumps-row .person-jumps { flex: 1 1 auto; border: 0; margin: 0; }
+.person-jumps-row .person-money-link { flex: 0 0 auto; margin: 0; }
+@media (max-width: 700px) { .person-jumps-row { display: contents; } }

@@ -4188,8 +4188,10 @@ async function openSubject(kind, name, manageFocus) {
     actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
   ]);
   renderPortraitCredit(name, key);
-  sections.insertAdjacentHTML("beforeend", `<nav class="person-jumps" aria-label="On this page"></nav>`);
-  if (party) sections.insertAdjacentHTML("beforeend", `<p class="person-money-link"><a class="action-btn" href="${esc(subjectHash("party", party))}"><span class="btn-glyph" aria-hidden="true">$</span><span>Money map from ${esc(party)}</span></a></p>`);
+  // One row on wide screens: the jump links at the left, the money map button at the right.
+  sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav>${party
+    ? `<p class="person-money-link"><a class="action-btn" href="${esc(subjectHash("party", party))}"><span class="btn-glyph" aria-hidden="true">$</span><span>Money map from ${esc(party)}</span></a></p>`
+    : ""}</div>`);
   sections.insertAdjacentHTML("beforeend", `
     <form class="query-line subject-ask-form" id="subject-ask-form">
       <label for="subject-ask-topic">Ask about their speeches</label>
