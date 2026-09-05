@@ -35,6 +35,11 @@
 # .webp so /photos/people.json is left to the /*.json rule and not double-set.)
 /*.json
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+# Reports are regenerated several times a day now; five minutes, then a day of
+# stale grace, so a rebuild reaches readers without a hard refresh.
+/reports/*.json
+  ! Cache-Control
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
 /photos/*.webp
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 # JPEG twins of the portraits, read by the Worker to draw share images

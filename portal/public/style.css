@@ -4067,3 +4067,13 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .bill-date-to { display: block; }
 
 /* ==== landed after the bills-ui merge (ui-about and later) ==== */
+
+
+/* ==== stats page: live figures ==== */
+.stat-live {
+  display: inline-block; margin-left: 0.4rem; vertical-align: 0.15em;
+  font: 700 0.625rem/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--bronze-ink); font-style: normal;
+}
+.stats-live-table thead + tbody + thead th { padding-top: 1.25rem; }
+.stats-live-table .stat-cell, .stats-live-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }

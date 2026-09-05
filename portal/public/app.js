@@ -11070,21 +11070,115 @@ async function openReport(slug, sectionNum, manageFocus) {
 
 // --- boot -------------------------------------------------------------------
 
+// --- counting up ------------------------------------------------------------
+// A figure counts up from most of itself to its value over one beat, eased,
+// in tabular digits so the tile never jitters. Reduced motion sets it at
+// once. A later update counts on from the number showing, not from zero.
+function countUp(el, value, { duration = 1300 } = {}) {
+  const target = Math.round(Number(value) || 0);
+  if (!el) return;
+  const fmt = (n) => Math.round(n).toLocaleString();
+  const shown = Number(String(el.textContent).replace(/[^\d]/g, ""));
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches || target < 20 || shown === target) {
+    el.textContent = fmt(target);
+    return;
+  }
+  const from = shown > 0 && shown < target ? shown : Math.round(target * 0.62);
+  const t0 = performance.now();
+  const token = (el.dataset.countToken = String(t0));
+  const step = (now) => {
+    if (el.dataset.countToken !== token) return; // a newer count took over
+    const p = Math.min(1, (now - t0) / duration);
+    el.textContent = fmt(from + (target - from) * (1 - Math.pow(1 - p, 3)));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+// Figures count up only once the reader can see them: hidden panels are not
+// intersecting, so a tile rendered at boot waits for its page to open.
+const countUpWatchers = new WeakMap();
+function countUpWhenVisible(el, value) {
+  if (!el) return;
+  el.dataset.count = String(value);
+  if (!("IntersectionObserver" in window)) { countUp(el, value); return; }
+  let io = countUpWatchers.get(el);
+  if (!io) {
+    io = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      countUp(el, Number(el.dataset.count));
+    }, { threshold: 0.2 });
+    countUpWatchers.set(el, io);
+    io.observe(el);
+  } else if (el.getClientRects().length && el.closest(".panel:not([hidden])")) {
+    countUp(el, value); // already in view: count on from what shows
+  }
+}
+
+// --- the stats page: manifest figures first, the live index over them -------
+const STATS_PARLIAMENTS = [
+  ["federal", "Federal Parliament"], ["nsw", "NSW Parliament"], ["vic", "Victorian Parliament"],
+  ["qld", "Queensland Parliament"], ["sa", "South Australian Parliament"],
+];
+const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["legal", "Legislation"], ["news", "News"]];
+
+/** One hero tile per key; the figure element is kept so a live update counts on in place. */
+function renderStatsHero() {
+  const hero = $("stats-hero");
+  if (!hero) return;
+  const m = corpusManifest || {};
+  const live = liveStats || {};
+  const donations = (m.sources || []).find((s) => s.name.startsWith("AEC donations"));
+  const tiles = [
+    { key: "speeches", value: live.kinds?.speech ?? m.collected_speeches ?? 0, label: "speeches indexed", live: live.kinds?.speech != null },
+    { key: "documents", value: live.resources, label: "documents in the index", live: true },
+    { key: "passages", value: live.paragraphs, label: "passages indexed", live: true },
+    { key: "parliaments", value: 5, label: "parliaments" },
+    donations ? { key: "donations", value: donations.docs, label: "donations classified" } : null,
+    donations ? { key: "coverage", text: donations.coverage, label: "coverage" } : null,
+  ].filter(Boolean);
+  // Every tile is made on the first render, in this order, so a live figure
+  // that arrives later counts up in its own place rather than joining the end.
+  for (const t of tiles) {
+    let tile = hero.querySelector(`[data-stat="${t.key}"]`);
+    if (!tile) {
+      tile = document.createElement("span");
+      tile.dataset.stat = t.key;
+      tile.innerHTML = `<span class="stat-figure"></span><span class="stat-label"></span>`;
+      hero.appendChild(tile);
+    }
+    const figure = tile.querySelector(".stat-figure");
+    const label = tile.querySelector(".stat-label");
+    label.textContent = t.label;
+    if (t.live) label.insertAdjacentHTML("beforeend", '<i class="stat-live" title="Read from the live index, refreshed every five minutes">live</i>');
+    if (t.text) figure.textContent = t.text;
+    else if (t.value == null) figure.textContent = "…"; // live figure still on its way
+    else countUpWhenVisible(figure, t.value);
+  }
+}
+
+/** The two live tables: speeches by parliament, documents by kind. */
+function renderStatsLiveTables() {
+  const live = liveStats || {};
+  const fill = (body, rows, counts) => {
+    if (!body) return;
+    if (!counts) { body.innerHTML = `<tr><td colspan="2">Live figures are unavailable right now.</td></tr>`; return; }
+    body.replaceChildren(...rows.filter(([k]) => counts[k] != null).map(([k, name]) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${esc(name)}</td><td class="stat-cell"><span class="stat-count"></span></td>`;
+      countUpWhenVisible(tr.querySelector(".stat-count"), counts[k]);
+      return tr;
+    }));
+  };
+  fill($("stats-parliaments"), STATS_PARLIAMENTS, live.speeches_by_state);
+  fill($("stats-kinds"), STATS_KINDS, live.kinds);
+}
+
 fetch("/corpus.json").then((r) => r.json()).then((m) => {
   corpusManifest = m;
   renderCorpusMeter();
   if (frontRendered) renderFrontNumbers();
-  // The stats page's hero figures come from the manifest, so a re-sync
-  // updates them in one place.
-  const donations = (m.sources || []).find((s) => s.name.startsWith("AEC donations"));
-  const stat = (figure, label) =>
-    `<span><span class="stat-figure">${figure}</span><span class="stat-label">${label}</span></span>`;
-  $("stats-hero").innerHTML = [
-    stat((m.collected_speeches ?? 0).toLocaleString(), "speeches collected"),
-    stat("5", "parliaments"),
-    donations ? stat(donations.docs.toLocaleString(), "donations classified") : "",
-    donations ? stat(esc(donations.coverage), "coverage") : "",
-  ].join("");
+  renderStatsHero();
   const statsBody = $("stats-sources");
   if (statsBody && m.sources) {
     statsBody.innerHTML = m.sources.map((s) =>
@@ -11119,13 +11213,16 @@ api("/api/stats")
     const line = `${(s.resources ?? 0).toLocaleString()} documents · ` +
       `${(s.paragraphs ?? 0).toLocaleString()} passages indexed · growing daily`;
     $("stats").textContent = line;
-    $("stats-live").textContent = `Live index: ${line}.`;
+    $("stats-live").textContent = "Figures marked live are read from the index itself and refresh every five minutes; the rest are from the corpus manifest.";
     renderCorpusMeter();
     if (frontRendered) renderFrontNumbers();
+    renderStatsHero();
+    renderStatsLiveTables();
   })
   .catch(() => {
     $("stats").textContent = "corpus loading…";
     $("stats-live").textContent = "Live index figures are unavailable right now.";
+    renderStatsLiveTables();
   });
 
 // Legacy entry contract: /?ask=<question> (used by standalone map pages).

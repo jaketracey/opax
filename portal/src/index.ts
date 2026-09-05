@@ -1380,11 +1380,30 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
 }
 
 /** KB counters for the front-page meter, cached 5 minutes. */
+/**
+ * The live index in numbers: the box's own counters (documents, passages)
+ * plus two facet counts read off the catalog, documents by kind and speeches
+ * by parliament, so the stats page can show what is indexed right now rather
+ * than what the manifest said at the last sync. Cached five minutes.
+ */
 async function apiStats(env: Env): Promise<Response> {
   return cachedJson('/api/stats', async () => {
-    const res = await kbFetch(env, '/counters')
-    if (!res.ok) return json({ error: `counters failed (${res.status})` }, 502)
-    return json(await res.json())
+    const [countersRes, kindsRes, statesRes] = await Promise.all([
+      kbFetch(env, '/counters'),
+      kbFetch(env, `/catalog?faceted=${KIND_FACET}&page_size=0`),
+      kbFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${SPEECH_FILTER}&page_size=0`),
+    ])
+    if (!countersRes.ok) return json({ error: `counters failed (${countersRes.status})` }, 502)
+    const counters = (await countersRes.json()) as Record<string, unknown>
+    // A facet that fails leaves its key null: the page keeps the manifest figure.
+    const facetOf = async (res: Response, prefix: string): Promise<Record<string, number> | null> => {
+      if (!res.ok) return null
+      const page = (await res.json()) as CatalogPage
+      const facet = page.fulltext?.facets?.[prefix] ?? {}
+      return Object.fromEntries(Object.entries(facet).map(([path, n]) => [path.slice(prefix.length + 1), n]))
+    }
+    const [kinds, speechesByState] = await Promise.all([facetOf(kindsRes, KIND_FACET), facetOf(statesRes, STATE_FACET)])
+    return json({ ...counters, kinds, speeches_by_state: speechesByState })
   }, STATS_CACHE_TTL)
 }
 
@@ -1615,7 +1634,8 @@ const TOPIC_FILTER_PREFIX = '/classification.labels/topic'
 const PARTY_FACET = '/classification.labels/party'
 const STATE_FACET = '/classification.labels/state'
 const DECADE_FILTER_PREFIX = '/classification.labels/decade'
-const SPEECH_FILTER = '/classification.labels/kind/speech'
+const KIND_FACET = '/classification.labels/kind'
+const SPEECH_FILTER = `${KIND_FACET}/speech`
 
 interface CatalogRow extends FindResource {
   created?: string
