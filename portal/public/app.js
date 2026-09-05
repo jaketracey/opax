@@ -758,9 +758,9 @@ function focusEntry(id) {
 function showPanel(name) {
   // Methods and the expense-category glossary live under the About menu, so its
   // trigger stays lit there; the drawer has exact links of its own.
-  const headerName = name === "methods" || name === "expenses" ? "about" : name;
+  const headerName = name === "methods" || name === "expenses" ? "about" : name === "bill" ? "bills" : name;
   for (const t of document.querySelectorAll("#primary-nav [data-panel], #nav-drawer [data-panel]")) {
-    const active = t.dataset.panel === (t.closest("#nav-drawer") ? name : headerName);
+    const active = t.dataset.panel === (t.closest("#nav-drawer") ? headerName : headerName);
     t.classList.toggle("active", active);
     if (t.tagName !== "A") continue; // aria-current marks pages, not disclosure buttons
     if (active) t.setAttribute("aria-current", "page");

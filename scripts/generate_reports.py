@@ -329,11 +329,9 @@ WINDOW_PROMPT = (
     "report a characterisation of another party as that member's claim about them, never as "
     "that party's own position and never as established fact. "
     "Begin with the answer itself. Never open with a preamble such as \"Based on the provided "
-    "context\", \"According to the passages\", \"The context shows\" or \"The record shows\": "
-    "the reader knows the answer comes from the record. State the finding directly — 'Debate "
-    "on X was sharply partisan', not 'The record shows debate on X was sharply partisan'. Do "
-    "not explain how the passages are numbered, ordered or provided. Write two to four tight "
-    "paragraphs of plain Markdown — no headings. "
+    "context\", \"According to the passages\" or \"The context shows\": the reader knows the "
+    "answer comes from the record. Do not explain how the passages are numbered, ordered or "
+    "provided. Write two to four tight paragraphs of plain Markdown — no headings. "
     "Only if NO passage mentions the subject at all, reply exactly: "
     "The record retrieved for this question does not discuss it."
 )
@@ -832,46 +830,36 @@ def gen_positions(kb: KbClient, title: str, srcs: dict, lines: list[str],
 LEDE_SCHEMA = {
     "name": "lede",
     "description": (
-        "A short opening for a report on the Australian parliamentary record, in exactly "
-        "three paragraphs, written ONLY from the findings, eras, figures and positions "
-        "supplied below — no outside knowledge, nothing invented."
+        "Three or four sentences opening a report with the overarching view of a debate "
+        "in the Australian parliament: what it is about, where the sides stand, what is "
+        "being fought over now and how it has moved. Each sentence is drawn from the "
+        "findings below and carries the number of the source that best evidences it."
     ),
     "parameters": {
         "type": "object",
         "additionalProperties": False,
         "properties": {
-            "now_paragraph": {
-                "type": "string",
-                "description": (
-                    "STRICT MAXIMUM 55 WORDS — count them. What parliament is arguing "
-                    "about NOW: name the largest debates below and give the main lines of "
-                    "argument across the NOW findings — who wants what, and the sharpest "
-                    "disagreement. PAST TENSE ONLY: 'argued', 'said', 'proposed', never "
-                    "'is arguing' or 'is debating'. No preamble: begin directly with the "
-                    "substance. Two or three sentences, not more."
-                ),
-            },
-            "arc_paragraph": {
-                "type": "string",
-                "description": (
-                    "STRICT MAXIMUM 55 WORDS — count them. How the argument has moved "
-                    "since 1993: one SHORT sentence for each era given, in order, ending "
-                    "with the direction the tide of attention shows. Past tense throughout."
-                ),
-            },
-            "figures_paragraph": {
-                "type": "string",
-                "description": (
-                    "STRICT MAXIMUM 55 WORDS — count them. The two or three strongest key "
-                    "figures, each with the base it is measured against, and each party's "
-                    "CURRENT position in one SHORT clause. Present tense for the parties' "
-                    "positions."
-                ),
+            "sentences": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 4,
+                "items": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "text": {"type": "string", "description": "One sentence, at most 36 words, plain and specific: a claim about the debate (its subject, a side's position, a shift over time), with the parties, bills and figures from the findings as its evidence. Name a member only where the point turns on that member. No preamble, no 'the record shows', no meta-commentary."},
+                        "source_ref": {"type": "integer", "description": "The [n] of the source that evidences this sentence."},
+                    },
+                    "required": ["text", "source_ref"],
+                },
             },
         },
-        "required": ["now_paragraph", "arc_paragraph", "figures_paragraph"],
+        "required": ["sentences"],
     },
 }
+
+
+_QUOTED = re.compile(r"[\u201c\"']([^\u201c\u201d\"']{12,240})[\u201d\"']")
 
 
 def _plain(text: str) -> str:
@@ -897,187 +885,181 @@ def raw_source_text(kb: KbClient, slug: str, cache: dict) -> str:
     return cache[slug]
 
 
-def tide_direction(tide_rows: list[dict]) -> str:
-    """A plain-language line on how a topic's share of the federal record has
-    moved by decade — computed here, not asked for, because it is arithmetic
-    the pipeline already holds and a model restating a share as a fresh
-    sentence is exactly the kind of drift a report should not introduce."""
-    rows = [r for r in (tide_rows or []) if r.get("decade")]
-    if len(rows) < 2:
-        return ""
-    shares = [(r["decade"], float(r.get("share") or 0.0)) for r in rows]
-    parts = ", ".join(f"{decade} {share * 100:.1f}%" for decade, share in shares)
-    first, last = shares[0][1], shares[-1][1]
-    if last > first * 1.1:
-        direction = "risen"
-    elif last < first * 0.9:
-        direction = "fallen"
-    else:
-        direction = "stayed roughly level"
-    return (f"TIDE — share of the labelled federal record on this topic, by decade: "
-            f"{parts}. Attention has {direction}.")
+def source_text(kb: KbClient, slug: str, cache: dict) -> str:
+    """The whole speech behind a source, folded for matching. Free."""
+    if slug not in cache:
+        cache[slug] = _plain(raw_source_text(kb, slug, {}))
+    return cache[slug]
 
 
-LEDE_PARAGRAPH_WORDS = 60   # 3 paragraphs x 60 words = the owner's 180-word ceiling
-# A boundary allows closing quotes/brackets after the punctuation before the
-# whitespace it looks for — a quoted claim inside the lede ends '"decrease
-# supply."' (period THEN closing quote), and without this a period like that
-# never counts as a boundary at all, mirroring `_SENTENCE_END` elsewhere.
-_CLAUSE_END = re.compile(r"[.!?;][\"'’”)\]]*(?=\s|$)")
-_SOFT_BREAK = re.compile(r"[.!?;,][\"'’”)\]]*(?=\s|$)")
-_END_PUNCT = re.compile(r"([.!?;,])([\"'’”)\]]*)$")
+def holds_the_quotes(kb: KbClient, sentence: str, slug: str, cache: dict) -> bool:
+    """True when every phrase the sentence puts in quotation marks is in this record."""
+    quotes = [q for q in _QUOTED.findall(sentence) if len(q.split()) >= 3]
+    if not quotes:
+        return True
+    body = source_text(kb, slug, cache)
+    if not body:
+        return True                      # cannot check: do not punish the sentence
+    return all(_plain(q) in body for q in quotes)
 
 
-def _fit_spans(text: str, boundary: "re.Pattern[str]", limit: int) -> str:
-    """The longest prefix of `text`, cut only at a `boundary` match, that does
-    not exceed `limit` words — or "" if not even the first piece fits."""
-    spans: list[tuple[int, int]] = []
-    start = 0
-    for match in boundary.finditer(text):
-        spans.append((start, match.end()))
-        start = match.end()
-    if text[start:].strip():
-        spans.append((start, len(text)))
-    kept, count = "", 0
-    for piece_start, piece_end in spans:
-        words = len(text[piece_start:piece_end].split())
-        if count + words > limit:
-            break
-        kept, count = text[:piece_end].strip(), count + words
-    return kept
+def settle_lede_ref(sentence: str, ref: int, srcs: dict) -> int | None:
+    """The source a lede sentence should cite, or None when it can cite none.
+
+    The lede is written from the findings and shown only the sources' titles,
+    so its source_ref is the model's guess. A sentence that names a speaker can
+    be checked: if the record it cites belongs to someone else, and exactly one
+    source in the list is that speaker's, the citation moves there. A sentence
+    that names a speaker no source carries is dropped rather than shipped
+    against a record that does not hold it."""
+    named = {
+        number for number, source in srcs.items()
+        if source.get("speaker") and _names_speaker(sentence, str(source["speaker"]))
+    }
+    if not named or ref in named:
+        return ref
+    return named.pop() if len(named) == 1 else None
 
 
-def _close_sentence(kept: str) -> str:
-    """Swap a trailing `;` or `,` for a full stop, keeping any closing quote
-    or bracket that followed it. A real `.!?` is left exactly as it is."""
-    match = _END_PUNCT.search(kept)
-    if match and match.group(1) in ";,":
-        return kept[:match.start(1)] + "." + match.group(2)
-    return kept
+def _names_speaker(sentence: str, speaker: str) -> bool:
+    """True when the sentence names this speaker, by surname or in full."""
+    parts = [p for p in re.split(r"\s+", speaker.strip()) if len(p) > 2]
+    if not parts:
+        return False
+    surname = parts[-1]
+    return bool(re.search(rf"\b{re.escape(surname)}\b", sentence))
 
 
-def cap_paragraph_words(text: str, limit: int = LEDE_PARAGRAPH_WORDS) -> str:
-    """Trim to the last full sentence, clause or (failing that) comma-phrase
-    at or under the word limit.
+def gen_lede(kb: KbClient, title: str, sections: list[dict], eras: list[dict] = ()) -> dict:
+    """The overarching view: three or four cited sentences on what the argument
+    is about, where the sides stand, what is fought over now and how it has
+    moved, written over the `now` answers and the era answers together.
 
-    The owner asked for a lede of about 120 to 180 words, and a model's own
-    word count is not reliable enough to hit that on instructions alone — both
-    exemplars came back at 265 and 303 words on the first try despite an
-    explicit per-paragraph target in the prompt and the schema. This is the
-    mechanical backstop, in the same spirit as `tide_direction()`: never trust
-    the model for arithmetic a script can just do.
-
-    Three tiers, each tried only when the one before it found nothing that
-    fit: `.!?;` boundaries first; failing that — the paragraph's very first
-    sentence alone is already over budget — `,` as well, so a 58-word opening
-    sentence still yields a clean phrase instead of nothing; only when not
-    even the first comma-phrase fits does it fall back to a hard word cut."""
-    text = re.sub(r"\s+", " ", str(text or "")).strip()
-    if len(text.split()) <= limit:
-        return text
-    for boundary in (_CLAUSE_END, _SOFT_BREAK):
-        kept = _fit_spans(text, boundary, limit)
-        if kept:
-            return _close_sentence(kept)
-    return " ".join(text.split()[:limit]).rstrip(",;:") + "."
-
-
-def lede_sources(sections: list[dict], eras: list[dict], cap: int = 12) -> list[dict]:
-    """The union of the `now` sections' and eras' own CITED sources, capped.
-
-    The lede's citation list therefore points only at records the report
-    actually went to, not at a fresh retrieval — the same sources a reader has
-    already seen argued from, gathered in one place. Each already carries the
-    passage its own section or era found for it."""
-    seen: dict[str, dict] = {}
-    for block in list(sections) + list(eras):
-        for source in block.get("sources") or []:
-            slug = source.get("slug")
-            if not slug or not source.get("cited") or slug in seen or len(seen) >= cap:
+    The numbered sources are the sections' and eras' own CITED sources, so the
+    lede's citations are the same records the report was built on — not a
+    fresh retrieval that could point somewhere the report never went. It used
+    to be three attributed sentences ("Senator X told the Senate..."), which
+    read as a run of quotations rather than an opening; Jake asked for the
+    overview (2026-09-05)."""
+    srcs: dict[int, dict] = {}
+    lines: list[str] = []
+    index: dict[str, int] = {}
+    bodies: dict[str, str] = {}
+    for section in [*sections, *eras]:
+        for source in section.get("sources") or []:
+            if not source.get("cited") or source["slug"] in index:
                 continue
-            seen[slug] = {
-                **{k: source.get(k) for k in
-                   ("slug", "title", "speaker", "party", "state", "date", "passage")},
-                "cited": True,
-            }
-    return list(seen.values())
-
-
-def gen_lede(kb: KbClient, title: str, now: dict, over_time: dict,
-            key_stats: list[dict] | None = None, positions: list[dict] | None = None) -> dict:
-    """A ~150-word, three-paragraph opening built over the WHOLE report.
-
-    The first version shipped three sentences, each a different speech's own
-    summary — read together they were not an opening for the report, they
-    were three unrelated quotations (the owner: "does this feel like an
-    appropriate opening for the whole first nations report?", "we need a
-    summary of the ENTIRE picture, not just a tiny bit"). This version reads
-    every block the report already built — the `now` sections' own answers,
-    the era answers, the kept key stats, the tide and the party positions —
-    and asks for three short paragraphs over that material and nothing else:
-    what parliament argues about now, how the argument has moved since 1993,
-    and where the figures and the parties stand today.
-
-    The lede no longer settles its own citations sentence by sentence. Its
-    source list is the union of the `now` sections' and eras' own CITED
-    sources (`lede_sources()`), capped at 12; its markers come from the same
-    free, verbatim pass every other answer earns them from (`anchor_block()`,
-    run by `cite_report()`) — a sentence that quotes the record verbatim earns
-    a marker, a synthesised sentence does not, and that is correct: a
-    three-paragraph summary of a dozen asks is mostly paraphrase, and a report
-    should never claim a source for words that source did not supply."""
-    sections = now.get("sections") or []
-    eras = over_time.get("eras") or []
-    srcs = lede_sources(sections, eras)
+            n = len(srcs) + 1
+            index[source["slug"]] = n
+            srcs[n] = source
+            who = " · ".join(x for x in [source.get("speaker"), source.get("party"),
+                                         str(source.get("date") or "")[:10]] if x)
+            # The words, not just the title. Shown only titles, the model has to
+            # guess which record carries a quotation, and it guesses wrong: it
+            # put a federal minister's "$32 billion Homes for Australia plan"
+            # against a New South Wales member's question about planning.
+            # Reading the record is free.
+            body = raw_source_text(kb, source["slug"], bodies)[:1200]
+            lines.append(f"[{n}] {source.get('title')}{f' ({who})' if who else ''}"
+                         + (f" — {body}" if body else ""))
     if not srcs:
         return {}
-
     findings = "\n\n".join(
-        f"NOW — {s['question']}\n{s['answer']}" for s in sections if s.get("answer"))
-    era_findings = "\n\n".join(
-        f"ERA {e.get('label')} ({e.get('from')} to {e.get('to')}) — {e.get('question')}\n"
-        f"{e.get('answer')}"
-        for e in eras if e.get("answer"))
-    debates = "\n".join(
-        f"- {d['title']} ({d['count']} speeches, {d['first']} to {d['last']})"
-        for d in sorted(now.get("discovered") or [], key=lambda d: -(d.get("count") or 0))[:5])
-    tide_line = tide_direction(over_time.get("tide") or [])
-    stats_lines = "\n".join(
-        f"- {s['value']} — {s['label']} ({s.get('jurisdiction', '')}, {s.get('as_of', '')})"
-        for s in (key_stats or [])[:3]) or "(no verified figures to draw on)"
-    position_lines = "\n".join(
-        f"- {p['party']}: {p['position']}" for p in (positions or [])
-    ) or "(no confirmed party positions to draw on)"
-
+        f"FINDING — {s['question']}\n{s['answer']}" for s in sections if s.get("answer"))
+    moved = "\n\n".join(
+        f"ERA {e.get('label')} — {e.get('question')}\n{e.get('answer')}" for e in eras if e.get("answer"))
     query = (
-        f'Open a report on "{title}" in the Australian parliament. Use ONLY the material '
-        "below — the report's own findings, nothing outside it. Write exactly three short "
-        "paragraphs, in this order: (1) what parliament is arguing about now, naming the "
-        "largest debates and the main lines of argument in the NOW findings — who wants "
-        "what, and the sharpest disagreement; (2) how the argument has moved since 1993, "
-        "one short sentence per era, ending with the direction the tide of attention shows; "
-        "(3) the strongest figures, each with its base, and where each party currently "
-        "stands, one short clause each. PAST TENSE for paragraphs 1 and 2 — what was argued, "
-        "said and proposed, never 'is arguing' or 'is debating' — and PRESENT TENSE only for "
-        "the parties' positions in paragraph 3. THE WHOLE OPENING MUST BE 120 TO 180 WORDS TOTAL — "
-        "55 WORDS OR FEWER IN EACH PARAGRAPH. Write tightly: a plain clause beats a long "
-        "one, and a detail that will not fit is a detail to cut, not a reason to run long. "
-        "Do not open with any preamble, and never write 'this report', 'based on', 'the "
-        "record shows' or any other description of the report or its sources — begin "
-        "directly with what parliament is doing. Quote a source's exact words, in quotation "
-        "marks, only where a finding below already does; never invent a quotation.\n\n"
-        f"DEBATES NOW BEFORE PARLIAMENT:\n{debates}\n\n{findings}\n\n{era_findings}\n\n"
-        f"{tide_line}\n\nKEY FIGURES:\n{stats_lines}\n\nPARTY POSITIONS:\n{position_lines}"
+        f'Open a report on "{title}" in the Australian parliament with one paragraph of three or '
+        "four sentences that gives a reader the overarching view of the debate. Write as an "
+        "analyst summing it up, not as a run of quotations: what the argument is fundamentally "
+        "about, where the sides stand and on what grounds, what is being fought over now, and "
+        "how the terms of the argument have shifted across the years the record covers. Lead "
+        "with the shape of the debate. The parties, bills, figures and members in the findings "
+        "are the evidence for those claims: name them where they sharpen a point, never as the "
+        "subject of every sentence. At most one sentence may rest on a single member's words, "
+        "and no sentence may be a paraphrase of one speech. Give each sentence the number of "
+        "the source that best evidences it: a claim about a party's position cites a member of "
+        "that party making it, and a sentence that names a member cites that member's own "
+        "record. Keep the whole opening to about 120 to 160 words. Paraphrase throughout and "
+        "put nothing in quotation marks: an opening is the analyst's own account, and a quoted "
+        "phrase is checked against the record and dropped when it is not there verbatim. Use "
+        "commas and full stops, never dashes. Do not "
+        "describe the report, the sources or the record itself; no headings, no lists, no "
+        "'the record shows'."
+        f"\n\nFINDINGS NOW:\n{findings}"
+        + (f"\n\nHOW IT HAS MOVED:\n{moved}" if moved else "")
+        + "\n\nSOURCES:\n" + "\n".join(lines)
     )
-    result = openrouter_tool_call(LEDE_SCHEMA, query)
+    sentences = (openrouter_tool_call(LEDE_SCHEMA, query)).get("sentences") or []
     ASKS["lede"] += 1
-    paragraphs = [
-        cap_paragraph_words(re.sub(r"\s+", " ", str(result.get(key) or "")).strip())
-        for key in ("now_paragraph", "arc_paragraph", "figures_paragraph")
-    ]
-    if not any(paragraphs):
+    folded: dict[str, str] = {}
+    text: list[str] = []
+    used: list[dict] = []
+    for sentence in sentences:
+        ref = sentence.get("source_ref")
+        # House style has no dashes; the model reaches for them between clauses.
+        body = re.sub(r"\s*[—–]\s*", ", ", str(sentence.get("text") or ""))
+        # The opening is asked to paraphrase, so a quotation mark here is the
+        # model slipping: the words stay, as its own account, rather than the
+        # sentence being dropped for a quotation the record does not hold.
+        body = re.sub(r"[\"“”]", "", body)
+        body = re.sub(r"\s+", " ", body).strip()
+        if ref not in srcs or not body:
+            continue
+        ref = settle_lede_ref(body, ref, srcs)
+        if ref is None:
+            print(f"  lede: dropped a sentence whose citation named the wrong speaker: "
+                  f"{body[:60]}...", file=sys.stderr)
+            continue
+        # A speaker says the same thing in more than one speech, and the lede is
+        # written from the findings rather than from the passages: the sentence
+        # can land on the right member and the wrong speech. The quotation marks
+        # are the checkable part, so they are checked against the record itself.
+        if not holds_the_quotes(kb, body, srcs[ref]["slug"], folded):
+            # The speaker was settled first, so a move here is a move between
+            # that member's speeches — or, failing that, to whichever record in
+            # the report's own citations actually holds the words.
+            elsewhere = [n for n, source in srcs.items()
+                         if n != ref and holds_the_quotes(kb, body, source["slug"], folded)]
+            if len(elsewhere) != 1:
+                print(f"  lede: dropped a sentence whose quotation is in no cited record: "
+                      f"{body[:60]}...", file=sys.stderr)
+                continue
+            ref = elsewhere[0]
+        text.append((body, srcs[ref]))
+        source = srcs[ref]
+        if source["slug"] not in {u["slug"] for u in used}:
+            used.append({**{k: source.get(k) for k in
+                            ("slug", "title", "speaker", "party", "state", "date", "passage")},
+                         # A lede lists only what its sentences rest on.
+                         "cited": True})
+    if not text:
         return {}
-    return {"text": "\n\n".join(p for p in paragraphs if p), "sources": srcs}
+    # The lede knows which record each sentence rests on: it settled the
+    # speaker and then checked the quotation against the record itself. The
+    # markers are recorded as the sentences are joined rather than recovered
+    # from the finished paragraph.
+    joined = ""
+    marks: dict[str, list[list[int]]] = defaultdict(list)
+    quotes: dict[str, str] = {}
+    for body, source in text:
+        joined += " " if joined else ""
+        start = len(joined)
+        joined += body
+        marks[source["slug"]].append([start, len(joined)])
+        for quote in _ANSWER_QUOTE.findall(body):
+            if len(quote.split()) >= QUOTE_MIN_WORDS:
+                quotes.setdefault(source["slug"], quote)
+    for source in used:
+        source["answer_ranges"] = dedupe_ranges(marks[source["slug"]])
+        quote = quotes.get(source["slug"], "")
+        passage = source.get("passage") or ""
+        # The section's passage answered the section's question; the lede's
+        # sentence quoted something else in the same speech.
+        if quote and not (passage and _loose(quote).search(passage)):
+            passage = raw_source_text(kb, source["slug"], bodies)
+        source["passage"] = trim_passage(passage, quote)
+    return {"text": joined, "sources": used, "cite_method": "declared"}
 
 
 PARLIAMENT_NAMES = {
@@ -1924,7 +1906,7 @@ def longest_verbatim_run(sentence: str, body: str) -> int:
 
 
 def anchor_block(records: Records, block: dict, key: str = "answer",
-                 mark: bool = True) -> dict[str, dict[str, str]]:
+                 by_speaker: bool = False, mark: bool = True) -> dict[str, dict[str, str]]:
     """Mark up an answer from the words themselves. Free: no ask, no guess.
 
     Returns the quotation that earned each source its marker, which is also the
@@ -1979,6 +1961,16 @@ def anchor_block(records: Records, block: dict, key: str = "answer",
         if best >= RUN_MIN_WORDS and holder:
             marks[holder].append([start, end])
             evidence(holder, sentence)
+        elif by_speaker:
+            # The lede is one sentence per record by construction, and
+            # gen_lede already settles each sentence on the member it names
+            # (settle_lede_ref) before it checks the quotation. A lede
+            # rebuilt from the file earns its markers the same way.
+            named = [s["slug"] for s in sources if s.get("speaker")
+                     and _names_speaker(sentence, str(s["speaker"]))]
+            if len(named) == 1:
+                marks[named[0]].append([start, end])
+                evidence(named[0], sentence)
     if not mark:                # evidence only, for choosing passages
         return dict(quotes)
     for source in sources:
@@ -2087,7 +2079,8 @@ def attach_passages(records: Records, block: dict, pool: dict[str, list[str]],
 
 
 def cite_block(records: Records, block: dict, *, query: str,
-               filter_expression: dict | None, key: str = "answer") -> tuple[int, int]:
+               filter_expression: dict | None, key: str = "answer",
+               by_speaker: bool = False) -> tuple[int, int]:
     """Markers and passages for one answer, without asking anything.
 
     An answer whose markers came from the platform keeps them: its ranges are
@@ -2095,7 +2088,8 @@ def cite_block(records: Records, block: dict, *, query: str,
     ever the fallback. The words are still read either way, because a source's
     passage should carry the quotation that source was cited for."""
     marked_already = any(s.get("answer_ranges") for s in block.get("sources") or [])
-    quotes = anchor_block(records, block, key=key, mark=not marked_already)
+    quotes = anchor_block(records, block, key=key, by_speaker=by_speaker,
+                          mark=not marked_already)
     pool = paragraph_pool(records.kb, query, filter_expression) if block.get("sources") else {}
     filled = attach_passages(records, block, pool, quotes)
     marked = sum(1 for s in block.get("sources") or [] if s.get("answer_ranges"))
@@ -2137,14 +2131,12 @@ def cite_report(kb: KbClient, slug: str, report: dict, since: str) -> dict[str, 
               f" [{block.get('cite_method') or 'none'}]")
     lede = report.get("lede") or {}
     if (lede.get("text") or "").strip() and lede.get("sources"):
-        # The lede now draws on the whole record, eras included, so its
-        # fallback retrieval pool is not windowed to `now` the way a section's
-        # or an era's own is.
         marked, filled = cite_block(
             records, lede, query=cfg["blurb"] or cfg["title"],
-            filter_expression=None, key="text")
-        # A lede source is one of the sections' or eras' own, so a passage
-        # already found there stands in for one the lede pass could not.
+            filter_expression=window_clauses(topic, window, None), key="text",
+            by_speaker=True)
+        # A lede source is one of the sections' own, so a passage the sections
+        # already found stands in for one the lede could not.
         known = {s["slug"]: s.get("passage") for _, block, _, _ in blocks
                  for s in block.get("sources") or [] if s.get("slug")}
         for source in lede["sources"]:
@@ -2420,7 +2412,6 @@ def build_over_time(kb: KbClient, slug: str, rows: list[dict],
             "answer": section["answer"],
             "sources": section["sources"],
             "asked_at": section["asked_at"],
-            "cite_method": section.get("cite_method"),
         })
     tide_rows = tide(kb, cfg["topic"])
     print("  tide: " + ", ".join(
@@ -2560,11 +2551,10 @@ def main() -> None:
                 print(f"[{slug}] voices: now {len(report['voices']['now'])}, "
                       f"all {len(report['voices']['all'])}")
             elif args.only == "lede":
-                report["lede"] = gen_lede(
-                    kb, cfg["title"], report.get("now") or {}, report.get("over_time") or {},
-                    report.get("key_stats") or [], report.get("positions") or [])
-                print(f"[{slug}] lede: {len((report['lede'] or {}).get('text') or '')} chars, "
-                      f"{len((report['lede'] or {}).get('sources') or [])} sources")
+                sections = (report.get("now") or {}).get("sections") or []
+                report["lede"] = gen_lede(kb, cfg["title"], sections,
+                                          (report.get("over_time") or {}).get("eras") or [])
+                print(f"[{slug}] lede: {len((report['lede'] or {}).get('text') or '')} chars")
             elif args.only == "cites":
                 print(f"[{slug}] marking answers and filling passages (free)")
                 tally = cite_report(kb, slug, report, args.since)
@@ -2678,7 +2668,8 @@ def main() -> None:
         checkpoint(positions=positions)
 
         try:
-            lede = gen_lede(kb, cfg["title"], report["now"], report["over_time"], kept, positions)
+            lede = gen_lede(kb, cfg["title"], report["now"]["sections"],
+                            (report.get("over_time") or {}).get("eras") or [])
         except AragError as error:
             print(f"  lede FAILED ({error.status})", file=sys.stderr)
             lede = prior.get("lede") or {}
