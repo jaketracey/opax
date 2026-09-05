@@ -8754,16 +8754,21 @@ function moneyWordsCharts(stats, { topic } = {}) {
   return out;
 }
 
-function renderStats(container, stats, topic) {
+/**
+ * The money and words charts under a report. `speakers: false` drops the
+ * speaker ranking: a v2 report ranks the same people in its own voices block,
+ * from its own counts, and two league tables of one thing that disagree are
+ * worse than either alone.
+ */
+function renderStats(container, stats, topic, { speakers = true } = {}) {
   if (!stats) { container.innerHTML = ""; return; }
   const don = stats.donations;
-  const industries = fmtIndustries(don?.industries || []);
   let htmlOut = "";
   htmlOut += moneyWordsCharts(stats, { topic });
   if (don?.top_donors?.length) htmlOut += barList(don.top_donors, {
     heading: "Largest donors", fmt: fmtMoney,
     linkTo: (nm) => subjectHash("donor", nm) });
-  if (stats.top_speakers?.length) htmlOut += barList(stats.top_speakers, {
+  if (speakers && stats.top_speakers?.length) htmlOut += barList(stats.top_speakers, {
     heading: "Most speeches on this topic", fmt: (v) => v.toLocaleString(),
     linkTo: (nm) => subjectHash("person", nm) });
   container.innerHTML = htmlOut;
@@ -8859,6 +8864,852 @@ function renderReportBrief(report) {
   }
 }
 
+/* ==== reports v2 ===========================================================
+   A v2 report answers two questions, in that order: what is parliament
+   arguing about now, and how did the argument move to get here. Everything
+   below builds that page. A report with no `version` is v1 and still renders
+   through renderReportBrief() above, untouched. */
+
+/** A report is v2 when it says so. Anything else is the v1 page. */
+function reportIsV2(report) {
+  return Number(report?.version) >= 2;
+}
+
+/* The decades the tide is counted in, mirroring TIDE_DECADES in the Worker.
+   A v2 report carries share/count/labelled per decade but not the decade's
+   own span, and the strip needs the span to open the speeches behind a bar. */
+const REPORT_TIDE_DECADES = {
+  "1990s": { label: "1993–99", from: 1993, to: 1999 },
+  "2000s": { label: "2000s", from: 2000, to: 2009 },
+  "2010s": { label: "2010s", from: 2010, to: 2019 },
+  "2020s": { label: "2020–26", from: 2020, to: 2026 },
+};
+
+/**
+ * The span behind a decade the report names. The generator writes the decade
+ * as its label ("1993–99", "2020–26"), not as the key the Worker uses, so a
+ * key lookup alone silently dropped the first and last bars — the two the
+ * report's own claim about movement rests on. Match the label, then the key,
+ * then the leading year, so a decade written any of those three ways lands.
+ */
+function reportTideSpan(decade) {
+  const key = String(decade || "").trim();
+  const spans = Object.values(REPORT_TIDE_DECADES);
+  const year = Number(/^(\d{4})/.exec(key)?.[1]);
+  return spans.find((s) => s.label === key)
+    || REPORT_TIDE_DECADES[key]
+    || (Number.isFinite(year) ? spans.find((s) => year >= s.from && year <= s.to) : null)
+    || null;
+}
+
+/* Every block of model prose on the page carries this, in the fineprint
+   voice. The report's claim is that the passages are real, not that the
+   sentences joining them were written by a person. */
+const REPORT_MODEL_NOTE = "Machine-written from the retrieved passages; not the record.";
+
+/** "2024-07-01" → "July 2024". Anything unparseable comes back as written. */
+const REPORT_MONTHS = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"];
+function reportMonthYear(value) {
+  const m = /^(\d{4})-(\d{2})/.exec(String(value || ""));
+  return m ? `${REPORT_MONTHS[Number(m[2]) - 1]} ${m[1]}` : String(value || "");
+}
+
+/**
+ * The two windows a v2 report reads over: the recent debate it calls "now",
+ * and the whole run it measures movement against. The long window starts at
+ * the first era when the report names one, and at the corpus floor otherwise.
+ */
+function reportWindow(report) {
+  const since = String(report.now?.since || "");
+  const fromYear = Number(since.slice(0, 4)) || null;
+  const firstEra = Number(report.over_time?.eras?.[0]?.from);
+  return {
+    since,
+    sinceLabel: reportMonthYear(since),
+    fromYear,
+    firstYear: Number.isFinite(firstEra) ? firstEra : RECORD_FIRST_YEAR,
+  };
+}
+
+/**
+ * A discovered debate's search link, with the report's window applied. The
+ * generator may hand over a ready route or the phrase to search for; a phrase
+ * is searched inside the window, so the chip opens what the count counted.
+ */
+function reportSearchLink(query, win) {
+  const q = String(query || "").trim();
+  if (/^[/#]/.test(q)) return q;
+  return searchHash(q, win.fromYear ? { from: String(win.fromYear) } : {});
+}
+
+/**
+ * Turn plain "[3]" markers into the citation token renderAnswer understands,
+ * so a report written with bracket markers gets the same superscripts as one
+ * written with explicit ranges. A number with no source behind it is left as
+ * the model wrote it rather than linked to the wrong speech.
+ */
+function reportBracketCitations(text, sources) {
+  return String(text || "").replace(/\s*\[(\d{1,3})\]/g, (whole, n) =>
+    (Number(n) >= 1 && Number(n) <= sources.length ? ` ⟦source:${n}⟧` : whole));
+}
+
+/**
+ * Model prose with its citations as true superscripts. Two shapes reach here:
+ * sources carrying explicit answerRanges (what /api/ask returns) and plain
+ * bracket markers written into the text. Ranges are character offsets into the
+ * text, so bracket conversion only runs when there are no ranges to shift.
+ */
+function reportRenderProse(container, text, sources) {
+  const hasRanges = sources.some((s) => s.answerRanges?.length);
+  container.askEvidence = sources;
+  renderAnswer(container, hasRanges ? text : reportBracketCitations(text, sources));
+}
+
+/**
+ * Re-point the superscripts at this report's own sources. renderAnswer wires
+ * them for the ask page, whose answer and source list share one scope; here
+ * each essay carries its own folded list, so the handler is replaced (cloning
+ * drops the original listener) rather than the shared helper being changed.
+ */
+function reportWireCitations(essay, sources) {
+  for (const button of [...essay.querySelectorAll(".ask-citation")]) {
+    const fresh = button.cloneNode(true);
+    button.replaceWith(fresh);
+    const n = Number(fresh.textContent);
+    if (!sources[n - 1]) continue;
+    fresh.addEventListener("click", () => reportOpenCitation(essay, fresh, n));
+  }
+}
+
+/** Open the folded list, reveal the cited speech, and offer the way back. */
+function reportOpenCitation(essay, button, n) {
+  // The rows are built on first open, so they have to exist before the one
+  // this superscript points at can be found.
+  for (const det of essay.querySelectorAll("details")) det.reportFill?.();
+  const row = essay.querySelector(`.report-source-row[data-cite="${n}"]`);
+  if (!row) return;
+  for (let el = row.parentElement; el && el !== essay; el = el.parentElement) {
+    if (el.tagName === "DETAILS") el.open = true;
+  }
+  essay.querySelector(".report-cite-back")?.remove();
+  const back = document.createElement("button");
+  back.type = "button";
+  back.className = "link report-cite-back";
+  back.textContent = "Back to the essay";
+  back.addEventListener("click", () => {
+    button.focus({ preventScroll: true });
+    button.scrollIntoView({ block: "center", behavior: "instant" });
+    back.remove();
+  });
+  row.appendChild(back);
+  row.focus({ preventScroll: true });
+  row.scrollIntoView({
+    block: "center",
+    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+  });
+}
+
+/** Up to two initials, for a speaker with no portrait in the map. */
+function reportInitials(name) {
+  return String(name || "").trim().split(/\s+/).map((w) => w[0] || "").slice(0, 2).join("");
+}
+
+/**
+ * What a record actually gives a reading-list row. Corpus titles carry the
+ * speaker and the date inside the string, and a report's source rows often
+ * arrive with those fields null beside them, which leaves an ISO date sitting
+ * in the middle of a heading. The trailing date is lifted out so it can be set
+ * the way every other date on the site is set. A leading segment that merely
+ * looks like a name is left where the record put it: guessing there would eat
+ * a subject that is genuinely the record's own.
+ */
+function reportRecordParts(s) {
+  const parts = String(s.title || "").trim().split(/(\s+—\s+)/);
+  let date = s.date || "";
+  const tail = String(parts[parts.length - 1] || "").trim();
+  if (!date && /^\d{4}-\d{2}-\d{2}$/.test(tail)) {
+    date = tail;
+    parts.splice(-2);
+  }
+  const title = parts.join("").trim();
+  return { date, title, subject: titleSubject({ ...s, title, date }) };
+}
+
+/**
+ * A cited source title with its trailing ISO date read out loud.
+ *
+ * `short` keeps only the leading segment, which is the speaker: an estimates
+ * record's own title runs to two hundred characters, and inside a figure tile
+ * that citation becomes nine lines of link under a two-word number. The whole
+ * title stays on the link's tooltip and one tap away in the record.
+ */
+function reportSourceLabel(raw, { short = false } = {}) {
+  const parts = String(raw || "").trim().split(/(\s+—\s+)/);
+  const tail = String(parts[parts.length - 1] || "").trim();
+  const dated = /^\d{4}-\d{2}-\d{2}$/.test(tail);
+  if (dated) parts.splice(-2);
+  const body = (short ? String(parts[0] || "").trim() : parts.join("").trim())
+    || String(raw || "").trim();
+  return dated ? `${body}, ${fmtDate(tail)}` : body;
+}
+
+/**
+ * One speech in a sources list: portrait, the speaker and party as links, the
+ * parliament and date, the retrieved passage, and a plain way into the record.
+ * This is the reading-list row the report pages settled on, reused wherever a
+ * v2 report shows its evidence.
+ */
+function reportSourceRow(s, num) {
+  const li = document.createElement("li");
+  li.className = "report-source-row";
+  if (num) { li.dataset.cite = String(num); li.tabIndex = -1; }
+
+  const record = reportRecordParts(s);
+  const body = document.createElement("div");
+  body.className = "report-source-body";
+
+  // A record with a named speaker leads with the person; one without leads
+  // with the title the record itself wrote, rather than an empty portrait and
+  // a party chip attached to nobody.
+  if (s.speaker) {
+    const face = document.createElement("span");
+    face.className = "report-source-face";
+    face.setAttribute("aria-hidden", "true");
+    face.textContent = reportInitials(s.speaker);
+    loadPhotoMap().then(() => {
+      const url = photoUrlFor(s.speaker);
+      if (url) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
+    });
+    li.appendChild(face);
+  } else {
+    li.classList.add("report-source-unnamed");
+  }
+
+  const name = document.createElement("p");
+  name.className = "report-source-name";
+  if (s.speaker) {
+    const who = document.createElement("a");
+    who.className = "meta-speaker";
+    who.href = subjectHash("person", s.speaker);
+    who.textContent = s.speaker;
+    name.appendChild(who);
+    if (s.party) {
+      const party = document.createElement("a");
+      party.className = "meta-party";
+      party.href = subjectHash("party", s.party);
+      party.innerHTML = partyChipHTML(s.party); // fixed map lookup, not model text
+      name.appendChild(party);
+    }
+  } else {
+    name.textContent = record.title || s.slug || "";
+  }
+
+  const where = document.createElement("p");
+  where.className = "report-source-where";
+  const parliament = s.state ? PARLIAMENT_NAMES[s.state] || STATE_NAMES[s.state] || s.state : "";
+  if (!s.speaker && s.party) {
+    // No 24px link where a 44px one will not fit: the party is stated, and the
+    // record itself is one tap away.
+    const party = document.createElement("span");
+    party.className = "report-source-party";
+    party.innerHTML = partyChipHTML(s.party); // fixed map lookup, not model text
+    if (!party.firstChild) party.textContent = s.party;
+    where.append(party, document.createTextNode(" "));
+  }
+  where.append([parliament, fmtDate(record.date)].filter(Boolean).join(" · "));
+
+  body.append(name, where);
+
+  // The debate this speech sat in, when the record names one beyond the
+  // speaker and the date the byline already carries.
+  if (s.speaker && record.subject) {
+    const debate = document.createElement("p");
+    debate.className = "report-source-debate";
+    debate.textContent = record.subject;
+    body.appendChild(debate);
+    li.dataset.debate = record.subject; // so a run of one debate says it once
+  }
+
+  const passage = String(s.snippet || s.brief || "").trim();
+  if (passage) {
+    const quote = document.createElement("p");
+    quote.className = "report-source-passage";
+    quote.textContent = passage.replace(/\s+/g, " ")
+      .replace(/^(?:[….]{1,3}\s*){2,}/, "… ").replace(/(?:\s*…){2,}/g, " …");
+    body.appendChild(quote);
+  }
+
+  const read = document.createElement("a");
+  read.className = "report-source-read";
+  read.href = `/doc/${s.slug}`;
+  read.textContent = "Read the speech";
+  body.appendChild(read);
+
+  li.appendChild(body); // the portrait, when there is one, is already in place
+  return li;
+}
+
+/**
+ * Build a fold's rows the first time it opens. A v2 report carries four
+ * hundred source rows across its folds, each with a portrait to look up, and
+ * building all of them before a reader has asked for any is most of what the
+ * page spends on rendering.
+ */
+function reportFillOnOpen(det, host, build) {
+  det.reportFill = () => {
+    if (det.dataset.filled) return;
+    det.dataset.filled = "1";
+    host.replaceChildren(...reportDedupeDebates(build()));
+  };
+  det.addEventListener("toggle", det.reportFill);
+}
+
+/**
+ * A retrieved list is usually a run of speeches from one debate, and repeating
+ * its name under every speaker turns eight rows into eight copies of the same
+ * long bill title. A run says it once; the next row to change debates says the
+ * new one, so the reader sees where the list moves on. Anything that is not a
+ * speech row (the divider) breaks the run.
+ */
+function reportDedupeDebates(rows) {
+  let last = null;
+  for (const row of rows) {
+    const debate = row.dataset?.debate;
+    if (!debate) { last = null; continue; }
+    if (debate === last) row.querySelector(".report-source-debate")?.remove();
+    last = debate;
+  }
+  return rows;
+}
+
+/**
+ * The evidence under an essay, folded away until a reader wants it.
+ *
+ * What was retrieved and what the answer leans on are different things. The
+ * generator marks the difference with `cited`, and a fold that offers twenty
+ * speeches under an answer built from nine is claiming more evidence than the
+ * answer used. The cited ones lead, and the rest are named as the rest.
+ */
+function reportSourcesFold(sources, label) {
+  const numbered = sources.map((s, i) => ({ s, n: i + 1 }));
+  const flagged = numbered.some((r) => r.s.cited === true);
+  const cited = flagged ? numbered.filter((r) => r.s.cited === true) : numbered;
+  const rest = flagged ? numbered.filter((r) => r.s.cited !== true) : [];
+  const det = document.createElement("details");
+  det.className = "chat-sources report-sources";
+  const sum = document.createElement("summary");
+  sum.textContent = flagged
+    ? `${label || "Sources"}: ${cited.length} cited, ${rest.length} more retrieved`
+    : `${label || "Sources"} (${numbered.length})`;
+  const ol = document.createElement("ol");
+  ol.className = "report-source-list";
+  det.append(sum, ol);
+  reportFillOnOpen(det, ol, () => {
+    const rows = cited.map((r) => reportSourceRow(r.s, r.n));
+    if (rest.length) {
+      const divider = document.createElement("li");
+      divider.className = "report-sources-divider";
+      divider.textContent =
+        `Also retrieved for this question, not cited in the answer (${rest.length})`;
+      rows.push(divider, ...rest.map((r) => reportSourceRow(r.s, r.n)));
+    }
+    return rows;
+  });
+  return det;
+}
+
+/**
+ * One essay: its question in the serif, the model's answer with superscript
+ * citations, the note saying who wrote it, the speeches behind it, and the
+ * two things a reader does with a section — take its link, or ask the record.
+ */
+function reportEssay(item, { id, slug, number } = {}) {
+  const sec = document.createElement("section");
+  sec.className = "report-essay";
+  if (id) sec.id = id;
+
+  const heading = document.createElement("h3");
+  heading.className = "report-essay-question";
+  heading.textContent = item.question || item.label || "";
+
+  const body = document.createElement("div");
+  body.className = "answer report-essay-body";
+  const sources = Array.isArray(item.sources) ? item.sources : [];
+  reportRenderProse(body, item.answer || "", sources);
+
+  const note = document.createElement("p");
+  note.className = "fineprint report-model-note";
+  note.textContent = REPORT_MODEL_NOTE;
+
+  sec.append(heading, body, note);
+  if (sources.length) sec.append(reportSourcesFold(sources, "Sources"));
+  reportWireCitations(sec, sources);
+
+  if (slug && number) {
+    const tools = document.createElement("p");
+    tools.className = "report-essay-tools";
+    const link = document.createElement("button");
+    link.type = "button";
+    link.className = "link report-essay-tool";
+    link.textContent = "Copy link to this section";
+    link.addEventListener("click", (e) => copyText(siteUrl(`/reports/${slug}/s/${number}`), e.currentTarget));
+    const ask = document.createElement("button");
+    ask.type = "button";
+    ask.className = "link report-essay-tool";
+    ask.textContent = "Ask the record about this";
+    ask.addEventListener("click", () => goRoute(askHash(item.question || item.label || "")));
+    tools.append(link, ask);
+    sec.append(tools);
+  }
+  return sec;
+}
+
+/**
+ * A debate's name without the procedural stage the record appends to it.
+ * "Statewide Treaty Bill 2025 - Second reading" is one debate about one bill;
+ * the stage is where in the machinery it was reached, not what was argued, and
+ * on a phone it costs a line of every second chip. The whole title stays in the
+ * chip's tooltip and its accessible name.
+ */
+const REPORT_DEBATE_STAGES =
+  /\s*[-–—]\s*(?:first|second|third) reading(?: debate)?$|\s*[-–—]\s*(?:consideration in detail|in committee|committee of the whole|declaration of urgency)$/i;
+function reportDebateName(title) {
+  const trimmed = String(title || "").trim().replace(REPORT_DEBATE_STAGES, "").trim();
+  return trimmed || String(title || "").trim();
+}
+
+/** The debates the report found in its window, each opening its own search. */
+function reportDiscovered(discovered, win) {
+  const row = document.createElement("div");
+  row.className = "report-chips";
+  for (const d of discovered) {
+    const count = Number(d.count || 0);
+    const chip = document.createElement("a");
+    chip.className = "report-chip";
+    chip.href = reportSearchLink(d.search || d.title, win);
+    const name = document.createElement("span");
+    name.className = "report-chip-name";
+    name.textContent = reportDebateName(d.title);
+    const tally = document.createElement("span");
+    tally.className = "report-chip-count";
+    tally.textContent = `${count.toLocaleString()} ${count === 1 ? "speech" : "speeches"}`;
+    chip.append(name, tally);
+    const span = [d.first, d.last].filter(Boolean).map((v) => fmtDate(v) || v).join(" to ");
+    if (span) chip.title = `${d.title}: ${span}`;
+    chip.setAttribute("aria-label",
+      `${d.title}, ${count.toLocaleString()} speeches${span ? `, ${span}` : ""}`);
+    row.appendChild(chip);
+  }
+  return row;
+}
+
+/**
+ * "12,470 of 46,180 adult prisoners" — the count the headline figure is a
+ * share of, and only when the denominator is a count. A denominator written as
+ * a phrase ("population of Queensland") is the same thing the tile's label
+ * already says, and stitching it to the number produced sentences no one would
+ * write: "4.6 of population of Queensland per cent". A unit already spoken in
+ * the value ("per cent", "%") is not repeated either.
+ */
+function reportStatCount(v) {
+  if (typeof v === "number") return Number.isFinite(v) ? v : null;
+  const raw = String(v ?? "").trim().replace(/,/g, "");
+  return /^\d+(\.\d+)?$/.test(raw) ? Number(raw) : null;
+}
+function reportStatRatio(s) {
+  const num = reportStatCount(s.numerator);
+  const den = reportStatCount(s.denominator);
+  if (num === null || den === null) return "";
+  const unit = String(s.unit || "").trim();
+  const tail = unit && !/^(%|per ?cent(age)?|pc)$/i.test(unit) ? ` ${unit}` : "";
+  return `${num.toLocaleString()} of ${den.toLocaleString()}${tail}`;
+}
+
+/**
+ * When a figure was true. A single point takes "as at"; a span the generator
+ * writes as a range ("1996-97 to 2004-05") takes "over", because a figure
+ * measured across nine years was never true as at any one of them.
+ */
+function reportStatAsOf(value) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return "";
+  if (/\bto\b|–|—/.test(raw)) return `over ${raw}`;
+  return `as at ${fmtDate(raw) || raw}`;
+}
+
+/** The figures the report leans on, each traced to the speech that said it. */
+function reportStatTiles(stats) {
+  const grid = document.createElement("div");
+  grid.className = "tiles report-stat-tiles";
+  for (const s of stats) {
+    const t = document.createElement("div");
+    t.className = "tile report-stat";
+    const value = document.createElement("b");
+    value.textContent = s.value;
+    const label = document.createElement("span");
+    label.className = "report-stat-label";
+    label.textContent = s.label;
+    t.append(value, label);
+    const ratio = reportStatRatio(s);
+    const scope = [s.jurisdiction, reportStatAsOf(s.as_of)].filter(Boolean).join(" · ");
+    const under = [ratio, scope].filter(Boolean).join(" · ");
+    if (under) {
+      const q = document.createElement("span");
+      q.className = "report-stat-basis";
+      q.textContent = under;
+      t.appendChild(q);
+    }
+    if (s.detail) t.title = s.detail;
+    if (s.slug) {
+      // The link stands on its own line: an "—" text node ahead of a 44px
+      // inline-flex link is left orphaned above it.
+      const src = document.createElement("span");
+      src.className = "tile-source";
+      const a = document.createElement("a");
+      a.href = `/doc/${s.slug}`;
+      a.textContent = reportSourceLabel(s.source_title, { short: true })
+        || "Read the speech that said it";
+      if (s.source_title) a.title = s.source_title;
+      src.appendChild(a);
+      t.appendChild(src);
+    }
+    grid.appendChild(t);
+  }
+  return grid;
+}
+
+/**
+ * Where the parties stand. The window says which debate the position is read
+ * from, not when it was said — the citation's own date says that, and the two
+ * can honestly differ when a party's clearest statement of a current position
+ * is an older speech. A citation from before the window opens says so, rather
+ * than leaving the reader to notice the years do not line up.
+ */
+function reportPositions(positions, win) {
+  const list = document.createElement("ul");
+  list.className = "position-list report-position-list";
+  for (const p of positions) {
+    const li = document.createElement("li");
+    const head = document.createElement("span");
+    head.className = "position-party";
+    head.innerHTML = partyChipHTML(p.party); // fixed map lookup, not model text
+    if (!head.firstChild) head.textContent = p.party;
+    const text = document.createElement("span");
+    text.className = "position-text";
+    text.textContent = ` ${p.position} `;
+    li.append(head, text);
+    if (p.window) {
+      const scope = document.createElement("span");
+      scope.className = "report-position-window";
+      scope.textContent = `Their position in the debate ${p.window}`;
+      li.appendChild(scope);
+    }
+    const cite = document.createElement("span");
+    cite.className = "source-meta report-position-cite";
+    const who = [p.speaker, fmtDate(p.date || "")].filter(Boolean).join(", ");
+    const read = document.createElement("a");
+    read.href = `/doc/${p.slug}`;
+    read.textContent = "read the speech";
+    cite.append(who ? `${who} · ` : "", read);
+    const earlier = win?.since && p.date && String(p.date) < String(win.since);
+    if (earlier) cite.append(" · cited from earlier in the record");
+    li.appendChild(cite);
+    list.appendChild(li);
+  }
+  return list;
+}
+
+/**
+ * The tide strip the topic pages draw, on the report's own decade counts. The
+ * caption says what the share is a share of, because a topic label is applied
+ * by a labeller that has not reached the whole record.
+ */
+function reportTideHTML(tide, topic) {
+  const rows = (tide || [])
+    .map((p) => ({ ...p, span: reportTideSpan(p.decade) }))
+    .filter((p) => p.span);
+  if (rows.length < 2) return "";
+  const max = Math.max(...rows.map((p) => Number(p.share) || 0), Number.EPSILON);
+  const bars = rows.map((p) => {
+    const share = Number(p.share) || 0;
+    const count = Number(p.count || 0);
+    const labelled = Number(p.labelled || 0);
+    const pct = `${(share * 100).toFixed(1)}%`;
+    const height = Math.max(2, (share / max) * 100);
+    const reading = `${p.span.label}: ${pct} of the labelled speeches, ` +
+      `${count.toLocaleString()} of ${labelled.toLocaleString()} labelled so far`;
+    return `<a class="topic-tide-decade" href="${esc(searchHash(topic, {
+      from: String(p.span.from), to: String(p.span.to),
+    }))}" title="${esc(reading)}" aria-label="${esc(reading)}">
+      <span class="topic-tide-label">${esc(p.span.label)}</span>
+      <span class="topic-tide-track" aria-hidden="true"><i style="height:${height.toFixed(2)}%"></i></span>
+      <strong>${pct}</strong><small>${count.toLocaleString()}</small>
+    </a>`;
+  }).join("");
+  return `<section class="topic-tide report-tide">
+    <figure><figcaption>The share of the labelled record, decade by decade</figcaption>
+      <div class="topic-tide-bars">${bars}</div></figure>
+    <p class="fineprint">Each bar is this subject's share of the federal speeches carrying any
+      topic label in that decade; the small figure is the count. Labelled so far, not the whole
+      record: the labeller is still working through the corpus, so a bar is a floor. Each decade
+      opens the speeches behind it.</p>
+  </section>`;
+}
+
+/** One ranked speaker: portrait, name, party, bar, count. */
+function reportVoiceRow(v, max) {
+  const row = document.createElement("li");
+  row.className = "report-voice";
+  const face = document.createElement("span");
+  face.className = "report-voice-face";
+  face.setAttribute("aria-hidden", "true");
+  face.textContent = reportInitials(v.speaker);
+  loadPhotoMap().then(() => {
+    const url = photoUrlFor(v.speaker);
+    if (url) face.innerHTML = `<img src="${esc(url)}" alt="" width="32" height="32" loading="lazy">`;
+  });
+  const body = document.createElement("div");
+  body.className = "report-voice-body";
+  const line = document.createElement("p");
+  line.className = "report-voice-name";
+  const who = document.createElement("a");
+  who.href = subjectHash("person", v.speaker);
+  who.textContent = v.speaker;
+  line.appendChild(who);
+  if (v.party) {
+    const party = document.createElement("span");
+    party.className = "report-voice-party";
+    party.innerHTML = partyChipHTML(v.party); // fixed map lookup, not model text
+    if (!party.firstChild) party.textContent = v.party;
+    line.appendChild(party);
+  }
+  const count = Number(v.count || 0);
+  const track = document.createElement("span");
+  track.className = "barrow-track report-voice-track";
+  track.setAttribute("aria-hidden", "true");
+  track.innerHTML = `<i style="width:${Math.max((count / max) * 100, 1).toFixed(2)}%"></i>`;
+  body.append(line, track);
+  const tally = document.createElement("span");
+  tally.className = "report-voice-count";
+  tally.textContent = count.toLocaleString();
+  row.append(face, body, tally);
+  return row;
+}
+
+/** Who is speaking now against who has spoken across the whole record. */
+function reportVoices(voices, win) {
+  const wrap = document.createElement("div");
+  wrap.className = "report-voices";
+  const column = (rows, heading) => {
+    if (!rows?.length) return;
+    const col = document.createElement("div");
+    col.className = "report-voice-column";
+    const h = document.createElement("h4");
+    h.className = "report-voice-heading";
+    h.textContent = heading;
+    const max = Math.max(...rows.map((r) => Number(r.count) || 0), 1);
+    const list = document.createElement("ol");
+    list.className = "report-voice-list";
+    list.replaceChildren(...rows.map((r) => reportVoiceRow(r, max)));
+    col.append(h, list);
+    wrap.appendChild(col);
+  };
+  column(voices.now, win.sinceLabel ? `Speaking since ${win.sinceLabel}` : "Speaking now");
+  column(voices.all, "Across the whole record");
+  return wrap;
+}
+
+/** Every speech the report cites anywhere, once each, folded at the foot. */
+function reportAllSources(report) {
+  const seen = new Map();
+  const add = (list) => {
+    for (const s of list || []) {
+      if (!s?.slug || seen.has(s.slug)) continue;
+      seen.set(s.slug, s);
+    }
+  };
+  add(report.lede?.sources);
+  for (const s of report.now?.sections || []) add(s.sources);
+  for (const e of report.over_time?.eras || []) add(e.sources);
+  add(report.over_time?.key_moments);
+  // A position and a figure name their record in `source_title`; without it
+  // the row would fall back to a slug and lose the debate it came from.
+  const titled = (list) => (list || []).map((s) => ({ ...s, title: s.title || s.source_title }));
+  add(titled(report.positions));
+  add(titled(report.key_stats));
+  const rows = [...seen.values()].sort((a, b) => String(a.date || "").localeCompare(String(b.date || "")));
+  if (!rows.length) return null;
+  const det = document.createElement("details");
+  det.className = "chat-sources report-sources report-all-sources";
+  const sum = document.createElement("summary");
+  sum.textContent = `Every speech behind this report (${rows.length})`;
+  const ol = document.createElement("ol");
+  ol.className = "report-source-list";
+  det.append(sum, ol);
+  reportFillOnOpen(det, ol, () => rows.map((s) => reportSourceRow(s)));
+  return det;
+}
+
+/** A serif section heading with a hairline over it, and the anchor to jump to. */
+function reportSectionHead(id, text) {
+  const h = document.createElement("h3");
+  h.className = "report-part-title";
+  h.id = `${id}-head`;
+  h.tabIndex = -1;
+  h.textContent = text;
+  return h;
+}
+
+/**
+ * Build the v2 page: the head, the debate now, how it has moved, and the two
+ * closing layers (the money, and every source deduplicated). Section numbers
+ * run through both essay groups so /reports/<slug>/s/<n> still names one.
+ */
+function renderReportV2(report, slug) {
+  const win = reportWindow(report);
+  const topic = report.title;
+
+  // --- head: the window it covers, then the lede -----------------------------
+  // The window is stated before the lede, not after it: which two spans are
+  // being compared is what the reader needs before the first sentence, and it
+  // keeps the lede's own provenance beside the lede.
+  const head = $("report-head2");
+  head.replaceChildren();
+  head.hidden = false;
+  if (win.sinceLabel) {
+    const covers = document.createElement("p");
+    covers.className = "report-window";
+    covers.textContent =
+      `The debate since ${win.sinceLabel}, and how it has moved since ${win.firstYear}.`;
+    head.appendChild(covers);
+  }
+  if (report.lede?.text) {
+    const lede = document.createElement("div");
+    lede.className = "answer report-lede";
+    const sources = Array.isArray(report.lede.sources) ? report.lede.sources : [];
+    reportRenderProse(lede, report.lede.text, sources);
+    head.appendChild(lede);
+    const note = document.createElement("p");
+    note.className = "fineprint report-model-note";
+    note.textContent = REPORT_MODEL_NOTE;
+    head.appendChild(note);
+    if (sources.length) head.appendChild(reportSourcesFold(sources, "Sources for this opening"));
+    reportWireCitations(head, sources);
+  }
+
+  const nav = $("report-jump");
+  nav.replaceChildren();
+  nav.hidden = false;
+  for (const [id, label] of [["report-now", "Now"], ["report-overtime", "Over time"]]) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "report-jump-btn";
+    b.textContent = label;
+    b.addEventListener("click", () => {
+      const target = $(id);
+      if (!target) return;
+      target.scrollIntoView({
+        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+      });
+      target.querySelector(".report-part-title")?.focus({ preventScroll: true });
+    });
+    nav.appendChild(b);
+  }
+
+  let number = 0;
+
+  // --- the debate now -------------------------------------------------------
+  const now = $("report-now");
+  now.replaceChildren();
+  now.hidden = !report.now;
+  if (report.now) {
+    now.append(reportSectionHead("report-now", "The debate now"));
+    if (report.now.discovered?.length) {
+      const intro = document.createElement("p");
+      intro.className = "report-part-note";
+      intro.textContent = win.sinceLabel
+        ? `What the chamber has actually been arguing about since ${win.sinceLabel}. Each opens its speeches.`
+        : "What the chamber has actually been arguing about. Each opens its speeches.";
+      now.append(intro, reportDiscovered(report.now.discovered, win));
+    }
+    for (const section of report.now.sections || []) {
+      number += 1;
+      now.appendChild(reportEssay(section, { id: `report-s-${number}`, slug, number }));
+    }
+    if (report.key_stats?.length) {
+      const h = document.createElement("h4");
+      h.className = "report-sub-title";
+      h.textContent = "The figures this turns on";
+      now.append(h, reportStatTiles(report.key_stats));
+    }
+    if (report.positions?.length) {
+      const h = document.createElement("h4");
+      h.className = "report-sub-title";
+      h.textContent = "Where the parties stand";
+      now.append(h, reportPositions(report.positions, win));
+    }
+  }
+
+  // --- how it has moved -----------------------------------------------------
+  const over = $("report-overtime");
+  over.replaceChildren();
+  over.hidden = !report.over_time;
+  if (report.over_time) {
+    over.append(reportSectionHead("report-overtime", "How it has moved"));
+    const eras = report.over_time.eras || [];
+    if (eras.length) {
+      const line = document.createElement("div");
+      line.className = "report-eras";
+      for (const era of eras) {
+        number += 1;
+        const step = document.createElement("div");
+        step.className = "report-era";
+        const span = document.createElement("p");
+        span.className = "report-era-span";
+        // The label is already the span ("1993–2009"). Restating it as ISO
+        // dates beside itself — "1993–2009 · 1993-01-01–2009-12-31" — says the
+        // same thing twice, the second time in machine. The years are drawn
+        // only when the label does not carry them.
+        const years = [era.from, era.to].map((v) => String(v || "").slice(0, 4))
+          .filter(Boolean).join("–");
+        span.textContent = era.label && /\d/.test(era.label) ? era.label
+          : [era.label, years].filter(Boolean).join(" · ");
+        step.append(span, reportEssay(era, { id: `report-s-${number}`, slug, number }));
+        line.appendChild(step);
+      }
+      over.appendChild(line);
+    }
+    const tide = reportTideHTML(report.over_time.tide, topic);
+    if (tide) over.insertAdjacentHTML("beforeend", tide);
+    if (report.over_time.key_moments?.length) {
+      const h = document.createElement("h4");
+      h.className = "report-sub-title";
+      h.textContent = "Start reading: the speeches that moved it";
+      const note = document.createElement("p");
+      note.className = "fineprint report-reading-note";
+      note.textContent = "Chosen from the labelled record: substantive speeches on the subject, one per speaker, across the years.";
+      const list = document.createElement("div");
+      list.className = "report-reading-list";
+      list.replaceChildren(...report.over_time.key_moments.map(keySpeechItem));
+      over.append(h, note, list);
+    }
+    if (report.voices?.now?.length || report.voices?.all?.length) {
+      const h = document.createElement("h4");
+      h.className = "report-sub-title";
+      h.textContent = "Who does the talking";
+      over.append(h, reportVoices(report.voices, win));
+    }
+  }
+
+  // --- every source, once ---------------------------------------------------
+  const all = $("report-allsources");
+  all.replaceChildren();
+  const fold = reportAllSources(report);
+  all.hidden = !fold;
+  if (fold) all.appendChild(fold);
+}
+
 async function openReport(slug, sectionNum, manageFocus) {
   // Already rendered (e.g. Back from a cited document): just reveal it —
   // the DOM is intact under `hidden`, so scroll position and charts survive.
@@ -8888,28 +9739,62 @@ async function openReport(slug, sectionNum, manageFocus) {
   $("report-title").innerHTML = `${reportGlyph(slug, "report-glyph")}${esc(report.title)}`;
   setCrumbs([{ label: "Reports", href: "/reports" }, { label: report.title }]);
   $("report-blurb").textContent = report.blurb;
-  $("report-meta").textContent =
+  const provenance =
     `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record · corpus v${corpusVersion()}`;
-  renderReportBrief(report);
-  renderStats($("report-stats"), report.stats, report.title);
-  {
-    const st = report.stats;
-    if (st) {
-      const don = st.donations;
+  $("report-meta").textContent = provenance;
+  $("report-meta2").textContent = provenance;
+  // The corpus totals under the money: how much record this report read.
+  const corpusTotalsHTML = (st) => {
+    const don = st?.donations;
+    if (!st) return "";
+    return `${tile((st.speech_count ?? 0).toLocaleString(), "speeches on the record")}
+      ${tile((st.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
+      ${don ? tile(fmtMoney(don.total ?? 0), `donations: ${fmtIndustries(don.industries || [])}`) : ""}`;
+  };
+  const v2 = reportIsV2(report);
+  // A v2 report reads in its own order (now, then how it moved), so the v1
+  // layers stand down rather than rendering an empty half-page beneath it.
+  $("report-blurb").hidden = v2;
+  $("report-lead").hidden = v2;
+  // v2 states its provenance at the foot, beside the download of the data the
+  // line describes; v1 keeps it under the title.
+  $("report-meta").hidden = v2;
+  $("report-meta2").hidden = !v2;
+  $("report-head2").hidden = !v2;
+  for (const id of ["report-jump", "report-now", "report-overtime", "report-allsources"]) $(id).hidden = !v2;
+  if (v2) {
+    for (const id of ["report-brief", "report-figures", "report-positions", "report-moments", "report-sections"]) {
+      $(id).replaceChildren();
+    }
+    renderReportV2(report, slug);
+  } else {
+    renderReportBrief(report);
+  }
+  renderStats($("report-stats"), report.stats, report.title,
+    { speakers: !(v2 && (report.voices?.now?.length || report.voices?.all?.length)) });
+  if (report.stats) {
+    if (v2) {
+      // No figures rail on a v2 page: the money is its own closing part and
+      // the corpus totals lead it under a line of their own, because a speech
+      // count is not money and the part heading should not claim it is.
+      $("report-stats").insertAdjacentHTML("afterbegin",
+        `<h3 class="report-part-title" id="report-money-head" tabindex="-1">The money beside the words</h3>
+         <h4 class="report-sub-title report-corpus-title">How much record this reads</h4>
+         <div class="tiles report-corpus-tiles">${corpusTotalsHTML(report.stats)}</div>`);
+    } else {
       const figures = $("report-figures");
       const grid = figures.querySelector(".tiles") || figures.appendChild(document.createElement("div"));
       grid.classList.add("tiles");
-      grid.insertAdjacentHTML("beforeend", `
-        ${tile((st.speech_count ?? 0).toLocaleString(), "speeches on the record")}
-        ${tile((st.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
-        ${don ? tile(fmtMoney(don.total ?? 0), `donations: ${fmtIndustries(don.industries || [])}`) : ""}`);
+      grid.insertAdjacentHTML("beforeend", corpusTotalsHTML(report.stats));
     }
   }
   $("report-download").innerHTML =
     `<a class="action-btn report-download-btn" href="/reports/${esc(slug)}.json">${iconSvg("download")}<span>Download the data behind this report</span></a>`;
 
   const sectionsEl = $("report-sections");
-  if (!report.sections?.length) {
+  if (v2) {
+    // v2 essays live inside their own parts, already numbered report-s-<n>.
+  } else if (!report.sections?.length) {
     sectionsEl.innerHTML =
       `<p class="status">The cited analysis for this investigation is generated from the full
       speech corpus, which is currently indexing. It will appear here automatically.</p>`;
