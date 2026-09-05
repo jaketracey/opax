@@ -20,17 +20,29 @@ not touched.
 | voices (now / all time) | 8 / 8 | 8 / 8 |
 | refusals | 0 | 0 |
 | cited sources per `now` section | 3 to 11 | 4 to 11 |
+| sources carrying a passage | 206 / 206 | 214 / 214 |
+| sources carrying an inline marker | 73 / 206 | 76 / 214 |
+| answer/lede blocks with at least one marker | 12 / 12 | 12 / 12 |
 
 Every v1 field survives in both files, so the live report page keeps working
 until the v2 page lands: `brief`, the three unfiltered `sections`, `stats` and
 `key_moments` are all still there and were not re-asked.
 
+Every source in every `now` section, era and the lede — 420 sources across the
+two reports — now carries a `passage` of up to 400 characters, and every one
+of the 12 answer blocks per report (8 sections, 3 eras, 1 lede) has at least
+one source with an `answer_ranges` marker into its own text. See **Markers and
+passages, added this pass** below for how, and for the one finding worth
+flagging: the platform returned zero usable citation ranges on any of these
+asks, so every marker in both files came from the free, verbatim fallback
+(`cite_method: "verbatim"`), never from `"platform"`.
+
 ## Paid calls
 
-This session used **27** asks against the 150 the task allows, on top of
+This session used **28** asks against the 150 the task allows, on top of
 whatever the interrupted session had already spent (its own state files record
 retrieval, not asks; the resumption note's rule of thumb was that two thirds of
-the budget was gone, which puts the total near 127).
+the budget was gone, which puts the total near 128 now).
 
 | run | calls |
 | --- | --- |
@@ -41,9 +53,12 @@ the budget was gone, which puts the total near 127).
 | `housing --only now --redo 3` | 1 |
 | `housing --only lede` | 1 |
 | `housing --only stats` × 3, ending with the merged pool | 5 |
+| `housing --only lede`, after the source-attribution and quotation checks | 1 |
+| markers and passages (`--only cites`, both reports, several runs) | 0 |
 | pytest, validation, every catalog page and passage read | 0 |
 
-A whole report is 12 to 14 calls. A single bad section is now 1.
+A whole report is 12 to 14 calls. A single bad section is now 1. Markers and
+passages never cost a call at all, however many times they are regenerated.
 
 ## What changed in the generator, and why
 
@@ -74,6 +89,24 @@ A whole report is 12 to 14 calls. A single bad section is now 1.
    unless the passage reaches for a national frame. Two housing tiles said
    "Australia" for Victorian social-housing figures.
 8. **`--redo N`.** Re-asks named `now` sections in place, one call each.
+9. **Markers and passages, added this pass.** The page needs an inline
+   citation marker on every answer and a quotable passage on every source —
+   the same two things the live ask page shows beside an answer. When the
+   platform hands back citation ranges those are used as-is
+   (`cite_method: "platform"`); when it does not — which turned out to be
+   every ask in this run — `anchor_block()` earns the marker from the words:
+   a quotation of three or more words verbatim in exactly one retrieved
+   record, or failing that a run of seven or more shared words, marks that
+   record and no other (`cite_method: "verbatim"`). A quotation two records
+   share, or a paraphrase with no long run in any one of them, earns no
+   marker — ambiguous evidence is not evidence, and it is better for a
+   sentence to carry no superscript than a wrong one. `attach_passages()`
+   then gives every source, cited or not, a passage of up to 400 characters
+   built around the words that earned it the marker. All of it is free —
+   retrieval and record reads, never an ask — and reruns as `--only cites`
+   over a report generated at any point in the past. `validate_reports.py`
+   now fails a report where any source has no passage, any citation range
+   is out of bounds, or any answer block has no marker on any source at all.
 
 ## What to check by eye
 
@@ -113,13 +146,32 @@ A whole report is 12 to 14 calls. A single bad section is now 1.
 - **Key figures are capped at six and both reports kept five.** The dropped
   list is in `key_stats_dropped` with a reason each, which is the fastest way
   to see whether the check is being too strict for a given topic.
+- **Every marker in both files is `verbatim`, none is `platform`.** The
+  platform's `ask` calls in this run never returned usable citation ranges, so
+  the free word-matching pass is currently carrying the entire load rather
+  than confirming the platform's own citations. That is worth watching on the
+  other four reports: if the platform starts returning ranges, `cite_method`
+  will start reading `platform` instead, which is a strictly stronger signal
+  and no change is needed to use it — `build_section()` already prefers it.
+- **A little under a third of retrieved sources earn a marker** (73/206 and
+  76/214) — the rest were retrieved and are shown as further reading, but the
+  answer's own prose does not lean on them verbatim or closely enough to
+  attribute a sentence to them. That is expected: an eight-section answer with
+  twenty retrieved sources cites a handful and skims the rest for context.
+  Read a section's marked spans against its `cited` flag; a source that is
+  `cited` but never marked is a source the model drew on without quoting or
+  closely paraphrasing it, which the page should still list but cannot
+  superscript.
 
 ## Running the other four
 
 The generator is ready for `gambling`, `climate`, `immigration` and `media`.
 Each is 12 to 14 calls; discovery re-enumerates the topic from the catalog on
-the first run, which is free and takes a minute or two. Validate with
-`python3 scripts/validate_reports.py <slug>` — it fails a report that refuses a
-question, opens with a context preamble, ships a figure without a denominator
-or a window, overlaps its era with the `now` window, or cites a slug the box no
-longer holds.
+the first run, which is free and takes a minute or two. Markers and passages
+run automatically at the end of a full generation — no extra call, no extra
+step. Validate with `python3 scripts/validate_reports.py <slug>` — it fails a
+report that refuses a question, opens with a context preamble, ships a figure
+without a denominator or a window, overlaps its era with the `now` window,
+cites a slug the box no longer holds, has a source with no passage or an
+out-of-bounds citation range, or has an answer block where no source carries
+a marker at all.

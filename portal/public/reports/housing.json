@@ -3,7 +3,7 @@
  "title": "Housing",
  "blurb": "Decades of affordability promises, negative gearing fights and supply debates.",
  "version": 2,
- "generated_at": "2026-09-05T00:26:11+00:00",
+ "generated_at": "2026-09-05T00:54:04+00:00",
  "corpus_resources": 609635,
  "stats": {
   "speech_count": 210854,
@@ -548,7 +548,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that Australian politics is dominated by negativity and inflexible ideology, criticising both major parties for abandoning evidence-based policy. They proposed a nuanced housing affordability approach involving investor-driven inflation controls, superannuation use tied to home ownership, and strategic decentralisation, while opposing scrapping negative gearing."
     },
     {
      "slug": "speech-349055",
@@ -556,7 +557,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued the Treasury Laws Amendment (Foreign Resident Capital Gains Withholding Payments) Bill 2017 is an integrity measure, not a housing affordability measure, and criticised the government for failing to deliver meaningful housing policies, noting home ownership rates for 25-34 year olds fell from 60% to under 40% in 30 years, median house prices in Melbourne rose 90% in 10 years,\u2026"
     },
     {
      "slug": "speech-810307",
@@ -564,7 +566,8 @@
      "speaker": null,
      "party": "Greens",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The minister reported that no federal data is collected on student housing, with 34 universities providing 42,620 beds, and that 2,681 NRAS incentives had been offered for student housing with 467 dwellings delivered. For the Building Better Regional Cities program, the minister stated that final guidelines are being developed, affordable home ownership and rental are included but not social\u2026"
     },
     {
      "slug": "speech-342991",
@@ -572,7 +575,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that the government offers no real solutions to housing affordability, mocking advice from Coalition MPs including get a good job, get rich parents, move to the bush, and get a highly paid job. They criticised the government for rejecting Labor's proposals to change negative gearing and capital gains tax, and accused it of failing renters, older women, homeless people, and\u2026"
     },
     {
      "slug": "speech-340553",
@@ -580,7 +584,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that the government's manipulation and delay of the House Economics Committee's housing affordability inquiry was shameful and negligent, and that its failure to reform negative gearing and capital gains tax concessions has contributed to a decline in home ownership, with landlord tax losses growing from $700 million profit in 1998-99 to $7.8 billion loss in 2010-11."
     },
     {
      "slug": "speech-788159",
@@ -588,7 +593,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Indeed in the lead up to last years election the now Government made addressing the Housing crisis in this country a priority, convening a housing affordability summit and committing to introducing a comprehensive package of initiatives, such as the first home saver initiative, aimed directly at making home ownership in this country more accessible and affordable."
     },
     {
      "slug": "speech-360912",
@@ -596,7 +602,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued the government's housing affordability bill is insufficient, calling for action on negative gearing and capital gains tax, and cited declining home ownership rates\u2014a 60-year low\u2014and rising investor activity as evidence of the crisis."
     },
     {
      "slug": "speech-773946",
@@ -604,7 +611,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "5:42 pm We are currently debating a motion moved by my frontbench Senate colleagueSenator Carrconcerning the issues relating to housing affordability. Homeownership is very important\u2014and rightly so\u2014to all Australians. It is central to the Australian ethos. Central to homeownership is the cost of borrowing money to pay for your home: interest rates. It is in this area that we have seen some very\u2026"
     },
     {
      "slug": "speech-838995",
@@ -612,7 +620,8 @@
      "speaker": null,
      "party": null,
      "state": "qld",
-     "date": null
+     "date": null,
+     "passage": "Fair call, Mr Deputy Speaker. In my electorate of Southern Downs a shortage of housing has great impacts, not just the moral and social impacts. All of us have had somebody come to us and say, 'Hey, I've been renting a house for 15 years and it has been sold'\u2014or the owner wants to redevelop or subdivide or something like that\u2014'and I have nowhere to go. I can't afford anywhere else.' We have all,\u2026"
     },
     {
      "slug": "speech-339312",
@@ -620,7 +629,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Argued that parliamentary inquiries are essential for evidence-based policy development, announced the restart of the home ownership inquiry and the tabling of the transport connectivity inquiry report, which recommends using value capture to fund high-speed rail and address housing affordability."
     },
     {
      "slug": "speech-776676",
@@ -628,7 +638,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "As far as affordability goes, Australia has a very high level of home ownership. Home ownership in Australia is 70 per cent. In the G7, only Italy has a higher rate. The most important ways to improve housing affordability are to keep unemployment low, keep real wages rising, keep interest rates low, maintain a competitive and efficient housing construction sector, ensure adequate land release\u2026"
     },
     {
      "slug": "speech-312774",
@@ -636,7 +647,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that government interference limiting land supply has driven up housing prices and reduced home ownership from 74% in 1981 to 64% today, costing 900,000 Australians the chance to own a home. They called for releasing more land, moving government departments to regional centres, reducing stamp duty, and increasing housing supply to improve affordability and address homelessness."
     },
     {
      "slug": "speech-778659",
@@ -644,7 +656,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "As theProductivity Commissionin their 2004 report into first home ownership identified: The debate around housing affordability needs to be refocused to where action is urgently needed\u2014that is in the area of property taxation, in particular stamp duty, and land supply ..."
     },
     {
      "slug": "speech-360751",
@@ -652,7 +665,14 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "answer_ranges": [
+      [
+       594,
+       861
+      ]
+     ],
+     "passage": "The speaker argued the bill fails to address the housing crisis, noting the median house price in Wills is $1 million, home ownership among 25\u201334 year olds fell from 60% to 48%, and public housing stock dropped from 6% to under 3% over 25 years. They supported Labor's proposed reforms to negative gearing and capital gains tax concessions as necessary for a credible national housing affordability\u2026"
     },
     {
      "slug": "speech-349058",
@@ -660,7 +680,14 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "answer_ranges": [
+      [
+       861,
+       1039
+      ]
+     ],
+     "passage": "The speaker argued that the government's housing affordability measures, including increasing the foreign resident capital gains withholding rate from 10% to 12.5% and lowering the threshold from $2 million to $750,000, are inadequate, noting that home ownership rates have fallen from 68\u201370% (1971\u20132001) to below 50% in 2017 and that first-home buyers in Sydney need 40 years of savings for a\u2026"
     },
     {
      "slug": "speech-400267",
@@ -668,7 +695,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker opposed the motion against compulsory superannuation, arguing it is a vital reform that benefits workers and that reports confirm the system is effective and industry funds outperform retail funds. They rejected the trade-off between super and home ownership, citing housing affordability issues like casualisation and low wages, and proposed building social housing and expanding first\u2026"
     },
     {
      "slug": "speech-352779",
@@ -676,7 +704,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "I would like to talk about the role of inquiries in this place and the role of political debate. When we commit in standing committees-bipartisan committees-to undertake an inquiry, we do so because we believe there is an issue that needs to be investigated. As chair of the Economics Committee, I shared a concern with many, particularly young people, that housing affordability was a thing of the\u2026"
     },
     {
      "slug": "speech-83980",
@@ -684,7 +713,8 @@
      "speaker": null,
      "party": "Nationals",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The first point I would make about what the Prime Minister put on the table last week was that he, in the interests of all Australians wanting to own their own home, has been prepared to think laterally and look for new solutions. He is not imposing any ideas, he is not outlining something that is going to be taken forward as policy; he is talking about a concept which can be worked up by the\u2026"
     },
     {
      "slug": "speech-1196718",
@@ -692,7 +722,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Let's look at what industry voices are saying. According to theHIA, since 2000, the insurance requirement for first home buyers with deposits under 20 per cent has added heavy costs, delayed ownership, driven up rents and worsened housing affordability. This policy works to address these things. HIAChief Economist, Tim Reardon, has stated that the government should be commended for 'taking a view\u2026"
     },
     {
      "slug": "speech-321051",
@@ -700,9 +731,11 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that the Reserve Bank should expand its inflation-targeting duty to include maintaining housing affordability. They proposed reviewing negative gearing, using superannuation for homebuyers, and introducing owner-occupier deductibility and a home hedge fund, based on their parliamentary inquiry into home ownership."
     }
-   ]
+   ],
+   "cite_method": "verbatim"
   },
   {
    "question": "What positions have been taken on negative gearing and property tax concessions?",
@@ -714,7 +747,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "1:43 pm Right now, in my electorate of Aston and across the country, first home buyers are being locked out of the housing market by property investors that benefit from a tax system that no longer serves the needs of a new generation of Australians. This is why the Albanese Labor government is taking responsible action to change that. Labor is delivering sensible reforms to negative gearing and\u2026"
     },
     {
      "slug": "speech-1195757",
@@ -722,7 +756,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "There are many options for reform that are not necessarily political suicide. On capital gains tax, we could reduce the rate of the capital gains tax concession. We could apply the concessions only to new builds, or just apartments. We could limit the CGT concession to one property. On negative gearing: we could remove negative gearing from second, or third, or fourth investment properties. We\u2026"
     },
     {
      "slug": "speech-1201659",
@@ -730,7 +765,8 @@
      "speaker": null,
      "party": "Independent",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "We should reform our generous housing tax concessions. The capital gains tax discount and negative gearing, as currently designed, are worsening intergenerational inequity and doing nothing to solve the housing crisis. These concessions overwhelmingly benefit older and wealthier Australians and distort investment away from productive activity and towards property speculation. We should look\u2026"
     },
     {
      "slug": "speech-349056",
@@ -738,7 +774,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that negative gearing is a regressive tax concession and that Labor's policy would only allow it on newly built properties, with no changes for existing negatively geared properties, no rent increases, and a potential two per cent drop in property prices. They criticised the government for prioritising tax concessions for multiple property investors over first-home buyers,\u2026"
     },
     {
      "slug": "division-federal-senate-4106",
@@ -746,7 +783,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The Senate passed a motion introduced by Greens Senator Scott Ludlam, noting that Assistant Treasurer Kelly O'Dwyer's assertions about reforming negative gearing and capital gains tax concessions were incorrect; the motion succeeded 32 votes to 27."
     },
     {
      "slug": "speech-1198908",
@@ -754,7 +792,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "So when will the government listen? When will they finally tackle the unfair capital gains discount and negative gearing tax breaks? The Labor Party used to want to address these unfair, unsustainable and distorting tax breaks for wealthy property investors. TreasurerJim Chalmersonce said that reforming negative gearing and capital gains tax discount was the 'most meaningful lever' that\u2026"
     },
     {
      "slug": "speech-330663",
@@ -762,7 +801,14 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "answer_ranges": [
+      [
+       586,
+       895
+      ]
+     ],
+     "passage": "\u2026So-called negative gearing is no more than income tax 101. It enables a taxpayer to deduct the interest cost of borrowings incurred for the purpose of acquiring an income-producing asset. They bring the income to account and they also bring the cost of the borrowings to account. If that results in a loss, then that can be called negative gearing. This is an absolutely standard business practice\u2026"
     },
     {
      "slug": "speech-1202989",
@@ -770,7 +816,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "He didn't stop at property taxes. Convinced that trusts are only used by billionaires, they planned wholesale changes that will cripple nearly 300,000 small businesses. These are battlers; they're not billionaires. The Prime Minister and the Treasurer have attacked negative gearing and have gutted capital gains tax concessions\u2014all while doing nothing about bracket creep."
     },
     {
      "slug": "speech-340546",
@@ -778,7 +825,8 @@
      "speaker": null,
      "party": "Greens",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that tax concessions for property investors, including negative gearing and the capital gains tax discount, have made housing unaffordable for young people, with house prices rising from six times a young person's income in 1990 to 12 times in 2013 and young households' wealth share falling from 10% in 1994 to 5% in 2014. The government's economic inquiry made no\u2026"
     },
     {
      "slug": "speech-329074",
@@ -786,7 +834,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that Malcolm Turnbull has failed to deliver the leadership he promised, leaving the government without a clear vision or economic plan, as shown by contradictory positions on capital gains tax discounts and negative gearing."
     },
     {
      "slug": "speech-328591",
@@ -794,7 +843,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The Murray inquiry found that reducing negative gearing and capital gains tax concessions would lead to a more efficient allocation of funding in the economy."
     },
     {
      "slug": "speech-1203422",
@@ -802,7 +852,8 @@
      "speaker": null,
      "party": "LNP",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "This bill starts to address that. It reforms negative gearing so that, from 1 July 2027, negative gearing for new residential property investment is focused on new builds. If tax concessions are going to support property investment, they should help add to the housing supply in this nation. They should help build more homes. They should not simply encourage investors to compete with first home\u2026"
     },
     {
      "slug": "speech-355282",
@@ -810,7 +861,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker supported the Treasury Laws Amendment (Housing Tax Integrity) Bill 2017, arguing it improves housing affordability through three targeted reforms: removing travel expense deductions for investors (saving $540 million), limiting depreciation claims to original purchasers, and imposing a vacancy charge on foreign-owned empty properties. He criticised Labor's proposed removal of negative\u2026"
     },
     {
      "slug": "speech-348561",
@@ -818,7 +870,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "More than 50% of negative gearing tax concessions go to the top 20% of income earners, mainly anaesthetists and surgeons, so Labor proposes restricting negative gearing to new investment properties and cutting the capital gains tax discount by 50% to help first home buyers, and asks why the opposition will not adopt this approach."
     },
     {
      "slug": "speech-372904",
@@ -826,7 +879,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The government was accused of refusing to act on unfair tax concessions that benefit wealthy property investors over young homebuyers, while Labor announced a seven-point housing plan including negative gearing and capital gains tax reform, a uniform vacant property tax, and an $88 million Safe Housing Fund for women and children escaping domestic violence. The speaker also criticised the\u2026"
     },
     {
      "slug": "speech-336083",
@@ -834,7 +888,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that Prime Minister Turnbull's promise of economic leadership has collapsed, citing an unpopular $50 billion company tax cut, 50,000 fewer full-time jobs, record underemployment, and distortionary negative gearing and capital gains concessions, while Labor advocates for inclusive growth through infrastructure and education investment."
     },
     {
      "slug": "speech-328663",
@@ -842,7 +897,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Negative gearing is standard income tax procedure, and ten times more nurses, teachers and emergency service workers claim net interest losses on property than surgeons, anaesthetists and finance managers."
     },
     {
      "slug": "speech-830156",
@@ -850,7 +906,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "I resisted talking about negative gearing and the member opposite! But Senator Kovacic said this: We should not be afraid to consider tax changes, whether they be capping the number of properties that can be negatively geared \u2026 That was in her first speech. You know, that's where you go along and you think, 'What do you really believe in?' There it is, just there, from September 2023. And then\u2026"
     },
     {
      "slug": "speech-329632",
@@ -858,9 +915,17 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "answer_ranges": [
+      [
+       895,
+       1127
+      ]
+     ],
+     "passage": "\u2026But let me talk about the different positions on that side of the House because, 12 months ago, Jon Faine asked the Leader of the Opposition: 'Yes or no? Would you, in some way, wind back negative gearing?' And the Leader of the Opposition said, 'That policy is not on our radar.' Then, nine months ago, when asked the same question, he said, 'Negative gearing changes are not the focus of the Labor\u2026"
     }
-   ]
+   ],
+   "cite_method": "verbatim"
   },
   {
    "question": "What has parliament said about social and public housing supply?",
@@ -872,7 +937,8 @@
      "speaker": null,
      "party": null,
      "state": "vic",
-     "date": null
+     "date": null,
+     "passage": "The speaker urged the Minister for Housing to urgently increase public housing supply in the Barwon region, citing 7,101 households on the priority waitlist and noting that only 72 of 400 planned dwellings at the Commonwealth Games village site are for social and affordable housing. They argued that the market has failed and that government intervention is needed, pointing to a decline in public\u2026"
     },
     {
      "slug": "speech-1186800",
@@ -880,7 +946,8 @@
      "speaker": null,
      "party": null,
      "state": "nsw",
-     "date": null
+     "date": null,
+     "passage": "The Hon. ROD ROBERTS ( 17:16 :30 ): I take note of the answers provided to written questions Nos 9355 and 9356 by the Minister for Planning, and Minister for Homes, as well as the answer provided to question on notice No. 9360 by the Minister for Families and Communities. Recently I asked the Minister for Family and Communities how many people are on the waiting list for public housing. The\u2026"
     },
     {
      "slug": "speech-978446",
@@ -888,7 +955,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "[Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Housing Australia] I think it's a fair statement to say that there's a lot of social housing stock that needs repair and that the government through this program has created additional supply of public and social housing that is very important for the system."
     },
     {
      "slug": "speech-360728",
@@ -896,7 +964,14 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "answer_ranges": [
+      [
+       1017,
+       1208
+      ]
+     ],
+     "passage": "The National Housing Finance and Investment Corporation Bill 2018 establishes an independent corporate entity to administer a $1 billion National Housing Infrastructure Facility and an affordable housing bond aggregator, aiming to boost housing supply, improve affordability for first home buyers and low-to-middle-income Australians, and enhance social housing outcomes. The speaker noted that\u2026"
     },
     {
      "slug": "speech-423666",
@@ -904,7 +979,8 @@
      "speaker": null,
      "party": null,
      "state": "nsw",
-     "date": null
+     "date": null,
+     "passage": "Sonia Hornery argued that social housing demand far exceeds supply, citing a Compass Housing report showing 48,000 households on the waiting list in New South Wales and 175,904 eligible. She criticised the government's Future Directions for Social Housing policy for only proposing enough dwellings for less than half the current waiting list over the next decade, and called for prioritising public\u2026"
     },
     {
      "slug": "speech-1153528",
@@ -912,7 +988,14 @@
      "speaker": null,
      "party": null,
      "state": "vic",
-     "date": null
+     "date": null,
+     "answer_ranges": [
+      [
+       2414,
+       2638
+      ]
+     ],
+     "passage": "The speaker supported a documents motion calling for release of information on the government's planning reforms, arguing the public and Parliament lack proper evidence that the changes will improve housing affordability or supply. They noted the New South Wales parliamentary research service found no clear local evidence for the government's claims."
     },
     {
      "slug": "speech-407114",
@@ -920,7 +1003,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker supported the Medicare levy threshold changes and the Family Home Guarantee measure in the Treasury Laws Amendment Bill, but argued the government's housing policy is too small\u2014helping only 10,000 single-parent families\u2014and fails to address structural issues like affordable housing supply, low wages, and the need for federal investment in public and social housing. The speaker also\u2026"
     },
     {
      "slug": "speech-422783",
@@ -928,7 +1012,8 @@
      "speaker": null,
      "party": "Greens",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "2:13 pm I thank the member for his question. Indeed, fixing the affordable housing shortage is a big challenge for Australia. We have a plan that is focused on supply, because that is the key, whether you want to be a homeowner, or you are a renter or someone in social and affordable housing. That's why our $32 billion Homes for Australia plan is worthy of the support of everyone in this\u2026"
     },
     {
      "slug": "speech-1198156",
@@ -936,7 +1021,8 @@
      "speaker": null,
      "party": "Independent",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "And I will just say, to the parliament, all of us represent local electorates where there's housing need that's particularly acute. We've all got people in our communities that need and deserve extra support from our government on housing. After a nine-year period where the coalition built 373 social and affordable homes, we're building 55,000 over five years. Whatever you might like to say about\u2026"
     },
     {
      "slug": "speech-829577",
@@ -944,7 +1030,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Senator Hanson, Minister Wong is being relevant to your question. Minister, please continue. My message is, yes, we do need to increase the supply of housing. This government went to the election with a very clear policy, a set of policies, around increasing the supply of housing\u2014because we on this side of the chamber care about social housing, we care about improving access to decent housing and\u2026"
     },
     {
      "slug": "speech-1197092",
@@ -952,7 +1039,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Our government has a $43 billion agenda which is targeted at addressing some of these issues. Under this Prime Minister and this government, we're building more homes, getting renters a better deal and getting more Australians into homeownership. A really important part of the work we're doing is our efforts to build 55,000 desperately needed social and affordable homes right around our country.\u2026"
     },
     {
      "slug": "speech-790911",
@@ -960,7 +1048,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "SOCIAL HOUSING This bill also contains vital measures to tackle the crisis in affordable housing inherited by this Government after years of under-investment. Improving the supply of affordable housing is a key part of achieving the Government's goal of halving the level of homelessness by 2020."
     },
     {
      "slug": "speech-905087",
@@ -968,7 +1057,14 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "answer_ranges": [
+      [
+       801,
+       1017
+      ]
+     ],
+     "passage": "[Economics Legislation Committee - Economics Legislation Committee 12/02/2026 Estimates TREASURY PORTFOLIO Housing Australia] I want to go to the question of social housing, which is currently at record lows, and the waitlist for public housing is at record highs. Around 190,000 households are currently on the public housing waitlist. Many are in very severe need. The government's plan is to\u2026"
     },
     {
      "slug": "speech-1205782",
@@ -976,7 +1072,14 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "answer_ranges": [
+      [
+       290,
+       548
+      ]
+     ],
+     "passage": "The Labor Government has delivered a trifecta of failure on housing: fewer homes, higher rents, and confidence in the market smashed. Labor has committed to over $80 billion in housing spending, but has built fewer houses than under the Coalition. Labor has also put in place $77 billion in higher taxes in their 2026-27 Budget, which, by design, delivers 35,000 fewer houses."
     },
     {
      "slug": "speech-867659",
@@ -984,7 +1087,8 @@
      "speaker": null,
      "party": null,
      "state": "nsw",
-     "date": null
+     "date": null,
+     "passage": "The Housing Legislation Amendment Bill 2016 was moved and supported, with the government arguing it will increase social and affordable housing supply through initiatives such as selling high-value public housing properties (e.g., Millers Point) to fund new construction and implementing maintenance contracts requiring tenant employment and training. Funding for social housing maintenance was\u2026"
     },
     {
      "slug": "speech-809322",
@@ -992,7 +1096,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "My question is to the Minister for Social Housing and Homelessness, Senator Arbib. Can the minister advise the Senate on what the government is doing to boost the supply of social housing in our country? How is this investment helping to turn around the lives of some of the most vulnerable people in our society?"
     },
     {
      "slug": "speech-372109",
@@ -1000,7 +1105,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that the government's Social Services Legislation Amendment (Housing Affordability) Bill 2017 is a reactionary and inadequate response to the homelessness crisis affecting nearly 120,000 Australians, including a growing number of older people. They called for redirecting funding from tax concessions like negative gearing and capital gains discounts\u2014costing billions annually\u2014to\u2026"
     },
     {
      "slug": "speech-908143",
@@ -1008,7 +1114,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "[Community Affairs Legislation Committee - Community Affairs Legislation Committee 12/02/2026 Estimates SOCIAL SERVICES PORTFOLIO Department of Social Services] I don't think I can add to what I've said before: ultimately, supply\u2014notwithstanding that that might take some time\u2014is the key driver of keeping down rental stress and improving housing affordability."
     },
     {
      "slug": "speech-323828",
@@ -1016,9 +1123,11 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that housing affordability requires addressing supply through planning and zoning reforms with states and territories, as well as social housing reforms, and criticised scare campaigns about a 15 per cent figure."
     }
-   ]
+   ],
+   "cite_method": "verbatim"
   }
  ],
  "lede": {
@@ -1030,7 +1139,15 @@
     "speaker": "Andrew Bragg",
     "party": null,
     "state": "federal",
-    "date": "2026-06-22"
+    "date": "2026-06-22",
+    "answer_ranges": [
+     [
+      0,
+      204
+     ]
+    ],
+    "passage": "I actually responded to that in the first answer. As I explained, as a whole we will see an increase in the supply of housing over the next decade if you look at all of the budget measures. What we will see, importantly, in terms of composition is an extra 75,000 first home buyers. So this is a budget which, despiteSenator Bragg's best effort, is a pro-supply budget. This is the budget which\u2026",
+    "cited": true
    },
    {
     "slug": "speech-1301465",
@@ -1038,7 +1155,15 @@
     "speaker": "Kylie Wilkinson",
     "party": null,
     "state": "nsw",
-    "date": "2025-11-13"
+    "date": "2025-11-13",
+    "answer_ranges": [
+     [
+      204,
+      474
+     ]
+    ],
+    "passage": "\u2026I am pleased to report that there has been an almost universally positive response to the passage of the Government's Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025. As with all meaningful reforms, there are some critics, but I am sure they will come around when they see the benefits to communities that the reforms will deliver. The reforms are a significant\u2026",
+    "cited": true
    },
    {
     "slug": "speech-905087",
@@ -1046,9 +1171,18 @@
     "speaker": "Barbara Pocock",
     "party": null,
     "state": "federal",
-    "date": "2026-02-12"
+    "date": "2026-02-12",
+    "answer_ranges": [
+     [
+      474,
+      761
+     ]
+    ],
+    "passage": "[Economics Legislation Committee - Economics Legislation Committee 12/02/2026 Estimates TREASURY PORTFOLIO Housing Australia] I want to go to the question of social housing, which is currently at record lows, and the waitlist for public housing is at record highs. Around 190,000 households are currently on the public housing waitlist. Many are in very severe need.",
+    "cited": true
    }
-  ]
+  ],
+  "cite_method": "verbatim"
  },
  "now": {
   "since": "2024-07-01",
@@ -1146,7 +1280,18 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-02-10",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        156,
+        450
+       ],
+       [
+        2505,
+        2699
+       ]
+      ],
+      "passage": "\u2026deliver more housing supply to Australians. And, when given the chance to support real solutions, they vote against them. The bottom line: action on supply is critical, and more supply means better affordability. That's what we're delivering, and an Albanese Labor government is building Australia's future. That is what we will keep fighting for\u2014more homes more quickly in more parts of the country."
      },
      {
       "slug": "speech-422783",
@@ -1155,7 +1300,14 @@
       "party": "Greens",
       "state": "federal",
       "date": "2025-02-10",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        450,
+        743
+       ]
+      ],
+      "passage": "\u2026We have a plan that is focused on supply, because that is the key, whether you want to be a homeowner, or you are a renter or someone in social and affordable housing. That's why our $32 billion Homes for Australia plan is worthy of the support of everyone in this parliament\u2014I note that the crossbenchers eventually, reluctantly, got there. They crab-walked their way to vote for some of the plans\u2026"
      },
      {
       "slug": "speech-1196161",
@@ -1164,7 +1316,14 @@
       "party": null,
       "state": "federal",
       "date": "2025-08-25",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1046,
+        1346
+       ]
+      ],
+      "passage": "\u2026But the proposition that is facing the Australian people is really one of a lack of housing supply. Until the government is able to better understand what is holding back the supply, by talking to builders, developers and tradespeople, then they will never solve this crisis. Unfortunately what we now see are more bandaids, more press releases and more puff pieces, and, frankly, an incoherence.\u2026"
      },
      {
       "slug": "speech-1198427",
@@ -1173,7 +1332,14 @@
       "party": null,
       "state": "federal",
       "date": "2025-11-05",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1852,
+        2032
+       ]
+      ],
+      "passage": "\u2026On housing supply, quite clearly the coalition were in government for 10 years, and, for those 10 years, they neglected housing. You can't turn around the supply of housing in a year or even one term. You're talking about significant structural change to get the housing supply that we need in this country to ensure that people have choices, that we protect renters, that we provide opportunities\u2026"
      },
      {
       "slug": "speech-956891",
@@ -1182,7 +1348,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-12-02",
-      "cited": true
+      "cited": true,
+      "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 02/12/2025 Estimates HOME AFFAIRS PORTFOLIO Department of Home Affairs] Secretary, I'll ask you a question and let you finish this up. They run a model in relation to housing supply; it's in chapter 5 of their State of the housing system 2025 report. Basically, they're saying that if\u2026"
      },
      {
       "slug": "speech-978784",
@@ -1191,7 +1358,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-12-04",
-      "cited": true
+      "cited": true,
+      "passage": "[Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Housing Australia] The National Housing Supply and Affordability Council has public information about that matter. The most recent public report was the state of the system report that was published, from memory, in May this year."
      },
      {
       "slug": "speech-428848",
@@ -1200,7 +1368,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-02-10",
-      "cited": true
+      "cited": true,
+      "passage": "[Finance and Public Administration Legislation Committee - Finance and Public Administration Legislation Committee 10/02/2026 Estimates PRIME MINISTER AND CABINET PORTFOLIO Indigenous Business Australia] Good morning. Thanks for joining us today. This is further to some of the conversation we've already had about housing. Of course, one of the biggest challenges for housing at the moment is\u2026"
      },
      {
       "slug": "speech-1203672",
@@ -1209,7 +1378,14 @@
       "party": null,
       "state": "federal",
       "date": "2026-06-22",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        743,
+        990
+       ]
+      ],
+      "passage": "\u2026So this is a budget which, despiteSenator Bragg's best effort, is a pro-supply budget. This is the budget which ensures that negative gearing will still be available for new builds, and new builds will have a choice ofCPIindexation or 50 per cent discount for capital gains. What I would say to you, Senator Bragg, is that we know housing affordability is a problem that is decades in the making,\u2026"
      },
      {
       "slug": "speech-840953",
@@ -1218,7 +1394,8 @@
       "party": null,
       "state": "qld",
       "date": "2024-09-10",
-      "cited": false
+      "cited": false,
+      "passage": "We will always answer questions because we on this side of the House are very proud of the delivery of our very ambitious housing plan. What I thought was interesting were some comments made recently by our political opponents. The member for Bulimba\u2014sorry, Broadwater\u2014 said on the same day that they want to see more housing supply\u2014"
      },
      {
       "slug": "speech-422850",
@@ -1227,7 +1404,8 @@
       "party": "Independent",
       "state": "federal",
       "date": "2025-02-10",
-      "cited": false
+      "cited": false,
+      "passage": "In less than three months, Australia will elect its 48th parliament. These last three years have seen the worst inflation in more than three decades. Grocery prices are up 30 per cent on 2020 levels. Housing is less affordable than ever before. Rentals are in critically short supply. Two in three Australian households have had to cut back on cooling or heating their homes. One in three households\u2026"
      },
      {
       "slug": "speech-1195171",
@@ -1236,7 +1414,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-07-23",
-      "cited": false
+      "cited": false,
+      "passage": "Housing is going to be an absolutely foremost priority of our government in this second term, and indeed it must be for the whole parliament. Housing is in crisis in our country. Every single one of us is duty-bound to spend our time and energy trying to find real solutions to the problems that we face. My door is open to everyone in this parliament, from every party, from every part of our\u2026"
      },
      {
       "slug": "speech-1195332",
@@ -1245,7 +1424,14 @@
       "party": null,
       "state": "federal",
       "date": "2025-07-24",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1493,
+        1786
+       ]
+      ],
+      "passage": "\u2026But they need to do more than just build 1.2 million homes by 2029\u2014a program that we know from Treasury is already very unlikely. In fact, from their assessment, it won't be met. Supply is part of the answer, but ignoring the question of demand is a red flag, and if you think we can fix our massive housing crisis with tweaks to building regulation and rolling back housing regulation and deliver\u2026"
      },
      {
       "slug": "speech-1196844",
@@ -1254,7 +1440,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-09-01",
-      "cited": false
+      "cited": false,
+      "passage": "3:10 pm Does the government concede that, by acquiring and converting at least 340 houses, the HAFF is making Australia's housing crisis worse by competing with Australians? Again, I don't accept the premise of the question that's been put to me. If you are worried,Senator Bragg, about the Commonwealth participating in the market and buying houses because you're saying there's not enough supply,\u2026"
      },
      {
       "slug": "speech-1198066",
@@ -1263,7 +1450,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-11-03",
-      "cited": false
+      "cited": false,
+      "passage": "2:36 pm Can Iwelcome the Speaker to our parliament. We'll try and be polite now, sir.Senator Bragg, we fundamentally don't agree with the proposition you've put forward\u2014that somehow it is a bad thing to assist first home buyers through this deposit scheme. Of course, that is not the only thing the government is doing. The government also recognises the importance of increasing supply, which is\u2026"
      },
      {
       "slug": "speech-908143",
@@ -1272,7 +1460,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-02-12",
-      "cited": false
+      "cited": false,
+      "passage": "[Community Affairs Legislation Committee - Community Affairs Legislation Committee 12/02/2026 Estimates SOCIAL SERVICES PORTFOLIO Department of Social Services] I don't think I can add to what I've said before: ultimately, supply\u2014notwithstanding that that might take some time\u2014is the key driver of keeping down rental stress and improving housing affordability."
      },
      {
       "slug": "speech-1202692",
@@ -1281,7 +1470,14 @@
       "party": null,
       "state": "federal",
       "date": "2026-05-13",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1346,
+        1493
+       ]
+      ],
+      "passage": "The Prime Minister himself, in a moment of honesty, said that supply was the most important way to make housing sustainable. The problem with the tax changes and the broken promise of this government is that its own budget papers, its own word, confirm that these measures will decrease supply. Their own measures will make it harder for young people to get into a home."
      },
      {
       "slug": "speech-1270477",
@@ -1290,7 +1486,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-06-04",
-      "cited": false
+      "cited": false,
+      "passage": "[Economics Legislation Committee - Economics Legislation Committee 04/06/2026 Estimates TREASURY PORTFOLIO Department of the Treasury] Senator Gallagher: My understanding is the answer to that question was, as she said, that a new build would be classified as\u2014I don't have the exact words before me\u2014one that genuinely adds to supply of housing. I'm not sure if she did say that."
      },
      {
       "slug": "speech-1279225",
@@ -1299,7 +1496,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-06-05",
-      "cited": false
+      "cited": false,
+      "passage": "[Economics Legislation Committee - Economics Legislation Committee 05/06/2026 Estimates TREASURY PORTFOLIO Productivity Commission] Senator HUME: I absolutely will. The government said that limiting negative gearing to new builds will support housing supply. I'm wondering if the commission has done any assessment on that claim."
      },
      {
       "slug": "speech-1203883",
@@ -1308,7 +1506,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2026-06-24",
-      "cited": false
+      "cited": false,
+      "passage": "The reforms that are before the parliament with regard to housing are not about the 150 people who sit in this chamber. They are about the 28 million outside of this chamber. I think that the member is trying to make a point\u2014 You said you weren't going to do it!"
      },
      {
       "slug": "speech-1205782",
@@ -1317,10 +1516,12 @@
       "party": null,
       "state": "federal",
       "date": "2026-08-19",
-      "cited": false
+      "cited": false,
+      "passage": "We should talk about what is holding back supply, what Parliament is doing on accountability, and how our housing agenda is shaping up. If taxpayers are expected to underwrite Housing Australia's balance sheet, its loan guarantees, and its multibillion-dollar disbursements, Parliament and the Australian public are entitled to complete financial transparency."
      }
     ],
-    "asked_at": "2026-09-05T00:08:12+00:00"
+    "asked_at": "2026-09-05T00:08:12+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What has parliament said about the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025?",
@@ -1333,7 +1534,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-03-27",
-      "cited": true
+      "cited": true,
+      "passage": "Ms SUE HIGGINSON ( 20:20 :54 ): The Greens do not oppose the Environmental Planning and Assessment Amendment Bill 2025, despite holding reservations about some of the bill's schedules. I acknowledge that the Government has taken our suggestions on board and has ensured that amendments have been agreed to in the other place to address some of those concerns. We are very grateful to the Minister\u2026"
      },
      {
       "slug": "speech-1297581",
@@ -1342,7 +1544,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-09-18",
-      "cited": true
+      "cited": true,
+      "passage": "Ms LIESL TESCH ( Gosford ) ( 11:12 :53 ): My question is addressed to the Minister for Planning and Public Spaces. Will the fine Minister update the House on the community reaction to the Minns Labor Government's planning reforms, including those in The Daily Telegraph? Mr PAUL SCULLY ( Wollongong\u2014Minister for Planning and Public Spaces) (11:13:09): I thank the member for Gosford for her\u2026"
      },
      {
       "slug": "speech-1298429",
@@ -1351,7 +1554,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-15",
-      "cited": true
+      "cited": true,
+      "passage": "Mr CLAYTON BARR ( Cessnock ) ( 16:39 :49 ): I support the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025. It is not every day that I get to stand in this place and participate in a debate about a piece of legislation that might stand the test of time and literally shape the structure and form or our communities, homes, villages and cities for the next 50 or\u2026"
      },
      {
       "slug": "speech-1298460",
@@ -1360,7 +1564,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-15",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        774,
+        988
+       ]
+      ],
+      "passage": "\u2026I am glad that the Opposition and the Government are focused on getting more homes built without adding cost or complexity to a system that is already very costly and complex. However, there is more to be done in regional New South Wales to drive down the costs of homes being built in the bush. As a former mayor of Clarence Valley, I understand the planning difficulties that some regional\u2026"
      },
      {
       "slug": "speech-1298461",
@@ -1369,7 +1580,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-15",
-      "cited": true
+      "cited": true,
+      "passage": "Mr DAVID MEHAN ( The Entrance ) ( 21:08 :56 ): I make a brief contribution to debate on the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025. I begin by noting that no government in this State since the Cahill Labor Government in the post-war period has done more to deliver housing that is affordable and in sufficient quantity to the people of New South Wales to\u2026"
      },
      {
       "slug": "speech-1298440",
@@ -1378,7 +1590,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-15",
-      "cited": true
+      "cited": true,
+      "passage": "Ms MARYANNE STUART ( Heathcote ) ( 17:49 :45 ): I contribute to debate in strong support of the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025. The bill is a major step forward to a simpler and fairer planning system. It is not about weakening environmental protections. The Minns Labor Government is committed to protecting the natural environment and taking\u2026"
      },
      {
       "slug": "speech-1298428",
@@ -1387,7 +1600,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-15",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1027,
+        1223
+       ]
+      ],
+      "passage": "\u2026First, it has the potential to create a significant corruption risk. The bill centralises discretionary powers in ministerially controlled bodies, removing checks and balances. We know that the ICAC has previously warned that discretionary planning powers represent a significant corruption risk. I have written to the ICAC seeking its advice and recommendations on this bill. However, I find it\u2026"
      },
      {
       "slug": "speech-1299659",
@@ -1396,7 +1616,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-21",
-      "cited": true
+      "cited": true,
+      "passage": "Dr AMANDA COHN ( 21:57 :10 ): As The Greens spokesperson for local government, I reiterate our opposition to the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025. I add to the excellent contributions of my colleagues The Greens spokesperson for planning, Ms Sue Higginson, and The Greens spokesperson for mining, Ms Cate Faehrmann. Ms Cate Faehrmann clearly\u2026"
      },
      {
       "slug": "speech-1300451",
@@ -1405,7 +1626,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-23",
-      "cited": true
+      "cited": true,
+      "passage": "Dr AMANDA COHN ( 17:20 :44 ): I continue my earlier comments in opposition to the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025. The DEPUTY PRESIDENT ( The Hon. Taylor Martin ): Order! Members will take their conversations out of the Chamber. Dr AMANDA COHN: The bill plainly is not about housing. It is about centralising power and creating opportunities for\u2026"
      },
      {
       "slug": "speech-1301465",
@@ -1414,7 +1636,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-11-13",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        216,
+        534
+       ]
+      ],
+      "passage": "\u2026I am pleased to report that there has been an almost universally positive response to the passage of the Government's Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025. As with all meaningful reforms, there are some critics, but I am sure they will come around when they see the benefits to communities that the reforms will deliver. The reforms are a significant\u2026"
      },
      {
       "slug": "speech-1287068",
@@ -1423,7 +1652,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-03-25",
-      "cited": false
+      "cited": false,
+      "passage": "Dr MARJORIE O'NEILL ( Coogee ) ( 15:39 :43 ): I speak in support of the Environmental Planning and Assessment Amendment Bill 2025. I also thank the Minister for Planning and Public Spaces for his mighty work on the task of reforming the planning system on behalf of the Government. My contribution to debate focuses on the bill's provisions relating to the strategic planning framework. In essence,\u2026"
      },
      {
       "slug": "speech-1288102",
@@ -1432,7 +1662,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-03-27",
-      "cited": false
+      "cited": false,
+      "passage": "The Hon. PENNY SHARPE (Minister for Climate Change, Minister for Energy, Minister for the Environment, and Minister for Heritage) ( 21:04 :05 ): In reply: I thank members for their contributions to debate on the Environmental Planning and Assessment Amendment Bill 2025: the Hon. Scott Farlow, on behalf of the Opposition; Ms Sue Higginson for The Greens; and the Hon. Mark Latham. It is clear that\u2026"
      },
      {
       "slug": "speech-1288733",
@@ -1441,7 +1672,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-05-06",
-      "cited": false
+      "cited": false,
+      "passage": "The Hon. PENNY SHARPE (Minister for Climate Change, Minister for Energy, Minister for the Environment, and Minister for Heritage) ( 16:39 :30 ): The Government disagrees with the Hon. Mark Latham. The amendment proposes to remove the requirement for public exhibition on zoning applications for State significant developments. The Government does not support the amendment as currently proposed. As\u2026"
      },
      {
       "slug": "speech-1298454",
@@ -1450,7 +1682,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-15",
-      "cited": false
+      "cited": false,
+      "passage": "Mr NATHAN HAGARTY ( Leppington ) ( 19:57 :39 ): I make a short contribution in support of the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025. When the Act was introduced in 1979, it was landmark legislation\u2014a trailblazer. It really was the first of its kind, not just for New South Wales but also for many jurisdictions. It was the first time in this State that\u2026"
      },
      {
       "slug": "speech-1298419",
@@ -1459,7 +1692,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-15",
-      "cited": false
+      "cited": false,
+      "passage": "Mr EDMOND ATALLA ( Mount Druitt ) ( 14:51 :30 ): I speak in support of the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 and acknowledge the Minister is in the Chamber. This landmark reform package will modernise our planning system, making it faster, simpler and more outcome driven. Most importantly, it will boost housing supply, investment and job\u2026"
      },
      {
       "slug": "speech-1299655",
@@ -1468,7 +1702,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-21",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1223,
+        1600
+       ]
+      ],
+      "passage": "\u2026ICAC explicitly stated that it was not asked to comment on the bill itself. While staff from ICAC's corruption prevention division met with departmental officers in 2024 and 2025 to provide general probity advice, it did not review this bill nor provide any formal endorsement of it. ICAC also made it clear that its advice could be released, but the Government has chosen not to do so. This means\u2026"
      },
      {
       "slug": "speech-1299658",
@@ -1477,7 +1718,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-21",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1600,
+        1856
+       ]
+      ],
+      "passage": "\u2026This bill is a mile away from that laissez-faire ideal, but it is a good step in the right direction. The Minister will not use these words, but the bill represents supply\u2011side economics. It is based on the idea that if the Government can step out of the way of the producers, they will produce more things and consumers will ultimately win from lower prices and higher quality. The public is aghast\u2026"
      },
      {
       "slug": "speech-1300452",
@@ -1486,7 +1734,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-23",
-      "cited": false
+      "cited": false,
+      "passage": "The Hon. MARK BANASIAK ( 17:30 :29 ): In principle, the Shooters, Fishers and Farmers Party supports the building of more homes for the people of New South Wales. It is a complex problem, and it is getting worse. The Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025 is complex. It gives sweeping powers to the Minister and the department to fast-track certain\u2026"
      },
      {
       "slug": "speech-1199220",
@@ -1495,7 +1744,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-11-27",
-      "cited": false
+      "cited": false,
+      "passage": "Dr Ken Henry said: The Australian Parliament has done its job and restored national leadership to environmental protection and repair. The Urban Development Institute of Australia said: 'The progress of the Environment Protection Reform Bill 2025 signals that critical and long-awaited reform is finally underway.' We made it very clear we wanted to negotiate across the board. Unfortunately, the\u2026"
      },
      {
       "slug": "speech-1132854",
@@ -1504,10 +1754,12 @@
       "party": null,
       "state": "vic",
       "date": "2025-12-04",
-      "cited": false
+      "cited": false,
+      "passage": "Thank you so very much for the opportunity to rise and make a contribution to the debate on the Planning Amendment (Better Decisions Made Faster) Bill 2025. This bill delivers some of the most significant reforms to the Planning and Environment Act 1987 in decades. It responds directly to the commitments the government made in the housing statement and reflects the scale of change required to\u2026"
      }
     ],
-    "asked_at": "2026-09-05T00:08:32+00:00"
+    "asked_at": "2026-09-05T00:08:32+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What has parliament said about Planning policy and housing?",
@@ -1520,7 +1772,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-02-04",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1024,
+        1315
+       ]
+      ],
+      "passage": "\u2026They have taxed the industry out of existence in Victoria. We know that. Look at Melbourne's skyline. I saw the other day a great big new twin tower residential project for Sydney, which is going up and has been approved there in Sydney's CBD. Meanwhile, the same project which Dick Wynne boasted was going to be the tallest in the Southern Hemisphere appears to be on ice down in Southbank because\u2026"
      },
      {
       "slug": "speech-1197280",
@@ -1529,7 +1788,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-09-04",
-      "cited": true
+      "cited": true,
+      "passage": "One of the great honours of entering this parliament is the ability to engage in and work in a range of important and interesting policy areas with some incredible people in this chamber, in the community, in our local communities and, of course, in the business sector. But there's one policy area which I am particularly keen to ensure that we get right in the next three years, and that is\u2026"
      },
      {
       "slug": "speech-1299259",
@@ -1538,7 +1798,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-21",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        541,
+        722
+       ]
+      ],
+      "passage": "\u2026Those are some of the most significant reforms to the planning system and some of the most significant reforms to housing in New South Wales history, including the biggest rezoning in New South Wales history, the biggest injection of funding for social housing since the Second World War, the biggest injection of funds to Landcom for essential worker housing, the NSW Housing Pattern Book with its\u2026"
      },
      {
       "slug": "speech-1205386",
@@ -1547,7 +1814,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-08-17",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1422,
+        1768
+       ]
+      ],
+      "passage": "We are increasingly seeing this prevail in our debate about housing.The Liberalshave said they want Australians to raid their super to buy a home. Now, I remind the parliament that this is an idea thatSaul Eslakesaid was the worst public policy idea in 60 years in our country. And now we've gotPauline Hansongetting on the same train."
      },
      {
       "slug": "speech-1195158",
@@ -1556,7 +1830,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2025-07-23",
-      "cited": false
+      "cited": false,
+      "passage": "The Property Council of Australia chief executive, Mike Zorbas, said: The five-year national housing target is already a success \u2026 He said, 'There is currently an outbreak of nationally coordinated political leadership and productivity on planning and housing, something we have not seen so far this century and would not have seen without the accord.' The Housing Industry Association said:"
      },
      {
       "slug": "speech-1195803",
@@ -1565,7 +1840,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-07-30",
-      "cited": false
+      "cited": false,
+      "passage": "Then we have a massive growth of regulation, with 5,000 new regulations in the last parliament enacted by this government. Now we see the Minister for Housing,Clare O'Neil, the productivity minister and the Treasurer talk about this thicket of regulations. They talk about a thicket. It's a very interesting word, 'thicket'. That thicket was put in place by this government. In three years, it put\u2026"
      },
      {
       "slug": "speech-1196606",
@@ -1574,7 +1850,8 @@
       "party": "Nationals",
       "state": "federal",
       "date": "2025-08-28",
-      "cited": false
+      "cited": false,
+      "passage": "Out of our summit that we held the week before parliament, we had agreement across sectors and committed actions on starting real planning reforms, building environmental regulations that are fit-for-purpose and freezing the building code. This is something that we're doing because we know that it is really important that we get as many homes built as quickly as possible. The Liberal contempt for\u2026"
      },
      {
       "slug": "speech-1295942",
@@ -1583,7 +1860,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-09-10",
-      "cited": false
+      "cited": false,
+      "passage": "The CLERK: I announce that the following ePetition signed by fewer than 500 persons has been lodged for presentation: Lindfield Low- and Mid-rise Housing Petition requesting that the Legislative Assembly call on the Government to retain the low- and mid-rise housing provisions in chapter 6 of the State Environmental Planning Policy (Housing) 2021, or specify that Ku\u2011ring-gai Council adopt the\u2026"
      },
      {
       "slug": "speech-939708",
@@ -1592,7 +1870,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-10-10",
-      "cited": false
+      "cited": false,
+      "passage": "[Economics Legislation Committee - Economics Legislation Committee 10/10/2025 Estimates TREASURY PORTFOLIO Reserve Bank of Australia] No. I don't have any particular policy views on that. The bottom line, as I've said, is that we've got to get the supply of housing moving. My observation, certainly living in New South Wales, is that the governments are trying really hard to get this moving. That\u2026"
      },
      {
       "slug": "speech-1297994",
@@ -1601,7 +1880,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-10-14",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        77,
+        541
+       ]
+      ],
+      "passage": "\u2026When we came to government in 2023, we started with a confused and confusing planning system that was in need of reform. House building had collapsed, with the forecast for a mere 180,000 homes over the next five years, less than half of that required under the housing accord target. Development application times averaged 116 days. Young people were giving up on New South Wales and Sydney, which\u2026"
      },
      {
       "slug": "speech-1198151",
@@ -1610,7 +1896,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-11-04",
-      "cited": false
+      "cited": false,
+      "passage": "The member asked me about alternative approaches, and we do see from those opposite a completely different attitude to housing. They are completely out of touch, not just with energy policy but also with the housing experience of Australians. In fairness to those opposite, this is not a new feature of the 48th Parliament. You will remember that, whenMalcolm Turnbullwas prime minister, he said the\u2026"
      },
      {
       "slug": "speech-977656",
@@ -1619,7 +1906,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-12-04",
-      "cited": false
+      "cited": false,
+      "passage": "[Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Department of the Treasury] I think the government has also been very clear that part of the solution to the housing issue that we find ourselves in rests with states and territories in terms of them changing and improving their planning, approvals and zoning processes."
      },
      {
       "slug": "speech-1199942",
@@ -1628,7 +1916,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-02-09",
-      "cited": false
+      "cited": false,
+      "passage": "The member asked me about alternative approaches, and what a pity it is that those opposite, once a serious political force in this country, have nothing sensible to say about one of the biggest challenges that face our country. We had the shadow minister for housing give an interview last week. He was asked about the coalition's policy, and this is what he said. I'm quoting him directly. He\u2026"
      },
      {
       "slug": "speech-1202624",
@@ -1637,7 +1926,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-05-12",
-      "cited": false
+      "cited": false,
+      "passage": "I move: That the Senate take note of the answer given by theLeader of the Government in the Senate(Senator Wong) to a question without notice I asked today relating to housing. The government's housing policy is the definition of insanity\u2014trying to do the same thing over and over again and expecting a different result. We have families living in cars and young people with nowhere to go and no\u2026"
      },
      {
       "slug": "speech-1314085",
@@ -1646,7 +1936,14 @@
       "party": null,
       "state": "nsw",
       "date": "2026-06-03",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1768,
+        2068
+       ]
+      ],
+      "passage": "\u2026That comes in a context when we are dealing with the effects of 12 years of a different approach. We did not get planning reforms under the previous Government, but we are now working on those. We are loosening the planning system in an appropriate and targeted way. The Government is responding to the housing crisis with a record investment in public housing. Indeed, it is the biggest investment\u2026"
      },
      {
       "slug": "speech-1203480",
@@ -1655,7 +1952,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-06-04",
-      "cited": false
+      "cited": false,
+      "passage": "I want to thank the member for Dickson for her question, and I know I speak for all of my Labor colleagues when I say how privileged we are to work with her. The housing debate in the parliament in recent weeks has been focused on the tax changes that passed the lower house earlier. We've got a broken housing system in this country, and today our Labor government stood up and did something big\u2026"
      },
      {
       "slug": "speech-1210384",
@@ -1664,7 +1962,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-06-17",
-      "cited": false
+      "cited": false,
+      "passage": "(2404) My question is for the Minister for Planning. Will the minister finally approve the Gisborne and Romsey structure plans that have been sitting on her desk for the past two years? Rural town planning under Labor is in total chaos as big developers get special fast-tracked treatment but local councils go ignored by the minister. New structure plans for Gisborne and Romsey have been sitting\u2026"
      },
      {
       "slug": "speech-1203883",
@@ -1673,7 +1972,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2026-06-24",
-      "cited": false
+      "cited": false,
+      "passage": "The reforms that are before the parliament with regard to housing are not about the 150 people who sit in this chamber. They are about the 28 million outside of this chamber. I think that the member is trying to make a point\u2014 You said you weren't going to do it!"
      },
      {
       "slug": "speech-1213951",
@@ -1682,7 +1982,8 @@
       "party": null,
       "state": "qld",
       "date": "2026-06-25",
-      "cited": false
+      "cited": false,
+      "passage": "Indeed! I take the interjection. They say it is based on the New South Wales system. I can advise the honourable Leader of the Opposition that the New South Wales system does not report to parliament. Our minister does. Their whole policy around this bureau they are establishing, based on New South Wales, is an absolute farce. I held out great hope for the second announcement because the Leader\u2026"
      },
      {
       "slug": "speech-1205682",
@@ -1691,10 +1992,12 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-08-19",
-      "cited": false
+      "cited": false,
+      "passage": "2:55 pm I thank the member for Dickson for this question. Not only is this woman a remarkable Australian but she is one of the strongest voices in this parliament for housing policy, and I want to thank her for her leadership."
      }
     ],
-    "asked_at": "2026-09-05T00:10:41+00:00"
+    "asked_at": "2026-09-05T00:10:41+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What has parliament said about Energy policy and housing?",
@@ -1707,7 +2010,14 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2025-07-30",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        468,
+        853
+       ]
+      ],
+      "passage": "\u2026this is a government who committed to 1.2 million houses. It legislates ambition; it loves to do that, but where's the outcome? We know that outcome is not going to be achieved. We see it in their energy policy of 82 per cent renewables\u2014ain't gonna happen! It's on the front page of the papers. It's not going to happen. It's not just this bill, of course. We see this pattern right across the board."
      },
      {
       "slug": "speech-1195740",
@@ -1716,7 +2026,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-07-30",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        468,
+        853
+       ]
+      ],
+      "passage": "\u2026living, on housing and on Medicare. The coalition are busy fighting culture wars against non-existent enemies and taking the old coalition brand of destruction and dysfunction into the new term. Now, they have a choice this parliament: are they going to continue to be housing hypocrites, or are they going to come with us and work on this great national challenge that our government is confronting?"
      },
      {
       "slug": "speech-1294831",
@@ -1725,7 +2042,18 @@
       "party": null,
       "state": "nsw",
       "date": "2025-08-06",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        910,
+        1214
+       ],
+       [
+        1214,
+        1390
+       ]
+      ],
+      "passage": "\u2026BOB NANVA ( 14:44 :48 ): As the Minister has outlined, even though the Government is committed to supporting households to electrify and take up clean energy technologies like solar technology, heat pump technology, hot water systems and electric vehicles [EVs], it is not supportive of banning new gas connections, because households should have choice. That said, there is plenty that the\u2026"
      },
      {
       "slug": "speech-1198151",
@@ -1734,7 +2062,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-11-04",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        78,
+        312
+       ]
+      ],
+      "passage": "\u2026They are completely out of touch, not just with energy policy but also with the housing experience of Australians. In fairness to those opposite, this is not a new feature of the 48th Parliament. You will remember that, whenMalcolm Turnbullwas prime minister, he said the answer for young people trying to get into their own home was that parents should shell out to help their kids, which doesn't\u2026"
      },
      {
       "slug": "speech-1198427",
@@ -1743,7 +2078,14 @@
       "party": null,
       "state": "federal",
       "date": "2025-11-05",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        2510,
+        2843
+       ]
+      ],
+      "passage": "\u2026They had 23 different energy policies over that period over time. They couldn't decide which way they were going and what they were going to do, and now all we see on our televisions at night and on the front page of every newspaper around the country is how divided, confused and uncertain they really are. They have no clue where they're going and no clue what they're offering the country. It's\u2026"
      },
      {
       "slug": "speech-1270567",
@@ -1752,7 +2094,14 @@
       "party": null,
       "state": "federal",
       "date": "2026-06-04",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        2275,
+        2510
+       ]
+      ],
+      "passage": "\u2026ion Committee 04/06/2026 Estimates TREASURY PORTFOLIO Department of the Treasury] Senator Gallagher: Well, look in housing. Look in energy. Look in regulatory reduction. Look in the simplified\u2014sorry, the single national market. Look across the board. We're working across government. We bring a bill to the parliament on regulatory reform. You vote against it, and then you come in here and complain."
      },
      {
       "slug": "speech-1027734",
@@ -1761,7 +2110,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-02-25",
-      "cited": false
+      "cited": false,
+      "passage": "[Finance and Public Administration Legislation Committee - Finance and Public Administration Legislation Committee 25/02/2025 Estimates FINANCE PORTFOLIO Future Fund Management Agency] Obviously I want to ask some questions about changes to the operations of the investment mandate. The new mandate requires the fund to consider national priorities, and you said residential housing, energy\u2026"
      },
      {
       "slug": "speech-1195171",
@@ -1770,7 +2120,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-07-23",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        312,
+        468
+       ]
+      ],
+      "passage": "\u2026an absolutely foremost priority of our government in this second term, and indeed it must be for the whole parliament. Housing is in crisis in our country. Every single one of us is duty-bound to spend our time and energy trying to find real solutions to the problems that we face. My door is open to everyone in this parliament, from every party, from every part of our country, to help us work\u2026"
      },
      {
       "slug": "speech-1294828",
@@ -1779,7 +2136,18 @@
       "party": null,
       "state": "nsw",
       "date": "2025-08-06",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1390,
+        1671
+       ],
+       [
+        1671,
+        1976
+       ]
+      ],
+      "passage": "\u2026(4)That this House calls on the Government to follow the lead of the Victorian Labor Government and Australian Capital Territory Government, as well as community leaders in councils across New South Wales, to ban new gas connections for residential and commercial developments and require higher standards of energy efficiency for rentals, to protect health and climate. Gas is a polluting fossil\u2026"
      },
      {
       "slug": "speech-1196122",
@@ -1788,7 +2156,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-08-25",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1978,
+        2275
+       ]
+      ],
+      "passage": "\u2026Our domestic gas reservation policy has protected us from some of the worst volatility that has been seen on the east coast. With targeted relief, fairer energy rules and investment in solar, wind, hydrogen and battery storage, we've been securing WA's energy future while driving new local jobs and industries. Under those opposite, household electricity prices rose by nearly 20 per cent. They\u2026"
      },
      {
       "slug": "speech-1196396",
@@ -1797,7 +2172,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-08-27",
-      "cited": false
+      "cited": false,
+      "passage": "There is a point where mature adults need to stand up and point out that this government has no answers to the challenges and the problems that our nation faces. One of the reasons they've made housing such a central tenet of this week in parliament is that they have been shamed and embarrassed after their tax hike summit from last week\u2014where their only concrete substantive outcome was to finally\u2026"
      },
      {
       "slug": "speech-1196718",
@@ -1806,7 +2182,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-09-01",
-      "cited": false
+      "cited": false,
+      "passage": "As the Minister for Housing said, we know the long-term solution to address the housing crisis in our country is to build, build, build. Labor's comprehensive approach to this involves funding the development of infrastructure needed for housing\u2014those are the roads, that's the sewerage, that's the energy and those are the water connections needed for new developments and more social housing."
      },
      {
       "slug": "speech-1196931",
@@ -1815,7 +2192,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2025-09-02",
-      "cited": false
+      "cited": false,
+      "passage": "6:14 pm Our budget repays hard work, nourishes aspiration and creates opportunity. That's why I stand today to support this enabling legislation\u2014legislation that underpins our reform agenda and recognises the challenges Australians are facing, cost-of-living pressures, the uncertainty of global events and the need for stability at home. It responds to these challenges with proactive policy and\u2026"
      },
      {
       "slug": "speech-1197280",
@@ -1824,7 +2202,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-09-04",
-      "cited": false
+      "cited": false,
+      "passage": "One of the great honours of entering this parliament is the ability to engage in and work in a range of important and interesting policy areas with some incredible people in this chamber, in the community, in our local communities and, of course, in the business sector. But there's one policy area which I am particularly keen to ensure that we get right in the next three years, and that is\u2026"
      },
      {
       "slug": "speech-913803",
@@ -1833,7 +2212,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-10-07",
-      "cited": false
+      "cited": false,
+      "passage": "[Environment and Communications Legislation Committee - Environment and Communications Legislation Committee 07/10/2025 Estimates; and CLIMATE CHANGE, ENERGY, THE ENVIRONMENT AND WATER PORTFOLIO Department of Climate Change, Energy, the Environment and Water] I would say that it hasn't been a massive issue in terms of the stakeholder consultation that we've done. It's possible that it's been\u2026"
      },
      {
       "slug": "speech-1199942",
@@ -1842,7 +2222,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-02-09",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        2510,
+        2843
+       ]
+      ],
+      "passage": "\u2026directly. He said, 'We've been too busy talking about the internals of the Liberal Party to do any work.' I did not make that up. Those were his exact words, and I present that to the House because it is very important for the Australian people to understand that the absolutely outrageous disunity and dysfunction that exists on the other side of the parliament actually has a cost for Australians."
      },
      {
       "slug": "speech-1202848",
@@ -1851,7 +2238,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-05-14",
-      "cited": false
+      "cited": false,
+      "passage": "We've announced that we're against Labor's energy policy. We've announced that we're against Labor's housing policy, we've announced that we're against Labor's tax policy, and we've announced that we're against Labor's immigration policy."
      },
      {
       "slug": "speech-1203883",
@@ -1860,7 +2248,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2026-06-24",
-      "cited": false
+      "cited": false,
+      "passage": "The reforms that are before the parliament with regard to housing are not about the 150 people who sit in this chamber. They are about the 28 million outside of this chamber. I think that the member is trying to make a point\u2014 You said you weren't going to do it!"
      },
      {
       "slug": "speech-1205386",
@@ -1869,7 +2258,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-08-17",
-      "cited": false
+      "cited": false,
+      "passage": "We are increasingly seeing this prevail in our debate about housing.The Liberalshave said they want Australians to raid their super to buy a home. Now, I remind the parliament that this is an idea thatSaul Eslakesaid was the worst public policy idea in 60 years in our country. And now we've gotPauline Hansongetting on the same train."
      },
      {
       "slug": "speech-1205510",
@@ -1878,10 +2268,12 @@
       "party": "LNP",
       "state": "federal",
       "date": "2026-08-18",
-      "cited": false
+      "cited": false,
+      "passage": "Now, I have a pretty traditional view. We got into this parliament to solve the big problems facing our country, and there is not a single person behind me who looks at that situation and says, 'We're not going to do anything about that.' Speaker, I say this really clearly to you. This is a situation hurting millions of people. Those opposite are the only people in the country that cannot see\u2026"
      }
     ],
-    "asked_at": "2026-09-05T00:08:50+00:00"
+    "asked_at": "2026-09-05T00:08:50+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What has parliament said about the Strata Schemes Legislation Amendment Bill 2024?",
@@ -1894,7 +2286,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-11",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        2775,
+        2981
+       ]
+      ],
+      "passage": "\u2026honest and not acted in good faith. The bill will go some way to improving the many issues that are experienced by owners in strata schemes but, of course, there is always more work to be done. I look forward to working with everyone in this Chamber, including the Government and the Minister, to make laws governing strata schemes fairer, more practical and more workable in an everyday environment."
      },
      {
       "slug": "speech-1283337",
@@ -1903,7 +2302,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-11",
-      "cited": true
+      "cited": true,
+      "passage": "Ms FELICITY WILSON ( North Shore ) ( 16:42 :33 ): I contribute to debate on the Strata Schemes Legislation Amendment Bill 2024. For the community of North Shore, strata is crucial to the way we live our lives every day. Just like me, more than half of my community live in strata schemes, which is significantly higher than in most of the electorates represented in this Parliament. When narrowed\u2026"
      },
      {
       "slug": "speech-1283326",
@@ -1912,7 +2312,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-11",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1027,
+        1326
+       ]
+      ],
+      "passage": "\u2026The object of the bill is to amend the Strata Management Act 2015, the Community Land Management Act 2021 and related legislation to implement 37 recommendations from the 2021 report of the statutory review of the Strata Schemes Development Act 2015 and the Strata Schemes Management Act 2015, to increase owners' corporation protections, uplift developer and strata managing agent professionalism,\u2026"
      },
      {
       "slug": "speech-1283330",
@@ -1921,7 +2328,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-11",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1326,
+        1657
+       ]
+      ],
+      "passage": "Ms CHARISHMA KALIYANDA ( Liverpool ) ( 15:50 :28 ): I speak in support of the Strata Schemes Legislation Amendment Bill 2024. I am pleased that there is support for it and recognition of its importance from all sides of the House. Currently, tens of thousands of strata schemes house more than 1.2 million New South Wales residents. That number is expected to increase significantly under the Minns\u2026"
      },
      {
       "slug": "speech-1283332",
@@ -1930,7 +2344,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-11",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1657,
+        1884
+       ]
+      ],
+      "passage": "\u2026Constituents of mine in the Heathcote electorate have made me aware of their concerns regarding some agents misusing their authority and the detrimental impacts it has had on their lives. An owners' corporation is a legal entity that manages the common property of a strata scheme, made up of all the owners of the individual units of the scheme. They are volunteers, and I have spoken to some of\u2026"
      },
      {
       "slug": "speech-1283338",
@@ -1939,7 +2360,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-11",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        494,
+        757
+       ]
+      ],
+      "passage": "\u2026Key reforms in the bill strengthen accountability to ensure trust in strata managing agents and building managers. The bill prohibits liability avoidance clauses in management agreements, except when they are covered by professional standards schemes. The bill increases the reporting frequency by managers to improve transparency and enables the termination of agreements if agents or managers\u2026"
      },
      {
       "slug": "speech-1283767",
@@ -1948,7 +2376,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-12",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        2172,
+        2552
+       ]
+      ],
+      "passage": "\u2026The bill introduces the most significant reforms to strata living and strata laws since 2015, which will be of benefit to people living in strata schemes. The bill is part of the Government's extensive reform agenda for the strata sector. It will improve the lives of residents in strata and community land schemes and provide confidence to invest in strata buildings as the Government moves to\u2026"
      },
      {
       "slug": "speech-1283743",
@@ -1957,7 +2392,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-12",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        267,
+        494
+       ]
+      ],
+      "passage": "\u2026The proposed amendments would enhance transparency, accountability and the overall functioning of strata schemes. There are over 86,000 strata schemes in New South Wales, with over 40,000 residents in the Granville electorate living in strata. The Government remains committed to reforms that will protect owners' corporations, improve the accountability of strata management services, ensure\u2026"
      },
      {
       "slug": "speech-1284522",
@@ -1966,7 +2408,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-13",
-      "cited": true
+      "cited": true,
+      "passage": "The Hon. MARK BUTTIGIEG ( 17:36 :02 ): On behalf of the Hon. Penny Sharpe: In reply: I thank members for their contributions to debate on the Strata Schemes Legislation Amendment Bill 2025, in particular the Hon. Scott Farlow, the Hon. Mark Banasiak, Ms Cate Faehrmann, the Hon. Rod Roberts, the Hon. Taylor Martin and the Hon. Bob Nanva. The bill introduces the most significant reforms to strata\u2026"
      },
      {
       "slug": "speech-1284516",
@@ -1975,7 +2418,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-13",
-      "cited": true
+      "cited": true,
+      "passage": "The Hon. SCOTT FARLOW ( 17:03 :04 ): I lead for the Opposition in debate on the Strata Schemes Legislation Amendment Bill 2025. The Coalition supports this important piece of legislation, which seeks to update and improve the governance of strata schemes in New South Wales. Strata living is an integral part of modern life in our State, with more than 1.2 million people living in strata\u2026"
      },
      {
       "slug": "speech-1306381",
@@ -1984,7 +2428,8 @@
       "party": null,
       "state": "nsw",
       "date": "2026-02-11",
-      "cited": true
+      "cited": true,
+      "passage": "Mr TIM JA MES ( Willoughby ) ( 14:55 :41 ): On behalf of the Opposition, I rise this afternoon to speak on the Strata Schemes Legislation Amendment (Miscellaneous) Bill 2025. The Liberals and The Nationals will be supporting the reforms in this bill. This is the third and, we understand, final tranche of legislation implementing the recommendations of the 2021 statutory review of the Strata\u2026"
      },
      {
       "slug": "speech-1283335",
@@ -1993,7 +2438,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-11",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1884,
+        2170
+       ]
+      ],
+      "passage": "Ms KYLIE WILKINSON ( East Hills ) ( 16:26 :34 ): I support the Strata Schemes Legislation Amendment Bill 2024. Strata living has become an essential and growing component of the overall housing mix in New South Wales. Increasing population, housing density and demand for diverse living options, paired with declining housing affordability, are combining to drive the rapid expansion of the strata\u2026"
      },
      {
       "slug": "speech-1283336",
@@ -2002,7 +2454,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-11",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        757,
+        1025
+       ]
+      ],
+      "passage": "\u2026By implementing 37 of the review's recommendations, this bill makes strata living fairer for the 1.2 million people living in the 86,000 schemes across the State and makes it more accessible and attractive to those who might consider it in the future. On that note, I will illustrate to the House how key elements of the bill address issues that may be faced by people living in strata. Imagine a\u2026"
      },
      {
       "slug": "speech-1283331",
@@ -2011,7 +2470,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-11",
-      "cited": false
+      "cited": false,
+      "passage": "Ms JENNY LEONG ( Newtown ) ( 16:00 :42 ): On behalf of The Greens, I contribute to debate in support of the Strata Schemes Legislation Amendment Bill 2024. The bill represents the third tranche of strata reforms that the Labor Government has introduced since the election in 2023. It seeks to implement 37 of the remaining 108 recommendations of the 2021 statutory review of the regulation of strata\u2026"
      },
      {
       "slug": "speech-1283765",
@@ -2020,7 +2480,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-12",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        2552,
+        2775
+       ]
+      ],
+      "passage": "\u2026The bill introduces protections for current and prospective strata owners by removing the exemption for electricity supplied through an embedded network, meaning contract term limits now apply to utilities provided by those networks; and introducing new disclosure requirements as part of the sale of a lot for exclusive supply networks . They include embedded electricity networks and exclusive\u2026"
      },
      {
       "slug": "speech-1284518",
@@ -2029,7 +2496,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-13",
-      "cited": false
+      "cited": false,
+      "passage": "Ms CATE FAEHRMANN ( 17:08 :48 ): I speak in support of the Strata Schemes Legislation Amendment Bill 2025 while proposing minor yet essential amendments, which I will speak to in the Committee stage. The bill implements recommendations from the statutory review of strata legislation reported on 29 November 2021. The bill marks the third tranche of strata reform since the report's release and is\u2026"
      },
      {
       "slug": "speech-1306384",
@@ -2038,7 +2506,8 @@
       "party": null,
       "state": "nsw",
       "date": "2026-02-11",
-      "cited": false
+      "cited": false,
+      "passage": "Ms JENNY LEONG ( Newtown ) ( 15:18 :45 ): On behalf of The Greens, I contribute to debate on the Strata Schemes Legislation Amendment (Miscellaneous) Bill 2025. I acknowledge that the Minister and his hardworking team who worked on this reform are in the Chamber and the advisers area. I recognise that the bill acts on 28 of the remaining recommendations of the 2021 statutory review of the Strata\u2026"
      },
      {
       "slug": "speech-1306390",
@@ -2047,7 +2516,8 @@
       "party": null,
       "state": "nsw",
       "date": "2026-02-11",
-      "cited": false
+      "cited": false,
+      "passage": "Mr ANOULACK CHANTHIVONG ( Macquarie Fields\u2014Minister for Better Regulation and Fair Trading, Minister for Industry and Trade, Minister for Innovation, Science and Technology, Minister for Building, and Minister for Corrections) (16:07:37): In reply: I thank members for their contributions to debate on the Strata Schemes Legislation Amendment (Miscellaneous) Bill 2025, including the member for\u2026"
      },
      {
       "slug": "speech-1306387",
@@ -2056,7 +2526,8 @@
       "party": null,
       "state": "nsw",
       "date": "2026-02-11",
-      "cited": false
+      "cited": false,
+      "passage": "Mr ALEX GREENWICH ( Sydney ) ( 15:43 :19 ): I contribute to debate on the Strata Schemes Legislation Amendment (Miscellaneous) Bill 2025. Strata schemes are the fastest growing form of housing in the State. We are rezoning land across the city that will transform our neighbourhoods into high-density regions where living in an apartment will become the norm, in the hope that it will improve\u2026"
      },
      {
       "slug": "speech-1306385",
@@ -2065,10 +2536,12 @@
       "party": null,
       "state": "nsw",
       "date": "2026-02-11",
-      "cited": false
+      "cited": false,
+      "passage": "Mr JIHAD DIB ( Bankstown\u2014Minister for Customer Service and Digital Government, Minister for Emergency Services, and Minister for Youth Justice) (15:28:48): I am pleased to support the Strata Schemes Legislation Amendment (Miscellaneous) Bill 2025. I acknowledge the presence in the Chamber of the excellent Minister Chanthivong and I acknowledge his work on this legislation. We do a fair bit of\u2026"
      }
     ],
-    "asked_at": "2026-09-05T00:09:01+00:00"
+    "asked_at": "2026-09-05T00:09:01+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What have MPs said about housing affordability and home ownership since July 2024?",
@@ -2081,7 +2554,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-03-27",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1826,
+        2062
+       ]
+      ],
+      "passage": "\u2026When we were elected in May 2022 we inherited a housing horror show. Let me take you through some of the numbers. The cost of building a home when we came to government was rising at 17 per cent. That is the highest rate in half a century. New builds were down, approvals were on a steep decline and, of course, all of our housing affordability metrics were getting worse. That's what you get when,\u2026"
      },
      {
       "slug": "speech-1290817",
@@ -2090,7 +2570,22 @@
       "party": null,
       "state": "nsw",
       "date": "2025-05-28",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        777,
+        920
+       ],
+       [
+        920,
+        1065
+       ],
+       [
+        1065,
+        1216
+       ]
+      ],
+      "passage": "\u2026The scheme meant they could participate in the housing market rather than simply pay rent for that period. Rather than just paying rent, they were able to build a strong deposit for their next home. Unfortunately, this Help to Buy scheme was held up in the Federal Parliament, for different reasons. The Greens and Liberals delayed the legislation until last December. Ms Jenny Leong: It was\u2026"
      },
      {
       "slug": "speech-1290818",
@@ -2099,7 +2594,22 @@
       "party": null,
       "state": "nsw",
       "date": "2025-05-28",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        63,
+        330
+       ],
+       [
+        330,
+        588
+       ],
+       [
+        588,
+        775
+       ]
+      ],
+      "passage": "\u2026They push up the cost of housing by injecting more money into the housing market. People who can access a subsidy can suddenly afford to pay more than they otherwise would for a home, thus turning the temperature up even higher in an already overheated housing market. Before anyone gets the idea that The Greens are playing politics, as though politics is not literally the area in which we work in\u2026"
      },
      {
       "slug": "speech-1290804",
@@ -2108,7 +2618,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-05-28",
-      "cited": true
+      "cited": true,
+      "passage": "Ms ELENI PETINOS ( Miranda ) ( 12:40 :18 ): I speak for the Opposition in debate on the Help to Buy (Commonwealth Powers) Bill 2025. I can indicate the Opposition will support the bill. It is good to see that the Minns Labor Government is backing the Commonwealth Help to Buy shared equity scheme despite cynically closing the New South Wales Shared Equity Home Buyer scheme from 30 June 2024. In\u2026"
      },
      {
       "slug": "speech-1195171",
@@ -2117,7 +2628,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-07-23",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1533,
+        1826
+       ]
+      ],
+      "passage": "\u2026ove the housing opportunities that are faced by Australians. Last term, we took the Commonwealth from being, really, a negligent bystander on this critical national problem to being easily the boldest and most ambitious Australian government on housing since theSecond World War. We're making it easier for people to buy, we're making it better to rent in this country and we are building more homes."
      },
      {
       "slug": "speech-1196718",
@@ -2126,7 +2644,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-09-01",
-      "cited": true
+      "cited": true,
+      "passage": "Housing affordability has long been an issue. We saw the coalition not only do very little in their 10 years of government but actively work against the government in the last term when it was trying to provide adequate housing solutions. Housing affordability has been an issue for many years. When those opposite were in government, whilst they spruiked their grand plans, nothing happened. It\u2026"
      },
      {
       "slug": "speech-1203348",
@@ -2135,7 +2654,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-06-02",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        2062,
+        2270
+       ]
+      ],
+      "passage": "The proposed changes to capital gains tax and negative gearing are also, though, about housing affordability. Right now it's too hard for many Australians to get into the housing market and get ahead. As I said, I hear this daily from young people, mums, dads and grandparents. House prices have risen by 400 per cent over the last two decades or so. They've gone from four to eight times people's\u2026"
      },
      {
       "slug": "speech-843055",
@@ -2144,7 +2670,8 @@
       "party": "LNP",
       "state": "qld",
       "date": "2025-02-19",
-      "cited": false
+      "cited": false,
+      "passage": "I rise to address the debate on the Revenue Legislation Amendment Bill 2024, legislation that further delivers on key commitments made by the Crisafulli Liberal National Party state government. Introduced on 12 December 2024 by the Treasurer, Minister for Energy and Minister for Home Ownership, this legislation implements revenue related commitments made during the 2024 state election, those\u2026"
      },
      {
       "slug": "speech-1292971",
@@ -2153,7 +2680,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-06-24",
-      "cited": false
+      "cited": false,
+      "passage": "Ms CATE FAEHRMANN ( 16:25 :27 ): I contribute to debate on the Community Housing Providers (Adoption of National Law) Amendment Bill 2025. I note at the outset that my colleague in the other place and The Greens spokesperson on housing, the member for Newtown, will speak to the bill in a lot more detail. The member for Newtown has long advocated for more affordable housing. It is good that her\u2026"
      },
      {
       "slug": "speech-1198003",
@@ -2162,7 +2690,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2025-11-03",
-      "cited": false
+      "cited": false,
+      "passage": "It's clear that the coalition'sAustralian Buildingand Construction Commission failed to bring these issues under control. It oversaw declining construction industry productivity and an increase in workplace injuries and deaths. In July 2024, along with crossbench colleagues, I asked the government for urgent and comprehensive action regarding the CFMEU. Our concern then, which remains, was that\u2026"
      },
      {
       "slug": "speech-432193",
@@ -2171,7 +2700,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-12-03",
-      "cited": false
+      "cited": false,
+      "passage": "In one year Victorians face a profound choice about the future of our state and the direction it is going. After 11 years of Labor, the cost of living is getting harder, pride in Victoria has been lost and too many people feel we are heading in the wrong direction. Debt keeps climbing, interest costs keep going up and, because Labor cannot get a handle on the books, they keep slugging Victorians\u2026"
      },
      {
       "slug": "speech-430769",
@@ -2180,7 +2710,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-03-05",
-      "cited": false
+      "cited": false,
+      "passage": "Don't I feel privileged for getting the pre-screening of the latest reel from the member for Warrandyte \u2013 3 stars. Those opposite talk about a sledge motion, but I think from what we are hearing from those opposite, it is obvious they are going to take a sledgehammer to working from home. The scare campaign has started. We see here the sketch of their campaign against work from home. Firstly,\u2026"
      },
      {
       "slug": "speech-1201014",
@@ -2189,7 +2720,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-03-10",
-      "cited": false
+      "cited": false,
+      "passage": "Like everywhere in this country, housing and homeownership is a challenge in my home town of Darwin, as it also is in Palmerston, so we were proud to announce support for more first home buyers from Darwin, Palmerston and a bit past there into the rural area to get into home ownership by increasing the property price gap for the five per cent home deposit scheme. From 1 July this year, two price\u2026"
      },
      {
       "slug": "speech-1201656",
@@ -2198,7 +2730,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-03-24",
-      "cited": false
+      "cited": false,
+      "passage": "This appropriation bill gives $325 million to the Treasury to provide loans to Housing Australia to support social and affordable housing projects as part of theHousing Australia Future Fund. Housing and home ownership is a challenge in my home of greater Darwin, as it is everywhere, so we announced support for more first home buyers from Darwin to get into home ownership by increasing the\u2026"
      },
      {
       "slug": "speech-1263811",
@@ -2207,7 +2740,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-06-03",
-      "cited": false
+      "cited": false,
+      "passage": "[Economics Legislation Committee - Economics Legislation Committee 03/06/2026 Estimates TREASURY PORTFOLIO Housing Australia] Senator BARBARA POCOCK: I'll come to that, Minister. I've got some questions for you regarding findings from your government's own housing affordability council. The National Housing Supply and Affordability Council's State of the housing system 2026 report found this in\u2026"
      },
      {
       "slug": "speech-1264406",
@@ -2216,7 +2750,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-06-03",
-      "cited": false
+      "cited": false,
+      "passage": "[Economics Legislation Committee - Economics Legislation Committee 03/06/2026 Estimates TREASURY PORTFOLIO Housing Australia] Ms Pawley : Since May 2022, the planning ministers have met three times: on 8 August 2025, on 22 February 2024 and on 27 July 2023. That's in addition to the joint minister meeting last Friday that Mr Rimmer was talking about."
      },
      {
       "slug": "speech-1203697",
@@ -2225,7 +2760,8 @@
       "party": "Independent",
       "state": "federal",
       "date": "2026-06-22",
-      "cited": false
+      "cited": false,
+      "passage": "7:48 pm I rise today in support of the Treasury Laws Amendment (Tax Reform No. 1) Bill 2026 and the Income Tax Rates Amendment (Tax Reform No. 1) Bill 2026. I want to start with a pretty simple observation. For years, Australians have been told that housing affordability is too hard, too complicated, too politically sensitive and too difficult to tackle. Every government acknowledged that there\u2026"
      },
      {
       "slug": "speech-1203643",
@@ -2234,7 +2770,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-06-22",
-      "cited": false
+      "cited": false,
+      "passage": "I want to thank the Minister for Housing, Minister for Homelessness and Minister for Cities, the Hon. Clare O'Neil MP, for her work and leadership in driving this housing agenda. 6:47 pm I support the government's efforts to make housing more affordable, but I stress that far more needs to be done to address our housing crisis. Let's look at one important piece of the puzzle for affordable\u2026"
      },
      {
       "slug": "speech-1205068",
@@ -2243,10 +2780,12 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2026-08-12",
-      "cited": false
+      "cited": false,
+      "passage": "Disadvantaging older Australians isn't an isolated story under this federal government; it is this prime minister's operating manual. Take housing. The focus should be on home affordability and ownership for younger Australians and first-time homeowners, yet, under this government's housing policy failures, many seniors are watching their home equity, often their only real safety net, crash in\u2026"
      }
     ],
-    "asked_at": "2026-09-05T00:09:11+00:00"
+    "asked_at": "2026-09-05T00:09:11+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What positions have been taken on negative gearing and property tax concessions since July 2024?",
@@ -2259,7 +2798,18 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-05-27",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        0,
+        279
+       ],
+       [
+        1844,
+        2163
+       ]
+      ],
+      "passage": "\u2026y used for new builds that add to housing supply, and we're replacing the 50 per cent CGT discount with inflation adjusted indexation from 1 July 2027 to restore taxation of real gains as well as a minimum tax on realised gains. We are not abolishing it; we're changing it. If you hear what's going on in the online media you would sometimes swear to God it was disappearing, but that's not the case."
      },
      {
       "slug": "speech-1203224",
@@ -2268,7 +2818,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-05-28",
-      "cited": true
+      "cited": true,
+      "passage": "From 1 July 2027, as mentioned, negative gearing will be limited to investments in new residential properties only. At the same time, the existing 50 per cent of CGT discounts for individuals, trusts and partnerships will be replaced with a system that indexes that cost base. Importantly, these changes are structured to protect current investments. Properties owned before the announcement on 12\u2026"
      },
      {
       "slug": "speech-1203348",
@@ -2277,7 +2828,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-06-02",
-      "cited": true
+      "cited": true,
+      "passage": "I want to turn to schedules 1 and 2 of the legislation\u2014reforms to negative gearing and the capital gains tax. These are important changes as they go to one of the most pressing challenges that we face as a nation\u2014housing affordability. For too long, the current tax settings have locked out many Australians from owning their own home, particularly young Australians. The existing system has\u2026"
      },
      {
       "slug": "speech-1203341",
@@ -2286,7 +2838,14 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2026-06-02",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        279,
+        540
+       ]
+      ],
+      "passage": "These reforms limit negative gearing for residential property investments to new builds and key government housing priorities. From 1 July 2027, losses related to existing residential investment properties purchased after 7:30 pm on 12 May 2026 will only be deductible against other income from residential properties, including capital gains. Excess losses can be carried forward to offset\u2026"
      },
      {
       "slug": "speech-1203304",
@@ -2295,7 +2854,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-06-02",
-      "cited": true
+      "cited": true,
+      "passage": "With these bills, we seek to level that playing field once again. From 1 July 2027, we replace the 50 per cent discount with a cost base indexation and a 30 per cent minimum tax. In plain language, it means capital will be taxed on real gains, taking into account inflation. We are bringing the capital gains discount back to its original purpose. We are taking the taxpayers' thumb off the scale,\u2026"
      },
      {
       "slug": "speech-1203422",
@@ -2304,7 +2864,8 @@
       "party": "LNP",
       "state": "federal",
       "date": "2026-06-03",
-      "cited": true
+      "cited": true,
+      "passage": "This bill starts to address that. It reforms negative gearing so that, from 1 July 2027, negative gearing for new residential property investment is focused on new builds. If tax concessions are going to support property investment, they should help add to the housing supply in this nation. They should help build more homes. They should not simply encourage investors to compete with first home\u2026"
      },
      {
       "slug": "speech-1203378",
@@ -2313,7 +2874,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-06-03",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        540,
+        713
+       ]
+      ],
+      "passage": "We're reforming negative gearing and capital gains tax concessions so that we level the playing field for first home buyers but grandfathering arrangements for some of the measures, to respect decisions that current investors have made. If you've already negatively geared or own an investment property, you can continue to do so. If investors still want to use negative gearing on additional\u2026"
      },
      {
       "slug": "speech-1203697",
@@ -2322,7 +2890,8 @@
       "party": "Independent",
       "state": "federal",
       "date": "2026-06-22",
-      "cited": true
+      "cited": true,
+      "passage": "Schedule 2 changes negative gearing for future residential property investments. For residential properties purchased after 7.30 on 12 May 2026, negative gearing will only be available for new builds from 1 July 2027. Existing investments are protected. People who own a residential investment property or who have entered into a contract before that time can continue to use the current\u2026"
      },
      {
       "slug": "speech-1203754",
@@ -2331,7 +2900,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-06-23",
-      "cited": true
+      "cited": true,
+      "passage": "We didn't stop there. In this budget, the 2026-27 budget, we took the brave but necessary steps to level the playing field. From the 2027-28 financial year, we are limiting negative gearing on residential property so that it can only be used for new builds. That means negative gearing is grandfathered for existing properties, but, going forward, it is only on new builds. As of 1 July 2027, we're\u2026"
      },
      {
       "slug": "speech-1203823",
@@ -2340,7 +2910,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-06-23",
-      "cited": true
+      "cited": true,
+      "passage": "We are also making the housing system fairer. Existing investments are protected, but, from 1 July 2027, negative gearing for future residential investments will be directed to new homes. That means tax concessions will help build supply instead of helping investors outbid first homebuyers for homes that already exist. That's a sensible reform. It supports construction, adds new homes and gives\u2026"
      },
      {
       "slug": "speech-1204099",
@@ -2349,7 +2920,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-06-25",
-      "cited": true
+      "cited": true,
+      "passage": "The government also intends to remove ministerial discretion in relation to the following aspects of the bill, with legislation to be introduced later this year following consultation around the definition of new builds that are eligible to choose a 50 per cent discount on gains accrued from 1 July 2027 and eligible to access negative gearing for properties purchased after 12 May 2026, consistent\u2026"
      },
      {
       "slug": "speech-1201659",
@@ -2358,7 +2930,8 @@
       "party": "Independent",
       "state": "federal",
       "date": "2026-03-24",
-      "cited": false
+      "cited": false,
+      "passage": "We should reform our generous housing tax concessions. The capital gains tax discount and negative gearing, as currently designed, are worsening intergenerational inequity and doing nothing to solve the housing crisis. These concessions overwhelmingly benefit older and wealthier Australians and distort investment away from productive activity and towards property speculation. We should look\u2026"
      },
      {
       "slug": "speech-1202166",
@@ -2367,7 +2940,18 @@
       "party": "Greens",
       "state": "federal",
       "date": "2026-03-30",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1313,
+        1599
+       ],
+       [
+        1599,
+        1666
+       ]
+      ],
+      "passage": "\u2026wasted $53 billion on tax concessions for wealthy property investors. That $53 billion has benefited the wealthiest income earners and property investors in our nation and has actively contributed to pushing up house prices, fuelling that crisis even more. Meanwhile, it's done nothing for the millions of Australians suffering under the conditions of the housing crisis. Labor have prioritised, in\u2026"
      },
      {
       "slug": "speech-1202766",
@@ -2376,7 +2960,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2026-05-13",
-      "cited": false
+      "cited": false,
+      "passage": "At the request ofSenator Bragg, I move: That there be laid on the table by the Minister representing the Treasurer, by no later than midday on Thursday, 14 May 2026, all advice by the Treasury on the impact of changes to housing taxes or lower tax concessions (including changes to capital gains tax and negative gearing) on housing supply and rents."
      },
      {
       "slug": "speech-1202989",
@@ -2385,7 +2970,14 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2026-05-25",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1021,
+        1313
+       ]
+      ],
+      "passage": "He didn't stop at property taxes. Convinced that trusts are only used by billionaires, they planned wholesale changes that will cripple nearly 300,000 small businesses. These are battlers; they're not billionaires. The Prime Minister and the Treasurer have attacked negative gearing and have gutted capital gains tax concessions\u2014all while doing nothing about bracket creep."
      },
      {
       "slug": "speech-1203186",
@@ -2394,7 +2986,14 @@
       "party": null,
       "state": "federal",
       "date": "2026-05-27",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        713,
+        954
+       ]
+      ],
+      "passage": "\u2026ty until it's sold. I think they are all really important items in this discussion to understand, because there is just so much fearmongering going on at the moment. This is careful, responsible policy design which protects existing investment decisions while making sure future tax settings better support housing supply, an issue that this government is absolutely committed to confronting head on."
      },
      {
       "slug": "speech-1203451",
@@ -2403,7 +3002,8 @@
       "party": "Nationals",
       "state": "federal",
       "date": "2026-06-04",
-      "cited": false
+      "cited": false,
+      "passage": "In tackling CGT and negative gearing, the government is taking steps towards addressing housing inequality. The proposed reforms are ambitious, and I welcome ambition in government. Changes to both CGT and negative gearing include exemptions for new houses, to help incentivise supply. From 1 July 2027, if you'd like to negatively gear an investment property and retain access to the 50 per cent\u2026"
      },
      {
       "slug": "speech-1272045",
@@ -2412,10 +3012,12 @@
       "party": null,
       "state": "federal",
       "date": "2026-06-04",
-      "cited": false
+      "cited": false,
+      "passage": "[Economics Legislation Committee - Economics Legislation Committee 04/06/2026 Estimates TREASURY PORTFOLIO Tax Practitioners Board] Senator Gallagher: I think the evidence is, again, that they shift from being negatively geared to being positively geared, so some of the benefits that come with being negatively geared are lost over time. The government has taken a decision, in terms of our tax\u2026"
      }
     ],
-    "asked_at": "2026-09-05T00:09:20+00:00"
+    "asked_at": "2026-09-05T00:09:20+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What has parliament said about social and public housing supply since July 2024?",
@@ -2428,7 +3030,18 @@
       "party": null,
       "state": "nsw",
       "date": "2025-02-18",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        954,
+        1250
+       ],
+       [
+        1250,
+        1440
+       ]
+      ],
+      "passage": "The Hon. STEPHEN LAWRENCE ( 16:52 :26 ): I support the Housing Amendment Bill 2025, which will enable the Minister to exercise the same functions as the New South Wales Land and Housing Corporation and make provision for the transfer of assets, rights and liabilities. Importantly, the effect of this bill supports the implementation and delivery of the New South Wales Government's commitment to\u2026"
      },
      {
       "slug": "speech-1287636",
@@ -2437,7 +3050,18 @@
       "party": null,
       "state": "nsw",
       "date": "2025-03-26",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        60,
+        380
+       ],
+       [
+        573,
+        781
+       ]
+      ],
+      "passage": "\u2026That is the largest number of homes delivered over the past decade. This year we are on track to match that and then continue to grow that number over the years to come. Those are the facts and the number. A record number of houses were delivered in our first year of government, and that number will keep going up. Another fact that might be useful for the House is that when dealing with public\u2026"
      },
      {
       "slug": "speech-1197021",
@@ -2446,7 +3070,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-09-02",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1440,
+        1771
+       ]
+      ],
+      "passage": "The real issue is supply, and that is exactly what Labor is addressing. Our $43 billion Homes for Australia plan is the boldest national housing plan since the post-war years. More than 5,000 homes have already been completed with Commonwealth investment, with another 25,000 in planning or construction, and we are delivering 5,000 social and affordable houses, with projects already underway in\u2026"
      },
      {
       "slug": "speech-978446",
@@ -2455,7 +3086,14 @@
       "party": null,
       "state": "federal",
       "date": "2025-12-04",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        2211,
+        2509
+       ]
+      ],
+      "passage": "[Economics Legislation Committee - Economics Legislation Committee 04/12/2025 Estimates TREASURY PORTFOLIO Housing Australia] I think it's a fair statement to say that there's a lot of social housing stock that needs repair and that the government through this program has created additional supply of public and social housing that is very important for the system."
      },
      {
       "slug": "speech-905087",
@@ -2464,7 +3102,14 @@
       "party": null,
       "state": "federal",
       "date": "2026-02-12",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1842,
+        2211
+       ]
+      ],
+      "passage": "\u2026at record lows, and the waitlist for public housing is at record highs. Around 190,000 households are currently on the public housing waitlist. Many are in very severe need. The government's plan is to support at most 55,000 households in new social and affordable homes and only for the next 25 years, via a range of different programs. The scale of delivery does not match the scale of demand. In\u2026"
      },
      {
       "slug": "speech-1307564",
@@ -2473,7 +3118,14 @@
       "party": null,
       "state": "nsw",
       "date": "2026-03-17",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        781,
+        952
+       ]
+      ],
+      "passage": "The Hon. EMILY SUVAAL ( 14:11 :25 ): My question without notice is addressed to the Minister for Housing. Will the Minister update the House on how the New South Wales Labor Government is continuing to invest in housing for regional communities? The Hon. ROSE JACKSON (Minister for Water, Minister for Housing, Minister for Homelessness, Minister for Mental Health, and Minister for Youth) ( 14:11\u2026"
      },
      {
       "slug": "speech-422783",
@@ -2482,7 +3134,8 @@
       "party": "Greens",
       "state": "federal",
       "date": "2025-02-10",
-      "cited": false
+      "cited": false,
+      "passage": "2:13 pm I thank the member for his question. Indeed, fixing the affordable housing shortage is a big challenge for Australia. We have a plan that is focused on supply, because that is the key, whether you want to be a homeowner, or you are a renter or someone in social and affordable housing. That's why our $32 billion Homes for Australia plan is worthy of the support of everyone in this\u2026"
      },
      {
       "slug": "speech-1064813",
@@ -2491,7 +3144,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-02-27",
-      "cited": false
+      "cited": false,
+      "passage": "[Community Affairs Legislation Committee - Community Affairs Legislation Committee 27/02/2025 Estimates SOCIAL SERVICES PORTFOLIO Department of Social Services] As I noted before the adjournment for the break, I have a follow-up question on the housing piece. Mr Flavel, when I asked the question around the crisis housing, you indicated to me that nothing had been built because the announcement\u2026"
      },
      {
       "slug": "speech-1158783",
@@ -2500,7 +3154,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-04-02",
-      "cited": false
+      "cited": false,
+      "passage": "(880) My question is to the minister for housing. Minister, your government has claimed that only 1.8 per cent of social housing was unoccupied as of March 2024; however, the most recent data shows that as of 30 June 2024 there were 4935 unoccupied public and community housing dwellings, representing a significantly higher proportion. Can you clarify how your government arrived at the 1.8 per\u2026"
      },
      {
       "slug": "speech-1196373",
@@ -2509,7 +3164,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-08-26",
-      "cited": false
+      "cited": false,
+      "passage": "Over the Housing Accord period that commenced on 1 July 2024\u2014 under Labor\u2014 the Council forecasts that gross new housing supply will be 938,000 under baseline macroeconomic conditions and current policy settings \u2026 or around 188,000 per year on average. This implies a shortfall of 262,000 relative to the 1.2 million Housing Accord target, which is a little more than the 256,900 shortfall forecast\u2026"
      },
      {
       "slug": "speech-1196931",
@@ -2518,7 +3174,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2025-09-02",
-      "cited": false
+      "cited": false,
+      "passage": "Finally, in April this year, with an election looming, the government acted, and, boy, is it taking off. More home batteries were installed in the first six weeks of this program than in the first six months of 2024. Just this week, we hit 40,000 batteries since July. This is public policy that is working. Reporting from last week from theAustralian Conservation Foundationfound that, by 2030, the\u2026"
      },
      {
       "slug": "speech-1198003",
@@ -2527,7 +3184,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2025-11-03",
-      "cited": false
+      "cited": false,
+      "passage": "It's clear that the coalition'sAustralian Buildingand Construction Commission failed to bring these issues under control. It oversaw declining construction industry productivity and an increase in workplace injuries and deaths. In July 2024, along with crossbench colleagues, I asked the government for urgent and comprehensive action regarding the CFMEU. Our concern then, which remains, was that\u2026"
      },
      {
       "slug": "speech-1198427",
@@ -2536,7 +3194,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-11-05",
-      "cited": false
+      "cited": false,
+      "passage": "Let's just take the four areas raised today in question time. On housing supply, quite clearly the coalition were in government for 10 years, and, for those 10 years, they neglected housing. You can't turn around the supply of housing in a year or even one term. You're talking about significant structural change to get the housing supply that we need in this country to ensure that people have\u2026"
      },
      {
       "slug": "speech-905006",
@@ -2545,7 +3204,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-02-12",
-      "cited": false
+      "cited": false,
+      "passage": "[Economics Legislation Committee - Economics Legislation Committee 12/02/2026 Estimates TREASURY PORTFOLIO Housing Australia] The accord obviously took effect from 1 July 2024, so there's five quarters of real data about the performance of the housing market since that time. In that period, houses are now nearly one per cent cheaper in real terms to build than they were at the start of that\u2026"
      },
      {
       "slug": "speech-908143",
@@ -2554,7 +3214,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-02-12",
-      "cited": false
+      "cited": false,
+      "passage": "[Community Affairs Legislation Committee - Community Affairs Legislation Committee 12/02/2026 Estimates SOCIAL SERVICES PORTFOLIO Department of Social Services] I don't think I can add to what I've said before: ultimately, supply\u2014notwithstanding that that might take some time\u2014is the key driver of keeping down rental stress and improving housing affordability."
      },
      {
       "slug": "speech-1202508",
@@ -2563,7 +3224,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-04-01",
-      "cited": false
+      "cited": false,
+      "passage": "Social and affordable housing The government is making significant new investments to increase the supply of social and affordable homes and is working with state, territory and local governments to improve housing outcomes."
      },
      {
       "slug": "speech-1203361",
@@ -2572,7 +3234,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-06-02",
-      "cited": false
+      "cited": false,
+      "passage": "We're also delivering more social and affordable homes in Shortland through the Social Housing Accelerator program and we're helping more people to rent. We've increased Commonwealth rent assistance by 50 per cent since 2022. This means almost 11,000 people in my electorate are benefiting from this rental support, and we're continuing to work with our state counterparts to strengthen rental\u2026"
      },
      {
       "slug": "speech-1264406",
@@ -2581,7 +3244,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-06-03",
-      "cited": false
+      "cited": false,
+      "passage": "[Economics Legislation Committee - Economics Legislation Committee 03/06/2026 Estimates TREASURY PORTFOLIO Housing Australia] Ms Pawley : Since May 2022, the planning ministers have met three times: on 8 August 2025, on 22 February 2024 and on 27 July 2023. That's in addition to the joint minister meeting last Friday that Mr Rimmer was talking about."
      },
      {
       "slug": "speech-1314732",
@@ -2590,7 +3254,8 @@
       "party": null,
       "state": "nsw",
       "date": "2026-06-23",
-      "cited": false
+      "cited": false,
+      "passage": "Mr ANTHONY ROBERTS ( Lane Cove )\u2014Speaker, I recognise Marcus Ray PSM on an outstanding career of public service to New South Wales. Marcus will cease full-time employment in early July 2026 after more than 33 years in the NSW Government, including 26 years in Planning and later service in The Cabinet Office and the Premier's Department. Across his career, Marcus helped deliver major reforms in\u2026"
      },
      {
       "slug": "speech-1205782",
@@ -2599,10 +3264,12 @@
       "party": null,
       "state": "federal",
       "date": "2026-08-19",
-      "cited": false
+      "cited": false,
+      "passage": "We should talk about what is holding back supply, what Parliament is doing on accountability, and how our housing agenda is shaping up. If taxpayers are expected to underwrite Housing Australia's balance sheet, its loan guarantees, and its multibillion-dollar disbursements, Parliament and the Australian public are entitled to complete financial transparency."
      }
     ],
-    "asked_at": "2026-09-05T00:09:30+00:00"
+    "asked_at": "2026-09-05T00:09:30+00:00",
+    "cite_method": "verbatim"
    }
   ]
  },
@@ -2622,7 +3289,18 @@
       "party": "Labor",
       "state": "federal",
       "date": "2000-11-02",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1944,
+        2098
+       ],
+       [
+        2546,
+        2753
+       ]
+      ],
+      "passage": "\u2026Only under the Howard government could half of 10 equal 5.5: before they apply the 50 per cent con-cession, they add on the 10 per cent GST and then halve it, so that half of 10 becomes 5.5.It says a lot about the mean-spirited nature of this government that they are prepared to squeeze every last cent out of battling Australians. We are not talking about people liv-ing on luxury yachts that line\u2026"
      },
      {
       "slug": "speech-773946",
@@ -2631,7 +3309,8 @@
       "party": null,
       "state": "federal",
       "date": "2006-08-10",
-      "cited": true
+      "cited": true,
+      "passage": "The fact is that we spend, in effect, by forgone revenue, more by a long way on tax expenditures on negative gearing than we do each year on the Commonwealth-State Housing Agreement. We provide far more in tax breaks for higher income earners, who can afford to invest in housing, than we provide in housing assistance to lower income earners. Even rent assistance, which obviously is targeted at\u2026"
      },
      {
       "slug": "speech-20565",
@@ -2640,7 +3319,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "1999-03-10",
-      "cited": false
+      "cited": false,
+      "passage": "I rise tonight to raise some issues associated with the provision of public housing. It is regrettable that public housing and issues surrounding the lack of public housing stock appear to have fallen off the mainstream political agenda. Part of the reason for this neglect is probably due to the fact that most people assume that home ownership is a goal that everyone strives for and will\u2026"
      },
      {
       "slug": "speech-26406",
@@ -2649,7 +3329,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "1999-06-23",
-      "cited": false
+      "cited": false,
+      "passage": "I would like to thank the member for Bradfield for raising the question of the Ardel land and therefore giving me the opportunity to clear up the government's position on this matter. Ever since becoming a member of parliament, I have been working with the Save Manly Dam Catchment Committee to try to protect this land. It is not just me; I know that many other local leaders have been doing\u2026"
      },
      {
       "slug": "speech-45080",
@@ -2658,7 +3339,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2000-06-26",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1842,
+        1944
+       ]
+      ],
+      "passage": "I am pleased to speak this evening on the continued failure of successive National Party ministers of community services to help the poorest and most vulnerable in our community, particularly in relation to housing. The member for Wide Bay, while he was the Minister for Community Services, mentioned housing in this place no more than half a dozen times\u2014only then it was in response to issues\u2026"
      },
      {
       "slug": "speech-86185",
@@ -2667,7 +3355,14 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2002-10-23",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1402,
+        1670
+       ]
+      ],
+      "passage": "This MPI is on the issue of housing affordability. The most important thing you can do for housing affordability is to have low interest rates, and at present interest rates are 6.55 per cent. When we were elected in March 1996, they were 10\u00bd per cent. When you go back to the late eighties and early nineties, you had a mortgage rate of 17 per cent. For a $100,000 mortgage, that is a $10,500\u2026"
      },
      {
       "slug": "speech-772936",
@@ -2676,7 +3371,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2006-06-14",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        537,
+        725
+       ]
+      ],
+      "passage": "As a consequence of that policy, over the last 10 years the number of dwelling units available under the Commonwealth-State Housing Agreement arrangements has fallen from 372,134 in 1996 to 345,000 units as at the last available figures in 2003-04. That is a drop of 27,000 units in a 10-year period, at a time when the demand for housing has grown dramatically and when the cost of housing has\u2026"
      },
      {
       "slug": "speech-778970",
@@ -2685,7 +3387,8 @@
       "party": "Australian Democrats",
       "state": "federal",
       "date": "2007-03-20",
-      "cited": false
+      "cited": false,
+      "passage": "We have had summits held in thisParliament House, in Canberra and in other parts of Australia year after year. Bodies such as the various councils of social services; National Shelter and the various state based shelters; other community housing organisations; theHousing Industry Association; people involved in the real estate industry; the Property Council; urban development groups plus trade\u2026"
      },
      {
       "slug": "speech-781669",
@@ -2694,7 +3397,14 @@
       "party": null,
       "state": "federal",
       "date": "2007-08-08",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        2755,
+        2960
+       ]
+      ],
+      "passage": "\u2026for more housing. Not only is it at the core of sexual abuse and poverty; it is also at the core of the health problems. At the core of all the problems is the fact that if you have got 18 people living in a house, the poverty and the conditions that generates is causal to a whole range of the outcomes that we are concerned about. And that, of course, is replicated in many Indigenous communities."
      },
      {
       "slug": "speech-782134",
@@ -2703,7 +3413,8 @@
       "party": null,
       "state": "federal",
       "date": "2007-08-15",
-      "cited": false
+      "cited": false,
+      "passage": "I was not arguing that there is no link between housing and child abuse. I was, and am, arguing that there is no link between providing that housing and having the measure contained in this legislation of the government taking over the land for five years. At the end of his contribution,Senator Evansasserted that there is a link. If there is a link, I have not seen any evidence of it. There was\u2026"
      },
      {
       "slug": "speech-782868",
@@ -2712,7 +3423,8 @@
       "party": null,
       "state": "federal",
       "date": "2007-09-17",
-      "cited": false
+      "cited": false,
+      "passage": "We need to increase the availability of affordable land for the construction of new housing. A no-brainer. Yes, of course it is a no-brainer; thank you, Senator Cormann. I take the Senate back to 2006, when theReserve BankGovernor,Ian Macfarlane, told a parliamentary committee that the decline of new home affordability was all about house prices. I would like to quote what he said then, because\u2026"
      },
      {
       "slug": "speech-783522",
@@ -2721,7 +3433,8 @@
       "party": null,
       "state": "federal",
       "date": "2008-02-14",
-      "cited": false
+      "cited": false,
+      "passage": "Having said that, I am not opposing the arguments that have been put forward for the specific inquiries here. As a person who, probably more than anyone else in this chamber, has argued repeatedly over many years for the need for a much greater focus to be put on the crisis in housing affordability, I would be hypocritical myself to then argue against setting up a committee precisely to focus on\u2026"
      },
      {
       "slug": "speech-785692",
@@ -2730,7 +3443,8 @@
       "party": null,
       "state": "federal",
       "date": "2008-06-16",
-      "cited": false
+      "cited": false,
+      "passage": "4:56 pm It is a real pleasure to be able to work together in this place to come up with some recommendations that will go before us as a parliament\u2014not just us as a government\u2014to look at such an important issue as housing affordability. I want to pay particular credit to the way that the SenateSelect Committeeon Housing Affordability was able to operate and the way that people were prepared to\u2026"
      },
      {
       "slug": "speech-788659",
@@ -2739,7 +3453,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2008-10-15",
-      "cited": false
+      "cited": false,
+      "passage": "It is either yes or no! We are going to keep talking about. So if you keep asking question about this you\u2014 Senator Conroy, address your comments to the chair. From yesterday we introduced a residential housing sector boost through the first home owners scheme. From yesterday until 30 June 2009 first home buyers who purchase a new home will receive a grant of $21,000, or $14,000 if they purchase\u2026"
      },
      {
       "slug": "speech-789638",
@@ -2748,7 +3463,8 @@
       "party": null,
       "state": "federal",
       "date": "2008-11-24",
-      "cited": false
+      "cited": false,
+      "passage": "5:24 pm I would just like to add to those remarks, because essentially theAustralian Greens, asSenator Payneput it, similarly had a great deal of concern. This was a fix that was literally hammered together at five minutes to midnight. I believe that we found out about it the day the bill was finally introduced into parliament. I believe it put the very viability of the scheme at risk. The scheme\u2026"
      },
      {
       "slug": "speech-791179",
@@ -2757,7 +3473,8 @@
       "party": null,
       "state": "federal",
       "date": "2009-02-12",
-      "cited": false
+      "cited": false,
+      "passage": "Further annual appropriation bills are required to fund a number of measures announced on 3 February 2009. They include funds for theBuilding the Education Revolution, Energy Efficient Homes, regional and local community infrastructure, theBlack Spot Program, repairing regional links on the national highway network and social housing. The additional funding required exceeds what is currently\u2026"
      },
      {
       "slug": "speech-793882",
@@ -2766,7 +3483,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2009-06-23",
-      "cited": false
+      "cited": false,
+      "passage": "I also congratulate you, Acting Deputy President Ryan, on your accession to the position of a temporary chair of committees. On behalf of the Parliamentary Standing Committee onPublic Works, I present the 3rd report of 2009 of the committee,Referrals made February and March 2009: fit-out of new leased premises for theAustralian Securities and Investments Commission, Sydney,New South Wales, and\u2026"
      },
      {
       "slug": "speech-794550",
@@ -2775,10 +3493,12 @@
       "party": null,
       "state": "federal",
       "date": "2009-08-13",
-      "cited": false
+      "cited": false,
+      "passage": "During that time, and prior to that time, they spent an inordinate amount of time reviewing various housing projects and then came up\u2014as Senator Crossin pointed out\u2014with the SIHIP project. That was the previous government's design. At the time, the Howard government was requiring 99-year leases. At the time, the then opposition spokesperson,Jenny Macklin\u2014now the minister\u2014made some very strong\u2026"
      }
     ],
-    "asked_at": "2026-09-04T23:07:31+00:00"
+    "asked_at": "2026-09-04T23:07:31+00:00",
+    "cite_method": "verbatim"
    },
    {
     "label": "2010\u20132019",
@@ -2794,7 +3514,14 @@
       "party": null,
       "state": "nsw",
       "date": "2018-06-21",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        922,
+        1202
+       ]
+      ],
+      "passage": "\u2026Let me make it very clear: The amendments contained in this bill will not impact on the vast majority of good, responsible and law-abiding tenants who look after their property and do not take advantage of the system. In fact, I believe tenants will welcome these changes. Good tenants are sick of having their public spaces damaged and their own representations wrecked by those doing the wrong\u2026"
      },
      {
       "slug": "speech-933878",
@@ -2803,7 +3530,14 @@
       "party": null,
       "state": "nsw",
       "date": "2018-08-07",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        461,
+        698
+       ]
+      ],
+      "passage": "\u2026I note that the committee looked at nine bills today, and this was the only bill that elicited a number of comments about how it infringes on the rights and liberties of citizens of the State. First, I will speak about the risk-based bonds scheme, which is the guts of the bill, whereby the Minister\u2014and it is all in the Minister's mind at the moment\u2014will determine how a bond will be applied to\u2026"
      },
      {
       "slug": "speech-937956",
@@ -2812,7 +3546,14 @@
       "party": null,
       "state": "nsw",
       "date": "2018-08-15",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        158,
+        461
+       ]
+      ],
+      "passage": "\u2026The bill could exacerbate the incidence of homelessness if it is not implemented properly. Concerns regarding the legislation have been raised and the Opposition believes that some of them warrant further attention by the Minister and are embodied in the amendments. There is no question that homelessness is on the rise in this State, as it is in many other jurisdictions. We could never be proud\u2026"
      },
      {
       "slug": "speech-937978",
@@ -2821,7 +3562,8 @@
       "party": null,
       "state": "nsw",
       "date": "2018-08-15",
-      "cited": true
+      "cited": true,
+      "passage": "Mr JUSTIN FIELD ( 16:12 :53 ): On behalf of The Greens, I speak in debate on the Residential Tenancies Amendment (Social Housing) Bill 2018. The bill has two key functions: to implement a bond scheme for social housing tenants, which includes termination of tenancy for non-payment, and to allow for the termination of tenancy where the tenant is found guilty of certain criminal offences. I make\u2026"
      },
      {
       "slug": "speech-944299",
@@ -2830,7 +3572,14 @@
       "party": null,
       "state": "nsw",
       "date": "2018-09-26",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1204,
+        1436
+       ]
+      ],
+      "passage": "\u2026a tremendous disappointment. That the bill is the result of a thorough review of the 2010 Act shows that we have reached the limits of what this Government is prepared to do to make renting fair in this State. The object of the bill is to amend the Residential Tenancies Act 2010 to give effect to recommendations of the statutory review of the Act, contained in the Residential Tenancies Act\u2026"
      },
      {
       "slug": "speech-944310",
@@ -2839,7 +3588,14 @@
       "party": null,
       "state": "nsw",
       "date": "2018-09-26",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1572,
+        1767
+       ]
+      ],
+      "passage": "\u2026These are commonsense reforms that strike a balance between the interests of tenants and the interests of landlords. I will address some of the issues raised during the second reading debate, particularly on no\u2011grounds evictions, pets and other concerns directly in consideration of the amendments during consideration in detail. There are some issues I will address now. Achieving an appropriate\u2026"
      },
      {
       "slug": "speech-353146",
@@ -2848,7 +3604,14 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2017-09-07",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        2208,
+        2391
+       ]
+      ],
+      "passage": "\u2026The vacancy charge builds on the government's existing foreign investment regime which seeks to increase the number of houses available for Australians to live in. The charge provides a financial incentive for the foreign owner to make their property available on the rental market. The charge payable will be equivalent to the residential application fee that was paid by the foreign person at the\u2026"
      },
      {
       "slug": "speech-354194",
@@ -2857,7 +3620,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2017-09-14",
-      "cited": false
+      "cited": false,
+      "passage": "I move: That this bill be now read a second time. The Social Services Legislation Amendment (Housing Affordability) Bill 2017 is designed to support the government's housing affordability package as announced in the 2017-18 budget. The bill introduces the framework for what will be known now as a new Automatic Rent Deduction Scheme (ARDS) to enable tenancy charges and other housing costs to be\u2026"
      },
      {
       "slug": "speech-356115",
@@ -2866,7 +3630,14 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2017-10-25",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1767,
+        2208
+       ]
+      ],
+      "passage": "I move: That this bill be now read a second time. This bill enacts the government's budget announcement to reform the way that the Commonwealth makes housing related payments to the states and territories. It supports improved housing and homelessness outcomes by requiring jurisdictions to develop a detailed housing and homelessness strategy and to commit to improved data collection and reporting\u2026"
      },
      {
       "slug": "speech-933880",
@@ -2875,7 +3646,8 @@
       "party": null,
       "state": "nsw",
       "date": "2018-08-07",
-      "cited": false
+      "cited": false,
+      "passage": "Mr TIM CRAKANTHORP ( Newcastle ) ( 17:12 :54 ): As a member of Parliament who has many thousands of social housing tenants in my electorate, I am compelled to speak in debate on the Residential Tenancies Amendment (Social Housing) Bill 2018. A huge part of my job is trying to get better outcomes for the very many social housing tenants in my electorate. This legislation makes amendments to both\u2026"
      },
      {
       "slug": "speech-934145",
@@ -2884,7 +3656,8 @@
       "party": null,
       "state": "nsw",
       "date": "2018-08-08",
-      "cited": false
+      "cited": false,
+      "passage": "Ms MELANIE GIBBONS ( Holsworthy ) ( 11:42 :07 ): I support the Residential Tenancies Amendment (Social Housing) Bill 2018. As we have heard, this is a bill that makes amendments to the Residential Tenancies Act 2010 and the Housing Act 2001. It aims to make the social housing system fairer by ensuring that public housing is available only to those who need it. The New South Wales Government is\u2026"
      },
      {
       "slug": "speech-934555",
@@ -2893,7 +3666,8 @@
       "party": null,
       "state": "nsw",
       "date": "2018-08-09",
-      "cited": false
+      "cited": false,
+      "passage": "Mr JAMES GRIFFIN ( Manly ) ( 15:24 :57 ): As Chair: I thank the House for the opportunity to speak on the Legislation Review Committee's fifty-eighth digest of the Fifty-sixth Parliament. In this week's digest, tabled on 7 August 2018, the committee examined nine bills introduced in the last parliamentary sitting week of June. The committee identified issues with one bill and reported on one\u2026"
      },
      {
       "slug": "speech-937980",
@@ -2902,7 +3676,8 @@
       "party": null,
       "state": "nsw",
       "date": "2018-08-15",
-      "cited": false
+      "cited": false,
+      "passage": "Ms DAWN WALKER ( 16:43 :15 ): I echo the words of my colleague Mr Justin Field in relation to the Residential Tenancies Amendment (Social Housing) Bill 2018. I add a reporting date to the inquiry referral motion. I move: That the amendment of Mr Field be amended by inserting the words by 18 September 2018 after report ."
      },
      {
       "slug": "speech-944724",
@@ -2911,7 +3686,8 @@
       "party": null,
       "state": "nsw",
       "date": "2018-09-26",
-      "cited": false
+      "cited": false,
+      "passage": "The Hon. CATHERINE CUSACK ( 22:37 :39 ): On behalf of the Hon. Sarah Mitchell: In reply: I thank the following members for their contributions to the debate: the Hon. Peter Primrose, the Hon. Scott Farlow, Mr Justin Field, Mr David Shoebridge, the Hon. Daniel Mookhey and the Hon. Paul Green. As honourable members have heard, the purpose of the Residential Tenancies Amendment (Review) Bill 2018 is\u2026"
      },
      {
       "slug": "speech-944303",
@@ -2920,7 +3696,8 @@
       "party": null,
       "state": "nsw",
       "date": "2018-09-26",
-      "cited": false
+      "cited": false,
+      "passage": "Mr JAMIE PARKER ( Balmain ) ( 18:16 :55 ): I address the Residential Tenancies Amendment (Review) Bill 2018 and I take this opportunity to support the comments made by The Greens spokesperson on this matter, the member for Newtown, Jenny Leong. I also acknowledge the important steps forward that this bill contains; however, so much more must be done to protect tenants. Today I attended a function\u2026"
      },
      {
       "slug": "speech-944719",
@@ -2929,7 +3706,8 @@
       "party": null,
       "state": "nsw",
       "date": "2018-09-26",
-      "cited": false
+      "cited": false,
+      "passage": "The Hon. SCOTT FARLOW ( 22:16 :02 ): I commend the work of the Minister's office in introducing the Residential Tenancies Amendment (Review) Bill 2018 to the House. The bill seeks a better deal for residential tenancies across New South Wales. These reforms introduce a valuable new power for Fair Trading NSW. They will provide an additional, simple and efficient avenue for both tenants and\u2026"
      },
      {
       "slug": "speech-944722",
@@ -2938,7 +3716,8 @@
       "party": null,
       "state": "nsw",
       "date": "2018-09-26",
-      "cited": false
+      "cited": false,
+      "passage": "The Hon. DANIEL MOOKHEY ( 22:29 :12 ): I feel that a too-lengthy contribution to this debate at this late hour risks my being evicted from the affections of the House. The PRESIDENT: Or by me. The Hon. DANIEL MOOKHEY: Or by you, Mr President. I will keep it short, sharp and pertinent. The Residential Tenancies Amendment (Review) Bill 2018 purports to restore some balance in law between landlords\u2026"
      },
      {
       "slug": "speech-1097876",
@@ -2947,7 +3726,8 @@
       "party": null,
       "state": "vic",
       "date": "2019-10-16",
-      "cited": false
+      "cited": false,
+      "passage": "I am pleased to rise this morning to make a contribution in relation to the Consumer Legislation Amendment Bill 2019. This bill is an omnibus bill that amends six acts. It amends the Australian Consumer Law and Fair Trading Act 2012, the Domestic Building Contracts Act 1995, the Fundraising Act 1998, the Residential Tenancies Act 1997, the Residential Tenancies Amendment Act 2018 and the Sex Work\u2026"
      },
      {
       "slug": "speech-1058473",
@@ -2956,7 +3736,8 @@
       "party": null,
       "state": "nsw",
       "date": "2019-10-23",
-      "cited": false
+      "cited": false,
+      "passage": "The Hon. SCOTT FARLOW ( 16:40:58): On behalf of the Hon. Don Harwin: I move: That this bill be now read a second time. The Government is pleased to introduce the Better Regulation Legislation Amendment Bill 2019. This bill makes a number of important miscellaneous amendments to 10 principal Acts and associated amendment Acts across the Better Regulation and Innovation portfolio. The amendments in\u2026"
      },
      {
       "slug": "speech-1073274",
@@ -2965,10 +3746,12 @@
       "party": null,
       "state": "nsw",
       "date": "2019-11-20",
-      "cited": false
+      "cited": false,
+      "passage": "Mr KEVIN ANDERSON ( Tamworth\u2014Minister for Better Regulation and Innovation) (12:37:55): I move: That this bill be now read a second time. The Government is pleased to introduce the Better Regulation Legislation Amendment Bill 2019, which makes a number of important miscellaneous amendments to 10 principal Acts and associated amendment Acts across the Better Regulation and Innovation portfolio.\u2026"
      }
     ],
-    "asked_at": "2026-09-04T23:07:45+00:00"
+    "asked_at": "2026-09-04T23:07:45+00:00",
+    "cite_method": "verbatim"
    },
    {
     "label": "2020\u20132024",
@@ -2984,7 +3767,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2020-06-12",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        634,
+        851
+       ]
+      ],
+      "passage": "\u2026In question time on Tuesday, when the minister quoted the publication Domain, had he also read these Domain stories: 'HomeBuilder might be the most-complex least-equitable construction jobs program ever devised', and 'HomeBuilder: eight ways that $688 million could be better spent on housing to stimulate the economy'? If this is what a real estate publication thinks of this scheme, isn't it time\u2026"
      },
      {
       "slug": "speech-1076106",
@@ -2993,7 +3783,8 @@
       "party": null,
       "state": "sa",
       "date": "2020-10-13",
-      "cited": true
+      "cited": true,
+      "passage": "It is indeed a pleasure to receive this question from the member for Kavel because across South Australia there has been an enlivening in relation to our affordable housing programs. The Minister for Human Services has spearheaded that development from the strategy that was developed last year and published in December to set out, for the next 10 years, our housing future, including affordable\u2026"
      },
      {
       "slug": "speech-399119",
@@ -3002,7 +3793,14 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2020-11-30",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        408,
+        634
+       ]
+      ],
+      "passage": "The HomeBuilder program has seen detached housing sales increase by 31 per cent. This has seen loan approvals for new housing up by 20 per cent into the September quarter, which is the highest level for 10 years. What does this all mean? What do these new home sales mean? Support for the residential construction industry, which employs up to one million people, from the tradies on site-the\u2026"
      },
      {
       "slug": "speech-1091371",
@@ -3011,7 +3809,14 @@
       "party": null,
       "state": "sa",
       "date": "2020-12-03",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1949,
+        2306
+       ]
+      ],
+      "passage": "I move: That the 125 th report of the committee for the Fifty-Fourth Parliament, entitled Affordable Housing Initiative, be noted. The South Australian Housing Authority's Affordable Housing provided a revised submission to the committee in relation to this project, and the committee conducted a hearing on 15 October 2020. The committee has taken in additional information to assist it in its\u2026"
      },
      {
       "slug": "speech-419515",
@@ -3020,7 +3825,14 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2022-03-29",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        79,
+        408
+       ]
+      ],
+      "passage": "\u2026HomeBuilder, the First Home Super Saver Scheme and the Home Guarantee Scheme have helped make the dream of home ownership a reality. Over the last year, 160,000 Australians purchased their first home. Tonight we go further, more than doubling the Home Guarantee Scheme to 50,000 places per year. Helping more single parents to buy a home with a deposit as low as two per cent. Helping more first\u2026"
      },
      {
       "slug": "speech-827212",
@@ -3029,7 +3841,14 @@
       "party": null,
       "state": "federal",
       "date": "2023-02-08",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1148,
+        1251
+       ]
+      ],
+      "passage": "\u2026That comes after a lost decade of minimal intervention and investment in social and affordable housing. Members opposite are happy to try to take political advantage of pressures in housing, but should they not be required to explain to their electorates and to my electorate where their investments were in 2013, where their investments were in 2014, 2015 and 2016? Where were your housing\u2026"
      },
      {
       "slug": "speech-827667",
@@ -3038,7 +3857,18 @@
       "party": "Labor",
       "state": "federal",
       "date": "2023-02-14",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1251,
+        1587
+       ],
+       [
+        2608,
+        2799
+       ]
+      ],
+      "passage": "In this context, then, the social and affordable housing crisis is one that knows no geographical boundaries. Essential workers, families, older women and the most vulnerable in our community need appropriate housing right across our country, and it is for this reason that robust debate regarding this Housing AustraliaFuture FundBill 2023 is something we must all commit to in this place."
      },
      {
       "slug": "speech-827746",
@@ -3047,7 +3877,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2023-02-15",
-      "cited": true
+      "cited": true,
+      "passage": "4:34 pm PENDER () (): I'm pleased that we're dealing with theHousing Australia Future FundBill 2023 and related bills today. Though I have some concerns with the way the government is approaching this, I'm glad that the parliament will be doing more to support those who rely on affordable and social housing."
      },
      {
       "slug": "speech-1187011",
@@ -3056,7 +3887,8 @@
       "party": null,
       "state": "sa",
       "date": "2023-03-08",
-      "cited": true
+      "cited": true,
+      "passage": "The Queensland Labor Treasurer, Cameron Dick, wrote to federal Labor housing minister Julie Collins in the last two weeks asking her to, I quote, 'urgently consult with states and territories,' and that 'a 12-month extension at the April 30, 2024 deadline for HomeBuilder was required.'"
      },
      {
       "slug": "speech-829856",
@@ -3065,7 +3897,14 @@
       "party": "Greens",
       "state": "federal",
       "date": "2023-05-09",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1601,
+        1914
+       ]
+      ],
+      "passage": "\u2026ng in this country. But we have the Greens and the Liberals teaming up to oppose more investment in housing. Who would have thought the Greens party would be lining up with the Liberals to oppose more investment in housing? We on this side of the chamber know too many Australians hit by growing rents, too many Australians struggling to buy a home and too many Australians experiencing homelessness."
      },
      {
       "slug": "speech-1043510",
@@ -3074,7 +3913,8 @@
       "party": null,
       "state": "vic",
       "date": "2020-10-15",
-      "cited": false
+      "cited": false,
+      "passage": "It is a pleasure to rise and speak on the Consumer Legislation Amendment Bill 2020. On a Thursday afternoon we see, one could argue, two shining lights, or mid-range lights, of the Liberal Party in here on the other side. They have not really rustled up much of a speaking contribution this afternoon. We have not seen much from them. Social and affordable housing\u2014"
      },
      {
       "slug": "speech-404317",
@@ -3083,7 +3923,8 @@
       "party": "LNP",
       "state": "federal",
       "date": "2021-03-17",
-      "cited": false
+      "cited": false,
+      "passage": "My question is to the Assistant Treasurer, Minister for Housing and Minister for Homelessness, Social and Community Housing. Will the minister please update the House on how the Morrison government's HomeBuilder plan is creating new jobs in the housing and construction sector and generating housing confidence as we continue our comeback from the COVID-19 recession, and is the minister aware of\u2026"
      },
      {
       "slug": "speech-1123167",
@@ -3092,7 +3933,8 @@
       "party": null,
       "state": "sa",
       "date": "2021-08-24",
-      "cited": false
+      "cited": false,
+      "passage": "The Minister for Human Services has provided the following advice: An affordable housing solution is an initiative, product or service that contributes to a customer achieving an affordable housing outcome such as purchasing an affordable home or securing affordable rental. Our Housing Future 2020:2030 outlines the number of projected affordable housing outcomes. The Marshall Liberal government\u2026"
      },
      {
       "slug": "speech-827330",
@@ -3101,7 +3943,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2023-02-09",
-      "cited": false
+      "cited": false,
+      "passage": "The government publicly consulted on the package from 19 December 2022 to 11 January 2023. Forty-six written submissions were received, and three consultation sessions held (two with state and territory officials, and one with community housing providers)."
      },
      {
       "slug": "speech-827329",
@@ -3110,7 +3953,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2023-02-09",
-      "cited": false
+      "cited": false,
+      "passage": "Establishment of the council was announced as part of the Safer and More Affordable Housing measure in the October 2022-23 budget. The bill forms part of the Housing Legislative Package, which delivers on key components of the government's ambitious election commitments on housing. Public consultation on the draft legislation attracted feedback from a broad range of stakeholders, including\u2026"
      },
      {
       "slug": "speech-828012",
@@ -3119,10 +3963,12 @@
       "party": null,
       "state": "federal",
       "date": "2023-03-06",
-      "cited": false
+      "cited": false,
+      "passage": "Establishment of the Council was announced as part of theSafer and More Affordable Housingmeasure in the October 2022-23 Budget. The Bill forms part of the Housing Legislative Package, which delivers on key components of the Government's ambitious election commitments on housing. Public consultation on the draft legislation attracted feedback from a broad range of stakeholders, including\u2026"
      }
     ],
-    "asked_at": "2026-09-04T23:07:55+00:00"
+    "asked_at": "2026-09-04T23:07:55+00:00",
+    "cite_method": "verbatim"
    }
   ],
   "tide": [

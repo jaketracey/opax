@@ -1,18 +1,26 @@
 import unittest
 
 from scripts.generate_reports import (
+    PASSAGE_CHARS,
     REPORTS,
+    Records,
+    anchor_block,
     brief_matches_topic,
     compose_stat_label,
     debate_question,
+    dedupe_ranges,
     dedupe_subjects,
     holds_the_quotes,
     is_procedural_debate,
     is_topic_echo,
+    longest_verbatim_run,
     period_question,
+    ranges_from,
+    sentence_spans,
     settle_jurisdiction,
     settle_lede_ref,
     stat_support,
+    trim_passage,
     voices,
     window_questions,
     debate_title,
@@ -422,3 +430,116 @@ class LedeQuoteTests(unittest.TestCase):
     def test_a_sentence_with_no_quotation_is_never_dropped(self):
         self.assertTrue(holds_the_quotes(
             self.FakeKb(), "Bragg criticised the government.", "speech-2", {}))
+
+
+class RangeHelperTests(unittest.TestCase):
+    def test_dedupe_ranges_sorts_and_drops_repeats(self):
+        self.assertEqual(
+            dedupe_ranges([[10, 20], [0, 5], [10, 20]]),
+            [[0, 5], [10, 20]])
+
+    def test_ranges_from_shifts_by_the_stripped_whitespace_and_clips_to_length(self):
+        # A citations span is an offset into the answer the platform returned,
+        # which sections store stripped. `shift` is the whitespace that
+        # stripping removed, and a span past the end of the stored answer is
+        # dropped rather than kept out of bounds.
+        self.assertEqual(ranges_from([[2, 8], [100, 200]], shift=2, length=6), [[0, 6]])
+
+
+class SentenceSpanTests(unittest.TestCase):
+    def test_a_period_inside_a_quotation_does_not_split_the_sentence(self):
+        text = ('The minister said the changes "will decrease. supply further" '
+                'and promised action.')
+        spans = sentence_spans(text)
+        self.assertEqual(len(spans), 1)
+        self.assertEqual(text[spans[0][0]:spans[0][1]], text)
+
+    def test_two_plain_sentences_are_kept_apart(self):
+        text = "The bill passed. The minister welcomed the result."
+        spans = sentence_spans(text)
+        self.assertEqual(len(spans), 2)
+
+
+class VerbatimRunTests(unittest.TestCase):
+    def test_the_longest_shared_run_is_counted_in_words_not_characters(self):
+        body = ("Members agreed the plan will increase costs significantly for "
+                "everyone in the community.")
+        sentence = "Critics said the plan will increase costs significantly for renters."
+        self.assertEqual(longest_verbatim_run(sentence, f" {body} "), 7)
+
+    def test_no_shared_run_scores_zero(self):
+        self.assertEqual(
+            longest_verbatim_run("Nothing here matches at all.", " an unrelated record "),
+            0)
+
+
+class PassageTrimTests(unittest.TestCase):
+    def test_a_short_passage_is_returned_whole(self):
+        self.assertEqual(trim_passage("Short passage."), "Short passage.")
+
+    def test_a_long_passage_is_capped_without_splitting_a_word(self):
+        out = trim_passage(("word " * 200).strip())
+        self.assertLessEqual(len(out), PASSAGE_CHARS)
+        self.assertTrue(out.endswith("…"))
+        self.assertFalse(out.endswith(" …"))
+
+    def test_the_window_opens_near_the_sentence_that_carries_the_quotation(self):
+        head = "Filler sentence. " * 40
+        quoted = "The minister said the changes will decrease housing supply significantly. "
+        tail = "More filler follows after this important point is made clear. " * 20
+        out = trim_passage(head + quoted + tail, around="will decrease housing supply")
+        self.assertIn("will decrease housing supply", out)
+
+
+class AnswerMarkupTests(unittest.TestCase):
+    class FakeKb:
+        def __init__(self, bodies):
+            self.bodies = bodies
+
+        def get_resource_by_slug(self, slug, **params):
+            return {"data": {"texts": {"body": {
+                "value": {"body": self.bodies.get(slug, "")}}}}}
+
+    def _records(self, bodies):
+        return Records(self.FakeKb(bodies))
+
+    def test_a_quotation_only_one_source_holds_marks_that_source_alone(self):
+        records = self._records({
+            "speech-1": ("The minister said the changes will decrease housing "
+                        "supply across the country this decade."),
+            "speech-2": ("The opposition responded that landlords need certainty "
+                        "and support for renters in every state."),
+        })
+        block = {
+            "answer": ('The minister argued the changes "will decrease housing supply" '
+                      "across the country. The opposition said landlords need "
+                      "certainty and support for renters in every state."),
+            "sources": [
+                {"slug": "speech-1", "cited": True},
+                {"slug": "speech-2", "cited": True},
+            ],
+        }
+        anchor_block(records, block)
+        by_slug = {s["slug"]: s for s in block["sources"]}
+        self.assertTrue(by_slug["speech-1"].get("answer_ranges"))
+        self.assertTrue(by_slug["speech-2"].get("answer_ranges"))
+        self.assertEqual(block.get("cite_method"), "verbatim")
+
+    def test_a_quotation_two_sources_share_earns_neither_a_marker(self):
+        records = self._records({
+            "speech-1": ("Members agreed the plan will increase costs significantly "
+                        "for everyone in the community."),
+            "speech-2": ("The minister repeated that the plan will increase costs "
+                        "significantly for everyone."),
+        })
+        block = {
+            "answer": ('Some members warned the plan "will increase costs '
+                      'significantly for everyone" affected.'),
+            "sources": [
+                {"slug": "speech-1", "cited": True},
+                {"slug": "speech-2", "cited": True},
+            ],
+        }
+        anchor_block(records, block)
+        self.assertFalse(any(s.get("answer_ranges") for s in block["sources"]))
+        self.assertIsNone(block.get("cite_method"))

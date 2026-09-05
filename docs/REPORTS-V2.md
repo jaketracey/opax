@@ -27,11 +27,12 @@ working until the v2 page lands.
   "now": {
     "since": "2024-07-01",
     "discovered": [ { "title", "count", "first", "last", "parliaments", "search" } ],
-    "sections": [ { "question", "answer", "sources", "asked_at" } ]      // 6-8
+    "sections": [ { "question", "answer", "sources", "asked_at", "cite_method" } ]  // 6-8
   },
 
   "over_time": {
-    "eras": [ { "label", "from", "to", "question", "answer", "sources", "asked_at" } ],
+    "eras": [ { "label", "from", "to", "question", "answer", "sources", "asked_at",
+                "cite_method" } ],
     "tide": [ { "decade", "share", "count", "labelled" } ],
     "tide_scope": "federal",
     "key_moments": [ ... ]                          // the same list as the v1 field
@@ -51,6 +52,23 @@ the three additions beyond the agreed shape. The first tells a reader that a
 "live debate" is a Victorian one; the second is the record of what the figure
 check threw away, which is the only way to see the check working; the third
 says whether a tile came out of the `now` window or the whole record.
+
+Every source in a `sections[]`, `eras[]` or `lede.sources` entry also carries:
+
+```jsonc
+{ "slug", "title", "speaker", "party", "state", "date", "cited",
+  "passage": "up to 400 characters of the record this source was cited for",
+  "answer_ranges": [[12, 96], [340, 410]] }        // [start, end) into the answer text
+```
+
+`passage` and `answer_ranges` are the same two things the live ask page shows
+beside an answer — a quotable passage behind each source, and a superscript in
+the prose that names which source a claim came from — carried in the file so
+a report page never has to ask the platform for them again. `answer_ranges`
+indexes into that block's own text (`section.answer`, `era.answer` or
+`lede.text`), the same convention as the platform's own `citations` map after
+`ask_sources()` re-bases it off the stripped answer. A block that earned no
+marker at all has no `cite_method`; see **Markers and passages** below.
 
 ## The platform quirk that shapes everything
 
@@ -274,6 +292,69 @@ jurisdiction the model actually names is always kept: a federal senator saying
   citation therefore points at a record the report actually went to, not at a
   fresh retrieval.
 
+## Markers and passages
+
+Every answer needs two things a reader can check by eye: a superscript that
+says which source a sentence came from, and a passage behind that source long
+enough to read the claim in context. The live ask page gets both from the
+platform in the same response as the answer — `citations` is a map of
+`paragraph id -> [[start, end], …]` into the answer text, and `app.js` turns
+that into numbered `<sup>` buttons against a passage per source. A report is
+generated once and read forever, so it carries the same two things in the
+file instead of asking the platform for them again on every page view:
+`sources[].answer_ranges` and `sources[].passage` (see **The shape** above).
+
+**When the platform's own citations are enough, they are used as-is.**
+`build_section()` re-bases `res["citations"]` onto the stripped answer text
+(`ranges_from()`) and `cited_paragraph()` picks the CITED paragraph from the
+retrieval results, mirroring the Worker's own `askPayload`. A section marked
+this way carries `"cite_method": "platform"`.
+
+**When the platform returns no citation ranges — which is not guaranteed on
+every ask — a section still needs its markers, so it earns them from the
+words instead, for free.** `anchor_block()` walks the answer sentence by
+sentence (`sentence_spans()`, which hides sentence-enders that fall *inside* a
+quotation so a quoted "The plan. Full stop." is not cut in half) and asks, of
+every retrieved source:
+
+- **A quoted phrase of three words or more** that appears verbatim (folded:
+  `_plain()` strips everything but letters, digits and single spaces, so a
+  curly quote or an OCR double space cannot break a match) in **exactly one**
+  source's own record is proof of where those words were said, whatever the
+  platform's citation map says. A phrase two sources share, or that is in
+  none of them, earns no marker — ambiguous evidence is not evidence.
+- **Failing a quotation**, a run of seven or more words shared verbatim with
+  exactly one source (`longest_verbatim_run()`) is still proof; a paraphrase
+  that shares no long run with any single source gets no marker, which is
+  correct — a paraphrase does not say whose words it paraphrased.
+- **The lede** is one sentence per source by construction and is settled by
+  the speaker it names (`settle_lede_ref()`, already run when the lede is
+  generated) rather than by verbatim overlap, since a lede sentence is a
+  paraphrase almost by definition.
+
+A section marked this way carries `"cite_method": "verbatim"`. A block that
+earned no marker at all — no citation ranges from the platform and no
+checkable evidence in the words — carries none, which is honest: it means
+nothing in the file can tell a reader which source a given sentence rests on,
+and `validate_reports.py` fails a block in that state.
+
+`attach_passages()` then gives every source — cited or not — a passage of up
+to 400 characters (`PASSAGE_CHARS`), in order of preference: the retrieved
+paragraph that carries the quotation the source was marked for; that
+quotation read in its own context, straight from the record, when no
+retrieved paragraph carries it; the retrieved paragraph closest in wording to
+the sentences the source was marked for; the best-scoring retrieved paragraph;
+the head of the record, as a last resort. `trim_passage()` opens its window at
+the sentence carrying the quotation, so a reader sees the claim in context
+rather than a paragraph's opening throat-clearing.
+
+**This whole pass costs nothing.** It reads retrieval and the record, never
+asks a question, and can be re-run at any time — over a report generated
+before it existed, or with a different passage length — as `--only cites`
+(also run once, automatically, at the end of a full report). `cite_report()`
+runs it over the `now` sections, the eras, v1's carried-over `sections[]` and
+the lede, and prints a marked/passage tally for each block.
+
 ## The budget
 
 Paid calls per report, at the default settings:
@@ -285,6 +366,7 @@ Paid calls per report, at the default settings:
 | key figures | 1 |
 | positions | 1 |
 | lede | 1 |
+| markers and passages (`cites`) | 0 — free |
 | **total** | **12-14** |
 
 One bad answer in eight costs **one** call, not eight: `--only now --redo 3`
@@ -292,7 +374,8 @@ re-asks section 3 alone, with the question and the window already in the file,
 and leaves the other seven untouched.
 
 Everything else — discovery, catalog paging, the tide, the voices, key-moment
-retrieval and every per-field text read — is free and unmetered.
+retrieval, markers, passages and every per-field text read — is free and
+unmetered.
 
 The generator prints `Paid calls this run: N (...)` at the end of every run,
 broken down by block. **Count them and stop at the cap.** A `--only` run pays
@@ -316,6 +399,7 @@ python3 scripts/generate_reports.py housing --only positions    # 1 call
 python3 scripts/generate_reports.py housing --only lede         # 1 call
 python3 scripts/generate_reports.py housing --only voices       # free
 python3 scripts/generate_reports.py housing --only key-moments  # free
+python3 scripts/generate_reports.py housing --only cites        # free: markers + passages
 
 # move the window, or re-enumerate the topic from the catalog (free, ~2 min)
 python3 scripts/generate_reports.py housing --since 2025-01-01

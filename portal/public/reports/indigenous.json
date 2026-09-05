@@ -3,7 +3,7 @@
  "title": "First Nations",
  "blurb": "Reconciliation, the Voice, Closing the Gap and native title, in parliament's own words.",
  "version": 2,
- "generated_at": "2026-09-05T00:04:51+00:00",
+ "generated_at": "2026-09-05T00:54:31+00:00",
  "corpus_resources": 609635,
  "stats": {
   "speech_count": 51381,
@@ -451,7 +451,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "6:43 pm I acknowledge the words of many of the previous speakers in the debate on theAboriginal and Torres Strait IslanderPeoples Recognition Bill 2012 in this chamber. In many cases, they have made compelling and salient points about the importance of this piece of legislation. I want to say from the outset from a personal perspective that I very strongly support the bill and support the\u2026"
     },
     {
      "slug": "speech-422797",
@@ -459,7 +460,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that Australia must continue working towards reconciliation with First Nations peoples, proposing the word soon to reassure them of Labor's commitment. They also advocated for Australia becoming a republic, criticized the opposition's campaign against the Voice referendum, and defended multiculturalism and LGBTQIA+ rights."
     },
     {
      "slug": "speech-375081",
@@ -467,7 +469,18 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "answer_ranges": [
+      [
+       256,
+       408
+      ],
+      [
+       1363,
+       1567
+      ]
+     ],
+     "passage": "\u2026Today I'm proud to declare again that enshrining a voice for First Australians will be Labor's first priority for constitutional change. If we are elected as the next government of Australia, we intend to hold a referendum on this question in our first term, as our partners have asked us to do. I'm optimistic that the referendum can succeed, because the proposition that we should include our\u2026"
     },
     {
      "slug": "speech-1165513",
@@ -475,7 +488,8 @@
      "speaker": null,
      "party": null,
      "state": "nsw",
-     "date": null
+     "date": null,
+     "passage": "During Reconciliation Week 2021, the speaker argued that Australia must move beyond symbolic reconciliation by taking active steps, including establishing a treaty with Aboriginal and Torres Strait Islander peoples, citing that Australia is the only Commonwealth nation without one, and referenced the Uluru Statement from the Heart's call for a constitutionally enshrined First Nations voice in\u2026"
     },
     {
      "slug": "speech-383534",
@@ -483,7 +497,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Senator Pat Dodson will deliver the Marek Edelman Centenary Lecture on reconciliation in the electorate of Macnamara on Thursday 7 November, with the speech noting the 2017 Uluru Statement from the Heart as a pathway towards constitutional recognition of First Peoples."
     },
     {
      "slug": "speech-1314356",
@@ -491,7 +506,8 @@
      "speaker": null,
      "party": null,
      "state": "nsw",
-     "date": null
+     "date": null,
+     "passage": "The Hon. CAMERON MURPHY ( 10:04 :55 ): I move: That this House: (a)notes that 27 May to 3 June 2026 marks Reconciliation Week across Australia; (b)recognises that Reconciliation Week is an opportunity for Australians to explore, learn and contribute to the journey towards reconciliation; and (c)acknowledges that the theme for Reconciliation Week 2026 is All In , which calls on Australians to\u2026"
     },
     {
      "slug": "speech-829041",
@@ -499,7 +515,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Whilst the opposition have sought to distract attention from the core purpose of the Voice,Uncle Pat, Prime Minister Anthony Albanese, Minister Linda Burney, Senator Malarndirri McCarthy and many, many others continue to share information about what the Voice is about\u2014two simple things: recognition and consultation. Those opposite are so deeply out of touch with the needs of First Nations\u2026"
     },
     {
      "slug": "speech-769255",
@@ -507,7 +524,8 @@
      "speaker": null,
      "party": null,
      "state": "vic",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that the Statewide Treaty Bill 2025 is a historic step toward reconciliation, self-determination and partnership with First Peoples, establishing new institutions to ensure Aboriginal Victorians have a real say in policy, service delivery and law-making. They referenced the United Nations Declaration on the Rights of Indigenous Peoples, acknowledged the work of the First\u2026"
     },
     {
      "slug": "speech-821927",
@@ -515,7 +533,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Our purpose is to ensure that we do not fail; that some time in the life of, or perhaps at the conclusion of, the 44th parliament, we will\u2014as did the 26th parliament in 1967\u2014have achieved a nationwide consensus which will give appropriate recognition to our first peoples and advance in a material way the cause of reconciliation."
     },
     {
      "slug": "speech-1203171",
@@ -523,7 +542,14 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "answer_ranges": [
+      [
+       1098,
+       1296
+      ]
+     ],
+     "passage": "\u2026From time to time, we may disagree on the best path to get there, but all of us are committed to seeing better outcomes for Indigenous people. I was pleased, as the Prime Minister has acknowledged, to go to the vigil for KumanjayiLittle Baby, to see the local member, the member for Lingiari, there, to go there with Senator Jacinta Nampijinpa Price from the other place, from our side, and to meet\u2026"
     },
     {
      "slug": "speech-798024",
@@ -531,7 +557,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "My question is toSenator Evans, the Minister representing the Prime Minister. In making his apology toIndigenous peopleat the beginning of parliament two years ago, the Prime Minister said: \u2026 unless the great symbolism of reconciliation is accompanied by an even greater substance, it is little more than a clanging gong."
     },
     {
      "slug": "speech-1184002",
@@ -539,7 +566,8 @@
      "speaker": null,
      "party": null,
      "state": "sa",
-     "date": null
+     "date": null,
+     "passage": "The Greens MP supported the First Nations Voice to Parliament bill as a historic step toward reconciliation, backing the Uluru Statement's three elements of Voice, Truth and Treaty, and rebutted opposition claims that it would create a third chamber. The MP criticised the Liberal Party and One Nation for opposing the reform, and cited statistics including over 50% of incarcerated youth being\u2026"
     },
     {
      "slug": "speech-267273",
@@ -547,7 +575,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Achieving constitutional recognition of Aboriginal and Torres Strait Islanders is a very significant step towards genuine and lasting reconciliation. It is a cause the coalition has long been associated with and one that we have proudly long supported. The coalition's position for over a decade has been that there should be recognition of Australia's Indigenous people in the Constitution. That is\u2026"
     },
     {
      "slug": "speech-875452",
@@ -555,7 +584,8 @@
      "speaker": null,
      "party": null,
      "state": "vic",
-     "date": null
+     "date": null,
+     "passage": "The MP from Melbourne's west announced strong support for the Indigenous Voice to Parliament, citing Victoria's First Nations Assembly and treaty progress as examples, and urged voters to vote yes in the referendum for reconciliation and better outcomes for First Nations Australians."
     },
     {
      "slug": "speech-783392",
@@ -563,7 +593,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Like the Australian Greens now, the new government of Prime Minister Kevin Rudd, in consultation with first Australians, is committed to pursuing constitutional change and undertaking the work of ending the broad-scale disadvantages which first Australians still suffer. We Greens are committed to accelerating that course of action. Saying sorry is a step along the road to true reconciliation and\u2026"
     },
     {
      "slug": "speech-374253",
@@ -571,7 +602,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "It is appropriate that I begin by acknowledging the traditional owners of the land on which this parliament meets and pay my respect to elders past and present. I am very pleased to take the opportunity to speak to this report of the Joint Select Committee on Constitutional Recognition relating to Aboriginal and Torres Strait Islander peoples. I believe that our Constitution is inadequate while\u2026"
     },
     {
      "slug": "speech-29423",
@@ -579,7 +611,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "ment has finalised its action and its decisions; I am talking about moving on with the process of the reconciliation document that is before us, with all members of parliament being involved with their communities in bringing along all of the individuals who are so important to changing attitudes within this community. Going back to the lessons of history, I think now is the time to challenge the\u2026"
     },
     {
      "slug": "speech-987940",
@@ -587,7 +620,14 @@
      "speaker": null,
      "party": null,
      "state": "nsw",
-     "date": null
+     "date": null,
+     "answer_ranges": [
+      [
+       1567,
+       1759
+      ]
+     ],
+     "passage": "Mr DAVID HARRIS ( Wyong ) ( 13:08 : 3 6): In reply: I thank the Government for allowing this motion to proceed. That was a good bipartisan show for the community that we are united on this issue. I thank the members representing the electorates of Albury, Strathfield, Seven Hills, Gosford, Holsworthy, Blacktown, Oatley, Lakemba, Terrigal, Auburn and Canterbury for their contributions. I also\u2026"
     },
     {
      "slug": "speech-367377",
@@ -595,7 +635,8 @@
      "speaker": null,
      "party": "Centre Alliance",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The government was asked whether it would support flying the Aboriginal and Torres Strait Islander flags in the chamber, continuing the spirit of reconciliation and recognition of First Peoples' history and cultures."
     },
     {
      "slug": "speech-1295699",
@@ -603,9 +644,17 @@
      "speaker": null,
      "party": null,
      "state": "nsw",
-     "date": null
+     "date": null,
+     "answer_ranges": [
+      [
+       1759,
+       1953
+      ]
+     ],
+     "passage": "Ms JENNY AITCHISON ( Maitland\u2014Minister for Roads, and Minister for Regional Transport)\u2014Congratulations to the Rutherford Tillys Play and Development Centre, who are a proud finalist in the 2025 Narragunnawali Reconciliation in Education Awards. Among just three early education services nationwide to receive this honour, Tillys exemplifies a strong commitment to reconciliation and closing the gap\u2026"
     }
-   ]
+   ],
+   "cite_method": "verbatim"
   },
   {
    "question": "What was said in parliament about the Voice to Parliament referendum?",
@@ -617,7 +666,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "I want to commence by saying I respect that a lot of speakers have made their comments regarding a potential referendum that might be held regarding a Voice to Parliament, and I don't in any way criticise that, but this bill is much beyond just any one particular referendum that might occur. I have very much said on the public record that I don't support amending our Constitution to enshrine a\u2026"
     },
     {
      "slug": "speech-829682",
@@ -625,7 +675,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker read a constituent's letter supporting the Voice to Parliament, arguing that constitutional recognition of Aboriginal and Torres Strait Islander peoples is long overdue and that the 1967 referendum's 90.77% Yes vote shows Australians can again support change."
     },
     {
      "slug": "speech-873092",
@@ -633,7 +684,8 @@
      "speaker": null,
      "party": null,
      "state": "vic",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued for a Yes vote in the 14 October referendum to recognise First Peoples and establish an advisory Voice to Parliament, stating it cannot make laws, impose taxes, or control funding, and confirmed they had already voted yes in solidarity."
     },
     {
      "slug": "speech-420791",
@@ -641,7 +693,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker highlighted William Cooper's 1937 petition for a First Nations voice to parliament and announced they will vote yes for a referendum to answer the Uluru Statement from the Heart."
     },
     {
      "slug": "speech-829551",
@@ -649,7 +702,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker opposed the Voice to Parliament, arguing it would lead to demands making 97% of Australians second-class citizens, and listed specific claims including reduced tax rates for Aboriginal people, Aboriginal ownership of beaches, and racially exclusive parliamentary seats. The speaker cited documents obtained through freedom of information to assert that the National Indigenous\u2026"
     },
     {
      "slug": "speech-827913",
@@ -657,7 +711,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The upcoming Voice to Parliament referendum is vitally important to the future of our country, to the future of both Indigenous and non-Indigenous Australians. It is vital to the future of race relations in this country. It is therefore outrageous to suggest that a referendum of this magnitude does not deserve equal government funding of both positions. It must be concluded with respect, and, for\u2026"
     },
     {
      "slug": "speech-391839",
@@ -665,7 +720,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker asked the Prime Minister to specify when the government will hold a referendum on an Indigenous Voice to Parliament, noting the Minister for Indigenous Australians' confidence that Australians will have their say this year."
     },
     {
      "slug": "speech-1182279",
@@ -673,7 +729,8 @@
      "speaker": null,
      "party": null,
      "state": "sa",
-     "date": null
+     "date": null,
+     "passage": "The speaker opposed the Voice to Parliament, arguing it is divisive, race-based, and premature ahead of the federal referendum, and advocated for needs-based support instead of race-focused policies. The speaker cited that 11 Indigenous federal parliamentarians already represent 4.85% of seats, exceeding the Indigenous population share, and claimed most Aboriginal people they consulted preferred\u2026"
     },
     {
      "slug": "speech-829589",
@@ -681,7 +738,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "I want to remind all senators that yesterday there were many conversations about the Voice to Parliament. For manyFirst Nationspeople in this country under 40, this will be the first time they vote in a referendum, and this motion jeopardises the success of this referendum. It undermines the currency of the conversation that we're about to have. These cooked-up terms of reference are being used\u2026"
     },
     {
      "slug": "speech-874204",
@@ -689,7 +747,8 @@
      "speaker": null,
      "party": null,
      "state": "vic",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that voting yes in the upcoming referendum is about recognising Aboriginal and Torres Strait Islander people in the Constitution and establishing a Voice to Parliament to give advice on matters affecting them."
     },
     {
      "slug": "speech-872942",
@@ -697,7 +756,8 @@
      "speaker": null,
      "party": null,
      "state": "vic",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that the Voice to Parliament will improve outcomes for First Nations children by ensuring their voices are heard, and announced their support for a 'yes' vote in the 14 October referendum."
     },
     {
      "slug": "speech-829164",
@@ -705,7 +765,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker criticised the Prime Minister's proposed referendum wording for the Voice to Parliament, arguing it was a flawed model lacking bipartisanship and transparency, and accused the Prime Minister of prioritising wedge politics over an enduring outcome for Indigenous Australians."
     },
     {
      "slug": "speech-829205",
@@ -713,7 +774,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker supported the Voice to Parliament referendum, noting South Australia's state-level Voice as a milestone and urging respectful debate. They argued the Voice would provide constitutional recognition and consultation to improve Indigenous outcomes in health, education, housing, and welfare."
     },
     {
      "slug": "speech-829522",
@@ -721,7 +783,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that the proposed Voice to Parliament amendment is radical, not modest, and could create an implied constitutional obligation to consult, raising serious justiciability concerns; they criticised the government for dismissing questions from the opposition and called for proper debate, referencing the Calma Langton report and its later dismissal as subconscious racism."
     },
     {
      "slug": "speech-880635",
@@ -729,7 +792,8 @@
      "speaker": null,
      "party": null,
      "state": "vic",
-     "date": null
+     "date": null,
+     "passage": "The speaker attended a forum on the Voice referendum and argued that the Indigenous Voice to Parliament is crucial for giving First Nations Australians a say on issues that affect them, and called on the Liberal and National parties to support the campaign."
     },
     {
      "slug": "speech-972204",
@@ -737,7 +801,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker questioned a $300,000 departmental expenditure on monitoring the mental health needs of First Nations people during the Voice to Parliament referendum, seeking an update on its status and methodology."
     },
     {
      "slug": "speech-1189469",
@@ -745,7 +810,8 @@
      "speaker": null,
      "party": null,
      "state": "sa",
-     "date": null
+     "date": null,
+     "passage": "The speaker opposed the South Australian government's decision to hold a special parliamentary sitting on Sunday 26 March 2023 to legislate a state-based Voice to Parliament before the national referendum, questioning the justification, cost to taxpayers, and whether it was a publicity stunt. The speaker argued the money could be better spent on issues like hospital ramping and child protection."
     },
     {
      "slug": "speech-406956",
@@ -753,7 +819,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that the 1967 referendum, which passed with over 90% support, enabled the Native Title Act and that the Uluru Statement's call for a Voice to Parliament is a necessary step to right ongoing wrongs, criticising the current government for lacking courage."
     }
    ]
   },
@@ -767,7 +834,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that progress on Closing the Gap for Aboriginal and Torres Strait Islander people has been insufficient since Tom Calma's 2005 call for equality within 25 years, and highlighted an implementation plan with measures for remote housing, family violence prevention, water infrastructure, and education. They stated that the Voice to Parliament is critical to improve outcomes by\u2026"
     },
     {
      "slug": "speech-1194626",
@@ -775,7 +843,8 @@
      "speaker": null,
      "party": "Independent",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "As the Prime Minister outlined earlier this week, the National Agreement onClosing the Gapis a landmark partnership. Also earlier this week, MinisterMcCarthyand thePMlaunched theClosing the Gap: Commonwealth2024annualreport:Commonwealth2025implementation plan. In Minister McCarthy's speech, she acknowledged what the government has been doing. The 2024 annual report also outlined the actions that\u2026"
     },
     {
      "slug": "speech-270213",
@@ -783,7 +852,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "I am very pleased to have the opportunity to speak in this debate in response to the Prime Minister's report to the parliament on the Closing the Gap report for 2012. The annual report to parliament has occurred each year since Prime Minister Rudd offered the official apology to the stolen generation on behalf of the nation in 2007. I was very pleased, as I am sure many of us were, to have been\u2026"
     },
     {
      "slug": "speech-1187945",
@@ -791,7 +861,8 @@
      "speaker": null,
      "party": null,
      "state": "sa",
-     "date": null
+     "date": null,
+     "passage": "The speaker argued that Labor's proposed State Voice to Parliament\u2014a body that could speak on any bill in parliament\u2014would be a departure from the Westminster system and risk becoming a third chamber, while the opposition's model of an Aboriginal representative body working within existing parliamentary committees would better deliver practical outcomes for closing the gap."
     },
     {
      "slug": "speech-359624",
@@ -799,7 +870,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "It gives me great pride to be able to contribute to this discussion today. We saw earlier in the week the report to the parliament on the Closing the Gap targets and we heard eminent speeches from the Prime Minister and the Leader of the Opposition. We had a breakfast which, sadly, the Prime Minister failed to stay for and we had a wonderful opportunity just yesterday to see a great show of unity\u2026"
     },
     {
      "slug": "speech-1205695",
@@ -807,7 +879,8 @@
      "speaker": null,
      "party": "Independent",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Every year this parliament marksClosing the Gapwith solemn language about partnership, healing and progress. But, every year, the data tells a different story. The Productivity Commission'sClosing the gap annual data compilation reportJuly 2026is now out. We're past the halfway point to 2031, the deadline for most targets under the national agreement. Of 19 targets, only one has been met. Three\u2026"
     },
     {
      "slug": "speech-828249",
@@ -815,7 +888,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "This prospect should attract bipartisan support, especially given that these priority reforms were agreed by the previous government. The 2023 implementation plan and up-and-coming referendum promises a truly transformational moment for First Nations and real, lasting change: recognition in the Constitution and ability to make representation, to the government, into the parliament on matters that\u2026"
     },
     {
      "slug": "speech-944442",
@@ -823,7 +897,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker discussed ongoing consultations over the scope of the next Productivity Commission review of the Closing the Gap agreement, noting the draft terms of reference are expected to be settled by February 2025, with the review scheduled for early 2027."
     },
     {
      "slug": "speech-424024",
@@ -831,7 +906,8 @@
      "speaker": null,
      "party": null,
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The speaker noted that 2025 Closing the Gap data shows Aboriginal and Torres Strait Islander adult incarceration is worsening, and asked the department what modifications are being made to programs like Justice Reinvestment to improve outcomes."
     },
     {
      "slug": "speech-1292575",
@@ -839,7 +915,8 @@
      "speaker": null,
      "party": null,
      "state": "nsw",
-     "date": null
+     "date": null,
+     "passage": "The Hon. JOHN RUDDICK ( 11:22 :24 ): My question is directed to the Leader of the Government, representing the Premier. In 2020 this Parliament allocated $222 million to Closing the Gap initiatives. The Auditor\u2011General released a report last week entitled Governance of the National Agreement on Closing the Gap in NSW. The Auditor-General found that the Government had exercised inadequate\u2026"
     },
     {
      "slug": "speech-1118190",
@@ -847,7 +924,8 @@
      "speaker": null,
      "party": null,
      "state": "vic",
-     "date": null
+     "date": null,
+     "passage": "The Prime Minister tabled the annual Closing the Gap report in Parliament on 14 February 2019, outlining that only two of the seven Closing the Gap targets are on track. This is shameful. While many of the national targets have not been achieved, outcomes for Aboriginal Victorians are stronger when compared to other jurisdictions across almost all areas of the Closing the Gap agreement, including\u2026"
     },
     {
      "slug": "speech-826960",
@@ -855,7 +933,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The motion acknowledged the 15th anniversary of the National Apology to the Stolen Generations and called for a referendum to establish an Aboriginal and Torres Strait Islander Voice to Parliament, arguing it would improve outcomes in health, education and housing by giving communities a say in policy. The speaker noted a decade-long life-expectancy gap and commended the Coalition of Peaks,\u2026"
     },
     {
      "slug": "speech-1197714",
@@ -863,7 +942,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "All 17 Closing the Gap outcomes were clearly outlined in the program for the very first time across the six Senate committees. The time dedicated to First Nations issues more than tripled, and, at estimates, we saw just how successful that change to the program was for scrutiny of Closing the Gap. I'm delighted to report that, when combined, we saw 11 hours of actual questions asked and answers\u2026"
     },
     {
      "slug": "speech-826829",
@@ -871,7 +951,8 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "Aboriginal and Torres Strait Islander leaders around the country acknowledge the significance of this event and routinely attend, and they will be welcomed to continue to do so. Most of the senators in this place often attend the speeches of both the Prime Minister and the Leader of the Opposition. The government considers Closing the Gap a bipartisan task and calls on all members of parliament\u2026"
     },
     {
      "slug": "speech-1121451",
@@ -879,7 +960,8 @@
      "speaker": null,
      "party": null,
      "state": "nsw",
-     "date": null
+     "date": null,
+     "passage": "The Hon. SHAOQUETT MOSELMANE ( 10:08 :42 ): I move: (1)That this House: (a)acknowledges that Friday 12 February was the thirteenth anniversary of the National Apology to Stolen Generations made by former Prime Minister Kevin Rudd; (b)acknowledges the generational trauma caused by the removal of Aboriginal children from their families; and (c)reaffirms the commitment of the New South Wales\u2026"
     },
     {
      "slug": "speech-401836",
@@ -887,7 +969,8 @@
      "speaker": null,
      "party": "Liberal",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "The member for Braddon supported the government's Indigenous Voice policy, quoting Aboriginal leader Emma Lee of Tasmania's west coast, who argued Indigenous peoples lack a formal say over their own affairs and called for a hand up through a Voice to parliament. The speech also praised the national agreement on closing the gap for giving Indigenous organisations greater say in funding outcomes."
     },
     {
      "slug": "speech-305008",
@@ -895,21 +978,30 @@
      "speaker": null,
      "party": "Labor",
      "state": "federal",
-     "date": null
+     "date": null,
+     "passage": "It is very fitting that we begin each parliamentary year with the annual Prime Minister's report on Closing the Gap. It is a unique chance for this parliament to reflect on the challenges ahead and to recommit ourselves to Closing the Gap targets in the areas of health, life expectancy, education, employment and justice. It was an honour to attend the breakfast this morning where a number of\u2026"
     }
    ]
   }
  ],
  "lede": {
-  "text": "The Victorian Parliament is split over the Statewide Treaty Bill 2025, with Labor MP Juliana Addison calling it \"a landmark in Victoria's ongoing journey towards justice and self-determination\" while the Shadow Minister for Aboriginal Affairs said the opposition would repeal it within 100 days if elected. Opposition MP Evan Mulholland claimed Gellung Warl \"will receive automatic escalating payments starting at $24 million a year and rising beyond $70 million by the end of the decade,\" with \"no accountability, no transparency.\" Greens MP Ellen Sandell backed the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024 but criticised Labor for accepting \"less than 15 per cent\" of Yoorrook Justice Commission recommendations.",
+  "text": "Sheena Watt called the Statewide Treaty Bill 2025, establishing Gellung Warl, \"a landmark in Victoria's ongoing journey towards justice and self-determination for First Peoples.\" Evan Mulholland said the Liberals and Nationals will not support the Statewide Treaty Bill 2025 and would repeal it if elected, arguing it \"elevates Indigenous Victorians above their fellow citizens.\" Ellen Sandell backed the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024 but criticised Labor for accepting \"less than 15 per cent\" of Yoorrook Justice Commission recommendations.",
   "sources": [
    {
-    "slug": "speech-831905",
-    "title": "Juliana Addison \u2014 Statewide Treaty Bill 2025 - Second reading \u2014 2025-10-14",
-    "speaker": "Juliana Addison",
+    "slug": "speech-1144408",
+    "title": "Sheena Watt \u2014 Scrutiny of Acts and Regulations Committee - Alert Digest No. 13 \u2014 2025-10-14",
+    "speaker": "Sheena Watt",
     "party": null,
     "state": "vic",
-    "date": "2025-10-14"
+    "date": "2025-10-14",
+    "passage": "\u2026I want to take a moment to talk to the chamber about this bill, which represents a landmark in Victoria's ongoing journey towards justice and self-determination for First Peoples in this state. Building on the Advancing the Treaty Process with Aboriginal Victorians Act 2018 and the Treaty Authority and Other Treaty Elements Act 2022, this bill establishes the legislative foundation for a\u2026",
+    "answer_ranges": [
+     [
+      0,
+      178
+     ]
+    ],
+    "cited": true
    },
    {
     "slug": "speech-1142225",
@@ -917,7 +1009,15 @@
     "speaker": "Evan Mulholland",
     "party": null,
     "state": "vic",
-    "date": "2025-10-28"
+    "date": "2025-10-28",
+    "passage": "\u2026In its attempt to right past wrongs and fix inequality, it elevates Indigenous Victorians above their fellow citizens in terms of access to government and their ability to influence future decisions. We have had several referendums, including a referendum that expanded the right to vote for the Australian Capital Territory and the Northern Territory and indeed the landmark referendum of the Holt\u2026",
+    "answer_ranges": [
+     [
+      179,
+      379
+     ]
+    ],
+    "cited": true
    },
    {
     "slug": "speech-856098",
@@ -925,9 +1025,18 @@
     "speaker": "Ellen Sandell",
     "party": null,
     "state": "vic",
-    "date": "2024-11-27"
+    "date": "2024-11-27",
+    "passage": "\u2026It has been a year since the government received the Yoorrook Justice Commission\u2019s report, and Labor has officially accepted less than 15 per cent of the Yoorrook Justice Commission\u2019s recommendations. Less than 15 per cent of the recommendations that this body of First Nations people have put before this government have been accepted. First Peoples are sick and tired of telling governments the\u2026",
+    "answer_ranges": [
+     [
+      380,
+      597
+     ]
+    ],
+    "cited": true
    }
-  ]
+  ],
+  "cite_method": "declared"
  },
  "now": {
   "since": "2024-07-01",
@@ -1025,7 +1134,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-14",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        330,
+        550
+       ]
+      ],
+      "passage": "\u2026It is not about division, it is about unity, justice and reconciliation and the power of truth-telling. As my friend Nikki Foy, a proud Gunditjmara woman who lives in my community, reminded me, treaty does not take anything away from non-Aboriginal people; rather, it is a mutual agreement that respects the rights and interests of all. I want to acknowledge the work of Aunty Jill Gallagher, Ngarra\u2026"
      },
      {
       "slug": "speech-1144408",
@@ -1034,7 +1150,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-14",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        330,
+        550
+       ]
+      ],
+      "passage": "\u2026I want to take a moment to talk to the chamber about this bill, which represents a landmark in Victoria's ongoing journey towards justice and self-determination for First Peoples in this state. Building on the Advancing the Treaty Process with Aboriginal Victorians Act 2018 and the Treaty Authority and Other Treaty Elements Act 2022, this bill establishes the legislative foundation for a\u2026"
      },
      {
       "slug": "speech-769255",
@@ -1043,7 +1166,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-15",
-      "cited": true
+      "cited": true,
+      "passage": "This evening I rise to make a contribution on the Statewide Treaty Bill 2025. Before I begin, I would like to acknowledge the traditional owners of the land on which we meet, the Wurundjeri people of the Kulin nation. I also pay my respects to the traditional owners of the lands that I represent, the Bunurong people. This was and always will be Aboriginal land. I would also like to acknowledge\u2026"
      },
      {
       "slug": "speech-769230",
@@ -1052,7 +1176,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-15",
-      "cited": true
+      "cited": true,
+      "passage": "I am honoured to rise today to speak on the Statewide Treaty Bill \u200d2025, and I would like to begin by acknowledging the traditional owners of the land on which the Parliament meets, the Wurundjeri Woi Wurrung people of the Kulin nation. I acknowledge the Wathaurong people of the Kulin nation, the traditional owners of the lands I represent in this place, and I thank them for the thousands of\u2026"
      },
      {
       "slug": "speech-769242",
@@ -1061,7 +1186,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-15",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        550,
+        728
+       ]
+      ],
+      "passage": "\u2026We have heard scaremongering from those opposing this legislation, but this treaty bill is not a radical proposition. It is a first step toward delivering benefits for First Nations people based on self-determined priorities established by the democratically elected First Peoples' Assembly. We have heard other critiques of this bill, that what it establishes is still limited by colonial\u2026"
      },
      {
       "slug": "speech-769259",
@@ -1070,7 +1202,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-15",
-      "cited": true
+      "cited": true,
+      "passage": "It is truly an honour and a privilege to stand and speak on the Statewide Treaty Bill 2025 here on the land of the Wurundjeri people. We stand on land that was a meeting place for the Wurundjeri and Bunurong peoples for millennia, a place for important discussions between clans. This bill heralds the start of important discussions on truth, justice and self-determination. I begin by acknowledging\u2026"
      },
      {
       "slug": "speech-1142226",
@@ -1079,7 +1212,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-28",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        330,
+        550
+       ]
+      ],
+      "passage": "\u2026It is the right thing to do, and it does not take anything away from anyone else. In her contribution last sitting week, the member for Cranbourne made a powerful observation when she said: We know treaty is an opportunity not to divide Victoria but to complete it. It is significant that Victoria is the only state in the Commonwealth so far to have a treaty, but I know that the other states and\u2026"
      },
      {
       "slug": "speech-1142225",
@@ -1088,7 +1228,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-28",
-      "cited": true
+      "cited": true,
+      "passage": "I rise to speak on the Statewide Treaty Bill 2025, and it would be remiss of me not to acknowledge this is a very significant debate in our Parliament. I would like to acknowledge particularly Melina Bath. I would like to acknowledge all the work that she has done \u2013 and Peter Walsh before her \u2013 as our shadow minister for Indigenous affairs. I would also like to acknowledge everyone in my\u2026"
      },
      {
       "slug": "speech-1142234",
@@ -1097,7 +1238,18 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-28",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1244,
+        1459
+       ],
+       [
+        1695,
+        1867
+       ]
+      ],
+      "passage": "\u2026Under this bill, Gellung Warl will receive automatic escalating payments starting at $24 million a year and rising beyond $70 million by the end of the decade. Parliament will have no control over this funding, and the minister will have no authority to direct or oversee it. Hundreds of millions of dollars will be handed to an unelected, race-based body that is accountable to no-one. The First\u2026"
      },
      {
       "slug": "speech-832694",
@@ -1106,7 +1258,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-09-09",
-      "cited": false
+      "cited": false,
+      "passage": "Well, it feels like it has been a very long day already. We have had some really big, big things happen this morning and this afternoon. I will start my contribution on the government business program by joining my colleagues, in fact everyone in this chamber, in expressing my deepest sympathy and condolences to the family members of the two slain police officers \u2013 incredibly tragic and traumatic\u2026"
      },
      {
       "slug": "speech-832652",
@@ -1115,7 +1268,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-09-09",
-      "cited": false
+      "cited": false,
+      "passage": "Every family is made stronger when they have control over their lives, their futures and the things that matter most, and Aboriginal families are no different. For too long the decisions that have shaped Aboriginal lives have been made without them, not with them. That is why treaty matters; that is why treaty makes sense. It gives Aboriginal people the opportunity to have a real say over the\u2026"
      },
      {
       "slug": "speech-1146099",
@@ -1124,7 +1278,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-09-10",
-      "cited": false
+      "cited": false,
+      "passage": "We are one step closer to treaty. The Statewide Treaty Bill 2025 was just introduced into the Victorian Parliament \u2013 a first for our state, a first for our country. I cannot underestimate how significant this moment is. This has been generations in the making, carried forward by the voices, the persistence, the courage and the strength of our elders and ancestors. Treaty is a milestone not just\u2026"
      },
      {
       "slug": "speech-831885",
@@ -1133,7 +1288,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-14",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1459,
+        1695
+       ]
+      ],
+      "passage": "\u2026But unfortunately this Statewide Treaty Bill does not address closing the gap in Victoria. If we really want to close the gap, if we are serious about looking at that, we need to be looking at the successful models that have succeeded in closing the gap, not just creating another layer of bureaucracy. A report from Australia's peak body for Indigenous children, the Secretariat of National\u2026"
      },
      {
       "slug": "speech-831910",
@@ -1142,7 +1304,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-14",
-      "cited": false
+      "cited": false,
+      "passage": "It is a great privilege to rise today and speak in support of the Statewide Treaty Bill 2025, and can I from the very outset thank from the very bottom of my heart the amazing people of the First Peoples' Assembly of Victoria. What incredible, groundbreaking, nation-leading work, and I am so proud that it is happening here today in this place. It is work that is over 200 years in the making and a\u2026"
      },
      {
       "slug": "speech-769256",
@@ -1151,7 +1314,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-15",
-      "cited": false
+      "cited": false,
+      "passage": "I also rise and acknowledge the traditional owners and custodians of the land on which the Victorian Parliament is, and I also acknowledge that Parliament House was actually built on traditional ceremonial land, as explained to us by Uncle Andrew Gardiner, a Wurundjeri elder. It was an important meeting place where decisions and laws were made for thousands of years before European settlement.\u2026"
      },
      {
       "slug": "speech-769245",
@@ -1160,7 +1324,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-15",
-      "cited": false
+      "cited": false,
+      "passage": "I am incredibly proud and honoured to stand here today in support of this momentous legislation, the Statewide Treaty Bill 2025. I would like to acknowledge the Wurundjeri people of the Kulin nation as the traditional owners of the land on which we are gathering today here in the Parliament of Victoria and also acknowledge the Bunurong people, whose lands include my electorate of Mulgrave. I want\u2026"
      },
      {
       "slug": "speech-1142199",
@@ -1169,7 +1334,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-28",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1459,
+        1695
+       ]
+      ],
+      "passage": "\u2026Yet this bill, which is 250 pages long, mentions Closing the Gap twice. In the bill there are no binding obligations for the state of Victoria to meet those Closing the Gap targets. There certainly is an arm \u2013 and I will speak to that \u2013 about monitoring government performance, but there are no consequences for the government not meeting those benchmarks. If there is one thing that we certainly\u2026"
      },
      {
       "slug": "speech-1142212",
@@ -1178,7 +1350,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-28",
-      "cited": false
+      "cited": false,
+      "passage": "I too rise to speak in support of the Statewide Treaty Bill 2025 before us today, and in doing so I begin by acknowledging the traditional owners and custodians of the land on which this Parliament stands, the Wurundjeri Woi Wurrung people of the Kulin nations, and I pay my respects to their elders past and present. I extend that acknowledgement to all traditional owners and First Peoples across\u2026"
      },
      {
       "slug": "speech-1142222",
@@ -1187,7 +1360,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-28",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        952,
+        1244
+       ]
+      ],
+      "passage": "\u2026This bill establishes a vastly different system of law and regulations that separates Victorians based on race. We live in a multicultural society, and we should celebrate that \u2013 people of all different backgrounds bringing their unique attributes to create a stronger community. We have been down this road before with a federal referendum on the Voice to Parliament. At the time there was a lack\u2026"
      },
      {
       "slug": "speech-1140487",
@@ -1196,10 +1376,12 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-30",
-      "cited": false
+      "cited": false,
+      "passage": "(2070) My adjournment today is for the Minister for Treaty and First Peoples in the other place. Last month negotiations were finalised between the Victorian government and the First Peoples' Assembly of Victoria for the Statewide Treaty Bill 2025 that was introduced into Parliament and has been passed tonight. The journey towards truth and treaty has been ongoing over a decade, and I am proud\u2026"
      }
     ],
-    "asked_at": "2026-09-04T23:04:38+00:00"
+    "asked_at": "2026-09-04T23:04:38+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What has parliament said about the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024?",
@@ -1212,7 +1394,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-13",
-      "cited": true
+      "cited": true,
+      "passage": "In accordance with the Charter of Human Rights and Responsibilities Act 2006, I table a statement of compatibility in relation to the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024: Opening paragraphs In accordance with section 28 of the Charter of Human Rights and Responsibilities Act 2006 , (the Charter), I make this Statement of Compatibility with respect\u2026"
      },
      {
       "slug": "speech-856102",
@@ -1221,7 +1404,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": true
+      "cited": true,
+      "passage": "It is a pleasure to rise in the short time I have got on the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024. I too want to start by acknowledging the traditional owners of the land on which we meet today, the Wurundjeri people, and paying my profound respect to elders past and present and to those that have courageously fronted up to the Yoorrook Justice\u2026"
      },
      {
       "slug": "speech-856098",
@@ -1230,7 +1414,14 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1131,
+        1287
+       ]
+      ],
+      "passage": "I rise to also speak on the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024, which will entrench principles of Indigenous data sovereignty within Victorian law. The Greens will be supporting this bill. We would like to commend the government on what sounds like has been a very good consultation and development process. As we understand it, the first step was\u2026"
      },
      {
       "slug": "speech-856094",
@@ -1239,7 +1430,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": true
+      "cited": true,
+      "passage": "I also rise to make a contribution on the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024. This is a piece of legislation that I am very proud to be a part of as a member of the Allan Labor government, which is introducing this into Parliament. We have heard a lot of allegations and talk about locking up land and funding and whatever, and as the next speaker\u2026"
      },
      {
       "slug": "speech-856099",
@@ -1248,7 +1440,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": true
+      "cited": true,
+      "passage": "Before I start I would like to acknowledge the traditional owners and custodians of the land on which this Parliament stands, the Wurundjeri Woi Wurrung people of the Kulin nation. I would also like to acknowledge the Bunurong people, who have looked after the lands that make up the electorate of Mulgrave for tens of thousands of years, and I pay my respects to elders and ancestors, elders from\u2026"
      },
      {
       "slug": "speech-1170966",
@@ -1257,7 +1450,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-28",
-      "cited": true
+      "cited": true,
+      "passage": "I move: That the bill be now read a first time. Motion agreed to. Read first time. Gayle TIERNEY: I move, by leave: That the second reading be taken forthwith. Motion agreed to. Gayle TIERNEY (Western Victoria \u2013 Minister for Skills and TAFE, Minister for Regional Development) (17:44): I lay on the table a statement of compatibility with the Charter of Human Rights and Responsibilities Act 2006:\u2026"
      },
      {
       "slug": "speech-1168618",
@@ -1266,7 +1460,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-02-18",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1938,
+        2156
+       ]
+      ],
+      "passage": "\u2026This bill sets up two classes of Victorians and treats them inherently differently, and I think this is a deep problem. We just had a large national vote last year where people sought to treat people in different ways. That was obviously not successful in changing the national constitution, but I think there was a very clear vote, including in Victoria. The vote was very clear. It was a 55\u201345\u2026"
      },
      {
       "slug": "speech-1168619",
@@ -1275,7 +1476,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-02-18",
-      "cited": true
+      "cited": true,
+      "passage": "I also rise to make a contribution on this bill, the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024. Before I begin my remarks I just want to acknowledge and pay my respects to the Wurundjeri people of the Kulin nation, whose land we are gathered on today. I wish to pay my respects to their elders past, present and emerging and to any elders who may be with\u2026"
      },
      {
       "slug": "speech-1168626",
@@ -1284,7 +1486,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-02-18",
-      "cited": true
+      "cited": true,
+      "passage": "I rise on behalf of the Minister for Treaty and First Peoples to sum up in relation to the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024. I begin \u2013 as we do at the start of every day \u2013 by acknowledging that we meet on the lands of the Wurundjeri Woi Wurrung people, and I pay my respects to elders past and present and to Aboriginal people who may be\u2026"
      },
      {
       "slug": "speech-1168610",
@@ -1293,7 +1496,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-02-18",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1333,
+        1713
+       ]
+      ],
+      "passage": "\u2026It creates two different classes of citizens and it is unnecessary. I want to in my contribution unpack the safeguards that exist now in our legislation that support all Victorians who provide critical information, personal information, vital information and sensitive information in the course of public hearings, royal commissions and, in this case, this commission. This bill proposes a 99-year\u2026"
      },
      {
       "slug": "speech-1168616",
@@ -1302,7 +1512,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-02-18",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        225,
+        589
+       ]
+      ],
+      "passage": "I rise to make a contribution on the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024. In doing so I say that the Liberal Party are opposing this bill. The purpose of the bill is to amend the Inquiries Act 2014 and the Public Records Act 1973 to empower the Yoorrook Justice Commission to make record orders to close or restrict access to specified records for\u2026"
      },
      {
       "slug": "speech-856301",
@@ -1311,7 +1528,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-26",
-      "cited": false
+      "cited": false,
+      "passage": "I move: That, under standing order 94(2), the orders of the day, government business, relating to the following bills be considered and completed by 5 pm on 28 November 2024: Justice Legislation Amendment (Committals) Bill 2024 Budget papers \u2013 motion Nuclear power \u2013 motion Parliamentary apology to Victorians who experienced historical abuse and neglect as children in institutional care \u2013 motion\u2026"
      },
      {
       "slug": "speech-856095",
@@ -1320,7 +1538,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": false
+      "cited": false,
+      "passage": "I rise to make a contribution on the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024. The inquiries amendment bill primarily aims to amend the Inquiries Act 2014 and the Public Records Act 1973 to regulate the management of, access to and preservation of records related to the Yoorrook Justice Commission. The commission was established in May 2021 and tasked\u2026"
      },
      {
       "slug": "speech-856096",
@@ -1329,7 +1548,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": false
+      "cited": false,
+      "passage": "I rise on this side of the house to proudly support the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024. In doing so I would like to begin by acknowledging the traditional custodians of the land on which we meet, live, learn and work, the Wurundjeri people of the Kulin nation. I pay my respects to elders past, present and emerging and particularly all of my\u2026"
      },
      {
       "slug": "speech-1168625",
@@ -1338,7 +1558,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-02-18",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        837,
+        1131
+       ]
+      ],
+      "passage": "It is only right that this Parliament, at the start of every sitting, acknowledge the traditional custodians as the First People of this land, and at the beginning of my contribution today I once again acknowledge them. I pay my respects to their elders past and present. I acknowledge their strength, their resilience and their continued connection to country, skies and waterways. I acknowledge\u2026"
      },
      {
       "slug": "speech-1168620",
@@ -1347,7 +1574,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-02-18",
-      "cited": false
+      "cited": false,
+      "passage": "I rise to speak on the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024. The bill takes important steps to futureproof how information gathered through the commission is sorted, accessed and used once its inquiries are concluded. Data sovereignty is the right of a group to own, control, access and possess information or data that has derived from them, and for\u2026"
      },
      {
       "slug": "speech-1168615",
@@ -1356,7 +1584,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-02-18",
-      "cited": false
+      "cited": false,
+      "passage": "I also rise to speak on the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024, and I will also preface my remarks by acknowledging the Wurundjeri people as the traditional owners of the land on which we are gathering here today. The Victorian Allan Labor government has remained consistent and steadfast in its commitment to achieving voice, truth-telling and\u2026"
      },
      {
       "slug": "speech-1168617",
@@ -1365,7 +1594,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-02-18",
-      "cited": false
+      "cited": false,
+      "passage": "I rise to speak on the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024, a bill which seeks to make some amendments with respect to data and record keeping to enable the operation of the Yoorrook Justice Commission, which is a groundbreaking process underway in this country being led by this state to get to the truth about past injustices and the ongoing\u2026"
      },
      {
       "slug": "speech-1168624",
@@ -1374,7 +1604,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-02-18",
-      "cited": false
+      "cited": false,
+      "passage": "I am proud to stand to speak in support of this bill today, the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024. I acknowledge the traditional owners of the land on which we are gathering and pay my respects to traditional owners, their culture and elders past and present. I acknowledge their strength, resilience and continued connection to their country. I\u2026"
      },
      {
       "slug": "speech-1146099",
@@ -1383,10 +1614,12 @@
       "party": null,
       "state": "vic",
       "date": "2025-09-10",
-      "cited": false
+      "cited": false,
+      "passage": "We are one step closer to treaty. The Statewide Treaty Bill 2025 was just introduced into the Victorian Parliament \u2013 a first for our state, a first for our country. I cannot underestimate how significant this moment is. This has been generations in the making, carried forward by the voices, the persistence, the courage and the strength of our elders and ancestors. Treaty is a milestone not just\u2026"
      }
     ],
-    "asked_at": "2026-09-04T23:04:49+00:00"
+    "asked_at": "2026-09-04T23:04:49+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What has parliament said about Treaty?",
@@ -1399,7 +1632,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-09-10",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        192,
+        387
+       ]
+      ],
+      "passage": "\u2026The Statewide Treaty Bill 2025 was just introduced into the Victorian Parliament \u2013 a first for our state, a first for our country. I cannot underestimate how significant this moment is. This has been generations in the making, carried forward by the voices, the persistence, the courage and the strength of our elders and ancestors. Treaty is a milestone not just for mob but for everyone who\u2026"
      },
      {
       "slug": "speech-832434",
@@ -1408,7 +1648,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-09-10",
-      "cited": true
+      "cited": true,
+      "passage": "Yesterday in this Parliament history was made again with the introduction of the Statewide Treaty \u2013 the first in the nation. Treaty will establish Gellung Warl to give First Peoples a direct say in their services and initiatives. It will strengthen truth-telling beyond Yoorrook and embed our shared history in every Victorian school. From a premiership flag that lifts community pride, to a hub\u2026"
      },
      {
       "slug": "speech-769241",
@@ -1417,7 +1658,18 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-15",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        387,
+        574
+       ],
+       [
+        1780,
+        1921
+       ]
+      ],
+      "passage": "\u2026Treaty is about making sure that First Peoples get a say over their health care, their families' housing and their kids' education, the practice of their culture. Now and into the future treaty is about acknowledging the pain and suffering of the past and working together towards a better future, not only for our First Nations people but for all Victorians. I am honoured and proud, and I commend\u2026"
      },
      {
       "slug": "speech-1142222",
@@ -1426,7 +1678,22 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-28",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1279,
+        1461
+       ],
+       [
+        1596,
+        1780
+       ],
+       [
+        2483,
+        2752
+       ]
+      ],
+      "passage": "\u2026It sets up a new authority that sits outside of Parliament or ministerial responsibility. Through treaty the state Labor government is legislating a new statutory body with ongoing and increasing funding outside of the normal budgetary process. Neither the Premier nor the minister nor the Treasurer has any control as to how that money is spent. The proposed authority sets its own rules, is\u2026"
      },
      {
       "slug": "speech-1142221",
@@ -1435,7 +1702,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-28",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        574,
+        785
+       ]
+      ],
+      "passage": "\u2026Some in this place have said 'not now', but the Greens say it is high time and that First Peoples have waited long enough. The assembly has set out a careful path built on listening, evidence and community mandate. The work has been patient and practical, and the mandate is clear. And I say thank you so much for all of the hard work that has been done by the assembly and all the community members\u2026"
      },
      {
       "slug": "speech-1172644",
@@ -1444,7 +1718,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-14",
-      "cited": false
+      "cited": false,
+      "passage": "(1290) I listened to what the Premier said today on the matter of treaty, and it appears that the Premier is preparing to try and entrench a treaty in the Victorian constitution. That is what I took out of some of the comments that the Premier made today. This is obviously directed to the Premier, this adjournment matter, and if my reading of what she said today is not correct, I would appreciate\u2026"
      },
      {
       "slug": "speech-1171292",
@@ -1453,7 +1728,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": false
+      "cited": false,
+      "passage": "(1325) My adjournment this evening is for the Premier, and the action I seek is for her to immediately stop treaty negotiations. On 14 October 2023 Australia resoundingly voted no to the Indigenous Voice to Parliament. This racist and divisive referendum pitted Australian against Australian and caused much upheaval in our beautiful country. The overwhelming majority of my electorate of Northern\u2026"
      },
      {
       "slug": "speech-843282",
@@ -1462,7 +1738,8 @@
       "party": null,
       "state": "qld",
       "date": "2025-03-12",
-      "cited": false
+      "cited": false,
+      "passage": "Thank you, Mr Deputy Speaker. We saw on their very first day of parliament sitting this term that the LNP came in here and trashed democracy with the repeal of the Path to Treaty Act. In their second week, they gagged the parliament around debate on termination of pregnancy in a desperate attempt to keep their fractious party room united\u2014"
      },
      {
       "slug": "speech-1154109",
@@ -1471,7 +1748,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-06-17",
-      "cited": false
+      "cited": false,
+      "passage": "(1715) My adjournment matter is for the Minister for Treaty and First Peoples, and the action I seek is that she immediately halt the statewide treaty process until the government comprehensively explains to the people of Victoria what treaty actually means. Last week the minister told the Public Accounts and Estimates Committee she wants treaty legislation introduced this year and a statewide\u2026"
      },
      {
       "slug": "speech-1147676",
@@ -1480,7 +1758,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-08-28",
-      "cited": false
+      "cited": false,
+      "passage": "Treaty means listening to First Nations people. Treaty will make sure that Aboriginal communities in our state always have a say. Treaty will take us forward. Australia's first treaty right here in Victoria is an opportunity to acknowledge \u2013 to celebrate \u2013 the world's oldest living culture. It is a momentous opportunity to be walking alongside First Nations people. This is a significant step for\u2026"
      },
      {
       "slug": "speech-1146474",
@@ -1489,7 +1768,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-09-09",
-      "cited": false
+      "cited": false,
+      "passage": "On this historic day I am so proud to share my support for treaty. Treaty is a step towards true justice, freedom and healing. It comes hundreds of years too late, but that it is happening is testament to the strength of First Peoples; to the endurance of culture, country and kin; and to the work of advocates over many decades for recognition of First People's sovereignty. The realisation of this\u2026"
      },
      {
       "slug": "speech-1144410",
@@ -1498,7 +1778,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-14",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        785,
+        987
+       ]
+      ],
+      "passage": "\u2026This government has been working on treaty since 2015. We have also had the First Peoples' Assembly working on this bill with their communities, and consultation has been happening for many, many years on this bill. So it is offensive for Mr Davis to get up in this chamber and perpetuate such misinformation about this very important milestone. To hear Mr Davis refer to this as a yes vote just\u2026"
      },
      {
       "slug": "speech-769228",
@@ -1507,7 +1794,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-15",
-      "cited": false
+      "cited": false,
+      "passage": "I am happy to rise today to speak on this bill, and I pay my respects. What is treaty? On that side of the house, treaty is a wonderful destination that they support, but they do not have the moral courage to take the journey to get there. They support it, but they do not support it: 'Sorry.' What is treaty? Treaty is 246 pages, 51,018 words of what could be described as pretty complex\u2026"
      },
      {
       "slug": "speech-1142225",
@@ -1516,7 +1804,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-28",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1032,
+        1279
+       ]
+      ],
+      "passage": "\u2026I must reiterate from the outset that the Liberals and Nationals will not be supporting this legislation, just as we did in the other place. I want to, in my contribution to this debate, make it very clear why this is the case and why we propose a different way forward on these important issues. We do not support treaty, and we certainly do not support this bill. From my own point of view, even\u2026"
      },
      {
       "slug": "speech-1142212",
@@ -1525,7 +1820,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-28",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1996,
+        2292
+       ]
+      ],
+      "passage": "\u2026It does not change the Victorian or Commonwealth constitutions. It does not establish a third chamber of Parliament. It does not change tax laws or provide individual financial reparations, although as Mr Ettershank stated, there is still so much more to be explored. It does not have veto powers on policy or legislation, and it will not impact private land. The body will also be subject to the\u2026"
      },
      {
       "slug": "speech-1140460",
@@ -1534,7 +1836,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-30",
-      "cited": false
+      "cited": false,
+      "passage": "Minister, one of the key things that I think universally both houses agree on is the need for Closing the Gap targets to be improved nationally \u2013 nationally agreed Closing the Gap targets. Indeed we heard many of the members of Parliament from the Labor Party saying 'let us try something different' in their contributions, and I could quote some of them. One of the things that we know is that over\u2026"
      },
      {
       "slug": "speech-1200406",
@@ -1543,7 +1846,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-03-02",
-      "cited": false
+      "cited": false,
+      "passage": "1:17 pm Closing the gap\u2014yes, we all want to see that happen. It's been going on for decades, and nothing happens. It's the same old rhetoric we hear all the time. Australians have been saying to me for ever and a day, 'Where does the money go? Why aren't things changing. If anything, our society is getting worse, because there's more division than there ever has been in the past.' We saw this\u2026"
      },
      {
       "slug": "speech-1211264",
@@ -1552,7 +1856,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-04-02",
-      "cited": false
+      "cited": false,
+      "passage": "I rise to speak strongly in support of this motion that has been put forward by the Treasurer. The Greens very much welcome this step, which is essentially implementing a commitment that was made as part of the treaty act that has passed this Parliament already. This is the government just following through and doing what has already been committed to. But I think it is more than just simply\u2026"
      },
      {
       "slug": "speech-1226755",
@@ -1561,7 +1866,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-05-26",
-      "cited": false
+      "cited": false,
+      "passage": "Today also marks the day that the Uluru Statement from the Heart was issued in 2017 with its call for Voice, Treaty and Truth. Victoria completed its truth-telling inquiry in 2025 with the Yoorrook Justice Commission, and Travis Lovett, a deputy commissioner from that commission, is currently on the penultimate stage of his 800 kilometre National Walk for Truth to promote the importance of\u2026"
      },
      {
       "slug": "speech-1204244",
@@ -1570,10 +1876,12 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-06-29",
-      "cited": false
+      "cited": false,
+      "passage": "Australia has a foundational role in the establishment of and continued implementation of the obligations under the South Pacific Nuclear Free Zone Treaty, which will mark 40 years in December this year. But there's more to do. Visiting parliament this week is a delegation withICANN, who won theNobel Peace Prizefor their work to establish the Treaty on the Prohibition of Nuclear Weapons, theTPNW,\u2026"
      }
     ],
-    "asked_at": "2026-09-04T23:04:59+00:00"
+    "asked_at": "2026-09-04T23:04:59+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What has parliament said about the Education and Training Reform Amendment Bill 2026?",
@@ -1586,7 +1894,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-06-04",
-      "cited": true
+      "cited": true,
+      "passage": "I rise to address the Education and Training Reform Amendment Bill 2026. I will be frank, I was not expecting to be addressing this bill this week, but because of the circumstances the house finds itself in, this bill has been brought forward, and I am now in a position where it is being considered by the house and I am now making a contribution on behalf of the opposition. This bill does a\u2026"
      },
      {
       "slug": "speech-1207724",
@@ -1595,7 +1904,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-06-04",
-      "cited": true
+      "cited": true,
+      "passage": "I rise to support the Education and Training Reform Amendment Bill 2026, a very important bill. It builds on the ongoing investments, reforms, policy measures and initiatives that we have been introducing continuously since 2014 to continue building the Education State here in Victoria. This bill, as we have heard from previous speakers, contains a number of reforms and changes, but there are\u2026"
      },
      {
       "slug": "speech-1210160",
@@ -1604,7 +1914,14 @@
       "party": null,
       "state": "vic",
       "date": "2026-07-28",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        607,
+        848
+       ]
+      ],
+      "passage": "\u2026The first one is around government-mandated policies on technology devices. It is my view, and it is the Libertarian Party's view, that education should be as decentralised as possible, and that involves allowing schools to make up their own policies on this sort of thing, on whether or not they allow devices in the classroom in schools. As has been pointed out by many, this is already the status\u2026"
      },
      {
       "slug": "speech-1210155",
@@ -1613,7 +1930,18 @@
       "party": null,
       "state": "vic",
       "date": "2026-07-28",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        164,
+        411
+       ],
+       [
+        411,
+        607
+       ]
+      ],
+      "passage": "\u2026While there are aspects of the legislation that warrant further scrutiny and questions that remain unanswered, there are also several measures that are sensible reforms and deserve bipartisan support. One of the most significant changes relates to the Aboriginal recognition and self-determination within the Education and Training Reform Act 2006. This bill inserts a formal statement recognising\u2026"
      },
      {
       "slug": "speech-1198102",
@@ -1622,7 +1950,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-11-03",
-      "cited": false
+      "cited": false,
+      "passage": "I commend the Bill to the House. EDUCATION LEGISLATION AMENDMENT (INTEGRITY AND OTHER MEASURES) BILL 2025 Mr Speaker, This Bill makes a number of changes to improve integrity, improve access and improve the information we collect about the education system."
      },
      {
       "slug": "speech-974689",
@@ -1631,7 +1960,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-12-04",
-      "cited": false
+      "cited": false,
+      "passage": "[Education and Employment Legislation Committee - Education and Employment Legislation Committee 04/12/2025 Estimates EDUCATION PORTFOLIO Department of Education] The introduction of demand driven places for First Nations medical students was part of the bill that went through parliament earlier this sitting. It commences from 1 January 2026. It was a recommendation of the accord final report\u2014to\u2026"
      },
      {
       "slug": "speech-1202282",
@@ -1640,7 +1970,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-03-31",
-      "cited": false
+      "cited": false,
+      "passage": "The ELA Bill passed by Parliament on 28 November 2025 included a range of integrity measures to strengthen the international education regulatory framework by amending theEducation Services for Overseas Students Act 2000 (the ESOS Act)."
      },
      {
       "slug": "speech-1208527",
@@ -1649,7 +1980,14 @@
       "party": null,
       "state": "vic",
       "date": "2026-04-02",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        898,
+        1162
+       ]
+      ],
+      "passage": "\u2026The key features of the Bill include: \u2022 long overdue recognition of First Nations people \u2013 including provisions to ensure the Act effectively supports our system to become more inclusive and responsive to the needs of First Nations learners; \u2022 measures to bolster student learning, engagement and mental health by restricting personal electronic devices in our schools; and \u2022 important updates to\u2026"
      },
      {
       "slug": "speech-1207714",
@@ -1658,7 +1996,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-06-04",
-      "cited": false
+      "cited": false,
+      "passage": "I am very pleased to speak on this bill, noting that the Education and Training Reform Amendment Bill 2026 will make improvements to our education system across the board. If you think more broadly, our state has led the way with treaty, and so it is consistent that we would make appropriate amendments particularly when it comes to Aboriginal recognition. We are strengthening Aboriginal\u2026"
      },
      {
       "slug": "speech-1207716",
@@ -1667,7 +2006,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-06-04",
-      "cited": false
+      "cited": false,
+      "passage": "I am delighted to rise to speak on the Education and Training Reform Amendment Bill 2026 \u200d\u2013 such an important bill, I think. Certainly all of my colleagues in this place understand the absolute importance \u2013 more than importance, the great leveller \u2013 of education. It is the way that we bring all of the community along with us. I know that there has been an enormous amount of work done in this\u2026"
      },
      {
       "slug": "speech-1207540",
@@ -1676,7 +2016,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-06-16",
-      "cited": false
+      "cited": false,
+      "passage": "It is a pleasure to rise on the Education and Training Reform Amendment Bill 2026. I think that education is one of the greatest investments that we can make in this state and for our future. It is not only an important investment, obviously, into our young generation and our children, but it really is about building our future and building our communities and our future communities. As a former\u2026"
      },
      {
       "slug": "speech-1207538",
@@ -1685,7 +2026,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-06-16",
-      "cited": false
+      "cited": false,
+      "passage": "It is a pleasure to rise to speak on a really substantive and important piece of legislation in this place, the Education and Training Reform Amendment Bill 2026. I might refer to it henceforth as ETRA. It builds upon not only a really sustained record of investment by this government in our school system but also a record of deep policy thinking and reform that has been led by successive\u2026"
      },
      {
       "slug": "speech-1207536",
@@ -1694,7 +2036,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-06-16",
-      "cited": false
+      "cited": false,
+      "passage": "I rise to contribute to the Education and Training Reform Amendment Bill 2026, and I have to agree wholeheartedly with the member for Shepparton and her comments about teachers and how hardworking they are. It is definitely more than just a job. It is a vocation, it is a calling, and our dedicated teachers deserve all of our respect and certainly recognition for the hard work that they put into\u2026"
      },
      {
       "slug": "speech-1210161",
@@ -1703,7 +2046,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-07-28",
-      "cited": false
+      "cited": false,
+      "passage": "I am very pleased to speak on the Education and Training Reform Amendment Bill 2026. Because this bill includes elements consistent with the treaty and other First Nations elements, I would like to acknowledge the traditional owners of the land that we are standing on at this point in time and in this chamber. I am very, very happy to support this bill. It introduces several important reforms to\u2026"
      },
      {
       "slug": "speech-1210158",
@@ -1712,7 +2056,14 @@
       "party": null,
       "state": "vic",
       "date": "2026-07-28",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1162,
+        1406
+       ]
+      ],
+      "passage": "\u2026a bill worthy of celebration and praise. I join with my fellow colleagues in speaking in strong support of the Education and Training Reform Amendment Bill 2026. This is a piece of legislation that goes right to the very heart of what our government is all about. It is about fairness, it is about opportunity and it is about doing the hard and practical work required to make sure that Victoria\u2026"
      },
      {
       "slug": "speech-1210164",
@@ -1721,7 +2072,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-07-28",
-      "cited": false
+      "cited": false,
+      "passage": "incorporated the following: President, I rise to make a contribution on the Education and Training Reform Amendment Bill 2026. And in doing so I would first like to thank my good friend the Minister for Education in the other place, Minister Carroll. Our record on investment into education is second to none in Victoria. Whether we're concerning early years education, school years, or tertiary and\u2026"
      },
      {
       "slug": "speech-1210156",
@@ -1730,7 +2082,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-07-28",
-      "cited": false
+      "cited": false,
+      "passage": "I am pleased to rise to make a contribution on the Education and Training Reform Amendment Bill 2026. As a former teacher \u2013 and I have now been in Parliament for 11-odd years \u2013 mobile phones were certainly on the rise when I was teaching. There was a level of frustration back in 2015, when I left, that students were not keeping them in the lockers as they were supposed to do but sneaking them in\u2026"
      },
      {
       "slug": "speech-1210159",
@@ -1739,7 +2092,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-07-28",
-      "cited": false
+      "cited": false,
+      "passage": "I am very, very pleased to speak today on the Education and Training Reform Amendment Bill 2026. It is no secret that I have a background in education, and it is one that I am very proud of. I want to commend Victorian teachers and even the Victorian teachers union for their hard work in standing up, holding the line and holding their ground to make sure that in the state of Victoria our\u2026"
      },
      {
       "slug": "speech-1210163",
@@ -1748,10 +2102,12 @@
       "party": null,
       "state": "vic",
       "date": "2026-07-28",
-      "cited": false
+      "cited": false,
+      "passage": "I also rise to give my contribution on the Education and Training Reform Amendment Bill 2026, and I will not be supporting this bill. It is obviously logical that I would not support it, because I voted against the Voice, I voted against the treaty, and no matter what name you call this bill, it is the same kind of thing. It is a divisive, racist self-humiliation ritual and a redistribution of\u2026"
      }
     ],
-    "asked_at": "2026-09-04T23:05:09+00:00"
+    "asked_at": "2026-09-04T23:05:09+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What has parliament said about the Aboriginal Land Legislation Amendment Bill 2024?",
@@ -1764,7 +2120,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-07-31",
-      "cited": true
+      "cited": true,
+      "passage": "Thank you for the opportunity to contribute on the Aboriginal Land Legislation Amendment Bill 2024. I too want to start by acknowledging the traditional owners of the land on which we gather today in this Parliament, the Wurundjeri people, and pay my profound respects to elders past and present. I also acknowledge the Bunurong and Boon Wurrung landowners in my community that represent my areas\u2026"
      },
      {
       "slug": "speech-863075",
@@ -1773,7 +2130,14 @@
       "party": null,
       "state": "vic",
       "date": "2024-07-31",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1180,
+        1437
+       ]
+      ],
+      "passage": "I rise to also speak on the Aboriginal Land Legislation Amendment Bill 2024. In doing so I would like to first acknowledge that this Parliament sits on the lands of the Wurundjeri Woi Wurrung people of the Kulin nation, and I pay my respects to elders past and present and also to the generations of First Nations advocates and activists and resisters from across the state who have fought for land\u2026"
      },
      {
       "slug": "speech-1182132",
@@ -1782,7 +2146,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-08-29",
-      "cited": true
+      "cited": true,
+      "passage": "I rise to speak to the Aboriginal Land Legislation Amendment Bill 2024. I want to start by acknowledging the traditional owners of this land, the Wurundjeri, Woiwurrung and Bunurong peoples of the Kulin nation. I pay my respects to their elders and to the First Nations communities who have been fighting tirelessly for land justice. I acknowledge that Parliament has a long, shameful history of\u2026"
      },
      {
       "slug": "speech-1182131",
@@ -1791,7 +2156,14 @@
       "party": null,
       "state": "vic",
       "date": "2024-08-29",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        163,
+        465
+       ]
+      ],
+      "passage": "I rise today to speak on the Aboriginal Land Legislation Amendment Bill 2024, and in doing so I acknowledge that I am here on the lands of the Wurundjeri Woi Wurrung people and I pay my respects to elders past, present and emerging of this particular nation, one of many Kulin nations. I acknowledge the very many Indigenous nations that make up the state of Victoria, including the lands of the\u2026"
      },
      {
       "slug": "speech-1182136",
@@ -1800,7 +2172,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-08-29",
-      "cited": true
+      "cited": true,
+      "passage": "Firstly, I would like to acknowledge the traditional owners of the lands on which I work, both here in Parliament House and at my electorate office in Prahran in the great community of the Southern Metropolitan Region. Those are the Wurundjeri people of the Kulin nations, and I want to acknowledge their elders past and present, given the context of this legislation we are debating today. Though\u2026"
      },
      {
       "slug": "speech-1182138",
@@ -1809,7 +2182,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-08-29",
-      "cited": true
+      "cited": true,
+      "passage": "I thank all members for their contributions in this debate on the Aboriginal Land Legislation Amendment Bill 2024. Of course the Victorian government is absolutely committed to true reconciliation, truth-telling and treaty with First Peoples, and we are committed to empowering and supporting Aboriginal people through true self-determination. This bill will amend and modernise the very outdated\u2026"
      },
      {
       "slug": "speech-1182134",
@@ -1818,7 +2192,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-08-29",
-      "cited": true
+      "cited": true,
+      "passage": "I am pleased to rise and join colleagues making contributions today on the Aboriginal Land Legislation Amendment Bill 2024, which is an important piece of legislation that seeks to amend the Aboriginal Lands Act 1970 and the 1991 act to make some important updates to the governance arrangements for the Lake Tyers and Framlingham trusts and also to effect arrangements to facilitate the transfer of\u2026"
      },
      {
       "slug": "speech-1182089",
@@ -1827,7 +2202,14 @@
       "party": null,
       "state": "vic",
       "date": "2024-08-29",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        0,
+        163
+       ]
+      ],
+      "passage": "I am pleased to rise and make a contribution to the Aboriginal Land Legislation Amendment Bill 2024. It is a very modest bill, and the opposition \u2013 the Liberals and the Nationals \u2013 will not oppose this bill. It is a bill that does a number of technical amendments and some simple tidy-ups. It has, we are informed through the shadow Peter Walsh and the information provided through the briefings,\u2026"
      },
      {
       "slug": "speech-1310266",
@@ -1836,7 +2218,8 @@
       "party": null,
       "state": "nsw",
       "date": "2026-05-05",
-      "cited": true
+      "cited": true,
+      "passage": "Ms SUE HIGGINSON ( 18:24 :52 ): I take note of the report of the Legislation Review Committee entitled Legislation Review Digest No. 43/58. I particularly note the comments that the committee recorded in the digest regarding the Government's Crown Land Management Amendment (Statutory Review) Bill 2026. There has been significant concern amongst a broad section of the New South Wales community\u2026"
      },
      {
       "slug": "speech-863341",
@@ -1845,7 +2228,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-07-30",
-      "cited": false
+      "cited": false,
+      "passage": "I move: That, under standing order 94(2), the orders of the day, government business, relating to the following bills be considered and completed by 5 pm on 1 August 2024: Youth Justice Bill 2024 State Sporting Legislation Amendment Bill 2024 Aboriginal Land Legislation Amendment Bill 2024 As we return after what is called, for reasons I do not fully understand, the winter 'break', it is good to\u2026"
      },
      {
       "slug": "speech-863074",
@@ -1854,7 +2238,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-07-31",
-      "cited": false
+      "cited": false,
+      "passage": "I rise to speak in support of the Aboriginal Land Legislation Amendment Bill 2024, and in doing so I would also like to begin by paying my respects to the First Nations people and traditional custodians of the land on which we meet, live, learn and work, the Wurundjeri people of the Kulin nation. I pay my respects to elders past, present and emerging, particularly Uncle Andrew Gardiner, who is a\u2026"
      },
      {
       "slug": "speech-863036",
@@ -1863,7 +2248,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-07-31",
-      "cited": false
+      "cited": false,
+      "passage": "I am pleased to rise on the Aboriginal Land Legislation Amendment Bill 2024 and say a few words, particularly as it relates to my area of Gippsland and Gippsland South. Unlike others, I do not think this is a bill that we need to take partisan positions on. Those opposite seemed determined to speak about everything except what this bill is."
      },
      {
       "slug": "speech-863033",
@@ -1872,7 +2258,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-07-31",
-      "cited": false
+      "cited": false,
+      "passage": "I rise to speak on the Aboriginal Land Legislation Amendment Bill 2024 and its proposed changes to the governance and shareholding structures of Aboriginal trusts created under the Aboriginal Lands Act 1970 and Aboriginal Lands Act 1991. This administrative bill has risen largely out of the challenges that have plagued the Aboriginal communities and will assist in ensuring that the issues\u2026"
      },
      {
       "slug": "speech-1182090",
@@ -1881,7 +2268,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-08-29",
-      "cited": false
+      "cited": false,
+      "passage": "I rise to speak on the Aboriginal Land Legislation Amendment Bill 2024. As Mr Davis has said, the coalition will not be opposing this bill. The various sections of this bill are about good governance and fairness, and I entirely agree with them. They are necessary, firstly, to bring the ownership and administration of the areas in question up to date. While in 1970 the act may have appeared\u2026"
      },
      {
       "slug": "speech-856098",
@@ -1890,7 +2278,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": false
+      "cited": false,
+      "passage": "I rise to also speak on the Inquiries Amendment (Yoorrook Justice Commission Records and Other Matters) Bill 2024, which will entrench principles of Indigenous data sovereignty within Victorian law. The Greens will be supporting this bill. We would like to commend the government on what sounds like has been a very good consultation and development process. As we understand it, the first step was\u2026"
      },
      {
       "slug": "speech-1297171",
@@ -1899,7 +2288,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-09-17",
-      "cited": false
+      "cited": false,
+      "passage": "Ms TRISH DOYLE ( Blue Mountains ) ( 15:11 :50 ): I am pleased to speak in support of the Environmental Legislation Amendment Bill 2025. I will speak particularly about the elements of the bill that look at the respect for country reforms. My colleagues will address looking after Environmental Protection Authority [EPA] officers and the general EPA framework. I understand that the Minister will\u2026"
      },
      {
       "slug": "speech-769225",
@@ -1908,7 +2298,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-15",
-      "cited": false
+      "cited": false,
+      "passage": "I begin by acknowledging the traditional owners of the land on which we meet and pay my respects to elders past, present and emerging. I also want to say this from the bottom of my heart: I am sorry for what you had to hear in this chamber yesterday. There is no excuse for people in privileged positions like ours to show such ignorance of our shared history. I go back to 2022. I remember a lovely\u2026"
      },
      {
       "slug": "speech-432365",
@@ -1917,7 +2308,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-12-02",
-      "cited": false
+      "cited": false,
+      "passage": "My question is to the Attorney-General. This Labor government has for many years committed to reducing youth incarceration. In 2023 the Premier announced that the minimum age of criminal responsibility would be raised, first from 10 to 12 and then to 14 by 2027. In 2024 the Parliament passed the Youth Justice Act, which embedded diversion-first principles, restorative justice processes and the\u2026"
      },
      {
       "slug": "speech-1200063",
@@ -1926,7 +2318,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-02-10",
-      "cited": false
+      "cited": false,
+      "passage": "As Noel Pearson has said, our strength comes from three threads\u2014our ancient Indigenous history, our British institutions and democracy, and our history of multicultural achievement. This commission sits at the intersection of those threads. It reflects our responsibility to ensure that our institutions serve and protect all Australians, including the youngest members of ourFirst Nationspeople.\u2026"
      },
      {
       "slug": "speech-1201566",
@@ -1935,10 +2328,12 @@
       "party": null,
       "state": "federal",
       "date": "2026-03-23",
-      "cited": false
+      "cited": false,
+      "passage": "1:21 pm I acknowledge that I'm standing here today on the unceded land of the Ngunnawal and Ngambri people, and I honour their elders past and present and their future leaders. I'm thinking of those future leaders today as we debate theNational CommissionforAboriginal and Torres Strait IslanderChildren and Young People Bill 2026 and the National Commission for Aboriginal and Torres Strait\u2026"
      }
     ],
-    "asked_at": "2026-09-04T23:05:19+00:00"
+    "asked_at": "2026-09-04T23:05:19+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What have MPs said about reconciliation and recognition of First Nations peoples since July 2024?",
@@ -1951,7 +2346,14 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1141,
+        1494
+       ]
+      ],
+      "passage": "\u2026It has been a year since the government received the Yoorrook Justice Commission's report, and Labor has officially accepted less than 15 per cent of the Yoorrook Justice Commission's recommendations. Less than 15 per cent of the recommendations that this body of First Nations people have put before this government have been accepted. First Peoples are sick and tired of telling governments the\u2026"
      },
      {
       "slug": "speech-856096",
@@ -1960,7 +2362,14 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        470,
+        822
+       ]
+      ],
+      "passage": "\u2026I would like to express my pride in being part of a Victorian Labor government that is leading the nation when it comes to progressing the aspirations of the Uluru Statement from the Heart through voice, treaty and truth. We have proudly established the First Peoples' Assembly of Victoria, the first state in Australia to create such an independent and democratically elected body that represents\u2026"
      },
      {
       "slug": "speech-1200063",
@@ -1969,7 +2378,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-02-10",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        2111,
+        2288
+       ]
+      ],
+      "passage": "\u2026very strong stakeholder support for a national commissioner right across Australia. The Albanese Labor government is focused on improving the lives of First Nations peoples through economic empowerment, job creation, health improvements and housing. We are resolutely committed to reconciliation and celebrating the profound contribution that Aboriginal and Torres Strait Islander peoples make to\u2026"
      },
      {
       "slug": "speech-857420",
@@ -1978,7 +2394,14 @@
       "party": null,
       "state": "vic",
       "date": "2024-10-31",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1494,
+        1656
+       ]
+      ],
+      "passage": "\u2026This is a monumental and long-overdue step towards justice and recognition for Victoria's First Nations peoples. The Greens stand in awe of all of those First Nations people who have fought for decades and who continue to fight for their true history to be told and for their right to justice, freedom and self-determination. In particular I would like to thank the Yoorrook Justice Commission, who\u2026"
      },
      {
       "slug": "speech-856301",
@@ -1987,7 +2410,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-26",
-      "cited": false
+      "cited": false,
+      "passage": "I move: That, under standing order 94(2), the orders of the day, government business, relating to the following bills be considered and completed by 5 pm on 28 November 2024: Justice Legislation Amendment (Committals) Bill 2024 Budget papers \u2013 motion Nuclear power \u2013 motion Parliamentary apology to Victorians who experienced historical abuse and neglect as children in institutional care \u2013 motion\u2026"
      },
      {
       "slug": "speech-856099",
@@ -1996,7 +2420,14 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        110,
+        470
+       ]
+      ],
+      "passage": "\u2026As Reconciliation Australia so powerfully stated: Truth-telling enables a fuller and more accurate account of Australia's history to recognise the strength and contribution of Aboriginal and Torres Strait Islander peoples. It acknowledges the historical silencing of injustices and ongoing impacts of colonisation on First Nations people. Truth-telling is fundamental to advancing reconciliation. We\u2026"
      },
      {
       "slug": "speech-1171276",
@@ -2005,7 +2436,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": false
+      "cited": false,
+      "passage": "I rise to address the Department of the Legislative Council's annual report 2023\u201324. The report highlights a wealth of achievements, and I wish, once again, to acknowledge the dedicated staff. To the administrative personnel, the researchers, the procedural experts, the support teams \u2013 oh, my goodness, your meticulous work underpins every aspect of our parliamentary work. I particularly commend\u2026"
      },
      {
       "slug": "speech-422797",
@@ -2014,7 +2446,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-02-10",
-      "cited": false
+      "cited": false,
+      "passage": "In the case of ourFirst Nationspeople, for many years our country has not listened for what we might learn, instead often choosing to pursue agendas which assume we know better than those who are living the experience firsthand. This attitude has seen what is often described as 'well-intentioned policies' pursued relentlessly, even as those impacted by them have asked us to step back and\u2026"
      },
      {
       "slug": "speech-1289451",
@@ -2023,7 +2456,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-05-08",
-      "cited": false
+      "cited": false,
+      "passage": "Mr NATHAN HAGARTY ( Leppington )\u2014On March 12, Community Kids Horningsea Park Early Education Centre took an important step in their commitment to reconciliation with a special flag ceremony. As part of their Reconciliation Action Plan, established in November 2024, the centre installed a native garden and flagpole\u2014a powerful symbol of respect and recognition for our First Nations people. This\u2026"
      },
      {
       "slug": "speech-1295699",
@@ -2032,7 +2466,8 @@
       "party": null,
       "state": "nsw",
       "date": "2025-09-09",
-      "cited": false
+      "cited": false,
+      "passage": "Ms JENNY AITCHISON ( Maitland\u2014Minister for Roads, and Minister for Regional Transport)\u2014Congratulations to the Rutherford Tillys Play and Development Centre, who are a proud finalist in the 2025 Narragunnawali Reconciliation in Education Awards. Among just three early education services nationwide to receive this honour, Tillys exemplifies a strong commitment to reconciliation and closing the gap\u2026"
      },
      {
       "slug": "speech-831891",
@@ -2041,7 +2476,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-14",
-      "cited": false
+      "cited": false,
+      "passage": "I also rise to address the Statewide Treaty Bill 2025. At the very outset I wish to convey the framework through which I intend to address this bill. I want to address this bill today in this place, the Victorian Parliament, the people's house, with a tone and with an air and with a purpose of respect. Our First Nations people deserve nothing less. Our First Nations people in Victoria and around\u2026"
      },
      {
       "slug": "speech-1200228",
@@ -2050,7 +2486,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-02-12",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1656,
+        2111
+       ]
+      ],
+      "passage": "\u2026As our Prime Minister has said, our government is determined and optimistic about closing the gap forFirst Nationspeople. To achieve this, our government is building on what works: listening to First Nations people, partnering with their organisations and investing in community led solutions. I'd like to really recognise the Minister forIndigenous Australiansfor her work on the 2025Closing the\u2026"
      },
      {
       "slug": "speech-1201566",
@@ -2059,7 +2502,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-03-23",
-      "cited": false
+      "cited": false,
+      "passage": "1:21 pm I acknowledge that I'm standing here today on the unceded land of the Ngunnawal and Ngambri people, and I honour their elders past and present and their future leaders. I'm thinking of those future leaders today as we debate theNational CommissionforAboriginal and Torres Strait IslanderChildren and Young People Bill 2026 and the National Commission for Aboriginal and Torres Strait\u2026"
      },
      {
       "slug": "speech-1202282",
@@ -2068,7 +2512,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-03-31",
-      "cited": false
+      "cited": false,
+      "passage": "Response: Support in principle The Government supports this recommendation in principle. The First Nations Clean Energy Strategy (the Strategy), released on 6 December 2024, provides a national framework for First Nations peoples' participation and empowerment in the energy transition."
      },
      {
       "slug": "speech-1203023",
@@ -2077,7 +2522,8 @@
       "party": "Nationals",
       "state": "federal",
       "date": "2026-05-25",
-      "cited": false
+      "cited": false,
+      "passage": "What frustrates me the most is this media release from the minister on 6 September 2024, where she wrote: It is my hope that \u2026 the settlement will bring closure to manyFirst Nationspeople impacted by these Commonwealth laws."
      },
      {
       "slug": "speech-1203171",
@@ -2086,7 +2532,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-05-27",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1656,
+        2111
+       ]
+      ],
+      "passage": "\u2026All of us are committed to reconciliation with ourFirst Nationspeople. From time to time, we may disagree on the best path to get there, but all of us are committed to seeing better outcomes for Indigenous people. I was pleased, as the Prime Minister has acknowledged, to go to the vigil for KumanjayiLittle Baby, to see the local member, the member for Lingiari, there, to go there with Senator\u2026"
      },
      {
       "slug": "speech-1312945",
@@ -2095,7 +2548,8 @@
       "party": null,
       "state": "nsw",
       "date": "2026-05-28",
-      "cited": false
+      "cited": false,
+      "passage": "Ms JANELLE SAFFIN ( Lismore\u2014Minister for Small Business, Minister for Recovery, and Minister for the North Coast)\u2014Primary schools across our Electorate of Lismore today (Thursday 28 May) shared a special opportunity as part of Reconciliation Week 2026.i I commend the Parliament of NSW's Education and Engagement Team and the Museums of History NSW for developing an online learning event focused on\u2026"
      },
      {
       "slug": "speech-1314356",
@@ -2104,7 +2558,8 @@
       "party": null,
       "state": "nsw",
       "date": "2026-06-04",
-      "cited": false
+      "cited": false,
+      "passage": "The Hon. CAMERON MURPHY ( 10:04 :55 ): I move: That this House: (a)notes that 27 May to 3 June 2026 marks Reconciliation Week across Australia; (b)recognises that Reconciliation Week is an opportunity for Australians to explore, learn and contribute to the journey towards reconciliation; and (c)acknowledges that the theme for Reconciliation Week 2026 is All In , which calls on Australians to\u2026"
      },
      {
       "slug": "speech-1207337",
@@ -2113,7 +2568,8 @@
       "party": null,
       "state": "vic",
       "date": "2026-06-17",
-      "cited": false
+      "cited": false,
+      "passage": "National Reconciliation Week was observed from 27 May to 3 \u200dJune. It is an opportunity to reflect on how far we have come as a state and a nation in our understanding of First Nation peoples, cultures and histories. As someone who is not getting any younger, I can honestly say that when I was growing up First Nation history and culture were not taught in the schools the way they are today. Many\u2026"
      },
      {
       "slug": "speech-1316708",
@@ -2122,10 +2578,18 @@
       "party": null,
       "state": "nsw",
       "date": "2026-08-05",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        2288,
+        2669
+       ]
+      ],
+      "passage": "\u2026(8)That this House affirms the commitment of the Parliament of New South Wales to strengthening relationships with First Nations communities, supporting self\u2011determination, and ensuring that Aboriginal voices are heard and respected in all areas of public policy. (9)That this House expresses appreciation to Aboriginal and Torres Strait Islander peoples for their enduring contributions to the\u2026"
      }
     ],
-    "asked_at": "2026-09-04T23:05:29+00:00"
+    "asked_at": "2026-09-04T23:05:29+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "What was said in parliament about the Voice to Parliament referendum since July 2024?",
@@ -2138,7 +2602,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-02-13",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        150,
+        440
+       ]
+      ],
+      "passage": "\u2026He talked about the referendum, and he said that, while it obviously was not the result that we wanted and that that has caused harm to many in the community, he doesn't regret wanting to enlarge our nation, because that's why we are here and, as he said, we will get there. The arc of history bends towards justice, asMartin Luther Kingsaid. While, obviously, that proposal for the Voice to\u2026"
      },
      {
       "slug": "speech-1144409",
@@ -2147,7 +2618,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-14",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1525,
+        1690
+       ]
+      ],
+      "passage": "\u2026We obviously saw the Voice referendum last year, which gave a very, very clear view from the Victorian community about this type of body, and the truth of the matter is this treaty is a sharper version of the Voice in many respects. The fact is that the Victorian community are the group that have not been properly consulted on this matter, and I think SARC could have done more to get that matter\u2026"
      },
      {
       "slug": "speech-1197860",
@@ -2156,7 +2634,14 @@
       "party": null,
       "state": "federal",
       "date": "2025-10-30",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        715,
+        922
+       ]
+      ],
+      "passage": "\u2026referendum. It was perhaps one of the most divisive periods in our history not just forIndigenous Australiansbut for all Australians, and it was not just about the proposition but also about how this government went about it. It pitted people against each other on the basis of race, giving special rights to a group of people above all others in our foundation document, theAustralian Constitution."
      },
      {
       "slug": "speech-1301363",
@@ -2165,7 +2650,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-11-12",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1023,
+        1222
+       ]
+      ],
+      "passage": "\u2026As we know, the people of Australia, including the people of Victoria, thoroughly rejected the notion of a Voice to Parliament just two years ago. The failed socialist Victorian Labor Government has nevertheless ignored that verdict and delivered in its treaty legislation an outcome that will undermine democracy in that State. The detail is frightening. The bill establishes a First Peoples\u2026"
      },
      {
       "slug": "speech-1200406",
@@ -2174,7 +2666,14 @@
       "party": null,
       "state": "federal",
       "date": "2026-03-02",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        440,
+        715
+       ]
+      ],
+      "passage": "\u2026Instead of rolling up their sleeves and getting on with the work of closing the gap in health, in housing, in education, in employment and in safety, the Albanese government consumed the better part of its first term and enormous political capital and public goodwill on a referendum that Australians ultimately resoundingly rejected. Then what did it do? As I said in the beginning of my speech, we\u2026"
      },
      {
       "slug": "speech-1186924",
@@ -2183,7 +2682,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-07-30",
-      "cited": false
+      "cited": false,
+      "passage": "Today I welcome Prime Minister Albanese's overdue admission that appointing an Assistant Minister for the Republic was a mistake. He put a brave face on it, yet his effort to rewrite history was pretty transparent. If it is really true he only ever wanted one referendum, then why should the embarrassing and expensive failure of the Voice referendum tarnish this newly minted ministry? If it has\u2026"
      },
      {
       "slug": "speech-1172644",
@@ -2192,7 +2692,14 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-14",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1377,
+        1525
+       ]
+      ],
+      "passage": "\u2026The referendum we have just been through at a national level, the Voice referendum, saw it defeated in every single state in the country, 60\u201340 nationally and 55\u201345 in Victoria, defeating that voice. I think there are very good reasons for that. I voted no and I campaigned against the Voice because it would have entrenched in the Australian constitution very unfavourable arrangements that would\u2026"
      },
      {
       "slug": "speech-1171292",
@@ -2201,7 +2708,8 @@
       "party": null,
       "state": "vic",
       "date": "2024-11-27",
-      "cited": false
+      "cited": false,
+      "passage": "(1325) My adjournment this evening is for the Premier, and the action I seek is for her to immediately stop treaty negotiations. On 14 October 2023 Australia resoundingly voted no to the Indigenous Voice to Parliament. This racist and divisive referendum pitted Australian against Australian and caused much upheaval in our beautiful country. The overwhelming majority of my electorate of Northern\u2026"
      },
      {
       "slug": "speech-1194197",
@@ -2210,7 +2718,8 @@
       "party": "Greens",
       "state": "federal",
       "date": "2025-02-10",
-      "cited": false
+      "cited": false,
+      "passage": "My question is for the Minister forIndigenous Australians,Senator McCarthy. Today the Prime Minister spoke about learning from the injustices and mistakes of the past in hisClosing the Gapstatement. The 2023 referendum on a voice to parliament highlighted the need for truth-telling to combat the misinformation peddled by the coalition, which continues to be a political football in the culture\u2026"
      },
      {
       "slug": "speech-422797",
@@ -2219,7 +2728,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-02-10",
-      "cited": false
+      "cited": false,
+      "passage": "The Constitution, remember, was an act of the British parliament, passed by white British men with beards in Westminster. One day, soon, our Constitution will be amended by the modern men and women of Australia. I remind those opposite that every election day our nation divides. But it is not a tear. Tears are sometimes shed, but it is not a tear. Australian democracy is a zip, and at 6 pm, upon\u2026"
      },
      {
       "slug": "speech-1154109",
@@ -2228,7 +2738,18 @@
       "party": null,
       "state": "vic",
       "date": "2025-06-17",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1023,
+        1222
+       ],
+       [
+        1222,
+        1377
+       ]
+      ],
+      "passage": "\u2026In 2023 Australians overwhelmingly rejected the Voice to Parliament \u2013 60 per cent said no; every state voted no \u2013 yet now this treaty process seeks to undo that clear verdict by institutionalising racial divisions through law and government. This is not reconciliation, it is racism enshrined in legislation. Speaking personally, I strongly believe the result of the Voice referendum underlines that\u2026"
      },
      {
       "slug": "speech-1197097",
@@ -2237,7 +2758,8 @@
       "party": "LNP",
       "state": "federal",
       "date": "2025-09-03",
-      "cited": false
+      "cited": false,
+      "passage": "But one of the things they can do is redress the damage that they did in the last term of this parliament, because, when it comes down to it, after the election of 2022 when the Prime Minister stood up on election night and made a commitment to have a referendum on an Indigenous voice in the Constitution, what he did was set an aspiration for so many Australians\u2014whatever your view on the issue\u2026"
      },
      {
       "slug": "speech-1197334",
@@ -2246,7 +2768,8 @@
       "party": "Greens",
       "state": "federal",
       "date": "2025-09-04",
-      "cited": false
+      "cited": false,
+      "passage": "The Refugee Council of Australia, with its broad reach, has spoken about this bill too. It says: As this legislation was only introduced on 26 August 2025 and is being rushed through Parliament, leading to a lack of scrutiny and devastating implications. The attempt to remove natural justice and dueprocess for certain groups of people should be a warning sign to all that the cornerstone of our\u2026"
      },
      {
       "slug": "speech-832444",
@@ -2255,7 +2778,14 @@
       "party": null,
       "state": "vic",
       "date": "2025-09-10",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1692,
+        1982
+       ]
+      ],
+      "passage": "\u2026The Voice was about recognising First Nations people in the constitution. I also want to be clear that Victoria has been on this journey to treaty for almost 10 years, and this process has been available to anyone online and through the reports that we have given, which I think are now up to about five or six. So it has not been hidden, it has not been kept from the people of Victoria; it has\u2026"
      },
      {
       "slug": "speech-1201853",
@@ -2264,7 +2794,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-03-25",
-      "cited": false
+      "cited": false,
+      "passage": "During theCOVID-19 pandemic, we saw a mainstreaming of racism and violence towards people of Chinese and Asian origin. I heard from constituents in Kooyong that they experienced racism against themselves and their family members for the first time ever during COVID. During the Voice referendum, we witnessed visible and widespread racism againstFirst Nationspeople, adding to the systemic injustice\u2026"
      },
      {
       "slug": "speech-1202508",
@@ -2273,7 +2804,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-04-01",
-      "cited": false
+      "cited": false,
+      "passage": "To address risks related to electoral integrity, the Government introduced the Electoral Legislation Amendment (Electoral Communications) Bill in 2024 to prohibit the authorisation of electoral and referendum communications that are inaccurate and misleading, and to require materials modified using digital technology (including AI) to carry a statement indicating such modification."
      },
      {
       "slug": "speech-1205066",
@@ -2282,10 +2814,18 @@
       "party": "Independent",
       "state": "federal",
       "date": "2026-08-12",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1982,
+        2135
+       ]
+      ],
+      "passage": "\u2026isters and for many in my own community. But this setback cannot be the end of our efforts or the responsibilities we all share. But our government must lead, and, since the referendum defeat, it seems that the government hasn't been able to. I know it's difficult to lead after such a loss, but we need a strong, ambitious agenda on Indigenous policy to get the outcomes that the community deserves."
      }
     ],
-    "asked_at": "2026-09-04T23:05:40+00:00"
+    "asked_at": "2026-09-04T23:05:40+00:00",
+    "cite_method": "verbatim"
    },
    {
     "question": "How has parliament discussed Closing the Gap outcomes since July 2024?",
@@ -2298,7 +2838,18 @@
       "party": null,
       "state": "nsw",
       "date": "2025-06-05",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        148,
+        470
+       ],
+       [
+        470,
+        753
+       ]
+      ],
+      "passage": "\u2026The Auditor-General found that the Government had exercised inadequate oversight and passive monitoring of the $222 million, and that in about half of the cases the funding was found to have no tangible outcome. Does the Minister agree with the Auditor-General? If so, what steps have been taken to get to the bottom of that waste and potential fraud? The Hon. PENNY SHARPE (Minister for Climate\u2026"
      },
      {
       "slug": "speech-1200063",
@@ -2307,7 +2858,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-02-10",
-      "cited": true
+      "cited": true,
+      "passage": "We need this commission to succeed. Every year the parliament pauses to hear the annual update onClosing the Gap, and, yes, while progress is being made, last year only five of the 19 targets were on track to be met, in the modern, prosperous Australia that we live in."
      },
      {
       "slug": "speech-1200452",
@@ -2316,7 +2868,14 @@
       "party": "Independent",
       "state": "federal",
       "date": "2026-03-02",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1089,
+        1369
+       ]
+      ],
+      "passage": "\u2026As we heard, targets pertaining to the development of children have worsened. Targets pertaining to the number of children in out-of-home care have worsened. The target pertaining to family safety\u2014namely, the safety of women\u2014has not even had data available for its assessment since 2018-19. We cannot expect to see sustainable economic outcomes without investing in the health and functionality of\u2026"
      },
      {
       "slug": "speech-1307973",
@@ -2325,7 +2884,8 @@
       "party": null,
       "state": "nsw",
       "date": "2026-03-18",
-      "cited": true
+      "cited": true,
+      "passage": "The Hon. CAMERON MURPHY ( 10:03 :16 ): I move: That this House notes that: (a)19 March 2026 is National Close the Gap Day; (b)National Close the Gap Day aims to improve health outcomes for Aboriginal and Torres Strait Islander peoples, creating more equitable conditions; and (c)this day is an important recognition of Australia's commitment to meeting the 19 Closing the Gap targets, ensuring a\u2026"
      },
      {
       "slug": "speech-1276132",
@@ -2334,7 +2894,14 @@
       "party": null,
       "state": "federal",
       "date": "2026-06-04",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        2546,
+        2779
+       ]
+      ],
+      "passage": "\u2026However, what will also be included in that annual report will be the details of the new, refreshed target 3, which will include retaining an element around enrolment, but, as I mentioned, we expect it to also look at data that captures measures of attendance and other indicators as well. I can't talk to the specifics of that target, because it's not yet been endorsed by all governments, but we\u2026"
      },
      {
       "slug": "speech-1205695",
@@ -2343,7 +2910,14 @@
       "party": "Independent",
       "state": "federal",
       "date": "2026-08-19",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        841,
+        1089
+       ]
+      ],
+      "passage": "\u2026s. But, every year, the data tells a different story. The Productivity Commission'sClosing the gap annual data compilation reportJuly 2026is now out. We're past the halfway point to 2031, the deadline for most targets under the national agreement. Of 19 targets, only one has been met. Three are on track, five are improving, but we won't get there on time, and on four targets we're going backwards."
      },
      {
       "slug": "speech-1194202",
@@ -2352,7 +2926,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2025-02-10",
-      "cited": false
+      "cited": false,
+      "passage": "I move: That the Senate take note of answers given by ministers to questions without notice asked by Opposition senators today. Today the opposition asked the government a number of questions about its achievements, or lack of, in relation toClosing the Gap, given the significant statements made by the Prime Minister, the Leader of the Opposition, ministers and colleagues across the chamber\u2026"
      },
      {
       "slug": "speech-1194619",
@@ -2361,7 +2936,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-02-13",
-      "cited": false
+      "cited": false,
+      "passage": "We are working with peak bodies through the National Agreement on Closing the Gap. This is a landmark partnership with First Nations groups across Australia. Earlier this week, the government released theCommonwealthclosing thegap 2024 annual reportand2025 implementation plan. It outlines the actions that the Albanese government has taken over the past year to deliver on the outcomes of the\u2026"
      },
      {
       "slug": "speech-1194626",
@@ -2370,7 +2946,14 @@
       "party": "Independent",
       "state": "federal",
       "date": "2025-02-13",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1843,
+        2051
+       ]
+      ],
+      "passage": "\u2026Just this week, the government tabled the Closing the Gap 2024 annual report and 2025 implementation plan. This Commonwealth report demonstrates the actions we took in the last 12 months and puts forward what we will deliver in 2025. This report delivers on a key commitment under the National Agreement on Closing the Gap. All governments, federal, state and territory; theLocal Government\u2026"
      },
      {
       "slug": "speech-1287611",
@@ -2379,7 +2962,14 @@
       "party": null,
       "state": "nsw",
       "date": "2025-03-26",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1369,
+        1631
+       ]
+      ],
+      "passage": "\u2026(2)That this House acknowledges the National Agreement on Closing the Gap signed in July 2020, which established 17 socio\u2011economic targets and four priority reforms to drive systemic change and improve services for Aboriginal and Torres Strait Islander communities. (3)That this House commends the role of the Coalition of Peaks, representing over 50 Aboriginal and Torres Strait Islander community\u2026"
      },
      {
       "slug": "speech-911286",
@@ -2388,7 +2978,8 @@
       "party": null,
       "state": "federal",
       "date": "2025-10-07",
-      "cited": false
+      "cited": false,
+      "passage": "[Legal and Constitutional Affairs Legislation Committee - Legal and Constitutional Affairs Legislation Committee 07/10/2025 Estimates ATTORNEY-GENERAL'S PORTFOLIO Attorney-General's Department] I'm happy to take it on notice to provide greater detail. I in no way take away from the import and the gravity of the issues that the Justice Policy Partnership is dealing with, but it is a mechanism that\u2026"
      },
      {
       "slug": "speech-1197714",
@@ -2397,7 +2988,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-10-28",
-      "cited": false
+      "cited": false,
+      "passage": "My question is to the Minister forIndigenous Australians,Senator McCarthy. The Albanese Labor government is focused on closing the gap so that all Australians have the same opportunities in life\u2014no-one is held back, and no-one is left behind. At supplementary budget estimates earlier this month, for the first time,Closing the Gapoutcomes were featured in programs across all committees throughout\u2026"
      },
      {
       "slug": "speech-1197895",
@@ -2406,7 +2998,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2025-10-30",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        2051,
+        2259
+       ]
+      ],
+      "passage": "\u2026Since the First Nations Health Worker Traineeship Program commenced in July 2023, we have seen more than 550 enrolments across the country. Of those, 152 trainees have already completed their studies. They are now armed with the skills to improve outcomes and help close the gap. This program is designed to address workforce shortages in Aboriginal health services and ensure the next generation of\u2026"
      },
      {
       "slug": "speech-1140460",
@@ -2415,7 +3014,8 @@
       "party": null,
       "state": "vic",
       "date": "2025-10-30",
-      "cited": false
+      "cited": false,
+      "passage": "Minister, one of the key things that I think universally both houses agree on is the need for Closing the Gap targets to be improved nationally \u2013 nationally agreed Closing the Gap targets. Indeed we heard many of the members of Parliament from the Labor Party saying 'let us try something different' in their contributions, and I could quote some of them. One of the things that we know is that over\u2026"
      },
      {
       "slug": "speech-944442",
@@ -2424,7 +3024,14 @@
       "party": null,
       "state": "federal",
       "date": "2025-12-01",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        2259,
+        2546
+       ]
+      ],
+      "passage": "\u2026The last time the Productivity Commission conducted a review of the Closing the Gap agreement, it was quite broad and comprehensive. It covered all elements of the agreement both in terms of targets and the priority reform issues. There has been an ongoing conversation around whether it should cover just priority reforms or a limited number of those priority reforms or whether it should also\u2026"
      },
      {
       "slug": "speech-1200228",
@@ -2433,7 +3040,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-02-12",
-      "cited": false
+      "cited": false,
+      "passage": "Closing the gap requires partnership with First Nations people and action right across government. As the Prime Minister has said, working together, we will succeed in closing the gap and delivering better outcomes forFirst Nations Australians."
      },
      {
       "slug": "speech-1200733",
@@ -2442,7 +3050,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2026-03-04",
-      "cited": false
+      "cited": false,
+      "passage": "Closing the Gap requires programs that deliver measurable change in school readiness, justice outcomes, health and wellbeing. It requires governments willing to test, learn and adapt. The Australian Centre for Evaluation is helping to build that culture of learning across the Commonwealth. By supporting rigorous trials, especially those led by First Nations organisations, it strengthens the link\u2026"
      },
      {
       "slug": "speech-1276103",
@@ -2451,7 +3060,8 @@
       "party": null,
       "state": "federal",
       "date": "2026-06-04",
-      "cited": false
+      "cited": false,
+      "passage": "[Education and Employment Legislation Committee - Education and Employment Legislation Committee 04/06/2026 Estimates EDUCATION PORTFOLIO Department of Education] Senator O'SULLIVAN: I'm going to stick with Closing the Gap. I want to ask specifically about the year before full-time schooling, YBFS, target. Can I confirm that the 2024 outcome for Closing the Gap target 3 was 94.2 per cent."
      },
      {
       "slug": "speech-1205066",
@@ -2460,10 +3070,12 @@
       "party": "Independent",
       "state": "federal",
       "date": "2026-08-12",
-      "cited": false
+      "cited": false,
+      "passage": "Back in 2024, theProductivity Commissiondid a review of the Closing the Gap work and said: \u2026 progress in implementing the Agreement's Priority Reforms has, for the most part, been weak and reflects tweaks to, or actions overlayed onto, business-as-usual approaches. The disparate actions and ad hoc changes have not led to improvements that are noticeable and meaningful for Aboriginal and Torres\u2026"
      }
     ],
-    "asked_at": "2026-09-04T23:05:48+00:00"
+    "asked_at": "2026-09-04T23:05:48+00:00",
+    "cite_method": "verbatim"
    }
   ]
  },
@@ -2483,7 +3095,14 @@
       "party": null,
       "state": "federal",
       "date": "2006-06-19",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1498,
+        1661
+       ]
+      ],
+      "passage": "\u2026They are opposing measures that would allow people to own their own homes\u2014a fundamental right, I believe, of Australians. They will be able to own their own homes. They will not be able to own their own homes unless we get support from all people in this place. Yes, we will probably get it through because it is commonsense, but I appeal for a bit of commonsense from the other side.(Time expired)\u2026"
      },
      {
       "slug": "speech-773725",
@@ -2492,7 +3111,14 @@
       "party": null,
       "state": "federal",
       "date": "2006-08-08",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        796,
+        1006
+       ]
+      ],
+      "passage": "\u2026Yet it is being rushed through the Senate with undue haste, causing significant community confusion and concern. The government claims that there has been sufficient community consultation going back over a number of years on this bill. This is disingenuous. While it is true that there has been consultation on some of it, there has not been on the controversial elements. It is telling to note\u2026"
      },
      {
       "slug": "speech-773796",
@@ -2501,7 +3127,22 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2006-08-09",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        192,
+        490
+       ],
+       [
+        1006,
+        1177
+       ],
+       [
+        1217,
+        1498
+       ]
+      ],
+      "passage": "\u2026rammed through with minimal debate, minimal scrutiny and minimal time for any Senate inquiry. We have just heard Senator Humphries admit that the Community Affairs Legislation Committee of this chamber had a grossly inadequate time frame in which to deal with such serious ramifications as this act presents. The government think they know best on all matters and that they do not have to consult,\u2026"
      },
      {
       "slug": "speech-774135",
@@ -2510,7 +3151,14 @@
       "party": null,
       "state": "federal",
       "date": "2006-08-15",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        490,
+        796
+       ]
+      ],
+      "passage": "\u2026stake, the ownership of land and the need for a majority greater than 50 per cent plus one. As in other organisations where one requires a three-quarters or two-thirds majority to change a constitution, the acceptance inside this debate has been that a figure greater than 50 per cent was appropriate given the import and significance of the decision regarding the administration of Indigenous land."
      },
      {
       "slug": "speech-780949",
@@ -2519,7 +3167,8 @@
       "party": "Australian Democrats",
       "state": "federal",
       "date": "2007-06-15",
-      "cited": true
+      "cited": true,
+      "passage": "This legislation is not supported by us because it is legislation that has not been done in consultation with Indigenous people. It is not about changes to the land rights act that involves their informed consent, and we will not be supporting it.(Time expired) 10:29 am Nor will the Greens be supporting theAboriginal Land Rights (Northern Territory) Amendment (Township Leasing) Bill 2007. We\u2026"
      },
      {
       "slug": "speech-786183",
@@ -2528,7 +3177,14 @@
       "party": null,
       "state": "federal",
       "date": "2008-06-23",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1661,
+        1948
+       ]
+      ],
+      "passage": "\u2026agreement struck in September 2003 between the NorthernTerritory governmentand the traditional Aboriginal owners of the land. It is consistent with the government's approach of resolving Indigenous land claims by agreement, wherever possible, and not through the courts. As a result, the 13 parks and reserves will be operated as national parks to provide long-lasting enjoyment for all Australians."
      },
      {
       "slug": "speech-795620",
@@ -2537,7 +3193,14 @@
       "party": null,
       "state": "federal",
       "date": "2009-09-14",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        2547,
+        2844
+       ]
+      ],
+      "passage": "\u2026lians, there is a renewed sense of optimism about the relationships between Indigenous and non-Indigenous Australians. Old attitudes are breaking down and there is a sense of renewed hope for what native title can deliver. However it is also clear that this system is in need of reform, and the changes contained in the bill before the chamber will enable faster and better outcomes for participants."
      },
      {
       "slug": "speech-778476",
@@ -2546,7 +3209,8 @@
       "party": null,
       "state": "federal",
       "date": "2007-02-26",
-      "cited": false
+      "cited": false,
+      "passage": "NATIVE TITLE AMENDMENT BILL 2006 It is more than twelve years since the commencement of theNative Title Act1993, which was enacted in response to the landmark High Court decision in Mabo (No 2). It is over eight years since the 1998 amendments to the Act were passed, which included measures identified in response to another significant High Court decision, the Wik judgment. Unlike the 1993 and\u2026"
      },
      {
       "slug": "speech-782318",
@@ -2555,7 +3219,18 @@
       "party": null,
       "state": "federal",
       "date": "2007-08-16",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        1950,
+        2260
+       ],
+       [
+        2260,
+        2547
+       ]
+      ],
+      "passage": "\u2026We worked through the very problem that we are confronting now. We came out with a positive measure that allowed us to embrace the Racial Discrimination Act in the passing of the first native title legislation in Australia. What we have been asked to do today is to pass another measure which the government says is beneficial to Aboriginal people, which Labor accepts. But to also say, 'Oh well, it\u2026"
      },
      {
       "slug": "speech-783551",
@@ -2564,10 +3239,18 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2008-02-14",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        2844,
+        3230
+       ]
+      ],
+      "passage": "\u2026are sacredin 2007. The first report assembled a catalogue of historic mistreatment and heart-rending personal stories of removal and alienation that have been characterised as the 'stolen generation'. The second report contains horrifying contemporary accounts of endemic sexual abuse, neglect and injury to children in Aboriginal communities in theNorthern Territory, some of whom were just babies."
      }
     ],
-    "asked_at": "2026-09-04T23:06:12+00:00"
+    "asked_at": "2026-09-04T23:06:12+00:00",
+    "cite_method": "verbatim"
    },
    {
     "label": "2010\u20132019",
@@ -2583,7 +3266,8 @@
       "party": null,
       "state": "nsw",
       "date": "2016-06-02",
-      "cited": true
+      "cited": true,
+      "passage": "The Hon. COURTNEY HOUSSOS ( 10:02 :24 ): I move: (1) That this House notes that: (a) National Reconciliation Week will run from 27 May to 3 June 2016; (b) this year's National Reconciliation Week theme is Our History, Our Story, Our Future ; and (c) National Reconciliation Week is coordinated by Reconciliation Australia and its State counterparts. (2) That this House notes that the beginning and\u2026"
      },
      {
       "slug": "speech-867890",
@@ -2592,7 +3276,8 @@
       "party": null,
       "state": "nsw",
       "date": "2016-10-19",
-      "cited": true
+      "cited": true,
+      "passage": "The Hon. NIALL BLAIR (Minister for Primary Industries, and Minister for Lands and Water) ( 11:29 :57 ): I move: That this bill be now read a second time. I ask the House to consider a package of landmark reforms to the management of Crown land in New South Wales. These reforms are a result of a thorough and consultative review of Crown land in New South Wales over the last four years. This bill\u2026"
      },
      {
       "slug": "speech-869217",
@@ -2601,7 +3286,18 @@
       "party": null,
       "state": "nsw",
       "date": "2016-11-09",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1110,
+        1413
+       ],
+       [
+        1413,
+        1655
+       ]
+      ],
+      "passage": "Ms KATRINA HODGKINSON ( Cootamundra ) ( 17:00 :49 ): I support the Crown Land Management Bill 2016, which represents historic reform. My contribution to the debate will be brief. As the Minister responsible for Crown lands from 2011 until 2014, I commenced a review of Crown land in 2012 because when the Coalition formed government it became very clear very quickly that after 16 years of Labor\u2026"
      },
      {
       "slug": "speech-869681",
@@ -2610,7 +3306,8 @@
       "party": null,
       "state": "nsw",
       "date": "2016-11-10",
-      "cited": true
+      "cited": true,
+      "passage": "Mr DAVID MEHAN ( The Entrance ) ( 15:56 :16 ): I speak on behalf of the Opposition to make a contribution to the take-note debate on the Legislation Review Digest No. 28/55, dated 8 November 2016. The committee considered six bills and commented on five. Our comments were brief except on the Crown Land Management Bill 2016. The committee made a number of comments on that bill. I am pleased to say\u2026"
      },
      {
       "slug": "speech-879811",
@@ -2619,7 +3316,14 @@
       "party": null,
       "state": "nsw",
       "date": "2017-06-01",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        2291,
+        2547
+       ]
+      ],
+      "passage": "\u2026Yet it has moved a motion, without proper community consultation, that would again remove the rights of Aboriginal people. The Government needs to come clean. It needs to state whether it supports the rights of Aboriginal people to make land claims and their right to economic independence or it is still following the policies of the past that removed the rights of Aboriginal people and denied\u2026"
      },
      {
       "slug": "speech-884503",
@@ -2628,7 +3332,8 @@
       "party": null,
       "state": "nsw",
       "date": "2017-10-11",
-      "cited": true
+      "cited": true,
+      "passage": "Reverend the Hon. FRED NILE ( 12:40 :27 ): Thank you for the opportunity to speak in support of the Aboriginal Languages Bill 2017. This is an historic moment, as the Minister said. The first historic point was when we passed the Aboriginal land rights legislation in 1983. I was pleased to be one of the members who enthusiastically supported the legislation and voted for it. I think I am the only\u2026"
      },
      {
       "slug": "speech-885020",
@@ -2637,7 +3342,14 @@
       "party": null,
       "state": "nsw",
       "date": "2017-10-17",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        454,
+        625
+       ]
+      ],
+      "passage": "Reverend the Hon. FRED NILE ( 20:50 :45 ): I contribute to the second reading debate on the Aboriginal Languages Bill 2017 and I acknowledge the traditional owners of land on which the Parliament stands, the Gadigal people of the Eora nation. I also pay my respects to their elders both past and present, and extend that respect to the many first peoples of New South Wales. I have come to know many\u2026"
      },
      {
       "slug": "speech-885252",
@@ -2646,7 +3358,14 @@
       "party": null,
       "state": "nsw",
       "date": "2017-10-18",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        625,
+        889
+       ]
+      ],
+      "passage": "Ms FELICITY WILSON ( North Shore ) ( 18:02 :51 ): I acknowledge the traditional owners of the land on which Parliament now stands, the Gadigal people of the Eora nation. I pay my respects to the traditional owners of the lands I now represent in the electorate of North Shore, believed to include the Cammeraygal, Wallumedegal and Borogegal peoples. I am proud to represent a community with rich\u2026"
      },
      {
       "slug": "speech-1109391",
@@ -2655,7 +3374,8 @@
       "party": null,
       "state": "vic",
       "date": "2019-05-27",
-      "cited": true
+      "cited": true,
+      "passage": "Yesterday was National Sorry Day, an important day for First Nations people because it marks the first time that their stories of the stolen generation were heard in a formal way. This week is National Reconciliation Week, which acknowledges the first time First Nations people were counted in the census. National Reconciliation Week ends on 3 June. This day commemorates the historic High Court\u2026"
      },
      {
       "slug": "speech-987935",
@@ -2664,7 +3384,8 @@
       "party": null,
       "state": "nsw",
       "date": "2019-05-30",
-      "cited": true
+      "cited": true,
+      "passage": "Mr MARK COURE ( Oatley ) ( 12:49 :05 ): By leave: Congratulations, Mr Temporary Speaker, on your promotion to that role. The referendum of 1967 and the apology to the Stolen Generation were certainly turning points. That apology came out of the 1997 tabling of the Bringing them Homereport in the Federal Parliament. We have come a long way since then. The theme of the 2019 National Reconciliation\u2026"
      },
      {
       "slug": "speech-987945",
@@ -2673,7 +3394,8 @@
       "party": null,
       "state": "nsw",
       "date": "2019-05-30",
-      "cited": true
+      "cited": true,
+      "passage": "The SPEAKER: I take a moment to acknowledge that this sitting period falls within National Reconciliation Week. National Reconciliation Week is nationally celebrated each year and is bookended by two significant anniversaries in our history: the anniversary of the 1967 referendum on 27 May and the Mabo High Court decision on 3 June 1992. This week we learn about, commemorate and celebrate\u2026"
      },
      {
       "slug": "speech-801384",
@@ -2682,7 +3404,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2010-06-22",
-      "cited": false
+      "cited": false,
+      "passage": "In 1999 theNunavut Actwas signed in Canada. That is just one example, I suppose, of just how far it seems we have to come in this country, that we should be having a debate here in parliament in 2010 in the absence of Aboriginal voices in this parliament or people to put their own views without white fellas putting them for them yet we had an act of parliament in Canada that established the\u2026"
      },
      {
       "slug": "speech-821965",
@@ -2691,7 +3414,8 @@
       "party": null,
       "state": "federal",
       "date": "2013-02-26",
-      "cited": false
+      "cited": false,
+      "passage": "The bill before us today is essentially a parliamentary statement that recognises some facts of our history that have never been formally acknowledged before\u2014the fact that Australia was first occupied by Aboriginal and Torres Strait Islander people; the fact that Aboriginal and Torres Strait Islander people have a continuing relationship with their traditional land and waters; and the fact that\u2026"
      },
      {
       "slug": "speech-822241",
@@ -2700,7 +3424,14 @@
       "party": "Labor",
       "state": "federal",
       "date": "2013-03-12",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        2547,
+        2813
+       ]
+      ],
+      "passage": "But despite all the hard work and commitment towards rectifying inequality and creating opportunity for all, we still have one major hurdle to leap. That is, the formal recognition of Aboriginal and Torres Strait Islander people within our Constitution. To this end, the bill enshrines some very important elements. It recognises that the continent and its islands, now known as Australia, were\u2026"
      },
      {
       "slug": "speech-825059",
@@ -2709,7 +3440,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2013-06-25",
-      "cited": false
+      "cited": false,
+      "passage": "I want to take the time also to thank the current Northern Territory government for working towards realising this solution and I want to sincerely thank the former Northern Territory Labor government for its support during the negotiation processes. The bill andAboriginal land rightsrecognition enable change to happen with respect. Land rights recognition benefits everyone through the clear\u2026"
      },
      {
       "slug": "speech-341828",
@@ -2718,7 +3450,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2017-02-16",
-      "cited": false
+      "cited": false,
+      "passage": "I rise to condemn this Prime Minister and this government for their conduct in this place in the last 24 hours in attempting to ram through substantial legislation in relation to a historic land rights agreement between the Aboriginal people and the government-that is, the Native Title Act. Make no mistake, we all agree that the substance of the Native Title Amendment (Indigenous Land Use\u2026"
      },
      {
       "slug": "speech-1017350",
@@ -2727,7 +3460,8 @@
       "party": null,
       "state": "nsw",
       "date": "2019-08-07",
-      "cited": false
+      "cited": false,
+      "passage": "The Hon. ADAM SEARLE ( 13:09 :23 ): I have a supplementary question for written answer to the Leader of the Government, and Minister for the Public Service and Employee Relations, Aboriginal Affairs, and the Arts relating to Aboriginal languages. Will the Minister elucidate the answers he has given this day and inform the House of an indicative date or time frame the Government has in mind for\u2026"
      },
      {
       "slug": "speech-1022722",
@@ -2736,10 +3470,12 @@
       "party": null,
       "state": "nsw",
       "date": "2019-08-08",
-      "cited": false
+      "cited": false,
+      "passage": "The Hon. WALT SECORD ( 13:16 :43 ): I take note of the Aboriginal affairs Minister's answer to the question about the Aboriginal Language Act, which was passed in 2017 and will not be proclaimed until 2020. The Hon. Don Harwin: No later than March 2020. The Hon. WALT SECORD: No later than March. In the Minister's answer he said that once the Act is proclaimed the trust will have two years to\u2026"
      }
     ],
-    "asked_at": "2026-09-04T23:06:22+00:00"
+    "asked_at": "2026-09-04T23:06:22+00:00",
+    "cite_method": "verbatim"
    },
    {
     "label": "2020\u20132024",
@@ -2755,7 +3491,22 @@
       "party": null,
       "state": "sa",
       "date": "2021-08-26",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        1338,
+        1754
+       ],
+       [
+        1754,
+        1958
+       ],
+       [
+        1958,
+        2066
+       ]
+      ],
+      "passage": "\u2026How does this support by government accord with the principle of interculturalism, namely to: recognise and promote in the community\u2014 (a) a deep understanding of, and respect for, all cultures; and (b) a dynamic, inclusive interaction between diverse groups within the community. The well-meaning, significant and powerful inclusion of an acknowledgement of Aboriginal peoples as First Australians\u2026"
      },
      {
       "slug": "speech-1177818",
@@ -2764,7 +3515,8 @@
       "party": null,
       "state": "nsw",
       "date": "2022-06-07",
-      "cited": true
+      "cited": true,
+      "passage": "The Hon. BEN FRANKLIN: I move: That standing and sessional orders be suspended to allow a motion relating to the twenty-fifth anniversary of the New South Wales apology to the Stolen Generations to be moved forthwith. Motion agreed to."
      },
      {
       "slug": "speech-827325",
@@ -2773,7 +3525,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2023-02-08",
-      "cited": true
+      "cited": true,
+      "passage": "I rise this evening to mark a momentous point inSouth Australian history, with my great state set to become the first Australian jurisdiction with aFirst Nationsvoice to parliament. The Malinauskas Labor government this week introduced the First Nations Voice Bill 2023. I am deeply proud to be aSouth Australianand see that occur."
      },
      {
       "slug": "speech-827579",
@@ -2782,7 +3535,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2023-02-13",
-      "cited": true
+      "cited": true,
+      "passage": "I rise today in this chamber to acknowledge the 15th anniversary of the apology to the stolen generations delivered inParliament Houseby former prime minister the Hon. DrKevin Ruddin 2008. This moment in our country's history was a significant occasion forFirst Nationspeople, and overall it was an important step in our nation's path to reconciliation. I am honoured to be in this place, as a proud\u2026"
      },
      {
       "slug": "speech-828249",
@@ -2791,7 +3545,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2023-03-08",
-      "cited": true
+      "cited": true,
+      "passage": "Last month theClosing the gapjoint tabling coincided with the 15th anniversary of theNational Apologyto theStolen Generations. Fifteen years ago,Prime Minister Ruddsaid, 'I am sorry,' on behalf of our nation. This was a significant page of truth-telling in our history as a nation, and it was acknowledged to be a historic moment in which the pain and the burden of members of the stolen generations\u2026"
      },
      {
       "slug": "speech-1187807",
@@ -2800,7 +3555,18 @@
       "party": null,
       "state": "sa",
       "date": "2023-03-09",
-      "cited": true
+      "cited": true,
+      "answer_ranges": [
+       [
+        207,
+        496
+       ],
+       [
+        496,
+        637
+       ]
+      ],
+      "passage": "\u2026But I do remain concerned that, to me at least, there does not seem to be a well-articulated motivation for opposing this bill because to oppose the bill accepts the status quo, and to accept the status quo means to accept the decades of failure that we persist with in trying to provide equal social and economic opportunity here in South Australia for Aboriginal Australians, and that to me is\u2026"
      },
      {
       "slug": "speech-1086996",
@@ -2809,7 +3575,8 @@
       "party": null,
       "state": "vic",
       "date": "2020-02-19",
-      "cited": false
+      "cited": false,
+      "passage": "Last Thursday, 13 February, was the 12th anniversary of the national apology to the stolen generations of First Nations people. I had the privilege of participating in the Wathaurong Aboriginal Co-operative's remembrance of the national apology delivered by the then Prime Minister, Kevin Rudd, in 2008. This apology was significant. It acknowledged the wrongdoing that resulted in the stolen\u2026"
      },
      {
       "slug": "speech-1121451",
@@ -2818,7 +3585,8 @@
       "party": null,
       "state": "nsw",
       "date": "2021-02-18",
-      "cited": false
+      "cited": false,
+      "passage": "The Hon. SHAOQUETT MOSELMANE ( 10:08 :42 ): I move: (1)That this House: (a)acknowledges that Friday 12 February was the thirteenth anniversary of the National Apology to Stolen Generations made by former Prime Minister Kevin Rudd; (b)acknowledges the generational trauma caused by the removal of Aboriginal children from their families; and (c)reaffirms the commitment of the New South Wales\u2026"
      },
      {
       "slug": "speech-406960",
@@ -2827,7 +3595,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2021-05-26",
-      "cited": false
+      "cited": false,
+      "passage": "It has been 13 years since the apology to the stolen generations in this very chamber. Today is 26 May. It is Sorry Day, and it is four years-four long years-since the Uluru delegates issued a kind, generous and inclusive statement to all of us as Australians. It said: We call for the establishment of a First Nations Voice enshrined in the Constitution.\u2026 \u2026 \u2026We seek a Makarrata Commission to\u2026"
      },
      {
       "slug": "speech-1133846",
@@ -2836,7 +3605,8 @@
       "party": null,
       "state": "sa",
       "date": "2021-10-12",
-      "cited": false
+      "cited": false,
+      "passage": "664 (25 August 2021). Why didn't the original version of the South Australian Multicultural Bill 2020 include recognition of First Nations peoples given this was raised multiple times in the consultation and review process of the bill?"
      },
      {
       "slug": "speech-1175903",
@@ -2845,7 +3615,8 @@
       "party": null,
       "state": "nsw",
       "date": "2022-05-19",
-      "cited": false
+      "cited": false,
+      "passage": "Mr ALISTER HENSKENS: I move: That standing and sessional orders be suspended to alter the routine of business following the prayer and acknowledgement of country on Tuesday 7 June 2022 to provide for: (1)Stolen Generations survivors to address the House from the floor of the Chamber. (2)The moving of a motion without notice by the Premier regarding the twenty-fifth anniversary of the apology to\u2026"
      },
      {
       "slug": "speech-1177365",
@@ -2854,7 +3625,14 @@
       "party": null,
       "state": "nsw",
       "date": "2022-06-07",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        2380,
+        2571
+       ]
+      ],
+      "passage": "\u2026It is sobering and important to acknowledge that many of the horrible practices and policies at that time were grounded in laws that were passed in this place, and that despite the collective wisdom that is our democracy we can and do get things terribly wrong. It is important that we acknowledge that and take every opportunity to right those wrongs. I was taken by Aunty Lorraine's speech when\u2026"
      },
      {
       "slug": "speech-1177819",
@@ -2863,7 +3641,8 @@
       "party": null,
       "state": "nsw",
       "date": "2022-06-07",
-      "cited": false
+      "cited": false,
+      "passage": "The Hon. BEN FRANKLIN: I move: That, notwithstanding anything to the contrary in the standing and sessional orders, a motion relating to the twenty-fifth anniversary of the New South Wales apology to the Stolen Generations be moved forthwith without notice, and debate on the motion take precedence of all other business except questions and debate on committee reports and Government responses\u2026"
      },
      {
       "slug": "speech-826911",
@@ -2872,7 +3651,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2023-02-06",
-      "cited": false
+      "cited": false,
+      "passage": "Well, here we all are, the first day of parliament in what the member for Barton has rightly described as 'the year of the Voice'. This is a year when Australians will finally have the opportunity, at a referendum, to make sure ourFirst Nationspeople are recognised in our Constitution. It's also a year where we've got a lot of work to do, and we as a government intend to do it. Just this week\u2026"
      },
      {
       "slug": "speech-1183112",
@@ -2881,7 +3661,8 @@
       "party": null,
       "state": "sa",
       "date": "2023-02-09",
-      "cited": false
+      "cited": false,
+      "passage": "Obtained leave and introduced a bill for an act to give First Nations people a voice that will be heard by the Parliament of South Australia, the Government of South Australia and other persons and bodies, to establish Local First Nations Voices and the State First Nations Voice, to repeal the Aboriginal Lands Parliamentary Standing Committee Act 2003, to amend the Constitution Act 1934, and for\u2026"
      },
      {
       "slug": "speech-827345",
@@ -2890,7 +3671,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2023-02-09",
-      "cited": false
+      "cited": false,
+      "passage": "I echo the words the Prime Minister said about this question on the first day of the 47th Parliament: 'You can either have a source of pride or a source of regret.' We look to next Monday, which is the 15th anniversary of the apology to the stolen generation. That was a moment of immense pride not just for this parliament but for this nation. We have an opportunity this year to put another moment\u2026"
      },
      {
       "slug": "speech-827533",
@@ -2899,7 +3681,8 @@
       "party": "Labor",
       "state": "federal",
       "date": "2023-02-13",
-      "cited": false
+      "cited": false,
+      "passage": "This year, Australia will be presented with a choice, a unifying opportunity on the path to a reconciled nation. Australians of all walks of life will be asked whether they supportFirst Nationsrecognition in our Constitution, acknowledging our Indigenous brothers and sisters as the original custodians of the land and culture that has continued to exist for over 60,000 years. Australians will also\u2026"
      },
      {
       "slug": "speech-1183897",
@@ -2908,7 +3691,14 @@
       "party": null,
       "state": "sa",
       "date": "2023-02-21",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        0,
+        207
+       ]
+      ],
+      "passage": "I would like to inform the chamber that my speech will go for probably around about 30 minutes, so I will need to seek leave to conclude at about 1 o'clock, when we break for lunch. I have spoken with the Attorney and he is comfortable with that. I am just giving everyone some notice of that. Also, my voice is not 100 per cent at the moment, so if the chamber can just bear with me. In my\u2026"
      },
      {
       "slug": "speech-827855",
@@ -2917,7 +3707,8 @@
       "party": "Liberal",
       "state": "federal",
       "date": "2023-03-06",
-      "cited": false
+      "cited": false,
+      "passage": "The idea is that we have policy tailored to meet the needs of First Nations people. While there have been several First Nations MPs and First Nations senators elected to the Australian parliament at the recent election, this may change in the future.The Voicewill ensure there is a First Nations voice into that future. Furthermore, every person in the country has different circumstances and life\u2026"
      },
      {
       "slug": "speech-1187101",
@@ -2926,10 +3717,18 @@
       "party": null,
       "state": "sa",
       "date": "2023-03-08",
-      "cited": false
+      "cited": false,
+      "answer_ranges": [
+       [
+        997,
+        1336
+       ]
+      ],
+      "passage": "\u2026I fear, however, the Voice to Parliament will fall short of delivering on some of the key injustices and inequality faced by Indigenous communities. They are many. Educational outcomes: we know that high levels of education have been linked to better economic, social and wellbeing outcomes for both Indigenous and non-Indigenous people. Ensuring early years learning, retaining Indigenous children\u2026"
      }
     ],
-    "asked_at": "2026-09-04T23:06:32+00:00"
+    "asked_at": "2026-09-04T23:06:32+00:00",
+    "cite_method": "verbatim"
    }
   ],
   "tide": [

@@ -315,7 +315,11 @@ WINDOW_PROMPT = (
     "{context}\n\n"
     "Question: {question}\n\n"
     "Instructions: Answer from whichever passages address the question, quoting or closely "
-    "paraphrasing them. Ignore passages that are off-topic; answer from the ones that apply "
+    "paraphrasing them. Quotation marks mean the words inside them are copied from a "
+    "passage EXACTLY, unbroken and unedited — no tightening, no joining two sentences, no "
+    "ellipsis, no bracketed change. If you would have to alter the words at all, paraphrase "
+    "them with no quotation marks instead. "
+    "Ignore passages that are off-topic; answer from the ones that apply "
     "even if only a few do or they address it only in part. If some passages mention the "
     "subject only briefly, report what they say and note that the record is limited. "
     "Name the speakers and their parties wherever the passages do, and name the parliament "
@@ -998,14 +1002,40 @@ def gen_lede(kb: KbClient, title: str, sections: list[dict]) -> dict:
                       f"{body[:60]}...", file=sys.stderr)
                 continue
             ref = elsewhere[0]
-        text.append(body)
+        text.append((body, srcs[ref]))
         source = srcs[ref]
         if source["slug"] not in {u["slug"] for u in used}:
-            used.append({k: source.get(k) for k in
-                         ("slug", "title", "speaker", "party", "state", "date")})
+            used.append({**{k: source.get(k) for k in
+                            ("slug", "title", "speaker", "party", "state", "date", "passage")},
+                         # A lede lists only what its sentences rest on.
+                         "cited": True})
     if not text:
         return {}
-    return {"text": " ".join(text), "sources": used}
+    # The lede knows which record each sentence rests on: it settled the
+    # speaker and then checked the quotation against the record itself. The
+    # markers are recorded as the sentences are joined rather than recovered
+    # from the finished paragraph.
+    joined = ""
+    marks: dict[str, list[list[int]]] = defaultdict(list)
+    quotes: dict[str, str] = {}
+    for body, source in text:
+        joined += " " if joined else ""
+        start = len(joined)
+        joined += body
+        marks[source["slug"]].append([start, len(joined)])
+        for quote in _ANSWER_QUOTE.findall(body):
+            if len(quote.split()) >= QUOTE_MIN_WORDS:
+                quotes.setdefault(source["slug"], quote)
+    for source in used:
+        source["answer_ranges"] = dedupe_ranges(marks[source["slug"]])
+        quote = quotes.get(source["slug"], "")
+        passage = source.get("passage") or ""
+        # The section's passage answered the section's question; the lede's
+        # sentence quoted something else in the same speech.
+        if quote and not (passage and _loose(quote).search(passage)):
+            passage = raw_source_text(kb, source["slug"], bodies)
+        source["passage"] = trim_passage(passage, quote)
+    return {"text": joined, "sources": used, "cite_method": "declared"}
 
 
 PARLIAMENT_NAMES = {
@@ -1708,9 +1738,448 @@ def window_clauses(topic: str, since: str | None, until: str | None) -> dict:
     return {"field": {"and": clauses}}
 
 
-def ask_sources(res: dict) -> list[dict]:
-    """Cited sources first, each flagged, so a section can be checked by eye."""
-    cited_ids = {key.split("/")[0] for key in (res.get("citations") or {})}
+# --- passages and citation markers -------------------------------------------
+# Two things every answer owes its reader: the passage behind each source, and
+# a superscript in the line of the prose that says WHICH source a claim came
+# from. The portal's ask page gets both from the platform — the citations map
+# is `paragraph id -> [[start, end], …]` into the answer text, and app.js turns
+# those spans into numbered <sup> buttons against the source list. Reports are
+# generated once and read forever, so they carry the same two things in the
+# file: `sources[].passage` and `sources[].answer_ranges`.
+#
+# A report that was generated before this existed cannot be re-asked for its
+# ranges without paying for the answer again, so there is a second, free way to
+# earn a marker: the words. An answer sentence that quotes the record verbatim
+# names its own source — if the quoted phrase is in exactly one of the
+# section's records, that record is where those words were said. Nothing is
+# ever guessed: a sentence that quotes nothing, or quotes something two records
+# share, gets no marker at all.
+
+PASSAGE_CHARS = 400
+QUOTE_MIN_WORDS = 3      # "will decrease supply" is checkable; "the plan" is not
+RUN_MIN_WORDS = 7        # an unquoted sentence must share a long verbatim run
+_ANSWER_QUOTE = re.compile(r"[\"“]([^\"“”]{12,400})[\"”]")
+_SENTENCE_END = re.compile(r"[.!?][\"”’')\]]*(?=\s|$)|\n+")
+
+
+def dedupe_ranges(ranges: list[list[int]]) -> list[list[int]]:
+    """Sorted, without repeats. Two citations of the same span mark it once."""
+    return [list(span) for span in sorted({(int(a), int(b)) for a, b in ranges})]
+
+
+class Records:
+    """Speech text, read once and shared across every block that cites it.
+
+    Raw for a passage a reader will see, folded for a match a reader would
+    call identical. Reading the record is free, so the only cost is time, and
+    prefetch() spends it in parallel."""
+
+    def __init__(self, kb: KbClient):
+        self.kb = kb
+        self._raw: dict[str, str] = {}
+        self._folded: dict[str, str] = {}
+
+    def raw(self, slug: str) -> str:
+        return raw_source_text(self.kb, slug, self._raw)
+
+    def folded(self, slug: str) -> str:
+        if slug not in self._folded:
+            self._folded[slug] = _plain(self.raw(slug))
+        return self._folded[slug]
+
+    def prefetch(self, slugs: list[str]) -> None:
+        wanted = [s for s in dict.fromkeys(slugs) if s and s not in self._raw]
+        if not wanted:
+            return
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            for slug, text in zip(wanted, pool.map(
+                    lambda s: raw_source_text(self.kb, s, {}), wanted)):
+                self._raw[slug] = text
+
+
+def _loose(needle: str) -> "re.Pattern[str]":
+    """A pattern matching this phrase across any punctuation or line breaks.
+
+    The record is OCR'd Hansard: it doubles spaces, breaks lines mid-sentence
+    and writes '11:43 :47'. A quotation a reader would call identical must
+    still match, so only the letters and digits are anchored."""
+    words = [w for w in re.split(r"[^A-Za-z0-9]+", needle) if w]
+    return re.compile(r"[^A-Za-z0-9]+".join(re.escape(w) for w in words), re.I)
+
+
+def trim_passage(text: str, around: str = "", limit: int = PASSAGE_CHARS) -> str:
+    """A quotable passage: the words the answer leaned on, in one paragraph.
+
+    With a quotation to centre on, the window opens at the sentence that
+    carries it, so the reader sees the quote in its own context rather than the
+    paragraph's opening throat-clearing."""
+    text = re.sub(r"\s+", " ", str(text or "")).strip()
+    if len(text) <= limit:
+        return text
+    start = 0
+    if around:
+        found = _loose(around).search(text)
+        if found:
+            head = text.rfind(". ", 0, found.start())
+            start = head + 2 if head != -1 and found.start() - head < limit else found.start()
+            start = max(0, min(start, len(text) - limit))
+    end = start + limit
+    if end < len(text):                       # never cut a word in half
+        space = text.rfind(" ", start, end)
+        end = space if space > start else end
+    return ("…" if start else "") + text[start:end].strip() + ("…" if end < len(text) else "")
+
+
+def masked_for_sentences(text: str) -> str:
+    """The text with sentence-enders inside quotation marks hidden.
+
+    A quoted passage runs to several sentences, and a marker belongs after the
+    quotation, not inside it."""
+    chars = list(text)
+    for match in _ANSWER_QUOTE.finditer(text):
+        start, end = match.start(1), match.end(1)
+        # The quotation's OWN last full stop still ends the sentence that
+        # carries it — the marker belongs after the closing quotation mark,
+        # not swallowed into whatever follows.
+        last = end - 1
+        while last > start and chars[last].isspace():
+            last -= 1
+        for i in range(start, end):
+            if chars[i] in ".!?\n" and i != last:
+                chars[i] = "·"
+    return "".join(chars)
+
+
+def sentence_spans(text: str) -> list[tuple[int, int]]:
+    """Every sentence of an answer as a [start, end) span of the answer text."""
+    masked = masked_for_sentences(text)
+    spans: list[tuple[int, int]] = []
+    start = 0
+    for match in _SENTENCE_END.finditer(masked):
+        end = match.end()
+        if text[start:end].strip():
+            spans.append((start, end))
+        start = end
+    if text[start:].strip():
+        spans.append((start, len(text)))
+    return spans
+
+
+def longest_verbatim_run(sentence: str, body: str) -> int:
+    """How many consecutive words of this sentence appear verbatim in the record.
+
+    `body` is already folded by _plain() and padded with spaces, so a run only
+    matches on whole words."""
+    tokens = _plain(sentence).split()
+    best = 0
+    for i in range(len(tokens)):
+        if best >= len(tokens) - i:
+            break
+        j = i + best + 1
+        while j <= len(tokens) and f" {' '.join(tokens[i:j])} " in body:
+            best, j = j - i, j + 1
+    return best
+
+
+def anchor_block(records: Records, block: dict, key: str = "answer",
+                 by_speaker: bool = False, mark: bool = True) -> dict[str, dict[str, str]]:
+    """Mark up an answer from the words themselves. Free: no ask, no guess.
+
+    Returns the quotation that earned each source its marker, which is also the
+    passage that source should show. A sentence is attributed only when the
+    evidence is verbatim AND unambiguous: exactly one of the block's records
+    holds it."""
+    text = str(block.get(key) or "")
+    sources = block.get("sources") or []
+    if not text or not sources:
+        return {}
+    # Every retrieved record is a candidate, not just the ones the platform
+    # cited: a quotation verbatim in a retrieved record is proof of where the
+    # words were said whatever the citation map says. Ambiguity is broken
+    # towards the cited records, and only towards a single one of them.
+    records.prefetch([s.get("slug") or "" for s in sources])
+    folded = {s["slug"]: f" {records.folded(s['slug'])} " for s in sources if s.get("slug")}
+    folded = {slug: body for slug, body in folded.items() if body.strip()}
+    flagged = {s["slug"] for s in sources if s.get("cited")}
+
+    def settle(holders: list[str]) -> str:
+        if len(holders) == 1:
+            return holders[0]
+        narrowed = [slug for slug in holders if slug in flagged]
+        return narrowed[0] if len(narrowed) == 1 else ""
+
+    marks: dict[str, list[list[int]]] = defaultdict(list)
+    quotes: dict[str, dict[str, str]] = defaultdict(lambda: {"quote": "", "text": ""})
+
+    def evidence(slug: str, sentence: str, quote: str = "") -> None:
+        if quote and not quotes[slug]["quote"]:
+            quotes[slug]["quote"] = quote
+        quotes[slug]["text"] = (quotes[slug]["text"] + " " + sentence).strip()
+
+    for start, end in sentence_spans(text):
+        sentence = text[start:end]
+        found = [q for q in _ANSWER_QUOTE.findall(sentence)
+                 if len(q.split()) >= QUOTE_MIN_WORDS]
+        for quote in found:
+            holder = settle([slug for slug, body in folded.items()
+                             if f" {_plain(quote)} " in body])
+            if not holder:
+                continue
+            marks[holder].append([start, end])
+            evidence(holder, sentence, quote)
+        if found:
+            continue
+        # No quotation to check. A long enough verbatim run is still proof, so
+        # long as one record alone carries it.
+        runs = {slug: longest_verbatim_run(sentence, body) for slug, body in folded.items()}
+        best = max(runs.values(), default=0)
+        holder = settle([slug for slug, run in runs.items() if run == best])
+        if best >= RUN_MIN_WORDS and holder:
+            marks[holder].append([start, end])
+            evidence(holder, sentence)
+        elif by_speaker:
+            # The lede is one sentence per record by construction, and
+            # gen_lede already settles each sentence on the member it names
+            # (settle_lede_ref) before it checks the quotation. A lede
+            # rebuilt from the file earns its markers the same way.
+            named = [s["slug"] for s in sources if s.get("speaker")
+                     and _names_speaker(sentence, str(s["speaker"]))]
+            if len(named) == 1:
+                marks[named[0]].append([start, end])
+                evidence(named[0], sentence)
+    if not mark:                # evidence only, for choosing passages
+        return dict(quotes)
+    for source in sources:
+        if marks.get(source.get("slug")):
+            source["answer_ranges"] = dedupe_ranges(
+                (source.get("answer_ranges") or []) + marks[source["slug"]])
+    if marks:
+        block["cite_method"] = "verbatim"
+    return dict(quotes)
+
+
+def paragraph_pool(kb: KbClient, query: str, filter_expression: dict | None = None,
+                   top_k: int = 20) -> dict[str, list[str]]:
+    """The retrieved paragraphs behind a question, best first, by slug. Free."""
+    res = kb.find(query, top_k=top_k, show=["basic", "origin", "extra"],
+                  filter_expression=filter_expression)
+    pool: dict[str, list[str]] = {}
+    for resource in ((res.get("resources") or {})).values():
+        slug = resource.get("slug") or ""
+        if not slug or slug.startswith("da-"):
+            continue
+        scored: list[tuple[float, str]] = []
+        for field in (resource.get("fields") or {}).values():
+            for para in (field.get("paragraphs") or {}).values():
+                text = re.sub(r"\s+", " ", (para.get("text") or "")).strip()
+                if text:
+                    scored.append((float(para.get("score") or 0.0), text))
+        pool[slug] = [text for _, text in sorted(scored, key=lambda row: -row[0])]
+    return pool
+
+
+def chunked(text: str, size: int = PASSAGE_CHARS) -> list[str]:
+    """A record cut into passage-sized pieces on sentence boundaries."""
+    text = re.sub(r"\s+", " ", str(text or "")).strip()
+    out: list[str] = []
+    piece = ""
+    for start, end in sentence_spans(text) or [(0, len(text))]:
+        sentence = text[start:end]
+        if piece and len(piece) + len(sentence) > size:
+            out.append(piece.strip())
+            piece = ""
+        piece += sentence
+    if piece.strip():
+        out.append(piece.strip())
+    return out
+
+
+def closest_paragraph(paragraphs: list[str], sentences: str) -> str:
+    """The retrieved paragraph that shares most of its words with the answer.
+
+    Retrieval ranks a paragraph against the QUESTION; a source that earned a
+    marker should show the paragraph behind that particular claim instead —
+    the whole record is often a debate with a dozen speakers in it."""
+    wanted = set(_content_words(sentences))
+    if not wanted:
+        return ""
+    scored = [(len(wanted & set(_content_words(p))), -i, p)
+              for i, p in enumerate(paragraphs)]
+    best = max(scored, default=(0, 0, ""))
+    return best[2] if best[0] >= 2 else ""
+
+
+def attach_passages(records: Records, block: dict, pool: dict[str, list[str]],
+                    quotes: dict[str, dict[str, str]]) -> int:
+    """Give every source the passage the answer leaned on. Free.
+
+    In order of preference: the retrieved paragraph that carries the quotation
+    this source was marked for; the quotation in its own context, read from the
+    record; the retrieved paragraph closest to the sentences it was marked for;
+    the best-scoring retrieved paragraph; the head of the record."""
+    filled = 0
+    sources = block.get("sources") or []
+    records.prefetch([s.get("slug") or "" for s in sources
+                      if not pool.get(s.get("slug") or "")])
+    for source in sources:
+        slug = source.get("slug") or ""
+        evidence = quotes.get(slug) or {}
+        quote, sentences = evidence.get("quote") or "", evidence.get("text") or ""
+        existing = (source.get("passage") or "").strip()
+        # A passage that does not carry the quotation its source was cited for
+        # is the wrong passage, however good it looked against the question.
+        if existing and (not quote or _loose(quote).search(existing)):
+            filled += 1
+            continue
+        if not slug:
+            continue
+        paragraphs = pool.get(slug) or []
+        passage = ""
+        if quote:
+            pattern = _loose(quote)
+            passage = next((p for p in paragraphs if pattern.search(p)), "")
+            if not passage:
+                passage = records.raw(slug)
+        if not passage and sentences:
+            # The marked claim may be nowhere near the paragraphs retrieval
+            # ranked for the question, so the record itself is searched too.
+            passage = (closest_paragraph(paragraphs, sentences)
+                       or closest_paragraph(chunked(records.raw(slug)), sentences))
+        if not passage and paragraphs:
+            passage = paragraphs[0]
+        if not passage:
+            passage = records.raw(slug)
+        source["passage"] = trim_passage(passage, quote)
+        filled += bool(source["passage"])
+    return filled
+
+
+def cite_block(records: Records, block: dict, *, query: str,
+               filter_expression: dict | None, key: str = "answer",
+               by_speaker: bool = False) -> tuple[int, int]:
+    """Markers and passages for one answer, without asking anything.
+
+    An answer whose markers came from the platform keeps them: its ranges are
+    the generator's own record of what the answer cited, and the words are only
+    ever the fallback. The words are still read either way, because a source's
+    passage should carry the quotation that source was cited for."""
+    marked_already = any(s.get("answer_ranges") for s in block.get("sources") or [])
+    quotes = anchor_block(records, block, key=key, by_speaker=by_speaker,
+                          mark=not marked_already)
+    pool = paragraph_pool(records.kb, query, filter_expression) if block.get("sources") else {}
+    filled = attach_passages(records, block, pool, quotes)
+    marked = sum(1 for s in block.get("sources") or [] if s.get("answer_ranges"))
+    return marked, filled
+
+
+def cite_report(kb: KbClient, slug: str, report: dict, since: str) -> dict[str, int]:
+    """Every answer in a report gets its markers and every source its passage.
+
+    Free — retrieval and record reads only — so it can be run over a report
+    that was generated before either existed, and re-run whenever the page
+    wants a different passage length."""
+    cfg = REPORTS[slug]
+    records = Records(kb)
+    topic = cfg["topic"]
+    tally = Counter()
+    now = report.get("now") or {}
+    window = now.get("since") or since
+    blocks: list[tuple[str, dict, str, dict | None]] = []
+    for index, section in enumerate(now.get("sections") or [], 1):
+        blocks.append((f"now #{index}", section, "answer",
+                       window_clauses(topic, window, None)))
+    for era in (report.get("over_time") or {}).get("eras") or []:
+        blocks.append((f"era {era.get('label')}", era, "answer",
+                       window_clauses(topic, era.get("from"), era.get("to"))))
+    for index, section in enumerate(report.get("sections") or [], 1):
+        # v1's three unfiltered sections. The live page renders them today.
+        blocks.append((f"section #{index}", section, "answer", None))
+    for name, block, key, clauses in blocks:
+        marked, filled = cite_block(
+            records, block, query=block.get("question") or cfg["title"],
+            filter_expression=clauses, key=key)
+        sources = len(block.get("sources") or [])
+        tally["blocks"] += 1
+        tally["marked"] += bool(marked)
+        tally["sources"] += sources
+        tally["passages"] += filled
+        print(f"  {name}: {marked}/{sources} sources marked, {filled} passages"
+              f" [{block.get('cite_method') or 'none'}]")
+    lede = report.get("lede") or {}
+    if (lede.get("text") or "").strip() and lede.get("sources"):
+        marked, filled = cite_block(
+            records, lede, query=cfg["blurb"] or cfg["title"],
+            filter_expression=window_clauses(topic, window, None), key="text",
+            by_speaker=True)
+        # A lede source is one of the sections' own, so a passage the sections
+        # already found stands in for one the lede could not.
+        known = {s["slug"]: s.get("passage") for _, block, _, _ in blocks
+                 for s in block.get("sources") or [] if s.get("slug")}
+        for source in lede["sources"]:
+            source.setdefault("cited", True)   # a lede lists only what it used
+            if not (source.get("passage") or "").strip():
+                source["passage"] = known.get(source.get("slug")) or ""
+                filled += bool(source["passage"])
+        tally["blocks"] += 1
+        tally["marked"] += bool(marked)
+        tally["sources"] += len(lede["sources"])
+        tally["passages"] += filled
+        print(f"  lede: {marked}/{len(lede['sources'])} sources marked, {filled} passages"
+              f" [{lede.get('cite_method') or 'none'}]")
+    return dict(tally)
+
+
+def ranges_from(value: object, shift: int, length: int) -> list[list[int]]:
+    """The platform's citation ranges for one paragraph, as the portal reads them.
+
+    A citations entry is `"<rid>/f/<field>/…": [[start, end], …]`, and the
+    offsets are into the answer the platform returned. Sections store the
+    answer STRIPPED, so leading whitespace has to come off the offsets too."""
+    out: list[list[int]] = []
+    for span in value if isinstance(value, list) else []:
+        if not isinstance(span, (list, tuple)) or len(span) != 2:
+            continue
+        start, end = span
+        if not isinstance(start, int) or not isinstance(end, int):
+            continue
+        start, end = start - shift, end - shift
+        start, end = max(0, start), min(length, end)
+        if end > start:
+            out.append([start, end])
+    return out
+
+
+def cited_paragraph(resource: dict, cited_ids: set[str]) -> str:
+    """The paragraph the answer actually leaned on: the CITED one when the
+    platform names it, otherwise the longest retrieved passage. Mirrors the
+    Worker's askPayload, which prefers a cited paragraph over a merely
+    retrieved one for the snippet it shows beside the answer."""
+    best = ""
+    for field in (resource.get("fields") or {}).values():
+        for pid, para in (field.get("paragraphs") or {}).items():
+            text = re.sub(r"\s+", " ", (para.get("text") or "")).strip()
+            if not text:
+                continue
+            if pid in cited_ids:
+                return text
+            if len(text) > len(best):
+                best = text
+    return best
+
+
+def ask_sources(res: dict, answer: str = "") -> list[dict]:
+    """Cited sources first, each flagged, so a section can be checked by eye.
+
+    Each source also carries the passage behind it and, when the platform
+    returned citation ranges, the spans of the answer it evidences — the same
+    two things the ask page shows: a quotable passage and a superscript."""
+    citations = res.get("citations") or {}
+    cited_ids = {key.split("/")[0] for key in citations}
+    raw = res.get("answer") or ""
+    shift = len(raw) - len(raw.lstrip())
+    spans: dict[str, list[list[int]]] = defaultdict(list)
+    for key, value in citations.items():
+        spans[key.split("/")[0]] += ranges_from(value, shift, len(answer))
     sources = []
     for rid, resource in ((res.get("retrieval_results") or {}).get("resources") or {}).items():
         slug = resource.get("slug") or ""
@@ -1725,6 +2194,8 @@ def ask_sources(res: dict) -> list[dict]:
             "state": summary["state"],
             "date": summary["date"],
             "cited": rid in cited_ids,
+            "passage": trim_passage(cited_paragraph(resource, set(citations))),
+            "answer_ranges": dedupe_ranges(spans.get(rid) or []),
         })
     sources.sort(key=lambda s: (not s["cited"], str(s.get("date") or "")))
     return sources
@@ -1743,12 +2214,20 @@ def build_section(kb: KbClient, question: str, *, topic: str | None = None,
         res = kb.ask(question, citations=True, prompt=SECTION_PROMPT, top_k=20,
                      show=["basic", "origin", "extra"])
     ASKS["ask"] += 1
-    return {
+    answer = (res.get("answer") or "").strip()
+    section = {
         "question": question,
-        "answer": (res.get("answer") or "").strip(),
-        "sources": ask_sources(res),
+        "answer": answer,
+        "sources": ask_sources(res, answer),
         "asked_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
+    if any(s["answer_ranges"] for s in section["sources"]):
+        section["cite_method"] = "platform"
+    else:
+        # The platform does not always return ranges with an answer. Rather
+        # than ship a section the page cannot mark up, fall back to the words.
+        anchor_block(Records(kb), section)
+    return section
 
 
 def merge_surname_variants(counts: "Counter[str]") -> dict[str, str]:
@@ -1836,7 +2315,7 @@ def tide(kb: KbClient, topic: str) -> list[dict]:
 
 
 BLOCKS = ("now", "over-time", "stats", "positions", "voices", "lede",
-          "key-moments", "sections")
+          "key-moments", "sections", "cites")
 
 
 def build_now(kb: KbClient, slug: str, rows: list[dict], since: str) -> dict:
@@ -2051,6 +2530,12 @@ def main() -> None:
                 sections = (report.get("now") or {}).get("sections") or []
                 report["lede"] = gen_lede(kb, cfg["title"], sections)
                 print(f"[{slug}] lede: {len((report['lede'] or {}).get('text') or '')} chars")
+            elif args.only == "cites":
+                print(f"[{slug}] marking answers and filling passages (free)")
+                tally = cite_report(kb, slug, report, args.since)
+                print(f"[{slug}] cites: {tally.get('marked', 0)}/{tally.get('blocks', 0)} "
+                      f"answers marked, {tally.get('passages', 0)}/{tally.get('sources', 0)} "
+                      f"sources carry a passage")
             elif args.only == "now" and args.redo:
                 # One bad answer in eight should cost one ask, not eight. The
                 # question and the window are the ones already in the file, so
@@ -2165,6 +2650,16 @@ def main() -> None:
         print(f"  lede: {len((lede or {}).get('text') or '')} chars, "
               f"{len((lede or {}).get('sources') or [])} sources")
         checkpoint(lede=lede)
+
+        # Markers and passages last, over the whole document: the paid blocks
+        # already carry the platform's, and this fills anything they left —
+        # v1's carried-over sections, a lede source, an answer the platform
+        # returned without citation ranges. Free.
+        print(f"[{slug}] marking answers and filling passages (free)")
+        tally = cite_report(kb, slug, report, args.since)
+        print(f"  cites: {tally.get('marked', 0)}/{tally.get('blocks', 0)} answers marked, "
+              f"{tally.get('passages', 0)}/{tally.get('sources', 0)} sources carry a passage")
+        checkpoint()
 
         index = [r for r in index if r["slug"] != slug] + [{
             "slug": slug, "title": cfg["title"], "blurb": cfg["blurb"],

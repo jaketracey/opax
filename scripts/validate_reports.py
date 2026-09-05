@@ -6,6 +6,10 @@ block makes a claim a reader can act on:
 
   every section        carries an answer, is not a refusal, and cites at least
                        one source that the knowledge box still holds
+  every source         carries a passage of about 400 characters, and the
+                       answer it sits under carries at least one inline
+                       citation marker (a source's `answer_ranges`) pointing
+                       into it — the same two things the ask page shows
   every key figure     carries a numerator, a denominator and a unit, and its
                        label names the base it is measured against
   every source slug    resolves live in the box
@@ -29,7 +33,7 @@ sys.path.insert(0, str(ROOT))
 
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv  # noqa: E402
 from scripts.generate_reports import (  # noqa: E402
-    ERAS, NOW_SINCE, REFUSAL, is_procedural_debate,
+    ERAS, NOW_SINCE, PASSAGE_CHARS, REFUSAL, is_procedural_debate,
 )
 
 REPORT_DIR = ROOT / "portal" / "public" / "reports"
@@ -41,6 +45,12 @@ STAT_FIELDS = ("value", "label", "numerator", "denominator", "unit", "slug", "wi
 FORBIDDEN_OPENERS = re.compile(
     r"^\s*(?:based on|according to the (?:provided|passages)|the (?:provided )?context"
     r"|the passages|from the (?:provided )?context)", re.I)
+# A passage is trimmed to PASSAGE_CHARS and may carry an ellipsis on either
+# side ("…" is one character), so a couple of characters of slack either way
+# is the trim doing its job, not a bug. PASSAGE_MIN only catches the empty or
+# near-empty string a failed lookup would leave behind.
+PASSAGE_MIN = 10
+PASSAGE_MAX = PASSAGE_CHARS + 4
 
 
 class Failure(Exception):
@@ -52,6 +62,30 @@ def check(condition: object, message: str, problems: list[str]) -> bool:
         problems.append(message)
         return False
     return True
+
+
+def validate_markup(where: str, sources: list[dict], text: str, problems: list[str]) -> None:
+    """Every source carries a quotable passage; the answer carries markers.
+
+    These are the two things the ask page shows beside a live answer — a
+    passage behind each source and a superscript in the prose that says which
+    source a claim came from — and a report carries both in the file instead
+    of asking the platform for them again on every page view."""
+    length = len(text)
+    for source in sources:
+        label = source.get("slug") or source.get("title") or "?"
+        passage = str(source.get("passage") or "").strip()
+        check(passage, f"{where}: source {label!r} has no passage", problems)
+        if passage:
+            check(PASSAGE_MIN <= len(passage) <= PASSAGE_MAX,
+                  f"{where}: source {label!r} passage is {len(passage)} chars", problems)
+        for span in source.get("answer_ranges") or []:
+            valid = (isinstance(span, list) and len(span) == 2
+                     and all(isinstance(n, int) for n in span)
+                     and 0 <= span[0] < span[1] <= length)
+            check(valid, f"{where}: source {label!r} has a bad citation range {span!r}", problems)
+    check(any(s.get("answer_ranges") for s in sources),
+          f"{where}: no source carries an inline citation marker", problems)
 
 
 def validate_section(where: str, section: dict, problems: list[str]) -> list[str]:
@@ -66,6 +100,7 @@ def validate_section(where: str, section: dict, problems: list[str]) -> list[str
     sources = section.get("sources") or []
     cited = [s for s in sources if s.get("cited")]
     check(cited, f"{where}: no cited source", problems)
+    validate_markup(where, sources, answer, problems)
     return [s["slug"] for s in sources if s.get("slug")]
 
 
@@ -93,10 +128,13 @@ def validate_report(slug: str, report: dict, problems: list[str]) -> list[str]:
             slugs.append(moment["slug"])
 
     lede = report.get("lede") or {}
-    check((lede.get("text") or "").strip(), f"{slug}: no lede", problems)
+    lede_text = (lede.get("text") or "").strip()
+    check(lede_text, f"{slug}: no lede", problems)
     check(lede.get("sources"), f"{slug}: the lede cites nothing", problems)
     check(not FORBIDDEN_OPENERS.match(lede.get("text") or ""),
           f"{slug}: the lede opens with a context preamble", problems)
+    if lede_text and lede.get("sources"):
+        validate_markup(f"{slug} lede", lede.get("sources") or [], lede.get("text") or "", problems)
     slugs += [s["slug"] for s in (lede.get("sources") or []) if s.get("slug")]
 
     now = report.get("now") or {}
