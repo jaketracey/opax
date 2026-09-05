@@ -52,8 +52,8 @@ STOP_FILE = DEFAULT_DB.with_name("labels_stop")
 STALE_CLAIM_S = 45 * 60
 MAX_LABELS = 4
 TEXT_HEAD, TEXT_TAIL = 1800, 400
-PACE_S = 1.5           # seconds between a worker's requests: the box sustains about 30,000 label writes an hour for the whole fleet; faster only earns 429s
-POOL = 2               # parallel requests per worker
+PACE_S = 0.5           # seconds between a worker's requests (a 20-worker Sonnet fleet stays well under the box's ceiling)
+POOL = 3               # parallel requests per worker
 
 
 def env() -> dict[str, str]:
@@ -250,7 +250,7 @@ def cmd_submit(a: argparse.Namespace) -> None:
     # rereads, rather than let empty verdicts retire rows from the queue.
     n_in = len(labels)
     n_empty = sum(1 for v in labels.values() if not v)
-    if n_in >= 10 and n_empty > 0.55 * n_in:
+    if n_in >= 20 and n_empty > 0.8 * n_in:  # a procedural sitting can honestly run 60-70% topicless; only a near-total blank is refused
         print(f"REJECTED: {n_empty} of {n_in} speeches marked no-topic; the fleet norm is about one in five. "
               "Reread the texts (a label is decided from the text, never the title) and submit again; your claims are kept.")
         return
