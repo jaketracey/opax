@@ -327,9 +327,16 @@ class KbClient:
 
     def ask(self, query: str, *, filter_expression: Optional[dict] = None,
             citations: bool = True, answer_json_schema: Optional[dict] = None,
-            prompt: Optional[str] = None, top_k: int = 20) -> dict:
+            prompt: Optional[str] = None, system: Optional[str] = None,
+            show: Optional[list[str]] = None, top_k: int = 20) -> dict:
         """Grounded, cited answer. HARD CONSTRAINT: never send citations=True
-        together with answer_json_schema — it crashes the backend (500/503)."""
+        together with answer_json_schema — it crashes the backend (500/503).
+
+        `show` mirrors find(): without it the retrieval_results resources carry
+        no origin (speaker) and no extra (date), so callers that render cited
+        sources get null bylines. `system` pairs with `prompt` the way the
+        Worker's askPayload does — a custom user template REPLACES the
+        platform's, so it must carry {question} and {context} itself."""
         if citations and answer_json_schema:
             raise ValueError("citations and answer_json_schema are mutually exclusive (platform bug)")
         body: dict[str, Any] = {
@@ -338,10 +345,15 @@ class KbClient:
             "top_k": top_k,
             "reranker": "predict",
         }
+        if show:
+            body["show"] = show
         if answer_json_schema:
             body["answer_json_schema"] = answer_json_schema
-        if prompt:
-            body["prompt"] = {"user": prompt}
+        if prompt or system:
+            body["prompt"] = {
+                **({"user": prompt} if prompt else {}),
+                **({"system": system} if system else {}),
+            }
         if filter_expression:
             body["filter_expression"] = filter_expression
         headers = {**self._headers, "x-synchronous": "true"}
