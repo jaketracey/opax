@@ -178,37 +178,56 @@ def cmd_next(a: argparse.Namespace) -> None:
     with con:
         con.execute("UPDATE queue SET status='pending', worker=NULL, claimed_at=NULL WHERE status='claimed' AND claimed_at < ?",
                     (now - STALE_CLAIM_S,))
-        rows = con.execute("SELECT rid FROM queue WHERE status='pending' LIMIT ?", (a.n,)).fetchall()
-        rids = [r[0] for r in rows]
-        con.executemany("UPDATE queue SET status='claimed', worker=?, claimed_at=? WHERE rid=? AND status='pending'",
-                        [(a.worker, now, r) for r in rids])
-    if not rids:
-        Path(a.out).write_text("[]")
-        print("NONE")
-        return
     kb = Kb()
     items: list[dict] = []
     errors: list[tuple[str, str]] = []
-    with ThreadPoolExecutor(max_workers=POOL) as pool:
-        for rid, res in zip(rids, pool.map(lambda r: _safe(fetch_item, kb, r), rids)):
-            if isinstance(res, Exception):
-                errors.append((rid, str(res)[:200]))
-            else:
-                items.append(res)
-    with con:
-        for rid, err in errors:
-            con.execute("UPDATE queue SET status='error', error=?, worker=? WHERE rid=?", (err, a.worker, rid))
-        forced = {r[0] for r in con.execute("SELECT rid FROM queue WHERE force=1 AND rid IN (%s)" % ",".join("?" * len(rids)), rids)}
-        already = [it for it in items if it["_has_topic"] and it["rid"] not in forced]  # a forced row is relabelled even though the box holds a topic for it
-        for it in already:  # the platform got there first: nothing to do
-            con.execute("UPDATE queue SET status='done', done_at=?, slug=?, labels='[]', error='already-labelled' WHERE rid=?",
-                        (time.time(), it["slug"], it["rid"]))
-        items = [it for it in items if not it["_has_topic"]]
-        for it in items:
-            con.execute("UPDATE queue SET slug=?, existing=? WHERE rid=?", (it["slug"], json.dumps(it["_existing"]), it["rid"]))
+    already_n = 0
+    claimed_any = False
+    # Claim in rounds until the batch is full: a stretch of the queue the
+    # platform's own labeler has already reached yields nothing to read, and
+    # those rows are retired here without costing the worker an empty batch.
+    for _round in range(6):
+        want = a.n - len(items)
+        if want <= 0:
+            break
+        with con:
+            rows = con.execute("SELECT rid FROM queue WHERE status='pending' LIMIT ?", (want,)).fetchall()
+            rids = [r[0] for r in rows]
+            con.executemany("UPDATE queue SET status='claimed', worker=?, claimed_at=? WHERE rid=? AND status='pending'",
+                            [(a.worker, time.time(), r) for r in rids])
+        if not rids:
+            break
+        claimed_any = True
+        fetched: list[dict] = []
+        with ThreadPoolExecutor(max_workers=POOL) as pool:
+            for rid, res in zip(rids, pool.map(lambda r: _safe(fetch_item, kb, r), rids)):
+                if isinstance(res, Exception):
+                    errors.append((rid, str(res)[:200]))
+                else:
+                    fetched.append(res)
+        with con:
+            for rid, err in errors:
+                con.execute("UPDATE queue SET status='error', error=?, worker=? WHERE rid=? AND status='claimed'", (err, a.worker, rid))
+            forced = {r[0] for r in con.execute("SELECT rid FROM queue WHERE force=1 AND rid IN (%s)" % ",".join("?" * len(rids)), rids)}
+            # A forced row is reread even though the box holds a topic for it
+            # (a retired worker wrote that topic); any other row the platform
+            # has already labelled is retired here.
+            already = [it for it in fetched if it["_has_topic"] and it["rid"] not in forced]
+            for it in already:
+                con.execute("UPDATE queue SET status='done', done_at=?, slug=?, labels='[]', error='already-labelled' WHERE rid=?",
+                            (time.time(), it["slug"], it["rid"]))
+            keep = [it for it in fetched if not it["_has_topic"] or it["rid"] in forced]
+            for it in keep:
+                con.execute("UPDATE queue SET slug=?, existing=? WHERE rid=?", (it["slug"], json.dumps(it["_existing"]), it["rid"]))
+        already_n += len(already)
+        items.extend(keep)
+    if not claimed_any and not items:
+        Path(a.out).write_text("[]")
+        print("NONE")
+        return
     public = [{k: v for k, v in it.items() if not k.startswith("_")} for it in items]
     Path(a.out).write_text(json.dumps(public, ensure_ascii=False, indent=0))
-    print(f"batch {len(public)} speeches for {a.worker} (errors {len(errors)}, already labelled {len(already)}) -> {a.out}")
+    print(f"batch {len(public)} speeches for {a.worker} (errors {len(errors)}, already labelled {already_n}) -> {a.out}")
 
 
 def _safe(fn, *args):
