@@ -3133,6 +3133,7 @@ async function mountSubjectMap(nodeId) {
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       focus: nodeId,
+      subject: nodeId, // this page IS the profile: its own card offers no "Full profile"
       chrome: "mini",
       reveal: true, // open on the subject, then pull out to the money
       // On a phone the card docks over most of the plate and would hide that
