@@ -8978,13 +8978,22 @@ function reportRecordParts(s) {
   return { date, title, subject: titleSubject({ ...s, title, date }) };
 }
 
-/** A cited source title with its trailing ISO date read out loud. */
-function reportSourceLabel(raw) {
+/**
+ * A cited source title with its trailing ISO date read out loud.
+ *
+ * `short` keeps only the leading segment, which is the speaker: an estimates
+ * record's own title runs to two hundred characters, and inside a figure tile
+ * that citation becomes nine lines of link under a two-word number. The whole
+ * title stays on the link's tooltip and one tap away in the record.
+ */
+function reportSourceLabel(raw, { short = false } = {}) {
   const parts = String(raw || "").trim().split(/(\s+—\s+)/);
   const tail = String(parts[parts.length - 1] || "").trim();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(tail)) return String(raw || "").trim();
-  parts.splice(-2);
-  return `${parts.join("").trim()}, ${fmtDate(tail)}`;
+  const dated = /^\d{4}-\d{2}-\d{2}$/.test(tail);
+  if (dated) parts.splice(-2);
+  const body = (short ? String(parts[0] || "").trim() : parts.join("").trim())
+    || String(raw || "").trim();
+  return dated ? `${body}, ${fmtDate(tail)}` : body;
 }
 
 /**
@@ -9061,6 +9070,7 @@ function reportSourceRow(s, num) {
     debate.className = "report-source-debate";
     debate.textContent = record.subject;
     body.appendChild(debate);
+    li.dataset.debate = record.subject; // so a run of one debate says it once
   }
 
   const passage = String(s.snippet || s.brief || "").trim();
@@ -9092,9 +9102,27 @@ function reportFillOnOpen(det, host, build) {
   det.reportFill = () => {
     if (det.dataset.filled) return;
     det.dataset.filled = "1";
-    host.replaceChildren(...build());
+    host.replaceChildren(...reportDedupeDebates(build()));
   };
   det.addEventListener("toggle", det.reportFill);
+}
+
+/**
+ * A retrieved list is usually a run of speeches from one debate, and repeating
+ * its name under every speaker turns eight rows into eight copies of the same
+ * long bill title. A run says it once; the next row to change debates says the
+ * new one, so the reader sees where the list moves on. Anything that is not a
+ * speech row (the divider) breaks the run.
+ */
+function reportDedupeDebates(rows) {
+  let last = null;
+  for (const row of rows) {
+    const debate = row.dataset?.debate;
+    if (!debate) { last = null; continue; }
+    if (debate === last) row.querySelector(".report-source-debate")?.remove();
+    last = debate;
+  }
+  return rows;
 }
 
 /**
@@ -9282,7 +9310,9 @@ function reportStatTiles(stats) {
       src.className = "tile-source";
       const a = document.createElement("a");
       a.href = `/doc/${s.slug}`;
-      a.textContent = reportSourceLabel(s.source_title) || "Read the speech that said it";
+      a.textContent = reportSourceLabel(s.source_title, { short: true })
+        || "Read the speech that said it";
+      if (s.source_title) a.title = s.source_title;
       src.appendChild(a);
       t.appendChild(src);
     }
@@ -9579,8 +9609,14 @@ function renderReportV2(report, slug) {
         step.className = "report-era";
         const span = document.createElement("p");
         span.className = "report-era-span";
-        span.textContent = [era.label, [era.from, era.to].filter(Boolean).join("–")]
-          .filter(Boolean).join(" · ");
+        // The label is already the span ("1993–2009"). Restating it as ISO
+        // dates beside itself — "1993–2009 · 1993-01-01–2009-12-31" — says the
+        // same thing twice, the second time in machine. The years are drawn
+        // only when the label does not carry them.
+        const years = [era.from, era.to].map((v) => String(v || "").slice(0, 4))
+          .filter(Boolean).join("–");
+        span.textContent = era.label && /\d/.test(era.label) ? era.label
+          : [era.label, years].filter(Boolean).join(" · ");
         step.append(span, reportEssay(era, { id: `report-s-${number}`, slug, number }));
         line.appendChild(step);
       }
