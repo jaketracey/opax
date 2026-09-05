@@ -26,7 +26,10 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses"];
+const PANELS = ["ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
+// /bills is the bill panel's index; it has no panel of its own, so isRoute has
+// to be told the word is ours before the click handler will follow it.
+const PANEL_ALIASES = { bills: "bill" };
 
 // --- helpers ----------------------------------------------------------------
 
@@ -789,6 +792,8 @@ const TITLES = {
   methods: "Methods · OPAX",
   stats: "Corpus stats · OPAX",
   expenses: "What the expense categories mean · OPAX",
+  bill: "Bill · OPAX",
+  bills: "Bills · OPAX",
 };
 
 // --- money map (lazy-loaded 3D bundle) --------------------------------------
@@ -1058,6 +1063,19 @@ function route() {
     document.title = `${DIRECTORY_KINDS[segs[1]]} · OPAX`;
     setCrumbs([{ label: DIRECTORY_KINDS[segs[1]] }]);
     openDirectory(segs[1], params, manageFocus);
+  } else if (view === "bill" || view === "bills") {
+    showPanel("bill");
+    // /bill/<key> is one bill; /bills and a bare /bill are the index.
+    const key = view === "bill" && segs[1] ? decodeURIComponent(segs[1]) : null;
+    if (key) {
+      document.title = TITLES.bill;
+      setCrumbs([{ label: "Bills", href: "/bills" }, { label: "Bill" }]);
+      openBill(key, manageFocus);
+    } else {
+      document.title = TITLES.bills;
+      setCrumbs([{ label: "Bills" }]);
+      openBillsIndex(params, manageFocus);
+    }
   } else if (view === "declared") {
     showPanel("declared");
     document.title = TITLES.declared;
@@ -1373,7 +1391,7 @@ const isRoute = (path) => {
   const bare = path.split("?")[0];
   if (ROUTE_FILE.test(bare)) return false;
   const first = bare.replace(/^\//, "").split("/")[0];
-  return first === "" || PANELS.includes(first);
+  return first === "" || PANELS.includes(first) || first in PANEL_ALIASES;
 };
 // One delegated listener owns in-app navigation. An anchor whose href is a
 // route of ours — the path form, or the "#/…" form still written by the app's
@@ -3939,8 +3957,10 @@ async function renderPersonVotes(name, personId, sections) {
   const side = (field) => recs
     .flatMap((r) => (Array.isArray(r[field]) ? r[field] : []).map((d) => ({ ...d, jur: d.jur || r.jurisdiction })))
     .sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 6);
+  // data-bill-name is what decoratePersonVoteBills matches on; until (and
+  // unless) the register names this bill, the row is exactly what it was.
   const billRow = (d) => `
-        <li><a class="source-title" href="${esc(searchHash(`"${d.name}"`, {}))}">${esc(d.name)}</a>
+        <li data-bill-name="${esc(d.name)}"><a class="source-title" href="${esc(searchHash(`"${d.name}"`, {}))}">${esc(d.name)}</a>
           <span class="result-meta">${[d.stage ? esc(d.stage) : "", esc(String(d.date || "").slice(0, 4)), jurChip(d.jur)].filter(Boolean).join(" · ")}</span></li>`;
   const col = (label, rows) => rows.length ? `
     <div>
@@ -3980,6 +4000,7 @@ async function renderPersonVotes(name, personId, sections) {
         searches the record for what was said about it.</p>
     </details>
     ${tvfy ? `<p class="action-row">${tvfy}</p>` : ""}`;
+  decoratePersonVoteBills(slot);
 }
 
 async function renderPersonTopics(name, sections) {
@@ -4179,6 +4200,7 @@ async function openSubject(kind, name, manageFocus) {
     if (isParty) {
       renderPartyMembers(node.label, body.querySelector(".subject-head"), key);
       renderPartyDebts(node.label, sections);
+      renderPartyBillDivisions(node.label, sections, key);
     }
     renderDonorAccess(node.label, sections);
     if (isParty) await renderPartyMentions(node.label, sections, key);
@@ -4837,7 +4859,9 @@ function directoryHash(kind, state) {
   const p = new URLSearchParams();
   for (const [k, v] of Object.entries(state)) if (v) p.set(k, v);
   const q = p.toString();
-  return `/subject/${kind}${q ? `?${q}` : ""}`;
+  // Bills are not an encyclopedia kind: their index is /bills, not /subject/bill.
+  const base = kind === "bill" ? "/bills" : `/subject/${kind}`;
+  return `${base}${q ? `?${q}` : ""}`;
 }
 
 /** A year span for a row: "1998–2019", or the one year. */
@@ -4927,9 +4951,11 @@ let activeDirectory = null;
  *   spec.sorts     [[value, label, cmp]]; the first is the default
  *   spec.row(item) one <li>; spec.fineprint: HTML for the sources note
  *   spec.params    URLSearchParams from the hash
+ *   spec.mount     element id to render into (default the subject panel's body)
+ *   spec.kicker    the eyebrow over the heading (default "Encyclopedia")
  */
 function renderDirectory(spec) {
-  const body = $("subject-body");
+  const body = $(spec.mount || "subject-body");
   const state = { q: "", sort: spec.sorts[0][0] };
   for (const f of spec.filters) state[f.key] = "";
   const readParams = (params) => {
@@ -4952,7 +4978,7 @@ function renderDirectory(spec) {
           ${f.options.map(([v, l]) => `<option value="${esc(v)}"${state[f.key] === v ? " selected" : ""}>${esc(l)}</option>`).join("")}
         </select></label>`;
   body.innerHTML = `
-    <p class="kicker">Encyclopedia</p>
+    <p class="kicker">${esc(spec.kicker || "Encyclopedia")}</p>
     <div class="subject-head dir-head">
       <h2 id="subject-title" tabindex="-1">${esc(spec.title)}</h2>
       ${spec.lede ? `<p class="subject-tag"><span>${spec.lede}</span></p>` : ""}
@@ -5748,6 +5774,1000 @@ async function renderCampaignerEntry(name, key) {
       Source: AEC Transparency Register, CC BY 4.0.${register
         ? ` <a href="${esc(register)}" rel="noopener" target="_blank">Open the register ↗︎</a>` : ""}</p>`);
   await subjectMentions(e.name, sections, "In parliament");
+}
+
+/* --- bills ------------------------------------------------------------------
+   Two static files behind every touchpoint (docs/BILLS-CONTRACT.md):
+   /bills/index.json is the whole list, small enough to hold in memory and
+   search in the page; /bills/<key>.json is one bill's dates, summary,
+   divisions, speeches and Acts, fetched only when a reader asks for that bill.
+
+   The lookup rule is the registry's own: full normalised title, numbers and
+   bill year intact, no fuzzy fallback. A bill the index does not name is not
+   guessed at, and — the rule that outranks every feature here — a failed
+   lookup never removes anything the page was already showing. */
+
+let billsIndexPromise = null;
+let billsTitleIndex = null;
+const billFiles = new Map();
+// "bill:<key>" or "index": what #bill-body is currently holding.
+let billView = null;
+
+function loadBillsIndex() {
+  billsIndexPromise ??= fetch("/bills/index.json")
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return billsIndexPromise;
+}
+
+/** One bill's full record; null when the projection has no such file. */
+function loadBill(key) {
+  if (!billFiles.has(key)) {
+    billFiles.set(key, fetch(`/bills/${encodeURIComponent(key)}.json`)
+      .then((r) => (r.ok ? r.json() : null)).catch(() => null));
+  }
+  return billFiles.get(key);
+}
+
+/** Index entries keyed by exact normalised title (and any alias the projection carries). */
+async function billTitleIndex() {
+  if (billsTitleIndex) return billsTitleIndex;
+  const idx = await loadBillsIndex();
+  const map = new Map();
+  for (const b of idx?.bills || []) {
+    if (b?.title) map.set(titleKey(b.title), b);
+    for (const alias of b?.aliases || []) map.set(titleKey(alias), b);
+  }
+  billsTitleIndex = map;
+  return map;
+}
+
+/** The one bill a title names, or null. Exact match only, by design. */
+async function billForTitle(title) {
+  if (!title) return null;
+  const map = await billTitleIndex();
+  return map.get(titleKey(title)) || null;
+}
+
+const billHash = (key) => `/bill/${encodeURIComponent(key)}`;
+
+/* The projection writes the registry's own vocabulary: chambers as codes,
+   stages and statuses as the register's lowercase tokens, an outcome as the
+   division's recorded result. These four turn that into English without
+   changing what it says, and pass anything unrecognised through untouched
+   rather than dropping a fact the register did record. */
+const billHouse = (code) => CHAMBER_NAMES[String(code || "").toLowerCase()] || String(code || "");
+const sentenceCase = (s) => {
+  const t = String(s || "").replace(/_/g, " ").trim();
+  return t ? t[0].toUpperCase() + t.slice(1) : "";
+};
+/** A stage as the register wrote it; a parsed-out compound title is clipped, not shown whole. */
+function billStage(stage) {
+  const t = sentenceCase(stage);
+  return t.length > 60 ? `${t.slice(0, 57).trimEnd()}…` : t;
+}
+/* A division's question is the record's, but TheyVoteForYou writes its
+   editorial notes in Markdown, so a raw question can arrive as
+   "…available [here](https://…)" or "_[For privatising…]_". The link text is
+   what the note says; the URL and the emphasis marks are formatting for a
+   page this is not. Nothing is dropped but punctuation. */
+function billQuestion(text) {
+  return String(text || "")
+    .replace(/\[([^\]]+)\]\((?:[^)\s]+)(?:\s+"[^"]*")?\)/g, "$1")
+    .replace(/[*_]{1,3}(?=\S)([^*_]+?)(?<=\S)[*_]{1,3}/g, "$1")
+    .replace(/\s+/g, " ").trim();
+}
+/** 41st, 42nd, 43rd, 44th — a parliament is a number a reader says out loud. */
+function ordinal(n) {
+  const v = Number(n);
+  if (!Number.isFinite(v)) return String(n ?? "");
+  const rem100 = v % 100, rem10 = v % 10;
+  const suffix = rem100 >= 11 && rem100 <= 13 ? "th"
+    : rem10 === 1 ? "st" : rem10 === 2 ? "nd" : rem10 === 3 ? "rd" : "th";
+  return `${v}${suffix}`;
+}
+const BILL_OUTCOMES = { affirmative: "Agreed to", negative: "Negatived" };
+const billOutcome = (o) => BILL_OUTCOMES[String(o || "").toLowerCase()] || sentenceCase(o);
+/** The short title when the register carries one, else the title itself. */
+const billName = (b) => b?.short_title || b?.title || b?.key || "";
+
+/* The register writes a private member's bill's sponsor into the portfolio
+   field, in its own notation: "(s) WILKIE, Andrew, MP". That is a person, not
+   a department, and printing it as a portfolio invents a department called
+   "(s) BANDT, Adam, MP". Read back, it is the sponsor — which is otherwise
+   null on every bill in this projection. Anything that does not fit the
+   notation is left exactly as the register wrote it. */
+/** MCGOWAN → McGowan, O'BRIEN → O'Brien, HANSON-YOUNG → Hanson-Young. */
+function titleCaseName(surname) {
+  return String(surname || "").toLocaleLowerCase("en-AU")
+    .replace(/(^|[\s'’-])(\p{Ll})/gu, (_, sep, c) => sep + c.toLocaleUpperCase("en-AU"))
+    .replace(/\bMc(\p{Ll})/gu, (_, c) => `Mc${c.toLocaleUpperCase("en-AU")}`);
+}
+
+// The register runs co-sponsors together with no separator at all:
+// "(s) PHELPS, Kerryn, MPWILKIE, Andrew, MPBANDT, Adam, MP" is three members.
+const BILL_MEMBER = /([\p{Lu}][\p{Lu}'’\- ]*[\p{Lu}]),\s*([^,]+?),\s*(MP|Senator|Sen\.?)(?=\p{Lu}|$)/gu;
+
+function billSponsorFromPortfolio(portfolio) {
+  const raw = String(portfolio || "").trim();
+  if (!/^\(s\)\s*/i.test(raw)) return null;
+  const rest = raw.replace(/^\(s\)\s*/i, "").trim();
+  const found = [...rest.matchAll(BILL_MEMBER)]
+    .map((m) => ({ name: `${m[2].trim()} ${titleCaseName(m[1])}`, suffix: m[3].trim() }));
+  if (found.length) return found;
+  // Not the notation this expects: hand back the register's own words untouched.
+  return [{ name: rest, suffix: "" }];
+}
+/** What the portfolio slot should say: nothing when the field is really a sponsor. */
+const billPortfolio = (b) => (billSponsorFromPortfolio(b?.portfolio) ? "" : String(b?.portfolio || ""));
+/** "Kerryn Phelps MP", or "Andrew Wilkie MP and 2 others" — the rest are on the bill page. */
+function billMembersLabel(members, max = 1) {
+  if (!members?.length) return "";
+  const head = members.slice(0, max)
+    .map((m) => `${m.name}${m.suffix ? ` ${m.suffix}` : ""}`).join(", ");
+  const more = members.length - Math.min(max, members.length);
+  return more > 0 ? `${head} and ${more} other${more === 1 ? "" : "s"}` : head;
+}
+
+/** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
+function billStatusLine(b) {
+  const status = sentenceCase(b?.status) || "Status not recorded";
+  const as = b?.status_as_of ? `, as at ${fmtDate(b.status_as_of)}` : "";
+  return `${status}${as}`;
+}
+
+const BILL_SOURCE_NAMES = {
+  billhome: "Bill home", text: "Bill text", em: "Explanatory memorandum",
+  em_revised: "Revised explanatory memorandum", em_supp: "Supplementary explanatory memorandum",
+  digest: "Bills Digest", frl_act: "The Act on the Federal Register",
+};
+
+function billSourcesHTML(sources) {
+  const links = (sources || []).map((s) => {
+    const url = safeUrl(s?.url);
+    if (!url) return "";
+    const name = BILL_SOURCE_NAMES[s.kind] || s.kind || "Source";
+    return `<a href="${esc(url)}" rel="noopener" target="_blank">${esc(name)} ↗︎</a>`;
+  }).filter(Boolean);
+  return links.length ? links.join(" · ") : "";
+}
+
+/** The head of every bill list row: the name, then what it is and where it got to. */
+function billRowHTML(b) {
+  const year = String(b.introduced || "").slice(0, 4);
+  const members = billSponsorFromPortfolio(b.portfolio);
+  const figures = [
+    // Not "28 divisions": the index counts the register's division records, and
+    // the source records one division several times, so the bill page folds
+    // that same Medibank bill to eight. The list cannot fold — it would have to
+    // open every file — so it says which number this is instead of asserting a
+    // count the next page denies.
+    Number(b.divisions) ? `${b.divisions} division record${b.divisions === 1 ? "" : "s"}` : "",
+    Number(b.speeches) ? `${b.speeches} speech${b.speeches === 1 ? "" : "es"}` : "",
+    Number(b.acts) ? "became law" : "",
+    // Absence is the norm here, so only a summary that exists is worth a word.
+    b.has_summary ? "summary" : "",
+  ].filter(Boolean);
+  return `<li>
+    <a class="source-title bill-row-title" href="${esc(billHash(b.key))}">${esc(billName(b))}</a>
+    <span class="result-meta bill-row-meta">${[
+      b.status ? `<b class="bill-row-status">${esc(sentenceCase(b.status))}</b>` : "",
+      year ? esc(year) : "",
+      b.sponsor_party ? partyChipHTML(b.sponsor_party) : "",
+      members ? esc(billMembersLabel(members)) : esc(billPortfolio(b)),
+    ].filter(Boolean).join("&nbsp;· ")}</span>
+    ${b.short_title && b.short_title !== b.title ? `<p class="bill-row-long">${esc(b.title)}</p>` : ""}
+    ${figures.length ? `<p class="bill-row-figures">${figures.join(" · ")}</p>` : ""}
+  </li>`;
+}
+
+const BILLS_FINEPRINT =
+  `Bills, their dates and their divisions come from the parliamentary record; each bill page links the
+   official source it was read from. Summaries are written by a model from the explanatory memorandum or
+   the Bills Digest, are marked as such wherever they appear, and are not the record. A bill missing from
+   this list is not evidence it does not exist: the register is still being built. The source records
+   some divisions more than once, so a division record here is a row in the register rather than a
+   separate vote of the house; a bill page folds the duplicates and usually shows fewer.`;
+
+/** /bills — the whole list, searchable by name, filtered by parliament, status and year. */
+async function openBillsIndex(params, manageFocus) {
+  if (billView === "index") {
+    activeDirectory?.setParams(params);
+    if (manageFocus) $("subject-title")?.focus();
+    return;
+  }
+  billView = "index";
+  const body = $("bill-body");
+  body.innerHTML = `
+    <p class="kicker">Bills</p>
+    <div class="subject-head">
+      <h2 id="subject-title" tabindex="-1">Bills</h2>
+      <p class="subject-tag"><span id="bill-loader" class="subject-loader"></span></p>
+    </div>`;
+  if (manageFocus) $("subject-title")?.focus();
+  showPageLoader("bill-loader", "Opening the bill list.");
+  const idx = await loadBillsIndex();
+  if (billView !== "index") return;
+  clearPageLoader("bill-loader");
+  if (!idx?.bills?.length) {
+    subjectTag(body).innerHTML =
+      `<span>The bill list could not be loaded. The record's speeches, divisions and people are unaffected.</span>`;
+    return;
+  }
+  const items = idx.bills.slice();
+  for (const b of items) {
+    b._year = String(b.introduced || "").slice(0, 4);
+    b._sortName = foldText(billName(b));
+  }
+  const years = [...new Set(items.map((b) => b._year).filter(Boolean))].sort().reverse();
+  const statuses = [...new Set(items.map((b) => b.status).filter(Boolean))].sort();
+  const parliaments = [...new Set(items.map((b) => b.parliament).filter((p) => p != null))]
+    .sort((a, b) => b - a);
+  const countBy = (get, value) => items.filter((b) => get(b) === value).length;
+  const withSummary = items.filter((b) => b.has_summary).length;
+
+  renderDirectory({
+    kind: "bill", mount: "bill-body", kicker: "Bills", params,
+    title: "Bills",
+    lede: withSummary
+      ? `${items.length.toLocaleString()} bills from the federal record, ${
+        withSummary.toLocaleString()} with a summary. Each one opens its dates, its divisions and what was said about it.`
+      : `${items.length.toLocaleString()} bills from the federal record. Each one opens its dates, its divisions
+         and what was said about it. Summaries are still being written, so no bill carries one yet.`,
+    items,
+    name: billName,
+    text: (b) => [b.title, b.short_title, b.sponsor, b.portfolio, b.status, b._year].filter(Boolean).join(" "),
+    href: (b) => billHash(b.key),
+    hint: (b) => sentenceCase(b.status),
+    filters: [
+      { key: "parliament", label: "Parliament", any: "All parliaments",
+        options: parliaments.map((p) => countOpt(String(p), `${ordinal(p)} parliament`, countBy((b) => b.parliament, p))),
+        test: (b, v) => String(b.parliament) === v },
+      { key: "status", label: "Status", any: "All statuses",
+        options: statuses.map((s) => countOpt(s, sentenceCase(s), countBy((b) => b.status, s))),
+        test: (b, v) => b.status === v },
+      { key: "year", label: "Year", any: "All years",
+        options: years.map((y) => countOpt(y, y, countBy((b) => b._year, y))),
+        test: (b, v) => b._year === v },
+      { key: "summary", label: "With a summary", check: true, test: (b) => Boolean(b.has_summary) },
+      { key: "divided", label: "Divided on", check: true, test: (b) => Number(b.divisions) > 0 },
+    ],
+    sorts: [
+      ["newest", "Newest first", (a, b) => String(b.introduced || "").localeCompare(String(a.introduced || ""))],
+      ["oldest", "Oldest first", (a, b) => String(a.introduced || "").localeCompare(String(b.introduced || ""))],
+      ["title", "By name", byName],
+      ["divisions", "Most division records", byNumDesc((b) => Number(b.divisions) || 0)],
+    ],
+    row: billRowHTML,
+    fineprint: BILLS_FINEPRINT,
+  });
+}
+
+/* The timeline. A bill's dates sit inside months, not decades, so the ruler is
+   drawn to the bill's own span rather than the record's: a hairline with one
+   notch per recorded stage, the two ends named, and the dates themselves read
+   as a list underneath. The ruler shows the shape of the passage; the list is
+   what a reader actually reads. */
+function billRulerHTML(dates) {
+  const points = dates.map((d) => Date.parse(`${String(d.date).slice(0, 10)}T00:00:00Z`))
+    .filter(Number.isFinite);
+  if (points.length < 2) return "";
+  const first = Math.min(...points), last = Math.max(...points);
+  const span = last - first || 1;
+  const x = (t) => 8 + ((t - first) / span) * 664;
+  const ticks = points.map((t) =>
+    `<line class="bill-ruler-tick" x1="${x(t).toFixed(2)}" x2="${x(t).toFixed(2)}" y1="10" y2="30"/>`).join("");
+  const label = (t, anchor) =>
+    `<text class="bill-ruler-label" x="${x(t).toFixed(2)}" y="45" text-anchor="${anchor}">${esc(fmtDate(new Date(t).toISOString().slice(0, 10)))}</text>`;
+  return `<svg class="bill-ruler" viewBox="0 0 680 52" role="img"
+    aria-label="The recorded stages of this bill, from ${esc(fmtDate(new Date(first).toISOString().slice(0, 10)))} to ${esc(fmtDate(new Date(last).toISOString().slice(0, 10)))}">
+    <line class="bill-ruler-axis" x1="8" x2="672" y1="30" y2="30"/>
+    ${ticks}${label(first, "start")}${label(last, "end")}
+  </svg>`;
+}
+
+/* The register records a stage on every day it was before the house, so a
+   second reading debated across seven sitting days arrives as seven rows. Set
+   one under another they read as seven second readings — the same mistake the
+   duplicated divisions made, the source's bookkeeping printed as parliament's
+   actions. A run of one stage in one chamber is one entry carrying its span.
+   The ruler above still draws every recorded date as its own tick, so nothing
+   is hidden: the density moves to where density belongs. */
+function billStageRuns(dates) {
+  const runs = [];
+  for (const d of dates) {
+    const stage = billStage(d.stage) || "Stage not named";
+    const house = billHouse(d.house);
+    const last = runs[runs.length - 1];
+    if (last && last.stage === stage && last.house === house) { last.dates.push(d); continue; }
+    runs.push({ stage, house, dates: [d] });
+  }
+  return runs;
+}
+
+/* A span in a column six characters wide breaks wherever it runs out, so
+   "25 Nov 2009 – 1 Dec 2009" came apart as "25 Nov 2009 –" and "1 Dec 2009"
+   with the dash orphaned. The two dates take a line each, the second saying
+   what it is, and the row reads the same at every width. */
+function billDateSpanHTML(dates) {
+  const first = dates[0]?.date, last = dates[dates.length - 1]?.date;
+  if (!last || first === last) return esc(fmtDate(first));
+  return `${esc(fmtDate(first))}<span class="bill-date-to">to ${esc(fmtDate(last))}</span>`;
+}
+
+function billTimelineHTML(bill) {
+  const dates = (bill.key_dates || []).filter((d) => d?.date)
+    .slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
+  if (!dates.length) {
+    return `<section class="bill-section"><h3 class="subject-section-title">How it moved</h3>
+      <p class="status">No dates recorded.</p></section>`;
+  }
+  const runs = billStageRuns(dates);
+  const folded = dates.length - runs.length;
+  const rows = runs.map((run) => {
+    const url = safeUrl(run.dates[0].url);
+    // "Royal assent · Assent": with no chamber to name, the register writes the
+    // stage into the house field, and the row says the same word twice.
+    const house = run.house && !run.stage.toLowerCase().includes(run.house.toLowerCase())
+      ? run.house : "";
+    const days = run.dates.length;
+    return `<li class="bill-date">
+      <span class="bill-date-when">${billDateSpanHTML(run.dates)}</span>
+      <span class="bill-date-what">${url
+        ? `<a href="${esc(url)}" rel="noopener" target="_blank">${esc(run.stage)} ↗︎</a>` : esc(run.stage)}${
+        house ? `<span class="bill-date-house">${esc(house)}</span>` : ""}${
+        days > 1 ? `<span class="bill-date-days">on ${days} recorded days</span>` : ""}</span>
+    </li>`;
+  }).join("");
+  return `<section class="bill-section">
+    <h3 class="subject-section-title">How it moved</h3>
+    ${billRulerHTML(dates)}
+    <ol class="bill-dates" role="list">${rows}</ol>
+    ${folded ? `<p class="fineprint">The register records a stage on each day it was before the house.
+      These ${runs.length} entries carry ${dates.length} such dates: a stage that ran across sitting days
+      is one entry with its span, not one entry a day. Every date is a tick on the ruler.</p>` : ""}
+  </section>`;
+}
+
+/* A division's party split, drawn as one pair of bars per party: ayes above,
+   noes below, both measured against the largest party in that division so the
+   party sizes read as well as the split inside each one. Party colour is a dot
+   and a name, never a bar — the bar says aye or no, nothing else. */
+/* One party carrying two votes should not take the same three rows as one
+   carrying twenty-two. The parties that decide the division are drawn; the
+   one- and two-member remainder is named on a single line, in full, so
+   nothing disappears — only the bars a reader cannot see anyway. */
+const BILL_SPLIT_DRAWN = 5;
+const BILL_SPLIT_SMALL = 2;
+
+function billSplitHTML(division) {
+  const splits = Object.entries(division.party_splits || {})
+    .map(([party, v]) => ({ party, ayes: Number(v?.ayes) || 0, noes: Number(v?.noes) || 0 }))
+    .filter((s) => s.ayes || s.noes)
+    .sort((a, b) => (b.ayes + b.noes) - (a.ayes + a.noes) || a.party.localeCompare(b.party));
+  if (!splits.length) return `<p class="fineprint bill-split-none">Party split not recorded for this division.</p>`;
+  let drawn = splits.filter((s, i) => i < BILL_SPLIT_DRAWN || s.ayes + s.noes > BILL_SPLIT_SMALL);
+  let folded = splits.slice(drawn.length);
+  if (folded.length === 1) { drawn = splits; folded = []; } // one line saved is no saving
+  const max = Math.max(...drawn.map((s) => Math.max(s.ayes, s.noes)), 1);
+  /* Name and figures on one line, the bars beneath them. The grid always said
+     so; the source order did not, and the grid places what it is given in the
+     order it is given, so "0–22" landed a row below its own bars and directly
+     above the next party's name — nearer the party it does not describe. */
+  const rows = drawn.map((s) => `
+    <li class="bill-split">
+      <span class="bill-split-party">${partyDotHTML(s.party)}${esc(billParty(s.party))}</span>
+      <span class="bill-split-n">${s.ayes}<span aria-hidden="true">–</span>${s.noes}<span class="visually-hidden"> ayes to noes</span></span>
+      <span class="bill-split-bars" aria-hidden="true">
+        <span class="bill-split-bar-track"><i class="bill-bar-aye" style="width:${((s.ayes / max) * 100).toFixed(1)}%"></i></span>
+        <span class="bill-split-bar-track"><i class="bill-bar-no" style="width:${((s.noes / max) * 100).toFixed(1)}%"></i></span>
+      </span>
+    </li>`).join("");
+  const rest = folded.length
+    ? `<p class="fineprint bill-split-rest">Also ${esc(folded
+      .map((s) => `${billParty(s.party)} ${s.ayes}–${s.noes}`).join(", "))}.</p>`
+    : "";
+  // What the attribution rests on, as a clause rather than a paragraph:
+  // party_coverage counts the votes carried by a party observed on or before
+  // the day against those falling back to a member's earliest or current one.
+  const named = splits.reduce((a, s) => a + s.ayes + s.noes, 0);
+  const total = (Number(division.ayes) || 0) + (Number(division.noes) || 0);
+  const cov = division.party_coverage || {};
+  const weak = (Number(cov.member) || 0) + (Number(cov.earliest) || 0) + (Number(cov.unknown) || 0);
+  const dated = Number(cov.dated) || 0;
+  const notes = [
+    total && named && named < total ? `${total - named} not placed with a party` : "",
+    weak > 0 && dated + weak > 0 ? `${weak} of ${dated + weak} inferred, not observed on the day` : "",
+    Number(division.paired) > 0 ? `${division.paired} paired` : "",
+  ].filter(Boolean);
+  return `<ul class="bill-splits" role="list">${rows}</ul>${rest}${
+    notes.length ? `<p class="fineprint bill-split-partial">${esc(notes.join(" · "))}</p>` : ""}`;
+}
+
+/** A division's own page in the record: the registry's key is the resource slug without its kind. */
+function billDivisionHref(d) {
+  const key = String(d?.key || "");
+  if (!key) return null;
+  return `/doc/${encodeURIComponent(key.startsWith("division-") ? key : `division-${key}`)}`;
+}
+
+/* A division's question field carries the motion put — but TheyVoteForYou
+   writes its editorial notes into the same field, so it can also hold a
+   700-character explanation or "This is a duplicate of an earlier division
+   available here." Set at heading size in the serif, a note reads as the
+   motion the House divided on. The first sentence stands as the heading;
+   whatever follows is a note and is set as one. Nothing is dropped. */
+/** Prose about a division rather than the motion put: it must not be set as a heading. */
+const BILL_DESCRIPTION = /^(this (is|division|motion|amendment)\b|the (majority|motion) )/i;
+
+/* The record's prose arrives as Markdown — "[motion](https://…)", "_[For
+   privatising government assets](/policies/21)_" — and flattening it to text
+   leaves "(Read more about these types of motions here. )": a pointer with
+   nothing behind it, several times in one note. Those links are the record
+   citing itself, so they are kept as links, relative ones resolved against the
+   site the field came from. Only the formatting marks are dropped. */
+const BILL_NOTE_BASE = "https://theyvoteforyou.org.au";
+const BILL_MD_LINK = /\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+/** Emphasis marks off; the words they wrapped stay. */
+const billPlain = (t) => String(t).replace(/[*_]{1,3}(?=\S)([^*_]+?)(?<=\S)[*_]{1,3}/g, "$1");
+/** The same field, as plain words: what the length and sentence tests judge. */
+const billFlat = (t) => billPlain(String(t || "").replace(BILL_MD_LINK, "$1")).trim();
+
+/* The source writes a quote straight onto its next bracket — '"the
+   guillotine"(Read more' — and leaves a space inside the closing one. Repaired
+   before anything is split, and never at "](", which would break a link. */
+function billNoteRepair(text) {
+  return String(text || "")
+    // Emphasis wrapped around a whole link leaves one mark on each side of it,
+    // and neither has a partner once the link becomes a link: "_For
+    // privatising government assets_" arrived as "the Policy _For … assets _.".
+    .replace(/([*_]{1,3})(\[[^\]]+\]\([^)\s]+\))\1/g, "$2")
+    .replace(/([^\s(\]])\(/g, "$1 (")
+    .replace(/\s+([.,;:])/g, "$1")
+    .replace(/\s+\)/g, ")")
+    .replace(/\s+/g, " ").trim();
+}
+
+/** A note as HTML: the record's own links live, everything else escaped. */
+function billNoteHTML(text) {
+  const raw = billNoteRepair(text);
+  let out = "", i = 0;
+  BILL_MD_LINK.lastIndex = 0;
+  for (let m = BILL_MD_LINK.exec(raw); m; m = BILL_MD_LINK.exec(raw)) {
+    out += esc(billPlain(raw.slice(i, m.index)));
+    const href = safeUrl(m[2].startsWith("/") ? BILL_NOTE_BASE + m[2] : m[2]);
+    const label = billPlain(m[1]);
+    // Inside running prose the mark must not be able to start a line of its own.
+    out += href
+      ? `<a href="${esc(href)}" rel="noopener" target="_blank">${esc(label)}&nbsp;↗︎</a>`
+      : esc(label);
+    i = m.index + m[0].length;
+  }
+  return out + esc(billPlain(raw.slice(i)));
+}
+
+/* The record writes "<Bill> - <Stage> - <Question>", and 164 of the fixture's
+   209 title-prefixed questions carry the division's own stage in that middle
+   segment. With the title gone the heading read "Second Reading - Read a
+   second time" directly above a meta line reading "Second reading · Senate ·
+   4 Dec 2006". The stage is the meta's job; the heading keeps the question. */
+function billStripStage(text, stage) {
+  const s = String(stage || "").trim();
+  const out = String(text || "").trim();
+  if (!s || !out.toLowerCase().startsWith(s.toLowerCase())) return out;
+  const rest = out.slice(s.length).replace(/^\s*[-–—:]\s*/, "").trim();
+  // Only when something is left: a division named by its stage alone keeps it.
+  return rest || out;
+}
+
+function billQuestionParts(division, bill) {
+  const raw = billStripStage(
+    billStripTitle(billNoteRepair(division?.question), bill), division?.stage);
+  const plain = billFlat(raw);
+  if (!plain) return { head: "", note: "" };
+  if (BILL_DESCRIPTION.test(plain)) return { head: "", note: raw };
+  if (plain.length <= 110) return { head: plain, note: "" };
+  // The first sentence stands as the heading, measured in words a reader sees
+  // rather than in a URL's characters; the rest is the note it is.
+  for (const m of raw.matchAll(/[.?!](\s|$)/g)) {
+    const head = billFlat(raw.slice(0, m.index + 1));
+    if (head.length < 20) continue;
+    if (head.length > 160) break;
+    return { head, note: raw.slice(m.index + 1).trim() };
+  }
+  return { head: `${plain.slice(0, 105).trimEnd()}…`, note: raw };
+}
+
+/* TheyVoteForYou records the same division several times — the Medibank bill's
+   third reading appears ten times, nine of them saying so in the question
+   field. Copied straight out, the page shows ten third readings and a reader
+   counts ten. Rows identical in day, stage and counts are one division; the
+   one that carries the motion is kept and the section says this is happening. */
+function billDedupeDivisions(divisions, bill) {
+  const groups = new Map();
+  for (const d of divisions || []) {
+    const k = [d.date, String(d.stage || "").toLowerCase(), d.ayes, d.noes].join("|");
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(d);
+  }
+  const kept = [];
+  let collapsed = 0;
+  for (const group of groups.values()) {
+    // Prefer a row whose question is the motion; then one that has a question at all.
+    const best = group.find((d) => billQuestionParts(d, bill).head)
+      || group.find((d) => d.question) || group[0];
+    kept.push(best);
+    collapsed += group.length - 1;
+  }
+  kept.sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+  return { divisions: kept, collapsed };
+}
+
+/* The record writes its questions as "<Bill> - <Stage> - <Question>", so on a
+   party page — where the bill's name is already the row's link — and on the
+   bill's own page — where the name is the headline — the leading title spends
+   the width saying it twice. It comes off in both places; on the bill page it
+   was costing a three-line heading whose first line and a half were the H1. */
+function billStripTitle(text, bill) {
+  let out = String(text || "").trim();
+  for (const t of [bill?.title, bill?.short_title]) {
+    const title = String(t || "").trim();
+    if (title && out.toLowerCase().startsWith(title.toLowerCase())) {
+      out = out.slice(title.length).replace(/^\s*[-–—:]\s*/, "").trim();
+    }
+  }
+  return out;
+}
+
+function billQuestionShort(division, bill, max = 104) {
+  // From the whole cleaned question, not the bill page's heading: clipping
+  // first and stripping the title afterwards throws away the useful end. The
+  // stage comes off for the same reason it does there — the row's meta line
+  // is already saying it, two lines up.
+  const text = billStripStage(
+    billStripTitle(billQuestion(division?.question), bill), division?.stage);
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max).lastIndexOf(" ");
+  return `${text.slice(0, cut > 40 ? cut : max).trimEnd()}…`;
+}
+
+/** The register's own codes for who is not a party. */
+const BILL_PARTY_LABELS = { PRES: "Presiding officer", SPK: "Speaker", "": "Not recorded" };
+const billParty = (p) => BILL_PARTY_LABELS[String(p || "").trim()] || String(p || "");
+
+function billDivisionHTML(d, bill) {
+  const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
+  const target = billDivisionHref(d);
+  const { head, note } = billQuestionParts(d, bill);
+  const official = safeUrl(d.url);
+  const stage = billStage(d.stage);
+  // With no motion in the field there is no heading to write. The division's
+  // own facts lead — its stage is the closest thing the record gives to a
+  // name for it — and the record's prose follows as the note it is.
+  const title = head || stage || "Division";
+  const meta = [
+    // The stage always names itself here now: the heading is the question with
+    // the stage taken off it, so the two no longer say the same words twice.
+    head && stage ? esc(stage) : "",
+    billHouse(d.house) ? esc(billHouse(d.house)) : "",
+    d.date ? esc(fmtDate(d.date)) : "",
+  ].filter(Boolean).join(" · ");
+  return `<li class="bill-division${head ? "" : " bill-division-unnamed"}">
+    ${target
+      ? `<a class="source-title bill-division-q" href="${esc(target)}">${esc(title)}</a>`
+      : `<span class="source-title bill-division-q">${esc(title)}</span>`}
+    <span class="result-meta">${meta}</span>
+    <p class="bill-division-out"><b>${esc(billOutcome(d.outcome) || "Outcome not recorded")}</b>
+      <span>${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes</span>${
+      official ? `<a class="bill-division-src" href="${esc(official)}" rel="noopener" target="_blank">The count ↗︎</a>` : ""}</p>
+    ${note ? `<p class="bill-division-note">${billNoteHTML(note)}</p>` : ""}
+    ${billSplitHTML(d)}
+  </li>`;
+}
+
+function billDivisionsHTML(bill) {
+  const { divisions: divs, collapsed } = billDedupeDivisions(bill.divisions, bill);
+  if (!divs.length) {
+    return `<section class="bill-section"><h3 class="subject-section-title">Divisions</h3>
+      <p class="status">No divisions recorded.</p>
+      <p class="fineprint">Most questions are decided on the voices and leave no per-member record, so a bill
+        with no division here was not necessarily unopposed.</p></section>`;
+  }
+  const head = divs.slice(0, 6), rest = divs.slice(6);
+  return `<section class="bill-section">
+    <h3 class="subject-section-title">Divisions</h3>
+    <ol class="bill-division-list" role="list" id="bill-divisions">${head.map((d) => billDivisionHTML(d, bill)).join("")}</ol>
+    ${rest.length ? `<p class="dir-more-row"><button type="button" class="secondary" id="bill-divisions-more"
+      data-rest="${esc(String(rest.length))}">Show more (${rest.length} more)</button></p>` : ""}
+    <p class="fineprint">Ayes and noes are the division's own totals. Party is each member's recorded
+      affiliation, not a reconstruction of who they sat with on the day, and a member the record does not
+      name is counted but not attributed. Only formal divisions leave a per-member record.${collapsed
+        ? ` The source records some divisions more than once; ${collapsed} row${collapsed === 1 ? "" : "s"}
+            identical in day, stage and counts ${collapsed === 1 ? "is" : "are"} shown here once.` : ""}</p>
+  </section>`;
+}
+
+function billSpeechesHTML(bill) {
+  const speeches = (bill.speeches || []).filter((s) => s?.slug);
+  if (!speeches.length) {
+    return `<section class="bill-section"><h3 class="subject-section-title">What was said</h3>
+      <p class="status">No speeches linked to this bill yet.</p></section>`;
+  }
+  // A speech the record leaves unattributed has one fact — its date — so the
+  // date is what opens it, rather than nine rows all reading the same absence.
+  const rows = speeches.slice(0, 24).map((s) => `<li>
+    <a class="source-title" href="/doc/${encodeURIComponent(s.slug)}">${
+      s.speaker ? esc(s.speaker) : `Speech${s.date ? ` on ${esc(fmtDate(s.date))}` : ", speaker not named"}`}</a>
+    <span class="result-meta">${[
+      s.party ? partyChipHTML(s.party) : "",
+      s.state && s.state !== "federal" ? esc(STATE_NAMES[s.state] || s.state) : "",
+      s.stage_hint ? esc(billStage(s.stage_hint)) : "",
+      s.speaker && s.date ? esc(fmtDate(s.date)) : "",
+    ].filter(Boolean).join(" · ")}</span>
+    ${s.brief ? `<p class="bill-speech-brief">${esc(s.brief)}</p>` : ""}
+  </li>`).join("");
+  const briefs = speeches.filter((s) => s.brief).length;
+  return `<section class="bill-section">
+    <h3 class="subject-section-title">What was said</h3>
+    <ul class="subject-list bill-speeches" role="list">${rows}</ul>
+    <p class="fineprint">Speeches the record attaches to this bill${
+      speeches.length > 24 ? `, the first 24 of ${speeches.length}` : ""}. ${briefs
+        ? "A brief under a name was written from that speech by a model, not by a person."
+        : "Open a speech to read it in full."}</p>
+  </section>`;
+}
+
+function billActsHTML(bill) {
+  const acts = (bill.acts || []).filter((a) => a?.title);
+  const passed = /passed|assent/i.test(String(bill.status || ""));
+  if (!acts.length) {
+    return passed
+      ? `<section class="bill-section"><h3 class="subject-section-title">What became law</h3>
+         <p class="status">No Act matched to this bill yet.</p></section>`
+      : "";
+  }
+  const rows = acts.map((a) => {
+    const url = safeUrl(a.frl_uri);
+    return `<li>
+      ${url ? `<a class="source-title" href="${esc(url)}" rel="noopener" target="_blank">${esc(a.title)} ↗︎</a>`
+        : `<span class="source-title">${esc(a.title)}</span>`}
+      <span class="result-meta">${a.assent_date ? `Assented ${esc(fmtDate(a.assent_date))}` : "Assent date not recorded"}</span>
+    </li>`;
+  }).join("");
+  return `<section class="bill-section">
+    <h3 class="subject-section-title">What became law</h3>
+    <ul class="subject-list" role="list">${rows}</ul>
+    <p class="fineprint">Act text on the Federal Register of Legislation, CC BY 4.0.</p>
+  </section>`;
+}
+
+function billSummaryHTML(bill) {
+  const s = bill.summary;
+  const sources = billSourcesHTML(bill.sources);
+  if (!s) {
+    return `<section class="bill-summary bill-summary-empty" aria-labelledby="bill-summary-head">
+      <div class="doc-brief-head"><h3 class="subject-section-title" id="bill-summary-head">In short</h3></div>
+      <p class="status">No summary yet.</p>
+      <p class="fineprint">Nothing has been written about this bill from its explanatory material. The dates,
+        divisions and speeches below are the record's own.${sources ? ` Official sources: ${sources}` : ""}</p>
+    </section>`;
+  }
+  const sentences = (s.sentences || []).filter(Boolean);
+  const changes = (s.changes || []).filter(Boolean);
+  return `<section class="bill-summary" aria-labelledby="bill-summary-head">
+    <div class="doc-brief-head">
+      <h3 class="subject-section-title" id="bill-summary-head">In short</h3>
+      <span class="doc-brief-tag">Machine summary</span>
+    </div>
+    <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
+    ${changes.length ? `<h4 class="bill-sub">What it changes</h4>
+      <ul class="bill-changes">${changes.map((c) => `<li>${esc(c)}</li>`).join("")}</ul>` : ""}
+    ${s.affected ? `<h4 class="bill-sub">Who is affected</h4><p class="bill-affected">${esc(s.affected)}</p>` : ""}
+    <p class="fineprint bill-attrib">${esc(s.attribution
+      || "Written by a model from the explanatory memorandum; not the record")}.${
+      s.describes_version ? ` Describes the bill ${esc(s.describes_version)}.` : ""}${
+      s.as_of ? ` Written from material dated ${esc(fmtDate(s.as_of))}.` : ""}${
+      sources ? ` Official sources: ${sources}` : ""}</p>
+  </section>`;
+}
+
+/** /bill/<key> — one bill, whole. */
+async function openBill(key, manageFocus) {
+  const view = `bill:${key}`;
+  if (billView === view) { if (manageFocus) $("bill-title")?.focus(); return; }
+  billView = view;
+  activeDirectory = null;
+  const body = $("bill-body");
+  body.innerHTML = `
+    <p class="kicker">Bill</p>
+    <div class="subject-head">
+      <h2 id="bill-title" tabindex="-1">Opening the bill…</h2>
+      <p class="subject-tag"><span id="bill-loader" class="subject-loader"></span></p>
+    </div>`;
+  if (manageFocus) $("bill-title")?.focus();
+  showPageLoader("bill-loader", "Opening the bill.");
+  const bill = await loadBill(key);
+  if (billView !== view) return;
+  clearPageLoader("bill-loader");
+  if (!bill) {
+    body.innerHTML = `
+      <p class="kicker">Bill</p>
+      <div class="subject-head">
+        <h2 id="bill-title" tabindex="-1">No bill with this identifier</h2>
+        <p class="subject-tag"><span>The register does not name <code>${esc(key)}</code>. It may not be
+          published yet, or the link may be old.</span></p>
+      </div>
+      <p class="action-row">${actionBtn("entry", "/bills", "Open the bill list", { primary: true })}
+        ${actionBtn("search", searchHash(key, {}), "Search the record")}</p>`;
+    if (manageFocus) $("bill-title")?.focus();
+    setCrumbs([{ label: "Bills", href: "/bills" }, { label: "Not found" }]);
+    return;
+  }
+  const title = bill.title || bill.short_title || key;
+  document.title = `${crumbLabel(billName(bill), 60)} · OPAX`;
+  setCrumbs([{ label: "Bills", href: "/bills" }, { label: crumbLabel(billName(bill), 48) }]);
+  const members = billSponsorFromPortfolio(bill.portfolio);
+  // Each co-sponsor is a person with an entry of their own, so each is a link.
+  const sponsorLinks = bill.sponsor
+    ? [`<a href="${esc(subjectHash("person", bill.sponsor))}">${esc(bill.sponsor)}</a>`]
+    : (members || []).map((m) => `<a href="${esc(subjectHash("person", m.name))}">${esc(m.name)}</a>${
+      m.suffix ? ` ${esc(m.suffix)}` : ""}`);
+  const sponsorBits = [
+    sponsorLinks.length
+      ? `Introduced by ${sponsorLinks.slice(0, 3).join(", ")}${
+        sponsorLinks.length > 3 ? ` and ${sponsorLinks.length - 3} others` : ""}`
+      : "Sponsor not recorded",
+    bill.sponsor_party ? partyChipHTML(bill.sponsor_party) : "",
+    billPortfolio(bill) ? esc(billPortfolio(bill)) : "",
+  ].filter(Boolean);
+  const billhome = safeUrl((bill.sources || []).find((s) => s.kind === "billhome")?.url);
+  body.innerHTML = `
+    <p class="kicker">Bill</p>
+    <div class="subject-head bill-head">
+      <h2 id="bill-title" class="bill-title" tabindex="-1">${esc(title)}</h2>
+      ${bill.short_title && bill.short_title !== title
+        ? `<p class="bill-short">Known as the ${esc(bill.short_title)}</p>` : ""}
+      <p class="subject-tag bill-tag">${sponsorBits.join(" · ")}</p>
+      <p class="bill-status"><b>${esc(sentenceCase(bill.status) || "Status not recorded")}</b>${
+        bill.status_as_of ? `<span class="bill-status-as">as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}${
+        bill.introduced ? `<span class="bill-status-as">introduced ${esc(fmtDate(bill.introduced))}${
+          billHouse(bill.originating_house) ? ` in the ${esc(billHouse(bill.originating_house))}` : ""}</span>` : ""}</p>
+    </div>
+    ${billSummaryHTML(bill)}
+    ${billTimelineHTML(bill)}
+    ${billDivisionsHTML(bill)}
+    ${billSpeechesHTML(bill)}
+    ${billActsHTML(bill)}
+    <p class="action-row bill-actions">
+      ${actionBtn("search", searchHash(`"${title}"`, {}), "Search the record for this bill", { primary: true })}
+      ${actionBtn("ask", askHash(`What did parliament say about the ${billName(bill)}?`), "Ask about it")}
+      ${billhome ? actionBtn("external", billhome, "Official bill home", { external: true }) : ""}
+      ${actionBtn("entry", "/bills", "All bills")}
+    </p>
+    <p class="fineprint">${BILLS_FINEPRINT}</p>`;
+  if (manageFocus) $("bill-title")?.focus();
+  const more = $("bill-divisions-more");
+  if (more) {
+    more.addEventListener("click", () => {
+      const list = $("bill-divisions");
+      const first = list.children.length;
+      const divs = billDedupeDivisions(bill.divisions, bill).divisions.slice(6);
+      list.insertAdjacentHTML("beforeend", divs.map((d) => billDivisionHTML(d, bill)).join(""));
+      more.remove();
+      list.children[first]?.querySelector("a, .bill-division-q")?.focus?.();
+    });
+  }
+}
+
+/* --- bills on the person page ----------------------------------------------
+   renderPersonVotes has already drawn the voting record by the time the index
+   arrives. This walks the rows it drew and, only where a bill name is an exact
+   match, turns the row into a disclosure: three sentences and a way to the
+   bill page, or — with no summary written — the bill's dated status instead.
+   A row that matches nothing is left exactly as it was, a search of the record,
+   which is what makes a missing or broken index harmless here. */
+async function decoratePersonVoteBills(slot) {
+  const rows = [...slot.querySelectorAll("[data-bill-name]")];
+  if (!rows.length) return;
+  let map;
+  try { map = await billTitleIndex(); } catch { return; }
+  if (!map?.size || !slot.isConnected) return;
+  for (const row of rows) {
+    const entry = map.get(titleKey(row.dataset.billName));
+    if (!entry) continue;
+    const meta = row.querySelector(".result-meta")?.innerHTML || "";
+    const id = `bill-peek-${entry.key}-${Math.random().toString(36).slice(2, 7)}`;
+    row.innerHTML = `
+      <details class="bill-peek" data-bill-key="${esc(entry.key)}">
+        <summary class="bill-peek-summary" aria-describedby="${esc(id)}">
+          <span class="bill-peek-name">${esc(billName(entry))}</span>
+          <span class="result-meta">${meta}</span>
+        </summary>
+        <div class="bill-peek-body" id="${esc(id)}">
+          <p class="status bill-peek-status">Opening the summary…</p>
+        </div>
+      </details>`;
+    const details = row.querySelector("details");
+    details.addEventListener("toggle", () => {
+      if (!details.open || details.dataset.filled) return;
+      details.dataset.filled = "1";
+      fillBillPeek(details, entry);
+    }, { once: false });
+  }
+}
+
+async function fillBillPeek(details, entry) {
+  const box = details.querySelector(".bill-peek-body");
+  const foot = `<p class="bill-peek-link"><a class="action-btn" href="${esc(billHash(entry.key))}">${
+    iconSvg("entry")}<span>Bill page</span></a></p>`;
+  // No summary written: the dated status is the honest thing to show instead.
+  if (!entry.has_summary) {
+    box.innerHTML = `<p class="bill-peek-line">${esc(billStatusLine(entry))}. No summary yet.</p>${foot}`;
+    return;
+  }
+  const bill = await loadBill(entry.key);
+  if (!box.isConnected) return;
+  const sentences = (bill?.summary?.sentences || []).filter(Boolean);
+  if (!sentences.length) {
+    box.innerHTML = `<p class="bill-peek-line">${esc(billStatusLine(entry))}. No summary yet.</p>${foot}`;
+    return;
+  }
+  box.innerHTML = `
+    <div class="bill-peek-head"><span class="doc-brief-tag">Machine summary</span></div>
+    <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
+    <p class="fineprint">${esc(bill.summary.attribution
+      || "Written by a model from the explanatory memorandum; not the record")}. ${esc(billStatusLine(entry))}.</p>
+    ${foot}`;
+}
+
+/* --- bills on the party page ------------------------------------------------
+   The party's own side of every bill division the projection holds. The index
+   names which bills carry divisions but not what the splits were, so the bill
+   files are read — newest first and capped, because this is a page, not a
+   report. The cap is stated in the note rather than hidden. */
+const PARTY_BILLS_SCAN = 96;   // most candidates ever asked for
+const PARTY_BILLS_ENOUGH = 32; // stop as soon as this many bill files have arrived
+const PARTY_BILLS_SHOW = 10;
+
+async function renderPartyBillDivisions(label, sections, key) {
+  // The section takes its place in the column before anything is fetched:
+  // where a reader finds it should not depend on how fast a file returns.
+  const slot = document.createElement("section");
+  slot.className = "party-bills";
+  slot.id = "party-bills";
+  slot.innerHTML = `<h3 class="subject-section-title">Bills they divided on</h3>
+    <p class="status">Reading the divisions…</p>`;
+  sections.appendChild(slot);
+  const idx = await loadBillsIndex();
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  if (!idx?.bills?.length) { slot.remove(); return; }
+  const candidates = idx.bills.filter((b) => Number(b.divisions) > 0)
+    .sort((a, b) => String(b.status_as_of || b.introduced || "").localeCompare(
+      String(a.status_as_of || a.introduced || ""))).slice(0, PARTY_BILLS_SCAN);
+  if (!candidates.length) { slot.remove(); return; }
+  // Read in small batches and stop as soon as enough bills have answered: a
+  // register entry need not have a file yet, and a page should not keep asking.
+  const files = [];
+  for (let i = 0; i < candidates.length && files.length < PARTY_BILLS_ENOUGH; i += 8) {
+    const batch = await Promise.all(candidates.slice(i, i + 8).map((b) => loadBill(b.key)));
+    if (currentSubjectKey !== key || !slot.isConnected) return;
+    files.push(...batch.filter(Boolean));
+  }
+  const rows = [];
+  for (const bill of files) {
+    // Same collapse as the bill page: a division the source recorded twice is
+    // one division, and listing it twice here would count it twice.
+    for (const d of billDedupeDivisions(bill.divisions, bill).divisions) {
+      const hit = Object.entries(d.party_splits || {})
+        .find(([party]) => samePartyLabel(party, label));
+      if (!hit) continue;
+      const [, split] = hit;
+      const ayes = Number(split?.ayes) || 0, noes = Number(split?.noes) || 0;
+      if (!ayes && !noes) continue;
+      rows.push({ bill, d, ayes, noes });
+    }
+  }
+  if (!rows.length) {
+    slot.innerHTML = `<h3 class="subject-section-title">Bills they divided on</h3>
+      <p class="status">No division in the ${files.length} most recent bills the register could open
+        records a vote by this party.</p>`;
+    return;
+  }
+  rows.sort((a, b) => String(b.d.date || "").localeCompare(String(a.d.date || "")));
+  const max = Math.max(...rows.map((r) => Math.max(r.ayes, r.noes)), 1);
+  /* A party often divides more than once on one bill, and loop 2 gave those
+     rows their questions to tell apart. What was left was the bill's name set
+     as a heading twice running. One bill is one entry: the name once, and
+     under it every division the party took on it. */
+  const groups = [];
+  for (const r of rows) {
+    const last = groups[groups.length - 1];
+    if (last && last.bill.key === r.bill.key) { last.rows.push(r); continue; }
+    groups.push({ bill: r.bill, rows: [r] });
+  }
+  const divHTML = (r) => `<li class="party-bill-div">
+    <span class="result-meta">${[
+      r.d.stage ? esc(billStage(r.d.stage)) : "", r.d.date ? esc(fmtDate(r.d.date)) : "",
+      r.d.outcome ? `<b>${esc(billOutcome(r.d.outcome))}</b>` : "",
+    ].filter(Boolean).join("&nbsp;· ")}</span>
+    ${billQuestionShort(r.d, r.bill)
+      ? `<span class="party-bill-q">${esc(billQuestionShort(r.d, r.bill))}</span>` : ""}
+    <span class="bill-split-n party-bill-n">${r.ayes} for, ${r.noes} against</span>
+    <span class="bill-split-bars party-bill-bars" aria-hidden="true">
+      <span class="bill-split-bar-track"><i class="bill-bar-aye" style="width:${((r.ayes / max) * 100).toFixed(1)}%"></i></span>
+      <span class="bill-split-bar-track"><i class="bill-bar-no" style="width:${((r.noes / max) * 100).toFixed(1)}%"></i></span>
+    </span>
+  </li>`;
+  const rowHTML = (g) => `<li class="party-bill">
+    <a class="source-title" href="${esc(billHash(g.bill.key))}">${esc(billName(g.bill))}</a>
+    ${g.rows.length > 1
+      ? `<span class="party-bill-count">${g.rows.length} divisions</span>` : ""}
+    <ul class="party-bill-divs" role="list">${g.rows.map(divHTML).join("")}</ul>
+  </li>`;
+  const head = groups.slice(0, PARTY_BILLS_SHOW), rest = groups.slice(PARTY_BILLS_SHOW);
+  slot.innerHTML = `
+    <h3 class="subject-section-title">Bills they divided on</h3>
+    <ul class="subject-list party-bill-list" role="list" id="party-bill-list">${head.map(rowHTML).join("")}</ul>
+    ${rest.length ? `<p class="dir-more-row"><button type="button" class="secondary" id="party-bills-more">Show more (${rest.length} more)</button></p>` : ""}
+    <p class="fineprint">This party's own ayes and noes, newest first, read from the ${files.length}
+      most recently decided bills the register could open — not the party's whole voting history, and not
+      every bill it divided on. Party is each member's recorded affiliation, not a reconstruction of who
+      they sat with on the day. A division on an amendment is not a vote on the bill itself.</p>`;
+  const more = $("party-bills-more");
+  if (more) {
+    more.addEventListener("click", () => {
+      const list = $("party-bill-list");
+      const first = list.children.length;
+      list.insertAdjacentHTML("beforeend", rest.map(rowHTML).join(""));
+      more.remove();
+      list.children[first]?.querySelector("a")?.focus();
+    });
+  }
+}
+
+/* --- the bill behind a speech ----------------------------------------------
+   Only when the debate a speech sat in IS a bill the register names, matched
+   in full and exactly. Anything less would attach the wrong bill to the right
+   speech, which is worse than attaching none. */
+async function renderDocBillPanel(doc, slug) {
+  const box = $("doc-bill");
+  if (!box) return;
+  box.hidden = true;
+  box.replaceChildren();
+  const subject = doc.metadata?.bill_ref || doc.metadata?.topic || doc.metadata?.debate || titleSubject(doc);
+  const entry = await billForTitle(subject);
+  if (!entry || currentDocSlug !== slug) return;
+  // The speech's own header is often the bill's title; printing it again
+  // directly beneath says nothing twice. Under a named speaker the headline is
+  // the speaker and the bill's title is the subject line under it, so the
+  // guard has to read both — checking the headline alone caught nothing on
+  // exactly the pages where the repetition happens.
+  const above = [$("doc-title")?.textContent, $("doc-topic")?.textContent]
+    .map((t) => titleKey(t || "")).filter(Boolean);
+  const repeats = above.some((h) => h === titleKey(entry.title) || h === titleKey(billName(entry)));
+  const line = `<p class="doc-bill-status">${esc(billStatusLine(entry))}</p>`;
+  const link = `<p class="doc-bill-link"><a href="${esc(billHash(entry.key))}">Bill page</a></p>`;
+  const head = `<div class="doc-brief-head">
+      <h3 class="subject-section-title" id="doc-bill-head">The bill</h3>
+      <span class="doc-brief-tag">Register</span>
+    </div>
+    ${repeats ? "" : `<p class="doc-bill-title">${esc(billName(entry))}</p>`}`;
+  box.innerHTML = `${head}${line}<p class="status doc-bill-sentence">Reading the summary…</p>${link}`;
+  box.hidden = false;
+  if (!entry.has_summary) {
+    box.querySelector(".doc-bill-sentence").outerHTML =
+      `<p class="fineprint doc-bill-none">No summary written for this bill yet.</p>`;
+    return;
+  }
+  const bill = await loadBill(entry.key);
+  if (currentDocSlug !== slug || !box.isConnected) return;
+  const first = (bill?.summary?.sentences || []).filter(Boolean)[0];
+  const el = box.querySelector(".doc-bill-sentence");
+  if (!el) return;
+  el.outerHTML = first
+    ? `<p class="doc-bill-sentence">${esc(first)}</p>
+       <p class="fineprint doc-bill-attrib">${esc(bill.summary.attribution
+         || "Written by a model from the explanatory memorandum; not the record")}.</p>`
+    : `<p class="fineprint doc-bill-none">No summary written for this bill yet.</p>`;
 }
 
 // --- explore (time machine + quiz) ------------------------------------------
@@ -8282,6 +9302,8 @@ async function openDocPage(slug, manageFocus) {
   $("doc-speaker-links").hidden = true;
   $("doc-text").textContent = "";
   $("doc-brief").hidden = true;
+  $("doc-bill").hidden = true;
+  $("doc-bill").replaceChildren();
   $("doc-record-head").hidden = true;
   $("doc-caveat").hidden = true;
   $("doc-cite-panel").hidden = true;
@@ -8372,6 +9394,7 @@ async function openDocPage(slug, manageFocus) {
       // Only worth naming when something else stands above it.
       $("doc-record-head").hidden = false;
     }
+    renderDocBillPanel(doc, slug);
     renderDocText(doc);
     $("doc-ask").href = askHash(`What has parliament said about ${topic || doc.title}?`);
     $("doc-actions").hidden = false;

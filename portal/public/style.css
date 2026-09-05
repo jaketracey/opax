@@ -3389,322 +3389,361 @@ html[data-panel="chat"] footer { display: none; }
 
 /* ==== the tide: air between the switchers and the chart ==== */
 .tide-view { margin-top: var(--space-4); }
-||||||| c7c37a5
+/* ==== bills-ui ============================================================
+   The bill page and its touchpoints. Everything here reads in the house
+   register: the record's serif for anything the record or a model says about
+   the bill, the sans for machinery, hairlines rather than boxes, bronze only
+   where something touches the record. Party colour stays a dot beside a name —
+   the paired bars say aye or no, and nothing else, so a chart never asserts a
+   party identity the split does not carry. Mobile first at 360; every control
+   and disclosure clears 44px. ------------------------------------------ */
 
-/* ==== reports-ui ====
-   The v2 report page. A report now reads as two arguments in sequence — what
-   parliament is saying now, and how it got there — so the page is built from
-   parts rather than one long column of sections. Everything here is scoped to
-   the reports panel or to a report- class the v1 page does not use, so a
-   report with no `version` still renders exactly as it did. */
+/* ---- one bill: the head ------------------------------------------------- */
 
-/* ---- head: the lede, the window, the two ways in ------------------------- */
+.bill-head { max-width: 68ch; }
+.bill-title { font: 700 1.6rem/1.28 var(--serif); margin: 0; overflow-wrap: break-word; }
+.bill-short {
+  margin: var(--space-2) 0 0; font: 400 0.9375rem/1.5 var(--sans); color: var(--ink-soft);
+}
+.bill-tag { margin-top: var(--space-2); }
+.bill-tag a { text-decoration: none; border-bottom: 1px solid var(--bronze-rule); }
+.bill-tag a:hover { color: var(--bronze-ink); }
+/* The status is a fact with a date on it; the date is never allowed to leave. */
+.bill-status {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.75rem;
+  margin: var(--space-3) 0 0; padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+  font: 400 0.9375rem/1.5 var(--sans); color: var(--ink-soft); max-width: 68ch;
+}
+.bill-status b { font: 700 1.0625rem/1.4 var(--sans); color: var(--ink); }
+.bill-status-as { color: var(--ink-faint); font-size: 0.875rem; }
 
-.report-head2 { margin: 0.9rem 0 0; }
-.report-head2[hidden] { display: none; }
+/* ---- the summary card --------------------------------------------------- */
+/* Same treatment as a speech's machine brief (.doc-brief): a reader who has
+   learned that sunken panel with the bronze edge means "written by a model,
+   not the record" reads it the same way here. */
 
-/* The lede is the page's reading text, a step above an ordinary answer: it is
-   the paragraph a reader decides on. */
-.report-lede { font-size: 1.1875rem; line-height: 1.8; max-width: 66ch; }
-.report-lede > p:first-child { margin-top: 0; }
+.bill-summary {
+  margin: var(--space-5) 0 0; max-width: 68ch;
+  background: var(--paper-sunken); border-left: 3px solid var(--bronze);
+  border-radius: 0 4px 4px 0; padding: 0.9rem 1.1rem 1rem;
+}
+.bill-summary .subject-section-title { margin: 0; font-size: 1.2rem; }
+.bill-summary .doc-brief-head { margin-bottom: var(--space-3); }
+.bill-sentences p {
+  font: 400 1.0625rem/1.62 var(--serif); color: var(--ink); margin: 0 0 0.65rem;
+}
+.bill-sentences p:last-child { margin-bottom: 0; }
+.bill-sub {
+  font: 600 0.9375rem/1.3 var(--sans); color: var(--ink-soft); margin: var(--space-4) 0 var(--space-2);
+  letter-spacing: 0.01em;
+}
+.bill-changes { margin: 0; padding-left: 1.05rem; }
+.bill-changes li {
+  font: 400 0.9375rem/1.6 var(--sans); color: var(--ink); margin: 0 0 0.35rem;
+}
+.bill-changes li::marker { color: var(--bronze); }
+.bill-affected { margin: 0; font: 400 0.9375rem/1.6 var(--sans); color: var(--ink); }
+.bill-attrib { margin-top: var(--space-4); }
+.bill-attrib a { color: var(--ink-faint); }
+.bill-attrib a:hover { color: var(--bronze-ink); }
+.bill-summary-empty { background: none; border-left-color: var(--line-strong); padding-left: 1.1rem; }
+.bill-summary-empty .status { margin-top: 0; }
 
-/* The window the report covers, said plainly rather than implied by a date
-   range: the whole page rests on which two spans are being compared. */
-.report-window {
-  margin: var(--space-5) 0 var(--space-4); max-width: 62ch;
-  font: 400 0.9375rem/1.6 var(--sans); color: var(--ink-soft);
-}
+/* ---- the timeline: a hairline ruler ------------------------------------- */
 
-/* Citations in the flow of a line: a true superscript with an invisible 44px
-   halo, the treatment the ask page settled on. */
-#panel-reports .ask-citation {
-  display: inline-block; position: relative; vertical-align: super; min-width: 0; min-height: 0;
-  margin: 0 0.05em 0 0.1em; padding: 0 0.15em; border: 0; background: transparent;
-  color: var(--bronze-ink); font: 700 0.6875rem/0 var(--sans);
-  font-variant-numeric: tabular-nums; cursor: pointer;
+.bill-section { margin: 0; }
+.bill-ruler { display: block; width: 100%; height: auto; max-width: 680px; margin: var(--space-3) 0 var(--space-4); }
+.bill-ruler-axis { stroke: var(--line-strong); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.bill-ruler-tick { stroke: var(--bronze-ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.bill-ruler-label { font: 400 11px/1 var(--sans); fill: var(--ink-faint); }
+.bill-dates { list-style: none; margin: 0; padding: 0; max-width: 68ch; }
+.bill-date {
+  display: grid; grid-template-columns: 6.25rem minmax(0, 1fr); column-gap: 0.7rem;
+  border-top: 1px solid var(--line); padding: var(--row-gap) 0;
 }
-#panel-reports .ask-citation::before {
-  content: ""; position: absolute; left: 50%; top: 50%;
-  width: 44px; height: 44px; transform: translate(-50%, -50%);
-}
-#panel-reports .ask-citation:hover { color: var(--ink); }
-#panel-reports .ask-citation:focus-visible {
-  outline: 2px solid var(--bronze-ink); outline-offset: -3px; border-radius: 2px;
-}
-/* Two stops, and on a phone they stay put: one 44px band under the masthead,
-   which is the whole budget this navigation is allowed. */
-.report-jump {
-  display: flex; gap: var(--space-4); align-items: stretch;
-  margin: var(--space-5) 0 0; border-bottom: 1px solid var(--line); background: var(--paper);
-}
-.report-jump-btn {
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0;
-  border: 0; background: none; cursor: pointer;
-  font: 650 0.9375rem/1.2 var(--sans); color: var(--ink-soft);
-  border-bottom: 2px solid transparent;
-}
-.report-jump-btn:hover { color: var(--bronze-ink); border-bottom-color: var(--bronze-rule); }
-.report-jump-btn:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: -2px; }
+.bill-date:first-child { border-top: none; }
+.bill-date-when { color: var(--ink-faint); font: 400 0.8125rem/1.7 var(--sans); }
+.bill-date-what { font: 400 0.9375rem/1.5 var(--sans); color: var(--ink); }
+.bill-date-what a { text-decoration: none; border-bottom: 1px solid var(--bronze-rule); }
+.bill-date-house { display: block; color: var(--ink-faint); font-size: 0.8125rem; }
 
-/* The v2 provenance line sits at the foot, above the download it describes. */
-.report-foot-meta { margin: var(--section-gap) 0 0; }
-.report-foot-meta[hidden] { display: none; }
+/* ---- divisions and their party splits ----------------------------------- */
 
-/* ---- parts --------------------------------------------------------------- */
+.bill-division-list { list-style: none; margin: 0; padding: 0; max-width: 68ch; }
+.bill-division { border-top: 1px solid var(--line); padding: var(--space-4) 0 var(--space-4); }
+.bill-division:first-child { border-top: none; padding-top: var(--space-2); }
+.bill-division-q {
+  font: 600 1.0625rem/1.42 var(--serif); display: block;
+  /* A question can be one long editorial note carrying a URL; it wraps inside
+     the column rather than pushing the page sideways. */
+  overflow-wrap: anywhere; max-width: 100%;
+}
+a.bill-division-q { text-decoration: none; }
+a.bill-division-q:hover { color: var(--bronze-ink); }
+.bill-division .result-meta { display: flex; margin-top: 0.2rem; color: var(--ink-faint); font-size: 0.8125rem; }
+.bill-division-out {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.6rem;
+  margin: var(--space-2) 0 var(--space-3); font: 400 0.9375rem/1.4 var(--sans); color: var(--ink-soft);
+}
+.bill-division-out b { color: var(--ink); }
+/* The count on TheyVoteForYou or the state Hansard: the number's own source,
+   one step from the number, without competing with the question above it. */
+.bill-division-src {
+  display: inline-flex; align-items: center; min-height: 44px; align-self: center;
+  font: 400 0.8125rem/1.4 var(--sans); color: var(--ink-faint);
+  text-decoration: none; border-bottom: 1px solid var(--line);
+}
+.bill-division-src:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }
 
-.report-part[hidden] { display: none; }
-.report-part:not([hidden]) { margin-top: var(--section-gap); }
-.report-part-title, #report-money-head {
-  margin: 0 0 var(--space-3); padding-top: var(--space-4);
-  border-top: 2px solid var(--bronze);
-  font: 600 1.6rem/1.25 var(--serif); color: var(--ink);
+.bill-splits { list-style: none; margin: 0; padding: 0; }
+/* Phone: the party names the split, the bars sit under it full width, and the
+   two figures stay on the name's line where they can be compared down the column. */
+.bill-split {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline;
+  column-gap: 0.6rem; row-gap: 0.25rem; padding: 0.3rem 0;
 }
-.report-part-title:focus-visible, #report-money-head:focus-visible {
-  outline: 2px solid var(--bronze-ink); outline-offset: 4px;
+.bill-split-party {
+  display: inline-flex; align-items: baseline; gap: 0.35rem; min-width: 0;
+  font: 400 0.875rem/1.4 var(--sans); color: var(--ink); overflow-wrap: anywhere;
 }
-#report-stats:not(:empty) { margin-top: var(--section-gap); }
-.report-part-note {
-  margin: 0 0 var(--space-4); max-width: 66ch;
-  font: 400 0.9375rem/1.6 var(--sans); color: var(--ink-soft);
+.bill-split-n {
+  font: 600 0.8125rem/1.4 var(--sans); color: var(--ink-soft); font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
-.report-sub-title {
-  margin: var(--sub-gap) 0 var(--space-3);
-  font: 600 1.15rem/1.35 var(--serif); color: var(--ink);
+.bill-split-bars {
+  grid-column: 1 / -1; display: flex; flex-direction: column; gap: 2px;
+  background: none; min-width: 0;
 }
+.bill-split-bars i {
+  display: block; height: 5px; border-radius: 2.5px; min-width: 2px;
+  background: var(--paper-sunken);
+}
+.bill-split-bars i.bill-bar-aye { background: var(--bronze); }
+.bill-split-bars i.bill-bar-no { background: var(--ink-faint); }
+.bill-split-bars i[style*="width:0.0%"] { background: none; box-shadow: inset 0 0 0 1px var(--line); }
+.bill-split-none, .bill-split-partial { margin-top: var(--space-3); }
 
-/* ---- the debates the report found --------------------------------------- */
+/* ---- what was said, and what became law --------------------------------- */
 
-/* A wrapping row, not a scroller: five discovered debates are the shape of
-   the argument, and a reader should see all five without swiping. */
-.report-chips { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: 0 0 var(--sub-gap); }
-/* The count is a column of its own rather than a word after the name: a
-   wrapping name used to push "· 212 speeches" onto the next line, where an
-   interpunct led the line and read as a bullet. The name wraps inside the
-   space left over, and the tally never starts a line. */
-.report-chip {
-  display: flex; flex-wrap: nowrap; align-items: center; gap: 0 var(--space-4);
-  min-height: 44px; padding: 0.3rem 0.95rem; max-width: 100%;
-  background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;
-  text-decoration: none; color: var(--ink);
+.bill-speech-brief {
+  margin: 0.35rem 0 0; font: 400 0.9375rem/1.6 var(--serif); color: var(--ink-soft); max-width: 62ch;
 }
-.report-chip:hover { background: var(--bronze-wash); border-color: var(--line-strong); }
-.report-chip:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; }
-.report-chip-name { min-width: 0; font: 600 0.875rem/1.3 var(--sans); overflow-wrap: anywhere; }
-.report-chip-count {
-  flex: 0 0 auto; margin-inline-start: auto; white-space: nowrap;
-  font: 400 0.8125rem/1.3 var(--sans); color: var(--ink-faint);
-  font-variant-numeric: tabular-nums;
-}
+.bill-speeches .source-title { font-family: var(--serif); font-weight: 600; }
+.bill-actions { margin-top: var(--section-gap); display: flex; flex-wrap: wrap; gap: 0.6rem; }
 
-/* ---- essays -------------------------------------------------------------- */
+/* ---- the /bills index --------------------------------------------------- */
 
-.report-essay { margin: 0 0 var(--sub-gap); }
-.report-essay:last-child { margin-bottom: 0; }
-.report-essay-question {
-  margin: 0 0 var(--space-4); max-width: 56ch;
-  font: 600 1.25rem/1.35 var(--serif); color: var(--ink);
+.bill-row-title { font: 600 1.0625rem/1.4 var(--serif); }
+.bill-row-status { color: var(--ink); font-weight: 600; }
+.bill-row-long {
+  margin: 0.2rem 0 0; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-faint); max-width: 62ch;
 }
-.report-essay-body { max-width: 68ch; }
-/* The note belongs to the prose above it, and says so by sitting tight under
-   it while the sources fold keeps its own distance. */
-.report-model-note { margin-top: var(--space-3); font-style: italic; }
-.report-essay-tools {
-  display: flex; flex-wrap: wrap; gap: 0 var(--space-5); margin: var(--space-2) 0 0;
+.bill-row-figures { margin: 0.25rem 0 0; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-faint); }
+
+/* ---- the disclosure on a person's voting record ------------------------- */
+/* The row was a link to the record and stays one when nothing matches. Where
+   the register does name the bill, the row becomes a 44px disclosure: three
+   sentences and a way through, or the dated status when nothing is written. */
+
+.bill-peek { margin: 0; }
+.bill-peek-summary {
+  display: flex; flex-direction: column; justify-content: center; gap: 0.15rem;
+  min-height: 44px; padding: 0.25rem 1.6rem 0.25rem 0; position: relative;
+  cursor: pointer; list-style: none;
 }
-.report-essay-tool {
+.bill-peek-summary::-webkit-details-marker { display: none; }
+.bill-peek-summary::after {
+  content: ""; position: absolute; right: 0.35rem; top: 50%; width: 8px; height: 8px;
+  border-right: 1.5px solid var(--bronze); border-bottom: 1.5px solid var(--bronze);
+  transform: translateY(-70%) rotate(45deg); transform-origin: center;
+}
+.bill-peek[open] > .bill-peek-summary::after { transform: translateY(-25%) rotate(-135deg); }
+.bill-peek-summary:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; }
+.bill-peek-name { font: 600 0.9375rem/1.4 var(--serif); color: var(--ink); }
+.bill-peek-summary:hover .bill-peek-name { color: var(--bronze-ink); }
+.bill-peek-body {
+  padding: var(--space-3) 0 var(--space-3) 0.9rem; margin: var(--space-2) 0 var(--space-3);
+  border-left: 3px solid var(--bronze-wash);
+}
+.bill-peek-body .bill-sentences p { font-size: 0.9375rem; line-height: 1.6; }
+.bill-peek-head { margin-bottom: var(--space-2); }
+.bill-peek-line { margin: 0; font: 400 0.9375rem/1.5 var(--sans); color: var(--ink); }
+.bill-peek-status { margin: 0; }
+.bill-peek-link { margin: var(--space-3) 0 0; }
+.bill-peek-link .action-btn { display: inline-flex; }
+
+/* ---- bills on a party page ---------------------------------------------- */
+
+.party-bill { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 0.6rem; }
+.party-bill .source-title { grid-column: 1 / -1; font-family: var(--serif); font-weight: 600; }
+.party-bill .result-meta { grid-column: 1 / -1; margin-top: 0.15rem; color: var(--ink-faint); font-size: 0.8125rem; }
+.party-bill-bars { grid-column: 1; margin-top: 0.4rem; align-self: center; }
+.party-bill-n { grid-column: 2; margin-top: 0.4rem; align-self: center; }
+
+/* ---- the bill behind a speech ------------------------------------------- */
+/* Quiet: a hairline panel with one bronze edge at the top, not the sunken
+   machine-brief block, so it never competes with the speech's own brief. */
+
+.doc-bill {
+  margin: var(--space-4) 0 0; max-width: 68ch; padding: var(--space-3) 0 0;
+  border-top: 2px solid var(--bronze-wash);
+}
+.doc-bill .subject-section-title { margin: 0; font-size: 1.0625rem; }
+.doc-bill .doc-brief-head { margin-bottom: var(--space-2); }
+.doc-bill-title { margin: 0; font: 600 1.0625rem/1.4 var(--serif); color: var(--ink); }
+.doc-bill-status { margin: 0.2rem 0 0; font: 400 0.875rem/1.5 var(--sans); color: var(--ink-soft); }
+.doc-bill-sentence { margin: var(--space-3) 0 0; font: 400 0.9375rem/1.6 var(--serif); color: var(--ink); }
+.doc-bill-attrib, .doc-bill-none { margin-top: var(--space-2); }
+.doc-bill-link { margin: var(--space-3) 0 0; }
+.doc-bill-link a {
   display: inline-flex; align-items: center; min-height: 44px;
-  font: 600 0.875rem/1.3 var(--sans);
+  font: 600 0.875rem/1.3 var(--sans); color: var(--bronze-ink); text-decoration: none;
+  border-bottom: 1.5px solid var(--bronze-rule);
 }
+.doc-bill-link a:hover { color: var(--ink); border-color: var(--bronze-ink); }
 
-/* ---- sources ------------------------------------------------------------- */
+/* ---- wider than a phone -------------------------------------------------- */
 
-.report-sources { margin-top: var(--space-4); }
-/* Sentence case, not the inherited uppercase eyebrow: a disclosure is a thing
-   a reader is offered, not a label stamped on the section. */
-#panel-reports .report-sources > summary {
-  min-height: 44px; display: inline-flex; align-items: center; gap: 0.5rem;
-  font: 600 0.9375rem/1.4 var(--sans); color: var(--bronze-ink);
-  text-transform: none; letter-spacing: 0;
-}
-.report-source-list { list-style: none; margin: var(--space-3) 0 0; padding: 0; border-top: 1px solid var(--line); }
-.report-source-row {
-  display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: var(--space-4);
-  padding: var(--space-4) 0; border-bottom: 1px solid var(--line);
-  scroll-margin-block: calc(var(--header-h) + 56px);
-}
-/* No speaker in the record, so no portrait slot to hold open. */
-.report-source-row.report-source-unnamed { grid-template-columns: minmax(0, 1fr); }
-.report-source-row:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 4px; }
-.report-source-face {
-  width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex: 0 0 40px;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: var(--paper-sunken); border: 1px solid var(--line);
-  font: 600 0.8125rem/1 var(--sans); color: var(--ink-faint);
-}
-.report-source-face img { display: block; width: 40px; height: 40px; object-fit: cover; }
-.report-source-body { min-width: 0; }
-.report-source-name {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.55rem; margin: 0;
-  font: 600 1.0625rem/1.35 var(--serif); color: var(--ink); overflow-wrap: anywhere;
-}
-.report-source-name > a { display: inline-flex; align-items: center; min-height: 44px; }
-.report-source-name .meta-speaker {
-  font: 600 1.0625rem/1.35 var(--serif); color: var(--ink); text-decoration: none;
-}
-.report-source-name .meta-speaker:hover { color: var(--bronze-ink); }
-.report-source-name .meta-party { text-decoration: none; }
-.report-source-where {
-  margin: 0.1rem 0 0; color: var(--ink-faint);
-  font: 400 0.8125rem/1.5 var(--sans); font-variant-numeric: tabular-nums;
-}
-.report-source-unnamed .report-source-where { margin-top: var(--space-2); }
-.report-source-party { margin-right: 0.15rem; }
-.report-source-debate {
-  margin: var(--space-2) 0 0; color: var(--ink-soft);
-  font: 400 0.9375rem/1.45 var(--serif); overflow-wrap: anywhere;
-}
-.report-source-passage {
-  margin: var(--space-3) 0 0; color: var(--ink-soft);
-  font: 400 1rem/1.65 var(--serif); max-width: 62ch;
-}
-.report-source-read {
-  display: inline-flex; align-items: center; min-height: 44px; margin-top: 0.1rem;
-  font: 600 0.875rem/1.3 var(--sans); color: var(--bronze-ink);
-  text-decoration: underline; text-decoration-color: var(--bronze-rule);
-  text-decoration-thickness: 1.5px; text-underline-offset: 4px;
-}
-.report-source-read:hover { color: var(--ink); text-decoration-color: var(--bronze-ink); }
-/* The line between what the answer cited and what was merely retrieved. It is
-   a label inside the list, so it takes no rule of its own above the rule the
-   row before it already draws. */
-.report-sources-divider {
-  padding: var(--space-5) 0 var(--space-3); color: var(--ink-faint);
-  font: 400 0.8125rem/1.5 var(--sans);
-}
-.report-all-sources { margin-top: var(--section-gap); }
-.report-all-sources > summary { font-size: 0.9375rem; }
-
-/* ---- the figures --------------------------------------------------------- */
-
-.report-stat-tiles { margin-bottom: var(--space-5); }
-.report-stat .report-stat-label { color: var(--ink); font: 400 0.9375rem/1.5 var(--sans); }
-.report-stat .report-stat-basis {
-  margin-top: 0.35rem; color: var(--ink-faint);
-  font: 400 0.8125rem/1.45 var(--sans); font-variant-numeric: tabular-nums;
-}
-.report-stat .tile-source { display: block; margin-top: 0.15rem; }
-.report-stat .tile-source a {
-  display: inline-flex; align-items: center; min-height: 44px; overflow-wrap: anywhere;
-}
-/* The corpus totals answer "how much record did this read", which is not a
-   money question: they take a line of their own under the part heading. */
-.report-corpus-title { margin-top: var(--space-4); }
-.report-corpus-tiles { margin-top: 0; }
-
-/* ---- where the parties stand -------------------------------------------- */
-
-.report-position-window {
-  display: block; margin-top: var(--space-2); color: var(--ink-faint);
-  font: 400 0.8125rem/1.5 var(--sans);
-}
-#panel-reports .report-position-list .source-meta a {
-  display: inline-flex; align-items: center; min-height: 44px;
-}
-
-/* ---- how it has moved: a spine, and an era hung off each notch ----------- */
-
-.report-eras { position: relative; margin: var(--space-5) 0 var(--sub-gap); padding-left: 1.35rem; }
-.report-eras::before {
-  content: ""; position: absolute; left: 3px; top: 0.55rem; bottom: 0.55rem;
-  width: 1px; background: var(--line-strong);
-}
-.report-era { position: relative; padding-bottom: var(--sub-gap); }
-.report-era:last-child { padding-bottom: 0; }
-.report-era::before {
-  content: ""; position: absolute; left: -1.35rem; top: 0.5rem;
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--bronze); box-shadow: 0 0 0 3px var(--paper);
-}
-.report-era-span {
-  margin: 0 0 var(--space-2); color: var(--ink-soft);
-  font: 600 0.8125rem/1.4 var(--sans); font-variant-numeric: tabular-nums;
-}
-.report-era .report-essay { margin-bottom: 0; }
-
-/* ---- the tide ------------------------------------------------------------ */
-
-.report-tide { margin-top: var(--sub-gap); }
-.report-tide > figure > figcaption {
-  color: var(--ink); font: 600 1.15rem/1.35 var(--serif);
-  letter-spacing: 0; text-transform: none; margin-bottom: var(--space-4);
-}
-.report-tide .topic-tide-label { white-space: normal; }
-
-/* ---- who does the talking ------------------------------------------------ */
-
-.report-voices { display: grid; grid-template-columns: 1fr; gap: var(--sub-gap); }
-.report-voice-heading {
-  margin: 0 0 var(--space-3); color: var(--ink-soft);
-  font: 600 0.9375rem/1.4 var(--sans);
-}
-.report-voice-list { list-style: none; margin: 0; padding: 0; }
-.report-voice {
-  display: grid; grid-template-columns: 32px minmax(0, 1fr) auto;
-  align-items: center; gap: 0 var(--space-3);
-  min-height: 44px; padding: var(--space-2) 0; border-bottom: 1px solid var(--line);
-}
-.report-voice-face {
-  width: 32px; height: 32px; border-radius: 50%; overflow: hidden;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: var(--paper-sunken); border: 1px solid var(--line);
-  font: 600 0.6875rem/1 var(--sans); color: var(--ink-faint);
-}
-.report-voice-face img { display: block; width: 32px; height: 32px; object-fit: cover; }
-.report-voice-body { min-width: 0; }
-.report-voice-name { display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.5rem; margin: 0; }
-.report-voice-name a {
-  display: inline-flex; align-items: center; min-height: 44px;
-  font: 600 0.9375rem/1.3 var(--sans); color: var(--ink); text-decoration: none;
-}
-.report-voice-name a:hover { color: var(--bronze-ink); text-decoration: underline; }
-.report-voice-track { display: block; margin: 0 0 0.15rem; }
-.report-voice-count {
-  color: var(--ink-soft); font: 400 0.875rem/1.3 var(--sans);
-  font-variant-numeric: tabular-nums;
-}
-
-@media (min-width: 900px) {
-  .report-voices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); }
-}
-
-/* ---- phones -------------------------------------------------------------- */
-
-@media (max-width: 700px) {
-  .report-lede { font-size: 1.125rem; line-height: 1.75; }
-  .report-part-title, #report-money-head { font-size: 1.4rem; }
-  .report-essay-question { font-size: 1.15rem; }
-  /* The band bleeds to the gutters so prose scrolls under it, not beside it.
-     44px of button and the hairline under it: the whole allowance. */
-  .report-jump {
-    position: sticky; top: var(--header-h); z-index: 5; gap: var(--space-5);
-    margin-inline: calc(clamp(1.25rem, 4vw, 4.5rem) * -1);
-    padding-inline: clamp(1.25rem, 4vw, 4.5rem);
+@media (min-width: 561px) {
+  .bill-title { font-size: 1.9rem; }
+  /* Room for the party name beside its bars, so the column of figures reads
+     down the division instead of interleaving with the names. */
+  .bill-split {
+    grid-template-columns: 8.5rem minmax(0, 1fr) 3.75rem; align-items: center; row-gap: 0;
   }
-  .report-part[hidden] { display: none; }
-  #report-now, #report-overtime, #report-stats { scroll-margin-top: calc(var(--header-h) + 45px); }
-  .report-chip { width: 100%; border-radius: 10px; padding: 0.35rem 0.9rem; }
-  .report-source-row { grid-template-columns: 40px minmax(0, 1fr); gap: var(--space-3); }
-  .report-essay-tools { gap: 0 var(--space-4); }
+  .bill-split-bars { grid-column: 2; }
+  .bill-split-n { text-align: right; }
+  .party-bill { grid-template-columns: minmax(0, 1fr) 10.5rem; align-items: baseline; }
+  .party-bill .source-title, .party-bill .result-meta { grid-column: 1; }
+  .party-bill-bars { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; }
+  .party-bill-n { grid-column: 2; grid-row: 3; margin-top: 0.3rem; text-align: right; }
+}
+@media (min-width: 861px) {
+  .bill-title { font-size: 2.15rem; }
+}
+/* Tiny phones: the date column costs more than it gives, so the stage sits
+   under its own date rather than squeezing to two words a line. */
+@media (max-width: 379px) {
+  .bill-date { grid-template-columns: minmax(0, 1fr); row-gap: 0.1rem; }
+  .bill-date-when { line-height: 1.4; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  #panel-reports * { scroll-behavior: auto; }
+/* ---- loop 1 ------------------------------------------------------------- */
+
+/* A row's name and a row's facts are two lines, not one sentence: a long
+   title otherwise runs straight on into "Lapsed · 2022 · Treasury". */
+.bill-row-meta { display: flex; margin-top: 0.2rem; }
+/* An editorial note that arrived in the question field, set as a note. */
+.bill-division-note {
+  margin: 0.3rem 0 0; font: 400 0.875rem/1.55 var(--sans); color: var(--ink-soft);
+  max-width: 62ch; overflow-wrap: anywhere;
+}
+/* The one- and two-member parties, named on one line under the bars. */
+.bill-split-rest { margin-top: var(--space-2); }
+.bill-split-partial { margin-top: var(--space-2); }
+/* The question a party's division was on, under its bill's name. */
+.party-bill-q {
+  grid-column: 1 / -1; margin-top: 0.15rem;
+  font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); overflow-wrap: anywhere;
+}
+/* The register's floor is 44px, and these are the page's primary actions.
+   Scoped to this panel: the shared button elsewhere is not this work's to move. */
+#panel-bill .action-btn { min-height: 44px; }
+/* At 360 three filter labels were cut off inside their boxes ("All parliam").
+   On a phone each control takes the row it needs. */
+@media (max-width: 430px) {
+  #panel-bill .dir-controls { gap: 0.55rem 0.7rem; }
+  #panel-bill .dir-field { flex: 1 1 100%; min-width: 0; }
+  #panel-bill .dir-field select { width: 100%; min-width: 0; }
+}
+@media (min-width: 561px) {
+  .party-bill .party-bill-q { grid-column: 1; }
 }
 
-/* ==== report: follow the money ==== */
-.report-map { height: 460px; margin-top: var(--space-4); }
-.report-money-links { margin-top: var(--space-3); }
-.report-money-links a + a { margin-left: 0.2rem; }
-@media (max-width: 640px) { .report-map { height: 380px; } }
-.report-words { margin-top: var(--space-3); }
-.report-words .wd-panel { margin-top: 0; }
+/* ---- loop 2 ------------------------------------------------------------- */
+
+/* A zero-length bar drawn with a minimum width reads as one or two votes, and
+   a zero-length bar drawn with no width reads as nothing at all. Both are
+   wrong: a party that cast no ayes has an empty track, and the track is what
+   says so. The bars sit in it at the division's own scale. */
+.bill-split-bars i {
+  min-width: 0; background: none; box-shadow: none; height: 6px; border-radius: 3px;
+  position: relative;
+}
+.bill-split-bar-track { display: block; height: 6px; border-radius: 3px; background: var(--paper-sunken); }
+.bill-split-bar-track > i { display: block; height: 6px; border-radius: 3px; }
+.bill-split-bars .bill-split-bar-track + .bill-split-bar-track { margin-top: 2px; }
+.bill-split-bar-track > i.bill-bar-aye { background: var(--bronze); }
+.bill-split-bar-track > i.bill-bar-no { background: var(--ink-faint); }
+/* The stage stands in as a division's name when the record left no motion;
+   set it apart from a real question so the two are never confused. */
+.bill-division-unnamed .bill-division-q { font-style: normal; color: var(--ink-soft); }
+
+/* ---- loop 3 ------------------------------------------------------------- */
+
+/* A stage the register recorded on several sitting days is one entry with its
+   span; this says how many dates that entry stands for. */
+.bill-date-days { display: block; color: var(--ink-faint); font-size: 0.8125rem; }
+
+/* The figures belong on the party's own line. The grid always said so, but the
+   source order put the bars between a name and its numbers, so "0–22" landed
+   directly above the *next* party's name. Order fixed in the markup; at this
+   width every cell is placed by hand so nothing can drift again. */
+@media (min-width: 561px) {
+  .bill-split-party { grid-column: 1; grid-row: 1; }
+  .bill-split-n { grid-column: 3; grid-row: 1; }
+  .bill-split-bars { grid-column: 2; grid-row: 1; }
+}
+
+/* The record's own citations, live rather than a dangling "here". Quiet: a
+   note is not where a reader should be pulled out of the page. */
+.bill-division-note a {
+  color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-strong);
+}
+.bill-division-note a:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }
+
+/* Loop 1 gave a row's facts their own line by making the box a flex container,
+   which made each fact a flex item: a long portfolio could not share the line
+   with the status, so the whole run of them dropped below it and the second
+   line opened on a separator. Normal flow wraps where the words do, and the
+   separators are tied to the word in front of them. */
+.bill-row-meta, .bill-division .result-meta { display: block; }
+
+/* The register's 44px floor reaches the button this work puts inside a
+   person's disclosure. It is the same shared class the loop 1 fix named, and
+   scoping that fix to #panel-bill left this one at 37.8px. */
+.bill-peek .action-btn { min-height: 44px; }
+
+/* ---- one bill, one entry on a party page -------------------------------- */
+/* A party divides on the same bill more than once, and loop 2 gave those rows
+   their questions to tell apart. What was left was the bill's name set as a
+   heading twice running. The name is written once; the divisions sit under it. */
+
+.party-bill { display: block; }
+.party-bill-count {
+  display: block; margin-top: 0.1rem; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-faint);
+}
+.party-bill-divs { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+.party-bill-div {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 0.6rem;
+  margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--line);
+}
+.party-bill-divs > .party-bill-div:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+.party-bill-div .result-meta {
+  grid-column: 1 / -1; margin: 0; color: var(--ink-faint); font-size: 0.8125rem; display: block;
+}
+.party-bill-div .party-bill-q { grid-column: 1 / -1; margin-top: 0.15rem; }
+.party-bill-div .party-bill-n { grid-column: 1; margin-top: 0.4rem; align-self: center; }
+.party-bill-div .party-bill-bars { grid-column: 1 / -1; margin-top: 0.3rem; }
+
+@media (min-width: 561px) {
+  .party-bill-div { grid-template-columns: minmax(0, 1fr) 10.5rem; align-items: baseline; }
+  .party-bill-div .result-meta, .party-bill-div .party-bill-q { grid-column: 1; }
+  .party-bill-div .party-bill-bars { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; align-self: center; }
+  .party-bill-div .party-bill-n { grid-column: 2; grid-row: 3; margin-top: 0.3rem; text-align: right; }
+}
+
+/* The far end of a stage's span, on its own line: the date column is six
+   characters wide and a range set inline came apart at the dash. */
+.bill-date-to { display: block; }

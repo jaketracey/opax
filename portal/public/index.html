@@ -654,6 +654,10 @@
           <p id="doc-speaker-links" class="fineprint doc-speaker-links" hidden></p>
         </div>
       </div>
+      <!-- A speech whose debate is exactly one bill in /bills/index.json gets
+           the bill's dated status and its first summary sentence, quietly,
+           under the byline. No match, no panel: it never guesses. -->
+      <aside id="doc-bill" class="doc-bill" aria-labelledby="doc-bill-head" hidden></aside>
       <div id="doc-cite-panel" class="cite-panel" hidden>
         <!-- injected -->
       </div>
@@ -856,6 +860,14 @@
     <!-- ============================ SUBJECT ============================ -->
     <section id="panel-subject" class="panel" hidden aria-label="Subject entry">
       <div id="subject-body"><!-- entry injected --></div>
+    </section>
+
+    <!-- ============================== BILLS ============================= -->
+    <!-- One panel serves /bills (the index) and /bill/<key> (one bill): both
+         are the same reading, at two scales, and switching between them should
+         not move the page under the reader. -->
+    <section id="panel-bill" class="panel" hidden aria-label="Bills">
+      <div id="bill-body"><!-- index or bill injected --></div>
     </section>
 
     <!-- =========================== DECLARED =========================== -->

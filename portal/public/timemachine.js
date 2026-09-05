@@ -796,6 +796,28 @@ const CSS = `
 }
 .tm-footer p { margin: 0; }
 .tm-footer b { color: var(--ink-soft, #575C52); font-weight: 600; }
+
+/* Bills of the year ------------------------------------------------------- */
+/* The static bill register (/bills/index.json), read once and filtered by the
+   year on the dial: what was introduced in it, and what finished its passage.
+   A row is the bill's name, what happened to it and when — nothing the index
+   does not already say. */
+.tm-sec-bills { order: 5; }
+.tm-bill-list { list-style: none; margin: 0; padding: 0; }
+.tm-bill {
+  border-top: 1px solid var(--line, #DFDCD2); padding: 0.5rem 0;
+  display: flex; flex-direction: column; gap: 0.1rem;
+}
+.tm-bill:first-child { border-top: 0; }
+.tm-bill-name {
+  font-family: var(--serif, Merriweather, Georgia, serif); font-size: 0.9rem; font-weight: 600;
+  line-height: 1.4; color: var(--ink, #23271F); text-decoration: none;
+  display: flex; align-items: center; min-height: 44px;
+}
+.tm-bill-name:hover { color: var(--bronze-ink, #8A5A12); }
+.tm-bill-name:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+.tm-bill-meta { font-size: 0.75rem; line-height: 1.5; color: var(--ink-faint, #6F7468); }
+.tm-bill-meta b { color: var(--ink-soft, #575C52); font-weight: 600; }
 `
 
 function injectStyles() {
@@ -821,7 +843,16 @@ async function fetchJSON(url, signal) {
  * Any individual failure degrades quietly — the panel that needed it hides.
  */
 async function loadStaticData(signal) {
-  const out = { reports: [], progress: null }
+  const out = { reports: [], progress: null, bills: [] }
+
+  // The static bill register (docs/BILLS-CONTRACT.md). One small file, read
+  // once per mount; absent or unbuilt simply leaves the year without bills.
+  try {
+    const index = await fetchJSON('/bills/index.json', signal)
+    out.bills = Array.isArray(index?.bills) ? index.bills : []
+  } catch (err) {
+    if (err?.name === 'AbortError') throw err
+  }
 
   try {
     const index = await fetchJSON('/reports/index.json', signal)
@@ -1041,6 +1072,10 @@ export function mountTimeMachine(container, opts = {}) {
           <h2 class="tm-h2">The year in <span>numbers</span></h2>
           <div class="tm-stats"></div>
         </section>
+        <section class="tm-sec tm-sec-bills" aria-label="Bills of the year" hidden>
+          <h2 class="tm-h2">Bills of <span>the year</span></h2>
+          <div class="tm-bills"></div>
+        </section>
       </div>
     </div>
 
@@ -1090,6 +1125,8 @@ export function mountTimeMachine(container, opts = {}) {
   const briefEl = $('.tm-yearbrief')
   const voicesSec = $('.tm-sec-voices')
   const voicesEl = $('.tm-voices')
+  const billsSec = $('.tm-sec-bills')
+  const billsEl = $('.tm-bills')
   const machineEl = $('.tm-machine')
   const picturesOpen = $('.tm-pictures-open')
   const filmstripEl = $('.tm-filmstrip')
@@ -1162,7 +1199,7 @@ export function mountTimeMachine(container, opts = {}) {
   // ---- state --------------------------------------------------------------
   let year = START_YEAR
   let topic = '' // '' = all topics (the curated probes); else a TOPICS slug
-  let staticData = { reports: [], progress: null }
+  let staticData = { reports: [], progress: null, bills: [] }
   let searchAbort = null       // in-flight headline probes
   let searchTimer = 0          // debounce while scrubbing
   let searchSeq = 0            // stale-response guard
@@ -1476,6 +1513,89 @@ export function mountTimeMachine(container, opts = {}) {
       }
       statsEl.appendChild(box)
     }
+  }
+
+  /* The register writes a private member's bill's sponsor into the portfolio
+     field in its own notation — "(s) WILKIE, Andrew, MP" — so printing that
+     field raw invents a department called "(s) BANDT, Adam, MP". The portal
+     learned this in loop 1; this module reads the same index and never did,
+     so a private member's bill reaching the year's eight would have said it.
+     A name is not a portfolio, and there is no room here to draw one: the
+     slot stays empty and the bill page names the member properly. */
+  function tidyPortfolio(value) {
+    const raw = String(value || '').trim()
+    return /^\(s\)/i.test(raw) ? '' : raw
+  }
+
+  /* Bills of the year -----------------------------------------------------
+     One read of the static register, then pure filtering: a bill belongs to a
+     year if it was introduced in it, or if its passage finished in it. Both
+     facts are dates the index already carries; nothing here is inferred. The
+     section stays hidden until the register is loaded and the year has bills,
+     so a missing or unbuilt register costs the year nothing. */
+  function renderYearBills() {
+    billsEl.replaceChildren()
+    const bills = staticData.bills
+    if (!bills || !bills.length) { billsSec.hidden = true; return }
+    const y = String(year)
+    const rows = []
+    for (const b of bills) {
+      const finished = /passed|assent/i.test(String(b.status || '')) &&
+        String(b.status_as_of || '').slice(0, 4) === y
+      const introduced = String(b.introduced || '').slice(0, 4) === y
+      if (!finished && !introduced) continue
+      rows.push({
+        b,
+        note: finished ? (/assent/i.test(b.status) ? 'Assented' : 'Passed') : 'Introduced',
+        date: finished ? b.status_as_of : b.introduced,
+      })
+    }
+    if (!rows.length) { billsSec.hidden = true; return }
+    /* Loop 1 asked for the year's news rather than its first February, and
+       putting the finished bills first only narrowed the window: taking the
+       head of 154 bills sorted by date gave 2001 eight bills from three weeks
+       in March, and 2015 eight bills from one day. Eight rows out of a year
+       have to be spread across it. The finished bills are preferred — passage
+       is the year's news, an introduction is not — and eight are taken at even
+       intervals through them, in the order they happened. */
+    const weight = (r) => (r.note === 'Introduced' ? 1 : 0)
+    rows.sort((a, c) => weight(a) - weight(c) || String(a.date).localeCompare(String(c.date)))
+    const passed = rows.filter((r) => r.note !== 'Introduced').length
+    const pool = passed >= 8 ? rows.slice(0, passed) : rows
+    const take = Math.min(8, pool.length)
+    const shown = take === pool.length
+      ? pool.slice()
+      : Array.from({ length: take }, (_, i) => pool[Math.round((i * (pool.length - 1)) / (take - 1))])
+    shown.sort((a, c) => String(a.date).localeCompare(String(c.date)))
+    const ol = el('ol', 'tm-bill-list')
+    for (const r of shown) {
+      const li = el('li', 'tm-bill')
+      const a = el('a', 'tm-bill-name', { href: `#/bill/${encodeURIComponent(r.b.key)}` })
+      a.textContent = r.b.short_title || r.b.title || r.b.key
+      const meta = el('div', 'tm-bill-meta')
+      const strong = el('b')
+      strong.textContent = r.note
+      meta.append(strong, document.createTextNode(` · ${fmtDate(r.date)}`))
+      const portfolio = tidyPortfolio(r.b.portfolio)
+      if (portfolio) meta.append(document.createTextNode(` · ${portfolio}`))
+      li.append(a, meta)
+      ol.appendChild(li)
+    }
+    billsEl.appendChild(ol)
+    const fine = el('p', 'tm-fineprint')
+    const more = rows.length - shown.length
+    // "8 are listed, the 154 that finished first" parses as if 154 were listed,
+    // and no longer describes what is chosen. Two short sentences instead.
+    fine.textContent = `${fmtInt(rows.length)} bill${rows.length === 1 ? '' : 's'} in the register ` +
+      `were introduced or finished their passage in ${year}` +
+      (more > 0
+        ? `. ${fmtInt(shown.length)} are listed here, spread across the year` +
+          (passed >= shown.length ? `, from the ${fmtInt(passed)} that finished their passage in it` : '') +
+          '.'
+        : '.') +
+      ' Introduction and passage are separate dates, so a bill can appear in two years.'
+    billsEl.appendChild(fine)
+    billsSec.hidden = false
   }
 
   function renderFooter() {
@@ -1930,6 +2050,7 @@ export function mountTimeMachine(container, opts = {}) {
     briefEl.replaceChildren()
     renderScrubber()
     renderStats()
+    renderYearBills()
     renderYearPictures()
     clearTimeout(searchTimer)
     // Debounce while scrubbing so we don't strafe the API; fire promptly on
@@ -2047,6 +2168,7 @@ export function mountTimeMachine(container, opts = {}) {
     .then((data) => {
       staticData = data
       renderStats()
+      renderYearBills()
       renderFooter()
     })
     .catch(() => { /* aborted or offline — panels stay in fallback copy */ })
