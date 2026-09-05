@@ -846,17 +846,7 @@ function renderMoneySwitch(jur) {
 }
 
 /** The panel fineprint, from the loaded file's meta block where it has one. */
-// The grants layer's sentence rides on the end of the fineprint whenever the
-// loaded file carries it (scripts/export_money_graph.py, grants_layer).
 function moneyFineprintHTML(jur, meta) {
-  const base = moneyFineprintBaseHTML(jur, meta);
-  const n = meta && typeof meta.donors_with_grants === "number" ? meta.donors_with_grants : 0;
-  if (!n) return base;
-  const dollars = fmtMoney(meta.grant_dollars_to_map_donors || 0);
-  const what = jur === "qld" ? "Queensland Government grants" : "Commonwealth grants";
-  return base + ` Teal flows are public money going the other way: ${what} received by ${n} of the donors shown (${dollars}), from the grant register; never summed with donations. Switch them off with the "Public money" chip.`;
-}
-function moneyFineprintBaseHTML(jur, meta) {
   const cfg = MONEY_JURISDICTIONS[jur];
   const parts = [];
   if (meta?.jurisdiction) {

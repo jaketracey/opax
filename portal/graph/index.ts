@@ -335,8 +335,9 @@ const CSS = `
 .mm-chip[aria-pressed='true'] { background: #142a43; color: #ffffff; }
 .mm-chip[data-dimmed] { opacity: 0.4; }
 .mm-chip.mm-grants-toggle { margin-top: 6px; padding-top: 8px; border-top: 1px solid #e4e1d8; border-radius: 0; }
-.mm-chip.mm-grants-toggle[aria-pressed='true'] { background: rgba(42, 127, 118, 0.14); color: #1f5f58; }
-.mm-chip.mm-grants-toggle[aria-pressed='false'] { opacity: 0.55; }
+.mm-chip.mm-grants-toggle[aria-pressed='true'] { background: none; }
+.mm-chip.mm-grants-toggle[aria-pressed='false'] { opacity: 0.5; }
+.mm-chip.mm-grants-toggle[aria-pressed='false'] .mm-dot { background: #b7b3a8 !important; }
 .mm-row-note { padding: 4px 0 6px; font-size: 12px; color: #8a8578; }
 .mm-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
 .mm-card { position: absolute; top: 12px; right: 12px; width: 330px;
