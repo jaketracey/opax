@@ -3601,6 +3601,12 @@ export class KnowledgeMapEngine {
       const el = document.createElement('div')
       el.className = 'rp-map3d-edge-label'
       el.textContent = visual.edge.label
+      // Born hidden: a label that finds no room on its first frame (or whose
+      // midpoint projects off screen) is never handed to the fader, and an
+      // unpositioned, visible element would sit at the layer's origin. The
+      // fader shows it the first frame it is wanted.
+      el.style.display = 'none'
+      el.style.opacity = '0'
       this.labelLayer.appendChild(el)
       visual.label = el
       const cs = getComputedStyle(el)
