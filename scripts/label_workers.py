@@ -52,8 +52,8 @@ STOP_FILE = DEFAULT_DB.with_name("labels_stop")
 STALE_CLAIM_S = 45 * 60
 MAX_LABELS = 4
 TEXT_HEAD, TEXT_TAIL = 1800, 400
-PACE_S = 0.5           # seconds between a worker's requests (a 20-worker Sonnet fleet stays well under the box's ceiling)
-POOL = 3               # parallel requests per worker
+PACE_S = 0.25          # seconds between a worker's requests (sixteen Opus workers sit under the box's ceiling)
+POOL = 4               # parallel requests per worker
 
 
 def env() -> dict[str, str]:
