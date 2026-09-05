@@ -1840,7 +1840,7 @@ a.report-card .card-meta { color: var(--ink-soft); }
    the only thing that scrolls sideways, never the page. */
 .ency-slider { min-width: 0; }
 .ency-track {
-  display: flex; gap: 0.8rem; overflow-x: auto; scroll-snap-type: x mandatory;
+  display: flex; align-items: flex-start; gap: 0.8rem; overflow-x: auto; scroll-snap-type: x mandatory; /* each card as tall as its own words: a card with two vote lists no longer stretches the ones beside it into empty paper */
   scrollbar-width: none; padding: 1px 0 3px; margin: -1px 0 -3px;
 }
 .ency-track::-webkit-scrollbar { display: none; }
