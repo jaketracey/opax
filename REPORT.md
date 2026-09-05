@@ -9,11 +9,11 @@ manual; this is the account of the work and its limits.
 | # | Thing | State |
 | --- | --- | --- |
 | 1 | `scripts/export_bills.py` | done; legacy and registry modes both exercised |
-| 1b | fixture in `portal/public/bills/` | done; index of 5,313 bills plus 200 real files, briefs attached |
+| 1b | fixture in `portal/public/bills/` | superseded by row 5: the 200-file legacy sample was replaced by the full 2,969-bill registry-mode export in the same commit |
 | 2 | Worker: `bill` kind, `/bill/<key>` route | done; `npx tsc --noEmit -p .` clean, route exercised under `wrangler dev` |
 | 3 | `scripts/publish_bills.py` | done; five real bills live in the box, create/update/unchanged all verified |
 | 4 | `docs/BILLS-EXPOSURE.md`, this report | done |
-| 5 | full-mode rerun and bulk publish | **not run**; neither ready marker exists. Rehearsed dry end to end against the live registry: 2,969 files, all passing the shape test, 6 summaries, 6 would-create |
+| 5 | full-mode rerun and bulk publish | done; 2,969 files, all passing the shape test, 1,698 bills with a summary, 1,698 published (0 created, 0 updated, 1,698 already matched by content hash) |
 
 ## The projection
 
@@ -61,13 +61,15 @@ on rather than implying all of it is dated evidence:
 | `member` (no speech observation at all) | 56,607 | 6.7% |
 | `unknown` | 0 | 0% |
 
-## The fixture
+## The fixture (superseded)
 
-`index.json` lists all 5,313 legacy bills, one per line: 2.3 MB, 164 KB gzipped.
-200 bill files span every shape the projection produces, 130 of them with
-divisions. Briefs were filled from the box: 1,846 unique speech slugs across the
-200 bills, 1,200 carrying a machine brief, the rest null, which is a state the UI
-has to render either way. Path written to `bills_fixture_ready`.
+The first pass shipped a legacy-mode fixture: `index.json` listing all 5,313
+legacy bills, one per line, plus 200 real bill files spanning every shape the
+projection produces, 130 with divisions and briefs filled for 1,200 of 1,846
+speech slugs. Path was written to `bills_fixture_ready`. It no longer exists
+in the repo -- "The full-mode rerun and bulk publish" above replaced it with
+the real 2,969-bill registry-mode export, and this section is kept only as a
+record of what the interim fixture was.
 
 ## The Worker
 
@@ -89,9 +91,10 @@ client route.
 
 ## The knowledge box
 
-Five real bills published live and left in place, chosen to span the projection's
-shapes: 48 divisions and no speeches, 28 divisions with 21 speeches and an Act, a
-Senate bill that lapsed, one carrying a ParlInfo source, one bare registry row.
+Five real bills published live earlier and left in place, chosen to span the
+projection's shapes: 48 divisions and no speeches, 28 divisions with 21
+speeches and an Act, a Senate bill that lapsed, one carrying a ParlInfo
+source, one bare registry row.
 
 | Check | Result |
 | --- | --- |
@@ -101,8 +104,9 @@ Senate bill that lapsed, one carrying a ParlInfo source, one bare registry row.
 | Rerun on unchanged content | 5 unchanged |
 | Deliberately altered body, then restored | updated, updated, unchanged |
 
-Slugs in the box now: `bill-au-federal-alrc-1270`, `-1433`, `-2796`, `-4304`,
-`-4831`.
+Slugs in the box from that early check: `bill-au-federal-alrc-1270`, `-1433`,
+`-2796`, `-4304`, `-4831`. They are untouched by the bulk pass below and
+remain in the box; the script never deletes.
 
 The body is the reviewed model summary when a bill has one, then a paragraph of
 parsed registry facts. No explanatory memorandum, Bills Digest or billhome prose
@@ -114,36 +118,23 @@ Idempotent by `extra.metadata.content_hash`, capped at 3,500 resources a run,
 newest first so a capped run lands what people are asking about. The only writes
 are `POST /resources` and `PATCH /slug/<slug>`.
 
-## Not done, and why
+## The full-mode rerun and bulk publish
 
-**The full-mode rerun and the bulk publish.** Neither `bills_registry_ready` nor
-`bills_summaries_ready` exists, so both agents are still building and the real
-run waits on them. The commands are in `docs/BILLS-EXPOSURE.md` section 4.
-
-It is no longer a run whose behaviour has to be guessed at. Measured
-2026-09-05 09:55, with the registry still growing:
+`bills_registry_ready`, `bills_speeches_ready` and `bills_summaries_ready` all
+landed 2026-09-05. Final registry state:
 
 | Table | Rows |
 | --- | --- |
 | `bills_v2` | 2,969 |
 | `bill_events` | 31,377 |
-| `bill_sources` | 8,301 |
-| `bill_links` | 5,412 (3,777 division over 916 bills, 1,635 act, 0 speech) |
-| `bill_summaries` | 8, of which 6 `ok` and 2 `flagged` |
+| `bill_sources` | 8,512 |
+| `bill_links` | 19,958 (division 4,230 over 1,003 bills, act 1,779, speech 13,949 over 2,032 bills) |
+| `bill_summaries` | 2,510 with an outline; 1,698 `ok`, 812 `flagged` |
 
-A full registry-mode export over those tables ran clean in 6.4 seconds and wrote
-2,969 bill files, and **all 2,969 pass the contract shape test**. `bill_summaries`
-matches the reader column for column, and all 6 `ok` summaries project with the
-contract shape: three sentences, three to six changes, `basis`, `as_of` and the
-attribution line. The bulk publish command was then rehearsed against that output
-with `--with-summary-only --dry-run`: 6 bills to consider, 6 would-create, no
-writes. So the switch, the summaries path and the publish pass are all exercised
-end to end; what is missing is the data, not the code.
+An earlier trial against the half-built registry (2026-09-05 09:55, kept for
+the record):
 
-An earlier trial against the half-built registry, kept because it is what the
-counts below were taken from:
-
-| | Legacy | Registry |
+| | Legacy | Registry (mid-build) |
 | --- | --- | --- |
 | Bills | 5,313 (1988 to 2022) | 2,760 (2013-02-06 to 2026-08-20) |
 | Keys | `au-federal-alrc-1270` | `au-federal-r7127`, `au-federal-s1511` |
@@ -151,17 +142,49 @@ counts below were taken from:
 | With speeches | 1,123 | 0 |
 | Sources | thin, title-matched | from `bill_sources`, with licences |
 
-**Zero speeches in registry mode is measured, not broken.** `bills_v2` starts in
-2013, and all 800 federal bill-topic speeches between 2013-02-06 and the 43rd
-Parliament's close carry the bare topic `Bills` with no title in them. Section 3
-records the same fall-off. Speeches on registry-mode bills stay at zero until
-`bill_links` supplies them or the Hansard debate hierarchy is recovered.
+Zero speeches at that point was measured, not broken: `bill_links` had no
+speech rows yet, because the registry agent's first attempt matched on
+`speeches.topic`, which is impossible for federal Hansard from 2013 on (the
+topic string is almost always the bare word "Bills"). It was replaced with a
+match on the speech text itself, corroborated by a same-day progress event,
+landing 13,949 links at 99.3% hand-audited precision. That surfaced a real bug
+here: the exporter was reading linked speeches off the same
+`SPEECH_CANDIDATE_SQL` query the legacy title-match path uses, which filters
+on `topic` and would have silently dropped 92% of them. Fixed by reading
+linked speech ids directly, with no topic filter.
 
-`bill_links` has since filled and does not close this gap: 5,412 rows, none of
-them a speech link. The exporter reads them the moment they exist, so the gap
-belongs to the registry agent, and a registry-mode bill page will have no
-speeches until it is closed. That is the single largest known hole in what the
-full run would publish.
+The full (non-dry) export: 2,969 files written, **all 2,969 pass**
+`node portal/test/bills.test.mjs`; index.json's division/speech/act totals
+match `bill_links` exactly (1,003 bills / 4,230 divisions, 2,032 bills /
+13,194 speech entries after the 24-per-bill cap, 1,779 acts); 1,698 bills
+carry a projected summary, matching `bills_summaries_ready`'s `ok` count
+exactly. `npx tsc --noEmit -p .` is clean.
+
+`publish_bills.py --with-summary-only` against the live box, chunked and
+paced at 2 requests/second to stay clear of the box's own labelling load:
+
+| Outcome | Count |
+| --- | --- |
+| Created | 0 |
+| Updated | 0 |
+| Unchanged (already matched by content hash) | 1,698 |
+| Failed | 0 (one transient HTTP 511 on a single key, succeeded on retry) |
+
+Confirmed against the live catalog (`filters=/classification.labels/kind/bill`)
+and a 25-key random sample drawn across the full run: every sampled bill
+present with the expected `content_hash`. All 1,698 summary-bearing bills were
+already live in the box by the time this run confirmed them; an earlier pass
+against the same shared box had already written them, and the idempotent
+design made re-running safe rather than redundant.
+
+**Two corpus holes, not join failures, limit what a bill page can show.**
+There is no Senate Hansard at all for 2014-2022 (only 602 of 13,949 speech
+links are Senate), and the chamber corpus nearly vanishes in 2024 (82 chamber
+speeches that year against thousands either side). Coverage by parliament,
+bills with at least one projected speech: P43 84%, P44 84%, P45 74%, **P47
+24%**, P48 74%. The 47th Parliament sits mostly inside the hole. A bill with
+no speeches there is not evidence it was never debated, and no page should say
+so.
 
 ## For the other agents
 
@@ -170,30 +193,44 @@ full run would publish.
 contract calls it a list of aliases. The exporter reads either, prefers the
 object's `sponsor_party` because it is the party as the bill page printed it, and
 folds a differing `listing_title` in as an alias. Worth settling which shape is
-intended. Separately, `bill_links` is the join the projection prefers, and until
-it has rows the exporter falls back to the title rule.
+intended. Separately, `bill_links` is the join the projection prefers over the
+title rule, and now has rows for every kind (division, act, speech).
 
 **Summaries agent.** Only a summary whose `review_state` is `ok`, that is not
 superseded, and that carries exactly three sentences and three to six changes is
 projected or published. A draft or a flagged summary shows as no summary at all.
 `basis` decides the attribution line.
 
-**UI agent.** The fixture is real output, not a mock. Three things to design for:
-`summary` is null on most bills and will stay null on many, `brief` is null on a
-third of speeches, and a division carries `party_coverage` saying how much of its
-split is dated evidence. A division naming a bill is not a vote for it, and the
-question as put is the only honest label.
+**UI agent.** The fixture is real output, not a mock, and it is now the full
+2,969-bill registry set, not the 200-bill sample. Four things to design for:
+`summary` is null on 1,271 bills (only 1,698 of 2,969 project one) and will
+stay null on many; `brief` is null on a third of speeches; a division carries
+`party_coverage` saying how much of its split is dated evidence; and a bill
+with no projected speeches in 2014-2022 (Senate) or 2024 (all chambers) is a
+corpus hole, not evidence it was never debated -- see "Two corpus holes"
+above. A division naming a bill is not a vote for it, and the question as put
+is the only honest label.
 
 ## Known limits
 
 - Legacy keys (`au-federal-alrc-<id>`) are provisional, not stable identities.
+  180 of the 2,969 registry-mode bills still use them, for rows with no
+  billhome match; they are a disjoint id space from the earlier 200-bill
+  legacy fixture's own `alrc` ids.
 - `sources` is thin in legacy mode: `ext_parlinfo_docs` has resolved a `bill_id`
   for 198 of 500 cached billhome records and 3 of 103 EMs.
 - Section 4's precision figures are in-sample. No independent holdout has been
-  run, and 100% on the diagnostic sample is not production accuracy.
+  run, and 100% on the diagnostic sample is not production accuracy. The
+  speech join's own audit (99.3%, 139/140) is likewise in-sample.
 - `parliament` is null before 1998-11-10, deliberately: extending the audited
   opening list would change the matching window as well as the label.
 - `stage_hint` is null for federal speeches, because the topic strings say
   nothing about the stage and a bill match is not evidence of one.
 - Party coverage is federal only. NSW and Victorian vote rows carry no party at
   all, and their splits must never be computed from present membership.
+- No Senate Hansard exists for 2014-2022 and the chamber corpus nearly
+  vanishes in 2024; the 47th Parliament (24% speech coverage) sits mostly
+  inside that hole. Absence of speeches there must never be read as absence
+  of debate.
+- 812 of 2,510 outlined bills carry a `flagged` summary and project as having
+  no summary at all -- a review-state design choice, not a defect.

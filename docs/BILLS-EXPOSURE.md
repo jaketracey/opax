@@ -264,10 +264,10 @@ it. Section 3 records the same fall-off. Speeches on registry-mode bills will
 stay at zero until `bill_links` supplies them or the Hansard debate hierarchy
 is recovered.
 
-`bill_links` has since filled, and it does not close this gap. As of 2026-09-05
-it holds 5,412 rows and not one is a speech link: 3,777 division links over 916
-bills, and 1,635 act links. The exporter reads speech links the moment they
-exist, so this stays with the registry agent.
+`bill_links` had no speech rows as of the 09:55 snapshot above; the registry
+agent closed that later the same day (see "The full run", below) once the
+topic-string join was found to be unworkable and replaced with a text match
+corroborated by a same-day progress event.
 
 One shape mismatch to settle with the registry agent: the contract calls
 `aliases_json` a list of aliases, and the registry currently writes an object of
@@ -316,6 +316,48 @@ carry exactly three sentences and three to six changes are projected. A draft or
 a flagged summary shows as no summary at all: the portal shows reviewed model
 text or nothing.
 
+### The full run and bulk publish, 2026-09-05
+
+`bills_registry_ready`, `bills_speeches_ready` and `bills_summaries_ready` all
+landed the same day. Final registry state: `bills_v2` 2,969, `bill_links`
+19,958 (division 4,230 over 1,003 bills, act 1,779, speech 13,949 over 2,032
+bills), `bill_summaries` 1,698 `ok` and 812 `flagged`.
+
+The registry agent's first speech join used `speeches.topic`, which is
+impossible for federal Hansard from 2013 on -- the topic string is almost
+always the bare word "Bills". It was replaced with a match on the speech
+text itself, corroborated by a same-day ParlInfo progress event, landing
+13,949 links (99.3% hand-audited precision). That in turn broke the exporter's
+assumption that a linked speech could be read off the same
+`SPEECH_CANDIDATE_SQL` query used for the legacy title-match path (which
+filters on `topic` and would have silently dropped nearly all of them);
+`export_bills.py` now resolves linked speech ids directly, by id, with no
+topic filter.
+
+The real (non-dry) run: 2,969 files written, all passing
+`node portal/test/bills.test.mjs`; index.json's division/speech/act totals
+match `bill_links` exactly; 1,698 bills carry a projected summary, matching
+`bills_summaries_ready`'s `ok` count exactly.
+
+`publish_bills.py --with-summary-only` against the live box, chunked and
+paced at 2 requests/second (`--rate 2`) to keep clear of the box's own
+labelling load: all 1,698 already matched by `content_hash` --
+**0 created, 0 updated, 1,698 unchanged**, one transient `511` on a single
+key that succeeded on retry. Confirmed by catalog listing
+(`filters=/classification.labels/kind/bill`) and a 25-key random sample
+spread across the full run, all present. The five legacy (`au-federal-alrc-*`)
+resources from the earlier hand-picked verification are untouched and remain
+in the box alongside the registry-mode set; the script never deletes.
+
+Two corpus holes affect what a bill page can show and are not join failures:
+there is no Senate Hansard at all for 2014-2022 (only 602 of 13,949 speech
+links are Senate), and the chamber corpus nearly vanishes in 2024 (82 chamber
+speeches that year, against thousands in the years either side). The 47th
+Parliament -- 2022 to 2025 -- sits mostly inside this hole: only 24% of its
+531 bills have a projected speech, against 74-84% for every other parliament
+in scope. A bill with no speeches in that window is not evidence it was never
+debated, and no page should say so.
+
 ## Known limits
 
 - Legacy keys are provisional. They are not stable identities and must not be
@@ -329,3 +371,11 @@ text or nothing.
   vote rows at all, and their splits must not be computed from present
   membership.
 - No state bills. Phase 1 is federal.
+- No Senate Hansard exists for 2014-2022 and the chamber corpus nearly
+  vanishes in 2024, so a registry-mode bill with no speeches in that window is
+  a corpus hole, not evidence the bill was never debated. The 47th Parliament
+  is mostly inside this hole (24% speech coverage against 74-84% elsewhere);
+  see "The full run and bulk publish" above.
+- 812 of 2,510 outlined bills carry a `flagged` rather than `ok` summary and
+  project as having no summary at all; that is a review-state design choice
+  (section "Summary contract" in `docs/BILLS-CONTRACT.md`), not a defect here.
