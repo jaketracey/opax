@@ -6198,15 +6198,19 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
     speakers: (rep?.stats?.top_speakers || []).filter(([nm]) => photoUrlFor(nm)),
   }));
   const seen = new Set();
-  const picks = [];
-  for (let rank = 0; picks.length < 8 && ranked.some((r) => r.speakers[rank]); rank++) {
+  const pool = [];
+  for (let rank = 0; pool.length < 24 && ranked.some((r) => r.speakers[rank]); rank++) {
     for (const r of ranked) {
       const row = r.speakers[rank];
-      if (!row || seen.has(row[0]) || picks.length >= 8) continue;
+      if (!row || seen.has(row[0]) || pool.length >= 24) continue;
       seen.add(row[0]);
-      picks.push({ name: row[0], count: row[1], topic: r.topic });
+      pool.push({ name: row[0], count: row[1], topic: r.topic });
     }
   }
+  // Cards with a voting record first: they carry the bill lists that give the
+  // rail its shape, and a card with only a sentence would stand mostly empty.
+  const fullCard = (p) => { const v = votesFor(p.name); return Boolean(v?.for?.length || v?.against?.length); };
+  const picks = [...pool.filter(fullCard), ...pool.filter((p) => !fullCard(p))].slice(0, 8);
 
   const voteList = (label, rows) => rows?.length ? `
     <div class="ency-votes-col">
