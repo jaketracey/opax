@@ -48,7 +48,8 @@ STAT_FIELDS = ("value", "label", "numerator", "denominator", "unit", "slug", "wi
 # model's summary of a prompt rather than the record.
 FORBIDDEN_OPENERS = re.compile(
     r"^\s*(?:based on|according to the (?:provided|passages)|the (?:provided )?context"
-    r"|the passages|from the (?:provided )?context)", re.I)
+    r"|the passages|from the (?:provided )?context|the record shows|the record indicates"
+    r"|the record reveals)", re.I)
 # A passage is trimmed to PASSAGE_CHARS and may carry an ellipsis on either
 # side ("…" is one character), so a couple of characters of slack either way
 # is the trim doing its job, not a bug. PASSAGE_MIN only catches the empty or

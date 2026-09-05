@@ -329,9 +329,11 @@ WINDOW_PROMPT = (
     "report a characterisation of another party as that member's claim about them, never as "
     "that party's own position and never as established fact. "
     "Begin with the answer itself. Never open with a preamble such as \"Based on the provided "
-    "context\", \"According to the passages\" or \"The context shows\": the reader knows the "
-    "answer comes from the record. Do not explain how the passages are numbered, ordered or "
-    "provided. Write two to four tight paragraphs of plain Markdown — no headings. "
+    "context\", \"According to the passages\", \"The context shows\" or \"The record shows\": "
+    "the reader knows the answer comes from the record. State the finding directly — 'Debate "
+    "on X was sharply partisan', not 'The record shows debate on X was sharply partisan'. Do "
+    "not explain how the passages are numbered, ordered or provided. Write two to four tight "
+    "paragraphs of plain Markdown — no headings. "
     "Only if NO passage mentions the subject at all, reply exactly: "
     "The record retrieved for this question does not discuss it."
 )
@@ -2418,6 +2420,7 @@ def build_over_time(kb: KbClient, slug: str, rows: list[dict],
             "answer": section["answer"],
             "sources": section["sources"],
             "asked_at": section["asked_at"],
+            "cite_method": section.get("cite_method"),
         })
     tide_rows = tide(kb, cfg["topic"])
     print("  tide: " + ", ".join(
