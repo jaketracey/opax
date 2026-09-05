@@ -44,8 +44,14 @@ const OUT_PAD_PX = 38
  * exists. Small - just enough that coming around is still felt.
  */
 const SWING_MIN = 0.3
-/** A touch more elevation on the way out, so the ring reads as a ring. */
-const LIFT = 0.1
+/**
+ * A touch more elevation on the way out, so the ring reads as a ring. Also
+ * the cheapest way to keep two counterparties sitting close together (Labor
+ * and Liberal on most donors) from stacking their name labels on each
+ * other's sphere: enough of an angle change spreads their labels' anchors
+ * apart without another camera move to explain.
+ */
+const LIFT = 0.18
 
 export type RevealSpec = {
   /** The entity the page is about. */
