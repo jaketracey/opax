@@ -3272,7 +3272,8 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 
 /* ==== donor-side register rows on the Just declared convention ==== */
 .donor-ties-list { list-style: none; margin: var(--space-3) 0 0; padding: 0; }
-.donor-ties-list .declared-row { padding: 0.85rem 0; border-top: 1px solid var(--line); }
+.donor-ties-list .declared-row { padding: 0.85rem 0; border-top: 1px solid var(--line); grid-template-columns: 48px minmax(0, 1fr); } /* no date column here: the row starts at the portrait */
+.donor-ties-list .declared-portrait { grid-column: 1; }
 .tie-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.35rem; }
 .tie-tag {
   display: inline-flex; align-items: center; min-height: 26px; padding: 0.1rem 0.55rem; border-radius: 999px;
