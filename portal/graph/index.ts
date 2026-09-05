@@ -282,6 +282,12 @@ const CSS = `
   border: 1px solid #e4e1d8; border-radius: 10px; padding: 8px; }
 .mm-legend-title { font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
   color: #8a8578; text-transform: uppercase; padding: 0 6px 4px; }
+/* A section of the card ("Where it went", "In parliament"): a kicker under a
+   hairline, flush with the card's text edge. Not the legend title, whose side
+   padding exists to line it up with the chips. */
+.mm-card-section { margin: 14px 0 6px; padding: 9px 0 0; border-top: 1px solid #e4e1d8;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; line-height: 1.3;
+  color: #8a5a12; text-transform: uppercase; }
 .mm-chip { display: flex; align-items: center; gap: 7px; border: 0;
   background: none; font: inherit; font-size: 12px; color: #4a4942;
   padding: 3px 8px; border-radius: 7px; cursor: pointer; text-align: left; }
@@ -1078,7 +1084,7 @@ export async function mountMoneyMap(
         : `given across ${node.count.toLocaleString()} donations · ${span}`
     inflationFineprint(card)
 
-    const listTitle = el('div', 'mm-legend-title', card)
+    const listTitle = el('div', 'mm-card-section', card)
     const list = el('ul', 'mm-rows', card)
     if (node.kind === 'donor') {
       listTitle.textContent = 'Where it went'
@@ -1175,7 +1181,7 @@ export async function mountMoneyMap(
       `${span ? ` · ${span}` : ''}`
     inflationFineprint(card)
 
-    const listTitle = el('div', 'mm-legend-title', card)
+    const listTitle = el('div', 'mm-card-section', card)
     listTitle.textContent = 'Largest donors in this flow'
     const list = el('ul', 'mm-rows', card)
     const flows = view.edges

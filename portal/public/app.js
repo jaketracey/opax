@@ -2165,8 +2165,7 @@ function renderSearchDateRuler(years, q, f) {
       <span class="search-year-label" aria-hidden="true">${from}<br>–${String(to).slice(-2)}</span></a>`);
   }
   box.innerHTML = `<h3 class="date-ruler-heading">Matches by year</h3>
-    <p class="search-year-hint">Tap a band to filter those years.</p>
-    <div class="search-year-scale"><span>${max.toLocaleString()} matches</span><span>0 at baseline</span></div>
+    <div class="search-year-scale"><span>${max.toLocaleString()} matches</span></div>
     <nav class="search-year-chart" aria-label="Filter search by year range">${bands.join("")}</nav>`;
   box.hidden = false;
 }
@@ -2764,7 +2763,7 @@ function declaredRowHTML(item, partyByName, { showDate = true } = {}) {
     ${showDate ? `<time datetime="${esc(item.date)}">${esc(fmtDate(item.date))}</time>` : ""}
     <span class="declared-portrait">${photo
       ? `<img src="${esc(photo)}" width="48" height="48" loading="lazy" decoding="async" alt="">`
-      : `<span aria-hidden="true">${esc(String(item.name || "?").split(/\s+/).map((w) => w[0]).slice(0, 2).join(""))}</span>`}</span>
+      : `<span aria-hidden="true"></span>`}</span>
     <div class="declared-entry">
       <div class="declared-person"><a href="${esc(subjectHash("person", item.name))}">${esc(item.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}${chamber ? ` <span class="result-meta">${esc(chamber)}</span>` : ""}</div>
       <div class="declared-kind">${esc(kind)} · ${esc(category)}${item.ocr ? ` <span class="result-meta">· machine-read from a scan</span>` : ""}</div>
@@ -3003,7 +3002,9 @@ async function renderDonorInterests(name, sections) {
   const slot = document.createElement("div");
   slot.className = "donor-interests";
   sections.appendChild(slot);
-  const [index, roster] = await Promise.all([loadInterestsTies(), loadParliamentarians()]);
+  // The photo map too: photoUrlFor() answers null until it is in, which drew
+  // every row here as a blank circle.
+  const [index, roster] = await Promise.all([loadInterestsTies(), loadParliamentarians(), loadPhotoMap()]);
   if (currentSubjectKey !== key) return;
   const rows = index?.donors?.[name];
   if (!Array.isArray(rows) || !rows.length) { slot.remove(); return; }
@@ -3032,7 +3033,7 @@ async function renderDonorInterests(name, sections) {
       return `<li class="declared-row">
         <span class="declared-portrait">${photo
           ? `<img src="${esc(photo)}" width="48" height="48" loading="lazy" decoding="async" alt="">`
-          : `<span aria-hidden="true">${esc(String(row.name || "?").split(/\s+/).map((w) => w[0]).slice(0, 2).join(""))}</span>`}</span>
+          : `<span aria-hidden="true"></span>`}</span>
         <div class="declared-entry">
           <div class="declared-person"><a href="${esc(subjectHash("person", row.name))}">${esc(row.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}<span class="result-meta">${esc(chamberName[row.chamber] || row.chamber || "Register")}</span></div>
           <div class="declared-kind tie-tags"><span class="tie-tag">${esc(category.charAt(0).toUpperCase() + category.slice(1))}</span>${holder ? `<span class="tie-tag tie-tag-holder">${esc(holder)}</span>` : ""}</div>
@@ -3598,8 +3599,9 @@ async function renderDonorAccess(label, container) {
   const key = currentSubjectKey;
   container.insertAdjacentHTML("beforeend", `<div id="subject-access"></div>`);
   accessPromise ??= fetch("/access.json").then((r) => (r.ok ? r.json() : null)).then((d) => (accessData = d)).catch(() => null);
-  const acc = await accessPromise;
+  const [acc, roster] = await Promise.all([accessPromise, loadParliamentarians(), loadPhotoMap()]);
   if (currentSubjectKey !== key) return;
+  const partyByName = new Map((roster?.people || []).map((p) => [String(p.name || "").toLowerCase(), p.party_now || p.party]));
   const slot = $("subject-access");
   if (!slot) return;
   const d = acc?.donors?.[label];
@@ -3617,11 +3619,26 @@ async function renderDonorAccess(label, container) {
     : meetings.length ? "Who they met" : "Who lobbies for them";
   let html = `<p class="kicker">${esc(kicker)}</p>`;
   if (meetings.length) {
-    html += `<ul class="subject-list" role="list">${meetings.map((m) => `
-      <li>${m.page
-        ? `<a class="source-title" href="${esc(subjectHash("person", m.page))}">${esc(m.minister)}</a>`
-        : `<span class="source-title">${esc(m.minister)}</span>`}${meta(esc(jur(m.jurisdiction)) + (m.date ? ` · ${esc(fmtDate(m.date))}` : ""))}
-        ${m.purpose ? `<p class="snippet" style="margin-top:0.15rem">${esc(m.purpose)}</p>` : ""}</li>`).join("")}</ul>
+    // The same row as the register list: portrait (a blank circle when the
+    // roster has none), name, party chip, then where and when.
+    html += `<ul class="subject-list met-list" role="list">${meetings.map((m) => {
+      const who = m.page || m.minister;
+      const party = partyByName.get(String(who || "").toLowerCase()) || partyByName.get(String(m.minister || "").toLowerCase());
+      const photo = photoUrlFor(who) || photoUrlFor(m.minister);
+      const when = [esc(jur(m.jurisdiction)), m.date ? esc(fmtDate(m.date)) : ""].filter(Boolean).join(" · ");
+      return `<li class="declared-row">
+        <span class="declared-portrait">${photo
+          ? `<img src="${esc(photo)}" width="48" height="48" loading="lazy" decoding="async" alt="">`
+          : `<span aria-hidden="true"></span>`}</span>
+        <div class="declared-entry">
+          ${m.page
+            ? `<a class="source-title" href="${esc(subjectHash("person", m.page))}">${esc(m.minister)}</a>`
+            : `<span class="source-title">${esc(m.minister)}</span>`}
+          <span class="result-meta">${[party ? partyChipHTML(party) : "", when].filter(Boolean).join(" · ")}</span>
+          ${m.purpose ? `<p class="snippet">${esc(m.purpose)}</p>` : ""}
+        </div>
+      </li>`;
+    }).join("")}</ul>
       <p class="fineprint" style="margin-top:0.5rem"><b>${total.toLocaleString()}</b> disclosed meeting${total === 1 ? "" : "s"}${total > meetings.length ? `, newest ${meetings.length} shown` : ""}.</p>`;
   }
   if (firms.length) {
@@ -5729,7 +5746,7 @@ async function renderCampaignerEntry(name, key) {
 // Both are standalone lazy modules with a mount/destroy contract; the page
 // only owns the toggle. Modules are mounted once and kept alive per session.
 
-const explore = { tm: null, tide: null, quiz: null, ledger: null, matrix: null, wd: null, tvn: null };
+const explore = { tm: null, tide: null, quiz: null, ledger: null, grants: null, matrix: null, wd: null, tvn: null };
 
 let explainInstance = null;
 let explainOpenSeq = 0;
@@ -5809,6 +5826,7 @@ const GAMES = {
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js", mount: "mountThenVsNow" },
@@ -5845,6 +5863,7 @@ $("explore-tm-btn").addEventListener("click", () => openGame("tm"));
 $("explore-tide-btn").addEventListener("click", () => openGame("tide"));
 $("explore-quiz-btn").addEventListener("click", () => openGame("quiz"));
 $("explore-ledger-btn").addEventListener("click", () => openGame("ledger"));
+$("explore-grants-btn").addEventListener("click", () => openGame("grants"));
 $("explore-matrix-btn").addEventListener("click", () => openGame("matrix"));
 $("explore-wd-btn").addEventListener("click", () => openGame("wd"));
 $("explore-tvn-btn").addEventListener("click", () => openGame("tvn"));
@@ -8998,17 +9017,6 @@ function reportOpenCitation(essay, button, n) {
   for (let el = row.parentElement; el && el !== essay; el = el.parentElement) {
     if (el.tagName === "DETAILS") el.open = true;
   }
-  essay.querySelector(".report-cite-back")?.remove();
-  const back = document.createElement("button");
-  back.type = "button";
-  back.className = "link report-cite-back";
-  back.textContent = "Back to the essay";
-  back.addEventListener("click", () => {
-    button.focus({ preventScroll: true });
-    button.scrollIntoView({ block: "center", behavior: "instant" });
-    back.remove();
-  });
-  row.appendChild(back);
   row.focus({ preventScroll: true });
   row.scrollIntoView({
     block: "center",
@@ -9958,7 +9966,7 @@ const VIEW_DESCRIPTIONS = {
   reports: "Standing investigations pairing the money with the words, every claim cited to the record.",
   subject: "An entry in the OPAX encyclopedia of Australian parliamentarians, parties, donors and topics.",
   doc: "A document from the Australian parliamentary record, with its speaker, date and official source.",
-  explore: "Play with the parliamentary record: the time machine, the record quiz, the ledger and the money map.",
+  explore: "Play with the parliamentary record: the time machine, the record quiz, the ledger, who gets the grants and the money map.",
   chat: "Follow-up questions on an answer from the parliamentary record, each reply cited to its sources.",
   about: "What OPAX is, what you can do here, and how answers are produced.",
   methods: "How the OPAX corpus is built, its known limits, and how to cite an answer or a speech.",

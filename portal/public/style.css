@@ -3182,7 +3182,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .search-count-wide { display: none; }
 #panel-search #results-count { font-variant-numeric: tabular-nums; }
 #panel-search #search-date-ruler { margin: 20px 0; }
-#panel-search .search-year-hint { margin: 4px 0 10px; font: 400 .8125rem/1.5 var(--sans); color: var(--ink-soft); }
 #panel-search .search-year-scale { display: flex; justify-content: space-between; font: 400 .75rem/1.5 var(--sans); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 #panel-search .search-year-chart { display: grid; grid-template-columns: repeat(7, minmax(44px, 1fr)); gap: 1px; border-top: 1px dotted var(--line); }
 #panel-search .search-year-band { display: block; padding: 0 3px; color: var(--ink-soft); text-decoration: none; }
@@ -3272,8 +3271,18 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 
 /* ==== donor-side register rows on the Just declared convention ==== */
 .donor-ties-list { list-style: none; margin: var(--space-3) 0 0; padding: 0; }
-.donor-ties-list .declared-row { padding: 0.85rem 0; border-top: 1px solid var(--line); grid-template-columns: 48px minmax(0, 1fr); } /* no date column here: the row starts at the portrait */
-.donor-ties-list .declared-portrait { grid-column: 1; }
+.donor-ties-list .declared-row { padding: 0.85rem 0; border-top: 1px solid var(--line); }
+/* No date column on these lists: the row starts at the portrait, and the entry
+   takes the second track (the base rule's third would be an implicit column,
+   which is how the register rows once ended up at the right edge). */
+.donor-ties-list .declared-row, .met-list .declared-row { grid-template-columns: 48px minmax(0, 1fr); }
+.donor-ties-list .declared-portrait, .met-list .declared-portrait { grid-column: 1; }
+.donor-ties-list .declared-entry, .met-list .declared-entry { grid-column: 2; }
+.met-list { margin-top: var(--space-3); }
+.met-list .declared-row { padding: var(--row-gap) 0; }
+.met-list .source-title { font: 600 1rem/1.35 var(--serif); }
+.met-list .result-meta { display: flex; margin-top: 0.15rem; } /* its own line under the name, as the mention rows */
+.met-list .snippet { margin-top: 0.25rem; }
 .tie-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.35rem; }
 .tie-tag {
   display: inline-flex; align-items: center; min-height: 26px; padding: 0.1rem 0.55rem; border-radius: 999px;
@@ -3418,11 +3427,6 @@ html[data-panel="chat"] footer { display: none; }
 #panel-reports .ask-citation:focus-visible {
   outline: 2px solid var(--bronze-ink); outline-offset: -3px; border-radius: 2px;
 }
-.report-cite-back {
-  display: inline-flex; align-items: center; min-height: 44px; margin-top: 0.2rem;
-  font: 600 0.875rem/1.3 var(--sans);
-}
-
 /* Two stops, and on a phone they stay put: one 44px band under the masthead,
    which is the whole budget this navigation is allowed. */
 .report-jump {

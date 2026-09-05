@@ -382,7 +382,7 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
     const { total, rows } = topicShares(m, slug)
     if (total <= 0 || rows.length === 0) return
 
-    const title = el('div', 'mm-legend-title', host)
+    const title = el('div', 'mm-card-section', host)
     title.textContent = 'In parliament'
     const lead = el('p', 'mm-words-lead', host)
     const topicLink = el('a', '', lead)
@@ -431,7 +431,7 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
       .slice(0, 5)
     if (rows.length === 0) return
 
-    const title = el('div', 'mm-legend-title', host)
+    const title = el('div', 'mm-card-section', host)
     title.textContent = 'What they talk about'
     const list = el('ul', 'mm-words-rows', host)
     const maxShare = rows[0]?.share ?? 0

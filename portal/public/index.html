@@ -56,7 +56,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=9b2442a1e7">
+<link rel="stylesheet" href="/style.css?v=60c7df62b4">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -107,6 +107,7 @@
                 <a class="mm-link" href="/explore" data-game="tide"><span class="mm-title">The tide</span><span class="mm-blurb">See which debates are rising or fading across four decades of labelled speeches.</span></a>
                 <a class="mm-link" href="/explore" data-game="quiz"><span class="mm-title">The record quiz</span><span class="mm-blurb">Guess what the numbers say, then see the receipts.</span></a>
                 <a class="mm-link" href="/explore" data-game="ledger"><span class="mm-title">The ledger</span><span class="mm-blurb">Every disclosed donation flow in one sortable, exportable table.</span></a>
+                <a class="mm-link" href="/explore" data-game="grants"><span class="mm-title">Who gets the grants</span><span class="mm-blurb">Every grant award, resolved to its recipient and checked against the donor registers.</span></a>
                 <a class="mm-link" href="/money"><span class="mm-title">The money map</span><span class="mm-blurb">250 donors, 11 parties, 28 years of AEC returns, as territory you can spin.</span></a>
               </div>
               <div>
@@ -200,6 +201,7 @@
         <li><a class="drawer-sub" href="/explore" data-game="tide">The tide</a></li>
         <li><a class="drawer-sub" href="/explore" data-game="quiz">The record quiz</a></li>
         <li><a class="drawer-sub" href="/explore" data-game="ledger">The ledger</a></li>
+        <li><a class="drawer-sub" href="/explore" data-game="grants">Who gets the grants</a></li>
       </ul>
     </details>
     <details class="drawer-group" id="drawer-group-encyclopedia">
@@ -731,6 +733,22 @@
           Filter it, follow it, take it home as CSV.</span>
           <span class="game-cta">Open</span>
         </button>
+        <button type="button" class="game-card" id="explore-grants-btn">
+          <span class="game-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 6h19l7 7v29H11z"/>
+              <path d="M30 6v7h7"/>
+              <path d="M17 20h14M17 26h14M17 32h8"/>
+              <circle cx="33" cy="35" r="4.5"/>
+              <path d="M30.5 39l-1.5 5 4-2 4 2-1.5-5"/>
+            </svg>
+          </span>
+          <span class="game-title">Who gets the grants</span>
+          <span class="game-blurb">Every published grant award, resolved to the organisations that
+          receive it and checked against the donor registers. Programs, seats and the money.</span>
+          <span class="game-cta">Open</span>
+        </button>
         <button type="button" class="game-card" id="explore-matrix-btn">
           <span class="game-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
@@ -805,6 +823,12 @@
           <button type="button" class="game-close" data-close="dialog-ledger" aria-label="Close">✕</button>
         </div>
         <div id="explore-ledger" class="game-dialog-body"></div>
+      </dialog>
+      <dialog class="game-dialog" id="dialog-grants" aria-label="Who gets the grants">
+        <div class="game-dialog-head">
+          <button type="button" class="game-close" data-close="dialog-grants" aria-label="Close">✕</button>
+        </div>
+        <div id="explore-grants" class="game-dialog-body"></div>
       </dialog>
       <dialog class="game-dialog" id="dialog-matrix" aria-label="Who owns which debate">
         <div class="game-dialog-head">
@@ -898,8 +922,8 @@
         <li><strong>Encyclopedia</strong>: an entry for every parliamentarian, party, donor and
         topic, with quick facts, voting record, declared interests, expenses and the money map
         narrowed to that entity.</li>
-        <li><strong>Explore</strong>: the time machine, the record quiz, the ledger, who owns
-        which debate, words per dollar, and then versus now.</li>
+        <li><strong>Explore</strong>: the time machine, the record quiz, the ledger, who gets the
+        grants, who owns which debate, words per dollar, and then versus now.</li>
       </ul>
 
       <h2>The corpus</h2>
@@ -1012,6 +1036,6 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/app.js?v=334a7d8eb1" defer></script>
+<script src="/app.js?v=199a0f40da" defer></script>
 </body>
 </html>
